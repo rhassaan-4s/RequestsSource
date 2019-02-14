@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean id="FileReader" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.dbUpdate.web.action.FileReader">
+				<property name="mgr">
+					<ref bean="SQLManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="UpdateDB" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.dbUpdate.web.action.UpdateDB">
+				<property name="dataSource">
+					<ref bean="dataSource" />
+				</property>
+				<property name="comMger">
+					<ref bean="commonManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="AddNewQueryForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.dbUpdate.web.action.AddNewQueryForm">
+				<property name="commandName">
+					<value>object</value>
+				</property>
+				<property name="commandClass">
+					<value>java.lang.Object</value>
+				</property>
+				<property name="formView">
+					<value>newQueryForm</value>
+				</property>
+				<property name="successView">
+					<value>newQueryForm.html</value>
+				</property>
+				<property name="mgr">
+					<ref bean="SQLManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+
+	<bean id="FileWriter" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.dbUpdate.web.action.FileWriter">
+				<property name="commandName">
+					<value>object</value>
+				</property>
+				<property name="commandClass">
+					<value>java.lang.Object</value>
+				</property>
+				<property name="formView">
+					<value>fileWriterForm</value>
+				</property>
+				<property name="successView">
+					<value>fileWriterForm.html</value>
+				</property>
+				<property name="mgr">
+					<ref bean="SQLManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	
+
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="openSessionInViewInterceptor" />
+			</list>
+		</property>
+		<property name="mappings">
+			<props>
+				<prop key="/newQueryForm.html">AddNewQueryForm</prop>
+				<prop key="/fileWriterForm.html">FileWriter</prop>
+				<prop key="/updateDBView.html">UpdateDB</prop>
+				<prop key="/fileReaderView.html">FileReader</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="requestContextAttribute">
+			<value>rc</value>
+		</property>
+		<property name="viewClass">
+			<value>org.springframework.web.servlet.view.JstlView</value>
+		</property>
+		<property name="prefix">
+			<value>/web/dbUpdate/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+
+</beans>

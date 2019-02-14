@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans >
+
+<!-- *********************************************************************
+									DAOs 
+********************************************************************* -->
+
+  <!-- Generic DAO - can be used when doing standard CRUD -->
+  <bean id="baseDAO" class="com._4s_.common.dao.BaseDAOHibernate" >
+      <property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  </bean>
+
+<!--	<bean id="messageDAO" class="com._4s_.i18n.dao.MessageDAOHibernate" >-->
+<!--    	<property name="sessionFactory">-->
+<!--	    	<ref bean="sessionFactory"/>-->
+<!--	    </property>-->
+<!--    </bean>-->
+<!-- -->
+<!-- 
+  <bean id="messageDAO" parent="txProxyTemplate">
+  	<property name="target">
+  		<bean class="com._4s_.i18n.dao.MessageDAOHibernate">
+  		    <property name="sessionFactory">
+		      <ref bean="sessionFactory"/>
+		    </property>
+        </bean>
+    </property>
+    <property name="transactionAttributes">
+        <props>
+            <prop key="save*">PROPAGATION_REQUIRED</prop>
+            <prop key="remove*">PROPAGATION_REQUIRED</prop>
+            <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+        </props>
+    </property>
+  </bean>
+-->
+
+<!--  <bean id="auditLogDAO" parent="txProxyTemplate"> -->
+<!--	  	<property name="target">-->
+<!--	  		<bean class="com._4s_.auditing.dao.AuditLogDAOHibernate">-->
+<!--	  		    <property name="sessionFactory">-->
+<!--		    		<ref bean="auditSessionFactory"/>-->
+<!--			    </property>-->
+<!--		    </bean>-->
+<!--		</property>-->
+<!--		<property name="transactionAttributes">-->
+<!--		    <props>-->
+<!--		        <prop key="save*">PROPAGATION_REQUIRES_NEW</prop>-->
+<!--		        <prop key="remove*">PROPAGATION_REQUIRED</prop>-->
+<!--		        <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>-->
+<!--		    </props>-->
+<!--		</property>-->
+<!--  </bean>-->
+
+
+<!-- *********************************************************************
+									Hibernate 
+********************************************************************* -->
+<!--    <bean id="auditTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">-->
+<!--        <property name="sessionFactory">-->
+<!--        	<ref local="auditSessionFactory"/>-->
+<!--        </property>-->
+<!--    </bean>-->
+<!---->
+<!--	-->
+<!--	 Transaction template for Managers, from:-->
+<!--		 http://blog.exis.com/colin/archives/2004/07/31/concise-transaction-definitions-spring-11/ -->
+<!--    <bean id="auditTxProxyTemplate" abstract="true"-->
+<!--        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">-->
+<!--        <property name="transactionManager"><ref bean="auditTransactionManager"/></property>-->
+<!--        <property name="transactionAttributes">-->
+<!--            <props>-->
+<!--                <prop key="save*">PROPAGATION_REQUIRED</prop>-->
+<!--                <prop key="remove*">PROPAGATION_REQUIRED</prop>-->
+<!--                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>-->
+<!--            </props>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+
+    <!-- Hibernate SessionFactory -->
+<!--    <bean id="auditSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">-->
+<!--        <property name="dataSource"><ref bean="dataSource"/></property>-->
+<!--        <property name="mappingResources">-->
+<!--            <list>-->
+<!--				<value>com/_4s_/i18n/model/Key.hbm.xml</value>-->
+<!--				<value>com/_4s_/i18n/model/MyLocale.hbm.xml</value>-->
+<!--				<value>com/_4s_/i18n/model/MyMessage.hbm.xml</value>-->
+<!--            -->
+<!--				<value>com/_4s_/auditing/model/AuditLogRecord.hbm.xml</value>-->
+<!--				<value>com/_4s_/auditing/model/AuditLogDetail.hbm.xml</value>-->
+<!--            </list>-->
+<!--        </property>-->
+<!---->
+<!--	    <property name="hibernateProperties">-->
+<!--	        <props>-->
+<!--	            <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>-->
+<!--	            <prop key="hibernate.show_sql">true</prop>-->
+<!-- 	            <prop key="hibernate.hbm2ddl.auto">update</prop>  -->
+<!--	        </props>-->
+<!--        </property>-->
+<!--    </bean>-->
+    
+
+<!-- *********************************************************************
+									Services 
+********************************************************************* -->
+
+    <bean id="baseManager" class="com._4s_.common.service.BaseManagerImpl" >
+  		<property name="baseDAO">
+	    	<ref bean="baseDAO"/>
+	    </property>
+	</bean>
+    
+<!--    <bean id="auditLogInterceptor" class="com._4s_.auditing.service.AuditLogInterceptor">-->
+<!--  		<property name="auditLogDAO">-->
+<!--	    	<ref bean="auditLogDAO"/>-->
+<!--	    </property>-->
+<!--	</bean>-->
+
+    <!-- Load WEB-INF/classes/messages.properties for i18n messages using JSTL's fmt tag -->
+<!-- Replace this section with the following messageSource bean definition -->
+<!--
+    <bean id="messageSource" 
+        class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename"><value>ApplicationResources</value></property>
+    </bean>
+-->
+<!--    <bean id="messageSource" -->
+<!--        class="com._4s_.i18n.service.ResourceMapMessageSource" >-->
+<!--    	    <property name="messageDAO"><ref bean="messageDAO"/></property> -->
+<!-- -->
+<!--    	    <property name="localeSource"><ref bean="arabicLocaleSource"/></property> -->
+<!--    	    <property name="defaultLocaleSource"><ref bean="arabicLocaleSource"/></property> -->
+<!---->
+<!--     </bean>-->
+<!--    -->
+<!--    <bean id="arabicLocaleSource" -->
+<!--        class="com._4s_.i18n.service.DefaultLocaleArabic" >-->
+<!--    </bean>-->
+<!--    <bean id="englishLocaleSource" -->
+<!--        class="com._4s_.i18n.service.DefaultLocaleEnglish" >-->
+<!--    </bean>-->
+    
+<!-- *********************************************************************
+								Controllers 
+********************************************************************* -->
+   	<bean id="baseController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.BaseController">
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- Sample Form Controller bean definition -->
+<!--	<bean id="baseSimpleFormController" parent="txProxyTemplate">-->
+<!--		<property name="target">-->
+<!--			<bean class="class that extends com._4s_.common.web.action.BaseSimpleFormController">-->
+<!--				<property name="baseManager">-->
+<!--					<ref bean="baseManager"/>-->
+<!--				</property>-->
+<!--				<property name="rollbackMode">-->
+					<!--	Rollback in case of anu binding or validation error, This it the default-->
+<!--					<value>ROLLBACK_ON_ERROR</value>  -->
+					<!--	In case you need to save data even if binding or validation fails-->
+<!--					<value>CONTINUE_WITH_ERROR</value>-->
+<!--				</property>-->
+<!--				<property name="binders">-->
+<!--					<list>-->
+				<!--	For this to work the bean class must implement the BaseBinder interface-->
+				<!--	DomainObjectBinder (see binders) implements BaseBinder and thus its child beans can be used here -->
+<!--						<ref bean="binderBean1Id"/>-->
+<!--						<ref bean="binderBean2Id"/>-->
+<!--						<ref bean="binderBean3Id"/>-->
+<!--					</list>-->
+<!--				</property>-->
+<!--			</bean>-->
+<!--		</property>-->
+<!--	</bean>-->
+	
+	
+<!-- *********************************************************************
+								Binders 
+********************************************************************* -->
+	<!-- Binders of Domain Model Objects -->
+	
+	<bean id="domainObjectBinder" class="com._4s_.common.web.binders.DomainObjectBinder" singleton="false" >
+	    <property name="baseManager">
+			<ref bean="baseManager"/>
+	    </property>
+	</bean>
+
+		<!-- Sample Binder bean definition -->	
+		<!-- please note that this bean does not have a class attribute, and does not require writing a class at all -->
+<!--	<bean id="someClassBinder" parent="domainObjectBinder" >-->
+<!--		<property name="bindedClass">-->
+<!--			<value>com._4s_.communication.model.SomeClass</value>-->
+<!--		</property>-->
+<!--		<property name="allowCreateNew">-->
+<!--			<value>false</value>-->
+			<!--<value>true</value>-->
+<!--		</property>-->
+<!--	</bean>-->
+	
+	<!-- Other binders -->
+
+		<!-- Hijri / Miladi Date Binder -->
+    <bean id="dateBinder"
+    	class="com._4s_.common.web.binders.BiCalendarDateBinder"
+     	singleton="false" ></bean>
+     	
+     <!-- Time Binder -->
+    <bean id="timeBinder"
+    	class="com._4s_.common.web.binders.BiCalendarTimeBinder"
+     	singleton="false" >
+     </bean>
+     	
+   	<bean id="dateTimeBinder"
+    	class="com._4s_.common.web.binders.DateTimeBinder"
+     	singleton="false" ></bean>
+     	
+    <bean id="mainBinder" class="com._4s_.common.web.binders.MainBinder" singleton="false" >
+	    <property name="baseManager">
+			<ref bean="baseManager"/>
+	    </property>
+	</bean>
+	
+	
+</beans>

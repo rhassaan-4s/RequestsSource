@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="searchController" parent="auditTxProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.auditing.web.action.SearchController">
+				<property name="commandName">
+					<value>cmd</value>
+				</property>
+				
+				<property name="commandClass">
+					<value>com._4s_.auditing.model.AuditSearchCommand</value>
+				</property>
+				
+				<property name="formView">
+					<value>search</value>
+				</property>
+				<property name="successView">
+					<value>searchForm.html</value>
+				</property>
+				<property name="mgr">
+					<ref bean="auditManager"/>
+				</property>
+				<property name="binders">
+					<list>
+						<ref bean="dateBinder"/>
+						<ref bean="userBinder"/>
+
+
+					</list>
+				</property>
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+				<property name="validator">
+					<ref bean="validateSearch"/>
+				</property>
+				
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="searchForm" parent="auditTxProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.auditing.web.action.SearchFormController">
+				<property name="mgr">
+					<ref bean="auditManager"/>
+				</property>
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- *********************************************************** 
+		URL Mapping
+		************************************************************ -->
+
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="openSessionInViewInterceptor" />
+			</list>
+		</property>
+		<property name="mappings">
+			<props>
+				<prop key="/search.html">searchController</prop>	
+				<prop key="/searchForm.html">searchForm</prop>	
+			</props>
+		</property>
+	</bean>
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="requestContextAttribute">
+			<value>rc</value>
+		</property>
+		<property name="viewClass">
+			<value>org.springframework.web.servlet.view.JstlView</value>
+		</property>
+		<property name="prefix">
+			<value>/web/auditing/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+
+	</beans>

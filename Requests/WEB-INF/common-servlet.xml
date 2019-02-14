@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="changeApplicationController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.ChangeApplication">
+				<property name="commonManager"><ref bean="commonManager"/></property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="citiesController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.CitiesController">
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="editCityFormController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.EditCityFormController">
+				<property name="commandName"><value>city</value></property>
+		
+				<property name="commandClass">
+					<value>com._4s_.common.model.City</value>
+				</property>
+				<property name="formView"><value>CommonAdminEditCity</value></property>
+				<property name="successView"><value>commonAdminCountryCities.html</value></property>
+				<property name="baseManager"><ref bean="baseManager"/></property>
+				<property name="validator"><ref bean="editCityValidator"/></property>
+
+				<property name="rollbackMode">
+					<value>ROLLBACK_ON_ERROR</value>  
+				</property>
+
+				<property name="binders">
+					<list>
+						<ref bean="countryBinder"/>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="countriesController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.CountriesController">
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="editCountryFormController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.EditCountryFormController">
+				<property name="commandName"><value>country</value></property>
+		
+				<property name="commandClass">
+					<value>com._4s_.common.model.Country</value>
+				</property>
+				<property name="formView"><value>CommonAdminEditCountry</value></property>
+				<property name="successView"><value>commonAdminCountries.html</value></property>
+				<property name="baseManager"><ref bean="baseManager"/></property>
+				<property name="validator"><ref bean="editCountryValidator"/></property>
+				
+				<property name="rollbackMode">
+					<value>ROLLBACK_ON_ERROR</value>  
+				</property>
+
+				<property name="binders">
+					<list>
+						<ref bean="dateBinder"/>
+						<ref bean="departmentBinder"/>
+						<ref bean="cityBinder"/>
+						<ref bean="countryBinder"/>
+						<ref bean="employeeBinder"/>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="regionsController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.RegionsController">
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="editRegionFormController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.EditRegionFormController">
+				<property name="commandName"><value>region</value></property>
+		
+				<property name="commandClass">
+					<value>com._4s_.common.model.Region</value>
+				</property>
+				<property name="formView"><value>commonAdminEditRegion</value></property>
+				<property name="successView"><value>commonAdminRegions.html</value></property>
+				<property name="baseManager"><ref bean="baseManager"/></property>
+				<property name="commonManager"><ref bean="commonManager"/></property>
+				
+				<property name="rollbackMode">
+					<value>ROLLBACK_ON_ERROR</value>  
+				</property>
+
+				<property name="binders">
+					<list>
+						<ref bean="countryBinder"/>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="departmentsController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.DepartmentsController">
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="editDepartmentFormController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.EditDepartmentFormController">
+				<property name="commandName"><value>department</value></property>
+		
+				<property name="commandClass">
+					<value>com._4s_.common.model.Department</value>
+				</property>
+				<property name="formView"><value>CommonAdminEditDepartment</value></property>
+				<property name="successView"><value>commonAdminDepartments.html</value></property>
+				<property name="baseManager"><ref bean="baseManager"/></property>
+				<property name="validator"><ref bean="editDepartmentValidator"/></property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="editEmployeeFormController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.EditEmployeeFormController">
+				<property name="commandName"><value>employee</value></property>
+
+				<property name="commandClass">
+					<value>com._4s_.common.model.Employee</value>
+				</property>
+
+				<property name="formView"><value>CommonAdminEditEmployee</value></property>
+				<property name="successView"><value>commonAdminEmployees.html</value></property>
+				<property name="baseManager"><ref bean="baseManager"/></property>
+
+				<property name="employeeHandlers">
+					<list>
+						<!--ref bean="employeeInternalCommunicator"/-->
+					</list>
+				</property>
+
+				<property name="rollbackMode">
+					<value>ROLLBACK_ON_ERROR</value>  
+				</property>
+
+				<property name="binders">
+					<list>
+						<ref bean="dateBinder"/>
+						<ref bean="cityBinder"/>
+						<ref bean="departmentBinder"/>
+					</list>
+				</property>
+
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="changePasswordFormController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.ChangePasswordFormController">
+				<property name="commandName"><value>changePassword</value></property>
+
+				<property name="commandClass">
+					<value>com._4s_.common.web.command.ChangePassword</value>
+				</property>
+
+				<property name="formView"><value>commonChangePassword</value></property>
+				<property name="successView"><value>login.html</value></property>
+				
+				<property name="baseManager"><ref bean="baseManager"/></property>
+
+				<property name="rollbackMode">
+					<value>ROLLBACK_ON_ERROR</value>  
+				</property>
+
+				<property name="validator"><ref bean="changePasswordValidator"/></property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="dateConverterFormController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.DateConverterFormController">
+				<property name="commandName"><value>dateConverter</value></property>
+
+				<property name="commandClass">
+					<value>com._4s_.common.web.command.DateConverter</value>
+				</property>
+
+				<property name="formView"><value>CommonAdminDateConverter</value></property>
+				<property name="successView"><value>commonAdminDateConverter.html</value></property>
+				
+				<property name="baseManager"><ref bean="baseManager"/></property>
+
+				<property name="rollbackMode">
+					<value>ROLLBACK_ON_ERROR</value>  
+				</property>
+				
+				<property name="sessionForm">
+					<value>true</value>
+				</property>
+				
+				<property name="validator"><ref bean="dateConverterValidator"/></property>
+			</bean>
+		</property>
+	</bean>
+	
+	<!--bean id="BranchController" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.common.web.action.BranchController">
+				<property name="commonManager">
+					<ref bean="commonManager" />
+				</property>
+			</bean>
+		</property>
+	</bean-->
+
+
+	<bean id="CompanyController" parent="txProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.common.web.action.CompanyController">
+				<property name="commonManager">
+					<ref bean="commonManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+
+
+	<!--bean id="BranchFormController" parent="txProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.common.web.action.BranchFormController">
+				<property name="commandName">
+					<value>branch</value>
+				</property>
+
+				<property name="commandClass">
+					<value>com._4s_.common.model.CommonBranch</value>
+				</property>
+
+				<property name="formView">
+					<value>commonAdminBranchForm</value>
+				</property>
+				<property name="successView">
+					<value>commonAdminBranchView.html</value>
+				</property>
+
+				<property name="baseManager">
+					<ref bean="baseManager" />
+				</property>
+			</bean>
+		</property>
+	</bean-->
+
+
+
+	<bean id="CompanyFormController" parent="txProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.common.web.action.CompanyFormController">
+				<property name="commandName">
+					<value>company</value>
+				</property>
+
+				<property name="commandClass">
+					<value>com._4s_.common.model.Company</value>
+				</property>
+
+				<property name="formView">
+					<value>commonAdminCompanyForm</value>
+				</property>
+				<property name="successView">
+					<value>commonAdminCompanyView.html</value>
+				</property>
+
+				<property name="baseManager">
+					<ref bean="baseManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="typesDataController" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.common.web.action.TypesDataController">
+				<property name="commonManager">
+					<ref bean="commonManager"/>
+				</property>
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="typesDataFormController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.TypesDataFormController">
+				<property name="commandName">
+					<value>typesData</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.common.model.TypesData</value>
+				</property>
+				<property name="formView"><value>typesDataFormController</value></property>
+				
+				<property name="successView"><value>typesDataController.html</value></property>
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+				
+				<property name="validator">
+					<ref bean="typesDataValidator"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="searchFormController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.SearchFormController">
+				<property name="mgr">
+					<ref bean="commonManager"/>
+				</property>
+				<property name="qry">
+					<ref bean="queries"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+    
+	<bean id="sampleLiveSearch" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.SampleLiveSearchController">
+				<property name="commandName"><value>employee</value></property>
+
+				<property name="commandClass">
+					<value>com._4s_.common.model.Employee</value>
+				</property>
+
+				<property name="formView"><value>sampleLiveSearch</value></property>
+			
+				<property name="baseManager"><ref bean="baseManager"/></property>
+
+				
+				<property name="rollbackMode">
+					<value>ROLLBACK_ON_ERROR</value>  
+				</property>
+			</bean>
+			
+		</property>
+	</bean>
+    <bean id="urlMapping" 
+        class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" >
+        <property name="interceptors">
+        	<list >
+        		<ref bean="openSessionInViewInterceptor"/>
+        	</list>
+        </property>
+        <property name="mappings">
+            <props>
+            	<prop key="/commonAdminCountryCities.html">citiesController</prop>
+            	<prop key="/commonAdminEditCity.html">editCityFormController</prop>
+				<prop key="/changeApplication.html">changeApplicationController</prop>
+            	<prop key="/commonAdminCountries.html">countriesController</prop>
+            	<prop key="/commonAdminEditCountry.html">editCountryFormController</prop>
+            	
+            	<prop key="/commonAdminRegions.html">regionsController</prop>
+            	<prop key="/commonAdminEditRegion.html">editRegionFormController</prop>
+
+            	<prop key="/commonAdminDepartments.html">departmentsController</prop>
+            	<prop key="/commonAdminEditDepartment.html">editDepartmentFormController</prop>
+
+            	<prop key="/commonAdminEmployees.html">employeesController</prop>
+            	<prop key="/commonAdminEditEmployee.html">editEmployeeFormController</prop>
+				<prop key="/commonAdminChangePassword.html">changePasswordFormController</prop>
+				<prop key="/commonAdminDateConverter.html">dateConverterFormController</prop>
+				
+				<!--prop key="/commonAdminBranchView.html">BranchController</prop>
+				<prop key="/commonAdminBranchForm.html">BranchFormController</prop-->
+				<prop key="/commonAdminCompanyView.html">CompanyController</prop>
+				<prop key="/commonAdminCompanyForm.html">
+					CompanyFormController
+				</prop>
+				
+				<prop key="/typesDataFormController.html">typesDataFormController</prop>
+				<prop key="/typesDataController.html">typesDataController</prop>
+				
+				<prop key="/sampleLiveSearch.html">sampleLiveSearch</prop>
+				<prop key="/searchForm.html">searchFormController</prop>
+			</props>
+        </property>
+    </bean>
+ 
+    <bean id="viewResolver" 
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+        <property name="requestContextAttribute"><value>rc</value></property>
+        <property name="viewClass">
+            <value>org.springframework.web.servlet.view.JstlView</value>
+        </property>
+        <property name="prefix"><value>/web/common/</value></property>
+        <property name="suffix"><value>.jsp</value></property>
+    </bean>    
+    
+</beans>

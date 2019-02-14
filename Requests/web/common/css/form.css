@@ -1,0 +1,97 @@
+body {
+	margin: 0px;
+	border: 0px;
+	padding: 0px;
+}
+#formWindow {
+	margin: 5mm;
+	margin-left:20%;
+	margin-right:20%;
+	width: 60%;
+}
+
+.niceForm {
+	padding: 5mm;
+	border-width: 2px;
+	border-style: outset;
+	border-color: rgb(150,150,210);
+}
+.formHeader {
+/*	padding: 2mm;
+	padding-left: 4mm;
+	padding-right: 4mm;*/
+	font-family: garamond, arial;
+	font-size: 12pt;
+/*	font-style: italic;
+*/	font-weight: bold;
+	background-color: rgb(240,240,250); 
+	
+}
+.formFieldLable {
+/*	margin-top: 4mm;
+*/	font-family: garamond, arial;
+	font-size: 12pt;
+
+}
+
+.inputComponent {
+	width: 6cm;
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgb(150,150,210);
+	background-color: transparent; 
+	color: rgb(150,150,210);
+	font-style: normal;
+}
+.inputComponent:hover {
+	border-color: black;
+	background-color: transparent; 
+	color: black;
+}
+.inputComponent:focus {
+	border-color: black;
+	background-color: rgb(245,245,254); 
+	color: black;
+}
+
+.buttonComponent {
+/*	width: 6cm;
+*/	border-width: 1px;
+	border-style: solid;
+	float:right;
+	border-color: rgb(250,250,250);
+	background-color: rgb(160,160,220); 
+	color: rgb(100,100,200);
+	font-style: normal;
+	font-weight: bold;
+}
+.buttonComponent:hover {
+	border-color: navy;
+	background-color: rgb(160,160,220); 
+	color: navy;
+}
+.buttonComponent:focus {
+	border-color: navy;
+	background-color: rgb(160,160,220); 
+	color: navy;
+}
+
+
+.vhint {
+	font-family: courier, arial;
+	font-size: 8pt;
+	color: red;
+}
+
+.fieldError {
+/*	font-family: courier, arial;
+	font-size: 8pt;
+*/	font-weight: bold;
+	color: red;
+	border-width: 0px;
+	border-style: none;
+}
+
+.spacer {
+	height: 4mm;
+}
