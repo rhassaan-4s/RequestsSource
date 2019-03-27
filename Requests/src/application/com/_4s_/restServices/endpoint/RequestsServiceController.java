@@ -133,7 +133,9 @@ public class RequestsServiceController {
 			User user = requestsService.getUser(userDet.getUsername());
 			LoginUsersRequests req = requestsService.signInOut(userRequest,user.getEmployee().getId());
 			if (req!=null){
-				response.put("Response" ,req.getId());
+				Map output = new HashMap();
+				output.put("request_id", req.getId());
+				response.put("Response" , output);
 			} else {
 				response.put("Response" ,null);
 			}

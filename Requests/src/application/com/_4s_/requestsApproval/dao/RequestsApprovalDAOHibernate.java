@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,7 @@ import com._4s_.common.util.DBUtils;
 import com._4s_.requestsApproval.model.EmpReqApproval;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.restServices.json.AttendanceRequest;
+import com._4s_.restServices.json.RequestOutput;
 //import com._4s_.requestsApproval.model.TimeAttend;
 //import com._4s_.stores.model.ViewStoreCardItem;
 
@@ -1068,8 +1070,41 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			criteria.setFirstResult(pageNumber * pageSize);
-			criteria.setMaxResults(pageSize);	
-			map.put("results", criteria.list());
+			criteria.setMaxResults(pageSize);
+			
+			List results = criteria.list();
+			List output = new ArrayList();
+			Iterator itr = results.iterator();
+			while (itr.hasNext()) {
+				LoginUsersRequests req = (LoginUsersRequests)itr.next();
+				RequestOutput op = new RequestOutput();
+				op.setId(req.getId());
+				op.setEmpCode(req.getEmpCode());
+				op.setEmpName(req.getLogin_user().getName());
+				op.setRequestDate(req.getRequest_date());
+				op.setNotes(req.getNotes());
+				op.setLongitude(req.getLongitude());
+				op.setLatitude(req.getLatitude());
+				
+				if (req.getRequest_id().getId().equals(new Long(1))) {
+					op.setRequestDesc(req.getVacation().getName());
+				} else {
+					op.setRequestDesc(req.getRequest_id().getDescription());
+				}
+				if (req.getApproved().equals(new Long(99))) {
+					op.setStatus("Declined");
+				} else if (req.getApproved().equals(new Long(1))) {
+					op.setStatus("Approved");
+				} else if (req.getApproved().equals(new Long(0))) {
+					op.setStatus("Waiting Approval");
+				} 
+				
+				op.setFromDate(req.getFrom_date());
+				op.setToDate(req.getTo_date());
+				
+				output.add(op);
+			}
+			map.put("results", output);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

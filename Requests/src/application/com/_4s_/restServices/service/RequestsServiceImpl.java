@@ -92,7 +92,7 @@ public void setSecurityDao(MySecurityDAO securityDao) {
 
 public LoginUsersRequests signInOut(AttendanceRequest userRequest,Long empId) {
 	// TODO Auto-generated method stub
-	DateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	DateFormat df=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	Date newDate = null;
 	try {
 		newDate = df.parse(userRequest.getAttendanceTime());
