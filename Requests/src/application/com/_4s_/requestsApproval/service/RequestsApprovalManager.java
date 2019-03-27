@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com._4s_.HR.model.HREmployee;
 import com._4s_.HR.model.HRGeographicalDivision;
 import com._4s_.HR.model.HRGeographicalLevel;
@@ -16,10 +18,13 @@ import com._4s_.HR.model.HRQualificationLevel;
 import com._4s_.HR.model.HRSpecialtyDivision;
 import com._4s_.HR.model.HRSpecialtyLevel;
 import com._4s_.HR.model.HRVacation;
+import com._4s_.common.model.Employee;
 import com._4s_.common.service.BaseManager;
+import com._4s_.requestsApproval.model.LoginUsersRequests;
+import com._4s_.restServices.json.RequestApproval;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
-
+@Transactional
 public interface RequestsApprovalManager extends BaseManager {
 	
 	public List getRoot(final String className);
@@ -111,5 +116,11 @@ public interface RequestsApprovalManager extends BaseManager {
 	public List getVacations (String empCode, Long reqId, Date from_date, Date to_date);
 	////////////////////////////////////////////////////
 	public int getSalaryFromDay();
+	public List getRequestsForApprovalList(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
+			String requestType, String codeFrom, String codeTo, String statusId);
+	public Map getRequestsForApproval(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
+			String requestType, String codeFrom, String codeTo, String statusId, int pageNumber, int pageSize);
+	public Map approvalsAccessLevels(RequestApproval approval, LoginUsersRequests requestInfo, Employee emp);
+	public Map getVacInfo(LoginUsersRequests requestInfo);
 }
 

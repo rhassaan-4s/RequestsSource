@@ -6,9 +6,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.acegisecurity.concurrent.ConcurrentLoginException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
@@ -36,7 +36,8 @@ public class LoginController implements Controller {
 		
 		Exception lastException = (Exception) request.getSession().getAttribute("ACEGI_SECURITY_LAST_EXCEPTION");
 		if(lastException != null ){
-			if (lastException instanceof ConcurrentLoginException) {
+			log.debug("exception " + lastException.getClass().getCanonicalName());
+			if (lastException instanceof AuthenticationException ) {//concurrent login exception
 				model.put("concurrentLoginException" , "true");
 			}else {
 				model.put("invalidUsernameOrPassword" , "true");

@@ -15,7 +15,7 @@
 			key="security.header.changeUserPassword" /></a></li>
 	</ul>
 	</li>
-	<li><a href="/Requests/security/logout.html"><fmt:message
+	<li><a href="<c:url value="j_spring_security_logout"/>"><fmt:message
 		key="commons.menu.logout" /></a></li>
 </ul>
 <br style="clear: left" />

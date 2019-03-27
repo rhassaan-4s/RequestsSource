@@ -9,18 +9,19 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.HR.model.AInsuranceCala;
 import com._4s_.HR.model.HREmployee;
@@ -31,7 +32,6 @@ import com._4s_.HR.model.HRGeographicalDivision;
 import com._4s_.HR.model.HRGeographicalLevel;
 import com._4s_.HR.model.HRInternalDivision;
 import com._4s_.HR.model.HRInternalLevel;
-import com._4s_.HR.model.HRMonth;
 import com._4s_.HR.model.HRQualificationDivision;
 import com._4s_.HR.model.HRQualificationLevel;
 import com._4s_.HR.model.HRServiceLengthCalculation;
@@ -45,8 +45,9 @@ import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.restServices.json.AttendanceRequest;
 //import com._4s_.requestsApproval.model.TimeAttend;
 //import com._4s_.stores.model.ViewStoreCardItem;
-import com.crystaldecisions.proxy.remoteagent.ai;
 
+@Transactional
+@Repository
 public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements RequestsApprovalDAO {
 
 	public List getAllLeafs(final Class clazz){
@@ -688,6 +689,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		return  aicList;
 	}
 
+	@Transactional
 	public List getRequestsByDatePeriodAndRequestType(final Date fromDate, final Date toDate, final Long requestType){
 		Calendar cFrom= Calendar.getInstance();
 		cFrom.setTime(fromDate);
@@ -738,6 +740,347 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 
+	public List getRequests(Date fromDate, Date toDate, Long requestType,
+			Date exactFrom, Date exactTo, Date periodFrom, Date periodTo,
+			String empCode, String codeFrom, String codeTo, Long statusId) {
+		Calendar cFrom= Calendar.getInstance();
+		
+		Date dateFrom=null;
+		Date dateTo= null;
+		if (fromDate !=null) {
+			cFrom.setTime(fromDate);
+			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+			cFrom.set(Calendar.MINUTE, 0);
+			cFrom.set(Calendar.SECOND, 0);
+			dateFrom=cFrom.getTime();
+		}
+		
+		log.debug("------dateFrom---"+dateFrom);
+
+		Calendar cTo= Calendar.getInstance();
+		if (toDate!=null) {
+			cTo.setTime(toDate);
+			cTo.set(Calendar.HOUR_OF_DAY, 23);
+			cTo.set(Calendar.MINUTE, 59);
+			cTo.set(Calendar.SECOND, 59);
+			dateTo=cTo.getTime();
+		}
+		
+		log.debug("------dateTo---"+dateTo);
+		
+		Date exFrom=null;
+		Date exTo= null;
+		
+		if (exactFrom !=null) {
+			cFrom.setTime(exactFrom);
+			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+			cFrom.set(Calendar.MINUTE, 0);
+			cFrom.set(Calendar.SECOND, 0);
+			exFrom=cFrom.getTime();
+		}
+		
+		log.debug("------exFrom---"+exFrom);
+
+		if (exactTo!=null) {
+			cTo.setTime(exactTo);
+			cTo.set(Calendar.HOUR_OF_DAY, 23);
+			cTo.set(Calendar.MINUTE, 59);
+			cTo.set(Calendar.SECOND, 59);
+			exTo=cTo.getTime();
+		}
+		log.debug("------exTo---"+exTo);
+		
+		Date pFrom=null;
+		Date pTo= null;
+		
+		if (periodFrom !=null) {
+			cFrom.setTime(periodFrom);
+			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+			cFrom.set(Calendar.MINUTE, 0);
+			cFrom.set(Calendar.SECOND, 0);
+			pFrom=cFrom.getTime();
+		}
+		
+		log.debug("------pfrom---"+pFrom);
+
+		if (periodTo!=null) {
+			cTo.setTime(periodTo);
+			cTo.set(Calendar.HOUR_OF_DAY, 23);
+			cTo.set(Calendar.MINUTE, 59);
+			cTo.set(Calendar.SECOND, 59);
+			pTo=cTo.getTime();
+		}
+		log.debug("------Pto---"+pTo);
+		DateFormat format =	new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		
+		Map map = new HashMap();
+		List list =new ArrayList();
+	
+		
+		try {
+
+			Criteria criteria = getCurrentSession()
+					.createCriteria(LoginUsersRequests.class);
+			
+			///////////////////////////////////////////////////////////////////////
+			if (fromDate!=null && toDate!=null){
+				final Date startDate =(Date) format.parse(format.format(dateFrom));
+				final Date endDate = (Date)format.parse(format.format(dateTo));
+				criteria.add(Expression.ge("request_date", startDate));
+				criteria.add(Expression.le("request_date", endDate));
+			}
+			if (pFrom!=null && pTo!=null){
+				final Date startDate =(Date) format.parse(format.format(pFrom));
+				final Date endDate = (Date)format.parse(format.format(pTo));
+				criteria.add(Expression.ge("period_from", startDate));
+				criteria.add(Expression.le("period_from", endDate));
+			}
+			if (exactFrom!=null && exactTo!=null){
+				final Date startDate =(Date) format.parse(format.format(exFrom));
+				final Date endDate = (Date)format.parse(format.format(exTo));
+				criteria.add(Expression.ge("from_date", startDate));
+				criteria.add(Expression.le("fromDate", endDate));
+			}
+			/////////////////////////////////////////////////////////////////////////////////
+			if(requestType!=null) {
+				if (requestType.equals(1)){
+					criteria.add(Restrictions.or(
+							Restrictions.eq("request_id.id", requestType),
+							Restrictions.eq("request_id.id", 4))
+							);
+				} else {
+					criteria.add(Restrictions.eq("request_id.id", requestType));
+				}
+			}
+			/////////////////////////////////////////////////////////////////////////////////
+			if (empCode!=null && !empCode.isEmpty()) {
+				criteria.add(Restrictions.eq("empCode", empCode));
+			}
+			////////////////////////////////////////////////////////////////////////////////
+			if (codeFrom!=null && !codeFrom.isEmpty() && codeTo!=null && !codeTo.isEmpty()) {
+				criteria.add(Restrictions.between("empCode", codeFrom, codeTo));
+			}
+			///////////////////////////////////////////////////////////////////////////////
+			if (statusId!=null) {
+				criteria.add(Restrictions.eq("approved", statusId));
+			}
+			///////////////////////////////////////////////////////////////////////////////
+			
+			criteria.addOrder(Property.forName("period_from").asc());
+			criteria
+			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			list =  criteria.list();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return list;
+	
+	}
+
+
+	public Map getPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, final int pageNumber, final int pageSize)  {
+		Calendar cFrom= Calendar.getInstance();
+		
+		Date dateFrom=null;
+		Date dateTo= null;
+		if (fromDate !=null) {
+			cFrom.setTime(fromDate);
+			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+			cFrom.set(Calendar.MINUTE, 0);
+			cFrom.set(Calendar.SECOND, 0);
+			dateFrom=cFrom.getTime();
+		}
+		
+		log.debug("------dateFrom---"+dateFrom);
+
+		Calendar cTo= Calendar.getInstance();
+		if (toDate!=null) {
+			cTo.setTime(toDate);
+			cTo.set(Calendar.HOUR_OF_DAY, 23);
+			cTo.set(Calendar.MINUTE, 59);
+			cTo.set(Calendar.SECOND, 59);
+			dateTo=cTo.getTime();
+		}
+		
+		log.debug("------dateTo---"+dateTo);
+		
+		Date exFrom=null;
+		Date exTo= null;
+		
+		if (fromDate !=null) {
+			cFrom.setTime(exactFrom);
+			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+			cFrom.set(Calendar.MINUTE, 0);
+			cFrom.set(Calendar.SECOND, 0);
+			exFrom=cFrom.getTime();
+		}
+		
+		log.debug("------exFrom---"+exFrom);
+
+		if (toDate!=null) {
+			cTo.setTime(exactTo);
+			cTo.set(Calendar.HOUR_OF_DAY, 23);
+			cTo.set(Calendar.MINUTE, 59);
+			cTo.set(Calendar.SECOND, 59);
+			exTo=cTo.getTime();
+		}
+		log.debug("------exTo---"+exTo);
+		
+		Date pFrom=null;
+		Date pTo= null;
+		
+		if (fromDate !=null) {
+			cFrom.setTime(fromDate);
+			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+			cFrom.set(Calendar.MINUTE, 0);
+			cFrom.set(Calendar.SECOND, 0);
+			pFrom=cFrom.getTime();
+		}
+		
+		log.debug("------pfrom---"+pFrom);
+
+		if (toDate!=null) {
+			cTo.setTime(periodTo);
+			cTo.set(Calendar.HOUR_OF_DAY, 23);
+			cTo.set(Calendar.MINUTE, 59);
+			cTo.set(Calendar.SECOND, 59);
+			pTo=cTo.getTime();
+		}
+		log.debug("------Pto---"+pTo);
+		DateFormat format =	new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		
+		Map map = new HashMap();
+		List list =new ArrayList();
+		try {
+
+			Criteria criteria = getCurrentSession()
+					.createCriteria(LoginUsersRequests.class);
+			
+			///////////////////////////////////////////////////////////////////////
+			if (fromDate!=null && toDate!=null){
+				final Date startDate =(Date) format.parse(format.format(dateFrom));
+				final Date endDate = (Date)format.parse(format.format(dateTo));
+				criteria.add(Expression.ge("request_date", startDate));
+				criteria.add(Expression.le("request_date", endDate));
+			}
+			if (pFrom!=null && pTo!=null){
+				final Date startDate =(Date) format.parse(format.format(pFrom));
+				final Date endDate = (Date)format.parse(format.format(pTo));
+				criteria.add(Expression.ge("period_from", startDate));
+				criteria.add(Expression.le("period_from", endDate));
+			}
+			if (exactFrom!=null && exactTo!=null){
+				final Date startDate =(Date) format.parse(format.format(exFrom));
+				final Date endDate = (Date)format.parse(format.format(exTo));
+				criteria.add(Expression.ge("from_date", startDate));
+				criteria.add(Expression.le("fromDate", endDate));
+			}
+			/////////////////////////////////////////////////////////////////////////////////
+			if(requestType!=null) {
+				if (requestType.equals(1)){
+					criteria.add(Restrictions.or(
+							Restrictions.eq("request_id.id", requestType),
+							Restrictions.eq("request_id.id", 4))
+							);
+				} else {
+					criteria.add(Restrictions.eq("request_id.id", requestType));
+				}
+			}
+			/////////////////////////////////////////////////////////////////////////////////
+			if (empCode!=null && !empCode.isEmpty()) {
+				criteria.add(Restrictions.eq("empCode", empCode));
+			}
+			////////////////////////////////////////////////////////////////////////////////
+			if (codeFrom!=null && !codeFrom.isEmpty() && codeTo!=null && !codeTo.isEmpty()) {
+				criteria.add(Restrictions.between("empCode", codeFrom, codeTo));
+			}
+			///////////////////////////////////////////////////////////////////////////////
+			if (statusId!=null) {
+				criteria.add(Restrictions.eq("approved", statusId));
+			}
+			///////////////////////////////////////////////////////////////////////////////
+			
+			criteria.addOrder(Property.forName("period_from").asc());
+			criteria
+			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			criteria.setProjection(Projections.projectionList().add(Projections.rowCount()));
+			list = (List)criteria.list();
+			map.put("listSize", criteria.list().iterator().next());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		try {
+
+			Criteria criteria = getCurrentSession()
+					.createCriteria(LoginUsersRequests.class);
+			
+			///////////////////////////////////////////////////////////////////////
+			if (fromDate!=null && toDate!=null){
+				final Date startDate =(Date) format.parse(format.format(dateFrom));
+				final Date endDate = (Date)format.parse(format.format(dateTo));
+				criteria.add(Expression.ge("request_date", startDate));
+				criteria.add(Expression.le("request_date", endDate));
+			}
+			if (pFrom!=null && pFrom!=null){
+				final Date startDate =(Date) format.parse(format.format(pFrom));
+				final Date endDate = (Date)format.parse(format.format(pTo));
+				criteria.add(Expression.ge("period_from", startDate));
+				criteria.add(Expression.le("period_from", endDate));
+			}
+			if (exactFrom!=null && exactTo!=null){
+				final Date startDate =(Date) format.parse(format.format(exFrom));
+				final Date endDate = (Date)format.parse(format.format(exTo));
+				criteria.add(Expression.ge("from_date", startDate));
+				criteria.add(Expression.le("fromDate", endDate));
+			}
+			/////////////////////////////////////////////////////////////////////////////////
+			if(requestType!=null) {
+				if (requestType.equals(1)){
+					criteria.add(Restrictions.or(
+							Restrictions.eq("request_id.id", requestType),
+							Restrictions.eq("request_id.id", 4))
+							);
+				} else {
+					criteria.add(Restrictions.eq("request_id.id", requestType));
+				}
+			}
+			/////////////////////////////////////////////////////////////////////////////////
+			if (empCode!=null && !empCode.isEmpty()) {
+				criteria.add(Restrictions.eq("empCode", empCode));
+			}
+			////////////////////////////////////////////////////////////////////////////////
+			if (codeFrom!=null && !codeFrom.isEmpty() && codeTo!=null && !codeTo.isEmpty()) {
+				criteria.add(Restrictions.between("empCode", codeFrom, codeTo));
+			}
+			///////////////////////////////////////////////////////////////////////////////
+			if (statusId!=null) {
+				criteria.add(Restrictions.eq("approved", statusId));
+			}
+			///////////////////////////////////////////////////////////////////////////////
+			
+			criteria.addOrder(Property.forName("period_from").asc());
+			criteria
+			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			criteria.setFirstResult(pageNumber * pageSize);
+			criteria.setMaxResults(pageSize);	
+			map.put("results", criteria.list());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return map;
+	}
+
+
+
+	
 	public List getRequestsByExactDatePeriodAndRequestType(final Date fromDate, final Date toDate, final Long requestType){
 		Calendar cFrom= Calendar.getInstance();
 		cFrom.setTime(fromDate);
@@ -1177,7 +1520,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		Criteria criteria = getCurrentSession()
 				.createCriteria(LoginUsersRequests.class);
 		criteria.add(Restrictions.between("empCode", codeFrom, codeTo));
-		criteria.addOrder(Property.forName("period_from").asc());
+//		criteria.addOrder(Property.forName("period_from").asc());
 		//copied from lehaa////////////////////////////////////////
 		criteria.addOrder(Property.forName("period_from").asc());
 		//////////////////////////////////////////////////////

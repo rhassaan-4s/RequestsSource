@@ -2,27 +2,23 @@ package com._4s_.requestsApproval.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.HR.model.HREmployee;
 import com._4s_.HR.model.HRGeographicalLevel;
 import com._4s_.HR.model.HRInternalDivision;
 import com._4s_.HR.model.HRInternalLevel;
-import com._4s_.HR.model.HRMonth;
 import com._4s_.HR.model.HRQualificationDivision;
 import com._4s_.HR.model.HRQualificationLevel;
 import com._4s_.HR.model.HRSpecialtyDivision;
 import com._4s_.HR.model.HRSpecialtyLevel;
 import com._4s_.HR.model.HRVacation;
-import com._4s_.HR.model.HRYear;
 import com._4s_.common.dao.BaseDAO;
 import com._4s_.restServices.json.AttendanceRequest;
 
-
+@Transactional
 public interface RequestsApprovalDAO extends BaseDAO {
 	
 	public List getRoot(final String className);
@@ -63,6 +59,10 @@ public interface RequestsApprovalDAO extends BaseDAO {
 	public List getFilteredGroupedAInsuranceCala(final String month, final String year, final String insurance, final String emp_code, final String empName, final String insuranceNo, final String subscriptionDate, final String groupBy);
 	
 	public List getRequestsByDatePeriodAndRequestType(final Date fromDate,final Date toDate, Long requestType);
+	public List getRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId);
+	public Map getPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, final int pageNumber, final int pageSize);
 	public List getRequestsByExactDatePeriodAndRequestType(Date fromDate, Date toDate, Long requestType);
 	public List getRequestsByDatePeriod(final Date fromDate, final Date toDate);
 	public List getRequestsByExactDatePeriod(final Date fromDate, final Date toDate);

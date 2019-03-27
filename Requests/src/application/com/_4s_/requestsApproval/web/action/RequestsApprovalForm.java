@@ -290,13 +290,16 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 				Date from_date = requestInfo.getFrom_date();
 				log.debug("from_date " + from_date);
 				log.debug("emp code " + requestInfo.getEmpCode());
-				Long vacLimit = requestsApprovalManager.getVacationLimit(requestInfo.getEmpCode(), Long.parseLong(reqId), vacId, from_date);
-				Long vacConsumed = requestsApprovalManager.getEmpVacation(requestInfo.getEmpCode(), Long.parseLong(reqId), vacId, from_date);
-				Long vacCredit = vacLimit - vacConsumed;
-				
-				model.put("vacLimit", vacLimit);
-				model.put("vacConsumed", vacConsumed);
-				model.put("vacCredit", vacCredit);
+				if (from_date!=null){
+					Long vacLimit = requestsApprovalManager.getVacationLimit(requestInfo.getEmpCode(), Long.parseLong(reqId), vacId, from_date);
+					Long vacConsumed = requestsApprovalManager.getEmpVacation(requestInfo.getEmpCode(), Long.parseLong(reqId), vacId, from_date);
+					Long vacCredit = vacLimit - vacConsumed;
+
+					model.put("vacLimit", vacLimit);
+					model.put("vacConsumed", vacConsumed);
+					model.put("vacCredit", vacCredit);
+				}
+
 			}
 			log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			
@@ -379,8 +382,6 @@ log.debug("requestOb " + requestOb);
 		log.debug("requestOb 2 " + requestOb);
 		empReqTypeAcc = (EmpReqTypeAcc) requestsApprovalManager.getObject(
 				EmpReqTypeAcc.class, new Long(accId));
-//		loginUsers = (LoginUsers) requestsApprovalManager.getObjectByParameter(
-//				LoginUsers.class, "empCode", empCode);
 
 		EmpReqApproval empReqApproval = new EmpReqApproval();
 

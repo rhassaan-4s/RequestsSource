@@ -2,14 +2,19 @@ package com._4s_.requestsApproval.service;
 
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.HR.model.HREmployee;
 import com._4s_.HR.model.HRGeographicalDivision;
@@ -21,17 +26,27 @@ import com._4s_.HR.model.HRQualificationLevel;
 import com._4s_.HR.model.HRSpecialtyDivision;
 import com._4s_.HR.model.HRSpecialtyLevel;
 import com._4s_.HR.model.HRVacation;
+import com._4s_.common.model.Employee;
 import com._4s_.common.model.LastSequence;
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.BaseManagerImpl;
 import com._4s_.common.service.SequenceManager;
+import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.requestsApproval.dao.ExternalQueries;
 import com._4s_.requestsApproval.dao.RequestsApprovalDAO;
+import com._4s_.requestsApproval.model.AccessLevels;
+import com._4s_.requestsApproval.model.EmpReqApproval;
+import com._4s_.requestsApproval.model.EmpReqTypeAcc;
+import com._4s_.requestsApproval.model.LoginUsers;
+import com._4s_.requestsApproval.model.LoginUsersRequests;
+import com._4s_.restServices.json.RequestApproval;
+import com._4s_.restServices.json.RestStatus;
 import com.ibm.icu.util.Calendar;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
 
-
+@Service
+@Transactional
 public class RequestsApprovalManagerImpl extends BaseManagerImpl implements RequestsApprovalManager{
 
 
@@ -372,6 +387,17 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		return  requestsApprovalDAO.getRequestsByDatePeriodAndRequestType(fromDate, toDate,requestType);
 		
 	}
+	public Map getPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, final int pageNumber, final int pageSize){
+		return  requestsApprovalDAO.getPagedRequests(fromDate, toDate,requestType,exactFrom,exactTo, periodFrom, periodTo, empCode, codeFrom, codeTo, statusId, pageNumber, pageSize);
+		
+	}
+	
+	public List getRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId){
+		return  requestsApprovalDAO.getRequests(fromDate, toDate,requestType,exactFrom,exactTo, periodFrom, periodTo, empCode, codeFrom, codeTo, statusId);
+		
+	}
 	public List getRequestsByExactDatePeriodAndRequestType(Date fromDate, Date toDate, Long requestType){
 		return requestsApprovalDAO.getRequestsByExactDatePeriodAndRequestType(fromDate, toDate, requestType);
 	}
@@ -552,4 +578,884 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		return externalQueries.getSalaryFromDay(hostName, serviceName, userName, password);
 	}
 
+	public List getRequestsForApprovalList(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
+			String requestType, String codeFrom, String codeTo, String statusId) {
+
+		MultiCalendarDate mCalDate = new MultiCalendarDate();
+		List loginUserReqs = new ArrayList();
+		if (requestType!= null && !requestType.isEmpty() && requestNumber!=null && !requestNumber.isEmpty()){
+			if (dateFrom != null && dateTo != null){
+				if (!dateFrom.equals("") && !dateTo.equals("") ) {
+					
+					Date fromDate = null;
+					Date toDate = null;
+					log.debug(">>>>>>>>>>>>> if ");
+					log.debug(">>>>>>>>>>>Valid date format");
+					log.debug(">>>>>>>>>>>>>fromDateString "+ dateFrom);
+					//fromDateStr = fromDateString +" 00:00";
+					mCalDate.setDateTimeString(dateFrom,new Boolean(true));
+					fromDate = mCalDate.getDate();
+					log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
+					log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
+					//toDateStr = toDateString+ " 23:59";
+					mCalDate.setDateTimeString(dateTo,new Boolean(false));
+					toDate= mCalDate.getDate();
+					log.debug(">>>>>>>>>>>>>toDate "+ toDate);
+					
+					loginUserReqs= getRequests(fromDate, toDate,Long.parseLong(requestType),null,null,null,null,null,null,null,null);
+					log.debug("--dateList.size--"+loginUserReqs.size());
+					//model.put("loginUserReqs", loginUserReqs);
+					return loginUserReqs;
+				}
+			}
+			
+			
+			if (exactDateFrom != null && exactDateTo != null){
+				if (!exactDateFrom.equals("") && !exactDateTo.equals("") ) {
+					
+					Date fromDate = null;
+					Date toDate = null;
+					log.debug(">>>>>>>>>>>>> if ");
+					log.debug(">>>>>>>>>>>Valid date format");
+					log.debug(">>>>>>>>>>>>>fromDateString "+ exactDateFrom);
+					//fromDateStr = fromDateString +" 00:00";
+					mCalDate.setDateTimeString(exactDateFrom,new Boolean(true));
+					fromDate = mCalDate.getDate();
+					log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
+					log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
+					//toDateStr = toDateString+ " 23:59";
+					mCalDate.setDateTimeString(dateTo,new Boolean(false));
+					toDate= mCalDate.getDate();
+					log.debug(">>>>>>>>>>>>>toDate "+ toDate);
+					
+					loginUserReqs=getRequests(null,null,Long.parseLong(requestType),fromDate, toDate,null,null,null,null,null,null);
+					log.debug("--dateList.size--"+loginUserReqs.size());
+					//model.put("loginUserReqs", loginUserReqs);
+					return loginUserReqs;
+				}
+			}
+			
+			
+			
+		}
+		
+		if(emp_code!=null && !emp_code.equals("")){
+			log.debug("---xxxxxxxCodeName--");
+			if(isOnlyNumbers(emp_code) && (getObjectByParameter(LoginUsers.class, "empCode", emp_code)!=null && !getObjectByParameter(LoginUsers.class, "empCode", emp_code).equals(""))){
+				LoginUsers loginUser=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp_code);
+				log.debug("--loginUser.getName()--"+loginUser.getName());
+
+				// to get requests corresponding to request type
+				List<String>list=new ArrayList<String>();
+				list.add("period_from");
+				
+//				loginUserReqs=(List) getObjectsByParameterOrderedByFieldList(LoginUsersRequests.class, "login_user", loginUser, list);
+				loginUserReqs = getRequests(null,null,new Long(requestType),null,null,null,null,emp_code,null,null,null);
+				
+				return loginUserReqs;
+				
+//				List neededRequestTypes = new ArrayList();
+//				for(int i=0;i<loginUserReqs.size();i++){
+//					log.debug("---needed---");
+//					LoginUsersRequests reqs= (LoginUsersRequests) loginUserReqs.get(i);
+//					log.debug("---needed reqs---"+reqs.getEmpCode()+"----reqs.getRequest_id().getId()--"+reqs.getRequest_id().getId());
+//					String request_type=Long.toString(reqs.getRequest_id().getId());
+//					log.debug("-----requestType.equals(reqs.getRequest_id().getId())----"+requestType.equals(reqs.getRequest_id().getId()));
+//					
+//					log.debug("-X--requestType.equals(request_type)--"+requestType.equals(request_type));
+//					if(requestType.equals(request_type)){
+//						neededRequestTypes.add(reqs);
+//						log.debug("---neededList---"+neededRequestTypes.size());
+//					}
+//					log.debug("---after IF neededList---"+neededRequestTypes.size());				
+//				}
+////				log.debug("--list.size--"+neededRequestTypes.size());
+//				return neededRequestTypes;
+				//model.put("loginUserReqs", neededRequestTypes);
+			}
+
+		}
+		
+		
+		if(codeFrom!=null && codeTo!=null && !codeFrom.equals("")&& !codeTo.equals("")){
+			loginUserReqs=getRequests(null, null, null, null, null, null, null, null, codeFrom, codeTo, null);
+			log.debug("---codesList---"+loginUserReqs.size());
+//			for (int i = 0; i < loginUserReqs.size(); i++) {
+//				LoginUsersRequests s=(LoginUsersRequests) loginUserReqs.get(i);
+//				log.debug("---code code---"+s.getEmpCode());
+//			}
+			return loginUserReqs;
+		}
+		
+		if (dateFrom != null && dateTo != null){
+			if (!dateFrom.equals("") && !dateTo.equals("") ) {
+				
+				Date fromDate = null;
+				Date toDate = null;
+				log.debug(">>>>>>>>>>>>> if ");
+				log.debug(">>>>>>>>>>>Valid date format");
+				log.debug(">>>>>>>>>>>>>fromDateString "+ dateFrom);
+				//fromDateStr = fromDateString +" 00:00";
+				mCalDate.setDateTimeString(dateFrom,new Boolean(true));
+				fromDate = mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
+				log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
+				//toDateStr = toDateString+ " 23:59";
+				mCalDate.setDateTimeString(dateTo,new Boolean(false));
+				toDate= mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>toDate "+ toDate);
+				
+				loginUserReqs=getRequests(fromDate, toDate, new Long(requestType), null, null, null,null, null, null, null, null);
+				log.debug("--dateList.size--"+loginUserReqs.size());
+				//model.put("loginUserReqs", loginUserReqs);
+				return loginUserReqs;
+			}
+		}
+		
+		if (exactDateFrom != null && exactDateTo != null){
+			if (!exactDateFrom.equals("") && !exactDateTo.equals("") ) {
+				
+				Date fromDate = null;
+				Date toDate = null;
+				log.debug(">>>>>>>>>>>>> if ");
+				log.debug(">>>>>>>>>>>Valid date format");
+				log.debug(">>>>>>>>>>>>>fromDateString "+ exactDateFrom);
+				//fromDateStr = fromDateString +" 00:00";
+				mCalDate.setDateTimeString(exactDateFrom,new Boolean(true));
+				fromDate = mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
+				log.debug(">>>>>>>>>>>>>toDateString "+ exactDateTo);
+				//toDateStr = toDateString+ " 23:59";
+				mCalDate.setDateTimeString(exactDateTo,new Boolean(false));
+				toDate= mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>exactDateTo "+ toDate);
+				
+//				loginUserReqs=getPagedRequestsByExactDatePeriodAndRequestType(fromDate, toDate,Long.parseLong(requestType),pageNumber,pageSize);
+				loginUserReqs = getRequests(fromDate, toDate, new Long(requestType), null, null, null, null, null, null, null, null);
+				log.debug("--dateList.size--"+loginUserReqs.size());
+				//model.put("loginUserReqs", loginUserReqs);
+				return loginUserReqs;
+			}
+		}
+		
+		
+		
+		if(emp_code!=null  && dateFrom!=null && dateTo!=null && codeFrom!=null && codeTo!=null && statusId!=null){
+			if((emp_code.equals(""))&&(dateFrom.equals(""))&&(dateTo.equals(""))&&(codeTo.equals(""))&&(codeFrom.equals(""))&&(statusId.equals(""))){
+				loginUserReqs= getRequests(null,null, Long.parseLong(requestType),null,null,null,null,null,null,null,null);
+				//model.put("loginUserReqs", allRequests);
+				return loginUserReqs;
+			}
+		}
+		
+		
+		
+		
+		if(emp_code!=null  && dateFrom!=null && dateTo!=null){
+			if((!emp_code.equals(""))&&(!dateFrom.equals(""))&&(!dateTo.equals(""))){
+				
+				Date fromDate = null;
+				Date toDate = null;
+				mCalDate.setDateTimeString(dateFrom,new Boolean(true));
+				fromDate = mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
+				log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
+				//toDateStr = toDateString+ " 23:59";
+				mCalDate.setDateTimeString(dateTo,new Boolean(false));
+				toDate= mCalDate.getDate();
+			
+//				loginUserReqs= getPagedRequestsByDatePeriodAndRequestTypeAndEmpCode(fromDate, toDate, new Long(requestType), emp_code,pageNumber,pageSize);
+				loginUserReqs= getRequests( null,null,new Long(requestType), fromDate, toDate,null,null,emp_code,null,null,null);
+				//model.put("loginUserReqs", allRequests);
+				return loginUserReqs;
+			}
+		}
+		
+		if(emp_code!=null  && exactDateFrom!=null && exactDateTo!=null){
+			if((!emp_code.equals(""))&&(!exactDateFrom.equals(""))&&(!exactDateTo.equals(""))){
+				
+				Date fromDate = null;
+				Date toDate = null;
+				mCalDate.setDateTimeString(exactDateFrom,new Boolean(true));
+				fromDate = mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
+				log.debug(">>>>>>>>>>>>>toDateString "+ exactDateTo);
+				//toDateStr = toDateString+ " 23:59";
+				mCalDate.setDateTimeString(exactDateTo,new Boolean(false));
+				toDate= mCalDate.getDate();
+			
+//				loginUserReqs= getPagedRequestsByExactDatePeriodAndRequestTypeAndEmpCode(fromDate, toDate, new Long(requestType), emp_code,pageNumber,pageSize);
+				loginUserReqs= getRequests( null,null,new Long(requestType), fromDate, toDate,null,null,emp_code,null,null,null);
+				//model.put("loginUserReqs", allRequests);
+				return loginUserReqs;
+			}
+		}
+		
+		//Lotus //////////////////////////////////
+		List list=new ArrayList();
+		list.add("empCode");
+		/////////////////////////////////////////
+		
+		if(statusId!=null && !statusId.equals("")){
+//			loginUserReqs=getObjectsByTwoParametersOrderedByFieldList(LoginUsersRequests.class, "approved", new Long(statusId),"request_id.id",new Long(requestType),list);
+			loginUserReqs = getRequests(null, null, null, null, null, null, null, null, null, null, new Long(statusId));
+			//model.put("loginUserReqs", allRequests);
+			return loginUserReqs;
+		}
+		return loginUserReqs;
+	}
+	
+	public Map getRequestsForApproval(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
+			String requestType, String codeFrom, String codeTo, String statusId, int pageNumber, int pageSize) {
+		MultiCalendarDate mCalDate = new MultiCalendarDate();
+		Map loginUserReqs = new HashMap();
+		if (requestType!= null && !requestType.isEmpty() && requestNumber!=null && !requestNumber.isEmpty()){
+			if (dateFrom != null && dateTo != null){
+				if (!dateFrom.equals("") && !dateTo.equals("") ) {
+					
+					Date fromDate = null;
+					Date toDate = null;
+					log.debug(">>>>>>>>>>>>> if ");
+					log.debug(">>>>>>>>>>>Valid date format");
+					log.debug(">>>>>>>>>>>>>fromDateString "+ dateFrom);
+					//fromDateStr = fromDateString +" 00:00";
+					mCalDate.setDateTimeString(dateFrom,new Boolean(true));
+					fromDate = mCalDate.getDate();
+					log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
+					log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
+					//toDateStr = toDateString+ " 23:59";
+					mCalDate.setDateTimeString(dateTo,new Boolean(false));
+					toDate= mCalDate.getDate();
+					log.debug(">>>>>>>>>>>>>toDate "+ toDate);
+					
+					loginUserReqs= getPagedRequests(fromDate, toDate,Long.parseLong(requestType),null,null,null,null,null,null,null,null,pageNumber,pageSize);
+					log.debug("--dateList.size--"+loginUserReqs.size());
+					//model.put("loginUserReqs", loginUserReqs);
+					return loginUserReqs;
+				}
+			}
+			
+			
+			if (exactDateFrom != null && exactDateTo != null){
+				if (!exactDateFrom.equals("") && !exactDateTo.equals("") ) {
+					
+					Date fromDate = null;
+					Date toDate = null;
+					log.debug(">>>>>>>>>>>>> if ");
+					log.debug(">>>>>>>>>>>Valid date format");
+					log.debug(">>>>>>>>>>>>>fromDateString "+ exactDateFrom);
+					//fromDateStr = fromDateString +" 00:00";
+					mCalDate.setDateTimeString(exactDateFrom,new Boolean(true));
+					fromDate = mCalDate.getDate();
+					log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
+					log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
+					//toDateStr = toDateString+ " 23:59";
+					mCalDate.setDateTimeString(dateTo,new Boolean(false));
+					toDate= mCalDate.getDate();
+					log.debug(">>>>>>>>>>>>>toDate "+ toDate);
+					
+					loginUserReqs=getPagedRequests(null,null,Long.parseLong(requestType),fromDate, toDate,null,null,null,null,null,null,pageNumber,pageSize);
+					log.debug("--dateList.size--"+loginUserReqs.size());
+					//model.put("loginUserReqs", loginUserReqs);
+					return loginUserReqs;
+				}
+			}
+			
+			
+			
+		}
+		
+		if(emp_code!=null && !emp_code.equals("")){
+			log.debug("---xxxxxxxCodeName--");
+			if(isOnlyNumbers(emp_code) && (getObjectByParameter(LoginUsers.class, "empCode", emp_code)!=null && !getObjectByParameter(LoginUsers.class, "empCode", emp_code).equals(""))){
+				LoginUsers loginUser=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp_code);
+				log.debug("--loginUser.getName()--"+loginUser.getName());
+
+				// to get requests corresponding to request type
+				List<String>list=new ArrayList<String>();
+				list.add("period_from");
+				
+//				loginUserReqs=(List) getObjectsByParameterOrderedByFieldList(LoginUsersRequests.class, "login_user", loginUser, list);
+				loginUserReqs = getPagedRequests(null,null,new Long(requestType),null,null,null,null,emp_code,null,null,null,pageNumber,pageSize);
+				
+				return loginUserReqs;
+				
+//				List neededRequestTypes = new ArrayList();
+//				for(int i=0;i<loginUserReqs.size();i++){
+//					log.debug("---needed---");
+//					LoginUsersRequests reqs= (LoginUsersRequests) loginUserReqs.get(i);
+//					log.debug("---needed reqs---"+reqs.getEmpCode()+"----reqs.getRequest_id().getId()--"+reqs.getRequest_id().getId());
+//					String request_type=Long.toString(reqs.getRequest_id().getId());
+//					log.debug("-----requestType.equals(reqs.getRequest_id().getId())----"+requestType.equals(reqs.getRequest_id().getId()));
+//					
+//					log.debug("-X--requestType.equals(request_type)--"+requestType.equals(request_type));
+//					if(requestType.equals(request_type)){
+//						neededRequestTypes.add(reqs);
+//						log.debug("---neededList---"+neededRequestTypes.size());
+//					}
+//					log.debug("---after IF neededList---"+neededRequestTypes.size());				
+//				}
+////				log.debug("--list.size--"+neededRequestTypes.size());
+//				return neededRequestTypes;
+				//model.put("loginUserReqs", neededRequestTypes);
+			}
+
+		}
+		
+		
+		if(codeFrom!=null && codeTo!=null && !codeFrom.equals("")&& !codeTo.equals("")){
+			loginUserReqs=getPagedRequests(null, null, null, null, null, null, null, null, codeFrom, codeTo, null, pageNumber, pageSize);
+			log.debug("---codesList---"+loginUserReqs.size());
+//			for (int i = 0; i < loginUserReqs.size(); i++) {
+//				LoginUsersRequests s=(LoginUsersRequests) loginUserReqs.get(i);
+//				log.debug("---code code---"+s.getEmpCode());
+//			}
+			return loginUserReqs;
+		}
+		
+		if (dateFrom != null && dateTo != null){
+			if (!dateFrom.equals("") && !dateTo.equals("") ) {
+				
+				Date fromDate = null;
+				Date toDate = null;
+				log.debug(">>>>>>>>>>>>> if ");
+				log.debug(">>>>>>>>>>>Valid date format");
+				log.debug(">>>>>>>>>>>>>fromDateString "+ dateFrom);
+				//fromDateStr = fromDateString +" 00:00";
+				mCalDate.setDateTimeString(dateFrom,new Boolean(true));
+				fromDate = mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
+				log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
+				//toDateStr = toDateString+ " 23:59";
+				mCalDate.setDateTimeString(dateTo,new Boolean(false));
+				toDate= mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>toDate "+ toDate);
+				
+				loginUserReqs=getPagedRequests(null, null, new Long(requestType), null, null, fromDate, toDate, null, null, null, null, pageNumber, pageSize);
+				log.debug("--dateList.size--"+loginUserReqs.size());
+				//model.put("loginUserReqs", loginUserReqs);
+				return loginUserReqs;
+			}
+		}
+		
+		if (exactDateFrom != null && exactDateTo != null){
+			if (!exactDateFrom.equals("") && !exactDateTo.equals("") ) {
+				
+				Date fromDate = null;
+				Date toDate = null;
+				log.debug(">>>>>>>>>>>>> if ");
+				log.debug(">>>>>>>>>>>Valid date format");
+				log.debug(">>>>>>>>>>>>>fromDateString "+ exactDateFrom);
+				//fromDateStr = fromDateString +" 00:00";
+				mCalDate.setDateTimeString(exactDateFrom,new Boolean(true));
+				fromDate = mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
+				log.debug(">>>>>>>>>>>>>toDateString "+ exactDateTo);
+				//toDateStr = toDateString+ " 23:59";
+				mCalDate.setDateTimeString(exactDateTo,new Boolean(false));
+				toDate= mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>exactDateTo "+ toDate);
+				
+//				loginUserReqs=getPagedRequestsByExactDatePeriodAndRequestType(fromDate, toDate,Long.parseLong(requestType),pageNumber,pageSize);
+				loginUserReqs = getPagedRequests(fromDate, toDate, new Long(requestType), null, null, null, null, null, null, null, null, pageNumber, pageSize);
+				log.debug("--dateList.size--"+loginUserReqs.size());
+				//model.put("loginUserReqs", loginUserReqs);
+				return loginUserReqs;
+			}
+		}
+		
+		
+		
+		if(emp_code!=null  && dateFrom!=null && dateTo!=null && codeFrom!=null && codeTo!=null && statusId!=null){
+			if((emp_code.equals(""))&&(dateFrom.equals(""))&&(dateTo.equals(""))&&(codeTo.equals(""))&&(codeFrom.equals(""))&&(statusId.equals(""))){
+				loginUserReqs= getPagedRequests(null,null, Long.parseLong(requestType),null,null,null,null,null,null,null,null,pageNumber,pageSize);
+				//model.put("loginUserReqs", allRequests);
+				return loginUserReqs;
+			}
+		}
+		
+		
+		
+		
+		if(emp_code!=null  && dateFrom!=null && dateTo!=null){
+			if((!emp_code.equals(""))&&(!dateFrom.equals(""))&&(!dateTo.equals(""))){
+				
+				Date fromDate = null;
+				Date toDate = null;
+				mCalDate.setDateTimeString(dateFrom,new Boolean(true));
+				fromDate = mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
+				log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
+				//toDateStr = toDateString+ " 23:59";
+				mCalDate.setDateTimeString(dateTo,new Boolean(false));
+				toDate= mCalDate.getDate();
+			
+//				loginUserReqs= getPagedRequestsByDatePeriodAndRequestTypeAndEmpCode(fromDate, toDate, new Long(requestType), emp_code,pageNumber,pageSize);
+				loginUserReqs= getPagedRequests( null,null,new Long(requestType), fromDate, toDate,null,null,emp_code,null,null,null,pageNumber,pageSize);
+				//model.put("loginUserReqs", allRequests);
+				return loginUserReqs;
+			}
+		}
+		
+		if(emp_code!=null  && exactDateFrom!=null && exactDateTo!=null){
+			if((!emp_code.equals(""))&&(!exactDateFrom.equals(""))&&(!exactDateTo.equals(""))){
+				
+				Date fromDate = null;
+				Date toDate = null;
+				mCalDate.setDateTimeString(exactDateFrom,new Boolean(true));
+				fromDate = mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
+				log.debug(">>>>>>>>>>>>>toDateString "+ exactDateTo);
+				//toDateStr = toDateString+ " 23:59";
+				mCalDate.setDateTimeString(exactDateTo,new Boolean(false));
+				toDate= mCalDate.getDate();
+			
+//				loginUserReqs= getPagedRequestsByExactDatePeriodAndRequestTypeAndEmpCode(fromDate, toDate, new Long(requestType), emp_code,pageNumber,pageSize);
+				loginUserReqs= getPagedRequests( null,null,new Long(requestType), fromDate, toDate,null,null,emp_code,null,null,null,pageNumber,pageSize);
+				//model.put("loginUserReqs", allRequests);
+				return loginUserReqs;
+			}
+		}
+		
+		//Lotus //////////////////////////////////
+		List list=new ArrayList();
+		list.add("empCode");
+		/////////////////////////////////////////
+		
+		if(statusId!=null && !statusId.equals("")){
+//			loginUserReqs=getObjectsByTwoParametersOrderedByFieldList(LoginUsersRequests.class, "approved", new Long(statusId),"request_id.id",new Long(requestType),list);
+			loginUserReqs = getPagedRequests(null, null, null, null, null, null, null, null, null, null, new Long(statusId), pageNumber, pageSize);
+			//model.put("loginUserReqs", allRequests);
+			return loginUserReqs;
+		}
+		return loginUserReqs;
+	}
+
+	public static boolean isOnlyNumbers(String str){
+		for(int i = 0 ; i<str.length(); i++){
+			char ch = str.charAt(i);
+			if(ch < '0' || ch >'9'){ // not a character
+				return false;
+			}
+		}
+		return true;
+	}
+	
+
+	
+	public Map approvalsAccessLevels(RequestApproval approval, LoginUsersRequests requestInfo, Employee emp) {
+
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+//		Map model = new HashMap();
+		Map response = new HashMap();
+		
+		RestStatus restStatus = new RestStatus();
+		
+		List approvalList = new ArrayList();
+		
+		LoginUsers empInfo = new LoginUsers();
+		LoginUsers loginUsers = new LoginUsers();
+		
+		String status = null;
+		String accId = null;
+		String note = null;
+		String last = null;
+		
+		
+		Boolean lastOne = false;
+		Boolean done = false;
+		//String canCancel = null;
+		Long idToBeCanceled = null;
+		String cancelApproval = null;
+		if(approval.getApprove().equals("0")) {//reject
+			cancelApproval = "99";
+		}
+		
+		List empReqAcc = new ArrayList();
+		if (requestInfo != null) {
+			List<String> orderfieldList = new ArrayList();
+			orderfieldList.add(new String("order"));
+
+			empReqAcc = getObjectsByTwoParametersOrderedByFieldList(
+							EmpReqTypeAcc.class, "req_id", requestInfo
+									.getRequest_id(), "emp_id", requestInfo
+									.getLogin_user(), orderfieldList);
+			EmpReqApproval empReqApproval = null;
+
+			loginUsers=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+			Map approvalRequest = new HashMap();
+			List<String> ordered1= new ArrayList();
+			ordered1.add("emp_id");
+
+			
+			orderfieldList.clear();
+			orderfieldList.add(new String("level_id"));
+
+			String showbSubmit = "1";
+			last = "0";
+
+			log.debug("---- size of list empReqAcc---"+empReqAcc.size());
+			if(empReqAcc.size()>0){
+				log.debug("---- size of list---"+empReqAcc.size());
+			for (int i = 0; i < empReqAcc.size(); i++) {
+				log.debug("---- i fo2---"+i);
+				try {
+					
+					/**
+					 * Detect if access level is the last order
+					 **/
+					
+					if (i == (empReqAcc.size() - 1)){
+						last = "1";
+					}
+					else{
+						last="0";
+					}
+					/*************************************/
+
+					EmpReqTypeAcc temp = new EmpReqTypeAcc();
+					temp = (EmpReqTypeAcc) empReqAcc.get(i);
+					log.debug("-----temp id---"+temp.getId());
+					log.debug("-----temp group--"+temp.getGroup_id().getId());
+					
+					empReqApproval = (EmpReqApproval) getObjectByTwoObjects(EmpReqApproval.class,"level_id", temp, "req_id", requestInfo);
+					log.debug("------empreqapp-----"+empReqApproval.getId());
+					
+					log.debug("------id ele wafe2-----"+empReqApproval.getUser_id().getId());
+					
+					log.debug("------code ele wafe2-----"+empReqApproval.getUser_id().getEmpCode());
+//					model.put("approvedBy", empReqApproval.getUser_id().getEmpCode());
+					log.debug("------code ele da5el-----"+emp.getEmpCode());
+//					model.put("operator", emp.getEmpCode());
+					log.debug("---- i t7t---"+i);
+					log.debug("---i==empReqAcc.size()-1-------"+(i==empReqAcc.size()-1));
+					if((i+1)<empReqAcc.size() || (i==empReqAcc.size()-1)){
+						try{
+//							model.put("lastOne", "false");
+							lastOne = false;
+							EmpReqTypeAcc nextTemp=(EmpReqTypeAcc)empReqAcc.get(i+1);
+							log.debug("-----nextTemp id---"+nextTemp.getId());
+							log.debug("-----nextTemp group--"+nextTemp.getGroup_id().getId());
+							EmpReqApproval empReqApprovalNext= new EmpReqApproval();
+							empReqApprovalNext = (EmpReqApproval) getObjectByTwoObjects(EmpReqApproval.class,"level_id", nextTemp, "req_id", requestInfo);
+							log.debug("------empReqApprovalNext.getId()!null nor ''----");
+							log.debug("------empReqApprovalNext-----"+empReqApprovalNext.getId());
+//							model.put("lastOne", "false");
+							lastOne = false;
+						}
+						catch (Exception e) {
+//							model.put("lastOne", "false");
+							lastOne = false;
+							if(empReqApproval.getUser_id().getEmpCode().equals(emp.getEmpCode())){
+								log.debug("---empReqApproval.getReq_id().getPosted()---"+empReqApproval.getReq_id().getPosted());
+								if(empReqApproval.getReq_id().getPosted()==0){
+									idToBeCanceled=empReqApproval.getId();
+									log.debug("------idToBeCanceled-----"+idToBeCanceled);
+									approvalRequest.put("idToBeCanceled", idToBeCanceled);
+									log.debug("----catch----no empReqApprovalNext-----");
+									
+									log.debug("--------cancelApproval-before---"+cancelApproval);
+									if(cancelApproval!=null && !cancelApproval.equals("")){
+										log.debug("--------cancelApproval----"+cancelApproval);
+										removeObject(EmpReqApproval.class, idToBeCanceled);
+										log.debug("----true---");
+										requestInfo.setApproved(new Long(0));
+										log.debug("--requestInfo.getApproved()---"+requestInfo.getApproved());
+										log.debug("----true---after--");
+//										String done=request.getParameter("done");
+//										if(done!=null){
+//											model.put("done", done);
+											done = true;
+//										}
+									}
+								}
+								else{
+//									model.put("lastOne", "false");
+									lastOne = false;
+								}
+							}else{
+//								model.put("lastOne", "false");
+								lastOne = false;
+							}
+						}
+
+					}
+					else{
+//						model.put("lastOne", "false");
+						lastOne = false;
+					}
+					
+					approvalRequest = new HashMap();
+
+					approvalRequest.put("title", temp.getGroup_id().getTitle());
+					log.debug("-----title of group-----"+temp.getGroup_id().getTitle());
+					approvalRequest.put("id", temp.getId());
+					approvalRequest.put("status", empReqApproval.getApproval());
+					
+					///////////////////////////////////////////////////
+					status = empReqApproval.getApproval()+"";
+					///////////////////////////////////////////////////
+					
+					
+					log.debug("-----status-empReqApproval.getApproval()--"+empReqApproval.getApproval());
+					approvalRequest.put("user", empReqApproval.getUser_id().getName());
+					log.debug("-----user-----"+empReqApproval.getUser_id().getName());
+					approvalRequest.put("note", empReqApproval.getNote());
+					approvalList.add(approvalRequest);
+
+					/**
+					 * Detect if access level is finished to hide submit button
+					 ***/
+					if ((i == (empReqAcc.size() - 1))){
+						log.debug("-------last one---- & not posted");
+//						model.put("lastOne", "true");
+						lastOne = true;
+						showbSubmit = "0";
+						
+						restStatus.setStatus("false");
+						restStatus.setCode("309");
+						restStatus.setMessage("Request approvals had been finished");
+						response.put("Status", restStatus);
+						return response;
+					}else{
+//						model.put("lastOne", "false");
+						lastOne = false;
+					}
+					/**
+					 * Detect if last access level is rejected to hide submit
+					 * button
+					 **/
+					if (empReqApproval.getApproval() == 0) {
+						log.debug("---empReqApproval.getApproval() == 0----cancelApproval---"+cancelApproval);
+						if(requestInfo.getApproved()==0 && (cancelApproval==null || cancelApproval.equals(""))){
+							log.debug("------pproved=0-ddd--");
+							requestInfo.setApproved(new Long(99));
+						}
+						saveObject(requestInfo);
+						showbSubmit = "0";
+						restStatus.setStatus("false");
+						restStatus.setCode("310");
+						restStatus.setMessage("Request had already been rejected");
+						response.put("Status", restStatus);
+						return response;
+//						break;
+
+					}else if(i == (empReqAcc.size() - 1)){
+						log.debug("---last one ---cancelApproval-"+cancelApproval);
+						log.debug("--------requestInfo.getApproved()------"+requestInfo.getApproved());
+						if(requestInfo.getApproved()==0 && (cancelApproval==null || cancelApproval.equals(""))){
+							log.debug("------pproved=0---");
+							requestInfo.setApproved(new Long(1));
+						}
+						saveObject(requestInfo);
+					}
+				} catch (Exception e) {
+					log.debug("execption " + e);
+					e.printStackTrace();
+					
+					/**
+					 * Data of  user which will approve
+					 * button
+					 **/
+//					model.put("lastOne", "false");
+					lastOne = false;
+					EmpReqTypeAcc temp = new EmpReqTypeAcc();
+
+					temp = (EmpReqTypeAcc) empReqAcc.get(i);
+					log.debug("------catch temp ---"+temp.getGroup_id().getId());
+					log.debug("------catch title---"+temp.getGroup_id().getTitle());
+					
+					log.debug("level id " + temp.getGroup_id().getId() + " emp id " + loginUsers.getId());
+					List accessLevels= getObjectsByTwoParametersOrderedByFieldList(AccessLevels.class, "level_id",temp.getGroup_id() , "emp_id", loginUsers, ordered1);
+					log.debug("access levels size " + accessLevels.size());
+//					if(accessLevels.size()>0){
+						approvalRequest = new HashMap();
+
+						approvalRequest.put("title", temp.getGroup_id().getTitle());
+						
+						approvalRequest.put("id", temp.getId());
+						log.debug("------catch temp id---"+temp.getId());
+//					}
+					if(accessLevels.size()>0){
+						approvalRequest.put("user", loginUsers.getName());
+						log.debug("------catch if user---"+loginUsers.getName());
+						approvalRequest.put("status", "2");
+						
+						//////////////////////////////////////
+						status = "2";
+						/////////////////////////////////////
+						
+//						model.put("lastOne", "false");
+						lastOne = false;
+					}
+					else{
+						approvalRequest.put("user", loginUsers.getName());
+						log.debug("------catch else user---"+loginUsers.getName());
+						approvalRequest.put("status", "3");
+						
+						/////////////////////////////////////
+						status="3";
+						////////////////////////////////////
+						
+						showbSubmit = "0";
+//						model.put("lastOne", "false");
+						lastOne = false;
+						
+						restStatus.setStatus("false");
+						restStatus.setCode("308");
+						restStatus.setMessage("The logged in employee isn't privileged to approve this type of request");
+						response.put("Status", restStatus);
+						return response;
+					}
+					approvalList.add(approvalRequest);
+
+					break;
+
+				}
+			  }
+			}
+			else{
+				showbSubmit = "0";
+//				model.put("lastOne", "false");
+				lastOne = false;
+				
+				restStatus.setStatus("false");
+				restStatus.setCode("308");
+				restStatus.setMessage("The logged-in employee isn't priviledged to approve this type of requests");
+				response.put("Status", restStatus);
+				return response;
+			}
+			
+//			model.put("requestInfo", requestInfo);
+//			model.put("showbSubmit", showbSubmit);
+//			model.put("data", "1");
+//			model.put("last", last);
+//			model.put("requestType", requestType);
+			
+			
+//			requestInfo = (LoginUsersRequests) getObject(LoginUsersRequests.class, new Long(reqId));
+			log.debug("request+info " + requestInfo.getId());
+			
+			
+		} 
+//		else
+//			model.put("data", "0");
+		
+//		String errand=request.getParameter("errand");
+//		model.put("errand", errand);
+		
+		
+		
+//		model.put("approvalList", approvalList);
+
+		
+		
+		/////////////////////////////Submitting transaction///////////////////////////////////
+		
+		
+//		test="${record.status==0 && record.user==emp && done!='true' && posted!=1 && approvedBy==operator && approvedBy!='' 
+//		&&operator!='' && approvedBy!=null &&operator!=null}"
+		Iterator iter = approvalList.iterator();
+		log.debug("approval list size " + approvalList.size());
+		while (iter.hasNext()) {
+			Map  approvalRequest = (HashMap)iter.next();
+			status = (String)approvalRequest.get("status");
+			log.debug("status " + status);
+//			user = (String)approvalRequest.get("user"); //emp name
+			accId = approvalRequest.get("id")+"";
+			log.debug("acc id " + accId);
+			//record.status==2 && posted!=1
+			if (status!=null && !status.isEmpty() && status.equals("2") && (requestInfo.getPosted()==null || !requestInfo.getPosted().equals(new Long("1")))) {
+				LoginUsersRequests requestOb = requestInfo;
+				EmpReqTypeAcc empReqTypeAcc = new EmpReqTypeAcc();
+				log.debug("requestOb " + requestOb);
+				requestOb = requestInfo;
+				log.debug("requestOb 2 " + requestOb);
+//				List empReqAcc
+				empReqTypeAcc = (EmpReqTypeAcc) getObject(
+						EmpReqTypeAcc.class, new Long(accId));
+
+						EmpReqApproval empReqApproval = new EmpReqApproval();
+
+				empReqApproval.setApproval(new Integer(status));
+				empReqApproval.setReq_id(requestOb);
+				empReqApproval.setLevel_id(empReqTypeAcc);
+				empReqApproval.setUser_id(loginUsers);
+				empReqApproval.setNote(approval.getNotes());
+				empReqApproval.setApproval(new Integer(status));
+
+				saveObject(empReqApproval);
+				
+				
+				if(approval.getApprove().equals("0")){
+
+					requestOb.setApproved(new Long(99));
+
+					saveObject(requestOb);
+
+				}else {
+
+					requestOb.setApproved(new Long(1));
+					saveObject(requestOb);
+				}
+				
+				
+				restStatus.setStatus("true");
+				restStatus.setCode("200");
+				restStatus.setMessage("Successful Transaction");
+				response.put("Status", restStatus);
+				String errand ="";
+				if(requestOb.getVacation()!=null && !requestOb.getVacation().equals("")){
+					if(requestOb.getVacation().getVacation().equals("999")){
+						errand="true";
+					}
+				}
+				return response;
+			}
+		}
+		//////////////////////////////////////////////////////////////////////////////////////
+	
+		return response;
+		
+	}
+	
+	public Map getVacInfo(LoginUsersRequests requestInfo) {
+		Map model = new HashMap();
+		if (requestInfo!= null && requestInfo.getVacation()!=null){
+			String vacId =  requestInfo.getVacation().getVacation();
+			
+			log.debug("vac id " + vacId);
+		
+			Date from_date = requestInfo.getFrom_date();
+			if (from_date == null) {
+				from_date = requestInfo.getPeriod_from();
+			}
+			log.debug("from_date " + from_date);
+			
+			
+			log.debug("emp code " + requestInfo.getEmpCode());
+			
+			Long vacLimit = getVacationLimit(requestInfo.getEmpCode(), requestInfo.getId(), vacId, from_date);
+			Long vacConsumed = getEmpVacation(requestInfo.getEmpCode(), requestInfo.getId(), vacId, from_date);
+			Long vacCredit = vacLimit - vacConsumed;
+			
+			model.put("vacLimit", vacLimit);
+			model.put("vacConsumed", vacConsumed);
+			model.put("vacCredit", vacCredit);
+			RestStatus restStatus = new RestStatus();
+			restStatus.setStatus("true");
+			restStatus.setCode("200");
+			restStatus.setMessage("Successful Transaction");
+			model.put("Status", restStatus);
+			return model;
+		} else {
+			RestStatus restStatus = new RestStatus();
+			restStatus.setStatus("false");
+			restStatus.setCode("303");
+			restStatus.setMessage("Null/Empty input parameter");
+			model.put("Status", restStatus);
+			return model;
+		}
+	}
 }

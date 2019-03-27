@@ -13,8 +13,10 @@
 	
 	<tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager" />
   
-	<mvc:annotation-driven />
 	
+<mvc:annotation-driven/>
+    
+   
 	<!--  <bean id="requestsService" class="com._4s_.restServices.endpoint.RequestsServiceController" >
 	 
 	 </bean>-->

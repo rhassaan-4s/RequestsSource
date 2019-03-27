@@ -6,9 +6,10 @@ import java.util.Map;
 
 import org.hibernate.FlushMode;
 import org.hibernate.criterion.MatchMode;
+import org.springframework.transaction.annotation.Transactional;
 
 
-
+@Transactional
 public interface BaseDAO {
 
 	public abstract void saveObject(Object o);

@@ -1,15 +1,16 @@
 package com._4s_.security.service;
 
+import java.util.Collection;
 import java.util.Iterator;
 
-import org.acegisecurity.Authentication;
-import org.acegisecurity.ConfigAttribute;
-import org.acegisecurity.ConfigAttributeDefinition;
-import org.acegisecurity.context.SecurityContext;
-import org.acegisecurity.context.SecurityContextHolder;
-import org.acegisecurity.vote.AccessDecisionVoter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com._4s_.common.service.BaseManager;
 import com._4s_.security.model.User;
@@ -53,7 +54,7 @@ public class MyVoter implements AccessDecisionVoter {
 	}
 
 	public int vote(Authentication authentication, Object object,
-	        ConfigAttributeDefinition config) {
+			Collection config) {
 	        int result = ACCESS_ABSTAIN;
 	        SecurityContext sc = (SecurityContext) (SecurityContextHolder.getContext());
 			log.debug("------------------------------------------username:--- "
@@ -62,7 +63,7 @@ public class MyVoter implements AccessDecisionVoter {
 			User user = (User) baseManager.getObjectByParameter(User.class,
 					"username", username);
 			
-	        Iterator iter = config.getConfigAttributes();
+	        Iterator iter = config.iterator();
 
 	        while (iter.hasNext()) {
 	            ConfigAttribute attribute = (ConfigAttribute) iter.next();
@@ -71,10 +72,10 @@ public class MyVoter implements AccessDecisionVoter {
 	                result = ACCESS_DENIED;
 
 	                // Attempt to find a matching granted authority
-	                for (int i = 0; i < authentication.getAuthorities().length;
+	                for (int i = 0; i < authentication.getAuthorities().size();
 	                    i++) {
-	                    if (attribute.getAttribute().equals(authentication
-	                            .getAuthorities()[i].getAuthority())) {
+	                    if (attribute.getAttribute().equals(((GrantedAuthority)(authentication
+	                            .getAuthorities().toArray()[i])).getAuthority())) {
 	                        return ACCESS_GRANTED;
 	                    }
 	                }

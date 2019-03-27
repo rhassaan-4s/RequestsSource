@@ -2,9 +2,9 @@ package com._4s_.security.service;
 
 import javax.servlet.http.HttpSessionEvent;
 
-import org.acegisecurity.ui.session.HttpSessionEventPublisher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 public class MyHttpSessionEventPublisher extends HttpSessionEventPublisher {
     private static final Log log = LogFactory.getLog(MyHttpSessionEventPublisher.class);

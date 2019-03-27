@@ -29,6 +29,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 
 
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import com._4s_.common.util.Page;
 
 /**
@@ -40,6 +43,8 @@ import com._4s_.common.util.Page;
  *
  * @spring.property name="sessionFactory" ref="sessionFactory"
 **/
+@Transactional
+@Repository
 public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
     protected final Log log = LogFactory.getLog(getClass());
     
@@ -52,6 +57,7 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
          this.sessionFactory = sessionFactory;
     }
 
+    @Transactional
 	public Session getCurrentSession(){
 	      return sessionFactory.getCurrentSession();
 	}

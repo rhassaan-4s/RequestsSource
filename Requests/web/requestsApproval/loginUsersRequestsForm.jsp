@@ -587,7 +587,7 @@ function calculateDiff2(){
 										<option value=""><fmt:message key="commons.caption.select" /></option>						
 										<option value="0" ${status.value == "0" ? ' selected':''}><fmt:message key="requestsApproval.caption.special"/></option>
 										<option value="1" ${status.value == "1" ? ' selected':''}><fmt:message key="requestsApproval.caption.errand"/></option>
-										<option value="1" ${status.value == "2" ? ' selected':''}><fmt:message key="requestsApproval.caption.normal"/></option>
+										<option value="2" ${status.value == "2" ? ' selected':''}><fmt:message key="requestsApproval.caption.normal"/></option>
 									</select>
 								</spring:bind>
 							</td>

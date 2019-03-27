@@ -5,10 +5,18 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+//
+//import org.acegisecurity.GrantedAuthority;
+//import org.acegisecurity.context.SecurityContext;
+//import org.acegisecurity.context.SecurityContextHolder;
 
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.context.SecurityContext;
-import org.acegisecurity.context.SecurityContextHolder;
+
+
+
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com._4s_.common.service.BaseManager;
 import com._4s_.common.service.BaseManagerImpl;
@@ -268,7 +276,7 @@ public class MySecurityManagerImpl extends BaseManagerImpl implements
 
 	public boolean userHasAuthority(String authority) {
 		SecurityContext sc = (SecurityContext) (SecurityContextHolder.getContext());
-		GrantedAuthority[] allUserAuthorities =  sc.getAuthentication().getAuthorities();
+		GrantedAuthority[] allUserAuthorities =  (GrantedAuthority[])sc.getAuthentication().getAuthorities().toArray();
 		for(int i = 0 ; i < allUserAuthorities.length ; i++){
 			String authority_i =allUserAuthorities[i].getAuthority(); 
 //			log.fatal("allUserAuthorities["+i+"] : " + authority_i);

@@ -3,16 +3,15 @@ package com._4s_.security.web.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.acegisecurity.Authentication;
-import org.acegisecurity.concurrent.SessionRegistry;
-import org.acegisecurity.concurrent.SessionRegistryUtils;
-import org.acegisecurity.context.SecurityContext;
-import org.acegisecurity.context.SecurityContextHolder;
-import org.acegisecurity.providers.dao.cache.EhCacheBasedUserCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.cache.EhCacheBasedUserCache;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.view.RedirectView;
@@ -22,14 +21,14 @@ public class LogoutController implements Controller,ApplicationContextAware{
 	ApplicationContext applicationContext;
 	
 	
-	SessionRegistry sessionRegistry;
-	
-	public SessionRegistry getSessionRegistry() {
-		return sessionRegistry;
-	}
-	public void setSessionRegistry(SessionRegistry sessionRegistry) {
-		this.sessionRegistry = sessionRegistry;
-	}
+//	SessionRegistry sessionRegistry;
+//	
+//	public SessionRegistry getSessionRegistry() {
+//		return sessionRegistry;
+//	}
+//	public void setSessionRegistry(SessionRegistry sessionRegistry) {
+//		this.sessionRegistry = sessionRegistry;
+//	}
 	public ApplicationContext getApplicationContext() {
 		return applicationContext;
 	}
@@ -49,18 +48,19 @@ public class LogoutController implements Controller,ApplicationContextAware{
         this.sessionRegistry.removeSessionInformation(sessionId);
 		*/
 		
-		log.debug("sessionRegistry" + sessionRegistry);
-		
+//		log.debug("sessionRegistry" + sessionRegistry);
+//		
 		SecurityContext sc = (SecurityContext) (SecurityContextHolder.getContext());
-		if(sc != null){
-			log.debug("sc != null)");
-			Authentication authentication = sc.getAuthentication();
-			if(authentication!= null){
-				log.debug("authentication!= null");
-		        String sessionId = SessionRegistryUtils.obtainSessionIdFromAuthentication(authentication);
-		        this.sessionRegistry.removeSessionInformation(sessionId);
-			}
-		}
+//		if(sc != null){
+//			log.debug("sc != null)");
+//			Authentication authentication = sc.getAuthentication();
+//			if(authentication!= null){
+//				log.debug("authentication!= null");
+////		        String sessionId = SessionRegistryUtils.obtainSessionIdFromAuthentication(authentication)
+//				String sessionId = request.getSession().getId();
+//		        this.sessionRegistry.removeSessionInformation(sessionId);
+//			}
+//		}
 		
 		EhCacheBasedUserCache ehCacheBasedUserCache = (EhCacheBasedUserCache)applicationContext.getBean("userCache");
 		if(sc != null && sc.getAuthentication() != null && sc.getAuthentication().getName()!= null){
@@ -68,6 +68,8 @@ public class LogoutController implements Controller,ApplicationContextAware{
 		}
 		//sc.getAuthentication().
 		request.getSession().invalidate();
+		
+		
 		return new ModelAndView(new RedirectView("login.html"));
 		//return new ModelAndView("index");
 	}

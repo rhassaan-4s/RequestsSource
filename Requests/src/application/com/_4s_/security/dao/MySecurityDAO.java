@@ -19,5 +19,6 @@ public List getApplicationEmployees(final Long applicationId);
 public abstract List getEmployeesByBranchAndDepartmentAndStatus(String branchId, String departmentId, String status);
 public abstract List getUserByEmail(String email);
 public List getActiveApplications();
-public User login(String username, String password);
+public User login();
+public User getUser(String username);
 }

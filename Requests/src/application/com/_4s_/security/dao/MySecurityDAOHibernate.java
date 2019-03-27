@@ -1,26 +1,27 @@
 package com._4s_.security.dao;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
-import net.sf.acegisecurity.Authentication;
-import net.sf.acegisecurity.AuthenticationException;
-import net.sf.acegisecurity.AuthenticationManager;
-import net.sf.acegisecurity.providers.UsernamePasswordAuthenticationToken;
-import net.sf.acegisecurity.providers.encoding.PasswordEncoder;
+import javax.servlet.ServletException;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.hsqldb.lib.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.ModelAndView;
 
 import com._4s_.common.dao.BaseDAOHibernate;
 import com._4s_.common.model.Branch;
@@ -37,15 +38,37 @@ public class MySecurityDAOHibernate extends BaseDAOHibernate implements
 MySecurityDAO {
 
 //	@Autowired
-//	AuthenticationManager authenticationManager;
-//
-//	public AuthenticationManager getAuthenticationManager() {
-//		return authenticationManager;
-//	}
-//
-//	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-//		this.authenticationManager = authenticationManager;
-//	}
+	
+	@Autowired AuthenticationSuccessHandler successHandler;
+	@Autowired AuthenticationManager authenticationManager;  
+	@Autowired AuthenticationFailureHandler failureHandler;
+	
+
+	
+
+	public AuthenticationSuccessHandler getSuccessHandler() {
+		return successHandler;
+	}
+
+	public void setSuccessHandler(AuthenticationSuccessHandler successHandler) {
+		this.successHandler = successHandler;
+	}
+
+	public AuthenticationManager getAuthenticationManager() {
+		return authenticationManager;
+	}
+
+	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+		this.authenticationManager = authenticationManager;
+	}
+
+	public AuthenticationFailureHandler getFailureHandler() {
+		return failureHandler;
+	}
+
+	public void setFailureHandler(AuthenticationFailureHandler failureHandler) {
+		this.failureHandler = failureHandler;
+	}
 
 	public String getApplicationDefaultPage(Long applicationId) {
 		SecurityApplication application = (SecurityApplication)getObject(SecurityApplication.class,applicationId);;
@@ -149,29 +172,51 @@ MySecurityDAO {
 		return criteria.list();
 	}
 
-	public User login(String username, String password) {
+	public User login() {
 		// TODO Auto-generated method stub
-//		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-//		Authentication auth;
-//		log.debug("authenticating " + token);
-//		try {
-//			auth = authenticationManager.authenticate(token);
-//			log.debug("authenticated");
-//		} catch (AuthenticationException  e) {
-//			log.debug("not authenticated");
-//		} 
-		log.debug("authenticating ");
-//		Map m = new java.util.HashMap();
-//		m.put("j_username", username);
-//		m.put("j_password", password);
-//		
-//		ModelAndView model = new ModelAndView("../security/j_acegi_security_check",m);//j_username="+username+"&j_password="+password);
-//		log.debug("returned model " + model.getViewName());
-//		return model;
-		
-		Criteria criteria = getCurrentSession().createCriteria(User.class);
+		log.debug("login method in mysecuritydao");
+//		 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+////		    token.setDetails(new WebAuthenticationDetails(request));//if request is needed during authentication
+//		    Authentication auth = null;
+//		    log.debug("$$$$$$$$Trying to Authenticate: token = " + token);
+//		    try {
+//		    	log.debug("$$$$$$$$Trying to Authenticate");
+//		        auth = authenticationManager.authenticate(token);
+//		        log.debug("$$$$$$$$Authenticated");
+//		    } catch (AuthenticationException e) {
+//		        //if failureHandler exists  
+////		        try {
+////		            failureHandler.onAuthenticationFailure(request, response, e);
+//		        	log.debug("$$$$$$$$Authentication Exception");
+////		        } catch (IOException se) {
+////		            //ignore
+////		        } catch (ServletException xe) {
+////		        	//ignore
+////		        }
+////		        throw e;
+//		    } catch (Exception ex) {
+//		    	log.debug("$$$$$$$$Exception to Authenticate");
+////		    	ex.printStackTrace();
+//		    }
+//		    SecurityContext securityContext = SecurityContextHolder.getContext();
+//		    securityContext.setAuthentication(auth);
+		    
+		    
+//		    successHandler.onAuthenticationSuccess(request, response, auth);//if successHandler exists  
+		    //if user has a http session you need to save context in session for subsequent requests
+//		    HttpSession session = request.getSession(true);
+//		    session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+		    
+		log.debug("SecurityContextHolder.getContext().getAuthentication().getClass() " + SecurityContextHolder.getContext().getAuthentication().getClass());
+		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDet = (UserDetails)token.getPrincipal();
+		return getUser(userDet.getUsername());
+	}
+
+	public User getUser(String username) {
+		log.debug("token details " + username);
+	    Criteria criteria = getCurrentSession().createCriteria(User.class);
 		criteria.add(Restrictions.eq("username", username));
-		criteria.add(Restrictions.eq("password", password));
 		criteria.add(Restrictions.eq("isActive", new Boolean(true)));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		List list = criteria.list();

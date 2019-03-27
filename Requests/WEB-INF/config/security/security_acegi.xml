@@ -1,323 +1,445 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-    "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-<beans>
-	<bean id="securityEnforcementFilter"
-		class="org.acegisecurity.intercept.web.SecurityEnforcementFilter">
-		<property name="filterSecurityInterceptor">
-			<ref bean="securityInterceptor" />
-		</property>
-		<property name="authenticationEntryPoint">
-			<ref bean="authenticationEntryPoint" />
-		</property>
-	</bean>
+	<!-- Security 2.0 Spring (Migrating from acegi) -->
 
-	<bean id="securityInterceptor"
-		class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
-		<property name="authenticationManager">
-			<ref bean="authenticationManager" />
-		</property>
-		<property name="accessDecisionManager">
-			<ref bean="accessDecisionManager" />
-		</property>
+	<http pattern="/api/workflow/**" use-expressions="false"
+		auto-config="false" disable-url-rewriting="false"
+		entry-point-ref="restAuthenticationEntryPoint"
+		access-decision-manager-ref="accessDecisionManager">
 
-		<property name="objectDefinitionSource">
-			<value>
-				\A/common/commonAdminCountryCities.html.*\Z=CAN_VIEW_page_common_commonAdminCountryCities
-				\A/common/commonAdminEditCity.html.*\Z=CAN_VIEW_page_common_commonAdminEditCity
-				\A/common/commonAdminCountries.html.*\Z=CAN_VIEW_page_common_commonAdminCountries
-				\A/common/commonAdminEditCountry.html.*\Z=CAN_VIEW_page_common_commonAdminEditCountry
-				\A/common/commonAdminDepartments.html.*\Z=CAN_VIEW_page_common_commonAdminDepartments
-				\A/common/commonAdminEditDepartment.html.*\Z=CAN_VIEW_page_common_commonAdminEditDepartment
-				\A/common/commonAdminEmployees.html.*\Z=CAN_VIEW_page_common_commonAdminEmployees
-				\A/common/commonAdminEditEmployee.html.*\Z=CAN_VIEW_page_common_commonAdminEditEmployee
-				\A/common/commonAdminChangePassword.html.*\Z=CAN_VIEW_page_common_commonAdminChangePassword
-				\A/common/commonAdminRegions.html.*\Z=CAN_VIEW_page_common_regionsView
-				\A/common/commonAdminEditRegion.html.*\Z=CAN_VIEW_page_common_regionForm
+		<form-login login-page="/api/workflow/login*"
+			username-parameter="username" password-parameter="password"
+			authentication-success-handler-ref="mySuccessHandler"
+			authentication-failure-handler-ref="myFailureHandler" />
+		<!-- authentication-success-handler-ref="mySuccessHandler" authentication-failure-handler-ref="myFailureHandler" -->
+		<logout logout-url="/api/workflow/logout" invalidate-session="true"
+			delete-cookies="JSESSIONID" success-handler-ref="myLogoutHandler" />
+
+		<!-- Rest Web Service -->
+
+		<intercept-url pattern="/api/workflow/signInOut"
+			access="CAN_VIEW_page_RequestsAproval_generalEmployee" />
+		<intercept-url pattern="/api/workflow/userRequest"
+			access="CAN_VIEW_page_RequestsAproval_generalEmployee" />
+		<intercept-url pattern="/api/workflow/submittedRequests"
+			access="CAN_VIEW_page_RequestsAproval_generalEmployee" />
 
 
-				\A/i18n/editMessage.html.*\Z=CAN_VIEW_page_i18n_editMessage
-				\A/i18n/changeDefaultLocale.html.*\Z=CAN_VIEW_page_i18n_changeDefaultLocale
-				\A/i18n/addNewLocale.html.*\Z=CAN_VIEW_page_i18n_addNewLocale
+		<intercept-url pattern="/api/workflow/requestsForApproval"
+			access="CAN_VIEW_page_requestsApproval" />
+			
+		<intercept-url pattern="/api/workflow/approveRequest"
+			access="CAN_VIEW_page_requestsApproval" />
+			
+		<intercept-url pattern="/api/workflow/vacInfo"
+			access="CAN_VIEW_page_requestsApproval" />
+			
+		<intercept-url pattern="/api/workflow/vacTypes"
+			access="CAN_VIEW_page_RequestsAproval_generalEmployee" />
+
+		<custom-filter ref="authenticationFilter" before="PRE_AUTH_FILTER" />
+
+		<access-denied-handler ref="exceptionControllerAdvice" />
+
+	</http>
 
 
-				\A/security/editSecurity.html.*\Z=CAN_VIEW_page_security_editSecurity
-				<!--            	 \A/security/changeUserApplication.html.*\Z=CAN_VIEW_page_security_changeUserApplication-->
-				\A/security/addNewRole.html.*\Z=CAN_VIEW_page_security_addNewRole
-				\A/security/addUserToRole.html.*\Z=CAN_VIEW_page_security_addUserToRole
-				\A/security/userDetails.html.*\Z=CAN_VIEW_page_security_userDetails
-				\A/security/roleDetails.html.*\Z=CAN_VIEW_page_security_roleDetails
-				\A/security/updateRole.html.*\Z=CAN_VIEW_page_security_updateRole
-				
-				
-				\A/stores/storesAdminBranches.html.*\Z=CAN_VIEW_page_stores_storesAdminBranches
-				\A/stores/codesDivisionForm.html.*\Z=CAN_VIEW_page_stores_codesDivisionForm
-				\A/stores/storesAdminGroupf.html.*\Z=CAN_VIEW_page_stores_storesAdminGroupf
-				\A/stores/basicGroupForm.html.*\Z=CAN_VIEW_page_stores_basicGroupForm
-				\A/stores/addBranch.html.*\Z=CAN_VIEW_page_stores_addBranch
-				\A/stores/storesAdminStores.html.*\Z=CAN_VIEW_page_stores_storesAdminStores
-				\A/stores/storesAdminEditStores.html.*\Z=CAN_VIEW_page_stores_storesAdminEditStores
-				\A/stores/storesAdminGroupTypes.html.*\Z=CAN_VIEW_page_stores_storesAdminGroupTypes
-				\A/stores/storesAdminEditGroupType.html.*\Z=CAN_VIEW_page_stores_storesAdminEditGroupType
-				\A/stores/storesAdminCustomers.html.*\Z=CAN_VIEW_page_stores_storesAdminCustomers
-				\A/stores/storesAdminEditCustomer.html.*\Z=CAN_VIEW_page_stores_storesAdminEditCustomer
-				\A/stores/storesAdminAgents.html.*\Z=CAN_VIEW_page_stores_storesAdminAgents
-				\A/stores/storesAdminEditAgent.html.*\Z=CAN_VIEW_page_stores_storesAdminEditAgent
-				\A/stores/storesAdminVendors.html.*\Z=CAN_VIEW_page_stores_storesAdminVendors
-				\A/stores/storesAdminEditVendors.html.*\Z=CAN_VIEW_page_stores_storesAdminEditVendors
-				\A/stores/storesAdminSalesRep.html.*\Z=CAN_VIEW_page_stores_storesAdminSalesRep
-				\A/stores/storesAdminEditSalesRep.html.*\Z=CAN_VIEW_page_stores_storesAdminEditSalesRep
-				\A/stores/storesAdminPersons.html.*\Z=CAN_VIEW_page_stores_storesAdminPersons
-				\A/stores/storesAdminEditPersons.html.*\Z=CAN_VIEW_page_stores_storesAdminEditPersons
-				\A/stores/storesAdminItemData.html.*\Z=CAN_VIEW_page_stores_storesAdminItemData
-				\A/stores/storesAdminEditItemData.html.*\Z=CAN_VIEW_page_stores_storesAdminEditItemData
-				\A/stores/storesAdminBasicUnit.html.*\Z=CAN_VIEW_page_stores_storesAdminBasicUnit
-				\A/stores/storesAdminEditBasicUnit.html.*\Z=CAN_VIEW_page_stores_storesAdminEditBasicUnit
-				\A/stores/storesAdminEditFirstBalanceStore.html.*\Z=CAN_VIEW_page_stores_storesAdminEditFirstBalanceStore
-				\A/stores/storesAdminContractors.html.*\Z=CAN_VIEW_page_stores_storesAdminContractors
-				\A/stores/storesAdminEditContractor.html.*\Z=CAN_VIEW_page_stores_storesAdminEditContractor
-				\A/stores/itemsMainGroupDescription.html.*\Z=CAN_VIEW_page_stores_itemsMainGroupDescription
-				\A/stores/storesAdminStoreTrnsDefs.html.*\Z=CAN_VIEW_page_stores_storesAdminStoreTrnsDefs
-				\A/stores/storesAdminEditStoreTrnsDef.html.*\Z=CAN_VIEW_page_stores_storesAdminEditStoreTrnsDef
-				\A/stores/storesAdminEditStoreTrnsDefSpec.html.*\Z=CAN_VIEW_page_stores_storesAdminEditStoreTrnsDefSpec
-				\A/stores/storesAdminEditStoreTrnsDefTax.html.*\Z=CAN_VIEW_page_stores_storesAdminEditStoreTrnsDefTax
-				\A/stores/storesAdminListStoreTransaction.html.*\Z=CAN_VIEW_page_stores_storesAdminListStoreTransaction
-				\A/stores/storesAdminEditStoreTransaction.html.*\Z=CAN_VIEW_page_stores_storesAdminEditStoreTransaction
-				\A/stores/storesAdminPaletteNumber.html.*\Z=CAN_VIEW_page_stores_storesAdminPaletteNumber
-				\A/stores/storesAdminEditPaletteNumber.html.*\Z=CAN_VIEW_page_stores_storesAdminEditPaletteNumber
-				\A/stores/storesAdminRoomMeasures.html.*\Z=CAN_VIEW_page_stores_storesAdminRoomMeasures
-				\A/stores/storesAdminEditRoomMeasures.html.*\Z=CAN_VIEW_page_stores_storesAdminEditRoomMeasures
-				\A/stores/storesAdminCostCenter.html.*\Z=CAN_VIEW_page_stores_storesAdminCostCenter
-				\A/stores/storesAdminEditCostCenter.html.*\Z=CAN_VIEW_page_stores_storesAdminEditCostCenter
-				\A/stores/storesCreateInvoices.html.*\Z=CAN_VIEW_page_stores_storesCreateInvoices
-				\A/stores/storesAdminAddStoreTransaction.html.*\Z=CAN_VIEW_page_stores_storesAdminAddStoreTransaction
-				\A/stores/storesCloseContract.html.*\Z=CAN_VIEW_page_stores_storesCloseContract
-				\A/stores/storesExternalTransaction.html.*\Z=CAN_VIEW_page_stores_storesExternalTransaction
-				\A/stores/storesAdminMultiPalette.html.*\Z=CAN_VIEW_page_stores_storesAdminMultiPalette
-				\A/stores/storesRoomMeasuresReport.html.*\Z=CAN_VIEW_page_stores_storesRoomMeasuresReport
-				\A/stores/storesChoseModule.html.*\Z=CAN_VIEW_page_stores_storesChoseModule
-				\A/stores/storesAdminDependenceSpec.html.*\Z=CAN_VIEW_page_stores_storesAdminDependenceSpec
-				\A/stores/storesExternalDependenceOn.html.*\Z=CAN_VIEW_page_stores_storesExternalDependenceOn
-				\A/stores/storesExternalDependenceTo.html.*\Z=CAN_VIEW_page_stores_storesExternalDependenceTo
-				\A/stores/storesAdminDBConnection.html.*\Z=CAN_VIEW_page_stores_storesAdminDBConnection
-				\A/stores/storesAdminEditDBConnection.html.*\Z=CAN_VIEW_page_stores_storesAdminEditDBConnection
-				
-				<!-- GL -->
-				\A/gl/account.html.*\Z=CAN_VIEW_page_account
-				\A/gl/accountForm.html.*\Z=CAN_VIEW_page_accountForm
-				\A/gl/accountTypeForm.html.*\Z=CAN_VIEW_page_accountTypeForm
-				\A/gl/currency.html.*\Z=CAN_VIEW_page_currency
-				\A/gl/currencyForm.html.*\Z=CAN_VIEW_page_currencyForm
-				\A/gl/financialPeriod.html.*\Z=CAN_VIEW_page_financialPeriod
-				\A/gl/financialPeriodForm.html.*\Z=CAN_VIEW_page_financialPeriodForm
-				\A/gl/docType.html.*\Z=CAN_VIEW_page_docType
-				\A/gl/docTypeForm.html.*\Z=CAN_VIEW_page_docTypeForm
-				\A/gl/masterBudget.html.*\Z=CAN_VIEW_page_masterBudget
-				\A/gl/masterBudgetForm.html.*\Z=CAN_VIEW_page_masterBudgetForm
-				\A/gl/masterTransactionForm.html.*\Z=CAN_VIEW_page_masterTransaction
-				\A/gl/repeatableMasterTransactionForm.html.*\Z=CAN_VIEW_page_repeatableMasterTransactionForm
-				\A/gl/searchRepeatableForm.html.*\Z=CAN_VIEW_page_searchRepeatableForm
-				\A/gl/activateRepeatableTransactionForm.html.*\Z=CAN_VIEW_page_activateRepeatableTransact
-				\A/gl/searchUnpostedTransaction.html.*\Z=CAN_VIEW_page_searchUnpostedTransaction
-				\A/gl/searchTransaction.html.*\Z=CAN_VIEW_page_searchTransaction
-				\A/gl/accountStatusReport.html.*\Z=CAN_VIEW_page_accountStatusReport
-				\A/gl/accountTransactionsReport.html.*\Z=CAN_VIEW_page_accountTransactionsReport
-				\A/gl/transactionDetails.html.*\Z=CAN_VIEW_page_transactionDetails
-				
-				\A/gl/suspendTransaction.html.*\Z=CAN_VIEW_page_suspendTransaction
-				\A/gl/financialYear.html.*\Z=CAN_VIEW_page_financialYear
-				\A/gl/financialYearForm.html.*\Z=CAN_VIEW_page_financialYearForm
-				\A/gl/reports.html.*\Z=CAN_VIEW_page_reports
-				\A/gl/addDetailedBudgetManually.html.*\Z=CAN_VIEW_page_addDetailedBudgetManually
-				\A/gl/addEstimatedBalance.html.*\Z=CAN_VIEW_page_addEstimatedBalance
-				<!-- ///////////////////////////////////////////////// -->
-				<!-- RequestsApproval -->
-				\A/requestsApproval/loginUsersRequestsView.html.*\Z=CAN_VIEW_page_RequestsAproval_generalEmployee
-				\A/requestsApproval/empRequestsReportsForm.html.*\Z=CAN_VIEW_page_requestsApproval
-				\A/requestsApproval/requestsApprovalForm.html.*\Z=CAN_VIEW_page_requestsApproval
-				\A/requestsApproval/loginUsersRequestsForm.html.*\Z=CAN_VIEW_page_RequestsAproval_generalEmployee
-				\A/requestsApproval/reports.html.*\Z=CAN_VIEW_page_requestsApproval
-				\A/requestsApproval/accessLevelsForm.html.*\Z=CAN_VIEW_page_approvement
-				\A/requestsApproval/empReqTypeGroupForm.html.*\Z=CAN_VIEW_page_approvement
-				\A/requestsApproval/empGroupsView.html.*\Z=CAN_VIEW_page_approvement
-				\A/requestsApproval/annualVacLimitSetting.html.*\Z=CAN_VIEW_page_approvement
-				
-				
-				
-				<!-- Fixed Assets -->
-				
-				<!--\A/fixedAssets/depreciation.html.*\Z=CAN_VIEW_ALL_Assets-->
-				
-				<!-- /////////////////////////////////// -->
-			</value>
-		</property>
-	</bean>
+	<http auto-config="true" access-denied-page="/403.jsp"
+		access-decision-manager-ref="accessDecisionManager">
+		<session-management>
+			<concurrency-control max-sessions="1"
+				error-if-maximum-exceeded="true" />
+		</session-management>
+
+		<intercept-url pattern="\A/common/commonAdminCountryCities.html.*\Z"
+			access="CAN_VIEW_page_common_commonAdminCountryCities" />
+		<intercept-url pattern="\A/common/commonAdminEditCity.html.*\Z"
+			access="CAN_VIEW_page_common_commonAdminEditCity" />
+		<intercept-url pattern="\A/common/commonAdminCountries.html.*\Z"
+			access="CAN_VIEW_page_common_commonAdminCountries" />
+		<intercept-url pattern="\A/common/commonAdminEditCountry.html.*\Z"
+			access="CAN_VIEW_page_common_commonAdminEditCountry" />
+		<intercept-url pattern="\A/common/commonAdminDepartments.html.*\Z"
+			access="CAN_VIEW_page_common_commonAdminDepartments" />
+		<intercept-url pattern="\A/common/commonAdminEditDepartment.html.*\Z"
+			access="CAN_VIEW_page_common_commonAdminEditDepartment" />
+		<intercept-url pattern="\A/common/commonAdminEmployees.html.*\Z"
+			access="CAN_VIEW_page_common_commonAdminEmployees" />
+		<intercept-url pattern="\A/common/commonAdminEditEmployee.html.*\Z"
+			access="CAN_VIEW_page_common_commonAdminEditEmployee" />
+		<intercept-url pattern="\A/common/commonAdminChangePassword.html.*\Z"
+			access="CAN_VIEW_page_common_commonAdminChangePassword" />
+		<intercept-url pattern="\A/common/commonAdminRegions.html.*\Z"
+			access="CAN_VIEW_page_common_regionsView" />
+		<intercept-url pattern="\A/common/commonAdminEditRegion.html.*\Z"
+			access="CAN_VIEW_page_common_regionForm" />
 
 
-	<bean id="authenticationManager"
-		class="org.acegisecurity.providers.ProviderManager">
-		<property name="providers">
-			<list>
-				<ref bean="authenticationProvider" />
-			</list>
-		</property>
-		
-<!--  to prevent concurrent logins -->
-		<property name="sessionController">
-			<ref bean="concurrentSessionController"/>
-		</property>
-	</bean>
+		<intercept-url pattern="\A/i18n/editMessage.html.*\Z"
+			access="CAN_VIEW_page_i18n_editMessage" />
+		<intercept-url pattern="\A/i18n/changeDefaultLocale.html.*\Z"
+			access="CAN_VIEW_page_i18n_changeDefaultLocale" />
+		<intercept-url pattern="\A/i18n/addNewLocale.html.*\Z"
+			access="CAN_VIEW_page_i18n_addNewLocale" />
 
 
-	<bean id="authenticationProcessingFilter"
-		class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
-		<property name="filterProcessesUrl">
-			<value>/security/j_acegi_security_check</value>
-		</property>
-		<property name="authenticationFailureUrl">
-			<value>/security/login.html?failed=true</value>
-		</property>
-		<property name="defaultTargetUrl">
-			<value>/security/defaultPage.html</value>
-		</property>
-		<property name="authenticationManager">
-			<ref bean="authenticationManager" />
-		</property>
-		<property name="alwaysUseDefaultTargetUrl">
-			<value>true</value>
-		</property>
-	</bean>
+		<intercept-url pattern="\A/security/editSecurity.html.*\Z"
+			access="CAN_VIEW_page_security_editSecurity" />
+		<!-- <intercept-url pattern="\A/security/changeUserApplication.html.*\Z" 
+			access="CAN_VIEW_page_security_changeUserApplication"/> -->
+		<intercept-url pattern="\A/security/addNewRole.html.*\Z"
+			access="CAN_VIEW_page_security_addNewRole" />
+		<intercept-url pattern="\A/security/addUserToRole.html.*\Z"
+			access="CAN_VIEW_page_security_addUserToRole" />
+		<intercept-url pattern="\A/security/userDetails.html.*\Z"
+			access="CAN_VIEW_page_security_userDetails" />
+		<intercept-url pattern="\A/security/roleDetails.html.*\Z"
+			access="CAN_VIEW_page_security_roleDetails" />
+		<intercept-url pattern="\A/security/updateRole.html.*\Z"
+			access="CAN_VIEW_page_security_updateRole" />
+
+
+		<intercept-url pattern="\A/stores/storesAdminBranches.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminBranches" />
+		<intercept-url pattern="\A/stores/codesDivisionForm.html.*\Z"
+			access="CAN_VIEW_page_stores_codesDivisionForm" />
+		<intercept-url pattern="\A/stores/storesAdminGroupf.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminGroupf" />
+		<intercept-url pattern="\A/stores/basicGroupForm.html.*\Z"
+			access="CAN_VIEW_page_stores_basicGroupForm" />
+		<intercept-url pattern="\A/stores/addBranch.html.*\Z"
+			access="CAN_VIEW_page_stores_addBranch" />
+		<intercept-url pattern="\A/stores/storesAdminStores.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminStores" />
+		<intercept-url pattern="\A/stores/storesAdminEditStores.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditStores" />
+		<intercept-url pattern="\A/stores/storesAdminGroupTypes.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminGroupTypes" />
+		<intercept-url pattern="\A/stores/storesAdminEditGroupType.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditGroupType" />
+		<intercept-url pattern="\A/stores/storesAdminCustomers.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminCustomers" />
+		<intercept-url pattern="\A/stores/storesAdminEditCustomer.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditCustomer" />
+		<intercept-url pattern="\A/stores/storesAdminAgents.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminAgents" />
+		<intercept-url pattern="\A/stores/storesAdminEditAgent.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditAgent" />
+		<intercept-url pattern="\A/stores/storesAdminVendors.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminVendors" />
+		<intercept-url pattern="\A/stores/storesAdminEditVendors.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditVendors" />
+		<intercept-url pattern="\A/stores/storesAdminSalesRep.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminSalesRep" />
+		<intercept-url pattern="\A/stores/storesAdminEditSalesRep.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditSalesRep" />
+		<intercept-url pattern="\A/stores/storesAdminPersons.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminPersons" />
+		<intercept-url pattern="\A/stores/storesAdminEditPersons.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditPersons" />
+		<intercept-url pattern="\A/stores/storesAdminItemData.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminItemData" />
+		<intercept-url pattern="\A/stores/storesAdminEditItemData.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditItemData" />
+		<intercept-url pattern="\A/stores/storesAdminBasicUnit.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminBasicUnit" />
+		<intercept-url pattern="\A/stores/storesAdminEditBasicUnit.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditBasicUnit" />
+		<intercept-url pattern="\A/stores/storesAdminEditFirstBalanceStore.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditFirstBalanceStore" />
+		<intercept-url pattern="\A/stores/storesAdminContractors.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminContractors" />
+		<intercept-url pattern="\A/stores/storesAdminEditContractor.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditContractor" />
+		<intercept-url pattern="\A/stores/itemsMainGroupDescription.html.*\Z"
+			access="CAN_VIEW_page_stores_itemsMainGroupDescription" />
+		<intercept-url pattern="\A/stores/storesAdminStoreTrnsDefs.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminStoreTrnsDefs" />
+		<intercept-url pattern="\A/stores/storesAdminEditStoreTrnsDef.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditStoreTrnsDef" />
+		<intercept-url pattern="\A/stores/storesAdminEditStoreTrnsDefSpec.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditStoreTrnsDefSpec" />
+		<intercept-url pattern="\A/stores/storesAdminEditStoreTrnsDefTax.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditStoreTrnsDefTax" />
+		<intercept-url pattern="\A/stores/storesAdminListStoreTransaction.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminListStoreTransaction" />
+		<intercept-url pattern="\A/stores/storesAdminEditStoreTransaction.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditStoreTransaction" />
+		<intercept-url pattern="\A/stores/storesAdminPaletteNumber.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminPaletteNumber" />
+		<intercept-url pattern="\A/stores/storesAdminEditPaletteNumber.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditPaletteNumber" />
+		<intercept-url pattern="\A/stores/storesAdminRoomMeasures.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminRoomMeasures" />
+		<intercept-url pattern="\A/stores/storesAdminEditRoomMeasures.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditRoomMeasures" />
+		<intercept-url pattern="\A/stores/storesAdminCostCenter.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminCostCenter" />
+		<intercept-url pattern="\A/stores/storesAdminEditCostCenter.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditCostCenter" />
+		<intercept-url pattern="\A/stores/storesCreateInvoices.html.*\Z"
+			access="CAN_VIEW_page_stores_storesCreateInvoices" />
+		<intercept-url pattern="\A/stores/storesAdminAddStoreTransaction.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminAddStoreTransaction" />
+		<intercept-url pattern="\A/stores/storesCloseContract.html.*\Z"
+			access="CAN_VIEW_page_stores_storesCloseContract" />
+		<intercept-url pattern="\A/stores/storesExternalTransaction.html.*\Z"
+			access="CAN_VIEW_page_stores_storesExternalTransaction" />
+		<intercept-url pattern="\A/stores/storesAdminMultiPalette.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminMultiPalette" />
+		<intercept-url pattern="\A/stores/storesRoomMeasuresReport.html.*\Z"
+			access="CAN_VIEW_page_stores_storesRoomMeasuresReport" />
+		<intercept-url pattern="\A/stores/storesChoseModule.html.*\Z"
+			access="CAN_VIEW_page_stores_storesChoseModule" />
+		<intercept-url pattern="\A/stores/storesAdminDependenceSpec.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminDependenceSpec" />
+		<intercept-url pattern="\A/stores/storesExternalDependenceOn.html.*\Z"
+			access="CAN_VIEW_page_stores_storesExternalDependenceOn" />
+		<intercept-url pattern="\A/stores/storesExternalDependenceTo.html.*\Z"
+			access="CAN_VIEW_page_stores_storesExternalDependenceTo" />
+		<intercept-url pattern="\A/stores/storesAdminDBConnection.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminDBConnection" />
+		<intercept-url pattern="\A/stores/storesAdminEditDBConnection.html.*\Z"
+			access="CAN_VIEW_page_stores_storesAdminEditDBConnection" />
+
+		<!-- GL -->
+		<intercept-url pattern="\A/gl/account.html.*\Z" access="CAN_VIEW_page_account" />
+		<intercept-url pattern="\A/gl/accountForm.html.*\Z"
+			access="CAN_VIEW_page_accountForm" />
+		<intercept-url pattern="\A/gl/accountTypeForm.html.*\Z"
+			access="CAN_VIEW_page_accountTypeForm" />
+		<intercept-url pattern="\A/gl/currency.html.*\Z" access="CAN_VIEW_page_currency" />
+		<intercept-url pattern="\A/gl/currencyForm.html.*\Z"
+			access="CAN_VIEW_page_currencyForm" />
+		<intercept-url pattern="\A/gl/financialPeriod.html.*\Z"
+			access="CAN_VIEW_page_financialPeriod" />
+		<intercept-url pattern="\A/gl/financialPeriodForm.html.*\Z"
+			access="CAN_VIEW_page_financialPeriodForm" />
+		<intercept-url pattern="\A/gl/docType.html.*\Z" access="CAN_VIEW_page_docType" />
+		<intercept-url pattern="\A/gl/docTypeForm.html.*\Z"
+			access="CAN_VIEW_page_docTypeForm" />
+		<intercept-url pattern="\A/gl/masterBudget.html.*\Z"
+			access="CAN_VIEW_page_masterBudget" />
+		<intercept-url pattern="\A/gl/masterBudgetForm.html.*\Z"
+			access="CAN_VIEW_page_masterBudgetForm" />
+		<intercept-url pattern="\A/gl/masterTransactionForm.html.*\Z"
+			access="CAN_VIEW_page_masterTransaction" />
+		<intercept-url pattern="\A/gl/repeatableMasterTransactionForm.html.*\Z"
+			access="CAN_VIEW_page_repeatableMasterTransactionForm" />
+		<intercept-url pattern="\A/gl/searchRepeatableForm.html.*\Z"
+			access="CAN_VIEW_page_searchRepeatableForm" />
+		<intercept-url pattern="\A/gl/activateRepeatableTransactionForm.html.*\Z"
+			access="CAN_VIEW_page_activateRepeatableTransact" />
+		<intercept-url pattern="\A/gl/searchUnpostedTransaction.html.*\Z"
+			access="CAN_VIEW_page_searchUnpostedTransaction" />
+		<intercept-url pattern="\A/gl/searchTransaction.html.*\Z"
+			access="CAN_VIEW_page_searchTransaction" />
+		<intercept-url pattern="\A/gl/accountStatusReport.html.*\Z"
+			access="CAN_VIEW_page_accountStatusReport" />
+		<intercept-url pattern="\A/gl/accountTransactionsReport.html.*\Z"
+			access="CAN_VIEW_page_accountTransactionsReport" />
+		<intercept-url pattern="\A/gl/transactionDetails.html.*\Z"
+			access="CAN_VIEW_page_transactionDetails" />
+
+		<intercept-url pattern="\A/gl/suspendTransaction.html.*\Z"
+			access="CAN_VIEW_page_suspendTransaction" />
+		<intercept-url pattern="\A/gl/financialYear.html.*\Z"
+			access="CAN_VIEW_page_financialYear" />
+		<intercept-url pattern="\A/gl/financialYearForm.html.*\Z"
+			access="CAN_VIEW_page_financialYearForm" />
+		<intercept-url pattern="\A/gl/reports.html.*\Z" access="CAN_VIEW_page_reports" />
+		<intercept-url pattern="\A/gl/addDetailedBudgetManually.html.*\Z"
+			access="CAN_VIEW_page_addDetailedBudgetManually" />
+		<intercept-url pattern="\A/gl/addEstimatedBalance.html.*\Z"
+			access="CAN_VIEW_page_addEstimatedBalance" />
+		<!-- ///////////////////////////////////////////////// -->
+		<!-- RequestsApproval -->
+		<intercept-url pattern="\A/requestsApproval/loginUsersRequestsView.html.*\Z"
+			access="CAN_VIEW_page_RequestsAproval_generalEmployee" />
+		<intercept-url pattern="\A/requestsApproval/empRequestsReportsForm.html.*\Z"
+			access="CAN_VIEW_page_requestsApproval" />
+		<intercept-url pattern="\A/requestsApproval/requestsApprovalForm.html.*\Z"
+			access="CAN_VIEW_page_requestsApproval" />
+		<intercept-url pattern="\A/requestsApproval/loginUsersRequestsForm.html.*\Z"
+			access="CAN_VIEW_page_RequestsAproval_generalEmployee" />
+		<intercept-url pattern="\A/requestsApproval/reports.html.*\Z"
+			access="CAN_VIEW_page_requestsApproval" />
+		<intercept-url pattern="\A/requestsApproval/accessLevelsForm.html.*\Z"
+			access="CAN_VIEW_page_approvement" />
+		<intercept-url pattern="\A/requestsApproval/empReqTypeGroupForm.html.*\Z"
+			access="CAN_VIEW_page_approvement" />
+		<intercept-url pattern="\A/requestsApproval/empGroupsView.html.*\Z"
+			access="CAN_VIEW_page_approvement" />
+		<intercept-url pattern="\A/requestsApproval/annualVacLimitSetting.html.*\Z"
+			access="CAN_VIEW_page_approvement" />
+		<intercept-url pattern="\A/security/login.html.*\Z"
+			access="CAN_VIEW_page_RequestsAproval_generalEmployee" />
+
+		<form-login login-page="/security/login.html"
+			authentication-failure-url="/security/login.html?failed=true"
+			default-target-url="/security/defaultPage.html" />
+		<logout logout-url="/security/logout.html" logout-success-url="/security/login.html"
+			delete-cookies="JSESSIONID" />
+
+	</http>
+
+	<global-method-security pre-post-annotations="enabled" />
 
 
 
-	<bean id="authenticationEntryPoint"
-		class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
-		<property name="loginFormUrl">
-			<value>/security/login.html</value>
-		</property>
-		<property name="forceHttps">
-			<value>false</value>
-		</property>
-	</bean>
-	
-<!--	<bean id="userCache" -->
-<!--		class="org.acegisecurity.providers.dao.cache.EhCacheBasedUserCache">-->
-<!--	  	<property name="minutesToIdle">-->
-<!--	  		<value>30</value>-->
-<!--		</property>-->
-<!--	</bean>-->
- 
-	<!-- Start  Caching Beans  --> 	
-	
-	 	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
-	    
-	    <bean id="userCacheBackend" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-	      <property name="cacheManager">
-	         <ref local="cacheManager"/>
-	      </property>
-	      <property name="cacheName">
-	         <value>userCache</value>
-	      </property>
-	      <property name="eternal">
-	         <value>true</value>
-	      </property>
-	   </bean>
-	   
-	   <bean id="userCache" class="org.acegisecurity.providers.dao.cache.EhCacheBasedUserCache">
-	      <property name="cache"><ref local="userCacheBackend"/></property>
-	   </bean>
-	
-	<!-- End  Caching Beans  --> 	
+	<beans:bean name="jacksonObjectMapper"
+		class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+	</beans:bean>
+	<beans:bean id="jsonConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<beans:property name="prefixJson" value="false" />
+		<beans:property name="supportedMediaTypes" value="application/json" />
+		<beans:property name="objectMapper">
+			<beans:bean class="com.fasterxml.jackson.databind.ObjectMapper">
+				<beans:property name="serializationInclusion" value="NON_NULL" />
+			</beans:bean>
+		</beans:property>
+	</beans:bean>
+
+	<beans:bean id="restAuthenticationEntryPoint"
+		class="com._4s_.restServices.entrypoint.RestAuthenticationEntryPoint">
+		<beans:property name="jsonConverter" ref="jsonConverter" />
+	</beans:bean>
 
 
-	<bean id="authenticationProvider"
-		class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
-		<!--  		<property name="passwordEncoder">
-			<bean
-			class="org.acegisecurity.providers.encoding.Md5PasswordEncoder" />
-			</property> -->
-		<property name="userDetailsService">
-			<ref bean="authenticationDao" />
-		</property>
-		<property name="userCache">
-  			<ref bean="userCache"/>
-		</property>
-	</bean>
+	<beans:bean id="exceptionControllerAdvice"
+		class="com._4s_.restServices.endpoint.ExceptionControllerAdvice">
+		<beans:property name="jsonConverter" ref="jsonConverter" />
+	</beans:bean>
 
-	<bean id="authenticationDao"
-		class="org.acegisecurity.userdetails.jdbc.JdbcDaoImpl">
-		<property name="dataSource">
-			<ref bean="dataSource" />
-		</property>
-		<property name="usersByUsernameQuery">
-			<value>
-				SELECT userName, password,1 as enabled FROM
-				security_users WHERE userName=?
-			</value>
-		</property>
-		<property name="authoritiesByUsernameQuery">
-			<value>
-				select distinct userName,permessionname from
+	<beans:bean id="mySuccessHandler"
+		class="com._4s_.restServices.entrypoint.MySavedRequestAwareAuthenticationSuccessHandler" />
+	<beans:bean id="myFailureHandler"
+		class="com._4s_.restServices.entrypoint.AuthFailureHandler" />
+	<beans:bean id="myLogoutHandler"
+		class="com._4s_.restServices.entrypoint.CustomLogoutSuccessHandler" />
+
+
+
+
+	<beans:bean id="authenticationFilter"
+		class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+		<beans:property name="authenticationEntryPoint" ref="restAuthenticationEntryPoint" />
+		<!-- <beans:property name="authenticationSuccessHandler" ref="mySuccessHandler" 
+			/> -->
+	</beans:bean>
+
+
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider>
+			<jdbc-user-service data-source-ref="dataSource"
+				users-by-username-query="SELECT userName, password,1 as enabled FROM
+				security_users WHERE userName=?"
+				authorities-by-username-query="select distinct userName,permessionname from
 				security_users,security_user_roles,security_role_permissions,security_permissions,security_roles
 				where security_users.id=security_user_roles.users and
 				security_user_roles.role=security_roles.id and
 				security_role_permissions.role=security_roles.id and
 				security_role_permissions.permission=security_permissions.id
-				and selected=1 and security_users.isActive=1 and (end_serv is null or (END_SERV >=  SYSDATE)) and userName=?
-			</value>
-		</property>
-	</bean>
+				and selected=1 and security_users.isActive=1 and (end_serv is null or (END_SERV >=  SYSDATE)) and userName=?" />
 
-	<bean id="roleVoter" class="org.acegisecurity.vote.RoleVoter">
-		<property name="rolePrefix">
-			<value>CAN_</value>
-		</property>
+		</authentication-provider>
 
-	</bean>
+	</authentication-manager>
 
-	<bean id="myVoter" class="com._4s_.security.service.MyVoter">
-		<property name="rolePrefix">
-			<value>My_</value>
-		</property>
-<!--		<property name="baseManager"><ref bean="baseManager"/></property>-->
-	</bean>
-
-	<bean id="accessDecisionManager"
-		class="org.acegisecurity.vote.AffirmativeBased">
-		<property name="decisionVoters">
-			<list>
-			
-				<ref bean="roleVoter" />
-			</list>
-		</property>
-		<property name="allowIfAllAbstainDecisions">
-			<value>true</value>
-		</property>
-	</bean>
-	<bean id="myAccessDecisionManager"
-		class="org.acegisecurity.vote.AffirmativeBased">
-		<property name="decisionVoters">
-			<list>
-				<ref bean="myVoter" />
-			</list>
-		</property>
-		<property name="allowIfAllAbstainDecisions">
-			<value>true</value>
-		</property>
-	</bean>
-
-	<bean id="integrationFilter"
-		class="org.acegisecurity.context.HttpSessionContextIntegrationFilter" />
-		
-		<!--  to prevent concurrent logins -->
-	<bean id="concurrentSessionController" class="org.acegisecurity.concurrent.ConcurrentSessionControllerImpl">
-  		<property name="maximumSessions"><value>1</value></property>
-  		<property name="exceptionIfMaximumExceeded"><value>1</value></property>
- 		 <property name="sessionRegistry"><ref local="sessionRegistry"/></property>
-	</bean>
-
-	<bean id="sessionRegistry" class="org.acegisecurity.concurrent.SessionRegistryImpl"/>
+	<!-- <beans:bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy"> 
+		<filter-chain-map path-type="ant"> <filter-chain pattern="/api/workflow/login*" 
+		filters="none" /> <filter-chain pattern="\A/security/login.html" filters="none" 
+		/> <filter-chain pattern="/**" filters="securityInterceptor" /> </filter-chain-map> 
+		</beans:bean> -->
 
 
-</beans>
+	<beans:bean id="myVoter" class="com._4s_.security.service.MyVoter">
+		<beans:property name="rolePrefix">
+			<beans:value>My_</beans:value>
+		</beans:property>
+	</beans:bean>
+	<beans:bean id="roleVoter"
+		class="org.springframework.security.access.vote.RoleVoter">
+		<beans:property name="rolePrefix" value="CAN_" />
+	</beans:bean>
+
+	<beans:bean id="accessDecisionManager"
+		class="org.springframework.security.access.vote.AffirmativeBased">
+		<beans:constructor-arg>
+			<beans:list>
+				<beans:bean
+					class="org.springframework.security.access.vote.AuthenticatedVoter" />
+				<beans:bean class="org.springframework.security.access.vote.RoleVoter">
+					<beans:property name="rolePrefix" value="CAN_" />
+				</beans:bean>
+				<beans:bean
+					class="org.springframework.security.web.access.expression.WebExpressionVoter" />
+			</beans:list>
+		</beans:constructor-arg>
+		<beans:property name="allowIfAllAbstainDecisions">
+			<beans:value>true</beans:value>
+		</beans:property>
+	</beans:bean>
+	<beans:bean id="myAccessDecisionManager"
+		class="org.springframework.security.access.vote.AffirmativeBased">
+		<beans:property name="decisionVoters">
+			<beans:list>
+				<beans:ref bean="myVoter" />
+			</beans:list>
+		</beans:property>
+		<beans:property name="allowIfAllAbstainDecisions">
+			<beans:value>true</beans:value>
+		</beans:property>
+	</beans:bean>
+	<!-- <beans:bean id="accessDecisionManager" class="org.springframework.security.vote.AffirmativeBased"> 
+		<beans:property name="allowIfAllAbstainDecisions" value="false"/> <beans:property 
+		name="decisionVoters"> <beans:list> <beans:bean class="org.springframework.security.vote.RoleVoter"/> 
+		<beans:bean class="org.springframework.security.vote.AuthenticatedVoter"/> 
+		</beans:list> </beans:property> </beans:bean> <beans:bean id="filterInvocationInterceptor" 
+		class="org.springframework.security.intercept.web.FilterSecurityInterceptor"> 
+		<beans:property name="authenticationManager" ref="authenticationManager"/> 
+		<beans:property name="accessDecisionManager" ref="accessDecisionManager"/> 
+		<beans:property name="objectDefinitionSource" ref="secureResourceFilter" 
+		/> </beans:bean> -->
+	<!-- <beans:bean id="secureResourceFilter" class="org.security.SecureFilter.MySecureResourceFilter" 
+		/> -->
+
+
+
+
+	<!-- Spring Security 3.1.7 -->
+	<!-- <beans:bean id="basicProcessingFilterEntryPoint" class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint"> 
+		<property name="realmName" value="My Realm" /> </beans:bean> <beans:bean 
+		id="httpSessionContextIntegrationFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter"> 
+		<beans:property name="forceEagerSessionCreation" value="false" /> </beans:bean> 
+		<beans:bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager"> 
+		<beans:property name="providers"> <beans:list> <ref bean="usernamePasswordAuthenticationProvider" 
+		/> </beans:list> </beans:property> </beans:bean> <beans:bean id="roleVoter" 
+		class="org.springframework.security.access.vote.RoleVoter"> <property name="rolePrefix" 
+		value="" /> </beans:bean> -->
+	<!-- <security:global-method-security pre-post-annotations="enabled"/> -->
+
+	<!-- ///////////////////// -->
+
+	<!-- ////////////////////////////////////////// -->
+
+
+	<!-- Start Caching Beans -->
+
+	<!-- <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/> 
+		<bean id="userCacheBackend" class="org.springframework.cache.ehcache.EhCacheFactoryBean"> 
+		<property name="cacheManager"> <ref local="cacheManager"/> </property> <property 
+		name="cacheName"> <value>userCache</value> </property> <property name="eternal"> 
+		<value>true</value> </property> </bean> <bean id="userCache" class="org.acegisecurity.providers.dao.cache.EhCacheBasedUserCache"> 
+		<property name="cache"><ref local="userCacheBackend"/></property> </bean> -->
+	<!-- End Caching Beans -->
+
+</beans:beans>

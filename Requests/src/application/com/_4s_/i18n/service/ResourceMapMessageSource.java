@@ -12,15 +12,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 
-import org.acegisecurity.context.SecurityContext;
-import org.acegisecurity.context.SecurityContextHolder;
-import org.springframework.context.HierarchicalMessageSource;
-import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.support.AbstractMessageSource;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com._4s_.i18n.dao.MessageDAO;
 import com._4s_.i18n.model.MyLocale;
 import com._4s_.security.service.UsersMap;
+//import org.acegisecurity.context.SecurityContext;
+//import org.acegisecurity.context.SecurityContextHolder;
 
 /**
  * @author mragab

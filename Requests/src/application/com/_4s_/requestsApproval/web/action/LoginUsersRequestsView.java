@@ -134,7 +134,7 @@ public class LoginUsersRequestsView implements Controller{
 				userReqs=requestsApprovalManager.getObjectsByTwoParametersOrderedByFieldList(LoginUsersRequests.class, "request_id.id", new Long(1),"empCode",emp.getEmpCode(),fields);
 				for (int i = 0; i < userReqs.size(); i++) {
 					LoginUsersRequests req=(LoginUsersRequests) userReqs.get(i);
-					if(req.getVacation().getVacation().equals("999")){
+					if(req!=null && req.getVacation()!=null && req.getVacation().getVacation()!=null && req.getVacation().getVacation().equals("999")){
 						model.put("empRequestTypeId", req.getId());
 						
 						reqs.add(req);
@@ -219,7 +219,7 @@ public class LoginUsersRequestsView implements Controller{
 					for (int i = 0; i < allRequests.size(); i++) {
 						LoginUsersRequests loginUsersRequests=(LoginUsersRequests) allRequests.get(i);
 						
-						if((loginUsersRequests.getRequest_id().getId()==1)&& (loginUsersRequests.getVacation().getVacation().equals("999"))){
+						if((loginUsersRequests.getRequest_id().getId()==1)&& (loginUsersRequests.getVacation()!=null && loginUsersRequests.getVacation().getVacation()!=null && loginUsersRequests.getVacation().getVacation().equals("999"))){
 							all.add(loginUsersRequests);
 							model.put("empRequestTypeId", loginUsersRequests.getId());
 						}

@@ -14,17 +14,16 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.acegisecurity.AccessDeniedException;
-import org.acegisecurity.Authentication;
-import org.acegisecurity.ConfigAttributeDefinition;
-import org.acegisecurity.GrantedAuthorityImpl;
-import org.acegisecurity.SecurityConfig;
-import org.acegisecurity.context.SecurityContext;
-import org.acegisecurity.context.SecurityContextHolder;
-import org.acegisecurity.vote.AffirmativeBased;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.SecurityConfig;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.util.ExpressionEvaluationUtils;
 
@@ -120,21 +119,21 @@ public class DefinedAuthorizeTag extends TagSupport {
 				  log.debug(">>>>>>>>>>>>>>>>>>>>>.role" +role+">>>>>>>>>>>>>>>>>>>>>");
 			}
 			Object obj = null;
-			ConfigAttributeDefinition configAttributeDefinition = new ConfigAttributeDefinition();
-			
-			Iterator itr= soso.iterator();
-			while(itr.hasNext()){
-				  securityConfig = ((SecurityConfig)itr.next());
-				log.debug(">>>>>>>>>>>>>>>>>>>>>>>>config "+securityConfig.toString());
-				configAttributeDefinition.addConfigAttribute(securityConfig);
-			}
-			
-			try {
-				log.debug(">>>>>>>>>>>>>>>>>>>>>..inside try not denied");
-				affirm.decide(currentUser, obj, configAttributeDefinition);
-			} catch (AccessDeniedException e) {
-				return Tag.SKIP_BODY;
-			}
+//			ConfigAttributeDefinition configAttributeDefinition = new ConfigAttributeDefinition();
+//			
+//			Iterator itr= soso.iterator();
+//			while(itr.hasNext()){
+//				  securityConfig = ((SecurityConfig)itr.next());
+//				log.debug(">>>>>>>>>>>>>>>>>>>>>>>>config "+securityConfig.toString());
+//				configAttributeDefinition.addConfigAttribute(securityConfig);
+//			}
+//			
+//			try {
+//				log.debug(">>>>>>>>>>>>>>>>>>>>>..inside try not denied");
+//				affirm.decide(currentUser, obj, configAttributeDefinition);
+//			} catch (AccessDeniedException e) {
+//				return Tag.SKIP_BODY;
+//			}
 
 		}
 

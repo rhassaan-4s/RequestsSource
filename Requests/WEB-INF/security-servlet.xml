@@ -64,9 +64,9 @@
 	<bean id="LogoutController" parent="txProxyTemplate">
 		<property name="target">
 			<bean class="com._4s_.security.web.action.LogoutController">
-				<property name="sessionRegistry">
+				<!-- <property name="sessionRegistry">
 					<ref bean="sessionRegistry"/>
-				</property>
+				</property> -->
 			</bean>
 		</property>
 	</bean>

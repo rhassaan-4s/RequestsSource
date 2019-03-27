@@ -1,22 +1,12 @@
 package com._4s_.restServices.json;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 import com._4s_.common.model.Branch;
 import com._4s_.common.model.City;
 import com._4s_.common.model.Department;
-import com._4s_.security.model.User;
 
 public class EmployeeResponse {
 
+	private RestStatus restStatus;
 	private Long id;
 	private String firstName;
 	private String lastName;
@@ -35,6 +25,14 @@ public class EmployeeResponse {
 	private Long employeeCode;
 	private Long attendanceCode;
 	private Branch branch;
+	
+	
+	public RestStatus getRestStatus() {
+		return restStatus;
+	}
+	public void setRestStatus(RestStatus restStatus) {
+		this.restStatus = restStatus;
+	}
 	public Long getId() {
 		return id;
 	}

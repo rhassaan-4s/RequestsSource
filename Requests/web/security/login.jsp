@@ -39,7 +39,7 @@
 		<form 	id="login"
 				name="login"
 				method="POST" 
-				action="j_acegi_security_check">
+				action="<c:url value="/j_spring_security_check"></c:url>">
 
 				<input type="hidden" name="activeLink" value="linkOne"/>
 
