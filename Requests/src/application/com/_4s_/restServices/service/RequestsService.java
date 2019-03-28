@@ -26,7 +26,7 @@ public interface RequestsService {// extends BaseManager {
 	
 	public User getUser(String username);
 
-	public Map getRequestsForApproval(RequestsApprovalQuery approvalQuery);
+	public Map getRequestsForApproval(RequestsApprovalQuery approvalQuery, Employee emp);
 
 	public Map approveRequest(RequestApproval requestApproval,Employee emp);
 	

@@ -470,10 +470,11 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 
 }
 
-public Map getRequestsForApproval(RequestsApprovalQuery approvalQuery) {
+public Map getRequestsForApproval(RequestsApprovalQuery approvalQuery,Employee emp) {
+	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
 	return requestsApprovalManager.getRequestsForApproval(approvalQuery.getRequestNumber(), approvalQuery.getEmp_code(), 
 			approvalQuery.getDateFrom(), approvalQuery.getDateTo(), approvalQuery.getExactDateFrom(), approvalQuery.getExactDateTo(), approvalQuery.getRequestType(),
-			approvalQuery.getCodeFrom(), approvalQuery.getCodeTo(), approvalQuery.getStatusId(), approvalQuery.getPageNumber(), approvalQuery.getPageSize());	
+			approvalQuery.getCodeFrom(), approvalQuery.getCodeTo(), approvalQuery.getStatusId(),loggedInUser, approvalQuery.getPageNumber(), approvalQuery.getPageSize());	
 }
 
 public Map approveRequest(RequestApproval requestApproval,Employee emp) {

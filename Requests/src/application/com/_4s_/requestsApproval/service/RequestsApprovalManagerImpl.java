@@ -388,8 +388,8 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		
 	}
 	public Map getPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
-			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, final int pageNumber, final int pageSize){
-		return  requestsApprovalDAO.getPagedRequests(fromDate, toDate,requestType,exactFrom,exactTo, periodFrom, periodTo, empCode, codeFrom, codeTo, statusId, pageNumber, pageSize);
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, List empReqTypeAccs, final int pageNumber, final int pageSize){
+		return  requestsApprovalDAO.getPagedRequests(fromDate, toDate,requestType,exactFrom,exactTo, periodFrom, periodTo, empCode, codeFrom, codeTo, statusId,empReqTypeAccs, pageNumber, pageSize);
 		
 	}
 	
@@ -806,8 +806,32 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	}
 	
 	public Map getRequestsForApproval(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
-			String requestType, String codeFrom, String codeTo, String statusId, int pageNumber, int pageSize) {
+			String requestType, String codeFrom, String codeTo, String statusId,LoginUsers loggedInUser, int pageNumber, int pageSize) {
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
+		List tempLevels = (List)getObjectsByParameter(AccessLevels.class, "emp_id", loggedInUser);
+		log.debug("access levels size " + tempLevels.size());
+		
+		Iterator itr = tempLevels.iterator();
+		List accessLevels = new ArrayList();
+		log.debug("will loop on levels");
+		while(itr.hasNext()) {
+			AccessLevels level = (AccessLevels)itr.next();
+			log.debug("will loop on levels " + level.getLevel_id().getId());
+			accessLevels.add(level.getLevel_id().getId());
+		}
+		log.debug("access levels " + accessLevels);
+		log.debug("requestType " + requestType);
+		List tempAcc = getEmpReqTypeAccs(accessLevels,new Long(requestType));
+		 
+		List empReqTypeAccs = new ArrayList();
+		Iterator it = tempAcc.iterator();
+		log.debug("will loop on empreqtypeAccs");
+		while(it.hasNext()) {
+			log.debug("looping empreqtypeAccs");
+			EmpReqTypeAcc acc = (EmpReqTypeAcc)it.next();
+			log.debug("acc " + acc.getEmp_id().getId());
+			empReqTypeAccs.add(acc.getEmp_id().getId());
+		}
 		Map loginUserReqs = new HashMap();
 		if (requestType!= null && !requestType.isEmpty() && requestNumber!=null && !requestNumber.isEmpty()){
 			if (dateFrom != null && dateTo != null){
@@ -828,7 +852,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					toDate= mCalDate.getDate();
 					log.debug(">>>>>>>>>>>>>toDate "+ toDate);
 					
-					loginUserReqs= getPagedRequests(fromDate, toDate,Long.parseLong(requestType),null,null,null,null,null,null,null,null,pageNumber,pageSize);
+					loginUserReqs= getPagedRequests(fromDate, toDate,Long.parseLong(requestType),null,null,null,null,null,null,null,null,empReqTypeAccs,pageNumber,pageSize);
 					log.debug("--dateList.size--"+loginUserReqs.size());
 					//model.put("loginUserReqs", loginUserReqs);
 					return loginUserReqs;
@@ -854,7 +878,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					toDate= mCalDate.getDate();
 					log.debug(">>>>>>>>>>>>>toDate "+ toDate);
 					
-					loginUserReqs=getPagedRequests(null,null,Long.parseLong(requestType),fromDate, toDate,null,null,null,null,null,null,pageNumber,pageSize);
+					loginUserReqs=getPagedRequests(null,null,Long.parseLong(requestType),fromDate, toDate,null,null,null,null,null,null,empReqTypeAccs,pageNumber,pageSize);
 					log.debug("--dateList.size--"+loginUserReqs.size());
 					//model.put("loginUserReqs", loginUserReqs);
 					return loginUserReqs;
@@ -876,7 +900,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				list.add("period_from");
 				
 //				loginUserReqs=(List) getObjectsByParameterOrderedByFieldList(LoginUsersRequests.class, "login_user", loginUser, list);
-				loginUserReqs = getPagedRequests(null,null,new Long(requestType),null,null,null,null,emp_code,null,null,null,pageNumber,pageSize);
+				loginUserReqs = getPagedRequests(null,null,new Long(requestType),null,null,null,null,emp_code,null,null,null,empReqTypeAccs,pageNumber,pageSize);
 				
 				return loginUserReqs;
 				
@@ -904,7 +928,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		
 		
 		if(codeFrom!=null && codeTo!=null && !codeFrom.equals("")&& !codeTo.equals("")){
-			loginUserReqs=getPagedRequests(null, null, null, null, null, null, null, null, codeFrom, codeTo, null, pageNumber, pageSize);
+			loginUserReqs=getPagedRequests(null, null, null, null, null, null, null, null, codeFrom, codeTo, null,empReqTypeAccs, pageNumber, pageSize);
 			log.debug("---codesList---"+loginUserReqs.size());
 //			for (int i = 0; i < loginUserReqs.size(); i++) {
 //				LoginUsersRequests s=(LoginUsersRequests) loginUserReqs.get(i);
@@ -931,7 +955,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				toDate= mCalDate.getDate();
 				log.debug(">>>>>>>>>>>>>toDate "+ toDate);
 				
-				loginUserReqs=getPagedRequests(null, null, new Long(requestType), null, null, fromDate, toDate, null, null, null, null, pageNumber, pageSize);
+				loginUserReqs=getPagedRequests(fromDate, toDate, new Long(requestType), null, null, null,null, null, null, null, null,empReqTypeAccs, pageNumber, pageSize);
 				log.debug("--dateList.size--"+loginUserReqs.size());
 				//model.put("loginUserReqs", loginUserReqs);
 				return loginUserReqs;
@@ -957,7 +981,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				log.debug(">>>>>>>>>>>>>exactDateTo "+ toDate);
 				
 //				loginUserReqs=getPagedRequestsByExactDatePeriodAndRequestType(fromDate, toDate,Long.parseLong(requestType),pageNumber,pageSize);
-				loginUserReqs = getPagedRequests(fromDate, toDate, new Long(requestType), null, null, null, null, null, null, null, null, pageNumber, pageSize);
+				loginUserReqs = getPagedRequests(fromDate, toDate, new Long(requestType), null, null, null, null, null, null, null, null,empReqTypeAccs, pageNumber, pageSize);
 				log.debug("--dateList.size--"+loginUserReqs.size());
 				//model.put("loginUserReqs", loginUserReqs);
 				return loginUserReqs;
@@ -968,7 +992,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		
 		if(emp_code!=null  && dateFrom!=null && dateTo!=null && codeFrom!=null && codeTo!=null && statusId!=null){
 			if((emp_code.equals(""))&&(dateFrom.equals(""))&&(dateTo.equals(""))&&(codeTo.equals(""))&&(codeFrom.equals(""))&&(statusId.equals(""))){
-				loginUserReqs= getPagedRequests(null,null, Long.parseLong(requestType),null,null,null,null,null,null,null,null,pageNumber,pageSize);
+				loginUserReqs= getPagedRequests(null,null, Long.parseLong(requestType),null,null,null,null,null,null,null,null,empReqTypeAccs,pageNumber,pageSize);
 				//model.put("loginUserReqs", allRequests);
 				return loginUserReqs;
 			}
@@ -991,7 +1015,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				toDate= mCalDate.getDate();
 			
 //				loginUserReqs= getPagedRequestsByDatePeriodAndRequestTypeAndEmpCode(fromDate, toDate, new Long(requestType), emp_code,pageNumber,pageSize);
-				loginUserReqs= getPagedRequests( null,null,new Long(requestType), fromDate, toDate,null,null,emp_code,null,null,null,pageNumber,pageSize);
+				loginUserReqs= getPagedRequests( null,null,new Long(requestType), fromDate, toDate,null,null,emp_code,null,null,null,empReqTypeAccs,pageNumber,pageSize);
 				//model.put("loginUserReqs", allRequests);
 				return loginUserReqs;
 			}
@@ -1011,7 +1035,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				toDate= mCalDate.getDate();
 			
 //				loginUserReqs= getPagedRequestsByExactDatePeriodAndRequestTypeAndEmpCode(fromDate, toDate, new Long(requestType), emp_code,pageNumber,pageSize);
-				loginUserReqs= getPagedRequests( null,null,new Long(requestType), fromDate, toDate,null,null,emp_code,null,null,null,pageNumber,pageSize);
+				loginUserReqs= getPagedRequests( null,null,new Long(requestType), fromDate, toDate,null,null,emp_code,null,null,null,empReqTypeAccs,pageNumber,pageSize);
 				//model.put("loginUserReqs", allRequests);
 				return loginUserReqs;
 			}
@@ -1024,11 +1048,16 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		
 		if(statusId!=null && !statusId.equals("")){
 //			loginUserReqs=getObjectsByTwoParametersOrderedByFieldList(LoginUsersRequests.class, "approved", new Long(statusId),"request_id.id",new Long(requestType),list);
-			loginUserReqs = getPagedRequests(null, null, null, null, null, null, null, null, null, null, new Long(statusId), pageNumber, pageSize);
+			loginUserReqs = getPagedRequests(null, null, null, null, null, null, null, null, null, null, new Long(statusId),empReqTypeAccs, pageNumber, pageSize);
 			//model.put("loginUserReqs", allRequests);
 			return loginUserReqs;
 		}
 		return loginUserReqs;
+	}
+
+	private List getEmpReqTypeAccs(List accessLevels,Long requestType) {
+		// TODO Auto-generated method stub
+		return requestsApprovalDAO.getEmpReqTypeAccs(accessLevels,requestType);
 	}
 
 	public static boolean isOnlyNumbers(String str){

@@ -20,6 +20,7 @@ import com._4s_.HR.model.HRSpecialtyLevel;
 import com._4s_.HR.model.HRVacation;
 import com._4s_.common.model.Employee;
 import com._4s_.common.service.BaseManager;
+import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.restServices.json.RequestApproval;
 import com.jenkov.prizetags.tree.itf.ITree;
@@ -119,7 +120,7 @@ public interface RequestsApprovalManager extends BaseManager {
 	public List getRequestsForApprovalList(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
 			String requestType, String codeFrom, String codeTo, String statusId);
 	public Map getRequestsForApproval(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
-			String requestType, String codeFrom, String codeTo, String statusId, int pageNumber, int pageSize);
+			String requestType, String codeFrom, String codeTo, String statusId,LoginUsers loggedInUser, int pageNumber, int pageSize);
 	public Map approvalsAccessLevels(RequestApproval approval, LoginUsersRequests requestInfo, Employee emp);
 	public Map getVacInfo(LoginUsersRequests requestInfo);
 }

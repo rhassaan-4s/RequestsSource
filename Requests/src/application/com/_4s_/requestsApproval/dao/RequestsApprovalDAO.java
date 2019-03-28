@@ -62,7 +62,7 @@ public interface RequestsApprovalDAO extends BaseDAO {
 	public List getRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
 			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId);
 	public Map getPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
-			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, final int pageNumber, final int pageSize);
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, List empReqTypeAccs, final int pageNumber, final int pageSize);
 	public List getRequestsByExactDatePeriodAndRequestType(Date fromDate, Date toDate, Long requestType);
 	public List getRequestsByDatePeriod(final Date fromDate, final Date toDate);
 	public List getRequestsByExactDatePeriod(final Date fromDate, final Date toDate);
@@ -80,4 +80,5 @@ public interface RequestsApprovalDAO extends BaseDAO {
 	public List getEmployeesByCodesAndDatePeriodAndRequestType(final String codeFrom,final String codeTo,final Date fromDate, final Date toDate, final Long requestType);
 	public List getRequestStatus(final Long req_id);
 	public void signInOut(AttendanceRequest userRequest);
+	public List getEmpReqTypeAccs(List accessLevels,Long requestType);
 }

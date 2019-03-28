@@ -42,6 +42,7 @@ import com._4s_.HR.model.HRVacation;
 import com._4s_.common.dao.BaseDAOHibernate;
 import com._4s_.common.util.DBUtils;
 import com._4s_.requestsApproval.model.EmpReqApproval;
+import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.RequestOutput;
@@ -883,11 +884,12 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 
 	public Map getPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
-			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, final int pageNumber, final int pageSize)  {
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, List empReqTypeAccs, final int pageNumber, final int pageSize)  {
 		Calendar cFrom= Calendar.getInstance();
 		
 		Date dateFrom=null;
 		Date dateTo= null;
+		log.debug("------fromDate---"+fromDate);
 		if (fromDate !=null) {
 			cFrom.setTime(fromDate);
 			cFrom.set(Calendar.HOUR_OF_DAY, 0);
@@ -898,6 +900,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		
 		log.debug("------dateFrom---"+dateFrom);
 
+		log.debug("------toDate---"+toDate);
 		Calendar cTo= Calendar.getInstance();
 		if (toDate!=null) {
 			cTo.setTime(toDate);
@@ -912,7 +915,8 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		Date exFrom=null;
 		Date exTo= null;
 		
-		if (fromDate !=null) {
+		log.debug("------exactfrom---"+exactFrom);
+		if (exactFrom !=null) {
 			cFrom.setTime(exactFrom);
 			cFrom.set(Calendar.HOUR_OF_DAY, 0);
 			cFrom.set(Calendar.MINUTE, 0);
@@ -922,7 +926,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		
 		log.debug("------exFrom---"+exFrom);
 
-		if (toDate!=null) {
+		if (exactTo!=null) {
 			cTo.setTime(exactTo);
 			cTo.set(Calendar.HOUR_OF_DAY, 23);
 			cTo.set(Calendar.MINUTE, 59);
@@ -934,8 +938,8 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		Date pFrom=null;
 		Date pTo= null;
 		
-		if (fromDate !=null) {
-			cFrom.setTime(fromDate);
+		if (pFrom !=null) {
+			cFrom.setTime(periodFrom);
 			cFrom.set(Calendar.HOUR_OF_DAY, 0);
 			cFrom.set(Calendar.MINUTE, 0);
 			cFrom.set(Calendar.SECOND, 0);
@@ -944,7 +948,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		
 		log.debug("------pfrom---"+pFrom);
 
-		if (toDate!=null) {
+		if (pTo!=null) {
 			cTo.setTime(periodTo);
 			cTo.set(Calendar.HOUR_OF_DAY, 23);
 			cTo.set(Calendar.MINUTE, 59);
@@ -1004,7 +1008,9 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				criteria.add(Restrictions.eq("approved", statusId));
 			}
 			///////////////////////////////////////////////////////////////////////////////
-			
+
+			log.debug("empReqTypeAccs " + empReqTypeAccs);
+			criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
 			criteria.addOrder(Property.forName("period_from").asc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -1014,6 +1020,8 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (Exception e) {
+			return map;
 		}
 		
 		
@@ -1029,7 +1037,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				criteria.add(Expression.ge("request_date", startDate));
 				criteria.add(Expression.le("request_date", endDate));
 			}
-			if (pFrom!=null && pFrom!=null){
+			if (pFrom!=null && pTo!=null){
 				final Date startDate =(Date) format.parse(format.format(pFrom));
 				final Date endDate = (Date)format.parse(format.format(pTo));
 				criteria.add(Expression.ge("period_from", startDate));
@@ -1065,14 +1073,20 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				criteria.add(Restrictions.eq("approved", statusId));
 			}
 			///////////////////////////////////////////////////////////////////////////////
-			
+
+			log.debug("empReqTypeAccs " + empReqTypeAccs);
+			criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
 			criteria.addOrder(Property.forName("period_from").asc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-			criteria.setFirstResult(pageNumber * pageSize);
+			log.debug("first result " + ((pageNumber-1)*pageSize));
+			log.debug("max results " + pageSize);
+			criteria.setFirstResult((pageNumber-1) * pageSize);
 			criteria.setMaxResults(pageSize);
 			
 			List results = criteria.list();
+			
+			log.debug("results " + results.size());
 			List output = new ArrayList();
 			Iterator itr = results.iterator();
 			while (itr.hasNext()) {
@@ -1091,12 +1105,14 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				} else {
 					op.setRequestDesc(req.getRequest_id().getDescription());
 				}
-				if (req.getApproved().equals(new Long(99))) {
+				
+				
+				if (req.getApproved()==null || req.getApproved().equals(new Long(0))) {
+					op.setStatus("Waiting Approval");
+				} else if (req.getApproved().equals(new Long(99))) {
 					op.setStatus("Declined");
 				} else if (req.getApproved().equals(new Long(1))) {
 					op.setStatus("Approved");
-				} else if (req.getApproved().equals(new Long(0))) {
-					op.setStatus("Waiting Approval");
 				} 
 				
 				op.setFromDate(req.getFrom_date());
@@ -1108,6 +1124,8 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (Exception e) {
+			return map;
 		}
 		
 		return map;
@@ -1684,6 +1702,34 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		System.out.println("dao sign in/out");
 		
 	}
+
+
+	public List getEmpReqTypeAccs(List accessLevels,Long requestType) {
+		try{
+			if (accessLevels.size()>0) {
+				Criteria criteria = getCurrentSession()
+						.createCriteria(EmpReqTypeAcc.class);
+				criteria.createCriteria("req_id").add(Restrictions.eq("id", requestType));
+				criteria.createCriteria("group_id").add(Restrictions.in("id", accessLevels));
+				criteria.addOrder(Property.forName("id").asc());
+				criteria
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+				List list = criteria.list();
+				Iterator itr = list.iterator();
+				log.debug("empreqtypeacc size " + list.size());
+				while(itr.hasNext()) {
+					EmpReqTypeAcc acc = (EmpReqTypeAcc)itr.next();
+					log.debug("EmpReqTypeAcc " + acc.getId() + " group id " + acc.getGroup_id().getId());
+				}
+				return list;
+			} else return new ArrayList();
+		}
+		catch (Exception e) {
+			return new ArrayList();
+		}
+	}
+	
+	
 
 	
 	//	public List getTimeAttend(final String empCode,final Date fromDate,final Date toDate){
