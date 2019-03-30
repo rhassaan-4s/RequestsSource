@@ -1469,13 +1469,15 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			Long vacConsumed = getEmpVacation(requestInfo.getEmpCode(), requestInfo.getId(), vacId, from_date);
 			Long vacCredit = vacLimit - vacConsumed;
 			
-			model.put("vacLimit", vacLimit);
-			model.put("vacConsumed", vacConsumed);
-			model.put("vacCredit", vacCredit);
+			Map output = new HashMap();
+			output.put("vacLimit", vacLimit);
+			output.put("vacConsumed", vacConsumed);
+			output.put("vacCredit", vacCredit);
 			RestStatus restStatus = new RestStatus();
 			restStatus.setStatus("true");
 			restStatus.setCode("200");
 			restStatus.setMessage("Successful Transaction");
+			model.put("Response", output);
 			model.put("Status", restStatus);
 			return model;
 		} else {

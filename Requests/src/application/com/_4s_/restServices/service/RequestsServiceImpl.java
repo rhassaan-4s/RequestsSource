@@ -460,7 +460,9 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		loginUsersRequests.setNotes(userRequest.getNotes());
 	}
 	requestsApprovalManager.saveObject(loginUsersRequests);
-	response.put("Response", loginUsersRequests.getId());
+	Map output = new HashMap();
+	output.put("request_id", loginUsersRequests.getId());
+	response.put("Response", output);
 	
 	status.setCode("200");
 	status.setMessage("Request Inserted Successfully");
