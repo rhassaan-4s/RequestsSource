@@ -30,7 +30,7 @@ public class Page{
 		map.put("numberOfPages",numberOfPages);
 		map.put("page",page);
 		
-		if ((page+1)*pageSize < listSize){
+		if ((page)*pageSize < listSize){
 			next = new Boolean(true);
 		}else{
 			next = new Boolean(false);

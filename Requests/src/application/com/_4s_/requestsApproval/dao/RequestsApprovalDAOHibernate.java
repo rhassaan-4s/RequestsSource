@@ -1024,6 +1024,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		} catch (Exception e) {
 			log.debug("exception " + e.getMessage());
 			Page page = new Page();
+			map.put("listSize", new Long(0));
 			return page.getPage(map,pageNumber,pageSize);
 		}
 		
