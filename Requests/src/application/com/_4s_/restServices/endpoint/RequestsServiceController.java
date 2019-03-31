@@ -192,11 +192,11 @@ public class RequestsServiceController {
 		response =	requestsService.getRequestsForApproval(approvalQuery,user.getEmployee());
 		
 //		response.put("Response",requests);
-		if (((List)response.get("list")).size()>0) {
+//		if (((List)response.get("list")).size()>0) {
 			restStatus.setStatus("true");
 			restStatus.setCode("200");
 			restStatus.setMessage("Successful Transaction");
-		} 
+//		} 
 //		else {
 //			restStatus.setStatus("false");
 //			restStatus.setCode("304");

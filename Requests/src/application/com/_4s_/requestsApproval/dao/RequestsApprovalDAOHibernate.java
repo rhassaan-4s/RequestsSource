@@ -41,6 +41,7 @@ import com._4s_.HR.model.HRSpecialtyLevel;
 import com._4s_.HR.model.HRVacation;
 import com._4s_.common.dao.BaseDAOHibernate;
 import com._4s_.common.util.DBUtils;
+import com._4s_.common.util.Page;
 import com._4s_.requestsApproval.model.EmpReqApproval;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
@@ -1021,7 +1022,9 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			return map;
+			log.debug("exception " + e.getMessage());
+			Page page = new Page();
+			return page.getPage(map,pageNumber,pageSize);
 		}
 		
 		
@@ -1125,10 +1128,13 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			return map;
+			log.debug("exception " + e.getMessage());
+			Page page = new Page();
+			return page.getPage(map,pageNumber,pageSize);
 		}
-		
-		return map;
+		Page page = new Page();
+		return page.getPage(map,pageNumber,pageSize);
+//		return map;
 	}
 
 
