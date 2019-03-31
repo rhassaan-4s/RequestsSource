@@ -891,6 +891,8 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		Date dateFrom=null;
 		Date dateTo= null;
 		log.debug("------fromDate---"+fromDate);
+		log.debug("fromDate " + fromDate + " toDate " + toDate + " requestType " + requestType);
+		log.debug("exactFrom " + exactFrom + " exactTo " + exactTo + " requestType " + requestType);
 		if (fromDate !=null) {
 			cFrom.setTime(fromDate);
 			cFrom.set(Calendar.HOUR_OF_DAY, 0);
@@ -1011,7 +1013,9 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			///////////////////////////////////////////////////////////////////////////////
 
 			log.debug("empReqTypeAccs " + empReqTypeAccs);
-			criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
+			if (empReqTypeAccs != null) {
+				criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
+			}
 			criteria.addOrder(Property.forName("period_from").asc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -1079,7 +1083,9 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			///////////////////////////////////////////////////////////////////////////////
 
 			log.debug("empReqTypeAccs " + empReqTypeAccs);
-			criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
+			if (empReqTypeAccs != null) {
+				criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
+			}
 			criteria.addOrder(Property.forName("period_from").asc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -1716,7 +1722,9 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			if (accessLevels.size()>0) {
 				Criteria criteria = getCurrentSession()
 						.createCriteria(EmpReqTypeAcc.class);
-				criteria.createCriteria("req_id").add(Restrictions.eq("id", requestType));
+				if (requestType != null) {
+					criteria.createCriteria("req_id").add(Restrictions.eq("id", requestType));
+				}
 				criteria.createCriteria("group_id").add(Restrictions.in("id", accessLevels));
 				criteria.addOrder(Property.forName("id").asc());
 				criteria

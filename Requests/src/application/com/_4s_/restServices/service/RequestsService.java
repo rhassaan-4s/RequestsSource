@@ -26,11 +26,13 @@ public interface RequestsService {// extends BaseManager {
 	
 	public User getUser(String username);
 
-	public Map getRequestsForApproval(RequestsApprovalQuery approvalQuery, Employee emp);
+	public Map getRequestsForApproval(RequestsApprovalQuery approvalQuery, List empReqTypeAccs, Employee emp);
 
 	public Map approveRequest(RequestApproval requestApproval,Employee emp);
 	
 	public Map getVacInfo(RequestApproval requestApproval);
 	
 	public Map getVacTypes(Long requestType);
+	
+	public List getEmpReqTypeAcc(Employee emp,String requestType);
 }

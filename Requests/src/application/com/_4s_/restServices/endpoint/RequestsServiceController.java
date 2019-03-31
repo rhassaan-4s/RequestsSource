@@ -154,20 +154,21 @@ public class RequestsServiceController {
 		User user = requestsService.getUser(userDet.getUsername());
 		Map response = new HashMap();		
 		RestStatus restStatus = new RestStatus();
-		response =	requestsService.getRequestsForApproval(approvalQuery,user.getEmployee());	
+		List empReqTypeAccs = requestsService.getEmpReqTypeAcc(user.getEmployee(), approvalQuery.getRequestType());
+		response =	requestsService.getRequestsForApproval(approvalQuery,empReqTypeAccs,user.getEmployee());	
 		
-		if (approvalQuery.getRequestType()== null || approvalQuery.getRequestType().isEmpty()) {
-			restStatus.setStatus("false");
-			restStatus.setCode("304");
-			restStatus.setMessage("Empty Search Criteria");
-		} else {
+//		if (approvalQuery.getRequestType()== null || approvalQuery.getRequestType().isEmpty()) {
+//			restStatus.setStatus("false");
+//			restStatus.setCode("304");
+//			restStatus.setMessage("Empty Search Criteria");
+//		} else {
 		
 //		response.put("Response",requests);
 //		if (((List)response.get("list")).size()>0) {
 			restStatus.setStatus("true");
 			restStatus.setCode("200");
 			restStatus.setMessage("Successful Transaction");
-		} 
+//		} 
 		
 		response.put("Status", restStatus);
 		return response;
@@ -189,7 +190,7 @@ public class RequestsServiceController {
 		approvalQuery.setCodeFrom(null);
 		approvalQuery.setCodeTo(null);
 		
-		response =	requestsService.getRequestsForApproval(approvalQuery,user.getEmployee());
+		response =	requestsService.getRequestsForApproval(approvalQuery,null,user.getEmployee());
 		
 //		response.put("Response",requests);
 //		if (((List)response.get("list")).size()>0) {
