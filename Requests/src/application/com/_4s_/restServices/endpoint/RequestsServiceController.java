@@ -96,9 +96,9 @@ public class RequestsServiceController {
 //	5. Errand Start
 //	6. Errand End
 	@RequestMapping(value="/userRequest", method=RequestMethod.POST, 
-			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_JSON)
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody
-	public Map userRequest(@RequestBody AttendanceRequest userRequest)
+	public Map userRequest(AttendanceRequest userRequest)
 	{
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 		UserDetails userDet = (UserDetails)token.getPrincipal();
@@ -109,9 +109,9 @@ public class RequestsServiceController {
 
 	@Transactional
 	@RequestMapping(value="/signInOut", method=RequestMethod.POST, 
-	consumes=MediaType.APPLICATION_JSON,produces=MediaType.APPLICATION_JSON)
+	consumes=MediaType.APPLICATION_FORM_URLENCODED,produces=MediaType.APPLICATION_JSON)
 	@ResponseBody
-	public Map signInOut(@RequestBody AttendanceRequest userRequest)
+	public Map signInOut( AttendanceRequest userRequest)
 	{
 		System.out.println("Controller sign in/out");
 		Map response = new HashMap();
@@ -145,9 +145,9 @@ public class RequestsServiceController {
 
 
 	@RequestMapping(value="/requestsForApproval", method=RequestMethod.POST, 
-			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_JSON)
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody
-	public Map requestsForApproval(@RequestBody RequestsApprovalQuery approvalQuery)
+	public Map requestsForApproval( RequestsApprovalQuery approvalQuery)
 	{
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 		UserDetails userDet = (UserDetails)token.getPrincipal();
@@ -176,9 +176,9 @@ public class RequestsServiceController {
 	
 	
 	@RequestMapping(value="/submittedRequests", method=RequestMethod.POST, 
-			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_JSON)
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody
-	public Map submittedRequests(@RequestBody RequestsApprovalQuery approvalQuery)
+	public Map submittedRequests(RequestsApprovalQuery approvalQuery)
 	{
 		Map response = new HashMap();		
 		RestStatus restStatus = new RestStatus();
@@ -209,9 +209,9 @@ public class RequestsServiceController {
 
 
 	@RequestMapping(value="/approveRequest", method=RequestMethod.POST,
-			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_JSON)
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody
-	public Map approveRequest (@RequestBody RequestApproval requestApproval) {
+	public Map approveRequest (RequestApproval requestApproval) {
 		Map response = new HashMap();		
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 		UserDetails userDet = (UserDetails)token.getPrincipal();
@@ -230,16 +230,16 @@ public class RequestsServiceController {
 	}
 	
 	@RequestMapping(value="/vacInfo", method=RequestMethod.POST,
-			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_JSON)
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody
-	public Map vacInfo (@RequestBody RequestApproval requestApproval) {
+	public Map vacInfo (RequestApproval requestApproval) {
 		return requestsService.getVacInfo(requestApproval);
 	}
 	
 	@RequestMapping(value="/vacTypes", method=RequestMethod.POST,
-			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_JSON)
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody
-	public Map vacTypes(@RequestBody RequestTypeWrapper requestType) {
+	public Map vacTypes(RequestTypeWrapper requestType) {
 		Map m =  requestsService.getVacTypes(requestType.getRequestType());
 		System.out.println("test vac types");
 		return m;
