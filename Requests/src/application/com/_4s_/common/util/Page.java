@@ -37,7 +37,7 @@ public class Page{
 		}
 		map.put("next",next);
 		
-		if (page != 0){
+		if (page != 1){
 			previous = new Boolean(true);
 		}else{
 			previous = new Boolean(false);
