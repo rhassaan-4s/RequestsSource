@@ -154,28 +154,34 @@ public class RequestsServiceController {
 		User user = requestsService.getUser(userDet.getUsername());
 		Map response = new HashMap();		
 		RestStatus restStatus = new RestStatus();
-		List empReqTypeAccs = requestsService.getEmpReqTypeAcc(user.getEmployee(), approvalQuery.getRequestType());
-		response =	requestsService.getRequestsForApproval(approvalQuery,empReqTypeAccs,user.getEmployee());	
-		
-//		if (approvalQuery.getRequestType()== null || approvalQuery.getRequestType().isEmpty()) {
-//			restStatus.setStatus("false");
-//			restStatus.setCode("304");
-//			restStatus.setMessage("Empty Search Criteria");
-//		} else {
-		
-//		response.put("Response",requests);
-		List resp = (List)response.get("list");
-		if (resp == null || resp.size()==0) {
-			restStatus.setStatus("true");
-			restStatus.setCode("200");
-			restStatus.setMessage("Empty List");
+		if (approvalQuery.getPageSize()!=0) {
+			List empReqTypeAccs = requestsService.getEmpReqTypeAcc(user.getEmployee(), approvalQuery.getRequestType());
+			response =	requestsService.getRequestsForApproval(approvalQuery,empReqTypeAccs,user.getEmployee());	
+
+			//		if (approvalQuery.getRequestType()== null || approvalQuery.getRequestType().isEmpty()) {
+			//			restStatus.setStatus("false");
+			//			restStatus.setCode("304");
+			//			restStatus.setMessage("Empty Search Criteria");
+			//		} else {
+
+			//		response.put("Response",requests);
+			List resp = (List)response.get("list");
+			if (resp == null || resp.size()==0) {
+				restStatus.setStatus("true");
+				restStatus.setCode("200");
+				restStatus.setMessage("Empty List");
+			} else {
+				restStatus.setStatus("true");
+				restStatus.setCode("200");
+				restStatus.setMessage("Successful Transaction");
+			}
+
+			response.put("Status", restStatus);
 		} else {
-			restStatus.setStatus("true");
-			restStatus.setCode("200");
-			restStatus.setMessage("Successful Transaction");
+			restStatus.setStatus("false");
+			restStatus.setCode("310");
+			restStatus.setMessage("Page Size Value Can't be ZERO");
 		}
-		
-		response.put("Status", restStatus);
 		return response;
 	}
 	
@@ -187,24 +193,29 @@ public class RequestsServiceController {
 	{
 		Map response = new HashMap();		
 		RestStatus restStatus = new RestStatus();
-		
+
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 		UserDetails userDet = (UserDetails)token.getPrincipal();
 		User user = requestsService.getUser(userDet.getUsername());
 		approvalQuery.setEmp_code(user.getEmployee().getEmpCode());
 		approvalQuery.setCodeFrom(null);
 		approvalQuery.setCodeTo(null);
-		
-		response =	requestsService.getRequestsForApproval(approvalQuery,null,user.getEmployee());
-		List resp = (List)response.get("list");
-		if (resp == null || resp.size()==0) {
-			restStatus.setStatus("true");
-			restStatus.setCode("200");
-			restStatus.setMessage("Empty List");
+		if (approvalQuery.getPageSize()!=0) {
+			response =	requestsService.getRequestsForApproval(approvalQuery,null,user.getEmployee());
+			List resp = (List)response.get("list");
+			if (resp == null || resp.size()==0) {
+				restStatus.setStatus("true");
+				restStatus.setCode("200");
+				restStatus.setMessage("Empty List");
+			} else {
+				restStatus.setStatus("true");
+				restStatus.setCode("200");
+				restStatus.setMessage("Successful Transaction");
+			}
 		} else {
-			restStatus.setStatus("true");
-			restStatus.setCode("200");
-			restStatus.setMessage("Successful Transaction");
+			restStatus.setStatus("false");
+			restStatus.setCode("310");
+			restStatus.setMessage("Page Size Value Can't be ZERO");
 		}
 		response.put("Status", restStatus);
 		return response;
