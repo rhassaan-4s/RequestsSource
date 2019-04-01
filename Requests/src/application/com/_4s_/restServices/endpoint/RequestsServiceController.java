@@ -181,6 +181,7 @@ public class RequestsServiceController {
 			restStatus.setStatus("false");
 			restStatus.setCode("310");
 			restStatus.setMessage("Page Size Value Can't be ZERO");
+			response.put("Status", restStatus);
 		}
 		return response;
 	}
