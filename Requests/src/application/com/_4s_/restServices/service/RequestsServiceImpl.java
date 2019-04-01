@@ -317,7 +317,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		return response;
 	}
 	
-	DateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	DateFormat df=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	Date newDate = null;
 	try {
 		newDate = df.parse(userRequest.getAttendanceTime());
@@ -491,7 +491,7 @@ public List getEmpReqTypeAcc(Employee emp,String requestType) {
 //	log.debug("access levels " + accessLevels);
 //	log.debug("requestType " + requestType);
 	List tempAcc = new ArrayList();
-	if (requestType != null) {
+	if (requestType != null && !requestType.isEmpty()) {
 		tempAcc = requestsApprovalManager.getEmpReqTypeAccs(accessLevels,new Long(requestType));
 	} else {
 		tempAcc = requestsApprovalManager.getEmpReqTypeAccs(accessLevels, null);
