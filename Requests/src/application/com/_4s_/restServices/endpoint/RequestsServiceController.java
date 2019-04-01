@@ -164,11 +164,16 @@ public class RequestsServiceController {
 //		} else {
 		
 //		response.put("Response",requests);
-//		if (((List)response.get("list")).size()>0) {
+		List resp = (List)response.get("list");
+		if (resp == null || resp.size()>0) {
+			restStatus.setStatus("true");
+			restStatus.setCode("200");
+			restStatus.setMessage("Empty List");
+		} else {
 			restStatus.setStatus("true");
 			restStatus.setCode("200");
 			restStatus.setMessage("Successful Transaction");
-//		} 
+		}
 		
 		response.put("Status", restStatus);
 		return response;
@@ -191,18 +196,16 @@ public class RequestsServiceController {
 		approvalQuery.setCodeTo(null);
 		
 		response =	requestsService.getRequestsForApproval(approvalQuery,null,user.getEmployee());
-		
-//		response.put("Response",requests);
-//		if (((List)response.get("list")).size()>0) {
+		List resp = (List)response.get("list");
+		if (resp == null || resp.size()>0) {
+			restStatus.setStatus("true");
+			restStatus.setCode("200");
+			restStatus.setMessage("Empty List");
+		} else {
 			restStatus.setStatus("true");
 			restStatus.setCode("200");
 			restStatus.setMessage("Successful Transaction");
-//		} 
-//		else {
-//			restStatus.setStatus("false");
-//			restStatus.setCode("304");
-//			restStatus.setMessage("Empty Search Criteria");
-//		}
+		}
 		response.put("Status", restStatus);
 		return response;
 	}

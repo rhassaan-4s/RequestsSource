@@ -833,11 +833,6 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				mCalDate.setDateTimeString(dateTo,new Boolean(false));
 				toDate= mCalDate.getDate();
 				log.debug(">>>>>>>>>>>>>toDate "+ toDate);
-				
-//				loginUserReqs= getPagedRequests(fromDate, toDate,Long.parseLong(requestType),null,null,null,null,null,null,null,null,empReqTypeAccs,pageNumber,pageSize);
-//				log.debug("--dateList.size--"+loginUserReqs.size());
-//				//model.put("loginUserReqs", loginUserReqs);
-//				return loginUserReqs;
 			}
 		}
 		Map loginUserReqs = new HashMap();
@@ -845,59 +840,6 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			reqType = Long.parseLong(requestType);
 		}
 			
-			
-		
-//		if(emp_code!=null && !emp_code.equals("")){
-//			log.debug("---xxxxxxxCodeName--");
-//			if(isOnlyNumbers(emp_code) && (getObjectByParameter(LoginUsers.class, "empCode", emp_code)!=null && !getObjectByParameter(LoginUsers.class, "empCode", emp_code).equals(""))){
-//				LoginUsers loginUser=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp_code);
-//				log.debug("--loginUser.getName()--"+loginUser.getName());
-//
-//				// to get requests corresponding to request type
-//				List<String>list=new ArrayList<String>();
-//				list.add("period_from");
-//				
-////				loginUserReqs=(List) getObjectsByParameterOrderedByFieldList(LoginUsersRequests.class, "login_user", loginUser, list);
-//				loginUserReqs = getPagedRequests(null,null,new Long(requestType),null,null,null,null,emp_code,null,null,null,empReqTypeAccs,pageNumber,pageSize);
-//				
-//				return loginUserReqs;
-//				
-//			}
-//
-//		}
-		
-		
-//		if(codeFrom!=null && codeTo!=null && !codeFrom.equals("")&& !codeTo.equals("")){
-//			loginUserReqs=getPagedRequests(null, null, null, null, null, null, null, null, codeFrom, codeTo, null,empReqTypeAccs, pageNumber, pageSize);
-//			log.debug("---codesList---"+loginUserReqs.size());
-//			return loginUserReqs;
-//		}
-//		
-//		if (dateFrom != null && dateTo != null){
-//			if (!dateFrom.equals("") && !dateTo.equals("") ) {
-//				
-//				Date fromDate = null;
-//				Date toDate = null;
-//				log.debug(">>>>>>>>>>>>> if ");
-//				log.debug(">>>>>>>>>>>Valid date format");
-//				log.debug(">>>>>>>>>>>>>fromDateString "+ dateFrom);
-//				//fromDateStr = fromDateString +" 00:00";
-//				mCalDate.setDateTimeString(dateFrom,new Boolean(true));
-//				fromDate = mCalDate.getDate();
-//				log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
-//				log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
-//				//toDateStr = toDateString+ " 23:59";
-//				mCalDate.setDateTimeString(dateTo,new Boolean(false));
-//				toDate= mCalDate.getDate();
-//				log.debug(">>>>>>>>>>>>>toDate "+ toDate);
-//				
-//				loginUserReqs=getPagedRequests(fromDate, toDate, new Long(requestType), null, null, null,null, null, null, null, null,empReqTypeAccs, pageNumber, pageSize);
-//				log.debug("--dateList.size--"+loginUserReqs.size());
-//				//model.put("loginUserReqs", loginUserReqs);
-//				return loginUserReqs;
-//			}
-//		}
-		
 		if (exactDateFrom != null && exactDateTo != null){
 			if (!exactDateFrom.equals("") && !exactDateTo.equals("") ) {
 				
@@ -914,61 +856,9 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				toExact= mCalDate.getDate();
 				log.debug(">>>>>>>>>>>>>exactDateTo "+ toExact);
 				
-//				loginUserReqs = getPagedRequests(fromDate, toDate, new Long(requestType), null, null, null, null, null, null, null, null,empReqTypeAccs, pageNumber, pageSize);
-//				log.debug("--dateList.size--"+loginUserReqs.size());
-//				return loginUserReqs;
 			}
 		}
 		
-		
-		
-//		if(emp_code!=null  && dateFrom!=null && dateTo!=null && codeFrom!=null && codeTo!=null && statusId!=null){
-//			if((emp_code.equals(""))&&(dateFrom.equals(""))&&(dateTo.equals(""))&&(codeTo.equals(""))&&(codeFrom.equals(""))&&(statusId.equals(""))){
-//				loginUserReqs= getPagedRequests(null,null, Long.parseLong(requestType),null,null,null,null,null,null,null,null,empReqTypeAccs,pageNumber,pageSize);
-//				//model.put("loginUserReqs", allRequests);
-//				return loginUserReqs;
-//			}
-//		}
-		
-		
-		
-		
-//		if(emp_code!=null  && dateFrom!=null && dateTo!=null){
-//			if((!emp_code.equals(""))&&(!dateFrom.equals(""))&&(!dateTo.equals(""))){
-//				
-//				Date fromDate = null;
-//				Date toDate = null;
-//				mCalDate.setDateTimeString(dateFrom,new Boolean(true));
-//				fromDate = mCalDate.getDate();
-//				log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
-//				log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
-//				//toDateStr = toDateString+ " 23:59";
-//				mCalDate.setDateTimeString(dateTo,new Boolean(false));
-//				toDate= mCalDate.getDate();
-//			
-////				loginUserReqs= getPagedRequestsByDatePeriodAndRequestTypeAndEmpCode(fromDate, toDate, new Long(requestType), emp_code,pageNumber,pageSize);
-//				loginUserReqs= getPagedRequests( null,null,new Long(requestType), fromDate, toDate,null,null,emp_code,null,null,null,empReqTypeAccs,pageNumber,pageSize);
-//				//model.put("loginUserReqs", allRequests);
-//				return loginUserReqs;
-//			}
-//		}
-		
-//		if(emp_code!=null  && exactDateFrom!=null && exactDateTo!=null){
-//			if((!emp_code.equals(""))&&(!exactDateFrom.equals(""))&&(!exactDateTo.equals(""))){
-//				
-//				
-//				mCalDate.setDateTimeString(exactDateFrom,new Boolean(true));
-//				fromExact = mCalDate.getDate();
-//				log.debug(">>>>>>>>>>>>>fromDate "+ fromExact);
-//				log.debug(">>>>>>>>>>>>>toDateString "+ exactDateTo);
-//				//toDateStr = toDateString+ " 23:59";
-//				mCalDate.setDateTimeString(exactDateTo,new Boolean(false));
-//				toExact= mCalDate.getDate();
-//			
-////				loginUserReqs= getPagedRequests( null,null,new Long(requestType), fromExact, toExact,null,null,emp_code,null,null,null,empReqTypeAccs,pageNumber,pageSize);
-//				return loginUserReqs;
-//			}
-//		}
 		if (emp_code!=null && emp_code.isEmpty()) {
 			emp_code = null;
 		}
@@ -988,8 +878,6 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		
 		if(statusId!=null && !statusId.equals("")){
 			status = new Long(statusId);
-//			loginUserReqs = getPagedRequests(null, null, null, null, null, null, null, null, null, null, new Long(statusId),empReqTypeAccs, pageNumber, pageSize);
-//			return loginUserReqs;
 		}
 		
 		
