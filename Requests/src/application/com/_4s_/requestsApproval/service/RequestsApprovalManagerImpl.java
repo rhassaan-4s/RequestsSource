@@ -840,6 +840,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			reqType = Long.parseLong(requestType);
 		}
 			
+		log.debug("exactDateFrom " + exactDateFrom + " exactDateTo " + exactDateTo);
 		if (exactDateFrom != null && exactDateTo != null && !exactDateFrom.isEmpty() && !exactDateTo.isEmpty()){
 			if (!exactDateFrom.equals("") && !exactDateTo.equals("") ) {
 				

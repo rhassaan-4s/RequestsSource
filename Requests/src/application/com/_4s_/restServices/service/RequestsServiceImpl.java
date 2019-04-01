@@ -188,7 +188,7 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 	
 	LoginUsersRequests withoutSalVac= new LoginUsersRequests();
 	
-	DateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	DateFormat df=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	Date from = null;
 	try {
 		from = df.parse(userRequest.getAttendanceTime());

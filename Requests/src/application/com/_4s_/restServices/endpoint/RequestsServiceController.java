@@ -165,7 +165,7 @@ public class RequestsServiceController {
 		
 //		response.put("Response",requests);
 		List resp = (List)response.get("list");
-		if (resp == null || resp.size()>0) {
+		if (resp == null || resp.size()==0) {
 			restStatus.setStatus("true");
 			restStatus.setCode("200");
 			restStatus.setMessage("Empty List");
@@ -197,7 +197,7 @@ public class RequestsServiceController {
 		
 		response =	requestsService.getRequestsForApproval(approvalQuery,null,user.getEmployee());
 		List resp = (List)response.get("list");
-		if (resp == null || resp.size()>0) {
+		if (resp == null || resp.size()==0) {
 			restStatus.setStatus("true");
 			restStatus.setCode("200");
 			restStatus.setMessage("Empty List");

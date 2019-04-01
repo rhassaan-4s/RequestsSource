@@ -1,7 +1,6 @@
 package com._4s_.restServices.entrypoint;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -10,15 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.StringUtils;
-
-import com._4s_.restServices.json.RestStatus;
-import com._4s_.security.model.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MySavedRequestAwareAuthenticationSuccessHandler 
 extends SimpleUrlAuthenticationSuccessHandler {
@@ -67,6 +63,15 @@ extends SimpleUrlAuthenticationSuccessHandler {
       clearAuthenticationAttributes(request);
       
       ////////////////////////////////////
+      
+//      try {
+//    	  UserAuthentication authResultObject = (UserAuthentication) authentication;
+//    	  tokenAuthenticationService.addAuthentication(response, authResultObject);
+//    	  // Add the authentication to the Security context
+//    	  SecurityContextHolder.getContext().setAuthentication(authentication);
+//      } catch (Exception ex) {
+//    	  ex.printStackTrace();
+//      }
   }
 
   public void setRequestCache(RequestCache requestCache) {
