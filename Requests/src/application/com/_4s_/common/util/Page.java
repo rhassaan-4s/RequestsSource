@@ -21,7 +21,7 @@ public class Page{
 		Boolean previous;
 		
 		
-		int listSize = ((Long)map.get("listSize")).intValue();
+		int listSize = ((Integer)map.get("listSize")).intValue();
 		int numberOfPages = (listSize / pageSize);
 		if (listSize % pageSize != 0){
 			numberOfPages = numberOfPages +1;

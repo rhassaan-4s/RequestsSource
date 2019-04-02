@@ -1021,14 +1021,14 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			criteria.setProjection(Projections.projectionList().add(Projections.rowCount()));
 			list = (List)criteria.list();
-			map.put("listSize", criteria.list().iterator().next());
+			map.put("listSize", Integer.valueOf(criteria.list().iterator().next()+""));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
 			log.debug("exception " + e.getMessage());
 			Page page = new Page();
-			map.put("listSize", new Long(0));
+			map.put("listSize", new Integer(0));
 			return page.getPage(map,pageNumber,pageSize);
 		}
 		
