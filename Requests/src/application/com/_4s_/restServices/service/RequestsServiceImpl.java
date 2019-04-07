@@ -95,7 +95,7 @@ public void setSecurityDao(MySecurityDAO securityDao) {
 
 public LoginUsersRequests signInOut(AttendanceRequest userRequest,Long empId) {
 	// TODO Auto-generated method stub
-	DateFormat df=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	Date newDate = null;
 	try {
 		newDate = df.parse(userRequest.getAttendanceTime());
@@ -188,7 +188,7 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 	
 	LoginUsersRequests withoutSalVac= new LoginUsersRequests();
 	
-	DateFormat df=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	Date from = null;
 	try {
 		from = df.parse(userRequest.getAttendanceTime());
@@ -317,7 +317,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		return response;
 	}
 	
-	DateFormat df=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	Date newDate = null;
 	try {
 		newDate = df.parse(userRequest.getAttendanceTime());

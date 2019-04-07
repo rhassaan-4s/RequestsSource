@@ -994,7 +994,18 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 							Restrictions.eq("request_id.id", requestType),
 							Restrictions.eq("request_id.id", 4))
 							);
-				} else {
+				} else if (requestType.equals("4")) {
+					criteria.add(Restrictions.or(Restrictions.or(
+							Restrictions.eq("request_id.id", 1),
+							Restrictions.eq("request_id.id", 2))
+							,Restrictions.eq("request_id.id", 4)));
+				} else if (requestType.equals("5")) {
+					criteria.add(Restrictions.or(
+							Restrictions.eq("request_id.id", 10),
+							Restrictions.eq("request_id.id", 11))
+							);
+				}
+				else {
 					criteria.add(Restrictions.eq("request_id.id", requestType));
 				}
 			}

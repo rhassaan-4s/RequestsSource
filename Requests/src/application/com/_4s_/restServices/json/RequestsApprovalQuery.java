@@ -8,7 +8,7 @@ public class RequestsApprovalQuery {
 	private String dateTo; 
 	private String exactDateFrom; 
 	private String exactDateTo; 
-	private String requestType; 
+	private String requestType; //1:Special Vacations 2:Periodic Vacations 3:Permissions 4:Special&Periodic Vacations 5:Sign in/out
 	private String codeFrom; 
 	private String codeTo; 
 	private String statusId;
