@@ -861,20 +861,20 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			}
 			/////////////////////////////////////////////////////////////////////////////////
 			if(requestType!=null) {
-				if (requestType.equals(1)){
+				if (requestType.equals(new Long(1))){
 					criteria.add(Restrictions.or(
 							Restrictions.eq("request_id.id", requestType),
-							Restrictions.eq("request_id.id", 4))
+							Restrictions.eq("request_id.id", new Long(4)))
 							);
-				} else if (requestType.equals(4)){//periodic and special vacations
+				} else if (requestType.equals(new Long(4))) {
 					criteria.add(Restrictions.or(Restrictions.or(
-							Restrictions.eq("request_id.id", 1),
-							Restrictions.eq("request_id.id", 2))
-							,Restrictions.eq("request_id.id", 4)));
-				} else if (requestType.equals(5)){//sign in or out
+							Restrictions.eq("request_id.id", new Long(1)),
+							Restrictions.eq("request_id.id", new Long(2)))
+							,Restrictions.eq("request_id.id", new Long(4))));
+				} else if (requestType.equals(new Long(5))) {
 					criteria.add(Restrictions.or(
-							Restrictions.eq("request_id.id", 10),
-							Restrictions.eq("request_id.id", 11))
+							Restrictions.eq("request_id.id", new Long(10)),
+							Restrictions.eq("request_id.id", new Long(11)))
 							);
 				} else {
 					criteria.add(Restrictions.eq("request_id.id", requestType));
@@ -1013,20 +1013,21 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			}
 			/////////////////////////////////////////////////////////////////////////////////
 			if(requestType!=null) {
-				if (requestType.equals(1)){
+				log.debug("request " + requestType);
+				if (requestType.equals(new Long(1))){
 					criteria.add(Restrictions.or(
 							Restrictions.eq("request_id.id", requestType),
-							Restrictions.eq("request_id.id", 4))
+							Restrictions.eq("request_id.id", new Long(4)))
 							);
-				} else if (requestType.equals("4")) {
+				} else if (requestType.equals(new Long(4))) {
 					criteria.add(Restrictions.or(Restrictions.or(
-							Restrictions.eq("request_id.id", 1),
-							Restrictions.eq("request_id.id", 2))
-							,Restrictions.eq("request_id.id", 4)));
-				} else if (requestType.equals("5")) {
+							Restrictions.eq("request_id.id", new Long(1)),
+							Restrictions.eq("request_id.id", new Long(2)))
+							,Restrictions.eq("request_id.id", new Long(4))));
+				} else if (requestType.equals(new Long(5))) {
 					criteria.add(Restrictions.or(
-							Restrictions.eq("request_id.id", 10),
-							Restrictions.eq("request_id.id", 11))
+							Restrictions.eq("request_id.id", new Long(10)),
+							Restrictions.eq("request_id.id", new Long(11)))
 							);
 				}
 				else {
