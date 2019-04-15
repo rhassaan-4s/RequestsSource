@@ -2,6 +2,8 @@ package com._4s_.restServices.endpoint;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -46,10 +48,12 @@ public class ExceptionControllerAdvice  implements AccessDeniedHandler {
 		status.setCode("403");
 		status.setMessage("Access Denied");
 		status.setStatus("False");
-
+		
+		Map map = new HashMap();
+		map.put("Status", status);
 		PrintWriter writer = response.getWriter();
 		ObjectMapper mapper = jsonConverter.getObjectMapper();
-		mapper.writeValue(writer, status);
+		mapper.writeValue(writer, map);
 		System.out.println("object mapper writting");
 		writer.flush();
 	}

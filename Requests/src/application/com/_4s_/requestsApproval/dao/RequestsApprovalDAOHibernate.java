@@ -53,6 +53,20 @@ import com._4s_.restServices.json.RequestOutput;
 @Transactional
 @Repository
 public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements RequestsApprovalDAO {
+	
+	private ExternalQueries externalQueries = null;
+	
+	
+
+	public ExternalQueries getExternalQueries() {
+		return externalQueries;
+	}
+
+
+	public void setExternalQueries(ExternalQueries externalQueries) {
+		this.externalQueries = externalQueries;
+	}
+
 
 	public List getAllLeafs(final Class clazz){
 		log.debug("inside getAllLeafs");
@@ -851,6 +865,16 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 					criteria.add(Restrictions.or(
 							Restrictions.eq("request_id.id", requestType),
 							Restrictions.eq("request_id.id", 4))
+							);
+				} else if (requestType.equals(4)){//periodic and special vacations
+					criteria.add(Restrictions.or(Restrictions.or(
+							Restrictions.eq("request_id.id", 1),
+							Restrictions.eq("request_id.id", 2))
+							,Restrictions.eq("request_id.id", 4)));
+				} else if (requestType.equals(5)){//sign in or out
+					criteria.add(Restrictions.or(
+							Restrictions.eq("request_id.id", 10),
+							Restrictions.eq("request_id.id", 11))
 							);
 				} else {
 					criteria.add(Restrictions.eq("request_id.id", requestType));
@@ -1754,6 +1778,15 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			return new ArrayList();
 		}
 	}
+
+
+	@Transactional
+	public int insertTimeAttend(String hostName, String serviceName,
+			String userName, String password, String emp_code, Date date_,
+			Date time_, String trans_type) {
+		return externalQueries.insertTimeAttend(hostName, serviceName, userName, password, emp_code, date_, time_, trans_type);
+	}
+	
 	
 	
 

@@ -1,34 +1,28 @@
 package com._4s_.requestsApproval.dao;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-
-import javax.sql.RowSet;
 
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.dao.DataAccessException;
 //import org.hibernate.hql.ast.tree.DeleteStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import com._4s_.common.util.DBUtils;
 import com._4s_.common.util.MultiCalendarDate;
-import com._4s_.common.util.Page;
 //import com._4s_.stores.model.DBConnection;
 //import com._4s_.stores.model.ExternalDependenceTo;
 //import com._4s_.stores.model.ItemData;
@@ -48,6 +42,9 @@ public class ExternalQueries {
 	private JdbcTemplate jdbcTemplate;
 	private BasicDataSource basicDataSource;
 	private JdbcTemplate exjt;
+	
+	private PlatformTransactionManager platformTransactionManager;
+	
 	
 	
 //	private StoresManager mgr ;
@@ -71,6 +68,17 @@ public class ExternalQueries {
 //		return basicDataSource;
 //	}
 	
+	public PlatformTransactionManager getPlatformTransactionManager() {
+		return platformTransactionManager;
+	}
+
+
+	public void setPlatformTransactionManager(
+			PlatformTransactionManager platformTransactionManager) {
+		this.platformTransactionManager = platformTransactionManager;
+	}
+
+
 	private BasicDataSource createDataSource(String hostName,String serviceName,String userName,String password) {
 		if(basicDataSource == null){
 			basicDataSource = new BasicDataSource();
@@ -83,6 +91,7 @@ public class ExternalQueries {
 		}
 		return basicDataSource;
 	}
+	
 
 //	public List getExternalTransactionTypeList(DBConnection dbConnection, String[] transNoList) {
 //		jdbcTemplate = new JdbcTemplate(createDataSource(dbConnection));
@@ -2638,6 +2647,41 @@ public class ExternalQueries {
 //	}
 //
 
+	public int insertTimeAttend (String hostName, String serviceName, String userName, String password, String emp_code, Date date_, Date time_, String trans_type) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+		
+		DefaultTransactionDefinition paramTransactionDefinition = new    DefaultTransactionDefinition();
+
+		TransactionStatus status=platformTransactionManager.getTransaction(paramTransactionDefinition );
+		log.debug("date_ " + date_);
+		log.debug("simpleDateFormat.format(date_) " + simpleDateFormat.format(date_));
+		
+		basicDataSource = createDataSource(hostName,serviceName,userName,password);
+		jdbcTemplate = new JdbcTemplate(basicDataSource);
+		StringBuilder sql = new StringBuilder(
+				" insert into time_attend (emp_code,date_,time_,trans_type) values ('" +emp_code
+				+ "',to_date('" + simpleDateFormat.format(date_) + "','dd-MM-YYYY hh:mi:ss'),to_date('" + simpleDateFormat.format(time_) + "','dd-MM-YYYY hh:mi:ss'),'" + trans_type+"')");
+		log.debug(sql.toString());
+		try {
+			jdbcTemplate.update(sql.toString());
+			
+			log.debug("will commit");
+			platformTransactionManager.commit(status);
+			return 1;
+//			jdbcTemplate.getDataSource().getConnection().commit();
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			log.debug("will rollback " + e.getMessage());
+			platformTransactionManager.rollback(status);
+			return -1;
+		}
+//		catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+	}
 	@SuppressWarnings("deprecation")
 	public Long getVacationLimit (String hostName,String serviceName,String userName,String password, String empCode, Long reqId, String vacId, Date from_date){
 //		Long result=null;

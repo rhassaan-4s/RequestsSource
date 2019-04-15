@@ -124,5 +124,7 @@ public interface RequestsApprovalManager extends BaseManager {
 	public Map approvalsAccessLevels(RequestApproval approval, LoginUsersRequests requestInfo, Employee emp);
 	public Map getVacInfo(LoginUsersRequests requestInfo);
 	public List getEmpReqTypeAccs(List accessLevels,Long requestType);
+	public int insertTimeAttendance(String hostName, String  serviceName, String  userName, String password,String empCode, Date date, Date date2,
+			String trans_type);
 }
 

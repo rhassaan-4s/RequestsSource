@@ -645,33 +645,12 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				LoginUsers loginUser=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp_code);
 				log.debug("--loginUser.getName()--"+loginUser.getName());
 
-				// to get requests corresponding to request type
 				List<String>list=new ArrayList<String>();
 				list.add("period_from");
 				
-//				loginUserReqs=(List) getObjectsByParameterOrderedByFieldList(LoginUsersRequests.class, "login_user", loginUser, list);
 				loginUserReqs = getRequests(null,null,new Long(requestType),null,null,null,null,emp_code,null,null,null);
 				
 				return loginUserReqs;
-				
-//				List neededRequestTypes = new ArrayList();
-//				for(int i=0;i<loginUserReqs.size();i++){
-//					log.debug("---needed---");
-//					LoginUsersRequests reqs= (LoginUsersRequests) loginUserReqs.get(i);
-//					log.debug("---needed reqs---"+reqs.getEmpCode()+"----reqs.getRequest_id().getId()--"+reqs.getRequest_id().getId());
-//					String request_type=Long.toString(reqs.getRequest_id().getId());
-//					log.debug("-----requestType.equals(reqs.getRequest_id().getId())----"+requestType.equals(reqs.getRequest_id().getId()));
-//					
-//					log.debug("-X--requestType.equals(request_type)--"+requestType.equals(request_type));
-//					if(requestType.equals(request_type)){
-//						neededRequestTypes.add(reqs);
-//						log.debug("---neededList---"+neededRequestTypes.size());
-//					}
-//					log.debug("---after IF neededList---"+neededRequestTypes.size());				
-//				}
-////				log.debug("--list.size--"+neededRequestTypes.size());
-//				return neededRequestTypes;
-				//model.put("loginUserReqs", neededRequestTypes);
 			}
 
 		}
@@ -680,10 +659,6 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		if(codeFrom!=null && codeTo!=null && !codeFrom.equals("")&& !codeTo.equals("")){
 			loginUserReqs=getRequests(null, null, null, null, null, null, null, null, codeFrom, codeTo, null);
 			log.debug("---codesList---"+loginUserReqs.size());
-//			for (int i = 0; i < loginUserReqs.size(); i++) {
-//				LoginUsersRequests s=(LoginUsersRequests) loginUserReqs.get(i);
-//				log.debug("---code code---"+s.getEmpCode());
-//			}
 			return loginUserReqs;
 		}
 		
@@ -730,10 +705,8 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				toDate= mCalDate.getDate();
 				log.debug(">>>>>>>>>>>>>exactDateTo "+ toDate);
 				
-//				loginUserReqs=getPagedRequestsByExactDatePeriodAndRequestType(fromDate, toDate,Long.parseLong(requestType),pageNumber,pageSize);
 				loginUserReqs = getRequests(fromDate, toDate, new Long(requestType), null, null, null, null, null, null, null, null);
 				log.debug("--dateList.size--"+loginUserReqs.size());
-				//model.put("loginUserReqs", loginUserReqs);
 				return loginUserReqs;
 			}
 		}
@@ -1323,4 +1296,11 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			return model;
 		}
 	}
+
+	public int insertTimeAttendance(String hostName, String  serviceName, String  userName, String password,String emp_code, Date date_, Date time_,
+			String trans_type) {
+		return requestsApprovalDAO.insertTimeAttend(hostName, serviceName, userName, password, emp_code, date_, time_, trans_type);
+	}
+	
+	
 }

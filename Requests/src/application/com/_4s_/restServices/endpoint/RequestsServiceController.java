@@ -126,17 +126,22 @@ public class RequestsServiceController {
 		} else {
 			restStatus.setStatus("true");
 			restStatus.setCode("200");
-			restStatus.setMessage("Successful Transaction");
-			response.put("Status", restStatus);
+			
 			UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 			UserDetails userDet = (UserDetails)token.getPrincipal();
 			User user = requestsService.getUser(userDet.getUsername());
 			LoginUsersRequests req = requestsService.signInOut(userRequest,user.getEmployee().getId());
 			if (req!=null){
+				restStatus.setMessage("Successful Manual Transaction");
+				response.put("Status", restStatus);
+				
 				Map output = new HashMap();
 				output.put("request_id", req.getId());
 				response.put("Response" , output);
 			} else {
+				restStatus.setMessage("Successful Automatic Transaction");
+				response.put("Status", restStatus);
+				
 				response.put("Response" ,null);
 			}
 			return response;
@@ -158,13 +163,6 @@ public class RequestsServiceController {
 			List empReqTypeAccs = requestsService.getEmpReqTypeAcc(user.getEmployee(), approvalQuery.getRequestType());
 			response =	requestsService.getRequestsForApproval(approvalQuery,empReqTypeAccs,user.getEmployee());	
 
-			//		if (approvalQuery.getRequestType()== null || approvalQuery.getRequestType().isEmpty()) {
-			//			restStatus.setStatus("false");
-			//			restStatus.setCode("304");
-			//			restStatus.setMessage("Empty Search Criteria");
-			//		} else {
-
-			//		response.put("Response",requests);
 			List resp = (List)response.get("list");
 			if (resp == null || resp.size()==0) {
 				restStatus.setStatus("true");

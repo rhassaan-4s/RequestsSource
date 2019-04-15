@@ -15922,4 +15922,5 @@ INSERT INTO i18n_message VALUES (20211615, 'Vacations Limit exceeded', 101401, 3
 </statment></query><query><sqlindex>92</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101402, 'requestsApproval.caption.exactRequestDate', NULL);&#xD;
 INSERT INTO i18n_message VALUES (20211616,'تاريخ الطلب الحقيقي', 101402, 1);&#xD;
 INSERT INTO i18n_message VALUES (20211617, 'Exact Request Date', 101401, 3);</statment></query><query><sqlindex>93</sqlindex><statment>ALTER TABLE LOGIN_USERS_REQUESTS ADD LONGITUDE FLOAT DEFAULT null;&#xD;
-ALTER TABLE LOGIN_USERS_REQUESTS ADD LATITUDE FLOAT DEFAULT null;</statment></query></SQL>
+ALTER TABLE LOGIN_USERS_REQUESTS ADD LATITUDE FLOAT DEFAULT null;</statment></query><query><sqlindex>94</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD AUTOMATICSIGNINOUT NUMBER;</statment></query><query><sqlindex>95</sqlindex><statment>UPDATE COMMON_SETTINGS SET AUTOMATICSIGNINOUT=1 WHERE ID=1;&#xD;
+</statment></query></SQL>

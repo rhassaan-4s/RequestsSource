@@ -61,6 +61,8 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Integer requestsDeadline;
 	
+	private Boolean automaticSignInOut;
+	
 	
 //	mailMgr: Lehaa= ticketmanager@4s-systems.com, Lotus=
 //			mailPass: Lehaa=mgemge, Lotus=
@@ -96,6 +98,14 @@ public class Settings  implements Serializable,Auditable {
 //	companyLogoHeader: Lehaa,Lotus
 
 	
+
+	public Boolean getAutomaticSignInOut() {
+		return automaticSignInOut;
+	}
+
+	public void setAutomaticSignInOut(Boolean automaticSignInOut) {
+		this.automaticSignInOut = automaticSignInOut;
+	}
 
 	public Integer getRequestsDeadline() {
 		return requestsDeadline;

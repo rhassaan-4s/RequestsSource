@@ -7,9 +7,15 @@
 		<property name="sessionFactory">
 		      <ref bean="sessionFactory"/>
 		</property>
+		<property name="externalQueries">
+			<ref bean="requestsApprovalExternalQueries" />
+		</property>
 	</bean>
 	
 	<bean id="requestsApprovalExternalQueries" class="com._4s_.requestsApproval.dao.ExternalQueries"
 		singleton="false">
+		<property name="platformTransactionManager">
+			<ref bean="transactionManager" />
+		</property>
 	</bean>
 </beans>

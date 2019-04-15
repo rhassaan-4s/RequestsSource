@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
+import com._4s_.requestsApproval.dao.ExternalQueries;
 import com._4s_.requestsApproval.dao.RequestsApprovalDAO;
 import com._4s_.requestsApproval.model.AccessLevels;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
@@ -95,80 +96,109 @@ public void setSecurityDao(MySecurityDAO securityDao) {
 
 public LoginUsersRequests signInOut(AttendanceRequest userRequest,Long empId) {
 	// TODO Auto-generated method stub
+	Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class, new Long(1));
+
 	DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	Date newDate = null;
 	try {
+		System.out.println("userRequest.getAttendanceTime() " + userRequest.getAttendanceTime());
 		newDate = df.parse(userRequest.getAttendanceTime());
+		System.out.println("parsed date " + newDate);
 	} catch (ParseException e) {
 		// TODO Auto-generated catch block
 		System.out.println(e.getMessage());
 	}
 	MultiCalendarDate mCalDate = new MultiCalendarDate();
 	mCalDate.setDate(newDate);
-
+	
+	MultiCalendarDate mCalDateOnly = new MultiCalendarDate();
+	Calendar cal = Calendar.getInstance();
+	cal.setTime(newDate);
+	cal.set(Calendar.HOUR_OF_DAY, 0);
+	cal.set(Calendar.MINUTE, 0);
+	cal.set(Calendar.SECOND, 0);
+	cal.set(Calendar.MILLISECOND,0);
+	Date dateOnly = cal.getTime();
+	mCalDateOnly.setDate(dateOnly);
+	
+	
 	Employee emp = (Employee)requestsApprovalDAO.getObject(Employee.class, empId);
 
 	LoginUsers loginUsers=(LoginUsers) requestsApprovalDAO.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
 	if(loginUsers!=null){
 		System.out.println("-----login.code----"+loginUsers.getEmpCode());
 	}
-	LoginUsersRequests loginUsersRequests = new LoginUsersRequests();
 
-	loginUsersRequests.setLogin_user(loginUsers);
-	/////////////////////////////////////////////////////
+	if (settings.getAutomaticSignInOut().booleanValue() == false) {
+		LoginUsersRequests loginUsersRequests = new LoginUsersRequests();
 
-	 // request number
-	if (loginUsersRequests.getId() == null){
-		String requestNumber="";
-		requestNumber=requestsApprovalManager.CreateRequestNumber();
-		loginUsersRequests.setRequestNumber(requestNumber);
-	}
-	
-	loginUsersRequests.setRequest_date(mCalDate.getDate());
-	loginUsersRequests.setPeriod_from(mCalDate.getDate());
+		loginUsersRequests.setLogin_user(loginUsers);
+		/////////////////////////////////////////////////////
 
-	if(loginUsersRequests.getApproved()==null || loginUsersRequests.getApproved().equals("")){
-		loginUsersRequests.setApproved(new Long(0));	
-	}
-	if(loginUsersRequests.getApplicable()==null || loginUsersRequests.getApplicable().equals("")){
-		loginUsersRequests.setApplicable(new Long(1));			
-	}
-	if(loginUsersRequests.getPosted()==null||loginUsersRequests.getPosted().equals("")){
-		loginUsersRequests.setPosted(new Long(0));
-	}
-	if(loginUsersRequests.getReply()==null||loginUsersRequests.getReply().equals("")){
-		loginUsersRequests.setReply("--");
-	}
-	if(loginUsersRequests.getLeave_effect()==null||loginUsersRequests.getLeave_effect().equals("")){
-		loginUsersRequests.setLeave_effect("0");
-	}
-	if(loginUsersRequests.getLeave_type()==null||loginUsersRequests.getLeave_type().equals("")){
-		loginUsersRequests.setLeave_type("0");
-	}
-	if(loginUsersRequests.getFrom_date()==null|| loginUsersRequests.getFrom_date().equals("")){
-		loginUsersRequests.setFrom_date(loginUsersRequests.getPeriod_from());
-	}
-	
-	loginUsersRequests.setEmpCode(emp.getEmpCode());
-	loginUsersRequests.setNotes("Android Sign In/Out");
-	
-	
-	//10 signin 11 signout
-	RequestTypes reqType = null;
-	System.out.println("userRequest.getAttendanceType() " + userRequest.getAttendanceType());
-	if (userRequest.getAttendanceType().equals(new Long(1))) {
-		reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(10));
+		// request number
+		if (loginUsersRequests.getId() == null){
+			String requestNumber="";
+			requestNumber=requestsApprovalManager.CreateRequestNumber();
+			loginUsersRequests.setRequestNumber(requestNumber);
+		}
+
+		loginUsersRequests.setRequest_date(mCalDate.getDate());
+		loginUsersRequests.setPeriod_from(mCalDate.getDate());
+
+		if(loginUsersRequests.getApproved()==null || loginUsersRequests.getApproved().equals("")){
+			loginUsersRequests.setApproved(new Long(0));	
+		}
+		if(loginUsersRequests.getApplicable()==null || loginUsersRequests.getApplicable().equals("")){
+			loginUsersRequests.setApplicable(new Long(1));			
+		}
+		if(loginUsersRequests.getPosted()==null||loginUsersRequests.getPosted().equals("")){
+			loginUsersRequests.setPosted(new Long(0));
+		}
+		if(loginUsersRequests.getReply()==null||loginUsersRequests.getReply().equals("")){
+			loginUsersRequests.setReply("--");
+		}
+		if(loginUsersRequests.getLeave_effect()==null||loginUsersRequests.getLeave_effect().equals("")){
+			loginUsersRequests.setLeave_effect("0");
+		}
+		if(loginUsersRequests.getLeave_type()==null||loginUsersRequests.getLeave_type().equals("")){
+			loginUsersRequests.setLeave_type("0");
+		}
+		if(loginUsersRequests.getFrom_date()==null|| loginUsersRequests.getFrom_date().equals("")){
+			loginUsersRequests.setFrom_date(loginUsersRequests.getPeriod_from());
+		}
+
+		loginUsersRequests.setEmpCode(emp.getEmpCode());
+		loginUsersRequests.setNotes("Android Sign In/Out");
+
+
+		//10 signin 11 signout
+		RequestTypes reqType = null;
+		System.out.println("userRequest.getAttendanceType() " + userRequest.getAttendanceType());
+		if (userRequest.getAttendanceType().equals(new Long(1))) {
+			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(10));
+		} else {
+			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(11));
+		}
+		loginUsersRequests.setRequest_id(reqType);
+
+		loginUsersRequests.setLatitude(userRequest.getLatitude());
+		loginUsersRequests.setLongitude(userRequest.getLongitude());
+
+		requestsApprovalManager.saveObject(loginUsersRequests);
+
+		return loginUsersRequests;
 	} else {
-		reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(11));
+		String trans_type = null;
+		if (userRequest.getAttendanceType().equals(new Long(1))) {
+			trans_type = "I";
+		} else {
+			trans_type = "O";
+		}
+		System.out.println("date_" + dateOnly + " time_ " + newDate);
+		int result = requestsApprovalManager.insertTimeAttendance(settings.getServer(),settings.getService(),settings.getUsername(),settings.getPassword(),
+				emp.getEmpCode(),dateOnly, newDate,trans_type);
+		return null;
 	}
-	loginUsersRequests.setRequest_id(reqType);
-	
-	loginUsersRequests.setLatitude(userRequest.getLatitude());
-	loginUsersRequests.setLongitude(userRequest.getLongitude());
-
-	requestsApprovalManager.saveObject(loginUsersRequests);
-		
-	return loginUsersRequests;
 }
 
 
