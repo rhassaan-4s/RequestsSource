@@ -861,22 +861,52 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			}
 			/////////////////////////////////////////////////////////////////////////////////
 			if(requestType!=null) {
+				log.debug("requesttype " + requestType);
 				if (requestType.equals(new Long(1))){
+					log.debug("requesttype is 1");
 					criteria.add(Restrictions.or(
 							Restrictions.eq("request_id.id", requestType),
 							Restrictions.eq("request_id.id", new Long(4)))
 							);
 				} else if (requestType.equals(new Long(4))) {
+					log.debug("requesttype is 4");
 					criteria.add(Restrictions.or(Restrictions.or(
 							Restrictions.eq("request_id.id", new Long(1)),
 							Restrictions.eq("request_id.id", new Long(2)))
 							,Restrictions.eq("request_id.id", new Long(4))));
 				} else if (requestType.equals(new Long(5))) {
+					log.debug("requesttype is 5");
 					criteria.add(Restrictions.or(
 							Restrictions.eq("request_id.id", new Long(10)),
 							Restrictions.eq("request_id.id", new Long(11)))
 							);
 				} else {
+					log.debug("requesttype is else");
+					criteria.add(Restrictions.eq("request_id.id", requestType));
+				}
+			}
+			if(requestType!=null) {
+				log.debug("requesttype " + requestType);
+				if (requestType.equals(new Long(1))){
+					log.debug("requesttype is 1");
+					criteria.add(Restrictions.or(
+							Restrictions.eq("request_id.id", requestType),
+							Restrictions.eq("request_id.id", new Long(4)))
+							);
+				} else if (requestType.equals(new Long(4))) {
+					log.debug("requesttype is 4");
+					criteria.add(Restrictions.or(Restrictions.or(
+							Restrictions.eq("request_id.id", new Long(1)),
+							Restrictions.eq("request_id.id", new Long(2)))
+							,Restrictions.eq("request_id.id", new Long(4))));
+				} else if (requestType.equals(new Long(5))) {
+					log.debug("requesttype is 5");
+					criteria.add(Restrictions.or(
+							Restrictions.eq("request_id.id", new Long(10)),
+							Restrictions.eq("request_id.id", new Long(11)))
+							);
+				} else {
+					log.debug("requesttype is else");
 					criteria.add(Restrictions.eq("request_id.id", requestType));
 				}
 			}
@@ -894,7 +924,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			}
 			///////////////////////////////////////////////////////////////////////////////
 			
-			criteria.addOrder(Property.forName("period_from").asc());
+			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			list =  criteria.list();
@@ -1013,24 +1043,27 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			}
 			/////////////////////////////////////////////////////////////////////////////////
 			if(requestType!=null) {
-				log.debug("request " + requestType);
+				log.debug("requesttype " + requestType);
 				if (requestType.equals(new Long(1))){
+					log.debug("requesttype is 1");
 					criteria.add(Restrictions.or(
 							Restrictions.eq("request_id.id", requestType),
 							Restrictions.eq("request_id.id", new Long(4)))
 							);
 				} else if (requestType.equals(new Long(4))) {
+					log.debug("requesttype is 4");
 					criteria.add(Restrictions.or(Restrictions.or(
 							Restrictions.eq("request_id.id", new Long(1)),
 							Restrictions.eq("request_id.id", new Long(2)))
 							,Restrictions.eq("request_id.id", new Long(4))));
 				} else if (requestType.equals(new Long(5))) {
+					log.debug("requesttype is 5");
 					criteria.add(Restrictions.or(
 							Restrictions.eq("request_id.id", new Long(10)),
 							Restrictions.eq("request_id.id", new Long(11)))
 							);
-				}
-				else {
+				} else {
+					log.debug("requesttype is else");
 					criteria.add(Restrictions.eq("request_id.id", requestType));
 				}
 			}
@@ -1052,7 +1085,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			if (empReqTypeAccs != null) {
 				criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
 			}
-			criteria.addOrder(Property.forName("period_from").asc());
+			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			criteria.setProjection(Projections.projectionList().add(Projections.rowCount()));
@@ -1095,12 +1128,27 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			}
 			/////////////////////////////////////////////////////////////////////////////////
 			if(requestType!=null) {
-				if (requestType.equals(1)){
+				log.debug("requesttype " + requestType);
+				if (requestType.equals(new Long(1))){
+					log.debug("requesttype is 1");
 					criteria.add(Restrictions.or(
 							Restrictions.eq("request_id.id", requestType),
-							Restrictions.eq("request_id.id", 4))
+							Restrictions.eq("request_id.id", new Long(4)))
+							);
+				} else if (requestType.equals(new Long(4))) {
+					log.debug("requesttype is 4");
+					criteria.add(Restrictions.or(Restrictions.or(
+							Restrictions.eq("request_id.id", new Long(1)),
+							Restrictions.eq("request_id.id", new Long(2)))
+							,Restrictions.eq("request_id.id", new Long(4))));
+				} else if (requestType.equals(new Long(5))) {
+					log.debug("requesttype is 5");
+					criteria.add(Restrictions.or(
+							Restrictions.eq("request_id.id", new Long(10)),
+							Restrictions.eq("request_id.id", new Long(11)))
 							);
 				} else {
+					log.debug("requesttype is else");
 					criteria.add(Restrictions.eq("request_id.id", requestType));
 				}
 			}
@@ -1122,7 +1170,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			if (empReqTypeAccs != null) {
 				criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
 			}
-			criteria.addOrder(Property.forName("period_from").asc());
+			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			log.debug("first result " + ((pageNumber-1)*pageSize));
