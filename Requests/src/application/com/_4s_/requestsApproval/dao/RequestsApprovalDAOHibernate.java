@@ -924,7 +924,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			}
 			///////////////////////////////////////////////////////////////////////////////
 			
-			criteria.addOrder(Property.forName("from_date").desc());
+			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			list =  criteria.list();
@@ -1039,7 +1039,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				final Date startDate =(Date) format.parse(format.format(exFrom));
 				final Date endDate = (Date)format.parse(format.format(exTo));
 				criteria.add(Expression.ge("from_date", startDate));
-				criteria.add(Expression.le("fromDate", endDate));
+				criteria.add(Expression.le("from_date", endDate));
 			}
 			/////////////////////////////////////////////////////////////////////////////////
 			if(requestType!=null) {
@@ -1085,7 +1085,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			if (empReqTypeAccs != null) {
 				criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
 			}
-			criteria.addOrder(Property.forName("from_date").desc());
+			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			criteria.setProjection(Projections.projectionList().add(Projections.rowCount()));
@@ -1170,7 +1170,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			if (empReqTypeAccs != null) {
 				criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
 			}
-			criteria.addOrder(Property.forName("from_date").desc());
+			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			log.debug("first result " + ((pageNumber-1)*pageSize));
@@ -1199,6 +1199,17 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				} else {
 					op.setRequestDesc(req.getRequest_id().getDescription());
 				}
+				
+				if (req.getRequest_id().getId().equals(new Long(1)) || req.getRequest_id().getId().equals(new Long(2))) {
+					op.setVacDuration(req.getWithdrawDays());
+				}
+				if (req.getRequest_id().getId().equals(new Long(10))) {
+					op.setRequestType(new Long(5));
+				} else if (req.getRequest_id().getId().equals(new Long(11))) {
+					op.setRequestType(new Long(6));
+				} else {
+					op.setRequestType(req.getRequest_id().getId());
+				} 
 				
 				
 				if (req.getApproved()==null || req.getApproved().equals(new Long(0))) {

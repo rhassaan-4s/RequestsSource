@@ -61,7 +61,7 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	@Transient
 	private Date vac_period_to;
 	
-	private Double latitude;
+	private Double latitude = new Double(0);
     
     public Double getLatitude() {
 		return latitude;
@@ -75,7 +75,7 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
-	private Double longitude;
+	private Double longitude = new Double(0);
 	
 	private String reply;
 	public Long getId() {

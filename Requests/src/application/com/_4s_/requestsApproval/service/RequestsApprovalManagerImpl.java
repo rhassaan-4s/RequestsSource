@@ -856,7 +856,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		
 		
 		loginUserReqs= getPagedRequests(fromDate, toDate,reqType,fromExact,toExact,null,null,emp_code,codeFrom,codeTo,status,empReqTypeAccs,pageNumber,pageSize);
-		log.debug("--dateList.size--"+loginUserReqs.size());
+		log.debug("--dateList.size--"+loginUserReqs.get("listSize"));
 		//model.put("loginUserReqs", loginUserReqs);
 		return loginUserReqs;
 	}

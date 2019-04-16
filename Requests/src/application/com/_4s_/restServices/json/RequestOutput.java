@@ -9,14 +9,28 @@ public class RequestOutput {
 	private String empName;
 	private String requestDesc;
 	private Date requestDate;
+	private Long requestType;
 	private Date fromDate;
 	private Date toDate;
 	private String status;//approved-declined
 	private String notes;
+	private Double vacDuration;
 	private Double longitude;
 	private Double latitude;
 	
 	
+	public Long getRequestType() {
+		return requestType;
+	}
+	public void setRequestType(Long requestType) {
+		this.requestType = requestType;
+	}
+	public Double getVacDuration() {
+		return vacDuration;
+	}
+	public void setVacDuration(Double vacDuration) {
+		this.vacDuration = vacDuration;
+	}
 	public Double getLongitude() {
 		return longitude;
 	}
