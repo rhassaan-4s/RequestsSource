@@ -2,6 +2,8 @@ package com._4s_.restServices.entrypoint;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +51,11 @@ extends BasicAuthenticationEntryPoint {
 		status.setStatus("false");
 		status.setCode("401");
 		status.setMessage("Unauthorized Access");
-		mapper.writeValue(writer, status);
+		
+		Map map = new HashMap();
+		map.put("Status", status);
+		
+		mapper.writeValue(writer, map);
 		System.out.println("object mapper writting");
 		writer.flush();
 	}
