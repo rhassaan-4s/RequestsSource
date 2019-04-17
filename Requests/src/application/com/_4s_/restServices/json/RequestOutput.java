@@ -9,6 +9,7 @@ public class RequestOutput {
 	private String empName;
 	private String requestDesc;
 	private Date requestDate;
+	private String requestNumber;
 	private Long requestType;
 	private Date fromDate;
 	private Date toDate;
@@ -18,7 +19,12 @@ public class RequestOutput {
 	private Double longitude;
 	private Double latitude;
 	
-	
+	public String getRequestNumber() {
+		return requestNumber;
+	}
+	public void setRequestNumber(String requestNumber) {
+		this.requestNumber = requestNumber;
+	}
 	public Long getRequestType() {
 		return requestType;
 	}

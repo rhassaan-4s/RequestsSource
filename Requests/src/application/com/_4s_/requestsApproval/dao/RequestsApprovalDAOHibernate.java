@@ -1190,6 +1190,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				op.setEmpCode(req.getEmpCode());
 				op.setEmpName(req.getLogin_user().getName());
 				op.setRequestDate(req.getRequest_date());
+				op.setRequestNumber(req.getRequestNumber());
 				op.setNotes(req.getNotes());
 				op.setLongitude(req.getLongitude());
 				op.setLatitude(req.getLatitude());
