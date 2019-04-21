@@ -150,7 +150,7 @@ public class RequestsServiceController {
 				response.put("Status", restStatus);
 				
 				Map output = new HashMap();
-				output.put("request_id", req.getId());
+				output.put("request_number", req.getRequestNumber());
 				response.put("Response" , output);
 			} else {
 				restStatus.setMessage("Successful Automatic Transaction");

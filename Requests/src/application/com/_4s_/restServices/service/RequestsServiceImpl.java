@@ -548,7 +548,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	}
 	requestsApprovalManager.saveObject(loginUsersRequests);
 	Map output = new HashMap();
-	output.put("request_id", loginUsersRequests.getId());
+	output.put("request_number", loginUsersRequests.getRequestNumber());
 	response.put("Response", output);
 	
 	status.setCode("200");
