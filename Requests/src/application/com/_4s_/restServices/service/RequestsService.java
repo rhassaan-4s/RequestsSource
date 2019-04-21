@@ -35,4 +35,7 @@ public interface RequestsService {// extends BaseManager {
 	public Map getVacTypes(Long requestType);
 	
 	public List getEmpReqTypeAcc(Employee emp,String requestType);
+
+	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
+			Employee employee);
 }

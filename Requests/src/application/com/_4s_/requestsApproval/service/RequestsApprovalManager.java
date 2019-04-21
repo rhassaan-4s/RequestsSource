@@ -23,6 +23,7 @@ import com._4s_.common.service.BaseManager;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.restServices.json.RequestApproval;
+import com._4s_.restServices.json.RequestsApprovalQuery;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
 @Transactional
@@ -126,5 +127,7 @@ public interface RequestsApprovalManager extends BaseManager {
 	public List getEmpReqTypeAccs(List accessLevels,Long requestType);
 	public int insertTimeAttendance(String hostName, String  serviceName, String  userName, String password,String empCode, Date date, Date date2,
 			String trans_type);
+	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
+			Employee emp);
 }
 

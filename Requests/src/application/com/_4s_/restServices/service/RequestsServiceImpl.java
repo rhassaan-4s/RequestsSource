@@ -559,6 +559,14 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 
 }
 
+
+public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
+		Employee emp) {
+	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+	Map response = requestsApprovalManager.checkStartedRequests(requestQuery,emp);
+	return response;
+}
+
 public List getEmpReqTypeAcc(Employee emp,String requestType) {
 	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
 	List tempLevels = (List)requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "emp_id", loggedInUser);

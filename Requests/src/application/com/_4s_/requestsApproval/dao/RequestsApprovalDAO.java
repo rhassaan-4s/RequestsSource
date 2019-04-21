@@ -16,7 +16,9 @@ import com._4s_.HR.model.HRSpecialtyDivision;
 import com._4s_.HR.model.HRSpecialtyLevel;
 import com._4s_.HR.model.HRVacation;
 import com._4s_.common.dao.BaseDAO;
+import com._4s_.common.model.Employee;
 import com._4s_.restServices.json.AttendanceRequest;
+import com._4s_.restServices.json.RequestsApprovalQuery;
 
 @Transactional
 public interface RequestsApprovalDAO extends BaseDAO {
@@ -84,4 +86,6 @@ public interface RequestsApprovalDAO extends BaseDAO {
 	public int insertTimeAttend(String hostName, String serviceName,
 			String userName, String password, String emp_code, Date date_,
 			Date time_, String trans_type);
+	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
+			Employee emp);
 }

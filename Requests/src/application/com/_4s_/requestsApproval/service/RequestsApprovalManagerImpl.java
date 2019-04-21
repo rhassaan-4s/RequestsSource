@@ -40,6 +40,7 @@ import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.restServices.json.RequestApproval;
+import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
 import com.ibm.icu.util.Calendar;
 import com.jenkov.prizetags.tree.itf.ITree;
@@ -1301,6 +1302,12 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			String trans_type) {
 		return requestsApprovalDAO.insertTimeAttend(hostName, serviceName, userName, password, emp_code, date_, time_, trans_type);
 	}
+
+	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
+			Employee emp) {
+		return requestsApprovalDAO.checkStartedRequests(requestQuery,emp);
+	}
 	
+
 	
 }

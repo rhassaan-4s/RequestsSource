@@ -1,18 +1,19 @@
 package com._4s_.restServices.endpoint;
 
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang.CharSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,8 +27,9 @@ import com._4s_.restServices.json.RequestTypeWrapper;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
 import com._4s_.restServices.service.RequestsService;
-import com._4s_.restServices.service.RequestsServiceImpl;
 import com._4s_.security.model.User;
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.mysql.jdbc.CharsetMapping;
 
 
 //@Controller
@@ -95,7 +97,7 @@ public class RequestsServiceController {
 //	4. Permission End
 //	5. Errand Start
 //	6. Errand End
-	@RequestMapping(value="/userRequest", method=RequestMethod.POST, 
+	@RequestMapping(value="/userRequest", method=RequestMethod.POST,
 			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody
 	public Map userRequest(AttendanceRequest userRequest)
@@ -104,6 +106,18 @@ public class RequestsServiceController {
 		UserDetails userDet = (UserDetails)token.getPrincipal();
 		User user = requestsService.getUser(userDet.getUsername());
 		Map response = requestsService.userRequest(userRequest,user.getEmployee().getId());
+		return response;
+	}
+	
+	@RequestMapping(value="/checkStartedRequests", method=RequestMethod.POST, 
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody
+	public Map checkStartedRequests(RequestsApprovalQuery requestQuery)
+	{
+		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDet = (UserDetails)token.getPrincipal();
+		User user = requestsService.getUser(userDet.getUsername());
+		Map response = requestsService.checkStartedRequests(requestQuery,user.getEmployee());
 		return response;
 	}
 
@@ -149,7 +163,7 @@ public class RequestsServiceController {
 	}
 
 
-	@RequestMapping(value="/requestsForApproval", method=RequestMethod.POST, 
+	@RequestMapping(value="/requestsForApproval", method=RequestMethod.POST,
 			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody
 	public Map requestsForApproval( RequestsApprovalQuery approvalQuery)

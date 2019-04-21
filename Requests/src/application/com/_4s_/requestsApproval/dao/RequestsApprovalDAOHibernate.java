@@ -40,6 +40,7 @@ import com._4s_.HR.model.HRSpecialtyDivision;
 import com._4s_.HR.model.HRSpecialtyLevel;
 import com._4s_.HR.model.HRVacation;
 import com._4s_.common.dao.BaseDAOHibernate;
+import com._4s_.common.model.Employee;
 import com._4s_.common.util.DBUtils;
 import com._4s_.common.util.Page;
 import com._4s_.requestsApproval.model.EmpReqApproval;
@@ -49,6 +50,8 @@ import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.RequestOutput;
 //import com._4s_.requestsApproval.model.TimeAttend;
 //import com._4s_.stores.model.ViewStoreCardItem;
+import com._4s_.restServices.json.RequestsApprovalQuery;
+import com._4s_.restServices.json.RestStatus;
 
 @Transactional
 @Repository
@@ -1847,11 +1850,125 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			Date time_, String trans_type) {
 		return externalQueries.insertTimeAttend(hostName, serviceName, userName, password, emp_code, date_, time_, trans_type);
 	}
-	
-	
-	
 
+
+	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
+			Employee emp) {
+		Map response = new HashMap();
+		DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
+		RestStatus status = new RestStatus();
+		Long requestType =  Long.parseLong(requestQuery.getRequestType());
+		
+		Date newDate1 = null;
+		try {
+			newDate1 = df.parse(requestQuery.getDateFrom());
+		} catch(Exception e){
+			e.printStackTrace();
+			status.setCode("312");
+			status.setMessage("Date is not well formated");
+			status.setStatus("False");
+			response.put("Status", status);
+			return response;
+		}
+		
+		Calendar cFrom= Calendar.getInstance();
+		cFrom.setTime(newDate1);
+		cFrom.set(Calendar.HOUR_OF_DAY, 0);
+		cFrom.set(Calendar.MINUTE, 0);
+		cFrom.set(Calendar.SECOND, 0);
+		final Date dateFrom=cFrom.getTime();
+		log.debug("------dateFrom---"+dateFrom);
+
+		Date newDate2 = null;
+		try {
+			newDate2 = df.parse(requestQuery.getDateTo());
+		} catch(Exception e){
+			e.printStackTrace();
+			status.setCode("312");
+			status.setMessage("Date is not well formated");
+			status.setStatus("False");
+			response.put("Status", status);
+			return response;
+		}
+		Calendar cTo= Calendar.getInstance();
+		cTo.setTime(newDate2);
+		cTo.set(Calendar.HOUR_OF_DAY, 23);
+		cTo.set(Calendar.MINUTE, 59);
+		cTo.set(Calendar.SECOND, 59);
+
+		final Date dateTo=cTo.getTime();
+		log.debug("------dateTo---"+dateTo);
+
+		DateFormat format =	new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date sDate =null;
+		if (dateFrom != null) {
+			try {
+				sDate = (Date) format.parse(format.format(dateFrom));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		Date eDate = null;
+		if (dateTo != null) {
+			try {
+				eDate = (Date)format.parse(format.format(dateTo));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		log.debug("sDate " + sDate);
+		log.debug("eDate " + eDate);
+		List list =new ArrayList();
+		Criteria criteria = getCurrentSession()
+				.createCriteria(LoginUsersRequests.class);
 	
+		criteria.add(Expression.isNull("period_to"));
+		
+		log.debug("request type " + requestType);
+		if (requestType.equals(new Long(1))){
+			log.debug("request type " + requestType);
+			criteria.add(Restrictions.eq("request_id.id", new Long(3)));
+			if (sDate !=null) {
+				final Date startDate =sDate;
+				criteria.add(Expression.ge("period_from", startDate));
+			}
+			if (eDate != null) {
+				final Date endDate = eDate;
+				criteria.add(Expression.le("period_from", endDate));
+			}
+		} else if (requestType.equals(new Long(2))){
+			log.debug("request type " + requestType);
+			criteria.add(Restrictions.eq("request_id.id", new Long(1)));
+			criteria.createCriteria("vacation").add(Restrictions.eq("vacation", "999"));
+			if (sDate !=null) {
+				final Date startDate =sDate;
+				criteria.add(Expression.ge("period_from", startDate));
+			}
+			if (eDate != null) {
+				final Date endDate = eDate;
+				criteria.add(Expression.le("period_from", endDate));
+			}
+		}
+		criteria.add(Restrictions.eq("empCode", emp.getEmpCode()));
+		criteria.addOrder(Property.forName("period_from").desc());
+		criteria
+		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		list = criteria.list();
+		status.setCode("200");
+		status.setMessage("Successful Transaction");
+		status.setStatus("True");
+		response.put("Status", status);
+		response.put("Response", list) ;
+		return response;
+	}
+
+
+
+
+
 	//	public List getTimeAttend(final String empCode,final Date fromDate,final Date toDate){
 	//		try{
 	//			List list = (List) getHibernateTemplate().execute(
