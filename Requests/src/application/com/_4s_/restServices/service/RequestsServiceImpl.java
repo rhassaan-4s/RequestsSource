@@ -15,6 +15,9 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +46,7 @@ import com._4s_.security.model.User;
 
 @Service("requestsService")
 @Transactional
-public class RequestsServiceImpl implements RequestsService {
+public class RequestsServiceImpl implements RequestsService, UserDetailsService {
  
  @Autowired
  private RequestsApprovalDAO requestsApprovalDAO;
@@ -206,6 +209,18 @@ public LoginUsersRequests signInOut(AttendanceRequest userRequest,Long empId) {
 public User getUser(String username) {
 	// TODO Auto-generated method stub
 	return securityDao.getUser(username);
+}
+
+
+
+public UserDetails loadUserByUsername(String username)
+		throws UsernameNotFoundException {
+	User user = getUser(username);
+	 if (user != null) {
+		 return user;
+	 } else {
+		 throw new UsernameNotFoundException("User not found.");
+	 }
 }
 
 public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long empId) {

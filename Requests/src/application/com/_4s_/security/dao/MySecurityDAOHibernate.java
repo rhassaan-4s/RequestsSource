@@ -1,9 +1,8 @@
 package com._4s_.security.dao;
 
-import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -13,9 +12,6 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -209,6 +205,7 @@ MySecurityDAO {
 		    
 		log.debug("SecurityContextHolder.getContext().getAuthentication().getClass() " + SecurityContextHolder.getContext().getAuthentication().getClass());
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+		
 		UserDetails userDet = (UserDetails)token.getPrincipal();
 		return getUser(userDet.getUsername());
 	}

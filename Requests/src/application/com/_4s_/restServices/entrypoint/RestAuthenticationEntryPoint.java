@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import com._4s_.restServices.json.RestStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Component
+//@Component
 public final class RestAuthenticationEntryPoint 
 extends BasicAuthenticationEntryPoint {
 

@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.springframework.security.core.GrantedAuthority;
 
 import com._4s_.auditing.model.Auditable;
 
@@ -20,7 +21,7 @@ import com._4s_.auditing.model.Auditable;
  */
 @Entity
 @Table (name = "security_permissions")
-public class Permissions implements Serializable,Auditable {
+public class Permissions implements Serializable,Auditable,GrantedAuthority{
 	@Id
 	private Long id;
 
@@ -124,6 +125,11 @@ public class Permissions implements Serializable,Auditable {
 
 	public void setPermissionDescription(String permissionDescription) {
 		this.permissionDescription = permissionDescription;
+	}
+
+	public String getAuthority() {
+		// TODO Auto-generated method stub
+		return permessionname;
 	}
 
 }

@@ -1,13 +1,12 @@
 package com._4s_.restServices.endpoint;
 
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.commons.lang.CharSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,8 +27,6 @@ import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
 import com._4s_.restServices.service.RequestsService;
 import com._4s_.security.model.User;
-import com.fasterxml.jackson.core.JsonEncoding;
-import com.mysql.jdbc.CharsetMapping;
 
 
 //@Controller
@@ -59,6 +56,14 @@ public class RequestsServiceController {
 			} else {
 				System.out.println("Authenticated with employee id is " + user.getEmployee().getId());
 
+				UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+//
+//				HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request) {
+//				    @Override public String getParameter(String name) { return "true"; }            
+//				};
+//		
+//				getRememberMeServices().loginSuccess(wrapper, response, auth);  
+				
 				RestStatus status = new RestStatus();
 				status.setStatus("true");
 				status.setCode("200");

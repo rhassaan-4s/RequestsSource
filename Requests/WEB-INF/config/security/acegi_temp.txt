@@ -13,18 +13,8 @@
 		entry-point-ref="restAuthenticationEntryPoint"
 		access-decision-manager-ref="accessDecisionManager">
 
-		 <!-- enable remember me 
-		    <remember-me key="spring-sec"
-		    services-ref="rememberMeServices"/>--><!--  token-validity-seconds="1209600" data-source-ref="dataSource"  remember-me-parameter="remember-me" -->
 		 <remember-me key="jsfspring-sec" services-ref="rememberMeServices"/>
 		 
-		<!-- <remember-me user-service-ref="restService" token-repository-ref="tokenRepository" token-validity-seconds="86400" />-->
-		<!-- <remember-me key="some_random_key" 
-         token-validity-seconds="31536000" 
-         user-service-ref="restService" token-repository-ref="tokenRepository" />
-         -->
-        
-   			 
 		<form-login login-page="/api/workflow/login*" 
 			username-parameter="username" password-parameter="password" 
 			authentication-success-handler-ref="mySuccessHandler"
@@ -38,25 +28,25 @@
 		<intercept-url pattern="/api/workflow/signInOut"
 			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 		<intercept-url pattern="/api/workflow/userRequest"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="CAN_VIEW_page_RequestsAproval_generalEmployee" />
 		<intercept-url pattern="/api/workflow/submittedRequests"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="CAN_VIEW_page_RequestsAproval_generalEmployee" />
 
 
 		<intercept-url pattern="/api/workflow/requestsForApproval"
-			access="hasRole('CAN_VIEW_page_requestsApproval')" />
+			access="CAN_VIEW_page_requestsApproval" />
 			
 		<intercept-url pattern="/api/workflow/approveRequest"
-			access="hasRole('CAN_VIEW_page_requestsApproval')" />
+			access="CAN_VIEW_page_requestsApproval" />
 			
 		<intercept-url pattern="/api/workflow/vacInfo"
-			access="hasRole('CAN_VIEW_page_requestsApproval')" />
+			access="CAN_VIEW_page_requestsApproval" />
 			
 		<intercept-url pattern="/api/workflow/vacTypes"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="CAN_VIEW_page_RequestsAproval_generalEmployee" />
 
 		<custom-filter ref="authenticationFilter" before="PRE_AUTH_FILTER" />
-		<custom-filter ref="rememberMeFilter" before="REMEMBER_ME_FILTER"/>
+		<custom-filter ref="rememberMeFilter" after="REMEMBER_ME_FILTER"/>
 
 		<access-denied-handler ref="exceptionControllerAdvice" />
 
@@ -67,17 +57,9 @@
 
  <beans:bean id="rememberMeServices"
       class="org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices">
-      
-  <!--   <beans:property  name="userDetailsService" ref="restService" />
-    <beans:property  name="tokenRepository" ref="tokenRepository" />
-    <beans:property name="alwaysRemember" value="true"/>
-    <beans:property name="cookieName" value="remember-me-cookie"/>
-    <beans:property name="tokenLength" value="32"/>
-     <beans:property name="tokenValiditySeconds" value="86400"/>
-    <beans:property  name="key" value="spring-token" />-->
 
     <beans:constructor-arg name="key"  value="jsfspring-sec"/>
-    <beans:constructor-arg name="userDetailsService" ref="restService"/> 
+    <beans:constructor-arg name="userDetailsService" ref="jdbcUserService"/>
     <beans:constructor-arg  name="tokenRepository" ref="tokenRepository" />
     <beans:property name="alwaysRemember" value="true"/>
     <beans:property name="tokenValiditySeconds" value="60" />
@@ -90,9 +72,8 @@
 
  <beans:bean id="rememberMeAuthenticationProvider"
         class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
-      <!--   <beans:property name="key" value="jsfspring-sec"/>-->
       <beans:constructor-arg value="jsfspring-sec"/>
-    </beans:bean>
+ </beans:bean>
 
     <beans:bean id="rememberMeFilter"
         class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
@@ -379,10 +360,14 @@
 
 
 	<beans:bean id="authenticationFilter"
-		class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
-		<beans:property name="authenticationManager" ref="authenticationManager" />
-		<beans:property name="authenticationEntryPoint" ref="restAuthenticationEntryPoint" />
-		<beans:property name="rememberMeServices" ref="rememberMeServices" />
+		class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+			<beans:property name="authenticationManager" ref="authenticationManager" />
+		  <beans:property name="authenticationSuccessHandler" ref="mySuccessHandler" />
+		  <beans:property name="rememberMeServices" ref="rememberMeServices" />
+		  <beans:property name="usernameParameter" value="username" />
+		  <beans:property name="passwordParameter" value="password" />
+
+	<!-- 	<beans:property name="authenticationEntryPoint" ref="restAuthenticationEntryPoint" /> -->
 		<!-- <beans:property name="authenticationSuccessHandler" ref="mySuccessHandler" 
 			/> -->
 	</beans:bean>
@@ -393,7 +378,7 @@
 		 <authentication-provider ref="rememberMeAuthenticationProvider">
         </authentication-provider>
 		<authentication-provider>
-			<jdbc-user-service data-source-ref="dataSource"
+			<jdbc-user-service id="jdbcUserService" data-source-ref="dataSource"
 				users-by-username-query="SELECT userName, password,1 as enabled FROM
 				security_users WHERE userName=?"
 				authorities-by-username-query="select distinct userName,permessionname from
@@ -409,12 +394,13 @@
 
 	</authentication-manager>
 
-	<!-- <beans:bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy"> 
-		<filter-chain-map path-type="ant"> <filter-chain pattern="/api/workflow/login*" 
-		filters="none" /> <filter-chain pattern="\A/security/login.html" filters="none" 
-		/> <filter-chain pattern="/**" filters="securityInterceptor" /> </filter-chain-map> 
-		</beans:bean> -->
-
+	<!--  <beans:bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy"> 
+		<filter-chain-map path-type="ant"> 
+			<filter-chain pattern="/api/workflow/login*" filters="authenticationFilter,rememberMeFilter" /> 
+			<filter-chain pattern="\A/security/login.html" filters="none" /> 
+		</filter-chain-map> 
+		</beans:bean> 
+ -->
 
 	<beans:bean id="myVoter" class="com._4s_.security.service.MyVoter">
 		<beans:property name="rolePrefix">

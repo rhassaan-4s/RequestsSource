@@ -1,7 +1,9 @@
 package com._4s_.security.model;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -21,6 +23,8 @@ import javax.persistence.Table;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com._4s_.auditing.model.Auditable;
 import com._4s_.common.model.Employee;
@@ -31,7 +35,12 @@ import com._4s_.i18n.model.MyLocale;
  */
 @Entity
 @Table (name = "security_users")
-public class User implements  Serializable,Auditable {
+public class User implements  Serializable,Auditable,UserDetails {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@SequenceGenerator(name = "userID", sequenceName = "USER_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userID")
@@ -230,6 +239,37 @@ public class User implements  Serializable,Auditable {
 
 	public void setEnd_serv(Date end_serv) {
 		this.end_serv = end_serv;
+	}
+
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		List authorities = new ArrayList();
+		Iterator itr = getRoles().iterator();
+		while(itr.hasNext()) {
+			Roles role = (Roles)itr.next();
+			authorities.addAll(role.getPermissions());
+		}
+		return authorities;
+	}
+
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
