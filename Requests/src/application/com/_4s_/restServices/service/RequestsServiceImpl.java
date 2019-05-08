@@ -521,9 +521,9 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		if (vac!=null) {
 			loginUsersRequests.setVacation(vac);
 		}
-		if (!userRequest.getAttendanceType().equals(new Long(7))){
-			loginUsersRequests.setRequest_date(mCalDate.getDate());
-		}
+//		if (!userRequest.getAttendanceType().equals(new Long(7))){
+//			loginUsersRequests.setRequest_date(mCalDate.getDate());
+//		}
 
 
 		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class, new Long(1));
@@ -561,6 +561,16 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	} else {
 		loginUsersRequests.setNotes(userRequest.getNotes());
 	}
+	
+	loginUsersRequests.setRequest_date(Calendar.getInstance().getTime());
+	
+	if(loginUsersRequests.getPeriod_from()!=null) {
+		loginUsersRequests.setFrom_date(loginUsersRequests.getPeriod_from());
+	}
+	if(loginUsersRequests.getPeriod_to()!=null) {
+		loginUsersRequests.setTo_date(loginUsersRequests.getPeriod_to());
+	}
+	
 	requestsApprovalManager.saveObject(loginUsersRequests);
 	Map output = new HashMap();
 	output.put("request_number", loginUsersRequests.getRequestNumber());

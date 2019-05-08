@@ -54,6 +54,9 @@
 			
 		<intercept-url pattern="/api/workflow/vacTypes"
 			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			
+		<intercept-url pattern="/api/workflow/checkStartedRequests"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 
 		<custom-filter ref="authenticationFilter" before="PRE_AUTH_FILTER" />
 		<custom-filter ref="rememberMeFilter" before="REMEMBER_ME_FILTER"/>
@@ -80,7 +83,7 @@
     <beans:constructor-arg name="userDetailsService" ref="restService"/> 
     <beans:constructor-arg  name="tokenRepository" ref="tokenRepository" />
     <beans:property name="alwaysRemember" value="true"/>
-    <beans:property name="tokenValiditySeconds" value="60" />
+    <beans:property name="tokenValiditySeconds" value="8640000" />
 </beans:bean>
 
 <beans:bean id="tokenRepository"
