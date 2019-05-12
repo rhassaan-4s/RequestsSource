@@ -110,6 +110,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 					</c:forEach></div>
 				</c:if>
 			</spring:bind>
+
 		</td>
 	</tr>
 	<tr>
@@ -176,25 +177,6 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 								</select>
 							</td>
 							
-<!-- 							
-					  		<td nowrap class="formBodControl" >
-								<abc:i18n property="requestsApproval.caption.userName"/>
-								<fmt:message key="requestsApproval.caption.userName"/>
-							</td>							
-	 						<td  class="formBod"> 
-								<abc:autocomplete 
-									inputId="name" 
-									inputName="empName" 
-									table="login_users" 
-									firstKey="commons.caption.name"
-									secondKey="commons.caption.code"
-									firstParam="name"
-									secondParam="empCode"
-									bindById="true"
-									valueString="${employeeName}"
-									valueId=""/>
-							</td>
- -->																				
 						</tr>
 						
 						<tr id="btnPrint">
@@ -317,27 +299,30 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 						<tr>
 						</tr>										
 					</table>
+					
+					<abc:paging url="empRequestsReportsForm.html" 
+					parametersString="empCode=${empCode}&statusId=${statusId}&request_date_from=${request_date_from}&request_date_to=${request_date_to}&exact_request_date_from=${exact_request_date_from}&exact_request_date_to=${exact_request_date_to}&codeFrom=${codeFrom}&codeTo=${codeTo}"/>
 					<table rules="all" align="center" class="sofT">
 									<tr>
 									<c:if test="${requestType=='1' && errand!='true'}">
-										<td colspan="14" class="helpTitle">
+										<td colspan="16" class="helpTitle">
 											<abc:i18n property="requestsApproval.header.empSpecialVacationsReportsForm" />
 											<fmt:message key="requestsApproval.header.empSpecialVacationsReportsForm" />
 										</td>
 									</c:if>
 									<c:if test="${requestType=='1' && errand=='true'}">
-										<td colspan="14" class="helpTitle">
+										<td colspan="16" class="helpTitle">
 										<abc:i18n property="requestsApproval.header.empErrandsReportsForm"/><fmt:message key="requestsApproval.header.empErrandsReportsForm"/>
 										</td>
 									</c:if>
 									<c:if test="${requestType=='2'}">
-										<td colspan="14" class="helpTitle">
+										<td colspan="16" class="helpTitle">
 											<abc:i18n property="requestsApproval.header.empAnnualVacationsReportsForm" />
 											<fmt:message key="requestsApproval.header.empAnnualVacationsReportsForm" />
 										</td>
 									</c:if>
 									<c:if test="${requestType=='3'}">
-										<td colspan="14" class="helpTitle">
+										<td colspan="16" class="helpTitle">
 											<abc:i18n property="requestsApproval.header.empRequestsReportsForm3" />
 											<fmt:message key="requestsApproval.header.empRequestsReportsForm3" />
 										</td>
@@ -412,11 +397,16 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											</td>
 										</c:if>	
 										
+										<td class="helpHed" nowrap>
+											<abc:i18n property="commons.caption.notes"/><fmt:message key="commons.caption.notes"/>
+										</td>
+										
 										<td class="helpHed" id="btnPrint">
-										</td>										
+											&nbsp;
+										</td>	
 									</tr>
 									
-								<c:forEach varStatus="loop" var="record" items="${loginUserReqs}">
+								<c:forEach varStatus="loop" var="record" items="${results}">
 									<tr height=20 bgcolor="#F8F8F8">
 										<td  nowrap>
 											${record.empCode}
@@ -511,6 +501,10 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										</td>
 										</c:if>	
 										
+										<td  nowrap>
+											${record.notes}
+										</td>
+										
 										<c:if test="${record.approved==0}">
 										<td  id="btnPrint" nowrap><abc:i18n
 											property="commons.button.approve" /><a
@@ -518,6 +512,11 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											key="commons.button.approve" /></a>
 										</td>								
 										</c:if>		
+										<c:if test="${record.approved!=0}">
+											<td  nowrap>
+												&nbsp;
+											</td>
+										</c:if>
 									</tr>
 								</c:forEach>									
 								</table>
