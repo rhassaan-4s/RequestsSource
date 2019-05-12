@@ -942,7 +942,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 
 	public Map getPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
-			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, List empReqTypeAccs, final int pageNumber, final int pageSize)  {
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, List empReqTypeAccs,boolean isWeb, final int pageNumber, final int pageSize)  {
 		Calendar cFrom= Calendar.getInstance();
 		
 		Date dateFrom=null;
@@ -1176,60 +1176,64 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-			log.debug("first result " + ((pageNumber-1)*pageSize));
+		
+			log.debug("first result " + (pageNumber*pageSize));
 			log.debug("max results " + pageSize);
-			criteria.setFirstResult((pageNumber-1) * pageSize);
+			criteria.setFirstResult(pageNumber * pageSize);
 			criteria.setMaxResults(pageSize);
 			
 			List results = criteria.list();
-			
-			log.debug("results " + results.size());
-			List output = new ArrayList();
-			Iterator itr = results.iterator();
-			while (itr.hasNext()) {
-				LoginUsersRequests req = (LoginUsersRequests)itr.next();
-				RequestOutput op = new RequestOutput();
-				op.setId(req.getId());
-				op.setEmpCode(req.getEmpCode());
-				op.setEmpName(req.getLogin_user().getName());
-				op.setRequestDate(req.getRequest_date());
-				op.setRequestNumber(req.getRequestNumber());
-				op.setNotes(req.getNotes());
-				op.setLongitude(req.getLongitude());
-				op.setLatitude(req.getLatitude());
-				
-				if (req.getRequest_id().getId().equals(new Long(1))) {
-					op.setRequestDesc(req.getVacation().getName());
-				} else {
-					op.setRequestDesc(req.getRequest_id().getDescription());
+			if (isWeb) {
+				map.put("results", results);
+			}  else {
+				log.debug("results " + results.size());
+				List output = new ArrayList();
+				Iterator itr = results.iterator();
+				while (itr.hasNext()) {
+					LoginUsersRequests req = (LoginUsersRequests)itr.next();
+					RequestOutput op = new RequestOutput();
+					op.setId(req.getId());
+					op.setEmpCode(req.getEmpCode());
+					op.setEmpName(req.getLogin_user().getName());
+					op.setRequestDate(req.getRequest_date());
+					op.setRequestNumber(req.getRequestNumber());
+					op.setNotes(req.getNotes());
+					op.setLongitude(req.getLongitude());
+					op.setLatitude(req.getLatitude());
+
+					if (req.getRequest_id().getId().equals(new Long(1))) {
+						op.setRequestDesc(req.getVacation().getName());
+					} else {
+						op.setRequestDesc(req.getRequest_id().getDescription());
+					}
+
+					if (req.getRequest_id().getId().equals(new Long(1)) || req.getRequest_id().getId().equals(new Long(2))) {
+						op.setVacDuration(req.getWithdrawDays());
+					}
+					if (req.getRequest_id().getId().equals(new Long(10))) {
+						op.setRequestType(new Long(5));
+					} else if (req.getRequest_id().getId().equals(new Long(11))) {
+						op.setRequestType(new Long(6));
+					} else {
+						op.setRequestType(req.getRequest_id().getId());
+					} 
+
+
+					if (req.getApproved()==null || req.getApproved().equals(new Long(0))) {
+						op.setStatus("Waiting Approval");
+					} else if (req.getApproved().equals(new Long(99))) {
+						op.setStatus("Declined");
+					} else if (req.getApproved().equals(new Long(1))) {
+						op.setStatus("Approved");
+					} 
+
+					op.setFromDate(req.getFrom_date());
+					op.setToDate(req.getTo_date());
+
+					output.add(op);
 				}
-				
-				if (req.getRequest_id().getId().equals(new Long(1)) || req.getRequest_id().getId().equals(new Long(2))) {
-					op.setVacDuration(req.getWithdrawDays());
-				}
-				if (req.getRequest_id().getId().equals(new Long(10))) {
-					op.setRequestType(new Long(5));
-				} else if (req.getRequest_id().getId().equals(new Long(11))) {
-					op.setRequestType(new Long(6));
-				} else {
-					op.setRequestType(req.getRequest_id().getId());
-				} 
-				
-				
-				if (req.getApproved()==null || req.getApproved().equals(new Long(0))) {
-					op.setStatus("Waiting Approval");
-				} else if (req.getApproved().equals(new Long(99))) {
-					op.setStatus("Declined");
-				} else if (req.getApproved().equals(new Long(1))) {
-					op.setStatus("Approved");
-				} 
-				
-				op.setFromDate(req.getFrom_date());
-				op.setToDate(req.getTo_date());
-				
-				output.add(op);
+				map.put("results", output);
 			}
-			map.put("results", output);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1239,6 +1243,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			return page.getPage(map,pageNumber,pageSize);
 		}
 		Page page = new Page();
+		log.debug("paging");
 		return page.getPage(map,pageNumber,pageSize);
 //		return map;
 	}

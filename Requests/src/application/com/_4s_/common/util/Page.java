@@ -19,31 +19,36 @@ public class Page{
 	public Map getPage(Map map,int page,int pageSize){
 		Boolean next;
 		Boolean previous;
-		
+		System.out.println("page " + page);
+		System.out.println("pageSize "+ pageSize);
 		
 		int listSize = ((Integer)map.get("listSize")).intValue();
 		int numberOfPages = (listSize / pageSize);
 		if (listSize % pageSize != 0){
 			numberOfPages = numberOfPages +1;
 		}
+		System.out.println("listSize "+ listSize);
+		System.out.println("numberOfPages "+ numberOfPages);
 		
 		map.put("numberOfPages",numberOfPages);
 		map.put("page",page);
 		
-		if ((page)*pageSize < listSize){
+		if ((page+1)*pageSize < listSize){
 			next = new Boolean(true);
 		}else{
 			next = new Boolean(false);
 		}
 		map.put("next",next);
 		
-		if (page != 1){
+		if (page != 0){
 			previous = new Boolean(true);
 		}else{
 			previous = new Boolean(false);
 		}
 		map.put("previous",previous);
 		
+		System.out.println("next "+ next);
+		System.out.println("previous "+ previous);
 		return map;
 	}
 }

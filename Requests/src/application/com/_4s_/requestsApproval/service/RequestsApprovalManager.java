@@ -1,6 +1,8 @@
 package com._4s_.requestsApproval.service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +22,8 @@ import com._4s_.HR.model.HRSpecialtyLevel;
 import com._4s_.HR.model.HRVacation;
 import com._4s_.common.model.Employee;
 import com._4s_.common.service.BaseManager;
+import com._4s_.requestsApproval.model.AccessLevels;
+import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.restServices.json.RequestApproval;
@@ -121,7 +125,7 @@ public interface RequestsApprovalManager extends BaseManager {
 	public List getRequestsForApprovalList(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
 			String requestType, String codeFrom, String codeTo, String statusId);
 	public Map getRequestsForApproval(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
-			String requestType, String codeFrom, String codeTo, String statusId,LoginUsers loggedInUser, List empReqTypeAccs, int pageNumber, int pageSize);
+			String requestType, String codeFrom, String codeTo, String statusId,LoginUsers loggedInUser, List empReqTypeAccs, boolean isWeb, int pageNumber, int pageSize);
 	public Map approvalsAccessLevels(RequestApproval approval, LoginUsersRequests requestInfo, Employee emp);
 	public Map getVacInfo(LoginUsersRequests requestInfo);
 	public List getEmpReqTypeAccs(List accessLevels,Long requestType);
@@ -129,5 +133,6 @@ public interface RequestsApprovalManager extends BaseManager {
 			String trans_type);
 	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 			Employee emp);
+	public List getEmpReqTypeAcc(Employee emp,String requestType);
 }
 

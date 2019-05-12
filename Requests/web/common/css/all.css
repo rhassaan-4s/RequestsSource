@@ -1,4 +1,10 @@
 /* CSS Document */
+ html, body, #map-canvas {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+  }
 body {
 	FONT-FAMILY:   Arabic Transparent, Arial, Helvetica, Geneva, sans-serif;
 	background-color: #ECF5FF;

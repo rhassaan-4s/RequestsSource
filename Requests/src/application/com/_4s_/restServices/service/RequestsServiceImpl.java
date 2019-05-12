@@ -593,36 +593,7 @@ public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 }
 
 public List getEmpReqTypeAcc(Employee emp,String requestType) {
-	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
-	List tempLevels = (List)requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "emp_id", loggedInUser);
-//	log.debug("access levels size " + tempLevels.size());
-	
-	Iterator itr = tempLevels.iterator();
-	List<Long> accessLevels = new ArrayList();
-//	log.debug("will loop on levels");
-	while(itr.hasNext()) {
-		AccessLevels level = (AccessLevels)itr.next();
-//		log.debug("will loop on levels " + level.getLevel_id().getId());
-		accessLevels.add(level.getLevel_id().getId());
-	}
-//	log.debug("access levels " + accessLevels);
-//	log.debug("requestType " + requestType);
-	List tempAcc = new ArrayList();
-	if (requestType != null && !requestType.isEmpty()) {
-		tempAcc = requestsApprovalManager.getEmpReqTypeAccs(accessLevels,new Long(requestType));
-	} else {
-		tempAcc = requestsApprovalManager.getEmpReqTypeAccs(accessLevels, null);
-	}
-	List empReqTypeAccs = new ArrayList();
-	Iterator it = tempAcc.iterator();
-//	log.debug("will loop on empreqtypeAccs");
-	while(it.hasNext()) {
-//		log.debug("looping empreqtypeAccs");
-		EmpReqTypeAcc acc = (EmpReqTypeAcc)it.next();
-//		log.debug("acc " + acc.getEmp_id().getId());
-		empReqTypeAccs.add(acc.getEmp_id().getId());
-	}
-	return empReqTypeAccs;
+	return requestsApprovalManager.getEmpReqTypeAcc(emp, requestType);
 }
 
 public Map getRequestsForApproval(RequestsApprovalQuery approvalQuery, List empReqTypeAccs,Employee emp) {
@@ -630,7 +601,7 @@ public Map getRequestsForApproval(RequestsApprovalQuery approvalQuery, List empR
 	
 	return requestsApprovalManager.getRequestsForApproval(approvalQuery.getRequestNumber(), approvalQuery.getEmp_code(), 
 			approvalQuery.getDateFrom(), approvalQuery.getDateTo(), approvalQuery.getExactDateFrom(), approvalQuery.getExactDateTo(), approvalQuery.getRequestType(),
-			approvalQuery.getCodeFrom(), approvalQuery.getCodeTo(), approvalQuery.getStatusId(),loggedInUser,empReqTypeAccs, approvalQuery.getPageNumber(), approvalQuery.getPageSize());	
+			approvalQuery.getCodeFrom(), approvalQuery.getCodeTo(), approvalQuery.getStatusId(),loggedInUser,empReqTypeAccs,false, approvalQuery.getPageNumber(), approvalQuery.getPageSize());	
 }
 
 public Map approveRequest(RequestApproval requestApproval,Employee emp) {

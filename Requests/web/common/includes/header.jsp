@@ -4,7 +4,8 @@
 
 <%@page import="java.util.List"%>
 
-<%@page import="com._4s_.security.model.SecurityApplication"%><html dir="<fmt:message key="commons.language.dir"/>"
+<%@page import="com._4s_.security.model.SecurityApplication"%>
+<html dir="<fmt:message key="commons.language.dir"/>"
 	xml:lang="<fmt:message key="commons.language.code"/>"
 	lang="<fmt:message key="commons.language.code"/>">
 <head>
@@ -32,8 +33,12 @@
 <script type="text/javascript" src="/Requests/web/common/js/Tokenizer.js"></script>
 <script type="text/javascript" src="/Requests/web/common/js/sorttable.js"></script>
 <script type="text/javascript" src="/Requests/web/common/js/extAjax.js"></script>
+
+<script type="text/javascript" src="/Requests/web/common/js/initMap.js"></script>
+
 <!--  ///////////////////////// Islamic Calendar -->
-<script type="text/javascript" src="/Requests/web/common/js/jquery.min.js"></script>
+ <script type="text/javascript" src="/Requests/web/common/js/jquery.min.js"></script>
+
    <script type="text/javascript" src="/Requests/web/common/js/jquery.calendars.js"></script> 
    <script type="text/javascript" src="/Requests/web/common/js/jquery.calendars.plus.js"></script>
    <link  rel="stylesheet" type="text/css" href="/Requests/web/common/css/jquery.calendars.picker.css"/>
@@ -47,6 +52,8 @@
 <script type="text/javascript" src="/Requests/web/common/timepicker/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/Requests/web/common/timepicker/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript" src="/Requests/web/common/timepicker/jquery-ui-sliderAccess.js"></script>
+
+
 		<script type="text/javascript">
 			
 			$(function(){

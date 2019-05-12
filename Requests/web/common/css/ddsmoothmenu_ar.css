@@ -34,6 +34,10 @@ text-align: right;
 
 * html .ddsmoothmenu ul li a{ /*IE6 hack to get sub menu links to behave correctly*/
 display: inline-block;
+ margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
 }
 
 .ddsmoothmenu ul li a:link, .ddsmoothmenu ul li a:visited{

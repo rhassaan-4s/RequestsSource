@@ -389,8 +389,8 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		
 	}
 	public Map getPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
-			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, List empReqTypeAccs, final int pageNumber, final int pageSize){
-		return  requestsApprovalDAO.getPagedRequests(fromDate, toDate,requestType,exactFrom,exactTo, periodFrom, periodTo, empCode, codeFrom, codeTo, statusId,empReqTypeAccs, pageNumber, pageSize);
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, List empReqTypeAccs, boolean isWeb, final int pageNumber, final int pageSize){
+		return  requestsApprovalDAO.getPagedRequests(fromDate, toDate,requestType,exactFrom,exactTo, periodFrom, periodTo, empCode, codeFrom, codeTo, statusId,empReqTypeAccs, isWeb, pageNumber, pageSize);
 		
 	}
 	
@@ -780,7 +780,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	}
 	
 	public Map getRequestsForApproval(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
-			String requestType, String codeFrom, String codeTo, String statusId,LoginUsers loggedInUser, List empReqTypeAccs, int pageNumber, int pageSize) {
+			String requestType, String codeFrom, String codeTo, String statusId,LoginUsers loggedInUser, List empReqTypeAccs, boolean isWeb, int pageNumber, int pageSize) {
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
 		log.debug("dateFrom " + dateFrom + " dateTo " + dateTo + " requestType " + requestType);
 		
@@ -856,7 +856,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		}
 		
 		
-		loginUserReqs= getPagedRequests(fromDate, toDate,reqType,fromExact,toExact,null,null,emp_code,codeFrom,codeTo,status,empReqTypeAccs,pageNumber,pageSize);
+		loginUserReqs= getPagedRequests(fromDate, toDate,reqType,fromExact,toExact,null,null,emp_code,codeFrom,codeTo,status,empReqTypeAccs,isWeb,pageNumber,pageSize);
 		log.debug("--dateList.size--"+loginUserReqs.get("listSize"));
 		//model.put("loginUserReqs", loginUserReqs);
 		return loginUserReqs;
@@ -1308,6 +1308,37 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		return requestsApprovalDAO.checkStartedRequests(requestQuery,emp);
 	}
 	
-
+	public List getEmpReqTypeAcc(Employee emp,String requestType) {
+		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		List tempLevels = (List)getObjectsByParameter(AccessLevels.class, "emp_id", loggedInUser);
+//		log.debug("access levels size " + tempLevels.size());
+		
+		Iterator itr = tempLevels.iterator();
+		List<Long> accessLevels = new ArrayList();
+//		log.debug("will loop on levels");
+		while(itr.hasNext()) {
+			AccessLevels level = (AccessLevels)itr.next();
+//			log.debug("will loop on levels " + level.getLevel_id().getId());
+			accessLevels.add(level.getLevel_id().getId());
+		}
+//		log.debug("access levels " + accessLevels);
+//		log.debug("requestType " + requestType);
+		List tempAcc = new ArrayList();
+		if (requestType != null && !requestType.isEmpty()) {
+			tempAcc = getEmpReqTypeAccs(accessLevels,new Long(requestType));
+		} else {
+			tempAcc = getEmpReqTypeAccs(accessLevels, null);
+		}
+		List empReqTypeAccs = new ArrayList();
+		Iterator it = tempAcc.iterator();
+//		log.debug("will loop on empreqtypeAccs");
+		while(it.hasNext()) {
+//			log.debug("looping empreqtypeAccs");
+			EmpReqTypeAcc acc = (EmpReqTypeAcc)it.next();
+//			log.debug("acc " + acc.getEmp_id().getId());
+			empReqTypeAccs.add(acc.getEmp_id().getId());
+		}
+		return empReqTypeAccs;
+	}
 	
 }
