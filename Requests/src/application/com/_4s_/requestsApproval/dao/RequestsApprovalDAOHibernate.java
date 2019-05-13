@@ -1044,6 +1044,8 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				criteria.add(Expression.ge("from_date", startDate));
 				criteria.add(Expression.le("from_date", endDate));
 			}
+			criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+					Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 			/////////////////////////////////////////////////////////////////////////////////
 			if(requestType!=null) {
 				log.debug("requesttype " + requestType);
@@ -1129,6 +1131,8 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				criteria.add(Expression.ge("from_date", startDate));
 				criteria.add(Expression.le("from_date", endDate));
 			}
+			criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+					Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 			/////////////////////////////////////////////////////////////////////////////////
 			if(requestType!=null) {
 				log.debug("requesttype " + requestType);

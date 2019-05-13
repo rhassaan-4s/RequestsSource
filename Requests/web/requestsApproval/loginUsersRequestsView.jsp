@@ -217,6 +217,8 @@ function printSelection(node){
 							</td>																														
 							<td class="helpHed">
 							</td>
+							<td class="helpHed">
+							</td>
 						</tr>
 					<c:forEach items="${records}" var="record">
 						<tr height=20 bgcolor="#F8F8F8"> 							        
@@ -269,35 +271,33 @@ function printSelection(node){
 						         <_4s_:formatMiladiDate value="${record.period_to}"/>
 											<_4s_:timeString value="${record.period_to}"/>
 							</td>
-							
-							<c:if test="${record.approved==1}">					
-							<td  nowrap>
-								<abc:i18n
-									property="requestsApproval.requestsApprovalForm.reqApproval" />
-								<fmt:message
-									key="requestsApproval.requestsApprovalForm.reqApproval" />
-							</td>
-							</c:if>
-														
-							<c:if test="${record.approved==99}">
-							<td  nowrap>
-						    	<abc:i18n
-									property="requestsApproval.requestsApprovalForm.reqRejected" />
-								<fmt:message
-									key="requestsApproval.requestsApprovalForm.reqRejected" />
-							</td>
-							</c:if>
 
-							<c:if test="${record.approved==0}">
-							<td  nowrap>
-						    	لم تكتمل
-							</td>
-							</c:if>
-							<td class="helpBod">
-								${record.reply}
-							</td>
-							
-							<c:choose>
+									<c:choose>
+										<c:when test="${record.approved==1}">
+											<td nowrap><abc:i18n
+													property="requestsApproval.requestsApprovalForm.reqApproval" />
+												<fmt:message
+													key="requestsApproval.requestsApprovalForm.reqApproval" />
+											</td>
+										</c:when>
+										<c:when test="${record.approved==99}">
+											<td nowrap><abc:i18n
+													property="requestsApproval.requestsApprovalForm.reqRejected" />
+												<fmt:message
+													key="requestsApproval.requestsApprovalForm.reqRejected" />
+											</td>
+										</c:when>
+
+										<c:when test="${record.approved==0}">
+											<td nowrap>لم تكتمل</td>
+										</c:when>
+										<c:otherwise>
+											<td nowrap>&nbsp;</td>
+										</c:otherwise>
+									</c:choose>
+									<td class="helpBod">${record.reply}</td>
+
+									<c:choose>
 								<c:when test="${record.approved==0}">	
 									<c:choose>
 										<c:when test="${record.request_id.id==10 || record.request_id.id==11}">								
@@ -318,10 +318,9 @@ function printSelection(node){
 										</c:otherwise>
 									</c:choose>	
 								</c:when>
-							<c:otherwise>
-							<td  nowrap >
-							</td>
-							</c:otherwise>
+								<c:otherwise>
+									<td  nowrap id="btnPrint">&nbsp;</td>
+								</c:otherwise>
 							</c:choose>														
 							<td  nowrap id="btnPrint">
 							<input type="button" id="${record.id}" value="<fmt:message key="requestsApproval.button.requestStatus"/>" name="requestStatus" class="button"	onclick="getRequestStatus(this)"></input>

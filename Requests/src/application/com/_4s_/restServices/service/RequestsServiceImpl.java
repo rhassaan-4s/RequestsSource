@@ -263,9 +263,12 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 	MultiCalendarDate mCalDateTo = new MultiCalendarDate();
 	mCalDateTo.setDate(cal.getTime());
 	
-	Long diff = to.getTime()-from.getTime();
+	Long diff = mCalDateTo.getDate().getTime()-mCalDateFrom.getDate().getTime();
 	
-	Double daysDiff = (diff/(1000*60*60*24.0))+1.0;
+	if (diff < 0) {
+		return null;
+	}
+	Double daysDiff = Double.valueOf(Math.round((diff/(1000*60*60*24.0))));
 	System.out.println("daysDiff " + daysDiff);
 	withoutSalVac.setWithdrawDays(daysDiff);
 	withoutSalVac.setEmpCode(emp.getEmpCode());
@@ -377,7 +380,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	}
 	MultiCalendarDate mCalDate = new MultiCalendarDate();
 	mCalDate.setDate(newDate);
-
+	
 	Employee emp = (Employee)requestsApprovalDAO.getObject(Employee.class, empId);
 
 	LoginUsers loginUsers=(LoginUsers) requestsApprovalDAO.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
@@ -409,8 +412,16 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		} else if (userRequest.getAttendanceType().equals(new Long(7))) { //special vacation
 //			System.out.println("7 reqType " + reqType);
 			loginUsersRequests = handleVacations(userRequest, empId);
-			reqType = loginUsersRequests.getRequest_id();
-			System.out.println(" reqType " + reqType.getId());
+			if (loginUsersRequests != null) {
+				reqType = loginUsersRequests.getRequest_id();
+				System.out.println(" reqType " + reqType.getId());
+			} else {
+				status.setCode("313");
+				status.setMessage("To date is before from date.");
+				status.setStatus("False");
+				response.put("Status", status);
+				return response;
+			}
 		} else if (userRequest.getAttendanceType().equals(new Long(8))) {//periodic vacation
 //			System.out.println("8 reqType " + reqType.getId());
 			loginUsersRequests = handleVacations(userRequest, empId);
@@ -425,6 +436,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				status.setMessage("One or more of Permission Parameters is null");
 				status.setStatus("False");
 				response.put("Status", status);
+				return response;
 			}
 		}
 		System.out.println("mCalDate " + mCalDate);
