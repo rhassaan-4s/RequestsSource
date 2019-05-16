@@ -223,7 +223,7 @@ public UserDetails loadUserByUsername(String username)
 	 }
 }
 
-public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long empId) {
+public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long empId,LoginUsersRequests withoutSalVac) {
 	Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class, new Long(1));
 	Boolean withoutSalaryVacEnabled = settings.getWithoutSalaryVacEnabled();
 	Boolean periodFromToEnabled = settings.getPeriodFromToEnabled();
@@ -231,7 +231,7 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 	Employee emp = (Employee)requestsApprovalDAO.getObject(Employee.class, empId);
 	LoginUsers loginUsers=(LoginUsers) requestsApprovalDAO.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
 	
-	LoginUsersRequests withoutSalVac= new LoginUsersRequests();
+//	LoginUsersRequests withoutSalVac= new LoginUsersRequests();
 	
 	DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	Date from = null;
@@ -303,17 +303,7 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 			request_id= (RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, new Long (3));
 			System.out.println("1.request " + request_id.getId());
 			
-//			withoutSalVac.setLeave_type("0");
 			withoutSalVac.setRequest_id(request_id);
-			
-//			String leaveTime =request.getParameter("leaveTime");
-//			if(leaveTime!=null &&  !leaveTime.equals("")){
-//				if(leaveTime.equals("start")){
-//					withoutSalVac.setLeave_effect("2");
-//				}else if(leaveTime.equals("end")){
-//					withoutSalVac.setLeave_effect("1");
-//				}
-//			}
 			
 		} else if(userRequest.getAttendanceType().equals(new Long(7))) {
 			request_id= (RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, new Long (1));
@@ -344,6 +334,7 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 	String requestNumber="";
 	requestNumber=requestsApprovalManager.CreateRequestNumber();
 	withoutSalVac.setRequestNumber(requestNumber);
+	System.out.println("requestNumber in handle vacation " + requestNumber);
 	
 	requestsApprovalManager.saveObject(withoutSalVac);
 	return withoutSalVac;
@@ -411,7 +402,8 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 			System.out.println(" reqType " + reqType.getId());
 		} else if (userRequest.getAttendanceType().equals(new Long(7))) { //special vacation
 //			System.out.println("7 reqType " + reqType);
-			loginUsersRequests = handleVacations(userRequest, empId);
+			loginUsersRequests = new LoginUsersRequests();
+			handleVacations(userRequest, empId,loginUsersRequests);
 			if (loginUsersRequests != null) {
 				reqType = loginUsersRequests.getRequest_id();
 				System.out.println(" reqType " + reqType.getId());
@@ -424,7 +416,8 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 			}
 		} else if (userRequest.getAttendanceType().equals(new Long(8))) {//periodic vacation
 //			System.out.println("8 reqType " + reqType.getId());
-			loginUsersRequests = handleVacations(userRequest, empId);
+			loginUsersRequests = new LoginUsersRequests();
+			handleVacations(userRequest, empId,loginUsersRequests);
 			reqType = loginUsersRequests.getRequest_id();
 			System.out.println(" reqType " + reqType.getId());
 		} else {
@@ -480,6 +473,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 						String requestNumber="";
 						requestNumber=requestsApprovalManager.CreateRequestNumber();
 						loginUsersRequests.setRequestNumber(requestNumber);
+						System.out.println("requestNumber in user request " + requestNumber);
 						loginUsersRequests.setPeriod_from(mCalDate.getDate());
 					}
 				}
