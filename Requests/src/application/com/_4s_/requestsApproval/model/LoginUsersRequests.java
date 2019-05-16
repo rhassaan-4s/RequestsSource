@@ -201,6 +201,8 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 		 }
 		 LoginUsersRequests rhs = (LoginUsersRequests) o;
 		 return new EqualsBuilder()
+		 .append(this.request_date, rhs.getRequest_date())
+		 .append(this.from_date, rhs.getFrom_date())
 		 .append(this.request_id, rhs.getRequest_id())
 		 .isEquals();
 	}

@@ -417,7 +417,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		} else if (userRequest.getAttendanceType().equals(new Long(8))) {//periodic vacation
 //			System.out.println("8 reqType " + reqType.getId());
 			loginUsersRequests = new LoginUsersRequests();
-			handleVacations(userRequest, empId,loginUsersRequests);
+			loginUsersRequests = handleVacations(userRequest, empId,loginUsersRequests);
 			reqType = loginUsersRequests.getRequest_id();
 			System.out.println(" reqType " + reqType.getId());
 		} else {
@@ -501,7 +501,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					
 
 					// request number
-					if (loginUsersRequests.getId() == null){
+					if (loginUsersRequests.getId() == null && loginUsersRequests.getRequestNumber() == null){
 						String requestNumber="";
 						requestNumber=requestsApprovalManager.CreateRequestNumber();
 						loginUsersRequests.setRequestNumber(requestNumber);
