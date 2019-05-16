@@ -356,6 +356,7 @@
 		<beans:property name="objectMapper">
 			<beans:bean class="com.fasterxml.jackson.databind.ObjectMapper">
 				<beans:property name="serializationInclusion" value="NON_NULL" />
+			<!-- 	<beans:property name="adjust_dates_to_context_time_zone" value="false"/> -->
 			</beans:bean>
 		</beans:property>
 	</beans:bean>

@@ -1,6 +1,7 @@
 package com._4s_.restServices.json;
 
 import java.util.Date;
+import java.util.TimeZone;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -10,7 +11,7 @@ public class RequestOutput {
 	private String empCode;
 	private String empName;
 	private String requestDesc;
-	@JsonFormat(timezone=JsonFormat.DEFAULT_TIMEZONE)
+	@JsonFormat(timezone="GMT+2")
 	private Date requestDate;
 	private String requestNumber;
 	private Long requestType;
