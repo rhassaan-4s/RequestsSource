@@ -1239,6 +1239,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 						op.setStatus("Approved");
 					} 
 
+					System.out.println("req.getFrom_date() " + req.getFrom_date());
 					op.setFromDate(req.getFrom_date());
 					op.setToDate(req.getTo_date());
 

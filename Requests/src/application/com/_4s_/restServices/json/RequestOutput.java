@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 public class RequestOutput {
 
@@ -11,11 +12,13 @@ public class RequestOutput {
 	private String empCode;
 	private String empName;
 	private String requestDesc;
-	@JsonFormat(timezone="GMT+2")
+	@JsonFormat(shape=Shape.NUMBER, timezone="GMT+2")
 	private Date requestDate;
 	private String requestNumber;
 	private Long requestType;
+	@JsonFormat(shape=Shape.NUMBER, timezone="GMT+2")
 	private Date fromDate;
+	@JsonFormat(shape=Shape.NUMBER, timezone="GMT+2")
 	private Date toDate;
 	private String status;//approved-declined
 	private String notes;
@@ -85,6 +88,9 @@ public class RequestOutput {
 		this.requestDate = requestDate;
 	}
 	public Date getFromDate() {
+//		TimeZone.setDefault(TimeZone.getTimeZone("Africa/Cairo"));
+//		TimeZone.getDefault().inDaylightTime(fromDate)
+		System.out.println("time zone " + TimeZone.getDefault().getDisplayName() + " date time saving " + TimeZone.getDefault().inDaylightTime(fromDate));
 		return fromDate;
 	}
 	public void setFromDate(Date fromDate) {
