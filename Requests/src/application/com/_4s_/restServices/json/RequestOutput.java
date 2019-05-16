@@ -2,12 +2,15 @@ package com._4s_.restServices.json;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class RequestOutput {
 
 	private Long id;
 	private String empCode;
 	private String empName;
 	private String requestDesc;
+	@JsonFormat(timezone=JsonFormat.DEFAULT_TIMEZONE)
 	private Date requestDate;
 	private String requestNumber;
 	private Long requestType;
@@ -74,6 +77,7 @@ public class RequestOutput {
 		this.requestDesc = requestDesc;
 	}
 	public Date getRequestDate() {
+		System.out.println("time zone" + JsonFormat.DEFAULT_TIMEZONE);
 		return requestDate;
 	}
 	public void setRequestDate(Date requestDate) {
