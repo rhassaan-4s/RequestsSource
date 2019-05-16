@@ -182,7 +182,7 @@ public class RequestsServiceController {
 			List empReqTypeAccs = requestsService.getEmpReqTypeAcc(user.getEmployee(), approvalQuery.getRequestType());
 			response =	requestsService.getRequestsForApproval(approvalQuery,empReqTypeAccs,user.getEmployee());	
 
-			List resp = (List)response.get("list");
+			List resp = (List)response.get("results");
 			if (resp == null || resp.size()==0) {
 				restStatus.setStatus("true");
 				restStatus.setCode("200");
@@ -220,7 +220,7 @@ public class RequestsServiceController {
 		approvalQuery.setCodeTo(null);
 		if (approvalQuery.getPageSize()!=0) {
 			response =	requestsService.getRequestsForApproval(approvalQuery,null,user.getEmployee());
-			List resp = (List)response.get("list");
+			List resp = (List)response.get("results");
 			if (resp == null || resp.size()==0) {
 				restStatus.setStatus("true");
 				restStatus.setCode("200");

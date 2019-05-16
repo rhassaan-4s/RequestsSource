@@ -942,7 +942,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 
 	public Map getPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
-			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, List empReqTypeAccs,boolean isWeb, final int pageNumber, final int pageSize)  {
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, List empReqTypeAccs,String requestNumber,boolean isWeb, final int pageNumber, final int pageSize)  {
 		Calendar cFrom= Calendar.getInstance();
 		
 		Date dateFrom=null;
@@ -1047,6 +1047,10 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
 					Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 			/////////////////////////////////////////////////////////////////////////////////
+			log.debug("requestNumber " + requestNumber);
+			if(requestNumber!=null && !requestNumber.isEmpty()) {
+				criteria.add(Restrictions.eq("requestNumber", requestNumber));
+			}
 			if(requestType!=null) {
 				log.debug("requesttype " + requestType);
 				if (requestType.equals(new Long(1))){
@@ -1134,6 +1138,10 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
 					Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 			/////////////////////////////////////////////////////////////////////////////////
+			log.debug("requestNumber " + requestNumber);
+			if(requestNumber!=null && !requestNumber.isEmpty()) {
+				criteria.add(Restrictions.eq("requestNumber", requestNumber));
+			}
 			if(requestType!=null) {
 				log.debug("requesttype " + requestType);
 				if (requestType.equals(new Long(1))){

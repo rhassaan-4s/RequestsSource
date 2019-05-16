@@ -389,8 +389,8 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		
 	}
 	public Map getPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
-			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, List empReqTypeAccs, boolean isWeb, final int pageNumber, final int pageSize){
-		return  requestsApprovalDAO.getPagedRequests(fromDate, toDate,requestType,exactFrom,exactTo, periodFrom, periodTo, empCode, codeFrom, codeTo, statusId,empReqTypeAccs, isWeb, pageNumber, pageSize);
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, List empReqTypeAccs,String requestNumber, boolean isWeb, final int pageNumber, final int pageSize){
+		return  requestsApprovalDAO.getPagedRequests(fromDate, toDate,requestType,exactFrom,exactTo, periodFrom, periodTo, empCode, codeFrom, codeTo, statusId,empReqTypeAccs, requestNumber, isWeb, pageNumber, pageSize);
 		
 	}
 	
@@ -856,7 +856,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		}
 		
 		
-		loginUserReqs= getPagedRequests(fromDate, toDate,reqType,fromExact,toExact,null,null,emp_code,codeFrom,codeTo,status,empReqTypeAccs,isWeb,pageNumber,pageSize);
+		loginUserReqs= getPagedRequests(fromDate, toDate,reqType,fromExact,toExact,null,null,emp_code,codeFrom,codeTo,status,empReqTypeAccs,requestNumber,isWeb,pageNumber,pageSize);
 		log.debug("--dateList.size--"+loginUserReqs.get("listSize"));
 		//model.put("loginUserReqs", loginUserReqs);
 		return loginUserReqs;

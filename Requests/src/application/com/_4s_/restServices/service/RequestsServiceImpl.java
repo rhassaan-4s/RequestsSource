@@ -274,7 +274,7 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 	withoutSalVac.setEmpCode(emp.getEmpCode());
 	withoutSalVac.setLogin_user(loginUsers);
 	withoutSalVac.setRequest_date(Calendar.getInstance().getTime());
-	withoutSalVac.setNotes(userRequest.getNotes());
+//	withoutSalVac.setNotes(userRequest.getNotes());
 	withoutSalVac.setApproved(new Long(0));
 	withoutSalVac.setApplicable(new Long(1));
 	withoutSalVac.setPosted(new Long(0));
