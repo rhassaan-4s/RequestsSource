@@ -417,7 +417,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		} else if (userRequest.getAttendanceType().equals(new Long(8))) {//periodic vacation
 //			System.out.println("8 reqType " + reqType.getId());
 			loginUsersRequests = new LoginUsersRequests();
-			loginUsersRequests = handleVacations(userRequest, empId,loginUsersRequests);
+			handleVacations(userRequest, empId,loginUsersRequests);
 			reqType = loginUsersRequests.getRequest_id();
 			System.out.println(" reqType " + reqType.getId());
 		} else {
@@ -509,7 +509,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					}
 				}
 			}
-		}else if (!userRequest.getAttendanceType().equals(new Long(7))){
+		}else if (!userRequest.getAttendanceType().equals(new Long(7))&& !userRequest.getAttendanceType().equals(new Long(8))){
 			loginUsersRequests = new LoginUsersRequests();
 			loginUsersRequests.setLogin_user(loginUsers);
 			loginUsersRequests.setEmpCode(loginUsers.getEmpCode());
@@ -548,7 +548,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		}
 
 
-		if (!userRequest.getAttendanceType().equals(new Long(7))) {
+		if (!userRequest.getAttendanceType().equals(new Long(7)) && !userRequest.getAttendanceType().equals(new Long(8))) {
 			loginUsersRequests.setRequest_id(reqType);
 		}
 	//Setting Longitude & Latitude////////////////////////////////
