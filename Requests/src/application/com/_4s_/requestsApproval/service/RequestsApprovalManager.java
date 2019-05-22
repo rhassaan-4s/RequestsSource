@@ -26,6 +26,7 @@ import com._4s_.requestsApproval.model.AccessLevels;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
+import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com.jenkov.prizetags.tree.itf.ITree;
@@ -113,8 +114,8 @@ public interface RequestsApprovalManager extends BaseManager {
 	public List getRequestStatus(final Long req_id);
 	public String CreateRequestNumber();
 	
-	public Long getEmpVacation (String empCode, Long reqId, String vacId, Date from_date);
-	public Long getVacationLimit (String empCode, Long reqId, String vacId, Date from_date);
+	public Long getEmpVacation (String empCode, String vacId, Date from_date);
+	public Long getVacationLimit (String empCode, String vacId, Date from_date);
 	public Long getVacationCredit (String empCode, Long reqId, String vacId, Date from_date);
 	public List getTimeAttend (String empCode, Date from_date, Date to_date);
 	// copied from lotus /////////////////////////////////
@@ -127,7 +128,7 @@ public interface RequestsApprovalManager extends BaseManager {
 	public Map getRequestsForApproval(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
 			String requestType, String codeFrom, String codeTo, String statusId,LoginUsers loggedInUser, List empReqTypeAccs, boolean isWeb, int pageNumber, int pageSize);
 	public Map approvalsAccessLevels(RequestApproval approval, LoginUsersRequests requestInfo, Employee emp);
-	public Map getVacInfo(LoginUsersRequests requestInfo);
+	public Map getVacInfo(Vacation vac, Date from_date, String empCode);
 	public List getEmpReqTypeAccs(List accessLevels,Long requestType);
 	public int insertTimeAttendance(String hostName, String  serviceName, String  userName, String password,String empCode, Date date, Date date2,
 			String trans_type);

@@ -2682,6 +2682,66 @@ public class ExternalQueries {
 //		}
 		
 	}
+	
+	public Long getVacationLimit (String hostName,String serviceName,String userName,String password, String empCode, String vacId, Date from_date){
+//		Long result=null;
+		Long cc1 = null,cc2 = null;
+		int year; 
+//		= from_date.getYear();
+		
+		log.debug("----fromdate---"+from_date);
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        
+        String from_dateString=df.format(from_date);
+        log.debug("----from_dateString- after formatting--"+from_dateString);
+        
+        try {
+        	log.debug("----xxxxxxxxxxxxxxxx-----");
+			from_date=df.parse(from_dateString);
+			log.debug("----from_date- after formatting--"+from_date);
+			log.debug("----xxxxxxxxxxxxxxxx-----");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        
+        MultiCalendarDate mCalDate = new MultiCalendarDate();
+		if(from_dateString!=null){
+			log.debug("-----date entered---"+from_dateString);
+			mCalDate.setDateTimeString(from_dateString,new Boolean(true));
+		}
+		from_date = mCalDate.getDate();
+		log.debug("----fromdate- after formatting--"+from_date);
+
+		
+        Calendar c = Calendar.getInstance();
+        c.setTime(from_date);
+        year=c.get(Calendar.YEAR);
+        log.debug("----year---"+year);
+//            System.out.println("Month = " + (c.get(Calendar.MONTH)));
+//            System.out.println("Day = " + c.get(Calendar.DAY_OF_MONTH));
+
+            
+		
+		jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
+		StringBuilder sql = new StringBuilder(
+				" select entitled+previous from vac_limit where empcode = '" +empCode
+						+ "' and vacation = '" + vacId + "' and year = '"
+						+ year+"'");
+		
+		log.debug("----sql1---"+sql);
+		try{
+			cc1=jdbcTemplate.queryForLong(sql.toString());
+			log.debug("----cc1---"+cc1);
+		}catch (Exception e) {
+			cc1=new Long(0);
+		}
+		
+		return cc1;
+	}
+
+	
 	@SuppressWarnings("deprecation")
 	public Long getVacationLimit (String hostName,String serviceName,String userName,String password, String empCode, Long reqId, String vacId, Date from_date){
 //		Long result=null;
@@ -2740,6 +2800,78 @@ public class ExternalQueries {
 		
 		return cc1;
 	}
+	
+	public Long getEmpVacation (String hostName,String serviceName,String userName,String password, String empCode, String vacId, Date from_date){
+//		Long result=null;
+		Long cc1 = null,cc2 = null;
+		int year; 
+//		= from_date.getYear();
+		
+		log.debug("----fromdate---"+from_date);
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        
+        String from_dateString=df.format(from_date);
+        log.debug("----from_dateString- after formatting--"+from_dateString);
+        
+        try {
+        	log.debug("----xxxxxxxxxxxxxxxx-----");
+			from_date=df.parse(from_dateString);
+			log.debug("----from_date- after formatting--"+from_date);
+			log.debug("----xxxxxxxxxxxxxxxx-----");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        
+        MultiCalendarDate mCalDate = new MultiCalendarDate();
+		if(from_dateString!=null){
+			log.debug("-----date entered---"+from_dateString);
+			mCalDate.setDateTimeString(from_dateString,new Boolean(true));
+		}
+		from_date = mCalDate.getDate();
+		log.debug("----fromdate- after formatting--"+from_date);
+
+		
+        Calendar c = Calendar.getInstance();
+        c.setTime(from_date);
+        year=c.get(Calendar.YEAR);
+        log.debug("----year---"+year);
+		
+		Date dd1=null;
+		c.set(year, 00, 01);
+		dd1=c.getTime();
+		log.debug("----dd1---"+dd1);
+		
+		String dd1String=df.format(dd1);
+        log.debug("----dd1String- after formatting--"+dd1String);
+
+		if(dd1String!=null){
+			log.debug("-----dd1 -string -"+dd1String);
+			mCalDate.setDateString(dd1String);
+		}
+		dd1 = mCalDate.getDate();
+		log.debug("----dd1- after formatting--"+dd1);
+		
+		
+		StringBuilder sql =new StringBuilder(" select sum(withdr) from empvac where empcode = '" +empCode
+						+ "' and vacation = '" + vacId + "' and fr_date < to_date ('"
+						+ from_dateString+"', 'DD-MM-YYYY') and fr_date >= to_date('" + dd1String+"', 'DD-MM-YYYY')");
+		
+		log.debug("----sql---"+sql);
+		try{
+			cc2=jdbcTemplate.queryForLong(sql.toString());
+		}catch (Exception e) {
+			cc2=new Long(0);
+		}
+		
+//		log.debug("----cc2---"+cc2);
+//		Long result=cc1-cc2;
+//		log.debug("----cc1-cc2---"+result);
+
+		return cc2;
+	}
+
 	
 	@SuppressWarnings("deprecation")
 	public Long getEmpVacation (String hostName,String serviceName,String userName,String password, String empCode, Long reqId, String vacId, Date from_date){

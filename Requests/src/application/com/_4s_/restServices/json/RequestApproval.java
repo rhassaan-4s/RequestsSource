@@ -5,6 +5,29 @@ public class RequestApproval {
 	private String requestId;
 	private String approve; //0: rejected 1:approved
 	private String notes;
+	private String vac;
+	private String empCode;
+	private String fromDate;
+	
+	
+	public String getFromDate() {
+		return fromDate;
+	}
+	public void setFromDate(String fromDate) {
+		this.fromDate = fromDate;
+	}
+	public String getVac() {
+		return vac;
+	}
+	public void setVac(String vac) {
+		this.vac = vac;
+	}
+	public String getEmpCode() {
+		return empCode;
+	}
+	public void setEmpCode(String empCode) {
+		this.empCode = empCode;
+	}
 	public String getRequestId() {
 		return requestId;
 	}

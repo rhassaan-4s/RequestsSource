@@ -39,6 +39,7 @@ import com._4s_.requestsApproval.model.EmpReqApproval;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
+import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
@@ -503,22 +504,22 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	return requestNumber;
 	}
 	
-	public Long getEmpVacation (String empCode, Long reqId, String vacId, Date from_date){
+	public Long getEmpVacation (String empCode, String vacId, Date from_date){
 		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
 		String hostName = settings.getServer();
 		String serviceName = settings.getService();
 		String userName = settings.getUsername();
 		String password = settings.getPassword();
-		return externalQueries.getEmpVacation(hostName, serviceName, userName, password, empCode, reqId, vacId, from_date);
+		return externalQueries.getEmpVacation(hostName, serviceName, userName, password, empCode, vacId, from_date);
 	}
 	
-	public Long getVacationLimit (String empCode, Long reqId, String vacId, Date from_date){
+	public Long getVacationLimit (String empCode, String vacId, Date from_date){
 		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
 		String hostName = settings.getServer();
 		String serviceName = settings.getService();
 		String userName = settings.getUsername();
 		String password = settings.getPassword();
-		return externalQueries.getVacationLimit(hostName, serviceName, userName, password, empCode, reqId, vacId, from_date);
+		return externalQueries.getVacationLimit(hostName, serviceName, userName, password, empCode, vacId, from_date);
 	}
 
 	public Long getVacationCredit (String empCode, Long reqId, String vacId, Date from_date){
@@ -1257,24 +1258,24 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		
 	}
 	
-	public Map getVacInfo(LoginUsersRequests requestInfo) {
+	public Map getVacInfo(Vacation vac, Date from_date, String empCode) {
 		Map model = new HashMap();
-		if (requestInfo!= null && requestInfo.getVacation()!=null){
-			String vacId =  requestInfo.getVacation().getVacation();
+		if (vac !=null){
+			String vacId =  vac.getVacation();
 			
 			log.debug("vac id " + vacId);
 		
-			Date from_date = requestInfo.getFrom_date();
-			if (from_date == null) {
-				from_date = requestInfo.getPeriod_from();
-			}
-			log.debug("from_date " + from_date);
+//			Date from_date = requestInfo.getFrom_date();
+//			if (from_date == null) {
+//				from_date = requestInfo.getPeriod_from();
+//			}
+//			log.debug("from_date " + from_date);
 			
 			
-			log.debug("emp code " + requestInfo.getEmpCode());
+//			log.debug("emp code " + requestInfo.getEmpCode());
 			
-			Long vacLimit = getVacationLimit(requestInfo.getEmpCode(), requestInfo.getId(), vacId, from_date);
-			Long vacConsumed = getEmpVacation(requestInfo.getEmpCode(), requestInfo.getId(), vacId, from_date);
+			Long vacLimit = getVacationLimit(empCode, vacId, from_date);
+			Long vacConsumed = getEmpVacation(empCode, vacId, from_date);
 			Long vacCredit = vacLimit - vacConsumed;
 			
 			Map output = new HashMap();

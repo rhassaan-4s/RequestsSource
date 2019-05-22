@@ -641,17 +641,63 @@ public Map approveRequest(RequestApproval requestApproval,Employee emp) {
 
 public Map getVacInfo(RequestApproval requestApproval) {
 	RestStatus status = new RestStatus();
-	Object obj = requestsApprovalManager.getObject(LoginUsersRequests.class, new Long(requestApproval.getRequestId()));
+	Object obj = null;
+	Vacation vac = null;
 	Map response = new HashMap();
-	if (obj == null) {
-		status.setCode("306");
-		status.setMessage("Request Not Found");
+	if (requestApproval.getRequestId() != null) {
+		obj = requestsApprovalManager.getObject(LoginUsersRequests.class, new Long(requestApproval.getRequestId()));
+	} else if (requestApproval.getVac()!= null && !requestApproval.getVac().isEmpty() 
+			&& requestApproval.getEmpCode()!=null && !requestApproval.getEmpCode().isEmpty()){
+		vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class, "vacation", requestApproval.getVac());
+	} else {
+		status.setCode("303");
+		status.setMessage("Null/Empty input parameter");
 		status.setStatus("false");
 		response.put("Status", status);
 		return response;
-	} else {
+	}
+	
+	Date from = null;
+	MultiCalendarDate mCalDateFrom = new MultiCalendarDate();
+	if (requestApproval.getFromDate() != null && !requestApproval.getFromDate().isEmpty()) {
+		DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
+		try {
+			from = df.parse(requestApproval.getFromDate());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(from);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		mCalDateFrom.setDate(cal.getTime());
+	}
+	
+	if (vac!= null && from != null) {
+//		status.setCode("306");
+//		status.setMessage("Request Not Found");
+//		status.setStatus("false");
+//		response.put("Status", status);
+//		return response;
+		return requestsApprovalManager.getVacInfo(vac,from,requestApproval.getEmpCode());
+	} else if (obj!=null){
+		System.out.println("object " + obj);
 		LoginUsersRequests loginUser = (LoginUsersRequests)obj;
-		return requestsApprovalManager.getVacInfo(loginUser);
+		Date from_date = loginUser.getFrom_date();
+		if (from_date == null) {
+			from_date = loginUser.getPeriod_from();
+		}
+		System.out.println("vacation " + loginUser.getVacation());
+		System.out.println("requestApproval.getEmpCode() " + loginUser.getEmpCode());
+		return requestsApprovalManager.getVacInfo(loginUser.getVacation(),from_date, loginUser.getEmpCode());
+	} else {
+		status.setCode("303");
+		status.setMessage("Null/Empty input parameter");
+		status.setStatus("false");
+		response.put("Status", status);
+		return response;
 	}
 }
 
