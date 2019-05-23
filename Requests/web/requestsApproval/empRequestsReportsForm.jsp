@@ -404,6 +404,9 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										<td class="helpHed" id="btnPrint">
 											&nbsp;
 										</td>	
+										<td class="helpHed" nowrap>
+										&nbsp;
+										</td>
 									</tr>
 									
 								<c:forEach varStatus="loop" var="record" items="${results}">
@@ -504,7 +507,18 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										<td  nowrap>
 											${record.notes}
 										</td>
-										
+									<c:choose>
+										<c:when test="${record.latitude>0.0}">
+											<td class="formBodControl"><iframe id="latlongmape"
+													style="border: 0; width: 98%" class="shadow"
+													src='https://www.google.com/maps/embed/v1/place?key=AIzaSyDkLn71hSNTgpfB228L6HYzTEqS3Zx7r_E&maptype=roadmap&q=${record.latitude},${record.longitude}'
+													allowfullscreen> </iframe>
+										</c:when>
+										<c:otherwise>
+											<td class="formBodControl">&nbsp;</td>
+										</c:otherwise>
+									</c:choose>
+									</td>
 										<c:if test="${record.approved==0}">
 										<td  id="btnPrint" nowrap><abc:i18n
 											property="commons.button.approve" /><a
@@ -517,6 +531,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 												&nbsp;
 											</td>
 										</c:if>
+										
 									</tr>
 								</c:forEach>									
 								</table>

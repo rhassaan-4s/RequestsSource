@@ -14,9 +14,14 @@ public class RequestsApprovalQuery {
 	private String statusId;
 	private int pageNumber;
 	private int pageSize;
+	private String sort; //asc, desc 
 	
-	
-	
+	public String getSort() {
+		return sort;
+	}
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
 	public int getPageNumber() {
 		return pageNumber;
 	}

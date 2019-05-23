@@ -604,10 +604,9 @@ public List getEmpReqTypeAcc(Employee emp,String requestType) {
 
 public Map getRequestsForApproval(RequestsApprovalQuery approvalQuery, List empReqTypeAccs,Employee emp) {
 	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
-	
 	return requestsApprovalManager.getRequestsForApproval(approvalQuery.getRequestNumber(), approvalQuery.getEmp_code(), 
 			approvalQuery.getDateFrom(), approvalQuery.getDateTo(), approvalQuery.getExactDateFrom(), approvalQuery.getExactDateTo(), approvalQuery.getRequestType(),
-			approvalQuery.getCodeFrom(), approvalQuery.getCodeTo(), approvalQuery.getStatusId(),loggedInUser,empReqTypeAccs,false, approvalQuery.getPageNumber(), approvalQuery.getPageSize());	
+			approvalQuery.getCodeFrom(), approvalQuery.getCodeTo(), approvalQuery.getStatusId(),approvalQuery.getSort(),loggedInUser,empReqTypeAccs,false, approvalQuery.getPageNumber(), approvalQuery.getPageSize());	
 }
 
 public Map approveRequest(RequestApproval requestApproval,Employee emp) {

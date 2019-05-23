@@ -160,7 +160,7 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 //			tempneededRequestTypes = requestsApprovalManager.getRequestsForApprovalList(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId);
 			List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(emp, requestType);
 			LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
-			model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,loginUsers, empReqTypeAccs,true,pageNumber,10);
+			model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,pageNumber,10);
 		}
 		model.put("requestNumber", requestNumber);
 		model.put("employeeCode", emp_code);

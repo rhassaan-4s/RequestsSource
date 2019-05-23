@@ -291,8 +291,8 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 				log.debug("from_date " + from_date);
 				log.debug("emp code " + requestInfo.getEmpCode());
 				if (from_date!=null){
-					Long vacLimit = requestsApprovalManager.getVacationLimit(requestInfo.getEmpCode(), Long.parseLong(reqId), vacId, from_date);
-					Long vacConsumed = requestsApprovalManager.getEmpVacation(requestInfo.getEmpCode(), Long.parseLong(reqId), vacId, from_date);
+					Long vacLimit = requestsApprovalManager.getVacationLimit(requestInfo.getEmpCode(), vacId, from_date);
+					Long vacConsumed = requestsApprovalManager.getEmpVacation(requestInfo.getEmpCode(), vacId, from_date);
 					Long vacCredit = vacLimit - vacConsumed;
 
 					model.put("vacLimit", vacLimit);
@@ -341,10 +341,10 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 		if (requestInfo.getVacation() != null) {
 			String vacId = requestInfo.getVacation().getVacation();
 			Long vacLimit = requestsApprovalManager.getVacationLimit(
-					requestInfo.getEmpCode(), Long.parseLong(reqId), vacId,
+					requestInfo.getEmpCode(), vacId,
 					from_date);
 			Long vacConsumed = requestsApprovalManager.getEmpVacation(
-					requestInfo.getEmpCode(), Long.parseLong(reqId), vacId,
+					requestInfo.getEmpCode(), vacId,
 					from_date);
 			Long vacCredit = vacLimit - vacConsumed;
 

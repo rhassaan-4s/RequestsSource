@@ -942,7 +942,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 
 	public Map getPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
-			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, List empReqTypeAccs,String requestNumber,boolean isWeb, final int pageNumber, final int pageSize)  {
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, String sort, List empReqTypeAccs,String requestNumber,boolean isWeb, final int pageNumber, final int pageSize)  {
 		Calendar cFrom= Calendar.getInstance();
 		
 		Date dateFrom=null;
@@ -1094,7 +1094,12 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			if (empReqTypeAccs != null) {
 				criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
 			}
-			criteria.addOrder(Property.forName("period_from").desc());
+			if (sort.equalsIgnoreCase("desc")) {
+				criteria.addOrder(Property.forName("period_from").desc());
+			}
+			if (sort.equalsIgnoreCase("asc")) {
+				criteria.addOrder(Property.forName("period_from").asc());
+			}
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			criteria.setProjection(Projections.projectionList().add(Projections.rowCount()));
@@ -1185,7 +1190,12 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			if (empReqTypeAccs != null) {
 				criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
 			}
-			criteria.addOrder(Property.forName("period_from").desc());
+			if (sort.equalsIgnoreCase("desc")) {
+				criteria.addOrder(Property.forName("period_from").desc());
+			}
+			if (sort.equalsIgnoreCase("asc")) {
+				criteria.addOrder(Property.forName("period_from").asc());
+			}
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		

@@ -178,6 +178,22 @@ public class RequestsServiceController {
 		User user = requestsService.getUser(userDet.getUsername());
 		Map response = new HashMap();		
 		RestStatus restStatus = new RestStatus();
+		RestStatus status = new RestStatus();
+		System.out.println(" sort " + approvalQuery.getSort());
+		System.out.println(!approvalQuery.getSort().equalsIgnoreCase("asc"));
+		System.out.println(!approvalQuery.getSort().equalsIgnoreCase("desc"));
+		System.out.println((!approvalQuery.getSort().equalsIgnoreCase("asc") && !approvalQuery.getSort().equalsIgnoreCase("desc")));
+		if (approvalQuery.getSort()==null || approvalQuery.getSort().isEmpty() 
+				|| (!approvalQuery.getSort().equalsIgnoreCase("asc") && !approvalQuery.getSort().equalsIgnoreCase("desc"))) {
+			System.out.println("sort value error");
+			System.out.println("sort value is wrong " + approvalQuery.getSort()==null || approvalQuery.getSort().isEmpty() 
+				|| (!approvalQuery.getSort().equalsIgnoreCase("asc") && !approvalQuery.getSort().equalsIgnoreCase("desc")));
+			status.setCode("303");
+			status.setMessage("Null/Empty/Wrong Input Parameter");
+			status.setStatus("false");
+			response.put("Status", status);
+			return response;
+		}
 		if (approvalQuery.getPageSize()!=0) {
 			List empReqTypeAccs = requestsService.getEmpReqTypeAcc(user.getEmployee(), approvalQuery.getRequestType());
 			response =	requestsService.getRequestsForApproval(approvalQuery,empReqTypeAccs,user.getEmployee());	
@@ -218,6 +234,22 @@ public class RequestsServiceController {
 		approvalQuery.setEmp_code(user.getEmployee().getEmpCode());
 		approvalQuery.setCodeFrom(null);
 		approvalQuery.setCodeTo(null);
+		RestStatus status = new RestStatus();
+		System.out.println(" sort " + approvalQuery.getSort());
+		System.out.println(!approvalQuery.getSort().equalsIgnoreCase("asc"));
+		System.out.println(!approvalQuery.getSort().equalsIgnoreCase("desc"));
+		System.out.println((!approvalQuery.getSort().equalsIgnoreCase("asc") && !approvalQuery.getSort().equalsIgnoreCase("desc")));
+		if (approvalQuery.getSort()==null || approvalQuery.getSort().isEmpty() 
+				|| (!approvalQuery.getSort().equalsIgnoreCase("asc") && !approvalQuery.getSort().equalsIgnoreCase("desc"))) {
+			System.out.println("sort value error");
+			System.out.println("sort value is wrong " + approvalQuery.getSort()==null || approvalQuery.getSort().isEmpty() 
+				|| (!approvalQuery.getSort().equalsIgnoreCase("asc") && !approvalQuery.getSort().equalsIgnoreCase("desc")));
+			status.setCode("303");
+			status.setMessage("Null/Empty/Wrong Input Parameter");
+			status.setStatus("false");
+			response.put("Status", status);
+			return response;
+		}
 		if (approvalQuery.getPageSize()!=0) {
 			response =	requestsService.getRequestsForApproval(approvalQuery,null,user.getEmployee());
 			List resp = (List)response.get("results");
