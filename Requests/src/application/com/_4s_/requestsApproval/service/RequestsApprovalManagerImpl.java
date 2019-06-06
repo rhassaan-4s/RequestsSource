@@ -937,7 +937,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			if(empReqAcc.size()>0){
 				log.debug("---- size of list---"+empReqAcc.size());
 			for (int i = 0; i < empReqAcc.size(); i++) {
-				log.debug("---- i fo2---"+i);
+				log.debug("---- i equals ---"+i);
 				try {
 					
 					/**
@@ -958,11 +958,16 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					log.debug("-----temp group--"+temp.getGroup_id().getId());
 					
 					empReqApproval = (EmpReqApproval) getObjectByTwoObjects(EmpReqApproval.class,"level_id", temp, "req_id", requestInfo);
-					log.debug("------empreqapp-----"+empReqApproval.getId());
 					
-					log.debug("------id ele wafe2-----"+empReqApproval.getUser_id().getId());
-					
-					log.debug("------code ele wafe2-----"+empReqApproval.getUser_id().getEmpCode());
+					if (empReqApproval != null) {
+						log.debug("------empreqapp-----"+empReqApproval.getId());
+
+						log.debug("------id ele wafe2-----"+empReqApproval.getUser_id().getId());
+
+						log.debug("------code ele wafe2-----"+empReqApproval.getUser_id().getEmpCode());
+					} else {
+						log.debug("no approvals saved yet");
+					}
 //					model.put("approvedBy", empReqApproval.getUser_id().getEmpCode());
 					log.debug("------code ele da5el-----"+emp.getEmpCode());
 //					model.put("operator", emp.getEmpCode());
@@ -978,7 +983,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 							EmpReqApproval empReqApprovalNext= new EmpReqApproval();
 							empReqApprovalNext = (EmpReqApproval) getObjectByTwoObjects(EmpReqApproval.class,"level_id", nextTemp, "req_id", requestInfo);
 							log.debug("------empReqApprovalNext.getId()!null nor ''----");
-							log.debug("------empReqApprovalNext-----"+empReqApprovalNext.getId());
+							log.debug("------empReqApprovalNext-----"+empReqApprovalNext);
 //							model.put("lastOne", "false");
 							lastOne = false;
 						}
@@ -1024,23 +1029,25 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 						lastOne = false;
 					}
 					
-					approvalRequest = new HashMap();
+					if (empReqApproval != null) {
+						approvalRequest = new HashMap();
 
-					approvalRequest.put("title", temp.getGroup_id().getTitle());
-					log.debug("-----title of group-----"+temp.getGroup_id().getTitle());
-					approvalRequest.put("id", temp.getId());
-					approvalRequest.put("status", empReqApproval.getApproval());
-					
-					///////////////////////////////////////////////////
-					status = empReqApproval.getApproval()+"";
-					///////////////////////////////////////////////////
-					
-					
-					log.debug("-----status-empReqApproval.getApproval()--"+empReqApproval.getApproval());
-					approvalRequest.put("user", empReqApproval.getUser_id().getName());
-					log.debug("-----user-----"+empReqApproval.getUser_id().getName());
-					approvalRequest.put("note", empReqApproval.getNote());
-					approvalList.add(approvalRequest);
+						approvalRequest.put("title", temp.getGroup_id().getTitle());
+						log.debug("-----title of group-----"+temp.getGroup_id().getTitle());
+						approvalRequest.put("id", temp.getId());
+						approvalRequest.put("status", empReqApproval.getApproval());
+
+						///////////////////////////////////////////////////
+						status = empReqApproval.getApproval()+"";
+						///////////////////////////////////////////////////
+
+
+						log.debug("-----status-empReqApproval.getApproval()--"+empReqApproval.getApproval());
+						approvalRequest.put("user", empReqApproval.getUser_id().getName());
+						log.debug("-----user-----"+empReqApproval.getUser_id().getName());
+						approvalRequest.put("note", empReqApproval.getNote());
+						approvalList.add(approvalRequest);
+					}
 
 					/**
 					 * Detect if access level is finished to hide submit button
@@ -1064,7 +1071,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					 * Detect if last access level is rejected to hide submit
 					 * button
 					 **/
-					if (empReqApproval.getApproval() == 0) {
+					if (empReqApproval != null && empReqApproval.getApproval() == 0) {
 						log.debug("---empReqApproval.getApproval() == 0----cancelApproval---"+cancelApproval);
 						if(requestInfo.getApproved()==0 && (cancelApproval==null || cancelApproval.equals(""))){
 							log.debug("------pproved=0-ddd--");

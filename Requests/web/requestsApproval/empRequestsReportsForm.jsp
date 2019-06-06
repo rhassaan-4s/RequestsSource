@@ -515,7 +515,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 													allowfullscreen> </iframe>
 										</c:when>
 										<c:otherwise>
-											<td class="formBodControl">&nbsp;</td>
+											<td >&nbsp;</td>
 										</c:otherwise>
 									</c:choose>
 									</td>
