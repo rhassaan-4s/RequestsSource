@@ -132,6 +132,7 @@ public LoginUsersRequests signInOut(AttendanceRequest userRequest,Long empId) {
 		System.out.println("-----login.code----"+loginUsers.getEmpCode());
 	}
 
+	System.out.println("settings.getAutomaticSignInOut().booleanValue() " + settings.getAutomaticSignInOut().booleanValue());
 	if (settings.getAutomaticSignInOut().booleanValue() == false) {
 		LoginUsersRequests loginUsersRequests = new LoginUsersRequests();
 
