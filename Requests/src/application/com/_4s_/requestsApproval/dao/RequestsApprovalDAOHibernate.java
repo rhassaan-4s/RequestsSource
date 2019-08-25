@@ -1044,8 +1044,8 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				criteria.add(Expression.ge("from_date", startDate));
 				criteria.add(Expression.le("from_date", endDate));
 			}
-			criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-					Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+//			criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//					Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 			/////////////////////////////////////////////////////////////////////////////////
 			log.debug("requestNumber " + requestNumber);
 			if(requestNumber!=null && !requestNumber.isEmpty()) {
@@ -1140,8 +1140,8 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				criteria.add(Expression.ge("from_date", startDate));
 				criteria.add(Expression.le("from_date", endDate));
 			}
-			criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-					Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+//			criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//					Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 			/////////////////////////////////////////////////////////////////////////////////
 			log.debug("requestNumber " + requestNumber);
 			if(requestNumber!=null && !requestNumber.isEmpty()) {
