@@ -359,9 +359,14 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	}
 	
 	DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	DateFormat df2=new SimpleDateFormat("dd/MM/yyyy");
 	Date newDate = null;
 	try {
-		newDate = df.parse(userRequest.getAttendanceTime());
+		if (!userRequest.getAttendanceType().equals(new Long(9))) {
+			newDate = df.parse(userRequest.getAttendanceTime());
+		} else {
+			newDate = df2.parse(userRequest.getAttendanceTime());
+		}
 	} catch (ParseException e) {
 		// TODO Auto-generated catch block
 		System.out.println(e.getMessage());
@@ -376,10 +381,19 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	
 	Date to = null;
 	try {
-		to = df.parse(userRequest.getAttendanceTime2());
+		if (!userRequest.getAttendanceType().equals(new Long(9))) {
+			to = df.parse(userRequest.getAttendanceTime2());
+		} else {
+			to = df2.parse(userRequest.getAttendanceTime2());
+		}
 	} catch (ParseException e) {
 		// TODO Auto-generated catch block
 		System.out.println(e.getMessage());
+		status.setCode("312");
+		status.setMessage("Date is not well formated");
+		status.setStatus("False");
+		response.put("Status", status);
+		return response;
 	}
 	Calendar cal = Calendar.getInstance();
 	cal.setTime(to);
@@ -497,8 +511,13 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 						requestNumber=requestsApprovalManager.CreateRequestNumber();
 						loginUsersRequests.setRequestNumber(requestNumber);
 						System.out.println("requestNumber in user request " + requestNumber);
+						cal.setTime(newDate);
+						cal.set(Calendar.HOUR_OF_DAY, 0);
+						cal.set(Calendar.MINUTE, 0);
+						cal.set(Calendar.SECOND, 0);
+						mCalDate.setDate(cal.getTime());
 						loginUsersRequests.setPeriod_from(mCalDate.getDate());
-						loginUsersRequests.setPeriod_to(to);
+						loginUsersRequests.setPeriod_to(mCalDateTo.getDate());
 					}
 				}
 			} else {
