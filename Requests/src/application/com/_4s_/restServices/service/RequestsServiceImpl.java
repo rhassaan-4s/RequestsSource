@@ -550,8 +550,6 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 						requestNumber=requestsApprovalManager.CreateRequestNumber();
 						loginUsersRequests.setRequestNumber(requestNumber);
 						loginUsersRequests.setPeriod_from(mCalDate.getDate());
-						loginUsersRequests.setPeriod_to(mCalDateTo.getDate());
-						loginUsersRequests.setTo_date(mCalDateTo.getDate());
 					}
 				}
 			}
@@ -567,6 +565,9 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				requestNumber=requestsApprovalManager.CreateRequestNumber();
 				loginUsersRequests.setRequestNumber(requestNumber);
 				loginUsersRequests.setPeriod_from(mCalDate.getDate());
+				
+				loginUsersRequests.setPeriod_to(mCalDateTo.getDate());
+				loginUsersRequests.setTo_date(mCalDateTo.getDate());
 			}
 			loginUsersRequests.setLeave_effect("0");
 			loginUsersRequests.setLeave_type("0");
