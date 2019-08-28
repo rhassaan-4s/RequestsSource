@@ -349,6 +349,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	RestStatus status = new RestStatus();
 	
 	if (userRequest.getAttendanceType()==null || userRequest.getAttendanceTime() == null 
+			||(userRequest.getAttendanceType().equals(new Long(9)) && (userRequest.getAttendanceTime2() == null ||userRequest.getAttendanceTime2() == null))
 			|| userRequest.getAttendanceTime().isEmpty()|| userRequest.getLatitude()==null || userRequest.getLongitude()==null){
 		status.setCode("303");
 		status.setMessage("Null/Empty Input Parameter");
@@ -372,6 +373,21 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	}
 	MultiCalendarDate mCalDate = new MultiCalendarDate();
 	mCalDate.setDate(newDate);
+	
+	Date to = null;
+	try {
+		to = df.parse(userRequest.getAttendanceTime2());
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		System.out.println(e.getMessage());
+	}
+	Calendar cal = Calendar.getInstance();
+	cal.setTime(to);
+	cal.set(Calendar.HOUR_OF_DAY, 23);
+	cal.set(Calendar.MINUTE, 59);
+	cal.set(Calendar.SECOND, 59);
+	MultiCalendarDate mCalDateTo = new MultiCalendarDate();
+	mCalDateTo.setDate(cal.getTime());
 	
 	Employee emp = (Employee)requestsApprovalDAO.getObject(Employee.class, empId);
 
@@ -421,6 +437,11 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 			handleVacations(userRequest, empId,loginUsersRequests);
 			reqType = loginUsersRequests.getRequest_id();
 			System.out.println(" reqType " + reqType.getId());
+		} else if (userRequest.getAttendanceType().equals(new Long(9))) {//Full Day errand
+//			System.out.println("5 6 reqType " + reqType.getId());
+			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(1));
+			vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class,"vacation", "999");
+			System.out.println(" reqType " + reqType.getId());
 		} else {
 			System.out.println("userRequest.getAttendanceType() " + userRequest.getAttendanceType().getClass());
 		}
@@ -436,7 +457,8 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		System.out.println("mCalDate " + mCalDate);
 		System.out.println("mCalDate.getDate() " + mCalDate.getDate());
 		if (userRequest.getAttendanceType().equals(new Long(4)) || userRequest.getAttendanceType().equals(new Long(6))
-				||userRequest.getAttendanceType().equals(new Long(3)) || userRequest.getAttendanceType().equals(new Long(5))) {//Permission End || //Full Day Permission End
+				||userRequest.getAttendanceType().equals(new Long(3)) || userRequest.getAttendanceType().equals(new Long(5))
+				|| userRequest.getAttendanceType().equals(new Long(9))) {//Permission End || //Full Day Permission End
 			List requests =  requestsApprovalManager.getRequestsByDatePeriodAndRequestTypeAndEmpCode(mCalDate.getDate(), mCalDate.getDate(), reqType.getId(), emp.getEmpCode());
 
 			if (userRequest.getAttendanceType().equals(new Long(4)) || userRequest.getAttendanceType().equals(new Long(6))) {
@@ -476,6 +498,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 						loginUsersRequests.setRequestNumber(requestNumber);
 						System.out.println("requestNumber in user request " + requestNumber);
 						loginUsersRequests.setPeriod_from(mCalDate.getDate());
+						loginUsersRequests.setPeriod_to(to);
 					}
 				}
 			} else {
