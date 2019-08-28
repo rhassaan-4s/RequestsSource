@@ -458,20 +458,6 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 			vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class,"vacation", "999");
 			System.out.println(" reqType " + reqType.getId());
 			
-			loginUsersRequests.setLeave_effect("0");
-			loginUsersRequests.setLeave_type("0");
-			loginUsersRequests.setPayed(new Long(1));
-			loginUsersRequests.setApplicable(new Long(1));
-			loginUsersRequests.setApproved(new Long(0));
-			Long diff = mCalDateTo.getDate().getTime()-mCalDate.getDate().getTime();
-			
-			if (diff < 0) {
-				return null;
-			}
-			Double daysDiff = Double.valueOf(Math.round((diff/(1000*60*60*24.0))));
-			System.out.println("daysDiff " + daysDiff);
-			loginUsersRequests.setWithdrawDays(daysDiff);
-			
 		} else {
 			System.out.println("userRequest.getAttendanceType() " + userRequest.getAttendanceType().getClass());
 		}
@@ -568,7 +554,21 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					}
 				}
 			}
-		}else if (!userRequest.getAttendanceType().equals(new Long(7))&& !userRequest.getAttendanceType().equals(new Long(8))){
+		}else if (userRequest.getAttendanceType().equals(new Long(9))) {
+			loginUsersRequests.setLeave_effect("0");
+			loginUsersRequests.setLeave_type("0");
+			loginUsersRequests.setPayed(new Long(1));
+			loginUsersRequests.setApplicable(new Long(1));
+			loginUsersRequests.setApproved(new Long(0));
+			Long diff = mCalDateTo.getDate().getTime()-mCalDate.getDate().getTime();
+			
+			if (diff < 0) {
+				return null;
+			}
+			Double daysDiff = Double.valueOf(Math.round((diff/(1000*60*60*24.0))));
+			System.out.println("daysDiff " + daysDiff);
+			loginUsersRequests.setWithdrawDays(daysDiff);
+		} else if (!userRequest.getAttendanceType().equals(new Long(7))&& !userRequest.getAttendanceType().equals(new Long(8))){
 			loginUsersRequests = new LoginUsersRequests();
 			loginUsersRequests.setLogin_user(loginUsers);
 			loginUsersRequests.setEmpCode(loginUsers.getEmpCode());
