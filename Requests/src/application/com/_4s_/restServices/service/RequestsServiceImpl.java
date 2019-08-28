@@ -554,6 +554,18 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				}
 			}
 		}else if (userRequest.getAttendanceType().equals(new Long(9))) {
+			loginUsersRequests = new LoginUsersRequests();
+			loginUsersRequests.setLogin_user(loginUsers);
+			loginUsersRequests.setEmpCode(loginUsers.getEmpCode());
+			
+
+			// request number
+			if (loginUsersRequests.getId() == null && loginUsersRequests.getRequestNumber() == null){
+				String requestNumber="";
+				requestNumber=requestsApprovalManager.CreateRequestNumber();
+				loginUsersRequests.setRequestNumber(requestNumber);
+				loginUsersRequests.setPeriod_from(mCalDate.getDate());
+			}
 			loginUsersRequests.setLeave_effect("0");
 			loginUsersRequests.setLeave_type("0");
 			loginUsersRequests.setPayed(new Long(1));
