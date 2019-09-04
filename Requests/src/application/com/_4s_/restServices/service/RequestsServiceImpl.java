@@ -378,14 +378,24 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	}
 	MultiCalendarDate mCalDate = new MultiCalendarDate();
 	mCalDate.setDate(newDate);
-	
+	MultiCalendarDate mCalDateTo = new MultiCalendarDate();
 	Date to = null;
+	Calendar cal = Calendar.getInstance();
 	try {
-		if (!userRequest.getAttendanceType().equals(new Long(9))) {
-			to = df.parse(userRequest.getAttendanceTime2());
-		} else {
-			to = df2.parse(userRequest.getAttendanceTime2());
-			System.out.println("to " + to);
+		if (userRequest.getAttendanceTime2()!=null && !userRequest.getAttendanceTime2().isEmpty()) {
+			if (!userRequest.getAttendanceType().equals(new Long(9))) {
+				to = df.parse(userRequest.getAttendanceTime2());
+			} else {
+				to = df2.parse(userRequest.getAttendanceTime2());
+				System.out.println("to " + to);
+			}
+			
+			cal.setTime(to);
+			cal.set(Calendar.HOUR_OF_DAY, 23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+
+			mCalDateTo.setDate(cal.getTime());
 		}
 	} catch (ParseException e) {
 		// TODO Auto-generated catch block
@@ -395,14 +405,17 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		status.setStatus("False");
 		response.put("Status", status);
 		return response;
+	}  catch (Exception e) {
+		// TODO Auto-generated catch block
+		System.out.println(e.getMessage());
+		status.setCode("312");
+		status.setMessage("Date Exception");
+		status.setStatus("False");
+		response.put("Status", status);
+		return response;
 	}
-	Calendar cal = Calendar.getInstance();
-	cal.setTime(to);
-	cal.set(Calendar.HOUR_OF_DAY, 23);
-	cal.set(Calendar.MINUTE, 59);
-	cal.set(Calendar.SECOND, 59);
-	MultiCalendarDate mCalDateTo = new MultiCalendarDate();
-	mCalDateTo.setDate(cal.getTime());
+	
+	
 	
 	Employee emp = (Employee)requestsApprovalDAO.getObject(Employee.class, empId);
 

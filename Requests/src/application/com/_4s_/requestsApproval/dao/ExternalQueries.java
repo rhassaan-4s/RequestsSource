@@ -21,6 +21,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 
 import com._4s_.common.util.MultiCalendarDate;
 //import com._4s_.stores.model.DBConnection;
@@ -3090,7 +3091,7 @@ public class ExternalQueries {
 		List in=(List) jdbcTemplate.queryForList(sql.toString());
 		
 			
-		ListOrderedMap inMap ;
+		LinkedCaseInsensitiveMap inMap ;
 
 		String minDate = null;
 //		Date min_date;
@@ -3140,7 +3141,8 @@ public class ExternalQueries {
 		long totalMins=0, totalHrs=0;
 		for(int i=0;i<in.size();i++){
 			timeAttend=new TimeAttend();
-			inMap = (ListOrderedMap) in.get(i);
+			log.debug("in.get(i) " + in.get(i).getClass());
+			inMap = (LinkedCaseInsensitiveMap) in.get(i);
 			minDate = inMap.get("minDate").toString();
 			log.debug("----minDate---"+minDate);
 			
