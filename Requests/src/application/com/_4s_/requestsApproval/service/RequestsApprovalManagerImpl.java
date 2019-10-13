@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.ojb.broker.accesslayer.conversions.Calendar2DateFieldConversion;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -967,14 +968,16 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 						log.debug("------code ele wafe2-----"+empReqApproval.getUser_id().getEmpCode());
 					} else {
 						log.debug("no approvals saved yet");
+						throw new Exception();
 					}
 //					model.put("approvedBy", empReqApproval.getUser_id().getEmpCode());
 					log.debug("------code ele da5el-----"+emp.getEmpCode());
 //					model.put("operator", emp.getEmpCode());
 					log.debug("---- i t7t---"+i);
-					log.debug("---i==empReqAcc.size()-1-------"+(i==empReqAcc.size()-1));
+					log.debug("---i==empReqAcc.size()-------"+(empReqAcc.size()));
 					if((i+1)<empReqAcc.size() || (i==empReqAcc.size()-1)){
 						try{
+							log.debug("trying to get next access group");
 //							model.put("lastOne", "false");
 							lastOne = false;
 							EmpReqTypeAcc nextTemp=(EmpReqTypeAcc)empReqAcc.get(i+1);
@@ -1205,7 +1208,14 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		log.debug("approval list size " + approvalList.size());
 		while (iter.hasNext()) {
 			Map  approvalRequest = (HashMap)iter.next();
-			status = (String)approvalRequest.get("status");
+			try {
+				status = (String)approvalRequest.get("status");
+			} catch (ClassCastException e) {
+				// TODO Auto-generated catch block
+//				e.printStackTrace();
+				status = (Integer)approvalRequest.get("status") + "";
+				
+			}
 			log.debug("status " + status);
 //			user = (String)approvalRequest.get("user"); //emp name
 			accId = approvalRequest.get("id")+"";
