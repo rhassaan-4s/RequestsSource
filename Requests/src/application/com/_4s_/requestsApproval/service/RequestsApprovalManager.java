@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -135,5 +136,6 @@ public interface RequestsApprovalManager extends BaseManager {
 	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 			Employee emp);
 	public List getEmpReqTypeAcc(Employee emp,String requestType);
+	public HttpServletResponse exportToExcelSheet(String reportName, List tableTitle,List results,HttpServletResponse response);
 }
 

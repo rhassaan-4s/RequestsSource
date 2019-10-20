@@ -70,6 +70,14 @@ function returnedData(data){
 		document.getElementById("resultList").value=result;
 	 }
 }
+
+function exportExcel() {
+	var fromDate = document.getElementById('request_date_from').value;
+	var toDate = document.getElementById('request_date_to').value;
+	var requestId = document.getElementById('request_id').value;
+	var link = '/Requests/requestsApproval/loginUsersRequestsView.html?export=true&dateFrom='+fromDate+'&dateTo='+toDate+'&requestType='+requestId;
+	window.open(link);
+}
 </script>
 <script type="text/javascript">
 
@@ -353,6 +361,11 @@ function printSelection(node){
 			<br>
 				<abc:i18n property="commons.button.print"/>
 				<input type="button" id="btnPrint" class="button" value="<fmt:message key="commons.button.print"/>" onClick="printthis('result')"></input>
+			</td>
+			<td colspan="2" align="center">
+			<br>
+				<abc:i18n property="commons.button.export"/>
+				<input type="button" id="btnexport" class="button" value="<fmt:message key="commons.button.export"/>" onClick="exportExcel();"></input>
 			</td>
 		</tr>
 	</table>

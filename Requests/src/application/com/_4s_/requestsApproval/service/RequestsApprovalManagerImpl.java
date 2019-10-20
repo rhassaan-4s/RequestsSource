@@ -9,11 +9,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.ojb.broker.accesslayer.conversions.Calendar2DateFieldConversion;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +40,9 @@ import com._4s_.common.model.Settings;
 import com._4s_.common.service.BaseManagerImpl;
 import com._4s_.common.service.SequenceManager;
 import com._4s_.common.util.MultiCalendarDate;
+import com._4s_.i18n.model.MyLocale;
+import com._4s_.i18n.model.MyMessage;
+import com._4s_.i18n.service.MessageManager;
 import com._4s_.requestsApproval.dao.ExternalQueries;
 import com._4s_.requestsApproval.dao.RequestsApprovalDAO;
 import com._4s_.requestsApproval.model.AccessLevels;
@@ -57,6 +67,8 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	
 	private ExternalQueries externalQueries = null;
 	
+	private MessageManager messageManager;
+	
 	private SequenceManager sequenceManager ;
 	public RequestsApprovalDAO getRequestsApprovalDAO() {
 		return requestsApprovalDAO;
@@ -66,6 +78,15 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		this.requestsApprovalDAO = requestsApprovalDAO;
 	}
 
+	
+
+	public MessageManager getMessageManager() {
+		return messageManager;
+	}
+
+	public void setMessageManager(MessageManager messageManager) {
+		this.messageManager = messageManager;
+	}
 
 	public void addNode(String nodeId, String nodeArDesc, String parentId,
 			ITree tree) {
@@ -1358,5 +1379,137 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		}
 		return empReqTypeAccs;
 	}
+	
+	public HttpServletResponse exportToExcelSheet(String reportName, List tableTitle,List results,HttpServletResponse response) {
+//		StringTokenizer tokenizer = new StringTokenizer(applicationIds,",");
+		log.debug("export to excel>>>>>>>>>.") ;
+		HSSFWorkbook workBook = new HSSFWorkbook();
+		HSSFCellStyle cellStyle = workBook.createCellStyle();
+		String sheetName = "printing search";
+		HSSFSheet sheet = workBook.createSheet(sheetName);
+
+		MyLocale myLocale = new MyLocale();
+		myLocale = (MyLocale) getObjectByParameter(
+				MyLocale.class, "isDefault", new Boolean(true));
+		log.debug("myLocale: " + myLocale.getCode());
+
+		HSSFRow dateRow = sheet.createRow((short) 0);
+		HSSFCell dateRowCell1 = dateRow.createCell((short) 0);
+		dateRowCell1.setCellStyle(cellStyle);
+		dateRowCell1
+				.setEncoding(org.apache.poi.hssf.usermodel.HSSFCell.ENCODING_UTF_16);
+		dateRowCell1.setCellValue(messageManager.getMessageByKeyName(
+				"commons.caption.date", myLocale).getMessage());
+		
+		HSSFCell dateRowCell2 = dateRow.createCell((short) 1);
+		dateRowCell2.setCellStyle(cellStyle);
+		dateRowCell2
+				.setEncoding(org.apache.poi.hssf.usermodel.HSSFCell.ENCODING_UTF_16);
+		Calendar cal=Calendar.getInstance();
+		cal.setTime(new Date());
+	    cal.set(Calendar.HOUR_OF_DAY, 0);
+	    cal.set(Calendar.MINUTE, 0);
+	    cal.set(Calendar.SECOND, 0);
+	    cal.set(Calendar.MILLISECOND, 0);
+	   Date currentDate = new Date();
+	   int day = currentDate.getDate();
+	   int month = currentDate.getMonth() + 1;
+	    int year = currentDate.getYear();
+	    
+	   String dateString= day + "/" + month + "/" + (year+1900);
+
+		dateRowCell2.setCellValue(dateString);
+		
+		
+		HSSFRow tableHeaderRow = sheet.createRow((short) 1);
+
+		Iterator titleItr = tableTitle.iterator();
+		int j = 0;
+		while (titleItr.hasNext()) {
+			String title = (String)titleItr.next();
+			
+			HSSFCell tableHeaderCell1 = tableHeaderRow.createCell((short) j);
+			tableHeaderCell1.setCellStyle(cellStyle);
+			tableHeaderCell1.setEncoding(org.apache.poi.hssf.usermodel.HSSFCell.ENCODING_UTF_16);
+			log.debug("title " + title);
+			MyMessage msg = messageManager.getMessageByKeyName(title, myLocale);
+			log.debug("msg " + msg);
+			tableHeaderCell1.setCellValue(msg.getMessage());
+			j++;
+		}
+
+
+
+	
+       int k=2;
+//		while (tokenizer.hasMoreTokens()){
+//			String id = tokenizer.nextToken();
+//			log.debug("id>>>>>>>>>>>>"+id);
+//			AccreditationApplication application = (AccreditationApplication)getObject(AccreditationApplication.class,new Long(id));
+//	
+//			log.debug("application>>>>>>>>>>>>>"+application);
+//			log.debug("application.getAccreditationApplication()>>>>>"+application.getAccreditationApplication());
+//			HSSFRow row = sheet.createRow((short) k++);
+//			
+//
+//			HSSFCell cell1 = row.createCell((short) 0);
+//			cell1
+//					.setEncoding(org.apache.poi.hssf.usermodel.HSSFCell.ENCODING_UTF_16);
+//			cell1.setCellValue(application
+//					.getApplicant().getArabicFullName());
+//
+//			HSSFCell cell2 = row.createCell((short) 1);
+//			cell2.setEncoding(org.apache.poi.hssf.usermodel.HSSFCell.ENCODING_UTF_16);
+//			cell2.setCellValue( application
+//					.getApplicant().getApplicantNumber());
+//			
+//		}
+       
+       Iterator itr = results.iterator();
+       log.debug("results size " + results.size());
+       while (itr.hasNext()) {
+    	   List listObject = (List)itr.next();
+    	   HSSFRow row = sheet.createRow((short) k++);
+    	   for (int i = 0; i<tableTitle.size();i++) {
+    		   HSSFCell cell = row.createCell((short) i);
+    		   cell.setEncoding(org.apache.poi.hssf.usermodel.HSSFCell.ENCODING_UTF_16);
+    		   
+    		   String value = null;
+    		   try {
+    			   value = String.valueOf(listObject.get(i));
+    		   } catch (ClassCastException e) {
+    			   value = listObject.get(i) +"";
+    		   }
+    		   
+    		   MyMessage msg = messageManager.getMessageByKeyName(value, myLocale);
+    		   
+    		   if (msg!=null) {
+    			   cell.setCellValue(msg.getMessage());
+    			   log.debug(msg.getMessage());
+    		   } else {
+    			   cell.setCellValue(value);
+    			   log.debug(value);
+    		   }
+    	   }
+       }
+
+       try {
+    	   log.debug("report name " + reportName);
+    	   response.setHeader("Content-Disposition",
+    			   "attachment; filename=\""+reportName+".xls");
+    	   workBook.write(response.getOutputStream());
+    	   response.getOutputStream().flush();
+    	   response.getOutputStream().close();
+    	   log.debug("Response written");
+       } catch (Exception e) {
+    	   // TODO: handle exception
+    	   log.debug("exception " + e);
+    	   e.printStackTrace();
+       }
+		log.debug("after export to excel");
+
+		return response;
+	}
+	
 	
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -16,13 +17,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
-import com._4s_.requestsApproval.model.Requests;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 
 public class LoginUsersRequestsView implements Controller{
@@ -39,10 +40,15 @@ public class LoginUsersRequestsView implements Controller{
 	}
 	
 	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse arg1) throws Exception {
+			HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
+		
+		List all=new ArrayList();
+		
+		
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
 		log.debug("---ref-emp from session---"+request.getSession().getAttribute("employee"));
+		
 		
 		fields.add("period_from");
 		//fields.add("empCode");
@@ -118,6 +124,7 @@ public class LoginUsersRequestsView implements Controller{
 //					}
 //					
 //				}
+				all = loginUserReqs;
 				model.put("records", loginUserReqs);
 				
 				
@@ -200,7 +207,7 @@ public class LoginUsersRequestsView implements Controller{
 				//toDateStr = toDateString+ " 23:59";
 				mCalDate.setDateTimeString(dateTo,new Boolean(false));
 				toDate= mCalDate.getDate();
-				List all=new ArrayList();
+				
 				List allRequests=new ArrayList();
 				if(!requestType.equals("4")){
 					allRequests= requestsApprovalManager.getRequestsByDatePeriodAndRequestTypeForEmployee(fromDate, toDate, new Long(requestType),emp.getEmpCode());
@@ -233,6 +240,7 @@ public class LoginUsersRequestsView implements Controller{
 //					}
 //					
 //				}
+				log.debug("records size " + all.size());
 				model.put("records", all);
 
 				
@@ -240,12 +248,11 @@ public class LoginUsersRequestsView implements Controller{
 		}
 				
 		
-		
 		if(requestType!=null  && dateFrom!=null && dateTo!=null){
 			if((requestType.equals(""))&&(dateFrom.equals(""))&&(dateTo.equals(""))){
 				List requests=requestsApprovalManager.getObjectsByParameterOrderedByFieldList(LoginUsersRequests.class, "empCode", emp.getEmpCode(), fields);
 				log.debug("-------requests.size---before"+requests.size());
-				List reqsToBeViewed= new ArrayList();
+				
 				for (int i = 0; i < requests.size(); i++) {
 					LoginUsersRequests loginUsersRequests=(LoginUsersRequests) requests.get(i);
 					log.debug("----i----"+loginUsersRequests.getEmpCode());
@@ -267,13 +274,13 @@ public class LoginUsersRequestsView implements Controller{
 					
 					if(loginUsersRequests.getLogin_user().getEndServ()==null || loginUsersRequests.getLogin_user().getEndServ().equals("")){
 						log.debug("---before removing--i----"+loginUsersRequests.getEmpCode());
-						reqsToBeViewed.add(loginUsersRequests);
+						all.add(loginUsersRequests);
 						model.put("empRequestTypeId", loginUsersRequests.getId());
 //						log.debug("----login----"+requests.get(i));
 						
 					}
 				}
-				log.debug("-------reqsToBeViewed.size---after"+reqsToBeViewed.size());
+				log.debug("-------reqsToBeViewed.size---after"+all.size());
 //				for (int i = 0; i < requests.size(); i++) {
 //					LoginUsersRequests loginUsersRequests=(LoginUsersRequests) requests.get(i);
 //					SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy/mm/dd");
@@ -289,7 +296,8 @@ public class LoginUsersRequestsView implements Controller{
 //					}
 //					
 //				}
-				model.put("records", reqsToBeViewed);
+				log.debug("records size " + all.size());
+				model.put("records", all);
 						
 			}
 		}
@@ -317,6 +325,134 @@ public class LoginUsersRequestsView implements Controller{
 		} else {//lehaa
 			model.put("requestTypeList",requests );
 		}
+		
+		
+		String exportParameter = (String)request.getParameter("export");
+		if (exportParameter!=null && exportParameter.equals("true")) {
+			List tableTitle = new ArrayList();
+			
+			tableTitle.add("requestsApproval.caption.userCode");
+			tableTitle.add("requestsApproval.caption.userName");
+			tableTitle.add("requestsApproval.caption.requestNumber");
+			tableTitle.add("requestsApproval.caption.requestType");
+			tableTitle.add("requestsApproval.caption.requestDate");
+			tableTitle.add("commons.caption.fromDate");
+			tableTitle.add("commons.caption.toDate");
+			tableTitle.add("requestsApproval.caption.reqPeriod");
+			tableTitle.add("commons.caption.from");
+			tableTitle.add("commons.caption.to");
+			tableTitle.add("requestsApproval.requestsApprovalForm.reqStatus");
+			tableTitle.add("requestsApproval.caption.reply");
+			
+			List results = new ArrayList();
+			Iterator itr = all.iterator();
+			log.debug("records size again " + all.size());
+			while(itr.hasNext()) {
+				LoginUsersRequests req = (LoginUsersRequests)itr.next();
+				log.debug("looping requests");
+				List temp = new ArrayList();
+				temp.add(req.getEmpCode());
+				temp.add(req.getLogin_user().getName());
+				temp.add(req.getRequestNumber());
+				
+				if (req.getRequest_id().getId().equals(new Long(1)) && req.getVacation().getVacation().equals("999")) {
+					temp.add("مأمورية");
+				} else {
+					temp.add(req.getRequest_id().getDescription());
+				}
+				///////////////////////////////////////
+				Calendar cal=Calendar.getInstance();
+				cal.setTime(req.getRequest_date());
+				Date currentDate = cal.getTime();
+				int dd = currentDate.getDate();
+				int mm = currentDate.getMonth() + 1;
+				int yy = currentDate.getYear();
+
+				String dateString= dd + "/" + mm + "/" + (yy+1900);
+				temp.add(dateString);
+				/////////////////////////////////////
+				if (req.getFrom_date()!=null) {
+					cal.setTime(req.getFrom_date());
+					currentDate = cal.getTime();
+					dd = currentDate.getDate();
+					mm = currentDate.getMonth() + 1;
+					yy = currentDate.getYear();
+
+
+					dateString= dd + "/" + mm + "/" + (yy+1900);
+					temp.add(dateString);
+				} else {
+					temp.add("");
+				}
+				////////////////////////////////////
+				if (req.getTo_date()!=null) {
+				cal.setTime(req.getTo_date());
+				currentDate = cal.getTime();
+				dd = currentDate.getDate();
+				mm = currentDate.getMonth() + 1;
+				yy = currentDate.getYear();
+
+				dateString= dd + "/" + mm + "/" + (yy+1900);
+				temp.add(dateString);
+				} else {
+					temp.add("");
+				}
+				////////////////////////////////////
+				if (req.getWithdrawDays()!=null){
+					temp.add(req.getWithdrawDays());
+				} else {
+					temp.add("");
+				}
+				///////////////////////////////////
+				if (req.getPeriod_from() != null) {
+					cal.setTime(req.getPeriod_from());
+					currentDate = cal.getTime();
+					dd = currentDate.getDate();
+					mm = currentDate.getMonth() + 1;
+					yy = currentDate.getYear();
+
+					dateString= dd + "/" + mm + "/" + (yy+1900);
+					temp.add(dateString);
+				} else {
+					temp.add("");
+				}
+				////////////////////////////////////
+				if (req.getPeriod_to() != null) {
+					cal.setTime(req.getPeriod_to());
+					currentDate = cal.getTime();
+					dd = currentDate.getDate();
+					mm = currentDate.getMonth() + 1;
+					yy = currentDate.getYear();
+
+					dateString= dd + "/" + mm + "/" + (yy+1900);
+					temp.add(dateString);
+				} else {
+					temp.add("");
+				}
+				////////////////////////////////////
+				if (req.getApproved()!=null && req.getApproved().equals(new Long(1))){
+					temp.add("requestsApproval.requestsApprovalForm.reqApproval");
+				} else if (req.getApproved()!=null && req.getApproved().equals(new Long(99))) {
+					temp.add("requestsApproval.requestsApprovalForm.reqRejected");
+				}  else if (req.getApproved()!=null && req.getApproved().equals(new Long(99))) {
+					temp.add("requestsApproval.requestsApprovalForm.reqRejected");
+				}  else {
+					temp.add("لم تكتمل");
+				}
+				/////////////////////////////////////
+				if (req.getReply()!=null) {
+					temp.add(req.getReply());
+				} else {
+					temp.add("");
+				}
+				log.debug("adding to results");
+				results.add(temp);
+			}
+			log.debug("results size " + results.size());
+			requestsApprovalManager.exportToExcelSheet("UserRequests", tableTitle, results, response);
+			return new ModelAndView(new RedirectView("loginUsersRequestsView.html"));
+		}
+		
 		return new ModelAndView("loginUsersRequestsView",model);
 	}
 	

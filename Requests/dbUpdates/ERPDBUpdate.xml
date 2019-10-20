@@ -15926,4 +15926,6 @@ ALTER TABLE LOGIN_USERS_REQUESTS ADD LATITUDE FLOAT DEFAULT null;</statment></qu
 </statment></query><query><sqlindex>96</sqlindex><statment>update login_users_requests set longitude=0 where longitude is null;</statment></query><query><sqlindex>97</sqlindex><statment>update login_users_requests set latitude=0 where latitude is null;</statment></query><query><sqlindex>98</sqlindex><statment>create table persistent_logins (username varchar(64) not null,&#xD;
  series varchar(64) primary key,&#xD;
  token varchar(64) not null,&#xD;
- last_used timestamp not null);</statment></query></SQL>
+ last_used timestamp not null);</statment></query><query><sqlindex>99</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101403, 'commons.button.export', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211618,'تصدير اكسل', 101403, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211619, 'Export to Excel Sheet', 101403, 3);</statment></query></SQL>
