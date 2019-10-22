@@ -1497,7 +1497,9 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
     	   log.debug("report name " + reportName);
     	   response.setHeader("Content-Disposition",
     			   "attachment; filename=\""+reportName+".xls");
+    	   log.debug(workBook);
     	   workBook.write(response.getOutputStream());
+    	   log.debug(response);
     	   response.getOutputStream().flush();
     	   response.getOutputStream().close();
     	   log.debug("Response written");

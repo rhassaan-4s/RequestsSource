@@ -13,6 +13,20 @@
 </head>
 <body>
 <script type="text/javascript">
+	
+function exportExcel() {
+	//alert("test");
+	var fromDate = document.getElementById('request_date_from').value;
+	var toDate = document.getElementById('request_date_to').value;
+	var requestId = document.getElementById('request_id').value;
+	var codeFrom = document.getElementById('codeFrom').value;
+	//alert(document.forms[0].export);
+	var codeTo = document.getElementById('codeTo').value;
+	document.forms[0].export.value = "true";
+	//var link = '/Requests/requestsApproval/reports.html?export=true&dateFrom='+fromDate+'&dateTo='+toDate+'&requestType='+requestId+'&codeFrom='+codeFrom+'&codeTo='+codeTo;
+	document.getElementById("reports").submit();
+	//window.open(link);
+}
 
 function getRequestStatus(id){
 	//alert('entered');
@@ -73,6 +87,7 @@ function searchForm (){
 	if(document.getElementById("codeTo").value!=null){
 		var codeTo=document.getElementById("codeTo").value;
 	}
+	document.forms[0].export.value = "";
 	var URL='reports.html?dateFrom='+dateFrom+'&dateTo='+dateTo+'&requestType='+requestType+'&codeFrom='+codeFrom+'&codeTo='+codeTo;
 	window.location.href=URL;
 }
@@ -122,20 +137,14 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 	</tr>
 	<tr>
 		<td colspan="2">
-			<spring:bind path="loginUsersRequests.*">
-				<c:if test="${not empty status.errorMessages}">
-					<div><c:forEach var="error" items="${status.errorMessages}">
-						<font color="red"> <c:out value="${error}" escapeXml="false" /><br />
-						</font>
-					</c:forEach></div>
-				</c:if>
-			</spring:bind>
+			
 		</td>
 	</tr>
 	<tr>
 		<td>
 			<form id="reports" name="reports"	method="POST" action="<c:url value="/requestsApproval/reports.html"/>">
 				    <input type="hidden"  id="requestType" name="requestType" value="${requestType}"/>
+				     <input type="hidden"  id="export" name="export" value="${export}"/>
 					<div id="result">
 
 					<table>
@@ -152,14 +161,12 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 								<fmt:message key="requestsApproval.caption.requestType"/>
 							</td>
 							<td  class="formBodControl" >
-								<spring:bind path="loginUsersRequests.request_id">
-									<select name="${status.expression}" id="${status.expression}">
+									<select name="request_id" id="request_id">
 										<option value=""><fmt:message key="commons.caption.select" /></option>						
 											<c:forEach items="${requestTypeList}" var="request">
-												<option value="${request.id}" ${request.id == loginUsersRequests.request_id.id ?' selected' : ''}">${request.description}</option>
+												<option value="${request.id}" ${request.id == request_id ?' selected' : ''}">${request.description}</option>
 											</c:forEach>
 									</select>
-								</spring:bind>
 							</td>													
 						</tr>
 		
@@ -229,7 +236,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 						<tr>
 							<td>
 								<abc:i18n property="commons.button.search"/>
-								<input type="button" id="btnPrint" name="aaa" onclick="searchForm()" value="<fmt:message key="commons.button.search"/> " class="button"/>
+								<input type="submit" id="btnPrint" name="aaa" onclick="searchForm()" value="<fmt:message key="commons.button.search"/> " class="button"/>
 								&nbsp;&nbsp;&nbsp;
 							</td>
 						</tr>
@@ -273,6 +280,9 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 							<td class="helpHed" nowrap="nowrap">
 								<abc:i18n property="requestsApproval.caption.reply" />
 							 	<fmt:message key="requestsApproval.caption.reply" />
+							</td>	
+							<td class="helpHed" nowrap="nowrap">
+								&nbsp;
 							</td>																														
 						</tr>
 					<c:forEach items="${records}" var="record">
@@ -363,6 +373,11 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 					<td colspan="2" align="center">
 						<abc:i18n property="commons.button.print"/>
 						<input type="button" id="btnPrint" class="button" value="<fmt:message key="commons.button.print"/>" onClick="printthis('result')"></input>
+					</td>
+					
+					<td colspan="2" align="center">
+						<abc:i18n property="commons.button.export"/>
+						<input type="submit" id="btnexport" class="button" value="<fmt:message key="commons.button.export"/>" onClick="exportExcel();"></input><!--   -->
 					</td>
 				</tr>
 			</table>								

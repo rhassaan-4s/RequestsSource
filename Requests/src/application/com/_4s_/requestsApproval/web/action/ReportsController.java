@@ -4,8 +4,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +35,8 @@ import com._4s_.common.web.action.BaseSimpleFormController;
 public class ReportsController extends BaseSimpleFormController{
 	RequestsApprovalManager requestsApprovalManager;
 	List<String> ordered1= new ArrayList<String>();
+	
+	
 	public RequestsApprovalManager getRequestsApprovalManager() {
 		return requestsApprovalManager;
 	}
@@ -57,31 +61,64 @@ public class ReportsController extends BaseSimpleFormController{
 	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		Map model=new HashMap();
 
-		List tempneededRequestTypes = new ArrayList();
-		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
-		Map model=new HashMap();		
-		
-//		String emp_code = request.getParameter("empCode");
-//		log.debug("----emp_code---"+emp_code);
-//		model.put("employeeCode", emp_code);
-		
-//		String empName = request.getParameter("empName");
-//		log.debug("----empName---"+empName);
-//		if(empName!=null && !empName.equals("")){
-//			LoginUsers loginUser=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "id", Long.parseLong(empName));
-//			log.debug("----loginUser.getName()---"+loginUser.getName());
-//			List loginUserReqs= requestsApprovalManager.getObjectsByParameter(LoginUsersRequests.class, "login_user", loginUser);
-//			
-//			model.put("employeeName", loginUser.getName());
-//			model.put("loginUserReqs", loginUserReqs);
-//			
-//		}
-		
 		String dateFrom = request.getParameter("dateFrom");
 		log.debug("--dateFrom--"+dateFrom);
 		model.put("request_date_from", dateFrom);
 		String dateTo = request.getParameter("dateTo");
+		log.debug("--dateTo--"+dateTo);
+		model.put("request_date_to", dateTo);
+		log.debug("---xxxxxxxDatePeriod--");
+		String codeFrom=request.getParameter("codeFrom");
+		String codeTo=request.getParameter("codeTo");
+		String requestType= request.getParameter("requestType");
+		log.debug("--requestType--"+requestType);
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+		model.put("codeFrom", codeFrom);
+		model.put("codeTo", codeTo);
+		String exportParameter = (String)request.getParameter("export");
+		log.debug("export " + exportParameter);
+		model.put("export", exportParameter);
+		
+		return model;
+	}
+
+	//**************************************** onBind ***********************************************\\	
+	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception{
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		
+		
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+	}
+//**************************************** onBindAndValidate ***********************************************\\
+	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
+	{
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+	}
+	
+	//**************************************** onSubmit ***********************************************\\	
+	public ModelAndView onSubmit(HttpServletRequest request,
+			HttpServletResponse response, Object command, BindException errors)throws Exception 
+	{	
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
+
+		List tempneededRequestTypes = new ArrayList();
+		
+		List all = new ArrayList();
+		List tableTitle = new ArrayList();
+		List results = new ArrayList();
+		
+		Map model=new HashMap();		
+		
+		String dateFrom = request.getParameter("request_date_from");
+		log.debug("--dateFrom--"+dateFrom);
+		model.put("request_date_from", dateFrom);
+		String dateTo = request.getParameter("request_date_to");
 		log.debug("--dateTo--"+dateTo);
 		model.put("request_date_to", dateTo);
 		log.debug("---xxxxxxxDatePeriod--");
@@ -102,39 +139,6 @@ public class ReportsController extends BaseSimpleFormController{
 			}
 		} 
 		
-
-		
-//		
-//		if(emp_code!=null && !emp_code.equals("")){
-//			log.debug("---xxxxxxxCodeName--");
-//			if(isOnlyNumbers(emp_code) && (requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp_code)!=null && !requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp_code).equals(""))){
-//				LoginUsers loginUser=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp_code);
-//				log.debug("--loginUser.getName()--"+loginUser.getName());
-//
-//				// to get requests corresponding to request type
-//				List loginUserReqs=(List) requestsApprovalManager.getObjectsByParameter(LoginUsersRequests.class, "login_user", loginUser);
-//				List neededRequestTypes = new ArrayList();
-//				for(int i=0;i<loginUserReqs.size();i++){
-//					log.debug("---needed---");
-//					LoginUsersRequests reqs= (LoginUsersRequests) loginUserReqs.get(i);
-//					log.debug("---needed reqs---"+reqs.getEmpCode()+"----reqs.getRequest_id().getId()--"+reqs.getRequest_id().getId());
-//					String request_type=Long.toString(reqs.getRequest_id().getId());
-//					log.debug("-----requestType.equals(reqs.getRequest_id().getId())----"+requestType.equals(reqs.getRequest_id().getId()));
-//					
-//					log.debug("-X--requestType.equals(request_type)--"+requestType.equals(request_type));
-//					if(requestType.equals(request_type)){
-//						neededRequestTypes.add(reqs);
-//						log.debug("---neededList---"+neededRequestTypes.size());
-//					}
-//					log.debug("---after IF neededList---"+neededRequestTypes.size());				
-//				}
-////				log.debug("--list.size--"+neededRequestTypes.size());
-//				tempneededRequestTypes=neededRequestTypes;
-//				//model.put("loginUserReqs", neededRequestTypes);
-//			}
-//
-//		}
-
 
 		model.put("codeFrom", codeFrom);
 		model.put("codeTo", codeTo);
@@ -322,26 +326,6 @@ public class ReportsController extends BaseSimpleFormController{
 			
 		}
 
-//		
-//		if(codeFrom!=null  && codeTo!=null && dateFrom!=null && dateTo!=null){
-//			if((!codeFrom.equals(""))&& (!codeTo.equals(""))&&(!dateFrom.equals(""))&&(!dateTo.equals(""))){
-//				
-//				Date fromDate = null;
-//				Date toDate = null;
-//				mCalDate.setDateTimeString(dateFrom,new Boolean(true));
-//				fromDate = mCalDate.getDate();
-//				log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
-//				log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
-//				//toDateStr = toDateString+ " 23:59";
-//				mCalDate.setDateTimeString(dateTo,new Boolean(false));
-//				toDate= mCalDate.getDate();
-//			
-//				List allRequests= requestsApprovalManager.getRequestsByDatePeriod(fromDate, toDate);
-//
-//				//model.put("loginUserReqs", allRequests);
-//				tempneededRequestTypes=allRequests;
-//			}
-//		}
 		List actualRequest= new ArrayList();
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
 		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
@@ -402,34 +386,136 @@ public class ReportsController extends BaseSimpleFormController{
 			model.put("requestTypeList",requests);
 		}
 		
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		return model;
-	}
+		
+		String exportParameter = (String)request.getParameter("export");
+		log.debug("export " + exportParameter);
+		if (exportParameter!=null && exportParameter.equals("true")) {
+			
+			
+			tableTitle.add("requestsApproval.caption.userCode");
+			tableTitle.add("requestsApproval.caption.userName");
+			tableTitle.add("requestsApproval.caption.requestNumber");
+			tableTitle.add("requestsApproval.caption.requestType");
+			tableTitle.add("requestsApproval.caption.requestDate");
+			tableTitle.add("commons.caption.fromDate");
+			tableTitle.add("commons.caption.toDate");
+			tableTitle.add("requestsApproval.caption.reqPeriod");
+			tableTitle.add("commons.caption.from");
+			tableTitle.add("commons.caption.to");
+			tableTitle.add("requestsApproval.requestsApprovalForm.reqStatus");
+			tableTitle.add("requestsApproval.caption.reply");
+			
+			Iterator itr = actualRequest.iterator();
+			log.debug("records size again " + actualRequest.size());
+			while(itr.hasNext()) {
+				LoginUsersRequests req = (LoginUsersRequests)itr.next();
+				log.debug("looping requests");
+				List temp = new ArrayList();
+				temp.add(req.getEmpCode());
+				temp.add(req.getLogin_user().getName());
+				temp.add(req.getRequestNumber());
+				
+				if (req.getRequest_id().getId().equals(new Long(1)) && req.getVacation().getVacation().equals("999")) {
+					temp.add("مأمورية");
+				} else {
+					temp.add(req.getRequest_id().getDescription());
+				}
+				///////////////////////////////////////
+				Calendar cal=Calendar.getInstance();
+				cal.setTime(req.getRequest_date());
+				Date currentDate = cal.getTime();
+				int dd = currentDate.getDate();
+				int mm = currentDate.getMonth() + 1;
+				int yy = currentDate.getYear();
 
-	//**************************************** onBind ***********************************************\\	
-	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception{
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		
-		
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	}
-//**************************************** onBindAndValidate ***********************************************\\
-	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
-	{
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	}
-	
-	//**************************************** onSubmit ***********************************************\\	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{	
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
+				String dateString= dd + "/" + mm + "/" + (yy+1900);
+				temp.add(dateString);
+				/////////////////////////////////////
+				if (req.getFrom_date()!=null) {
+					cal.setTime(req.getFrom_date());
+					currentDate = cal.getTime();
+					dd = currentDate.getDate();
+					mm = currentDate.getMonth() + 1;
+					yy = currentDate.getYear();
+
+
+					dateString= dd + "/" + mm + "/" + (yy+1900);
+					temp.add(dateString);
+				} else {
+					temp.add("");
+				}
+				////////////////////////////////////
+				if (req.getTo_date()!=null) {
+				cal.setTime(req.getTo_date());
+				currentDate = cal.getTime();
+				dd = currentDate.getDate();
+				mm = currentDate.getMonth() + 1;
+				yy = currentDate.getYear();
+
+				dateString= dd + "/" + mm + "/" + (yy+1900);
+				temp.add(dateString);
+				} else {
+					temp.add("");
+				}
+				////////////////////////////////////
+				if (req.getWithdrawDays()!=null){
+					temp.add(req.getWithdrawDays());
+				} else {
+					temp.add("");
+				}
+				///////////////////////////////////
+				if (req.getPeriod_from() != null) {
+					cal.setTime(req.getPeriod_from());
+					currentDate = cal.getTime();
+					dd = currentDate.getDate();
+					mm = currentDate.getMonth() + 1;
+					yy = currentDate.getYear();
+
+					dateString= dd + "/" + mm + "/" + (yy+1900);
+					temp.add(dateString);
+				} else {
+					temp.add("");
+				}
+				////////////////////////////////////
+				if (req.getPeriod_to() != null) {
+					cal.setTime(req.getPeriod_to());
+					currentDate = cal.getTime();
+					dd = currentDate.getDate();
+					mm = currentDate.getMonth() + 1;
+					yy = currentDate.getYear();
+
+					dateString= dd + "/" + mm + "/" + (yy+1900);
+					temp.add(dateString);
+				} else {
+					temp.add("");
+				}
+				////////////////////////////////////
+				if (req.getApproved()!=null && req.getApproved().equals(new Long(1))){
+					temp.add("requestsApproval.requestsApprovalForm.reqApproval");
+				} else if (req.getApproved()!=null && req.getApproved().equals(new Long(99))) {
+					temp.add("requestsApproval.requestsApprovalForm.reqRejected");
+				}  else if (req.getApproved()!=null && req.getApproved().equals(new Long(99))) {
+					temp.add("requestsApproval.requestsApprovalForm.reqRejected");
+				}  else {
+					temp.add("لم تكتمل");
+				}
+				/////////////////////////////////////
+				if (req.getReply()!=null) {
+					temp.add(req.getReply());
+				} else {
+					temp.add("");
+				}
+				log.debug("adding to results");
+				results.add(temp);
+			}
+			log.debug("results size " + results.size());
+			log.debug("table title " + tableTitle);
+			
+			requestsApprovalManager.exportToExcelSheet("employeesRequests", tableTitle, results, response);
+		}
 		
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView("reports",model);
 	}
 	
 	public static boolean isOnlyNumbers(String str){
