@@ -449,7 +449,7 @@ public class LoginUsersRequestsView implements Controller{
 				results.add(temp);
 			}
 			log.debug("results size " + results.size());
-			requestsApprovalManager.exportToExcelSheet("UserRequests", tableTitle, results, response);
+			requestsApprovalManager.exportToExcelSheet("requestsApproval.header.loginUsersRequestsView", tableTitle, results, response);
 			return new ModelAndView(new RedirectView("loginUsersRequestsView.html"));
 		}
 		

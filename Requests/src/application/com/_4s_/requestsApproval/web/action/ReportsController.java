@@ -511,7 +511,7 @@ public class ReportsController extends BaseSimpleFormController{
 			log.debug("results size " + results.size());
 			log.debug("table title " + tableTitle);
 			
-			requestsApprovalManager.exportToExcelSheet("employeesRequests", tableTitle, results, response);
+			requestsApprovalManager.exportToExcelSheet("requestsApproval.menu.allReports", tableTitle, results, response);
 		}
 		
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");

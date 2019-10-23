@@ -1495,8 +1495,16 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
        try {
     	   log.debug("report name " + reportName);
+    	   MyMessage msg = messageManager.getMessageByKeyName(reportName, myLocale);
+		   String reportN="";
+		   if (msg!=null) {
+			  reportN = msg.getMessage();
+			   log.debug(msg.getMessage());
+		   } else {
+			   reportN = reportName;
+		   }
     	   response.setHeader("Content-Disposition",
-    			   "attachment; filename=\""+reportName+".xls");
+    			   "attachment; filename=\""+reportN+".xls");
     	   log.debug(workBook);
     	   workBook.write(response.getOutputStream());
     	   log.debug(response);

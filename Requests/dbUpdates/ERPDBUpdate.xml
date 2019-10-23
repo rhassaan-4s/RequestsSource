@@ -15897,10 +15897,7 @@ values (5, 1, 1, 1, 'oraserv', 'oraserv', 'lotus_pay', 'lotus_pay', 1, 1, 1, 0, 
 insert into common_settings (ID, ACCESSLEVELSCHECKDATE, EMPREQUESTCHECKDATE, ANNUALVACBALDAYSENABLED, SERVER, SERVICE, USERNAME, PASSWORD, ADDNEWDATA, CHECKPOSTEDREQUESTS, EMPREQUESTTYPEEXCEPTION, TATTREPWITHHRSMIN, SPECIALVACEXCEP, CREATINGMAIL, LOGINURL, VACLIMITPROBLEM, VACATIONREQUESTEXCEP, REQPERIODDATE, WITHDRAWDAYSQUARTPOLICY, NOTESVALIDATION, WITHOUTSALPERIODVALIDATION, FROMTOREQUESTVALD, WITHOUTSALARYVACENABLED, PERIODFROMTOENABLED, FOOTERCOPYRIGHTSENABLED, COMPANYLOGOHEADER, COMPANYLOGOHEADERNAME, ATTENDANCEREQUESTEN, COMPANYRULESEN, MAILMGR, MAILPASS, SMTPSERVER, PORTSERVER, EXECUSEENABLED)&#xD;
 values (2, 0, 0, 0, '10.8.2.109', 'lehaa', 'lehaa_payroll', 'lehaa_payroll', 0, 0, 0, 1, 0, 1, 'http://10.8.2.46:28000/Requests/security/login.html', 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, null, 'erp_header.jpg', 1, 0, 'ticketmanager@4s-systems.com', 'mgemge', 'smtp.tedata.net', '25', 0);</statment></query><query><sqlindex>83</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101393, 'requestsApproval.caption.netTotalTime', NULL);&#xD;
 INSERT INTO i18n_message VALUES (20211598,'عدد الساعات الكلي', 101393, 1);&#xD;
-INSERT INTO i18n_message VALUES (20211599, 'netTotalTime', 101393, 3);&#xD;
-INSERT INTO I18N_KEY VALUES (101394, 'requestsApproval.caption.netTime', NULL);&#xD;
-INSERT INTO i18n_message VALUES (20211600,'عدد الساعات', 101394, 1);&#xD;
-INSERT INTO i18n_message VALUES (20211601, 'netTime', 101394, 3);</statment></query><query><sqlindex>84</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101395, 'requestsApproval.header.attendanceVacationReport', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211599, 'netTotalTime', 101393, 3)</statment></query><query><sqlindex>84</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101395, 'requestsApproval.header.attendanceVacationReport', NULL);&#xD;
 INSERT INTO i18n_message VALUES (20211602,' تقرير الحضور و الغياب', 101395, 1);&#xD;
 INSERT INTO i18n_message VALUES (20211603, 'Attendance &amp; Vacation Report', 101395, 3);</statment></query><query><sqlindex>85</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101396, 'requestsApproval.caption.vacLimit', NULL);&#xD;
 INSERT INTO i18n_message VALUES (20211604,'الرصيد المستحق', 101396, 1);&#xD;

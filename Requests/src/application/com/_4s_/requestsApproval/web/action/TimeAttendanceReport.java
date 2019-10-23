@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
@@ -38,7 +40,7 @@ public class TimeAttendanceReport implements Controller{
 	}
 	
 	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse arg1) throws Exception {
+			HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
 		log.debug("---ref-emp from session---"+request.getSession().getAttribute("employee"));
@@ -88,7 +90,8 @@ public class TimeAttendanceReport implements Controller{
 		String password = settings.getPassword();
 		
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
-
+		
+		List objects= new ArrayList();
 
 		if (dateFrom != null && dateTo != null){
 			if (!dateFrom.equals("") && !dateTo.equals("") ) {
@@ -104,7 +107,6 @@ public class TimeAttendanceReport implements Controller{
 				
 				// VIP
 				List totalObjects= new ArrayList();
-				List objects= new ArrayList();
 				totalObjects=requestsApprovalManager.getTimeAttend(emp.getEmpCode(), fromDate, toDate);
 				objects=(List) totalObjects.get(0);
 				
@@ -148,6 +150,124 @@ public class TimeAttendanceReport implements Controller{
 			}
 		}
 		
+		String exportParameter = (String)request.getParameter("export");
+		if (exportParameter!=null && exportParameter.equals("true")) {
+			List tableTitle = new ArrayList();
+			
+			tableTitle.add("requestsApproval.caption.date");
+			tableTitle.add("commons.caption.date");
+			tableTitle.add("requestsApproval.caption.in");
+			tableTitle.add("requestsApproval.caption.out");
+			tableTitle.add("requestsApproval.caption.netTime");
+			
+			List results = new ArrayList();
+			Iterator itr = objects.iterator();
+			log.debug("records size again " + objects.size());
+			while(itr.hasNext()) {
+				TimeAttend req = (TimeAttend)itr.next();
+				log.debug("looping attendance");
+				List temp = new ArrayList();
+				temp.add(req.getDayString());
+				temp.add(req.getDay());
+				temp.add(req.getTimeIn());
+				temp.add(req.getTimeOut());
+				if (!req.getDiffMins().equals("0") && !req.getDiffHrs().equals("0")) {
+					temp.add("0"+req.getDiffHrs()+":"+req.getDiffMins());
+				}
+				
+//				///////////////////////////////////////
+//				Calendar cal=Calendar.getInstance();
+//				cal.setTime(req.getRequest_date());
+//				Date currentDate = cal.getTime();
+//				int dd = currentDate.getDate();
+//				int mm = currentDate.getMonth() + 1;
+//				int yy = currentDate.getYear();
+//
+//				String dateString= dd + "/" + mm + "/" + (yy+1900);
+//				temp.add(dateString);
+//				/////////////////////////////////////
+//				if (req.getFrom_date()!=null) {
+//					cal.setTime(req.getFrom_date());
+//					currentDate = cal.getTime();
+//					dd = currentDate.getDate();
+//					mm = currentDate.getMonth() + 1;
+//					yy = currentDate.getYear();
+//
+//
+//					dateString= dd + "/" + mm + "/" + (yy+1900);
+//					temp.add(dateString);
+//				} else {
+//					temp.add("");
+//				}
+//				////////////////////////////////////
+//				if (req.getTo_date()!=null) {
+//				cal.setTime(req.getTo_date());
+//				currentDate = cal.getTime();
+//				dd = currentDate.getDate();
+//				mm = currentDate.getMonth() + 1;
+//				yy = currentDate.getYear();
+//
+//				dateString= dd + "/" + mm + "/" + (yy+1900);
+//				temp.add(dateString);
+//				} else {
+//					temp.add("");
+//				}
+//				////////////////////////////////////
+//				if (req.getWithdrawDays()!=null){
+//					temp.add(req.getWithdrawDays());
+//				} else {
+//					temp.add("");
+//				}
+//				///////////////////////////////////
+//				if (req.getPeriod_from() != null) {
+//					cal.setTime(req.getPeriod_from());
+//					currentDate = cal.getTime();
+//					dd = currentDate.getDate();
+//					mm = currentDate.getMonth() + 1;
+//					yy = currentDate.getYear();
+//
+//					dateString= dd + "/" + mm + "/" + (yy+1900);
+//					temp.add(dateString);
+//				} else {
+//					temp.add("");
+//				}
+//				////////////////////////////////////
+//				if (req.getPeriod_to() != null) {
+//					cal.setTime(req.getPeriod_to());
+//					currentDate = cal.getTime();
+//					dd = currentDate.getDate();
+//					mm = currentDate.getMonth() + 1;
+//					yy = currentDate.getYear();
+//
+//					dateString= dd + "/" + mm + "/" + (yy+1900);
+//					temp.add(dateString);
+//				} else {
+//					temp.add("");
+//				}
+//				////////////////////////////////////
+//				if (req.getApproved()!=null && req.getApproved().equals(new Long(1))){
+//					temp.add("requestsApproval.requestsApprovalForm.reqApproval");
+//				} else if (req.getApproved()!=null && req.getApproved().equals(new Long(99))) {
+//					temp.add("requestsApproval.requestsApprovalForm.reqRejected");
+//				}  else if (req.getApproved()!=null && req.getApproved().equals(new Long(99))) {
+//					temp.add("requestsApproval.requestsApprovalForm.reqRejected");
+//				}  else {
+//					temp.add("لم تكتمل");
+//				}
+//				/////////////////////////////////////
+//				if (req.getReply()!=null) {
+//					temp.add(req.getReply());
+//				} else {
+//					temp.add("");
+//				}
+				log.debug("adding to results");
+				results.add(temp);
+			}
+			log.debug("results size " + results.size());
+			requestsApprovalManager.exportToExcelSheet("requestsApproval.header.timeAttendanceReport", tableTitle, results, response);
+//			return new ModelAndView(new RedirectView("timeAttendanceReport.html"));
+			return new ModelAndView("timeAttendanceReport",model);
+		}
 		return new ModelAndView("timeAttendanceReport",model);
 	}
 	

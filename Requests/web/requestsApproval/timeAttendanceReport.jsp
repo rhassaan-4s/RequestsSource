@@ -12,6 +12,14 @@
 <body>
 <abc:security property="1034"/>
 <script type="text/javascript">
+function exportExcel() {
+	//alert("export");
+	var fromDate = document.getElementById('fromDate').value;
+	var toDate = document.getElementById('toDate').value;
+	var link = 'timeAttendanceReport.html?export=true&fromDate='+fromDate+'&toDate='+toDate;
+	//alert(link);
+	window.open(link);
+}
 function searchForm (){
 //	if(document.getElementById("empCode").value!=null){
 //		var empCode=document.getElementById("empCode").value;
@@ -222,7 +230,7 @@ function printthis(which) {
 										</tr>
 									</c:forEach>
 									<tr>
-									<td class="helpHed" nowrap="nowrap" colspan="3">
+									<td class="helpHed" nowrap="nowrap" colspan="4">
 										<abc:i18n property="requestsApproval.caption.netTotalTime" />
 										<fmt:message key="requestsApproval.caption.netTotalTime" />
 									</td>
@@ -236,11 +244,18 @@ function printthis(which) {
 							</div>
 							<table align="center">
 								<tr>
-									<td colspan="2" align="center">
-										<abc:i18n property="commons.button.print"/>
-										<input type="button" id="btnPrint" class="button" value="<fmt:message key="commons.button.print"/>" onClick="printthis('result')"></input>
-									</td>
-								</tr>
+							<td colspan="2" align="center"><abc:i18n
+									property="commons.button.print" /> <input type="button"
+								id="btnPrint" class="button"
+								value="<fmt:message key="commons.button.print"/>"
+								onClick="printthis('result')"></input></td>
+							<td colspan="2" align="center"> <abc:i18n
+									property="commons.button.export" /> <input type="button"
+								id="btnexport" class="button"
+								value="<fmt:message key="commons.button.export"/>"
+								onClick="exportExcel();"></input></td>
+						</tr>
+								
 							</table>				
 			</form>
 		</td>
