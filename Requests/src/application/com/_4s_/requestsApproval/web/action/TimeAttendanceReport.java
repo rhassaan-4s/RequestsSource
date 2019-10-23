@@ -167,10 +167,26 @@ public class TimeAttendanceReport implements Controller{
 				TimeAttend req = (TimeAttend)itr.next();
 				log.debug("looping attendance");
 				List temp = new ArrayList();
-				temp.add(req.getDayString());
-				temp.add(req.getDay());
-				temp.add(req.getTimeIn());
-				temp.add(req.getTimeOut());
+				if (req.getDayString()!= null) {
+					temp.add(req.getDayString());
+				} else {
+					temp.add("");
+				}
+				if (req.getDay()!=null) {
+					temp.add(req.getDay());
+				} else {
+					temp.add("");
+				}
+				if (req.getTimeIn()!=null) {
+					temp.add(req.getTimeIn());
+				} else {
+					temp.add("");
+				}
+				if (req.getTimeOut()!=null) {
+					temp.add(req.getTimeOut());
+				} else {
+					temp.add("");
+				}
 				if (!req.getDiffMins().equals("0") && !req.getDiffHrs().equals("0")) {
 					temp.add("0"+req.getDiffHrs()+":"+req.getDiffMins());
 				}
