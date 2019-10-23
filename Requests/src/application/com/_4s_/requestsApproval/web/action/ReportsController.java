@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
@@ -511,7 +512,24 @@ public class ReportsController extends BaseSimpleFormController{
 			log.debug("results size " + results.size());
 			log.debug("table title " + tableTitle);
 			
-			requestsApprovalManager.exportToExcelSheet("requestsApproval.menu.allReports", tableTitle, results, response);
+			Map result = requestsApprovalManager.exportToExcelSheet("requestsApproval.menu.allReports", tableTitle, results);
+			String title = "EmployeesRequests";
+			HSSFWorkbook workBook = (HSSFWorkbook)result.get("workbook");
+			try {
+		    	   response.setHeader("Content-Disposition",
+		    			   "attachment; filename=\""+title+".xls\"");
+		    	   log.debug(workBook);
+		    	   workBook.write(response.getOutputStream());
+		    	   log.debug(response);
+		    	   response.getOutputStream().flush();
+		    	   response.getOutputStream().close();
+		    	   log.debug("Response written");
+		       } catch (Exception e) {
+		    	   // TODO: handle exception
+		    	   log.debug("exception " + e);
+		    	   e.printStackTrace();
+		       }
+				log.debug("after export to excel");
 		}
 		
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");

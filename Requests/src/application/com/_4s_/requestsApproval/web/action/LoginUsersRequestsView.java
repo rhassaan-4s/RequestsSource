@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.view.RedirectView;
@@ -449,7 +450,24 @@ public class LoginUsersRequestsView implements Controller{
 				results.add(temp);
 			}
 			log.debug("results size " + results.size());
-			requestsApprovalManager.exportToExcelSheet("requestsApproval.header.loginUsersRequestsView", tableTitle, results, response);
+			Map result = requestsApprovalManager.exportToExcelSheet("requestsApproval.header.loginUsersRequestsView", tableTitle, results);
+			String title = "LoggedinUserRequests";
+			HSSFWorkbook workBook = (HSSFWorkbook)result.get("workbook");
+			try {
+		    	   response.setHeader("Content-Disposition",
+		    			   "attachment; filename=\""+title+".xls\"");
+		    	   log.debug(workBook);
+		    	   workBook.write(response.getOutputStream());
+		    	   log.debug(response);
+		    	   response.getOutputStream().flush();
+		    	   response.getOutputStream().close();
+		    	   log.debug("Response written");
+		       } catch (Exception e) {
+		    	   // TODO: handle exception
+		    	   log.debug("exception " + e);
+		    	   e.printStackTrace();
+		       }
+				log.debug("after export to excel");
 			return new ModelAndView(new RedirectView("loginUsersRequestsView.html"));
 		}
 		

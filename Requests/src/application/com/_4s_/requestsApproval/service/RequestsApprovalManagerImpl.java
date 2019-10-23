@@ -1,6 +1,7 @@
 package com._4s_.requestsApproval.service;
 
 
+import java.awt.Color;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +22,7 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -1380,7 +1382,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		return empReqTypeAccs;
 	}
 	
-	public HttpServletResponse exportToExcelSheet(String reportName, List tableTitle,List results,HttpServletResponse response) {
+	public Map exportToExcelSheet(String reportName, List tableTitle,List results) {
 //		StringTokenizer tokenizer = new StringTokenizer(applicationIds,",");
 		log.debug("export to excel>>>>>>>>>.") ;
 		HSSFWorkbook workBook = new HSSFWorkbook();
@@ -1435,6 +1437,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			MyMessage msg = messageManager.getMessageByKeyName(title, myLocale);
 			log.debug("msg " + msg);
 			tableHeaderCell1.setCellValue(msg.getMessage());
+			tableHeaderCell1.getCellStyle().setFillBackgroundColor(HSSFColor.GREY_25_PERCENT.index);
 			j++;
 		}
 
@@ -1493,32 +1496,20 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
     	   }
        }
 
-       try {
-    	   log.debug("report name " + reportName);
-    	   MyMessage msg = messageManager.getMessageByKeyName(reportName, myLocale);
-		   String reportN="";
-		   if (msg!=null) {
-			  reportN = msg.getMessage();
-			   log.debug(msg.getMessage());
-		   } else {
-			   reportN = reportName;
-		   }
-    	   response.setHeader("Content-Disposition",
-    			   "attachment; filename=\""+reportN+".xls");
-    	   log.debug(workBook);
-    	   workBook.write(response.getOutputStream());
-    	   log.debug(response);
-    	   response.getOutputStream().flush();
-    	   response.getOutputStream().close();
-    	   log.debug("Response written");
-       } catch (Exception e) {
-    	   // TODO: handle exception
-    	   log.debug("exception " + e);
-    	   e.printStackTrace();
-       }
-		log.debug("after export to excel");
-
-		return response;
+       log.debug("report name " + reportName);
+	   MyMessage msg = messageManager.getMessageByKeyName(reportName, myLocale);
+	   String reportN="";
+	   if (msg!=null) {
+		  reportN = msg.getMessage();
+		   log.debug(msg.getMessage());
+	   } else {
+		   reportN = reportName;
+	   }
+       
+       Map result = new HashMap();
+       result.put("workbook", workBook);
+       result.put("title", reportN);
+		return result;
 	}
 	
 	
