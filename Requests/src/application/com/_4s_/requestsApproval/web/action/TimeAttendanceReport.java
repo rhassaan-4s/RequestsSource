@@ -189,6 +189,8 @@ public class TimeAttendanceReport implements Controller{
 				}
 				if (!req.getDiffMins().equals("0") && !req.getDiffHrs().equals("0")) {
 					temp.add("0"+req.getDiffHrs()+":"+req.getDiffMins());
+				} else {
+					temp.add("");
 				}
 				
 //				///////////////////////////////////////
