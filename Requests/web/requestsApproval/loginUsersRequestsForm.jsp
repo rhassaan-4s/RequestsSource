@@ -506,7 +506,7 @@ function calculateDiff2(){
 
 								<td></td>
 
-								<c:if test="${settings.annualVacBalDaysEnabled==1}">
+								<c:if test="${settings.annualVacBalDaysEnabled==true}">
 									<td class="formBodControl"><abc:i18n
 											property="commons.button.getVacCredit" /> <fmt:message
 											key="commons.button.getVacCredit" /></td>
