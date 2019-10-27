@@ -478,6 +478,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 				}
 			}
 		}
+		model.put("settings", settings);
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		return model;

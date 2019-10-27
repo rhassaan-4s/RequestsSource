@@ -490,33 +490,36 @@ function calculateDiff2(){
 							</td>					
 						</tr>
 
-						<tr id="annualVacationTypes" class="hideClass">
-					  		<td nowrap class="formReq">
-								<abc:i18n property="requestsApproval.caption.vacationType"/>
-								<fmt:message key="requestsApproval.caption.vacationType"/>
-							</td>
-							<td  class="formBodControl" >
-								<select name="annualVacation" id="annualVacation"   onchange="showVacationTypes()">
-									<option value=""><fmt:message key="commons.caption.select" /></option>						
+							<tr id="annualVacationTypes" class="hideClass">
+								<td nowrap class="formReq"><abc:i18n
+										property="requestsApproval.caption.vacationType" /> <fmt:message
+										key="requestsApproval.caption.vacationType" /></td>
+								<td class="formBodControl"><select name="annualVacation"
+									id="annualVacation" onchange="showVacationTypes()">
+										<option value=""><fmt:message
+												key="commons.caption.select" /></option>
 										<c:forEach items="${annualVacations}" var="vacation">
-											<option value="${vacation.vacation}" ${vacation.vacation == loginUsersRequests.vacation.vacation?' selected' : ''} >${vacation.name}</option>
+											<option value="${vacation.vacation}"
+												${vacation.vacation == loginUsersRequests.vacation.vacation?' selected' : ''}>${vacation.name}</option>
 										</c:forEach>
-								</select>
-							</td>
-														
-							<td>
-							</td>
-							
-							<td  class="formBodControl">
-								<abc:i18n property="commons.button.getVacCredit"/><fmt:message key="commons.button.getVacCredit"/>
-							</td>
+								</select></td>
 
-							<td  class="formBodControl" >
-								<input type="text"  size="10" readonly="readonly" onfocus="getBalanceVac()" name="vacCredit" id="vacCredit" value="${vacCredit}" />
-							</td>														
-						</tr>
-												
-						<tr id="vacationDates" class="hideClass">
+								<td></td>
+
+								<c:if test="${settings.ANNUALVACBALDAYSENABLED==1}">
+									<td class="formBodControl"><abc:i18n
+											property="commons.button.getVacCredit" /> <fmt:message
+											key="commons.button.getVacCredit" /></td>
+
+
+									<td class="formBodControl"><input type="text" size="10"
+										readonly="readonly" onfocus="getBalanceVac()" name="vacCredit"
+										id="vacCredit" value="${vacCredit}" /></td>
+								</c:if>
+
+							</tr>
+
+							<tr id="vacationDates" class="hideClass">
 					  		<td nowrap class="formReq" >
 								<abc:i18n property="commons.caption.fromDate"/>
 								<fmt:message key="commons.caption.fromDate"/>
