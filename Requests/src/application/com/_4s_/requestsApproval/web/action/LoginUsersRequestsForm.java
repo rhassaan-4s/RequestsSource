@@ -649,7 +649,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		log.debug("-----annVacation entered--------"+annVacation);
 		
 		if (annVacation != null && !annVacation.isEmpty()) {
-			if (loginUsersRequests.getVacCredit() == 0) {
+			if (loginUsersRequests.getVacCredit()!=null && loginUsersRequests.getVacCredit() == 0) {
 				errors.rejectValue("empCode", "requestsApproval.errors.zerovacationcredit");
 			}
 		}
