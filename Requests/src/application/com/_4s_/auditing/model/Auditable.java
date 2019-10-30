@@ -14,6 +14,6 @@ package com._4s_.auditing.model;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public interface Auditable {
-	public Long getId();
+	public Object getId();
 	public String getEntityDisplayName();
 }

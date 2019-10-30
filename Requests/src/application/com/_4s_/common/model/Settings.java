@@ -49,6 +49,7 @@ public class Settings  implements Serializable,Auditable {
 	private Boolean companyRulesEn;
 	private Blob companyLogoHeader;
 	private String companyLogoHeaderName;
+	private Integer maxEmp;
 	
 	private String mailMgr;
 	private String mailPass;
@@ -402,6 +403,15 @@ public class Settings  implements Serializable,Auditable {
 		this.salaryFromDay = salaryFromDay;
 	}
 	
+	
+	public Integer getMaxEmp() {
+		return maxEmp;
+	}
+
+	public void setMaxEmp(Integer maxEmp) {
+		this.maxEmp = maxEmp;
+	}
+
 	public Long getId() {
 		return id;
 	}
