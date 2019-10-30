@@ -386,6 +386,38 @@
 			
 		</property>
 	</bean>
+	
+	<bean id="empBasicFormController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.EmpBasicController">
+				<property name="commandName"><value>empBasic</value></property>
+
+				<property name="commandClass">
+					<value>com._4s_.common.model.EmpBasic</value>
+				</property>
+
+				<property name="formView"><value>commonAdminEmpBasic</value></property>
+				<property name="successView"><value>commonAdminEmpBasicView.html</value></property>
+				<property name="baseManager"><ref bean="baseManager"/></property>
+
+				<property name="rollbackMode">
+					<value>ROLLBACK_ON_ERROR</value>  
+				</property>
+
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="empBasicViewController" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.common.web.action.EmpBasicViewController">
+				<property name="commonManager">
+					<ref bean="commonManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
     <bean id="urlMapping" 
         class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" >
         <property name="interceptors">
@@ -424,6 +456,9 @@
 				
 				<prop key="/sampleLiveSearch.html">sampleLiveSearch</prop>
 				<prop key="/searchForm.html">searchFormController</prop>
+				
+				<prop key="/commonAdminEmpBasicView.html">empBasicViewController</prop>
+				<prop key="/commonAdminEmpBasic.html">empBasicFormController</prop>
 			</props>
         </property>
     </bean>

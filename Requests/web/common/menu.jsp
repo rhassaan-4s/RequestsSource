@@ -21,6 +21,9 @@
 		<li><a href="/Requests/security/roleDetails.html"><abc:i18n
 			property="security.menu.roles" /> <fmt:message
 			key="security.menu.roles" /></a></li>
+			<li><a href="/Requests/common/commonAdminEmpBasicView.html"><abc:i18n
+			property="common.menu.empBasic" /> <fmt:message
+			key="common.menu.empBasic" /></a></li>
 	</ul>
 	</li>
 	<li><a href="#"><fmt:message key="commons.menu.common" /></a>
@@ -28,6 +31,7 @@
 		<li><a href="/Requests/dbUpdate/updateDBView.html"><abc:i18n
 			property="common.menu.dbUpdate" /> <fmt:message
 			key="common.menu.dbUpdate" /></a></li>
+			
 	</ul>
 	</li>
 	<li><a href="/Requests/security/logout.html"><fmt:message

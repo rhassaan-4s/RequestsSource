@@ -15925,4 +15925,20 @@ ALTER TABLE LOGIN_USERS_REQUESTS ADD LATITUDE FLOAT DEFAULT null;</statment></qu
  token varchar(64) not null,&#xD;
  last_used timestamp not null);</statment></query><query><sqlindex>99</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101403, 'commons.button.export', NULL);&#xD;
 INSERT INTO i18n_message VALUES (20211618,'تصدير اكسل', 101403, 1);&#xD;
-INSERT INTO i18n_message VALUES (20211619, 'Export to Excel Sheet', 101403, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (20211619, 'Export to Excel Sheet', 101403, 3);</statment></query><query><sqlindex>100</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101404, 'commons.caption.empBasicForm', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211620,'اضافة موظف', 101404, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211621, 'New Employee', 101404, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101405, 'common.menu.empBasic', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211622,'الموظفين', 101405, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211623, 'Employees', 101405, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101406, 'commons.caption.empCode', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211624,'كود الموظف', 101406, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211625, 'Employee Code', 101406, 3);</statment></query><query><sqlindex>101</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101407, 'commons.errors.empCodeShouldBe8Digits', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211626,'كود الموظف يجب أن يحتوي على 8 أرقام', 101407, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211627, 'Employee Code Should Contain 8 Digits', 101407, 3);</statment></query><query><sqlindex>102</sqlindex><statment>ALTER TABLE FOURS_PAY.COMMON_SETTINGS ADD MAXEMP NUMBER;</statment></query><query><sqlindex>103</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101408, 'commons.caption.empBasicView', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211628,'الموظفين', 101408, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211629, 'Employees', 101408, 3);</statment></query><query><sqlindex>104</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101409, 'commons.error.duplicateCode', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211630,'تم استخدام هذا الكود من قبل', 101409, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211631, 'Employee code duplicated', 101409, 3);</statment></query><query><sqlindex>105</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101410, 'commons.errors.maxEmpReached', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211632,'تم الوصول للحد الاقصى للموظفين', 101410, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211633, 'You have reached the maximum limit of employees', 101410, 3);</statment></query></SQL>

@@ -130,7 +130,7 @@
 	
 <%
 	String applicationName = (String) session.getAttribute("appName");
-System.out.println("applicationName " + applicationName);
+//System.out.println("applicationName " + applicationName);
 	List activeApplications = (List) request.getSession().getAttribute(
 			"activeApplications");
 	String locale = ((String) request.getSession().getAttribute(
@@ -291,7 +291,8 @@ menuItems:[
 	["<b><fmt:message key="commons.button.editUserPreferences" /></b>", "/Requests/security/changeUserApplication.html?activeLink=linkOne", "_new"],
 	["<b><fmt:message key="commons.caption.date" /></b>", "javascript:createWindow('<c:url value="/common/commonAdminDateConverter.html"/>')", "_new"],
 	["<b><fmt:message key="commons.caption.applications" /></b>"]
-<% if (activeApplications != null) {
+<%System.out.println("application " + activeApplications); 
+if (activeApplications != null) {
 		for (int i = 0; i < activeApplications.size(); i++) {
 	  		SecurityApplication securityApplication = (SecurityApplication) activeApplications.get(i);
 %>
