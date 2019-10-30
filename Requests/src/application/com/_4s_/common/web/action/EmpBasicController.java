@@ -106,6 +106,7 @@ public class EmpBasicController extends BaseSimpleFormController {
 			}
 		}
 		
+		/////////////////////
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> end of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
 
