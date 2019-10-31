@@ -19,11 +19,9 @@ public class EmpBasic  implements Serializable,Auditable {
 	//////////////
 	
 	public String getEmpCode() {
-		System.out.println("get empcode " + empCode);
 		return empCode;
 	}
 	public void setEmpCode(String empCode) {
-		System.out.println("set empcode " + empCode);
 		this.empCode = empCode;
 	}
 	public String getEmpName() {

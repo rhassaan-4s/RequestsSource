@@ -30,7 +30,7 @@ public class EmpBasicViewController extends BaseController {
 		
 		log.debug("entering 'handleRequest' method...");
 		
-		List list= commonManager.getObjects(EmpBasic.class);
+		List list= commonManager.getObjectsOrderedByFieldASC(EmpBasic.class,"empCode");
 		HashMap map=new HashMap();
 		map.put("employees",list);
 			

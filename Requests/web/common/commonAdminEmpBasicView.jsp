@@ -63,6 +63,7 @@
 			</TR>
 
 			<c:forEach var="result" items="${employees}">
+			<c:if test="${employees.empCode!='00000001'">
 				<tr height=20 bgcolor="#F8F8F8">
 					<td valign=TOP style="padding:0px 3px 0px 3px;">${result.empCode}</td>
 					<TD BGCOLOR="#666666" WIDTH=1 NOWRAP><IMG
@@ -85,6 +86,7 @@
 						class="actionLink"> <fmt:message key="commons.button.edit" /></a>&nbsp;</NOBR></td>
 
 				</tr>
+				</c:if>
 			</c:forEach>
 
 			<TR>
