@@ -63,7 +63,7 @@
 			</TR>
 
 			<c:forEach var="result" items="${employees}">
-			<c:if test="${employees.empCode!='00000001'">
+			<c:if test="${result.empCode!='00000001'">
 				<tr height=20 bgcolor="#F8F8F8">
 					<td valign=TOP style="padding:0px 3px 0px 3px;">${result.empCode}</td>
 					<TD BGCOLOR="#666666" WIDTH=1 NOWRAP><IMG
