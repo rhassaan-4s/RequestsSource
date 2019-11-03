@@ -110,8 +110,13 @@ public class RequestsServiceController {
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 		UserDetails userDet = (UserDetails)token.getPrincipal();
 		User user = requestsService.getUser(userDet.getUsername());
-		Map response = requestsService.userRequest(userRequest,user.getEmployee().getId());
-		return response;
+		try {
+			Map response = requestsService.userRequest(userRequest,user.getEmployee().getId());
+			return response;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	@RequestMapping(value="/checkStartedRequests", method=RequestMethod.POST, 
