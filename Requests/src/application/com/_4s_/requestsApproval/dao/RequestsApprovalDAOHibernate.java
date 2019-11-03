@@ -1886,46 +1886,52 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
 		RestStatus status = new RestStatus();
 		Long requestType =  Long.parseLong(requestQuery.getRequestType());
+		Date dateFrom = null;
+		Date dateTo = null;
 		
 		Date newDate1 = null;
-		try {
-			newDate1 = df.parse(requestQuery.getDateFrom());
-		} catch(Exception e){
-			e.printStackTrace();
-			status.setCode("312");
-			status.setMessage("Date is not well formated");
-			status.setStatus("False");
-			response.put("Status", status);
-			return response;
-		}
-		
-		Calendar cFrom= Calendar.getInstance();
-		cFrom.setTime(newDate1);
-		cFrom.set(Calendar.HOUR_OF_DAY, 0);
-		cFrom.set(Calendar.MINUTE, 0);
-		cFrom.set(Calendar.SECOND, 0);
-		final Date dateFrom=cFrom.getTime();
-		log.debug("------dateFrom---"+dateFrom);
+		if (requestQuery.getDateFrom()!=null && !requestQuery.getDateFrom().isEmpty()) {
+			try {
+				newDate1 = df.parse(requestQuery.getDateFrom());
+			} catch(Exception e){
+				e.printStackTrace();
+				status.setCode("312");
+				status.setMessage("Date is not well formated");
+				status.setStatus("False");
+				response.put("Status", status);
+				return response;
+			}
 
+
+			Calendar cFrom= Calendar.getInstance();
+			cFrom.setTime(newDate1);
+			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+			cFrom.set(Calendar.MINUTE, 0);
+			cFrom.set(Calendar.SECOND, 0);
+			dateFrom=cFrom.getTime();
+			log.debug("------dateFrom---"+dateFrom);
+		}
 		Date newDate2 = null;
-		try {
-			newDate2 = df.parse(requestQuery.getDateTo());
-		} catch(Exception e){
-			e.printStackTrace();
-			status.setCode("312");
-			status.setMessage("Date is not well formated");
-			status.setStatus("False");
-			response.put("Status", status);
-			return response;
-		}
-		Calendar cTo= Calendar.getInstance();
-		cTo.setTime(newDate2);
-		cTo.set(Calendar.HOUR_OF_DAY, 23);
-		cTo.set(Calendar.MINUTE, 59);
-		cTo.set(Calendar.SECOND, 59);
+		if (requestQuery.getDateTo()!=null && !requestQuery.getDateTo().isEmpty()) {
+			try {
+				newDate2 = df.parse(requestQuery.getDateTo());
+			} catch(Exception e){
+				e.printStackTrace();
+				status.setCode("312");
+				status.setMessage("Date is not well formated");
+				status.setStatus("False");
+				response.put("Status", status);
+				return response;
+			}
+			Calendar cTo= Calendar.getInstance();
+			cTo.setTime(newDate2);
+			cTo.set(Calendar.HOUR_OF_DAY, 23);
+			cTo.set(Calendar.MINUTE, 59);
+			cTo.set(Calendar.SECOND, 59);
 
-		final Date dateTo=cTo.getTime();
-		log.debug("------dateTo---"+dateTo);
+			dateTo=cTo.getTime();
+			log.debug("------dateTo---"+dateTo);
+		}
 
 		DateFormat format =	new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Date sDate =null;
@@ -1949,6 +1955,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 		log.debug("sDate " + sDate);
 		log.debug("eDate " + eDate);
+		
 		List list =new ArrayList();
 		Criteria criteria = getCurrentSession()
 				.createCriteria(LoginUsersRequests.class);
@@ -1979,7 +1986,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				final Date endDate = eDate;
 				criteria.add(Expression.le("period_from", endDate));
 			}
-		}
+		} 
 		criteria.add(Restrictions.eq("empCode", emp.getEmpCode()));
 		criteria.addOrder(Property.forName("period_from").desc());
 		criteria

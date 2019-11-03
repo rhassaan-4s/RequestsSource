@@ -489,6 +489,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				||userRequest.getAttendanceType().equals(new Long(3)) || userRequest.getAttendanceType().equals(new Long(5))) {//Permission End || //Full Day Permission End
 			List requests =  requestsApprovalManager.getRequestsByDatePeriodAndRequestTypeAndEmpCode(mCalDate.getDate(), mCalDate.getDate(), reqType.getId(), emp.getEmpCode());
 
+			
 			if (userRequest.getAttendanceType().equals(new Long(4)) || userRequest.getAttendanceType().equals(new Long(6))) {
 				if (requests.size() == 1) {
 					loginUsersRequests = (LoginUsersRequests)requests.get(0);
@@ -535,23 +536,39 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					}
 				}
 			} else {
+				RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
+				
+				//1 permission 2 errands
+				if (userRequest.getAttendanceType().equals(new Long(3))) {//permission start
+					requestQuery.setRequestType("1");
+				} else if (userRequest.getAttendanceType().equals(new Long(5))) {//permission end
+					requestQuery.setRequestType("2");
+				} else {
+					System.out.println("condition not handled 2 " + userRequest.getAttendanceType());
+				}
+				
+				Map startedRequests = checkStartedRequests(requestQuery, emp);
+				List startedRequestsResponse = (List)startedRequests.get("Response");
 				System.out.println("permission/errand start , size =" + requests.size());
-				if (requests.size() == 1) {
-					LoginUsersRequests req = (LoginUsersRequests)requests.get(0);
-					if (req.getTo_date()==null) {
-						status.setCode("311");
-						status.setMessage("A request started on the requested date hasn't been ended yet.");
-						status.setStatus("False");
-						response.put("Status", status);
-						return response;
-					}
+				if (requests.size() == 1 && ((LoginUsersRequests)requests.get(0)).getTo_date()==null) {
+					status.setCode("311");
+					status.setMessage("A request started on the requested date hasn't been ended yet.");
+					status.setStatus("False");
+					response.put("Status", status);
+					return response;
 				} else if (requests.size() > 1){
 					status.setCode("301");
 					status.setMessage("Too Many Requests Started on the Specified Date");
 					status.setStatus("False");
 					response.put("Status", status);
 					return response;
-				} else {
+				} else if (startedRequestsResponse.size() > 0) {
+					status.setCode("314");
+					status.setMessage("Another Request is already Started for the logged in user");
+					status.setStatus("False");
+					response.put("Status", status);
+					return response;
+				}else {
 					loginUsersRequests = new LoginUsersRequests();
 					loginUsersRequests.setLogin_user(loginUsers);
 					loginUsersRequests.setEmpCode(loginUsers.getEmpCode());
@@ -608,6 +625,8 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				loginUsersRequests.setRequestNumber(requestNumber);
 				loginUsersRequests.setPeriod_from(mCalDate.getDate());
 			}
+		} else {
+			System.out.println("condition not handled " + userRequest.getAttendanceType());
 		}
 
 		if (vac!=null) {
