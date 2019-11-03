@@ -635,6 +635,8 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 
 
 		if (!userRequest.getAttendanceType().equals(new Long(7)) && !userRequest.getAttendanceType().equals(new Long(8))) {
+			System.out.println("service implmentation ma2moreya " + loginUsersRequests);
+			System.out.println("service implmentation ma2moreya " + reqType);
 			loginUsersRequests.setRequest_id(reqType);
 		}
 	//Setting Longitude & Latitude////////////////////////////////
