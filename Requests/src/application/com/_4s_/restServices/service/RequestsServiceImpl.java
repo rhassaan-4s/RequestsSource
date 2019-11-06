@@ -487,8 +487,20 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		System.out.println("mCalDate.getDate() " + mCalDate.getDate());
 		if (userRequest.getAttendanceType().equals(new Long(4)) || userRequest.getAttendanceType().equals(new Long(6))
 				||userRequest.getAttendanceType().equals(new Long(3)) || userRequest.getAttendanceType().equals(new Long(5))) {//Permission End || //Full Day Permission End
-			List requests =  requestsApprovalManager.getRequestsByDatePeriodAndRequestTypeAndEmpCode(mCalDate.getDate(), mCalDate.getDate(), reqType.getId(), emp.getEmpCode());
-
+//			List requests =  requestsApprovalManager.getRequestsByDatePeriodAndRequestTypeAndEmpCode(mCalDate.getDate(), mCalDate.getDate(), reqType.getId(), emp.getEmpCode());
+			RequestsApprovalQuery requestQueryending = new RequestsApprovalQuery();
+			
+			//1 permission 2 errands
+			if (userRequest.getAttendanceType().equals(new Long(4))) {//permission start
+				requestQueryending.setRequestType("1");
+			} else if (userRequest.getAttendanceType().equals(new Long(6))) {//errand start
+				requestQueryending.setRequestType("2");
+			} else {
+				System.out.println("condition not handled 2 " + userRequest.getAttendanceType());
+			}
+			requestQueryending.setDateFrom(userRequest.getAttendanceTime());
+			requestQueryending.setDateTo(userRequest.getAttendanceTime());
+			List requests = (List)(requestsApprovalManager.checkStartedRequests(requestQueryending, emp)).get("Response");
 			
 			if (userRequest.getAttendanceType().equals(new Long(4)) || userRequest.getAttendanceType().equals(new Long(6))) {
 				Iterator itrrequests = requests.iterator();
