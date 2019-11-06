@@ -483,26 +483,26 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				return response;
 			}
 		}
-		System.out.println("mCalDate " + mCalDate);
+//		System.out.println("mCalDate " + mCalDate);
 		System.out.println("mCalDate.getDate() " + mCalDate.getDate());
 		if (userRequest.getAttendanceType().equals(new Long(4)) || userRequest.getAttendanceType().equals(new Long(6))
 				||userRequest.getAttendanceType().equals(new Long(3)) || userRequest.getAttendanceType().equals(new Long(5))) {//Permission End || //Full Day Permission End
-//			List requests =  requestsApprovalManager.getRequestsByDatePeriodAndRequestTypeAndEmpCode(mCalDate.getDate(), mCalDate.getDate(), reqType.getId(), emp.getEmpCode());
-			RequestsApprovalQuery requestQueryending = new RequestsApprovalQuery();
 			
-			//1 permission 2 errands
-			if (userRequest.getAttendanceType().equals(new Long(4))) {//permission start
-				requestQueryending.setRequestType("1");
-			} else if (userRequest.getAttendanceType().equals(new Long(6))) {//errand start
-				requestQueryending.setRequestType("2");
-			} else {
-				System.out.println("condition not handled 2 " + userRequest.getAttendanceType());
-			}
-			requestQueryending.setDateFrom(userRequest.getAttendanceTime());
-			requestQueryending.setDateTo(userRequest.getAttendanceTime());
-			List requests = (List)(requestsApprovalManager.checkStartedRequests(requestQueryending, emp)).get("Response");
 			
 			if (userRequest.getAttendanceType().equals(new Long(4)) || userRequest.getAttendanceType().equals(new Long(6))) {
+				RequestsApprovalQuery requestQueryending = new RequestsApprovalQuery();
+				
+				//1 permission 2 errands
+				if (userRequest.getAttendanceType().equals(new Long(4))) {//permission start
+					requestQueryending.setRequestType("1");
+				} else if (userRequest.getAttendanceType().equals(new Long(6))) {//errand start
+					requestQueryending.setRequestType("2");
+				} else {
+					System.out.println("condition not handled 3 " + userRequest.getAttendanceType());
+				}
+				requestQueryending.setDateFrom(userRequest.getAttendanceTime());
+				requestQueryending.setDateTo(userRequest.getAttendanceTime());
+				List requests = (List)(requestsApprovalManager.checkStartedRequests(requestQueryending, emp)).get("Response");
 				Iterator itrrequests = requests.iterator();
 				while(itrrequests.hasNext()) {
 					System.out.println("ending request other requests "+((LoginUsersRequests)itrrequests.next()).getRequestNumber());
@@ -551,7 +551,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 						loginUsersRequests.setPeriod_to(mCalDateTo.getDate());
 					}
 				}
-			} else {
+			} else {//starting permissions and errands
 				RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
 				
 				//1 permission 2 errands
@@ -565,20 +565,20 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				
 				Map startedRequests = checkStartedRequests(requestQuery, emp);
 				List startedRequestsResponse = (List)startedRequests.get("Response");
-				System.out.println("permission/errand start , size =" + requests.size());
+				System.out.println("permission/errand start , size =" + startedRequests.size());
 				Iterator itr = startedRequestsResponse.iterator();
 				while(itr.hasNext()) {
 					System.out.println(itr.next());
 				}
 				if (startedRequestsResponse.size() == 1 && ((LoginUsersRequests)startedRequestsResponse.get(0)).getTo_date()==null) {
 					status.setCode("311");
-					status.setMessage("A request started on the requested date hasn't been ended yet.");
+					status.setMessage("A request is already started that hasn't been ended yet.");
 					status.setStatus("False");
 					response.put("Status", status);
 					return response;
 				} else if (startedRequestsResponse.size() > 1){
 					status.setCode("301");
-					status.setMessage("Too Many Requests Started on the Specified Date");
+					status.setMessage("Too Many Requests Already Started");
 					status.setStatus("False");
 					response.put("Status", status);
 					return response;
