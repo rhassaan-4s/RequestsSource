@@ -27,6 +27,18 @@
 		</property>
 	</bean>
 
+	<bean id="UpdateTriggers" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.dbUpdate.web.action.UpdateTriggers">
+				<property name="dataSource">
+					<ref bean="dataSource" />
+				</property>
+				<property name="comMger">
+					<ref bean="commonManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
 	<bean id="AddNewQueryForm" parent="txProxyTemplate">
 		<property name="target">
 			<bean
@@ -87,6 +99,7 @@
 				<prop key="/newQueryForm.html">AddNewQueryForm</prop>
 				<prop key="/fileWriterForm.html">FileWriter</prop>
 				<prop key="/updateDBView.html">UpdateDB</prop>
+				<prop key="/updateTriggersView.html">UpdateTriggers</prop>
 				<prop key="/fileReaderView.html">FileReader</prop>
 			</props>
 		</property>

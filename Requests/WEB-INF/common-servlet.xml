@@ -418,6 +418,26 @@
 		</property>
 	</bean>
 	
+	<bean id="settingsForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.common.web.action.SettingsForm">
+				<property name="commandName">
+					<value>settings</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.common.model.Settings</value>
+				</property>
+				<property name="formView">
+					<value>settingsForm</value>
+				</property>
+				<property name="baseManager">
+					<ref bean="baseManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
     <bean id="urlMapping" 
         class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" >
         <property name="interceptors">
@@ -459,6 +479,8 @@
 				
 				<prop key="/commonAdminEmpBasicView.html">empBasicViewController</prop>
 				<prop key="/commonAdminEmpBasic.html">empBasicFormController</prop>
+				
+				<prop key="/settingsForm.html">settingsForm</prop>
 			</props>
         </property>
     </bean>

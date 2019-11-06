@@ -15941,4 +15941,14 @@ INSERT INTO i18n_message VALUES (20211629, 'Employees', 101408, 3);</statment></
 INSERT INTO i18n_message VALUES (20211630,'تم استخدام هذا الكود من قبل', 101409, 1);&#xD;
 INSERT INTO i18n_message VALUES (20211631, 'Employee code duplicated', 101409, 3);</statment></query><query><sqlindex>105</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101410, 'commons.errors.maxEmpReached', NULL);&#xD;
 INSERT INTO i18n_message VALUES (20211632,'تم الوصول للحد الاقصى للموظفين', 101410, 1);&#xD;
-INSERT INTO i18n_message VALUES (20211633, 'You have reached the maximum limit of employees', 101410, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (20211633, 'You have reached the maximum limit of employees', 101410, 3);</statment></query><query><sqlindex>106</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101411, 'commons.caption.settings', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211634,'اعدادات البرنامج', 101411, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211635, 'Application Settings', 101411, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101412, 'commons.caption.maxEmpBasic', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211636,'الحد الاقصى لعدد الموظفين', 101412, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211637, 'Maximum Allowed Number of Employees', 101412, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101413, 'commons.caption.annualVacBalDaysEnabled', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211638,'تفعيل رصيد الاجازات السنوية', 101413, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211639, 'Enabling Annual Vacations Balance', 101413, 3);</statment></query><query><sqlindex>107</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101414, 'dbUpdate.header.updateTriggersScript', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211640,'ضبط ال Triggers', 101414, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211641, 'Triggers Initiation', 101414, 3);</statment></query></SQL>

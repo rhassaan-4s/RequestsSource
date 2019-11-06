@@ -8,8 +8,8 @@
 <link rel="stylesheet" type="text/css" media="print, handheld"
 	href="/Requests/web/common/css/print.css">
 
+<abc:security property="960"/>
 
-<%@ taglib uri="http://acegisecurity.org/authz" prefix="authz"%>
 <div id="smoothmenu1" class="ddsmoothmenu">
 
 <ul>
@@ -28,6 +28,11 @@
 	</li>
 	<li><a href="#"><fmt:message key="commons.menu.common" /></a>
 	<ul>
+	<authz:authorize ifAllGranted="CAN_UPDATE_settings">
+		<li><a href="/Requests/common/settingsForm.html"><abc:i18n
+			property="commons.caption.settings" /> <fmt:message
+			key="commons.caption.settings" /></a></li>
+	</authz:authorize>
 		<li><a href="/Requests/dbUpdate/updateDBView.html"><abc:i18n
 			property="common.menu.dbUpdate" /> <fmt:message
 			key="common.menu.dbUpdate" /></a></li>

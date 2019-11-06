@@ -541,7 +541,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				//1 permission 2 errands
 				if (userRequest.getAttendanceType().equals(new Long(3))) {//permission start
 					requestQuery.setRequestType("1");
-				} else if (userRequest.getAttendanceType().equals(new Long(5))) {//permission end
+				} else if (userRequest.getAttendanceType().equals(new Long(5))) {//errand start
 					requestQuery.setRequestType("2");
 				} else {
 					System.out.println("condition not handled 2 " + userRequest.getAttendanceType());
@@ -550,13 +550,17 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				Map startedRequests = checkStartedRequests(requestQuery, emp);
 				List startedRequestsResponse = (List)startedRequests.get("Response");
 				System.out.println("permission/errand start , size =" + requests.size());
-				if (requests.size() == 1 && ((LoginUsersRequests)requests.get(0)).getTo_date()==null) {
+				Iterator itr = startedRequestsResponse.iterator();
+				while(itr.hasNext()) {
+					System.out.println(itr.next());
+				}
+				if (startedRequestsResponse.size() == 1 && ((LoginUsersRequests)startedRequestsResponse.get(0)).getTo_date()==null) {
 					status.setCode("311");
 					status.setMessage("A request started on the requested date hasn't been ended yet.");
 					status.setStatus("False");
 					response.put("Status", status);
 					return response;
-				} else if (requests.size() > 1){
+				} else if (startedRequestsResponse.size() > 1){
 					status.setCode("301");
 					status.setMessage("Too Many Requests Started on the Specified Date");
 					status.setStatus("False");
