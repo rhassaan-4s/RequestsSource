@@ -491,6 +491,10 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 
 			
 			if (userRequest.getAttendanceType().equals(new Long(4)) || userRequest.getAttendanceType().equals(new Long(6))) {
+				Iterator itrrequests = requests.iterator();
+				while(itrrequests.hasNext()) {
+					System.out.println("ending request other requests "+((LoginUsersRequests)itrrequests.next()).getRequestNumber());
+				}
 				if (requests.size() == 1) {
 					loginUsersRequests = (LoginUsersRequests)requests.get(0);
 					if (loginUsersRequests.getPeriod_to()==null){
