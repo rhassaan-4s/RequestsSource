@@ -1,7 +1,7 @@
 <%@ include file="/web/common/includes/taglibs.jsp"%>
 <jsp:include page="/web/common/includes/header.jsp" flush="true"/>
 
-
+<abc:security property="1021"/>
 <form id="settings" name="settings" method="POST" action="<c:url value="/common/settingsForm.html"/>">
 	
 	

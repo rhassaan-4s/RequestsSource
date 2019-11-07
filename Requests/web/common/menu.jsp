@@ -1,4 +1,6 @@
 <%@ include file="/web/common/includes/taglibs.jsp"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 <link type="text/css" rel="stylesheet"
 	href="/Requests/web/common/css/all.css">
 <link type="text/css" rel="stylesheet"
@@ -8,7 +10,6 @@
 <link rel="stylesheet" type="text/css" media="print, handheld"
 	href="/Requests/web/common/css/print.css">
 
-<abc:security property="960"/>
 
 <div id="smoothmenu1" class="ddsmoothmenu">
 
@@ -28,11 +29,11 @@
 	</li>
 	<li><a href="#"><fmt:message key="commons.menu.common" /></a>
 	<ul>
-	<authz:authorize ifAllGranted="CAN_UPDATE_settings">
+	<sec:authorize ifAllGranted="CAN_UPDATE_settings">
 		<li><a href="/Requests/common/settingsForm.html"><abc:i18n
 			property="commons.caption.settings" /> <fmt:message
 			key="commons.caption.settings" /></a></li>
-	</authz:authorize>
+	</sec:authorize>
 		<li><a href="/Requests/dbUpdate/updateDBView.html"><abc:i18n
 			property="common.menu.dbUpdate" /> <fmt:message
 			key="common.menu.dbUpdate" /></a></li>

@@ -410,23 +410,25 @@ window.onload=init;
 					property="security.caption.roles" /> <fmt:message
 					key="security.caption.roles" /></td>
 
-				<TD colspan="3" class="formBodControl" rowspan="2"><select name="userRoles" size="3" multiple>
-					<c:forEach items="${roles}" var="role">
+						<TD colspan="3" class="formBodControl" rowspan="2"><select
+							name="userRoles" size="3" multiple>
+								<c:forEach items="${roles}" var="role">
 
+									<c:if test="${role.id!=6}"> <!-- Hiding 4s Administration  -->
+										<c:set var="isSelected" value="" />
+										<c:forEach items="${user.roles}" var="userRole">
 
-						<c:set var="isSelected" value="" />
-						<c:forEach items="${user.roles}" var="userRole">
+											<c:if test="${role.id == userRole.id}">
+												<c:set var="isSelected" value="selected" />
+											</c:if>
+										</c:forEach>
 
-							<c:if test="${role.id == userRole.id}">
-								<c:set var="isSelected" value="selected" />
-							</c:if>
-						</c:forEach>
+										<option value="${role.id}" ${isSelected}>${role.rolename}</option>
+									</c:if>
+								</c:forEach>
+						</select></TD>
 
-						<option value="${role.id}"${isSelected}>${role.rolename}</option>
-					</c:forEach>
-				</select></TD>
-				
-			</tr>
+					</tr>
 <!-- 			
 			<tr>
 				<td nowrap class="formReq"><abc:i18n

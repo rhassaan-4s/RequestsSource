@@ -15952,4 +15952,5 @@ INSERT INTO i18n_message VALUES (20211638,'تفعيل رصيد الاجازات 
 INSERT INTO i18n_message VALUES (20211639, 'Enabling Annual Vacations Balance', 101413, 3);</statment></query><query><sqlindex>107</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101414, 'dbUpdate.header.updateTriggersScript', NULL);&#xD;
 INSERT INTO i18n_message VALUES (20211640,'ضبط ال Triggers', 101414, 1);&#xD;
 INSERT INTO i18n_message VALUES (20211641, 'Triggers Initiation', 101414, 3);</statment></query><query><sqlindex>108</sqlindex><statment>INSERT INTO SECURITY_FIELDS VALUES (1021,'page_commons_settings', NULL, 3, NULL);</statment></query><query><sqlindex>109</sqlindex><statment>INSERT INTO SECURITY_PERMISSIONS (ID, PERMESSIONNAME, SELECTED, FIELDID,PERMISSIONDESCRIPTION ) VALUES (1036, 'CAN_UPDATE_settings', 1, 1021, NULL);&#xD;
-INSERT INTO SECURITY_ROLE_PERMISSIONS VALUES (5,1036);</statment></query></SQL>
+INSERT INTO SECURITY_ROLE_PERMISSIONS VALUES (5,1036);</statment></query><query><sqlindex>110</sqlindex><statment>INSERT INTO SECURITY_ROLES (ID, ROLENAME, APPLICATION, DEFAULTPAGE)  VALUES(6, 'Admin', 3, '/Requests/requestsApproval/welcome.html');&#xD;
+</statment></query><query><sqlindex>111</sqlindex><statment>UPDATE SECURITY_ROLE_PERMISSIONS SET  ROLE=6 WHERE PERMISSION=1036;</statment></query></SQL>
