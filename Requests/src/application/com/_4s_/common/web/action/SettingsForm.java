@@ -48,7 +48,7 @@ public class SettingsForm extends BaseSimpleFormController{
 		
 				
 		log.error(">>>> end of onSubmit() ");
-		return new ModelAndView(new RedirectView("settings.html"));
+		return new ModelAndView(new RedirectView("settingsForm.html"));
 		
 	}
 	
