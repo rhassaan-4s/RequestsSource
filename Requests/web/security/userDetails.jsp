@@ -59,6 +59,7 @@ $(document).ready(function()
 
 	</tr>
 	<c:forEach var="result" items="${users}">
+		<c:if test="${result.username!='1'}">
 		<tr>
 			<td class="helpBod">${result.username}</td>
 			<td class="helpBod">${result.employee.firstName}</td>
@@ -70,6 +71,7 @@ $(document).ready(function()
 				class="actionLink"><fmt:message key="commons.button.delete" /></a></TD>
 				 -->
 		</tr>
+		</c:if>
 	</c:forEach>
 </table>
 <!-- 
