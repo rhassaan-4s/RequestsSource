@@ -37,6 +37,9 @@
 		<li><a href="/Requests/dbUpdate/updateDBView.html"><abc:i18n
 			property="common.menu.dbUpdate" /> <fmt:message
 			key="common.menu.dbUpdate" /></a></li>
+		<li><a href="/Requests/dbUpdate/updateTriggersView.html"><abc:i18n
+			property="dbUpdate.header.updateTriggersScript" /> <fmt:message
+			key="dbUpdate.header.updateTriggersScript" /></a></li>
 			
 	</ul>
 	</li>

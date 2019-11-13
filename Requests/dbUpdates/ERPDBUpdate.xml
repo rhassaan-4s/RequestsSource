@@ -15953,4 +15953,32 @@ INSERT INTO i18n_message VALUES (20211639, 'Enabling Annual Vacations Balance', 
 INSERT INTO i18n_message VALUES (20211640,'ضبط ال Triggers', 101414, 1);&#xD;
 INSERT INTO i18n_message VALUES (20211641, 'Triggers Initiation', 101414, 3);</statment></query><query><sqlindex>108</sqlindex><statment>INSERT INTO SECURITY_FIELDS VALUES (1021,'page_commons_settings', NULL, 3, NULL);</statment></query><query><sqlindex>109</sqlindex><statment>INSERT INTO SECURITY_PERMISSIONS (ID, PERMESSIONNAME, SELECTED, FIELDID,PERMISSIONDESCRIPTION ) VALUES (1036, 'CAN_UPDATE_settings', 1, 1021, NULL);&#xD;
 INSERT INTO SECURITY_ROLE_PERMISSIONS VALUES (5,1036);</statment></query><query><sqlindex>110</sqlindex><statment>INSERT INTO SECURITY_ROLES (ID, ROLENAME, APPLICATION, DEFAULTPAGE)  VALUES(6, 'Admin', 3, '/Requests/requestsApproval/welcome.html');&#xD;
-</statment></query><query><sqlindex>111</sqlindex><statment>UPDATE SECURITY_ROLE_PERMISSIONS SET  ROLE=6 WHERE PERMISSION=1036;</statment></query></SQL>
+</statment></query><query><sqlindex>111</sqlindex><statment>UPDATE SECURITY_ROLE_PERMISSIONS SET  ROLE=6 WHERE PERMISSION=1036;</statment></query><query><sqlindex>112</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101415, 'commons.caption.salaryFromDay', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211642,'بداية شهر المرتب من يوم', 101415, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211643, '’Month Salary Starts on ', 101415, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101416, 'commons.caption.requestsDeadline', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211644,'الحد الاقصى لتأخير ادخال الطلب (ساعة)', 101416, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211645, 'Max Allowed hours for late request entering', 101416, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101417, 'commons.caption.mailMgr', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211646,'البريد الاليكتروني المسؤول عن الاشعارات', 101417, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211647, 'Email address responsible for notifications', 101417, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101418, 'commons.caption.mailPass', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211648,'كلمة السر الخاصة بالبريد الاليكتروني', 101418, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211649, 'Password of email address account', 101418, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101419, 'commons.caption.SMTPServer', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211650,'سيرفر ارسال الاشعارات', 101419, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211651, 'Notifications sending server', 101419, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101420, 'commons.caption.portServer', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116352,'بورت سيرفر الارسال', 101420, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211653, 'Sender Server Port', 101420, 3);</statment></query><query><sqlindex>113</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101421, 'commons.caption.serverSettings', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116354,'اعدادات سيرفر الداتابيز', 101421, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211655, 'DB Server Settings', 101421, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101422, 'commons.caption.server', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116356,'سيرفر IP', 101422, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211657, 'Server IP', 101422, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101423, 'commons.caption.service', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116358,'اوراكل سيرفيس', 101423, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211659, 'Oracle Service', 101423, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101424, 'commons.caption.loginUrl', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116360,'رابط الدخول للبرنامج', 101424, 1);&#xD;
+INSERT INTO i18n_message VALUES (20211661, 'Application Login URL', 101424, 3);</statment></query></SQL>

@@ -26,6 +26,7 @@ import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.common.model.Flag;
 import com._4s_.common.model.LastSequence;
+import com._4s_.common.model.Settings;
 import com._4s_.common.service.CommonManager;
 
 public class UpdateTriggers implements Controller {
@@ -72,6 +73,9 @@ public class UpdateTriggers implements Controller {
 
             JdbcTemplate jt = new JdbcTemplate(dataSource);
 
+            Settings settings = (Settings)comMger.getObject(Settings.class, new Long(1));
+            String schema = settings.getUsername().toUpperCase();
+            log.debug("schema " + schema);
 //            LastSequence seq= comMger.getSequenceByClassName("QueryIndex");
 //            Long oldIndex=seq.getClassSequence();
 //            log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>oldIndex " +oldIndex);
@@ -95,30 +99,58 @@ public class UpdateTriggers implements Controller {
         			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>blockIndex "+blockIndex);
         			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>before executing");
         			totalNumber++;
-        			StringTokenizer tokenizer = new StringTokenizer(queryBlock, ";");
+//        			StringTokenizer tokenizer = new StringTokenizer(queryBlock, ";");
         			
+        			qry = queryBlock;
+    				qry = StringUtils.trim(qry);
+    				if (qry.contains("TRANSEMPBASIC")) {
+    					qry=qry.replace("TRANSEMPBASIC", "\""+schema+"\".TRANSEMPBASIC2");
+    				}
+    				if (qry.contains("UPDATE_TRANS_CODE")) {
+    					qry=qry.replace("UPDATE_TRANS_CODE", "\""+schema+"\".UPDATE_TRANS_CODE");
+    				}
+    				log.debug("qry " +qry);
         			
 //        			jt.execute("start transaction");
-        			while (tokenizer.hasMoreTokens()) { //for all statements in the Block
-        				qry = tokenizer.nextToken();
-        				qry = StringUtils.trim(qry);
+//        			while (tokenizer.hasMoreTokens()) { //for all statements in the Block
+        				
         				try{
         					if (qry != null && qry.length() != 0){
         						jt.execute(qry);
+        						log.debug("qry successfully excecuted");
         					}
         				}catch (Exception ec) {
+        					if (qry.contains("TRANSEMPBASIC")) {
+        						try {
+									jt.execute("DROP TIGGER "+schema+".TRANSEMPBASIC");
+									jt.execute(qry);
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+        					}
+        					if (qry.contains("UPDATE_TRANS_CODE")) {
+        						try {
+									jt.execute("DROP TIGGER "+schema+".UPDATE_TRANS_CODE");
+									jt.execute(qry);
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+        					}
                     		noErrors=false;
 //                    		TransactionInterceptor.currentTransactionStatus().setRollbackOnly();
             	        	String BadLine="Error in line" + "\n"+qry;
-            				witer.append(BadLine+"\n \t"+ec.getCause()+"\n\n\n\n\n the block:\n"+queryBlock);
+            				witer.append(BadLine+"\n \t"+ec.getCause()+"\n\n\n\n\n the block:\n"+qry);
             				for (int i =0; i<ec.getStackTrace().length; i++) {
             					witer.append("\n"+ec.getStackTrace()[i]);
             				}
 //            				
             				ec.printStackTrace();
+            				
 //            				break; // stop this block
             	       }
-        			}
+//        			}
         			
 //    				if(noErrors) {
 //    					String updateSQL="update  common_last_sequence set classSequence="+blockIndex+" where className='QueryIndex'";

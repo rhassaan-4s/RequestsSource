@@ -25,17 +25,17 @@ public class Settings  implements Serializable,Auditable {
 	private Boolean attendanceRequestEn;
 	private Boolean empRequestCheckDate;
 	private Boolean annualVacBalDaysEnabled;
-	private String server;
-	private String service;
-	private String username;
-	private String password;
+	private String server;//
+	private String service;//
+	private String username;//
+	private String password;//
 	private Boolean addNewData;
 	private Boolean checkPostedRequests;
 	private Boolean empRequestTypeException;
 	private Boolean tAttRepWithHrsMin;
 	private Boolean specialVacExcep;
 	private Boolean creatingMail;
-	private String loginUrl;
+	private String loginUrl;//
 	private Boolean vacLimitProblem;
 	private Boolean vacationRequestExcep;
 	private Boolean reqPeriodDate;
@@ -49,18 +49,18 @@ public class Settings  implements Serializable,Auditable {
 	private Boolean companyRulesEn;
 	private Blob companyLogoHeader;
 	private String companyLogoHeaderName;
-	private Integer maxEmp;
+	private Integer maxEmp;//
 	
-	private String mailMgr;
-	private String mailPass;
-	private String SMTPServer;
-	private String portServer;
+	private String mailMgr;//
+	private String mailPass;//
+	private String SMTPServer;//
+	private String portServer;//
 	
 	private Boolean execuseEnabled;
 
-	private Integer salaryFromDay;
+	private Integer salaryFromDay;//
 	
-	private Integer requestsDeadline;
+	private Integer requestsDeadline;//
 	
 	private Boolean automaticSignInOut;
 	

@@ -44,6 +44,32 @@
 				</td>
 			</tr>
 			
+			
+			<tr>
+				<td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.salaryFromDay" />
+					<fmt:message key="commons.caption.salaryFromDay" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.salaryFromDay">
+						<input type="text" name="${status.expression}" value="${status.value}"/>
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			<tr>
+				<td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.requestsDeadline" />
+					<fmt:message key="commons.caption.requestsDeadline" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.requestsDeadline">
+						<input type="text" name="${status.expression}" value="${status.value}"/>
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			
 			<tr>
 				<td nowrap class="formBodControl" >
 					<abc:i18n property="commons.caption.maxEmpBasic" />
@@ -56,6 +82,7 @@
 				</td>
 				<TD width="50%">&nbsp;</TD>
 			</tr>
+			
 			<tr><td nowrap class="formBodControl" >
 					<abc:i18n property="commons.caption.annualVacBalDaysEnabled" />
 					<fmt:message key="commons.caption.annualVacBalDaysEnabled" />
@@ -63,6 +90,146 @@
 				<td  class="formBod"> 
 					<spring:bind path="settings.annualVacBalDaysEnabled">
 						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			
+	<tr><td nowrap class="formBodControl" >
+					<abc:i18n property="requestsApproval.header.AttendanceRequest" />
+					<fmt:message key="requestsApproval.header.AttendanceRequest" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.attendanceRequestEn">
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			
+	<tr>
+				<td class="tableHeader" height="20"></td>
+			</tr>
+			<tr id="head_1_ep">
+				<td class="bodyBold" colspan=4 nowrap>
+					<abc:i18n property="commons.caption.serverSettings" />
+					<fmt:message key="commons.caption.serverSettings" />
+				</td>
+			</tr>
+			<tr>
+				<td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.server" />
+					<fmt:message key="commons.caption.server" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.server">
+						<input type="text" disabled="disabled" name="${status.expression}" value="${status.value}"/>
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			<tr>
+				<td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.service" />
+					<fmt:message key="commons.caption.service" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.service">
+						<input type="text" disabled="disabled" name="${status.expression}" value="${status.value}"/>
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			<tr>
+				<td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.username" />
+					<fmt:message key="commons.caption.username" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.username">
+						<input type="text" disabled="disabled" name="${status.expression}" value="${status.value}"/>
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			<tr>
+				<td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.password" />
+					<fmt:message key="commons.caption.password" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.password">
+						<input type="text" disabled="disabled" name="${status.expression}" value="${status.value}"/>
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			<tr>
+				<td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.loginUrl" />
+					<fmt:message key="commons.caption.loginUrl" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.loginUrl">
+						<input type="text" disabled="disabled" size="50" name="${status.expression}" value="${status.value}"/>
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			
+			<tr>
+				<td class="tableHeader" height="20"></td>
+			</tr>
+			<tr id="head_1_ep">
+				<td class="bodyBold" colspan=4 nowrap>
+					<abc:i18n property="commons.caption.email" />
+					<fmt:message key="commons.caption.email" />
+				</td>
+			</tr>
+			<tr>
+				<td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.mailMgr" />
+					<fmt:message key="commons.caption.mailMgr" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.mailMgr">
+						<input type="text" name="${status.expression}" value="${status.value}"/>
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			<tr>
+				<td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.mailPass" />
+					<fmt:message key="commons.caption.mailPass" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.mailPass">
+						<input type="text" name="${status.expression}" value="${status.value}"/>
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			<tr>
+				<td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.SMTPServer" />
+					<fmt:message key="commons.caption.SMTPServer" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.SMTPServer">
+						<input type="text" name="${status.expression}" value="${status.value}"/>
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			<tr>
+				<td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.portServer" />
+					<fmt:message key="commons.caption.portServer" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.portServer">
+						<input type="text" name="${status.expression}" value="${status.value}"/>
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
