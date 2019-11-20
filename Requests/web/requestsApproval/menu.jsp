@@ -132,24 +132,31 @@
 	        	<fmt:message key="requestsApproval.header.timeAttendanceReport" />
 	        	</a>
 			</li>
-			
-	         <li>
-	        	<abc:i18n property="requestsApproval.header.annualVacationBalance2" />
-	        	<a href="/Requests/requestsApproval/annualVacationBalance.html"> &nbsp;&nbsp;
-	        	<fmt:message key="requestsApproval.header.annualVacationBalance2" />
-	        	</a>
-			</li> 
-			
-			<%
-				if (settings.getAttendanceRequestEn().equals(new Boolean(true))){ 
-			%>
-			<li>			
-				<abc:i18n property="requestsApproval.header.attendanceVacationReport" />
-	        	<a href="/Requests/requestsApproval/attendanceVacationReport.html"> &nbsp;&nbsp;
-	        	<fmt:message key="requestsApproval.header.attendanceVacationReport" />
-	        	</a>
-			</li> 
-			<% } %>
+
+				<%
+					if (settings.getAnnualVacBalDaysEnabled().equals(new Boolean(true))) {
+				%>
+				<li><abc:i18n
+						property="requestsApproval.header.annualVacationBalance2" /> <a
+					href="/Requests/requestsApproval/annualVacationBalance.html">
+						&nbsp;&nbsp; <fmt:message
+							key="requestsApproval.header.annualVacationBalance2" />
+				</a></li>
+				<%
+					}
+				%>
+				<%
+					if (settings.getAttendanceRequestEn().equals(new Boolean(true))) {
+				%>
+				<li><abc:i18n
+						property="requestsApproval.header.attendanceVacationReport" /> <a
+					href="/Requests/requestsApproval/attendanceVacationReport.html">
+						&nbsp;&nbsp; <fmt:message
+							key="requestsApproval.header.attendanceVacationReport" />
+				</a></li>
+				<%
+					}
+				%>
 			</ul>	
 		
 	</li>

@@ -1445,28 +1445,6 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
 	
        int k=2;
-//		while (tokenizer.hasMoreTokens()){
-//			String id = tokenizer.nextToken();
-//			log.debug("id>>>>>>>>>>>>"+id);
-//			AccreditationApplication application = (AccreditationApplication)getObject(AccreditationApplication.class,new Long(id));
-//	
-//			log.debug("application>>>>>>>>>>>>>"+application);
-//			log.debug("application.getAccreditationApplication()>>>>>"+application.getAccreditationApplication());
-//			HSSFRow row = sheet.createRow((short) k++);
-//			
-//
-//			HSSFCell cell1 = row.createCell((short) 0);
-//			cell1
-//					.setEncoding(org.apache.poi.hssf.usermodel.HSSFCell.ENCODING_UTF_16);
-//			cell1.setCellValue(application
-//					.getApplicant().getArabicFullName());
-//
-//			HSSFCell cell2 = row.createCell((short) 1);
-//			cell2.setEncoding(org.apache.poi.hssf.usermodel.HSSFCell.ENCODING_UTF_16);
-//			cell2.setCellValue( application
-//					.getApplicant().getApplicantNumber());
-//			
-//		}
        
        Iterator itr = results.iterator();
        log.debug("results size " + results.size());
@@ -1490,7 +1468,16 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
     			   cell.setCellValue(msg.getMessage());
     			   log.debug(msg.getMessage());
     		   } else {
-    			   cell.setCellValue(value);
+    			   if (value.contains("\n")) {
+    				   HSSFCellStyle cs = workBook.createCellStyle();  
+    		            cs.setWrapText(true);  
+    		            cell.setCellStyle(cs);  
+    		            row.setHeightInPoints((2*sheet.getDefaultRowHeightInPoints()));  
+    		            sheet.setColumnBreak((new Integer(2)).shortValue()); 
+    		            cell.setCellValue(value);
+    			   } else {
+    				   cell.setCellValue(value);
+    			   }
     			   log.debug(value);
     		   }
     	   }

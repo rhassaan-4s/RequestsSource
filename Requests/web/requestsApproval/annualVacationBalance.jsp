@@ -12,6 +12,14 @@
 <body>
 <abc:security property="1034"/>
 <script type="text/javascript">
+function exportExcel() {
+	//alert("export");
+	var inDate = document.getElementById('inDate').value;
+	var vacType = document.getElementById('vacType').value;
+	var link = 'annualVacationBalance.html?export=true&inDate='+inDate+'&vacType='+vacType;
+	//alert(link);
+	window.open(link);
+}
 function searchForm (){
 //	if(document.getElementById("empCode").value!=null){
 //		var empCode=document.getElementById("empCode").value;
@@ -75,14 +83,6 @@ function printthis(which) {
 	</tr>
 	<tr>
 		<td colspan="2">
-			<spring:bind path="loginUsersRequests.*">
-				<c:if test="${not empty status.errorMessages}">
-					<div><c:forEach var="error" items="${status.errorMessages}">
-						<font color="red"> <c:out value="${error}" escapeXml="false" /><br />
-						</font>
-					</c:forEach></div>
-				</c:if>
-			</spring:bind>
 		</td>
 	</tr>
 	<tr>
@@ -95,6 +95,8 @@ function printthis(which) {
 			<form id="annualVacationBalance" name="annualVacationBalance"	method="POST" action="<c:url value="/requestsApproval/annualVacationBalance.html"/>">
 				   <input type="hidden"  id="empRequestTypeId" name="empRequestTypeId" value="${empRequestTypeId}"/>
 				   <input type="hidden"  id="requestType" name="requestType" value="${requestType}"/>
+				   <input type="hidden"  id="inDate" name="inDate" value="${inDate}"/>
+				   <input type="hidden"  id="vacId" name="vacId" value="${vacId}"/>
 					<div id="result">
 					<table border=0 cellspacing=1 cellpadding=0 id="ep" style="margin-right:40px">
 						<tr id="head_1_ep">
@@ -124,7 +126,7 @@ function printthis(which) {
 								<select name="vacType" id="vacType" value="${vacId}">
 									<option value=""><fmt:message key="commons.caption.select" /></option>						
 										<c:forEach items="${annualVacList}" var="vac">
-											<option value="${vac.vacation}" ${vac.vacation == vacId ?' selected' : ''}">${vac.name}</option>
+											<option value="${vac.vacation}" ${vac.vacation == vacId ? 'selected' : ''}>${vac.name}</option>
 										</c:forEach>
 								</select>
 							</td>													
@@ -201,7 +203,7 @@ function printthis(which) {
 										<td class="helpBod" nowrap>
 											<_4s_:formatMiladiDate value="${inDate}"/>
 										</td>
-										<c:if test="${vacType==null}">
+										<c:if test="${vacType==null || vacType==''}">
 										<td class="helpBod" nowrap>
 											${name1}<br><br>
 											&nbsp; ${name2}
@@ -212,7 +214,7 @@ function printthis(which) {
 										</td>
 										</c:if>
 										
-										<c:if test="${vacType!=null}">
+										<c:if test="${vacType!=null && vacType!=''}">
 										<td class="helpBod" nowrap>
 											${vacType}
 										</td>
@@ -394,11 +396,17 @@ function printthis(which) {
 								</div>
 								<table align="center">
 									<tr>
-										<td colspan="2" align="center">
-											<abc:i18n property="commons.button.print"/>
-											<input type="button" id="btnPrint" class="button" value="<fmt:message key="commons.button.print"/>" onClick="printthis('result')"></input>
-										</td>
-									</tr>
+							<td colspan="2" align="center"><abc:i18n
+									property="commons.button.print" /> <input type="button"
+								id="btnPrint" class="button"
+								value="<fmt:message key="commons.button.print"/>"
+								onClick="printthis('result')"></input></td>
+							<td colspan="2" align="center"><abc:i18n
+									property="commons.button.export" /> <input type="button"
+								id="btnexport" class="button"
+								value="<fmt:message key="commons.button.export"/>"
+								onClick="exportExcel();"></input></td>
+						</tr>
 								</table>					
 			</form>
 		</td>
