@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,15 +16,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
-import com._4s_.requestsApproval.model.LoginUsersRequests;
-import com._4s_.requestsApproval.model.RequestTypes;
-import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 
 public class AttendanceVacationReport implements Controller{
@@ -39,11 +39,14 @@ public class AttendanceVacationReport implements Controller{
 	}
 	
 	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse arg1) throws Exception {
+			HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
 		log.debug("---ref-emp from session---"+request.getSession().getAttribute("employee"));
 		int year, month;
+		List objects= new ArrayList();
+		List days=new ArrayList();
+		
 		Map model=new HashMap();
 		
 
@@ -113,7 +116,7 @@ public class AttendanceVacationReport implements Controller{
 				
 				// VIP
 				List totalObjects= new ArrayList();
-				List objects= new ArrayList();
+				
 				totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
 				objects=(List) totalObjects.get(0);
 				
@@ -154,7 +157,7 @@ public class AttendanceVacationReport implements Controller{
 				model.put("records", objects);
 				// VIP
 				
-				List days=new ArrayList();
+				
 				days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate);
 				log.debug("-----days 001 ---"+days.size());
 				model.put("days1", days);
@@ -164,6 +167,97 @@ public class AttendanceVacationReport implements Controller{
 //				model.put("days2", days);
 				
 			}
+		}
+		String exportParameter = (String)request.getParameter("export");
+		if (exportParameter!=null && exportParameter.equals("true")) {
+			List tableTitle = new ArrayList();
+
+			tableTitle.add("requestsApproval.caption.userCode");
+			tableTitle.add("requestsApproval.caption.userName");
+			tableTitle.add("requestsApproval.caption.date");
+			tableTitle.add("commons.caption.date");
+			tableTitle.add("requestsApproval.caption.in");
+			tableTitle.add("requestsApproval.caption.out");
+
+			List results = new ArrayList();
+			
+			Iterator itr = objects.iterator();
+			while(itr.hasNext()) {
+				TimeAttend req = (TimeAttend)itr.next();
+				log.debug("looping attendance");
+				List temp = new ArrayList();
+				temp.add(req.getEmployee());
+				temp.add(req.getEmpName());
+				temp.add(req.getDayString());
+				temp.add(req.getDay());
+				if (req.getTimeIn() != null ) {
+					temp.add(req.getTimeIn());
+				} else {
+					temp.add("");
+				}
+				if (req.getTimeIn() != null ) {
+					temp.add(req.getTimeIn());
+				} else {
+					temp.add("");
+				}
+
+				log.debug("adding to results");
+				results.add(temp);
+				log.debug("results size " + results.size());
+			}
+			List temp = new ArrayList();
+			temp.add("");
+			temp.add("");
+			temp.add("");
+			temp.add("");
+			temp.add("");
+			temp.add("");
+			results.add(temp);
+			
+			temp = new ArrayList();
+			temp.add("requestsApproval.caption.userCode");
+			temp.add("requestsApproval.caption.userName");
+			temp.add("commons.caption.from");
+			temp.add("commons.caption.to");
+			temp.add("requestsApproval.caption.vacPeriod");
+			temp.add("");
+			results.add(temp);
+			
+			Iterator itr2 = days.iterator();
+			while (itr2.hasNext()) {
+				log.debug("emp vacation start");
+				LinkedHashMap res = (LinkedHashMap)itr2.next();
+				temp = new ArrayList();
+				temp.add(res.get("empCode"));
+				temp.add(res.get("fName"));
+				temp.add(res.get("fr_date"));
+				temp.add(res.get("to_date"));
+				temp.add(res.get("withdr"));
+				temp.add("");
+				log.debug("emp vacation end " + res.get("empCode"));
+				results.add(temp);
+			}
+			Map result = requestsApprovalManager.exportToExcelSheet("requestsApproval.header.attendanceVacationReport", tableTitle, results);
+			//			String title = (String)result.get("title");
+			String title = "AttendanceVacationReport";
+			HSSFWorkbook workBook = (HSSFWorkbook)result.get("workbook");
+			try {
+				response.setHeader("Content-Disposition",
+						"attachment; filename=\""+title+".xls\"");
+				log.debug(workBook);
+				workBook.write(response.getOutputStream());
+				log.debug(response);
+				response.getOutputStream().flush();
+				response.getOutputStream().close();
+				log.debug("Response written");
+			} catch (Exception e) {
+				// TODO: handle exception
+				log.debug("exception " + e);
+				e.printStackTrace();
+			}
+			log.debug("after export to excel");
+			//			return new ModelAndView(new RedirectView("timeAttendanceReport.html"));
+//			return new ModelAndView("attendanceVacationReport",model);
 		}
 		
 		return new ModelAndView("attendanceVacationReport",model);
