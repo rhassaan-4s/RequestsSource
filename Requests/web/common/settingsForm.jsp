@@ -123,7 +123,7 @@
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.server">
-						<input type="text" disabled="disabled" name="${status.expression}" value="${status.value}"/>
+						<input type="text"  name="${status.expression}" value="${status.value}"/>
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
@@ -135,7 +135,7 @@
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.service">
-						<input type="text" disabled="disabled" name="${status.expression}" value="${status.value}"/>
+						<input type="text"  name="${status.expression}" value="${status.value}"/>
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
@@ -147,7 +147,7 @@
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.username">
-						<input type="text" disabled="disabled" name="${status.expression}" value="${status.value}"/>
+						<input type="text" name="${status.expression}" value="${status.value}"/>
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
@@ -159,7 +159,7 @@
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.password">
-						<input type="text" disabled="disabled" name="${status.expression}" value="${status.value}"/>
+						<input type="text" name="${status.expression}" value="${status.value}"/>
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
@@ -171,7 +171,7 @@
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.loginUrl">
-						<input type="text" disabled="disabled" size="50" name="${status.expression}" value="${status.value}"/>
+						<input type="text"  size="50" name="${status.expression}" value="${status.value}"/>
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
