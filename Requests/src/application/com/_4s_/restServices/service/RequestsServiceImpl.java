@@ -103,14 +103,15 @@ public LoginUsersRequests signInOut(AttendanceRequest userRequest,Long empId) {
 
 	DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	Date newDate = null;
-	try {
-		System.out.println("userRequest.getAttendanceTime() " + userRequest.getAttendanceTime());
-		newDate = df.parse(userRequest.getAttendanceTime());
+//	try {
+//		System.out.println("userRequest.getAttendanceTime() " + userRequest.getAttendanceTime());
+//		newDate = df.parse(userRequest.getAttendanceTime());
+		newDate = Calendar.getInstance().getTime();
 		System.out.println("parsed date " + newDate);
-	} catch (ParseException e) {
+//	} catch (ParseException e) {
 		// TODO Auto-generated catch block
-		System.out.println(e.getMessage());
-	}
+//		System.out.println(e.getMessage());
+//	}
 	MultiCalendarDate mCalDate = new MultiCalendarDate();
 	mCalDate.setDate(newDate);
 	
