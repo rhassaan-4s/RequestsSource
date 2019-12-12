@@ -89,4 +89,6 @@ public interface RequestsApprovalDAO extends BaseDAO {
 			Date time_, String trans_type);
 	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 			Employee emp);
+	
+	public Map checkAttendance(Date today, Long empId);
 }

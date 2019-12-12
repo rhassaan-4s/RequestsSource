@@ -1,5 +1,6 @@
 package com._4s_.restServices.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,8 @@ public interface RequestsService {// extends BaseManager {
 	
 	public List getEmpReqTypeAcc(Employee emp,String requestType);
 
+	public Map checkAttendance(Date today, Long empId);
+	
 	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 			Employee employee);
 }

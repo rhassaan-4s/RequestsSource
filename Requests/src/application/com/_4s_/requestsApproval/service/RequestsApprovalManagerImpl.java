@@ -1343,6 +1343,10 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			String trans_type) {
 		return requestsApprovalDAO.insertTimeAttend(hostName, serviceName, userName, password, emp_code, date_, time_, trans_type);
 	}
+	
+	public Map checkAttendance(Date today, Long empId) {
+		return requestsApprovalDAO.checkAttendance(today,empId);
+	}
 
 	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 			Employee emp) {

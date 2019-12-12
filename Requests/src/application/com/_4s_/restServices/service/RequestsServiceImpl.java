@@ -717,6 +717,10 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 
 }
 
+public Map checkAttendance(Date today, Long empId) {
+	Map response = requestsApprovalManager.checkAttendance(today,empId);
+	return response;
+}
 
 public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 		Employee emp) {

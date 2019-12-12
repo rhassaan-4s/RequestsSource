@@ -138,5 +138,7 @@ public interface RequestsApprovalManager extends BaseManager {
 			Employee emp);
 	public List getEmpReqTypeAcc(Employee emp,String requestType);
 	public Map exportToExcelSheet(String reportName, List tableTitle,List results);
+	
+	public Map checkAttendance(Date today, Long empId);
 }
 

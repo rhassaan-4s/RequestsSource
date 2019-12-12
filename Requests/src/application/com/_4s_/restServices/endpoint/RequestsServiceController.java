@@ -1,5 +1,6 @@
 package com._4s_.restServices.endpoint;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,6 +113,23 @@ public class RequestsServiceController {
 		User user = requestsService.getUser(userDet.getUsername());
 		try {
 			Map response = requestsService.userRequest(userRequest,user.getEmployee().getId());
+			return response;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@RequestMapping(value="/checkAttendance", method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON)
+	@ResponseBody
+	public Map checkAttendance()
+	{
+		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDet = (UserDetails)token.getPrincipal();
+		User user = requestsService.getUser(userDet.getUsername());
+		try {
+			Map response = requestsService.checkAttendance(Calendar.getInstance().getTime(),user.getEmployee().getId());
 			return response;
 		} catch (Exception e) {
 			e.printStackTrace();

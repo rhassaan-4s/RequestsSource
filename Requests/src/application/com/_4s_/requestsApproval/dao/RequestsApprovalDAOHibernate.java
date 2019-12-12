@@ -2001,6 +2001,86 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 
+	public Map checkAttendance(Date today, Long empId) {
+
+		Map response = new HashMap();
+		DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
+		RestStatus status = new RestStatus();
+		Date dateToday = null;
+		Date dateToday2 = null;
+
+		Calendar todayCal= Calendar.getInstance();
+		todayCal.setTime(today);
+		todayCal.set(Calendar.HOUR_OF_DAY, 0);
+		todayCal.set(Calendar.MINUTE, 0);
+		todayCal.set(Calendar.SECOND, 0);
+		dateToday=todayCal.getTime();
+		log.debug("------dateFrom---"+dateToday);
+
+		DateFormat format =	new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date sDate =null;
+		if (dateToday != null) {
+			try {
+				sDate = (Date) format.parse(format.format(dateToday));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		Calendar todayCal2= Calendar.getInstance();
+		todayCal2.setTime(today);
+		todayCal2.set(Calendar.HOUR_OF_DAY, 23);
+		todayCal2.set(Calendar.MINUTE, 59);
+		todayCal2.set(Calendar.SECOND, 59);
+		dateToday2=todayCal2.getTime();
+		log.debug("------dateFrom---"+dateToday2);
+		
+		Date eDate = null;
+		if (dateToday2 != null) {
+			try {
+				eDate = (Date)format.parse(format.format(dateToday2));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		log.debug("sDate " + sDate);
+		log.debug("eDate " + eDate);
+		
+		List list =new ArrayList();
+		Criteria criteria = getCurrentSession()
+				.createCriteria(LoginUsersRequests.class);
+	
+			criteria.add(Restrictions.eq("request_id.id", new Long(10)));
+			if (sDate !=null) {
+				final Date startDate =sDate;
+				criteria.add(Expression.ge("period_from", startDate));
+			}
+			if (eDate != null) {
+				final Date endDate = eDate;
+				criteria.add(Expression.le("period_from", endDate));
+			}
+		criteria.addOrder(Property.forName("period_from").desc());
+		criteria
+		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		list = criteria.list();
+		status.setCode("200");
+		status.setMessage("Successful Transaction");
+		status.setStatus("True");
+		response.put("Status", status);
+		
+		if (list.size()>0) {
+			LoginUsersRequests req = (LoginUsersRequests)list.get(0);
+			response.put("Response",format.format(req.getPeriod_from()));
+		}
+		return response;
+	
+	}
+	
+	
+
+
 
 
 
