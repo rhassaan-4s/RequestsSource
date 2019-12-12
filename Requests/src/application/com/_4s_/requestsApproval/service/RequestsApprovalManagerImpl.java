@@ -1344,8 +1344,8 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		return requestsApprovalDAO.insertTimeAttend(hostName, serviceName, userName, password, emp_code, date_, time_, trans_type);
 	}
 	
-	public Map checkAttendance(Date today, Long empId) {
-		return requestsApprovalDAO.checkAttendance(today,empId);
+	public Map checkAttendance(Date today, Long empId, Long reqType) {
+		return requestsApprovalDAO.checkAttendance(today,empId,reqType);
 	}
 
 	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,

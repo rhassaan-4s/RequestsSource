@@ -37,7 +37,7 @@ public interface RequestsService {// extends BaseManager {
 	
 	public List getEmpReqTypeAcc(Employee emp,String requestType);
 
-	public Map checkAttendance(Date today, Long empId);
+	public Map checkAttendance(Date today, Long empId, Long reqType);
 	
 	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 			Employee employee);

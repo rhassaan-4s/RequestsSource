@@ -2001,7 +2001,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 
-	public Map checkAttendance(Date today, Long empId) {
+	public Map checkAttendance(Date today, Long empId, Long reqType) {
 
 		Map response = new HashMap();
 		DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
@@ -2052,7 +2052,18 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		Criteria criteria = getCurrentSession()
 				.createCriteria(LoginUsersRequests.class);
 	
+		if (reqType.equals(new Long(1))) {
 			criteria.add(Restrictions.eq("request_id.id", new Long(10)));
+		} else if (reqType.equals(new Long(2))) {
+			criteria.add(Restrictions.eq("request_id.id", new Long(11)));
+		} else {
+			status.setCode("320");
+			status.setMessage("Incorrect request type " + reqType);
+			status.setStatus("False");
+			response.put("Status", status);
+			response.put("Response", list);
+			return response;
+		}
 			if (sDate !=null) {
 				final Date startDate =sDate;
 				criteria.add(Expression.ge("period_from", startDate));
@@ -2073,6 +2084,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		if (list.size()>0) {
 			LoginUsersRequests req = (LoginUsersRequests)list.get(0);
 			response.put("Response",format.format(req.getPeriod_from()));
+//			response.put("list", list);
 		}
 		return response;
 	
