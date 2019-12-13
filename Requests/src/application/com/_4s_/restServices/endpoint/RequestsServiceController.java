@@ -121,15 +121,15 @@ public class RequestsServiceController {
 	}
 	
 	@RequestMapping(value="/checkAttendance", method=RequestMethod.POST,
-			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+			produces=MediaType.APPLICATION_JSON)
 	@ResponseBody
-	public Map checkAttendance(AttendanceRequest userRequest)
+	public Map checkAttendance()
 	{
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 		UserDetails userDet = (UserDetails)token.getPrincipal();
 		User user = requestsService.getUser(userDet.getUsername());
 		try {
-			Map response = requestsService.checkAttendance(Calendar.getInstance().getTime(),user.getEmployee().getId(),userRequest.getAttendanceType());
+			Map response = requestsService.checkAttendance(Calendar.getInstance().getTime(),user.getEmployee().getId());
 			return response;
 		} catch (Exception e) {
 			e.printStackTrace();

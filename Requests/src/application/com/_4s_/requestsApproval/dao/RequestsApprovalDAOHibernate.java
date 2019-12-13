@@ -52,6 +52,7 @@ import com._4s_.restServices.json.RequestOutput;
 //import com._4s_.stores.model.ViewStoreCardItem;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
+import com._4s_.restServices.model.AttendanceStatus;
 
 @Transactional
 @Repository
@@ -2001,9 +2002,10 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 
-	public Map checkAttendance(Date today, Long empId, Long reqType) {
+	public Map checkAttendance(Date today, Long empId) {
 
 		Map response = new HashMap();
+		AttendanceStatus attStatus = new AttendanceStatus();
 		DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
 		RestStatus status = new RestStatus();
 		Date dateToday = null;
@@ -2051,41 +2053,80 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		List list =new ArrayList();
 		Criteria criteria = getCurrentSession()
 				.createCriteria(LoginUsersRequests.class);
-	
-		if (reqType.equals(new Long(1))) {
-			criteria.add(Restrictions.eq("request_id.id", new Long(10)));
-		} else if (reqType.equals(new Long(2))) {
-			criteria.add(Restrictions.eq("request_id.id", new Long(11)));
+
+		criteria.add(Restrictions.eq("request_id.id", new Long(10)));
+		
+//		if (sDate !=null) {
+			final Date startDate =sDate;
+			criteria.add(Expression.ge("period_from", startDate));
+//		}
+//		if (eDate != null) {
+			final Date endDate = eDate;
+			criteria.add(Expression.le("period_from", endDate));
+//			}
+		criteria.addOrder(Property.forName("period_from").desc());
+		criteria
+		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		
+		list = criteria.list();
+		
+		if (list.size()>0) {
+			LoginUsersRequests req = (LoginUsersRequests)list.get(0);
+			
+			attStatus.setSignIn(new Boolean(true));
+			attStatus.setSignInTime(req.getPeriod_from().getTime());
+			
+			log.debug(req.getId() + " - " + req.getPeriod_from());
+//			response.put("Response",format.format(req.getPeriod_from()));
 		} else {
-			status.setCode("320");
-			status.setMessage("Incorrect request type " + reqType);
-			status.setStatus("False");
-			response.put("Status", status);
-			response.put("Response", list);
-			return response;
+			attStatus.setSignIn(new Boolean(false));
+			attStatus.setSignInTime(null);
 		}
-			if (sDate !=null) {
-				final Date startDate =sDate;
-				criteria.add(Expression.ge("period_from", startDate));
-			}
-			if (eDate != null) {
-				final Date endDate = eDate;
-				criteria.add(Expression.le("period_from", endDate));
-			}
+
+		//////////////////////////////////////
+		
+		list =new ArrayList();
+		criteria = getCurrentSession()
+				.createCriteria(LoginUsersRequests.class);
+	
+		criteria.add(Restrictions.eq("request_id.id", new Long(11)));
+			
+//		if (sDate !=null) {
+			final Date startDate2 =sDate;
+			criteria.add(Expression.ge("period_from", startDate2));
+//		}
+//		if (eDate != null) {
+			final Date endDate2 = eDate;
+			criteria.add(Expression.le("period_from", endDate2));
+//		}
 		criteria.addOrder(Property.forName("period_from").desc());
 		criteria
 		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		list = criteria.list();
+
+		if (list.size()>0) {
+			LoginUsersRequests req = (LoginUsersRequests)list.get(0);
+
+			if (req.getPeriod_to()!=null){
+				attStatus.setSignOut(new Boolean(true));
+				attStatus.setSignOutTime(req.getPeriod_to().getTime());
+				log.debug(req.getId() + " - " +req.getPeriod_to());
+			} else {
+				attStatus.setSignOut(new Boolean(false));
+				attStatus.setSignOutTime(null);
+				log.debug(req.getId() + " - " +req.getPeriod_to());
+			}
+		} else {
+			attStatus.setSignOut(new Boolean(false));
+			attStatus.setSignOutTime(null);
+		}
+		
 		status.setCode("200");
 		status.setMessage("Successful Transaction");
 		status.setStatus("True");
 		response.put("Status", status);
+		response.put("Response", attStatus);
 		
-		if (list.size()>0) {
-			LoginUsersRequests req = (LoginUsersRequests)list.get(0);
-			response.put("Response",format.format(req.getPeriod_from()));
-//			response.put("list", list);
-		}
 		return response;
 	
 	}

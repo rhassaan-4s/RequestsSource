@@ -90,5 +90,5 @@ public interface RequestsApprovalDAO extends BaseDAO {
 	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 			Employee emp);
 	
-	public Map checkAttendance(Date today, Long empId, Long reqType);
+	public Map checkAttendance(Date today, Long empId);
 }
