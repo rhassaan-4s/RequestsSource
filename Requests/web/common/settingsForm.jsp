@@ -234,6 +234,92 @@
 				</td>
 				<TD width="50%">&nbsp;</TD>
 			</tr>
+			
+			
+			<tr>
+				<td class="tableHeader" height="20"></td>
+			</tr>
+			<tr id="head_1_ep">
+				<td class="bodyBold" colspan=4 nowrap>
+					<abc:i18n property="commons.caption.androidSettings" />
+					<fmt:message key="commons.caption.androidSettings" />
+				</td>
+			</tr>
+			<tr>
+				<td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.locationAccuracy" />
+					<fmt:message key="commons.caption.locationAccuracy" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.locationAccuracy">
+						<input type="text" maxlength="3" name="${status.expression}" value="${status.value}"/>
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			
+			<tr><td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.isLocationAccuracyEnabled" />
+					<fmt:message key="commons.caption.isLocationAccuracyEnabled" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.isLocationAccuracyEnabled">
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			
+			<!-- //////////////////////////// -->
+			<tr><td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.showAddressOnForm" />
+					<fmt:message key="commons.caption.showAddressOnForm" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.showAddressOnForm">
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			<tr><td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.showRequestsOnCalendar" />
+					<fmt:message key="commons.caption.showRequestsOnCalendar" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.showRequestsOnCalendar">
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			<tr><td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.errandTimeFromSystem" />
+					<fmt:message key="commons.caption.errandTimeFromSystem" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.errandTimeFromSystem">
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			<tr><td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.obligateNotes" />
+					<fmt:message key="commons.caption.obligateNotes" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.obligateNotes">
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			
+	<tr>
+	
+			
+			
 			<tr>
 				<td class="tableHeader" height="20"></td>
 			</tr>

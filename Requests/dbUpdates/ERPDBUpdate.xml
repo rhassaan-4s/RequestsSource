@@ -15981,4 +15981,30 @@ INSERT INTO i18n_message VALUES (202116358,'اوراكل سيرفيس', 101423, 
 INSERT INTO i18n_message VALUES (20211659, 'Oracle Service', 101423, 3);&#xD;
 INSERT INTO I18N_KEY VALUES (101424, 'commons.caption.loginUrl', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116360,'رابط الدخول للبرنامج', 101424, 1);&#xD;
-INSERT INTO i18n_message VALUES (20211661, 'Application Login URL', 101424, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (20211661, 'Application Login URL', 101424, 3);</statment></query><query><sqlindex>114</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD LOCATIONACCURACY FLOAT;&#xD;
+ALTER TABLE COMMON_SETTINGS ADD ISLOCATIONACCURACYENABLED NUMBER;&#xD;
+ALTER TABLE COMMON_SETTINGS ADD SHOWADDRESSONFORM NUMBER;&#xD;
+ALTER TABLE COMMON_SETTINGS ADD SHOWREQUESTSONCALENDAR NUMBER;&#xD;
+ALTER TABLE COMMON_SETTINGS ADD ERRANDTIMEFROMSYSTEM NUMBER;&#xD;
+ALTER TABLE COMMON_SETTINGS ADD OBLIGATENOTES NUMBER;</statment></query><query><sqlindex>115</sqlindex><statment>update common_settings set locationaccuracy=50, &#xD;
+islocationaccuracyenabled=1, showaddressonform=1, showrequestsoncalendar=0, errandtimefromsystem=1, obligatenotes=1;</statment></query><query><sqlindex>116</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101425, 'commons.caption.androidSettings', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116362,'اعدادات الاندرويد', 101425, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116363, 'Android Settings', 101425, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101426, 'commons.caption.locationAccuracy', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116364,'دقة الموقع', 101426, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116365, 'Location Accuracy', 101426, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101427, 'commons.caption.isLocationAccuracyEnabled', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116366,'تفعيل دقة الموقع', 101427, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116367, 'Enable Location Accuracy', 101427, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101428, 'commons.caption.showAddressOnForm', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116368,'اظهار الموقع الحالي في الطلبات', 101428, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116369, 'Show Current Location in Requests Form', 101428, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101429, 'commons.caption.showRequestsOnCalendar', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116370,'اظهار الطلبات علي النتيجة بالصفحة الرئيسية', 101429, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116371, 'Show Requests in Calendar', 101429, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101430, 'commons.caption.errandTimeFromSystem', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116372,'تفعيل وقت المامؤرية عن طريق المستخدم', 101430, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116373, 'Enable Errand Time from Server Clock', 101430, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101431, 'commons.caption.obligateNotes', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116374,'عدم تنفيذ الطلب بدون ملاحظات', 101431, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116375, 'Mandatory Notes', 101431, 3);</statment></query></SQL>

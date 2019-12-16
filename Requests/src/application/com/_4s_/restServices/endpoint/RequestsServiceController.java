@@ -331,4 +331,13 @@ public class RequestsServiceController {
 		System.out.println("test vac types");
 		return m;
 	}
+	
+	@RequestMapping(value="/getSettings", method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON)
+	@ResponseBody
+	public Map getSettings() {
+		Map m =  requestsService.getSettings();
+		System.out.println("test getSettings");
+		return m;
+	}
 }

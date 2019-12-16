@@ -65,6 +65,24 @@ public class Settings  implements Serializable,Auditable {
 	private Boolean automaticSignInOut;
 	
 	
+	////////////////Android Settings////////////////////
+	
+	private Float locationAccuracy;
+	
+	private Boolean isLocationAccuracyEnabled;
+	
+	private Boolean showAddressOnForm;
+	
+	private Boolean showRequestsOnCalendar;
+	
+	private Boolean errandTimeFromSystem;
+	
+	private Boolean obligateNotes;
+
+	
+	////////////////////////////////////////////////////
+	
+	
 //	mailMgr: Lehaa= ticketmanager@4s-systems.com, Lotus=
 //			mailPass: Lehaa=mgemge, Lotus=
 //			SMTPServer: Lehaa=smtp.tedata.net, Lotus=
@@ -100,8 +118,57 @@ public class Settings  implements Serializable,Auditable {
 
 	
 
+	
 	public Boolean getAutomaticSignInOut() {
 		return automaticSignInOut;
+	}
+
+	public Float getLocationAccuracy() {
+		return locationAccuracy;
+	}
+
+	public void setLocationAccuracy(Float locationAccuracy) {
+		this.locationAccuracy = locationAccuracy;
+	}
+
+	public Boolean getIsLocationAccuracyEnabled() {
+		return isLocationAccuracyEnabled;
+	}
+
+	public void setIsLocationAccuracyEnabled(Boolean isLocationAccuracyEnabled) {
+		this.isLocationAccuracyEnabled = isLocationAccuracyEnabled;
+	}
+
+	public Boolean getShowAddressOnForm() {
+		return showAddressOnForm;
+	}
+
+	public void setShowAddressOnForm(Boolean showAddressOnForm) {
+		this.showAddressOnForm = showAddressOnForm;
+	}
+
+	public Boolean getShowRequestsOnCalendar() {
+		return showRequestsOnCalendar;
+	}
+
+	public void setShowRequestsOnCalendar(Boolean showRequestsOnCalendar) {
+		this.showRequestsOnCalendar = showRequestsOnCalendar;
+	}
+
+	public Boolean getErrandTimeFromSystem() {
+		return errandTimeFromSystem;
+	}
+
+	public void setErrandTimeFromSystem(Boolean errandTimeFromSystem) {
+		this.errandTimeFromSystem = errandTimeFromSystem;
+	}
+
+	public Boolean getObligateNotes() {
+		return obligateNotes;
+	}
+
+	public void setObligateNotes(Boolean obligateNotes) {
+		this.obligateNotes = obligateNotes;
 	}
 
 	public void setAutomaticSignInOut(Boolean automaticSignInOut) {

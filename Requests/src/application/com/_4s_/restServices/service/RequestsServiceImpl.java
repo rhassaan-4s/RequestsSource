@@ -874,6 +874,30 @@ public Map getVacTypes(Long requestType) {
 	return response ;
 }
 
+public Map getSettings() {
+	Map response = new HashMap();
+	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	Map temp = new HashMap();
+	
+	temp.put("locationAccuracy",settings.getLocationAccuracy());
+	temp.put("isLocationAccuracyEnabled", settings.getIsLocationAccuracyEnabled());
+	temp.put("showAddressOnForm", settings.getShowAddressOnForm());
+	temp.put("showRequestsOnCalendar", settings.getShowRequestsOnCalendar());
+	temp.put("errandTimeFromSystem", settings.getErrandTimeFromSystem());
+	temp.put("obligateNotes", settings.getObligateNotes());
+	temp.put("showVacationBalance", settings.getAnnualVacBalDaysEnabled());
+	
+	response.put("Response", temp);
+	RestStatus status = new RestStatus();
+	status.setCode("200");
+	status.setMessage("Success");
+	status.setStatus("true");
+	response.put("Status", status);
+	
+	
+	return response;
+}
+
 
 
 

@@ -41,4 +41,6 @@ public interface RequestsService {// extends BaseManager {
 	
 	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 			Employee employee);
+
+	public Map getSettings();
 }
