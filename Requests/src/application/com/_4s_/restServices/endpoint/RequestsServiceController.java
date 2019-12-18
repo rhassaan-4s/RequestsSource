@@ -129,7 +129,7 @@ public class RequestsServiceController {
 		UserDetails userDet = (UserDetails)token.getPrincipal();
 		User user = requestsService.getUser(userDet.getUsername());
 		try {
-			Map response = requestsService.checkAttendance(Calendar.getInstance().getTime(),user.getEmployee().getId());
+			Map response = requestsService.checkAttendance(Calendar.getInstance().getTime(),user.getEmployee().getEmpCode());
 			return response;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -2002,7 +2002,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 
-	public Map checkAttendance(Date today, Long empId) {
+	public Map checkAttendance(Date today, String empCode) {
 
 		Map response = new HashMap();
 		AttendanceStatus attStatus = new AttendanceStatus();
@@ -2055,6 +2055,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				.createCriteria(LoginUsersRequests.class);
 
 		criteria.add(Restrictions.eq("request_id.id", new Long(10)));
+		criteria.add(Restrictions.eq("empCode", empCode));
 		
 //		if (sDate !=null) {
 			final Date startDate =sDate;
@@ -2090,6 +2091,8 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				.createCriteria(LoginUsersRequests.class);
 	
 		criteria.add(Restrictions.eq("request_id.id", new Long(11)));
+		criteria.add(Restrictions.eq("empCode", empCode));
+		
 			
 //		if (sDate !=null) {
 			final Date startDate2 =sDate;
@@ -2107,14 +2110,14 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		if (list.size()>0) {
 			LoginUsersRequests req = (LoginUsersRequests)list.get(0);
 
-			if (req.getPeriod_to()!=null){
+			if (req.getPeriod_from()!=null){
 				attStatus.setSignOut(new Boolean(true));
-				attStatus.setSignOutTime(req.getPeriod_to().getTime());
-				log.debug(req.getId() + " - " +req.getPeriod_to());
+				attStatus.setSignOutTime(req.getPeriod_from().getTime());
+				log.debug(req.getId() + " - " +req.getPeriod_from());
 			} else {
 				attStatus.setSignOut(new Boolean(false));
 				attStatus.setSignOutTime(null);
-				log.debug(req.getId() + " - " +req.getPeriod_to());
+				log.debug(req.getId() + " - " +req.getPeriod_from());
 			}
 		} else {
 			attStatus.setSignOut(new Boolean(false));

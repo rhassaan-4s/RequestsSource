@@ -718,8 +718,8 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 
 }
 
-public Map checkAttendance(Date today, Long empId) {
-	Map response = requestsApprovalManager.checkAttendance(today,empId);
+public Map checkAttendance(Date today, String empCode) {
+	Map response = requestsApprovalManager.checkAttendance(today,empCode);
 	return response;
 }
 
