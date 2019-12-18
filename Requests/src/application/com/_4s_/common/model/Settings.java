@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -20,6 +22,10 @@ public class Settings  implements Serializable,Auditable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+	
+	@ManyToOne
+	@JoinColumn (name="company")
+	private Company company;
 	
 	private Boolean accessLevelsCheckDate;
 	private Boolean attendanceRequestEn;
@@ -121,6 +127,14 @@ public class Settings  implements Serializable,Auditable {
 	
 	public Boolean getAutomaticSignInOut() {
 		return automaticSignInOut;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 
 	public Float getLocationAccuracy() {

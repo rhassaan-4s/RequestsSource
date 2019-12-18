@@ -2094,17 +2094,12 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		criteria.add(Restrictions.eq("empCode", empCode));
 		
 			
-//		if (sDate !=null) {
-			final Date startDate2 =sDate;
-			criteria.add(Expression.ge("period_from", startDate2));
-//		}
-//		if (eDate != null) {
-			final Date endDate2 = eDate;
-			criteria.add(Expression.le("period_from", endDate2));
-//		}
+		final Date startDate2 =sDate;
+		criteria.add(Expression.ge("period_from", startDate2));
+		final Date endDate2 = eDate;
+		criteria.add(Expression.le("period_from", endDate2));
 		criteria.addOrder(Property.forName("period_from").desc());
-		criteria
-		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		list = criteria.list();
 
 		if (list.size()>0) {

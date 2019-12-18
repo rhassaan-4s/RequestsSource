@@ -44,6 +44,18 @@
 				</td>
 			</tr>
 			
+			<tr>
+				<td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.company" />
+					<fmt:message key="commons.caption.company" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.company.description">
+						<input type="text" name="${status.expression}" value="${status.value}"/>
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
 			
 			<tr>
 				<td nowrap class="formBodControl" >

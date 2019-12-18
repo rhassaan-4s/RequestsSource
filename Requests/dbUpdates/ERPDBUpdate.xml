@@ -16009,4 +16009,4 @@ INSERT INTO I18N_KEY VALUES (101431, 'commons.caption.obligateNotes', NULL);&#xD
 INSERT INTO i18n_message VALUES (202116374,'عدم تنفيذ الطلب بدون ملاحظات', 101431, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116375, 'Mandatory Notes', 101431, 3);</statment></query><query><sqlindex>117</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101432, 'requestsApproval.button.approveAll', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116376,'موافقة للكل', 101432, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116377, 'Approve All', 101432, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116377, 'Approve All', 101432, 3);</statment></query><query><sqlindex>118</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD COMPANY NUMBER;</statment></query><query><sqlindex>119</sqlindex><statment>update common_settings set company=1;</statment></query></SQL>
