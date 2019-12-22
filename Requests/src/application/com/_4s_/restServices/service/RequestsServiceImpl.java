@@ -37,6 +37,7 @@ import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
+import com._4s_.restServices.model.AttendanceStatus;
 import com._4s_.security.dao.MySecurityDAO;
 import com._4s_.security.model.User;
 //import com.javacodegeeks.gwtspring.server.utils.NotificationsProducer;
@@ -472,6 +473,40 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 			vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class,"vacation", "999");
 			System.out.println(" reqType " + reqType.getId());
 			
+			///////////////////////////Full day errand validations///////////////////////////////////////////////
+			Map att = checkAttendance(mCalDate.getDate(), emp.getEmpCode());
+			AttendanceStatus attendanceResponse = (AttendanceStatus)att.get("Response");
+			System.out.println("attendance status response " + attendanceResponse);
+			RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
+			requestQuery.setDateFrom(userRequest.getAttendanceTime());
+			requestQuery.setDateTo(userRequest.getAttendanceTime2());
+			System.out.println("attendanceResponse.getSignIn() " + attendanceResponse.getSignIn());
+			Map checkStartedMap = checkStartedRequests(requestQuery, emp);
+			System.out.println("after checking started requests " + checkStartedMap);
+			List startedRequests = (List)checkStartedMap.get("Response");
+			System.out.println("after checking started requests 2" + startedRequests);
+			
+			if (attendanceResponse!=null && attendanceResponse.getSignIn()!=null && attendanceResponse.getSignIn().equals(new Boolean(true))) {
+				// check attendance on this day//
+
+				System.out.println("attendance status response " + attendanceResponse.getSignIn());
+				
+				status.setCode("322");
+				status.setMessage("User Signed In Already on the specified date, full day errand is not allowed.");
+				status.setStatus("False");
+				response.put("Status", status);
+				return response;
+				
+				////////////////////////////////
+			} else if (startedRequests != null && startedRequests.size() > 0) {
+				status.setCode("322");
+				status.setMessage("Another request is made already on the specified date, full day errand is not allowed.");
+				status.setStatus("False");
+				response.put("Status", status);
+				return response;
+			}
+			////////////////////////////////////////////////////////////////////////////////////////////////////
+			
 		} else {
 			System.out.println("userRequest.getAttendanceType() " + userRequest.getAttendanceType().getClass());
 		}
@@ -726,7 +761,9 @@ public Map checkAttendance(Date today, String empCode) {
 public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 		Employee emp) {
 	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+	System.out.println("logged in user " + loggedInUser);
 	Map response = requestsApprovalManager.checkStartedRequests(requestQuery,emp);
+	System.out.println("response " + response);
 	return response;
 }
 

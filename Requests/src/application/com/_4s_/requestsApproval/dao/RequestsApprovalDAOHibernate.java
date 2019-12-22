@@ -1883,14 +1883,22 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 			Employee emp) {
+		log.debug("inside checkStartedRequests dao");
 		Map response = new HashMap();
 		DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
 		RestStatus status = new RestStatus();
-		Long requestType =  Long.parseLong(requestQuery.getRequestType());
+		log.debug("requestQuery.getRequestType() " +requestQuery.getRequestType());
+		Long requestType = null;
+		if (requestQuery.getRequestType()!=null && !requestQuery.getRequestType().isEmpty()) {
+			requestType =  Long.parseLong(requestQuery.getRequestType());
+		} 
+		log.debug("inside checkStartedRequests dao request type " + requestType);
 		Date dateFrom = null;
 		Date dateTo = null;
 		
+		log.debug("inside checkStartedRequests");
 		Date newDate1 = null;
+		log.debug(requestQuery.getDateFrom());
 		if (requestQuery.getDateFrom()!=null && !requestQuery.getDateFrom().isEmpty()) {
 			try {
 				newDate1 = df.parse(requestQuery.getDateFrom());
@@ -1913,6 +1921,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			log.debug("------dateFrom---"+dateFrom);
 		}
 		Date newDate2 = null;
+		log.debug(requestQuery.getDateTo());
 		if (requestQuery.getDateTo()!=null && !requestQuery.getDateTo().isEmpty()) {
 			try {
 				newDate2 = df.parse(requestQuery.getDateTo());
@@ -1964,30 +1973,29 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		criteria.add(Expression.isNull("period_to"));
 		
 		log.debug("request type " + requestType);
-		if (requestType.equals(new Long(1))){
+		if (requestType== null){
+			criteria.add(Restrictions.or(
+					Restrictions.eq("request_id.id", new Long(3)),
+					Restrictions.and(
+							Restrictions.eq("request_id.id", new Long(1)), 
+							Restrictions.eq("vacation.vacation", "999"))
+					));
+		} else if (requestType.equals(new Long(1))){
 			log.debug("request type " + requestType);
 			criteria.add(Restrictions.eq("request_id.id", new Long(3)));
-			if (sDate !=null) {
-				final Date startDate =sDate;
-				criteria.add(Expression.ge("period_from", startDate));
-			}
-			if (eDate != null) {
-				final Date endDate = eDate;
-				criteria.add(Expression.le("period_from", endDate));
-			}
 		} else if (requestType.equals(new Long(2))){
 			log.debug("request type " + requestType);
 			criteria.add(Restrictions.eq("request_id.id", new Long(1)));
 			criteria.createCriteria("vacation").add(Restrictions.eq("vacation", "999"));
-			if (sDate !=null) {
-				final Date startDate =sDate;
-				criteria.add(Expression.ge("period_from", startDate));
-			}
-			if (eDate != null) {
-				final Date endDate = eDate;
-				criteria.add(Expression.le("period_from", endDate));
-			}
 		} 
+		if (sDate !=null) {
+			final Date startDate =sDate;
+			criteria.add(Expression.ge("period_from", startDate));
+		}
+		if (eDate != null) {
+			final Date endDate = eDate;
+			criteria.add(Expression.le("period_from", endDate));
+		}
 		criteria.add(Restrictions.eq("empCode", emp.getEmpCode()));
 		criteria.addOrder(Property.forName("period_from").desc());
 		criteria

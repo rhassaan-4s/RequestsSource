@@ -1350,6 +1350,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
 	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 			Employee emp) {
+		log.debug("inside checkStartedRequests service");
 		return requestsApprovalDAO.checkStartedRequests(requestQuery,emp);
 	}
 	
