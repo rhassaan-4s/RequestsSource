@@ -16009,4 +16009,11 @@ INSERT INTO I18N_KEY VALUES (101431, 'commons.caption.obligateNotes', NULL);&#xD
 INSERT INTO i18n_message VALUES (202116374,'عدم تنفيذ الطلب بدون ملاحظات', 101431, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116375, 'Mandatory Notes', 101431, 3);</statment></query><query><sqlindex>117</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101432, 'requestsApproval.button.approveAll', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116376,'موافقة للكل', 101432, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116377, 'Approve All', 101432, 3);</statment></query><query><sqlindex>118</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD COMPANY NUMBER;</statment></query><query><sqlindex>119</sqlindex><statment>update common_settings set company=1;</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116377, 'Approve All', 101432, 3);</statment></query><query><sqlindex>118</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD COMPANY NUMBER;</statment></query><query><sqlindex>119</sqlindex><statment>update common_settings set company=1;</statment></query><query><sqlindex>120</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101433, 'requestsApproval.errors.fullDayErrandIsNotAllowedToday', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116378,'لا يمكن تسجيل مأمورية يوم كامل اليوم، تم تسجيل طلب اخر في نفس اليوم', 101433, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116379, 'Another request is made already on the specified date, full day errand is not allowed', 101433, 3);</statment></query><query><sqlindex>121</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101434,'requestsApproval.errors.endStartedRequestsInDateIntervalSpecified', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116380,'برجاء انهاء الطلبات المفتوحة للفترة المحددة في الطلب', 101434, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116381, 'Please end started requests in date interval specified', 101434, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101435,'requestsApproval.errors.overlappingRequests', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116382,'يوجد طلب في فترة زمانية متداخلة مع طلبك', 101435, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116383, 'Another request is overlapping with the specified period', 101435, 3);</statment></query></SQL>

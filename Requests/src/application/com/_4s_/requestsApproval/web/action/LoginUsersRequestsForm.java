@@ -6,15 +6,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.mail.*;
-import javax.mail.internet.*;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -951,12 +951,38 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 
 						System.out.println("attendance status response " + attendanceResponse.getSignIn());
 
-						errors.rejectValue("request_id","User Signed In Already on the specified date, full day errand is not allowed.","User Signed In Already on the specified date, full day errand is not allowed.");
+						errors.rejectValue("request_id","requestsApproval.errors.fullDayErrandIsNotAllowedToday","User Signed In Already on the specified date, full day errand is not allowed.");
 
 						////////////////////////////////
 					} else if (startedRequests != null && startedRequests.size() > 0) {
-						errors.rejectValue("request_id","Another request is made already on the specified date, full day errand is not allowed.","Another request is made already on the specified date, full day errand is not allowed.");
+						errors.rejectValue("request_id","requestsApproval.errors.fullDayErrandIsNotAllowedToday","Another request is made already on the specified date, full day errand is not allowed.");
 					}
+				} else {
+					//if not full day errand check requests overlapping/////////////////
+					////////////////////////////////////1///////////////////////////////
+					//Signing in ///////////////////////////////////////////////////////
+					////////////////////////////////////////////////////////////////////
+//					if(loginUsersRequests.getRequest_id().getId().equals(new Long(10))) {
+					Calendar temp = Calendar.getInstance();
+					temp.setTime(loginUsersRequests.getPeriod_from());
+					
+						List requests = requestsApprovalManager.getRequestsByExactDatePeriodAndEmpCode(loginUsersRequests.getPeriod_from(), loginUsersRequests.getPeriod_to(), loginUsersRequests.getEmpCode());
+						if (requests.size() >0) {
+							Iterator reqItr = requests.iterator();
+							while (reqItr.hasNext()) {
+								LoginUsersRequests req = (LoginUsersRequests)reqItr.next();
+								if (req.getPeriod_to() == null) {
+									errors.rejectValue("request_id","requestsApproval.errors.endStartedRequestsInDateIntervalSpecified");
+								} else {
+									if (req.getPeriod_to().compareTo(loginUsersRequests.getPeriod_from()) > 0) {
+										errors.rejectValue("request_id","requestsApproval.errors.overlappingRequests");
+									}
+								}
+							}
+						}
+						
+//					}
+					///////////////////////////////////////////////////////////////////
 				}
 			}
 		}
