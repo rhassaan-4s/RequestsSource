@@ -41,6 +41,8 @@ import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
+import com._4s_.restServices.json.RequestsApprovalQuery;
+import com._4s_.restServices.model.AttendanceStatus;
 
 public class LoginUsersRequestsForm extends BaseSimpleFormController{
 
@@ -648,6 +650,9 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		String annVacation = request.getParameter("annualVacation");
 		log.debug("-----annVacation entered--------"+annVacation);
 		
+		RequestTypes reqType = (RequestTypes)requestsApprovalManager.getObject(RequestTypes.class, new Long(1));
+		Vacation vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class,"vacation", "999");
+		
 		if (annVacation != null && !annVacation.isEmpty()) {
 			if (loginUsersRequests.getVacCredit()!=null && loginUsersRequests.getVacCredit() == 0) {
 				errors.rejectValue("empCode", "requestsApproval.errors.zerovacationcredit");
@@ -914,6 +919,43 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 				if(notesValidation==true){
 					if(loginUsersRequests.getNotes().equals("") || loginUsersRequests.getNotes()==null){
 						errors.rejectValue("notes", "commons.errors.requiredFields");
+					}
+				}
+				
+
+				log.debug("loginUsersRequests.getRequest_id() " + loginUsersRequests.getRequest_id().getId());
+				if (loginUsersRequests.getRequest_id().getId().equals(new Long(4))) {
+					
+					//check if full day errand
+					
+					
+					String perFrom=loginUsersRequests.getPeriod_from()+"";
+					String perTo=loginUsersRequests.getPeriod_to()+"";
+
+					Map att = requestsApprovalManager.checkAttendance(loginUsersRequests.getPeriod_from(), loginUsersRequests.getEmpCode());
+					AttendanceStatus attendanceResponse = (AttendanceStatus)att.get("Response");
+					System.out.println("attendance status response " + attendanceResponse);
+					RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
+					requestQuery.setDateFrom(perFrom);
+					requestQuery.setDateTo(perTo);
+					System.out.println("attendanceResponse.getSignIn() " + attendanceResponse.getSignIn());
+
+					Employee e = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", loginUsersRequests.getEmpCode());
+					Map checkStartedMap = requestsApprovalManager.checkStartedRequests(requestQuery, e);
+					System.out.println("after checking started requests " + checkStartedMap);
+					List startedRequests = (List)checkStartedMap.get("Response");
+					System.out.println("after checking started requests 2" + startedRequests);
+
+					if (attendanceResponse!=null && attendanceResponse.getSignIn()!=null && attendanceResponse.getSignIn().equals(new Boolean(true))) {
+						// check attendance on this day//
+
+						System.out.println("attendance status response " + attendanceResponse.getSignIn());
+
+						errors.rejectValue("request_id","User Signed In Already on the specified date, full day errand is not allowed.","User Signed In Already on the specified date, full day errand is not allowed.");
+
+						////////////////////////////////
+					} else if (startedRequests != null && startedRequests.size() > 0) {
+						errors.rejectValue("request_id","Another request is made already on the specified date, full day errand is not allowed.","Another request is made already on the specified date, full day errand is not allowed.");
 					}
 				}
 			}
