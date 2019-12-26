@@ -350,6 +350,9 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	Map response = new HashMap();
 	RestStatus status = new RestStatus();
 	
+	 Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class, new Long(1));
+	 boolean automaticRequestsValidation = settings.getAutomaticRequestsValidation();
+	 
 	if (userRequest.getAttendanceType()==null || userRequest.getAttendanceTime() == null 
 			||(userRequest.getAttendanceType().equals(new Long(9)) && (userRequest.getAttendanceTime2() == null ||userRequest.getAttendanceTime2() == null))
 			|| userRequest.getAttendanceTime().isEmpty()|| userRequest.getLatitude()==null || userRequest.getLongitude()==null){
@@ -472,41 +475,6 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(1));
 			vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class,"vacation", "999");
 			System.out.println(" reqType " + reqType.getId());
-			
-			///////////////////////////Full day errand validations///////////////////////////////////////////////
-			Map att = checkAttendance(mCalDate.getDate(), emp.getEmpCode());
-			AttendanceStatus attendanceResponse = (AttendanceStatus)att.get("Response");
-			System.out.println("attendance status response " + attendanceResponse);
-			RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
-			requestQuery.setDateFrom(userRequest.getAttendanceTime());
-			requestQuery.setDateTo(userRequest.getAttendanceTime2());
-			System.out.println("attendanceResponse.getSignIn() " + attendanceResponse.getSignIn());
-			Map checkStartedMap = checkStartedRequests(requestQuery, emp);
-			System.out.println("after checking started requests " + checkStartedMap);
-			List startedRequests = (List)checkStartedMap.get("Response");
-			System.out.println("after checking started requests 2" + startedRequests);
-			
-			if (attendanceResponse!=null && attendanceResponse.getSignIn()!=null && attendanceResponse.getSignIn().equals(new Boolean(true))) {
-				// check attendance on this day//
-
-				System.out.println("attendance status response " + attendanceResponse.getSignIn());
-				
-				status.setCode("322");
-				status.setMessage("User Signed In Already on the specified date, full day errand is not allowed.");
-				status.setStatus("False");
-				response.put("Status", status);
-				return response;
-				
-				////////////////////////////////
-			} else if (startedRequests != null && startedRequests.size() > 0) {
-				status.setCode("322");
-				status.setMessage("Another request is made already on the specified date, full day errand is not allowed.");
-				status.setStatus("False");
-				response.put("Status", status);
-				return response;
-			}
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-			
 		} else {
 			System.out.println("userRequest.getAttendanceType() " + userRequest.getAttendanceType().getClass());
 		}
@@ -519,6 +487,78 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				return response;
 			}
 		}
+		
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////
+		if (automaticRequestsValidation==true) {
+			if (userRequest.getAttendanceType().equals(new Long(9))) {
+				///////////////////////////Full day errand validations///////////////////////////////////////////////
+				Map att = checkAttendance(mCalDate.getDate(), emp.getEmpCode());
+				AttendanceStatus attendanceResponse = (AttendanceStatus)att.get("Response");
+				System.out.println("attendance status response " + attendanceResponse);
+				RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
+				requestQuery.setDateFrom(userRequest.getAttendanceTime());
+				requestQuery.setDateTo(userRequest.getAttendanceTime2());
+				System.out.println("attendanceResponse.getSignIn() " + attendanceResponse.getSignIn());
+				Map checkStartedMap = checkStartedRequests(requestQuery, emp);
+				System.out.println("after checking started requests " + checkStartedMap);
+				List startedRequests = (List)checkStartedMap.get("Response");
+				System.out.println("after checking started requests 2" + startedRequests);
+
+				if (attendanceResponse!=null && attendanceResponse.getSignIn()!=null && attendanceResponse.getSignIn().equals(new Boolean(true))) {
+					// check attendance on this day//
+
+					System.out.println("attendance status response " + attendanceResponse.getSignIn());
+
+					status.setCode("322");
+					status.setMessage("User Signed In Already on the specified date, full day errand is not allowed.");
+					status.setStatus("False");
+					response.put("Status", status);
+					return response;
+
+					////////////////////////////////
+				} else if (startedRequests != null && startedRequests.size() > 0) {
+					status.setCode("322");
+					status.setMessage("Another request is made already on the specified date, full day errand is not allowed.");
+					status.setStatus("False");
+					response.put("Status", status);
+					return response;
+				}
+				////////////////////////////////////////////////////////////////////////////////////////////////////
+			} else {
+				//if not full day errand check requests overlapping/////////////////
+				////////////////////////////////////1///////////////////////////////
+				//Signing in ///////////////////////////////////////////////////////
+				////////////////////////////////////////////////////////////////////
+				//					if(loginUsersRequests.getRequest_id().getId().equals(new Long(10))) {
+				Calendar temp = Calendar.getInstance();
+				temp.setTime(loginUsersRequests.getPeriod_from());
+
+				List requests = requestsApprovalManager.getRequestsByExactDatePeriodAndEmpCode(loginUsersRequests.getPeriod_from(), loginUsersRequests.getPeriod_to(), loginUsersRequests.getEmpCode());
+				if (requests.size() >0) {
+					Iterator reqItr = requests.iterator();
+					while (reqItr.hasNext()) {
+						LoginUsersRequests req = (LoginUsersRequests)reqItr.next();
+						if (req.getPeriod_to() == null) {
+							status.setCode("323");
+							status.setMessage("Please finish your started requests during the same time interval specified");
+							status.setStatus("False");
+							response.put("Status", status);
+							return response;
+						} else {
+							if (req.getPeriod_to().compareTo(loginUsersRequests.getPeriod_from()) > 0) {
+								status.setCode("324");
+								status.setMessage("The specified time interval is specifing with one of your requests");
+								status.setStatus("False");
+								response.put("Status", status);
+								return response;
+							}
+						}
+					}
+				}
+			}
+		}
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
 //		System.out.println("mCalDate " + mCalDate);
 		System.out.println("mCalDate.getDate() " + mCalDate.getDate());
 		if (userRequest.getAttendanceType().equals(new Long(4)) || userRequest.getAttendanceType().equals(new Long(6))
@@ -693,7 +733,6 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 //		}
 
 
-		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class, new Long(1));
 		if(settings.getVacationRequestExcep()==false){
 			if(loginUsersRequests!=null && !loginUsersRequests.equals("")){
 				if(loginUsersRequests.getId()!=null && !loginUsersRequests.getId().equals("")){

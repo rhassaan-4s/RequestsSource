@@ -119,6 +119,18 @@
 				<TD width="50%">&nbsp;</TD>
 			</tr>
 			
+			<tr><td nowrap class="formBodControl" >
+					<abc:i18n property="requestsApproval.header.automaticValidation" />
+					<fmt:message key="requestsApproval.header.automaticValidation" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.automaticRequestsValidation">
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			
 	<tr>
 				<td class="tableHeader" height="20"></td>
 			</tr>

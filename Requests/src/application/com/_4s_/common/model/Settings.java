@@ -85,6 +85,8 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Boolean obligateNotes;
 
+	private boolean automaticRequestsValidation;
+
 	
 	////////////////////////////////////////////////////
 	
@@ -520,6 +522,14 @@ public class Settings  implements Serializable,Auditable {
 	public String getEntityDisplayName() {
 		
 		return "Application Settings";
+	}
+
+	public boolean getAutomaticRequestsValidation() {
+		return this.automaticRequestsValidation;
+	}
+
+	public void setAutomaticRequestsValidation(boolean automaticRequestsValidation) {
+		this.automaticRequestsValidation = automaticRequestsValidation;
 	}
 
 	

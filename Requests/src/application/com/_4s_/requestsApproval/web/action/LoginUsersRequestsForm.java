@@ -590,6 +590,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		boolean withoutSalPeriodValidation = settings.getWithoutSalPeriodValidation();
 		boolean notesValidation = settings.getNotesValidation();
 		boolean fromToRequestVald = settings.getFromToRequestVald();
+		boolean automaticRequestsValidation = settings.getAutomaticRequestsValidation();
 		
 	
 		String withdrawDays=request.getParameter("withdrawDays");
@@ -923,49 +924,50 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 				}
 				
 
-				log.debug("loginUsersRequests.getRequest_id() " + loginUsersRequests.getRequest_id().getId());
-				if (loginUsersRequests.getRequest_id().getId().equals(new Long(4))) {
-					
-					//check if full day errand
-					
-					
-					String perFrom=loginUsersRequests.getPeriod_from()+"";
-					String perTo=loginUsersRequests.getPeriod_to()+"";
+				if (automaticRequestsValidation==true) {
+					log.debug("loginUsersRequests.getRequest_id() " + loginUsersRequests.getRequest_id().getId());
+					if (loginUsersRequests.getRequest_id().getId().equals(new Long(4))) {
 
-					Map att = requestsApprovalManager.checkAttendance(loginUsersRequests.getPeriod_from(), loginUsersRequests.getEmpCode());
-					AttendanceStatus attendanceResponse = (AttendanceStatus)att.get("Response");
-					System.out.println("attendance status response " + attendanceResponse);
-					RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
-					requestQuery.setDateFrom(perFrom);
-					requestQuery.setDateTo(perTo);
-					System.out.println("attendanceResponse.getSignIn() " + attendanceResponse.getSignIn());
+						//check if full day errand
 
-					Employee e = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", loginUsersRequests.getEmpCode());
-					Map checkStartedMap = requestsApprovalManager.checkStartedRequests(requestQuery, e);
-					System.out.println("after checking started requests " + checkStartedMap);
-					List startedRequests = (List)checkStartedMap.get("Response");
-					System.out.println("after checking started requests 2" + startedRequests);
 
-					if (attendanceResponse!=null && attendanceResponse.getSignIn()!=null && attendanceResponse.getSignIn().equals(new Boolean(true))) {
-						// check attendance on this day//
+						String perFrom=loginUsersRequests.getPeriod_from()+"";
+						String perTo=loginUsersRequests.getPeriod_to()+"";
 
-						System.out.println("attendance status response " + attendanceResponse.getSignIn());
+						Map att = requestsApprovalManager.checkAttendance(loginUsersRequests.getPeriod_from(), loginUsersRequests.getEmpCode());
+						AttendanceStatus attendanceResponse = (AttendanceStatus)att.get("Response");
+						System.out.println("attendance status response " + attendanceResponse);
+						RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
+						requestQuery.setDateFrom(perFrom);
+						requestQuery.setDateTo(perTo);
+						System.out.println("attendanceResponse.getSignIn() " + attendanceResponse.getSignIn());
 
-						errors.rejectValue("request_id","requestsApproval.errors.fullDayErrandIsNotAllowedToday","User Signed In Already on the specified date, full day errand is not allowed.");
+						Employee e = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", loginUsersRequests.getEmpCode());
+						Map checkStartedMap = requestsApprovalManager.checkStartedRequests(requestQuery, e);
+						System.out.println("after checking started requests " + checkStartedMap);
+						List startedRequests = (List)checkStartedMap.get("Response");
+						System.out.println("after checking started requests 2" + startedRequests);
 
-						////////////////////////////////
-					} else if (startedRequests != null && startedRequests.size() > 0) {
-						errors.rejectValue("request_id","requestsApproval.errors.fullDayErrandIsNotAllowedToday","Another request is made already on the specified date, full day errand is not allowed.");
-					}
-				} else {
-					//if not full day errand check requests overlapping/////////////////
-					////////////////////////////////////1///////////////////////////////
-					//Signing in ///////////////////////////////////////////////////////
-					////////////////////////////////////////////////////////////////////
-//					if(loginUsersRequests.getRequest_id().getId().equals(new Long(10))) {
-					Calendar temp = Calendar.getInstance();
-					temp.setTime(loginUsersRequests.getPeriod_from());
-					
+						if (attendanceResponse!=null && attendanceResponse.getSignIn()!=null && attendanceResponse.getSignIn().equals(new Boolean(true))) {
+							// check attendance on this day//
+
+							System.out.println("attendance status response " + attendanceResponse.getSignIn());
+
+							errors.rejectValue("request_id","requestsApproval.errors.fullDayErrandIsNotAllowedToday","User Signed In Already on the specified date, full day errand is not allowed.");
+
+							////////////////////////////////
+						} else if (startedRequests != null && startedRequests.size() > 0) {
+							errors.rejectValue("request_id","requestsApproval.errors.fullDayErrandIsNotAllowedToday","Another request is made already on the specified date, full day errand is not allowed.");
+						}
+					} else {
+						//if not full day errand check requests overlapping/////////////////
+						////////////////////////////////////1///////////////////////////////
+						//Signing in ///////////////////////////////////////////////////////
+						////////////////////////////////////////////////////////////////////
+						//					if(loginUsersRequests.getRequest_id().getId().equals(new Long(10))) {
+						Calendar temp = Calendar.getInstance();
+						temp.setTime(loginUsersRequests.getPeriod_from());
+
 						List requests = requestsApprovalManager.getRequestsByExactDatePeriodAndEmpCode(loginUsersRequests.getPeriod_from(), loginUsersRequests.getPeriod_to(), loginUsersRequests.getEmpCode());
 						if (requests.size() >0) {
 							Iterator reqItr = requests.iterator();
@@ -980,8 +982,9 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 								}
 							}
 						}
-						
-//					}
+
+						//					}
+					}
 					///////////////////////////////////////////////////////////////////
 				}
 			}
