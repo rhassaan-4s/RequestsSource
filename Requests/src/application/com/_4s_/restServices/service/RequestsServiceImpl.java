@@ -733,11 +733,13 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 							return response;
 						} else {
 							if (req.getPeriod_to().compareTo(loginUsersRequests.getPeriod_from()) > 0) {
-								status.setCode("324");
-								status.setMessage("The specified time interval is specifing with one of your requests");
-								status.setStatus("False");
-								response.put("Status", status);
-								return response;
+								if (!userRequest.getAttendanceType().equals(new Long(6)) && !userRequest.getAttendanceType().equals(new Long(4))) {
+									status.setCode("324");
+									status.setMessage("The specified time interval is overlapping with one of your requests");
+									status.setStatus("False");
+									response.put("Status", status);
+									return response;
+								}
 							}
 						}
 					}
