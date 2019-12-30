@@ -99,6 +99,7 @@
 		    $( ".MM_to_d" ).datepicker({		
 			onSelect: function( selectedDate ){
 			$('input.MM_from_d[title="'+this.title+'"]').datepicker( "option", "maxDate", selectedDate );}});
+		    
 
 			$('.timepac').datepicker( "option", "dateFormat", "yy/mm/dd" );
 			$('.MM_from').datepicker( "option", "dateFormat", "yy/mm/dd" );

@@ -1970,21 +1970,28 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		Criteria criteria = getCurrentSession()
 				.createCriteria(LoginUsersRequests.class);
 	
-		criteria.add(Expression.isNull("period_to"));
+		
 		
 		log.debug("request type " + requestType);
 		if (requestType== null){
-			criteria.add(Restrictions.or(
-					Restrictions.eq("request_id.id", new Long(3)),
-					Restrictions.and(
-							Restrictions.eq("request_id.id", new Long(1)), 
-							Restrictions.eq("vacation.vacation", "999"))
-					));
+//			criteria.add(Restrictions.or(
+//					Restrictions.eq("request_id.id", new Long(3)),
+//					Restrictions.and(
+//							Restrictions.eq("request_id.id", new Long(1)), 
+//							Restrictions.eq("vacation.vacation", "999"))
+//					));
 		} else if (requestType.equals(new Long(1))){
+			
 			log.debug("request type " + requestType);
+			
+			criteria.add(Expression.isNull("period_to"));
+			
 			criteria.add(Restrictions.eq("request_id.id", new Long(3)));
 		} else if (requestType.equals(new Long(2))){
 			log.debug("request type " + requestType);
+			
+			criteria.add(Expression.isNull("period_to"));
+			
 			criteria.add(Restrictions.eq("request_id.id", new Long(1)));
 			criteria.createCriteria("vacation").add(Restrictions.eq("vacation", "999"));
 		} 

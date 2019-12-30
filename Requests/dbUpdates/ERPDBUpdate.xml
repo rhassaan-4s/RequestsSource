@@ -16018,4 +16018,9 @@ INSERT INTO I18N_KEY VALUES (101435,'requestsApproval.errors.overlappingRequests
 INSERT INTO i18n_message VALUES (202116382,'يوجد طلب في فترة زمانية متداخلة مع طلبك', 101435, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116383, 'Another request is overlapping with the specified period', 101435, 3);</statment></query><query><sqlindex>122</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD AUTOMATICREQUESTSVALIDATION NUMBER;</statment></query><query><sqlindex>123</sqlindex><statment>update common_settings set AUTOMATICREQUESTSVALIDATION=1;</statment></query><query><sqlindex>124</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101436,'requestsApproval.header.automaticValidation', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116384,'التأكد من عدم تداخل الطلبات آليا', 101436, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116385, 'Automatic validation for overlapping requests"', 101436, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116385, 'Automatic validation for overlapping requests"', 101436, 3);</statment></query><query><sqlindex>125</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD AUTOMATICERRANDEND DATE;</statment></query><query><sqlindex>126</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD FINGERPRINTENABLED NUMBER;</statment></query><query><sqlindex>127</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101437, 'requestsApproval.header.fingerprintEnabled', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116386,'تفعيل الامضاء بالبصمة', 101437, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116387, 'Enable fingerprint sign in/out', 101437, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101438, 'requestsApproval.header.automaticErrandEnd', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116388,'وقت انهاء المأموريات آليًا', 101438, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116389, 'Automatic end of errand time', 101438, 3);</statment></query><query><sqlindex>128</sqlindex><statment>update COMMON_SETTINGS set AUTOMATICREQUESTSVALIDATION=0;</statment></query><query><sqlindex>129</sqlindex><statment>update common_settings set fingerprintEnabled = 0;</statment></query></SQL>

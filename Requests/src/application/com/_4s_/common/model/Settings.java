@@ -2,6 +2,7 @@ package com._4s_.common.model;
 
 import java.io.Serializable;
 import java.sql.Blob;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -85,7 +86,11 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Boolean obligateNotes;
 
-	private boolean automaticRequestsValidation;
+	private Boolean automaticRequestsValidation;
+	
+	private Date automaticErrandEnd;
+	
+	private Boolean fingerprintEnabled;
 
 	
 	////////////////////////////////////////////////////
@@ -127,6 +132,14 @@ public class Settings  implements Serializable,Auditable {
 	
 
 	
+	public Date getAutomaticErrandEnd() {
+		return automaticErrandEnd;
+	}
+
+	public void setAutomaticErrandEnd(Date automaticErrandEnd) {
+		this.automaticErrandEnd = automaticErrandEnd;
+	}
+
 	public Boolean getAutomaticSignInOut() {
 		return automaticSignInOut;
 	}
@@ -524,13 +537,22 @@ public class Settings  implements Serializable,Auditable {
 		return "Application Settings";
 	}
 
-	public boolean getAutomaticRequestsValidation() {
-		return this.automaticRequestsValidation;
+	public Boolean getAutomaticRequestsValidation() {
+		return automaticRequestsValidation;
 	}
 
-	public void setAutomaticRequestsValidation(boolean automaticRequestsValidation) {
+	public void setAutomaticRequestsValidation(Boolean automaticRequestsValidation) {
 		this.automaticRequestsValidation = automaticRequestsValidation;
 	}
+
+	public Boolean getFingerprintEnabled() {
+		return fingerprintEnabled;
+	}
+
+	public void setFingerprintEnabled(Boolean fingerprintEnabled) {
+		this.fingerprintEnabled = fingerprintEnabled;
+	}
+
 
 	
 
