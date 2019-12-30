@@ -1511,11 +1511,14 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		final Date dateFrom=cFrom.getTime();
 		log.debug("------dateFrom---"+dateFrom);
 
+		
 		Calendar cTo= Calendar.getInstance();
-		cTo.setTime(toDate);
-		cTo.set(Calendar.HOUR_OF_DAY, 23);
-		cTo.set(Calendar.MINUTE, 59);
-		cTo.set(Calendar.SECOND, 59);
+		if (toDate!=null) {
+			cTo.setTime(toDate);
+			cTo.set(Calendar.HOUR_OF_DAY, 23);
+			cTo.set(Calendar.MINUTE, 59);
+			cTo.set(Calendar.SECOND, 59);
+		}
 
 		final Date dateTo=cTo.getTime();
 		log.debug("------dateTo---"+dateTo);
@@ -1529,7 +1532,9 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			Criteria criteria = getCurrentSession()
 					.createCriteria(LoginUsersRequests.class);
 			criteria.add(Expression.ge("from_date", startDate));
-			criteria.add(Expression.le("from_date", endDate));
+			if (toDate!=null) {
+				criteria.add(Expression.le("from_date", endDate));
+			}
 			criteria.add(Restrictions.eq("empCode", empCode));
 			criteria.addOrder(Property.forName("period_from").asc());
 			criteria
