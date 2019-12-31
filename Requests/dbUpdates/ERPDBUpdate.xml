@@ -16023,4 +16023,4 @@ INSERT INTO i18n_message VALUES (202116386,'تفعيل الامضاء بالبص
 INSERT INTO i18n_message VALUES (202116387, 'Enable fingerprint sign in/out', 101437, 3);&#xD;
 INSERT INTO I18N_KEY VALUES (101438, 'requestsApproval.header.automaticErrandEnd', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116388,'وقت انهاء المأموريات آليًا', 101438, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116389, 'Automatic end of errand time', 101438, 3);</statment></query><query><sqlindex>128</sqlindex><statment>update COMMON_SETTINGS set AUTOMATICREQUESTSVALIDATION=0;</statment></query><query><sqlindex>129</sqlindex><statment>update common_settings set fingerprintEnabled = 0;</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116389, 'Automatic end of errand time', 101438, 3);</statment></query><query><sqlindex>128</sqlindex><statment>update COMMON_SETTINGS set AUTOMATICREQUESTSVALIDATION=0;</statment></query><query><sqlindex>129</sqlindex><statment>update common_settings set fingerprintEnabled = 0;</statment></query><query><sqlindex>130</sqlindex><statment>ALTER TABLE COMMON_SETTINGS MODIFY AUTOMATICERRANDEND VARCHAR(5);</statment></query></SQL>

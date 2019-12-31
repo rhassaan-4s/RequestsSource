@@ -2,6 +2,12 @@
 <jsp:include page="/web/common/includes/header.jsp" flush="true"/>
 
 <abc:security property="1021"/>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+
+</SCRIPT>
+
 <form id="settings" name="settings" method="POST" action="<c:url value="/common/settingsForm.html"/>">
 	
 	
@@ -130,6 +136,39 @@
 				</td>
 				<TD width="50%">&nbsp;</TD>
 			</tr>
+			<tr><td nowrap class="formBodControl" >
+					<abc:i18n property="requestsApproval.header.fingerprintEnabled" />
+					<fmt:message key="requestsApproval.header.fingerprintEnabled" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.fingerprintEnabled">
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			<tr><td nowrap class="formBodControl" >
+					<abc:i18n property="requestsApproval.header.automaticErrandEnd" />
+					<fmt:message key="requestsApproval.header.automaticErrandEnd" />
+				</td>
+				<td  class="formBod"> 
+					
+					<div class="input-group clockpicker" data-placement="left"
+						data-align="top" data-autoclose="true">
+						<spring:bind path="settings.automaticErrandEnd">
+						<input type="text" class="form-control" name="${status.expression}" value="${status.value}" readonly="readonly"></spring:bind> <span
+							class="input-group-addon"> <span
+							class="glyphicon glyphicon-time"></span>
+						</span>
+					</div>
+					<script type="text/javascript">
+						$('.clockpicker').clockpicker();
+					</script>
+				
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			
 			
 	<tr>
 				<td class="tableHeader" height="20"></td>

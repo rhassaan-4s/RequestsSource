@@ -36,6 +36,8 @@
 
 <script type="text/javascript" src="/Requests/web/common/js/initMap.js"></script>
 
+
+
 <!--  ///////////////////////// Islamic Calendar -->
  <script type="text/javascript" src="/Requests/web/common/js/jquery.min.js"></script>
 
@@ -52,6 +54,10 @@
 <script type="text/javascript" src="/Requests/web/common/timepicker/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/Requests/web/common/timepicker/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript" src="/Requests/web/common/timepicker/jquery-ui-sliderAccess.js"></script>
+
+<link type="text/css" rel="stylesheet"	href="/Requests/web/common/clockpicker/clockpicker.css" />
+<link type="text/css" rel="stylesheet"	href="/Requests/web/common/clockpicker/standalone.css" />
+<script type="text/javascript" src="/Requests/web/common/clockpicker/clockpicker.js"></script>
 
 
 		<script type="text/javascript">
