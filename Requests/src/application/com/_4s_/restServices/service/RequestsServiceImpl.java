@@ -501,9 +501,9 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				RequestsApprovalQuery requestQueryending = new RequestsApprovalQuery();
 				
 				//1 permission 2 errands
-				if (userRequest.getAttendanceType().equals(new Long(4))) {//permission start
+				if (userRequest.getAttendanceType().equals(new Long(4))) {//permission 
 					requestQueryending.setRequestType("1");
-				} else if (userRequest.getAttendanceType().equals(new Long(6))) {//errand start
+				} else if (userRequest.getAttendanceType().equals(new Long(6))) {//errand 
 					requestQueryending.setRequestType("2");
 				} else {
 					System.out.println("condition not handled 3 " + userRequest.getAttendanceType());
@@ -571,16 +571,44 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					System.out.println("condition not handled 2 " + userRequest.getAttendanceType());
 				}
 				
+//				requestQuery.setDateFrom(userRequest.getAttendanceTime());
+				
+				requestQuery.setDateTo(userRequest.getAttendanceTime());
+				
 				Map startedRequests = checkStartedRequests(requestQuery, emp);
 				List startedRequestsResponse = (List)startedRequests.get("Response");
-				System.out.println("permission/errand start , size =" + startedRequests.size());
+				
+				///////////////////////end requests automatically////////////////////////////////////////////////
+//				Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+//				List results = (List)response.get("Response");
 				Iterator itr = startedRequestsResponse.iterator();
-				while(itr.hasNext()) {
-					System.out.println(itr.next());
+				System.out.println("checkStartedRequests: automatic errands end " + settings.getAutomaticErrandEnd());
+				if (settings.getAutomaticErrandEnd() != null && !settings.getAutomaticErrandEnd().isEmpty()) {
+					while (itr.hasNext()) {
+						LoginUsersRequests req = (LoginUsersRequests)itr.next();
+						System.out.println("checkStartedRequests: period to " + req.getPeriod_to());
+						if (req.getPeriod_to() == null) {
+							String requestEndTime = settings.getAutomaticErrandEnd();
+							String [] time =  requestEndTime.split(":");
+							System.out.println("Time hour " + time[0] + " minutes " + time[1]);
+							if (req.getPeriod_from() != null) {
+								Calendar cal2 = Calendar.getInstance();
+								cal2.setTime(req.getPeriod_from());
+								cal2.set(Calendar.HOUR, Integer.parseInt(time[0]));
+								cal2.set(Calendar.MINUTE, Integer.parseInt(time[1]));
+								cal2.set(Calendar.SECOND, 0);
+								req.setPeriod_to(cal2.getTime());
+								requestsApprovalManager.saveObject(req);
+							}
+						}
+					}
+					startedRequests = requestsApprovalManager.checkStartedRequests(requestQuery,emp);
 				}
+				////////////////////////////////////////////////////////////////////////////////////////////////////
+				System.out.println("permission/errand start , size =" + startedRequestsResponse.size());
 				if (startedRequestsResponse.size() == 1 && ((LoginUsersRequests)startedRequestsResponse.get(0)).getTo_date()==null) {
 					status.setCode("311");
-					status.setMessage("A request is already started that hasn't been ended yet.");
+					status.setMessage("A request is already started (#" + ((LoginUsersRequests)startedRequestsResponse.get(0)).getRequestNumber() + ") that hasn't been ended yet.");
 					status.setStatus("False");
 					response.put("Status", status);
 					return response;
@@ -816,9 +844,9 @@ public Map checkAttendance(Date today, String empCode) {
 public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 		Employee emp) {
 	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
-	System.out.println("logged in user " + loggedInUser);
+	System.out.println("checkStartedRequests: logged in user " + loggedInUser);
 	Map response = requestsApprovalManager.checkStartedRequests(requestQuery,emp);
-	System.out.println("response " + response);
+	System.out.println("checkStartedRequests: response " + response);
 	return response;
 }
 

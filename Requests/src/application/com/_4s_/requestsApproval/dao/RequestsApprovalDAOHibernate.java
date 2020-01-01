@@ -1985,6 +1985,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 //							Restrictions.eq("request_id.id", new Long(1)), 
 //							Restrictions.eq("vacation.vacation", "999"))
 //					));
+			criteria.add(Restrictions.and(Restrictions.ne("request_id.id", new Long(10)), Restrictions.ne("request_id.id", new Long(11))));
 		} else if (requestType.equals(new Long(1))){
 			
 			log.debug("request type " + requestType);

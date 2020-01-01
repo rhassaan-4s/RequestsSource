@@ -88,7 +88,7 @@ public class Settings  implements Serializable,Auditable {
 
 	private Boolean automaticRequestsValidation;
 	
-	private Date automaticErrandEnd;
+	private String automaticErrandEnd;
 	
 	private Boolean fingerprintEnabled;
 
@@ -132,11 +132,11 @@ public class Settings  implements Serializable,Auditable {
 	
 
 	
-	public Date getAutomaticErrandEnd() {
+	public String getAutomaticErrandEnd() {
 		return automaticErrandEnd;
 	}
 
-	public void setAutomaticErrandEnd(Date automaticErrandEnd) {
+	public void setAutomaticErrandEnd(String automaticErrandEnd) {
 		this.automaticErrandEnd = automaticErrandEnd;
 	}
 
