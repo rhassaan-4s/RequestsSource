@@ -106,7 +106,7 @@
 	<http auto-config="true" access-denied-page="/403.jsp"
 		access-decision-manager-ref="accessDecisionManager">
 		<session-management>
-			<concurrency-control max-sessions="1"
+			<concurrency-control max-sessions="10"
 				error-if-maximum-exceeded="true" />
 		</session-management>
 
