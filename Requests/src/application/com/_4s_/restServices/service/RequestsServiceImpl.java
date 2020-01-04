@@ -98,12 +98,16 @@ public void setSecurityDao(MySecurityDAO securityDao) {
  }
 
 
-public LoginUsersRequests signInOut(AttendanceRequest userRequest,Long empId) {
+public Map signInOut(AttendanceRequest userRequest,Long empId) {
 	// TODO Auto-generated method stub
 	Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class, new Long(1));
 
 	DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	Date newDate = null;
+	
+	Map response = new HashMap();
+	RestStatus restStatus = new RestStatus();
+	
 //	try {
 //		System.out.println("userRequest.getAttendanceTime() " + userRequest.getAttendanceTime());
 //		newDate = df.parse(userRequest.getAttendanceTime());
@@ -136,63 +140,110 @@ public LoginUsersRequests signInOut(AttendanceRequest userRequest,Long empId) {
 
 	System.out.println("settings.getAutomaticSignInOut().booleanValue() " + settings.getAutomaticSignInOut().booleanValue());
 	if (settings.getAutomaticSignInOut().booleanValue() == false) {
-		LoginUsersRequests loginUsersRequests = new LoginUsersRequests();
-
-		loginUsersRequests.setLogin_user(loginUsers);
-		/////////////////////////////////////////////////////
-
-		// request number
-		if (loginUsersRequests.getId() == null){
-			String requestNumber="";
-			requestNumber=requestsApprovalManager.CreateRequestNumber();
-			loginUsersRequests.setRequestNumber(requestNumber);
-		}
-
-		loginUsersRequests.setRequest_date(mCalDate.getDate());
-		loginUsersRequests.setPeriod_from(mCalDate.getDate());
-
-		if(loginUsersRequests.getApproved()==null || loginUsersRequests.getApproved().equals("")){
-			loginUsersRequests.setApproved(new Long(0));	
-		}
-		if(loginUsersRequests.getApplicable()==null || loginUsersRequests.getApplicable().equals("")){
-			loginUsersRequests.setApplicable(new Long(1));			
-		}
-		if(loginUsersRequests.getPosted()==null||loginUsersRequests.getPosted().equals("")){
-			loginUsersRequests.setPosted(new Long(0));
-		}
-		if(loginUsersRequests.getReply()==null||loginUsersRequests.getReply().equals("")){
-			loginUsersRequests.setReply("--");
-		}
-		if(loginUsersRequests.getLeave_effect()==null||loginUsersRequests.getLeave_effect().equals("")){
-			loginUsersRequests.setLeave_effect("0");
-		}
-		if(loginUsersRequests.getLeave_type()==null||loginUsersRequests.getLeave_type().equals("")){
-			loginUsersRequests.setLeave_type("0");
-		}
-		if(loginUsersRequests.getFrom_date()==null|| loginUsersRequests.getFrom_date().equals("")){
-			loginUsersRequests.setFrom_date(loginUsersRequests.getPeriod_from());
-		}
-
-		loginUsersRequests.setEmpCode(emp.getEmpCode());
-		loginUsersRequests.setNotes("Android Sign In/Out");
-
-
-		//10 signin 11 signout
-		RequestTypes reqType = null;
-		System.out.println("userRequest.getAttendanceType() " + userRequest.getAttendanceType());
-		if (userRequest.getAttendanceType().equals(new Long(1))) {
-			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(10));
+//		List attendanceRequests = requestsApprovalManager.getAttendanceRequests(mCalDate.getDate(),loginUsers.getEmpCode());
+		Map attendanceToday = checkAttendance(mCalDate.getDate(), loginUsers.getEmpCode());
+		AttendanceStatus attendanceStatus = (AttendanceStatus)attendanceToday.get("Response"); 
+		if (settings.getAutomaticSignInOut().booleanValue() == false 
+				&& userRequest.getAttendanceType().equals(new Long(1))
+				&& (attendanceStatus.getSignIn().booleanValue()==true && attendanceStatus.getSignOut().booleanValue()==false)) {
+			/////////////////////check sign in in the same day//////////////////////////////////////////////
+			restStatus.setCode("325");
+			restStatus.setMessage("User signed In Before and didn't signed out");
+			restStatus.setStatus("False");
+			response.put("Status", restStatus);
+			return response;
+			
+			/////////////////////////////////////////////////////////////////////////////////////
+		} else if (settings.getAutomaticSignInOut().booleanValue() == false 
+				&& userRequest.getAttendanceType().equals(new Long(2))
+				&& ((attendanceStatus.getSignIn().booleanValue()==false && attendanceStatus.getSignOut().booleanValue()==false)
+						|| (attendanceStatus.getSignIn().booleanValue()==true && attendanceStatus.getSignOut().booleanValue()==true) )) {
+			/////////////////////check sign in in the same day//////////////////////////////////////////////
+			restStatus.setCode("326");
+			restStatus.setMessage("User didn't sign In yet");
+			restStatus.setStatus("False");
+			response.put("Status", restStatus);
+			return response;
+			
+			/////////////////////////////////////////////////////////////////////////////////////
+		}  else if (settings.getAutomaticSignInOut().booleanValue() == false 
+				&& userRequest.getAttendanceType().equals(new Long(2))
+				&& (attendanceStatus.getSignIn().booleanValue()==true && attendanceStatus.getSignOut().booleanValue()==false)
+				&& mCalDate.getDate().getTime() < attendanceStatus.getSignInTime()) {
+			/////////////////////check sign in in the same day//////////////////////////////////////////////
+			restStatus.setCode("327");
+			restStatus.setMessage("Sign out date is before sign in date");
+			restStatus.setStatus("False");
+			response.put("Status", restStatus);
+			return response;
+			
+			/////////////////////////////////////////////////////////////////////////////////////
 		} else {
-			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(11));
+			LoginUsersRequests loginUsersRequests = new LoginUsersRequests();
+
+			loginUsersRequests.setLogin_user(loginUsers);
+			/////////////////////////////////////////////////////
+
+			// request number
+			if (loginUsersRequests.getId() == null){
+				String requestNumber="";
+				requestNumber=requestsApprovalManager.CreateRequestNumber();
+				loginUsersRequests.setRequestNumber(requestNumber);
+			}
+
+			loginUsersRequests.setRequest_date(mCalDate.getDate());
+			loginUsersRequests.setPeriod_from(mCalDate.getDate());
+
+			if(loginUsersRequests.getApproved()==null || loginUsersRequests.getApproved().equals("")){
+				loginUsersRequests.setApproved(new Long(0));	
+			}
+			if(loginUsersRequests.getApplicable()==null || loginUsersRequests.getApplicable().equals("")){
+				loginUsersRequests.setApplicable(new Long(1));			
+			}
+			if(loginUsersRequests.getPosted()==null||loginUsersRequests.getPosted().equals("")){
+				loginUsersRequests.setPosted(new Long(0));
+			}
+			if(loginUsersRequests.getReply()==null||loginUsersRequests.getReply().equals("")){
+				loginUsersRequests.setReply("--");
+			}
+			if(loginUsersRequests.getLeave_effect()==null||loginUsersRequests.getLeave_effect().equals("")){
+				loginUsersRequests.setLeave_effect("0");
+			}
+			if(loginUsersRequests.getLeave_type()==null||loginUsersRequests.getLeave_type().equals("")){
+				loginUsersRequests.setLeave_type("0");
+			}
+			if(loginUsersRequests.getFrom_date()==null|| loginUsersRequests.getFrom_date().equals("")){
+				loginUsersRequests.setFrom_date(loginUsersRequests.getPeriod_from());
+			}
+
+			loginUsersRequests.setEmpCode(emp.getEmpCode());
+			loginUsersRequests.setNotes("Android Sign In/Out");
+
+
+			//10 signin 11 signout
+			RequestTypes reqType = null;
+			System.out.println("userRequest.getAttendanceType() " + userRequest.getAttendanceType());
+			if (userRequest.getAttendanceType().equals(new Long(1))) {
+				reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(10));
+			} else {
+				reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(11));
+			}
+			loginUsersRequests.setRequest_id(reqType);
+
+			loginUsersRequests.setLatitude(userRequest.getLatitude());
+			loginUsersRequests.setLongitude(userRequest.getLongitude());
+
+			requestsApprovalManager.saveObject(loginUsersRequests);
+
+//			return loginUsersRequests;
+			restStatus.setStatus("true");
+			restStatus.setCode("200");
+			restStatus.setMessage("Successful Manual Transaction");
+			response.put("Status", restStatus);
+			
+			response.put("Response" ,loginUsersRequests);
+			return response;
 		}
-		loginUsersRequests.setRequest_id(reqType);
-
-		loginUsersRequests.setLatitude(userRequest.getLatitude());
-		loginUsersRequests.setLongitude(userRequest.getLongitude());
-
-		requestsApprovalManager.saveObject(loginUsersRequests);
-
-		return loginUsersRequests;
 	} else {
 		String trans_type = null;
 		if (userRequest.getAttendanceType().equals(new Long(1))) {
@@ -203,7 +254,13 @@ public LoginUsersRequests signInOut(AttendanceRequest userRequest,Long empId) {
 		System.out.println("date_" + dateOnly + " time_ " + newDate);
 		int result = requestsApprovalManager.insertTimeAttendance(settings.getServer(),settings.getService(),settings.getUsername(),settings.getPassword(),
 				emp.getEmpCode(),dateOnly, newDate,trans_type);
-		return null;
+		restStatus.setStatus("true");
+		restStatus.setCode("200");
+		restStatus.setMessage("Successful Automatic Transaction");
+		response.put("Status", restStatus);
+		
+		response.put("Response" ,null);
+		return response;
 	}
 }
 
@@ -513,7 +570,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				List requests = (List)(requestsApprovalManager.checkStartedRequests(requestQueryending, emp)).get("Response");
 				Iterator itrrequests = requests.iterator();
 				while(itrrequests.hasNext()) {
-					System.out.println("ending request other requests "+((LoginUsersRequests)itrrequests.next()).getRequestNumber());
+					System.out.println("####Strarted requests "+((LoginUsersRequests)itrrequests.next()).getRequestNumber());
 				}
 				if (requests.size() == 1) {
 					loginUsersRequests = (LoginUsersRequests)requests.get(0);
@@ -747,18 +804,33 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				}
 
 				System.out.println("validating non full errand requests 2");
+				System.out.println("loginUsersRequests.getPeriod_from() " + loginUsersRequests.getPeriod_from());
+				System.out.println("loginUsersRequests.getPeriod_to() " + loginUsersRequests.getPeriod_to());
 				List requests = requestsApprovalManager.getRequestsByExactDatePeriodAndEmpCode(loginUsersRequests.getPeriod_from(), loginUsersRequests.getPeriod_to(), loginUsersRequests.getEmpCode());
 				System.out.println("validating non full errand requests " + requests.size());
+				
+//				Iterator itr = requests.iterator();
+				
+				
 				if (requests.size() >0) {
 					Iterator reqItr = requests.iterator();
 					while (reqItr.hasNext()) {
 						LoginUsersRequests req = (LoginUsersRequests)reqItr.next();
 						if (req.getPeriod_to() == null) {
-							status.setCode("323");
-							status.setMessage("Please finish your started requests during the same time interval specified");
-							status.setStatus("False");
-							response.put("Status", status);
-							return response;
+							if (req.getRequest_id().getId().equals(new Long(10))) {
+								//request must be before sign in from date
+
+							}
+							else if (req.getRequest_id().getId().equals(new Long(11))) {
+								//must be after from date
+							} else {
+								System.out.println("request in same interval " + req.getRequestNumber() + req.getFrom_date());
+								status.setCode("323");
+								status.setMessage("Please finish your started requests during the same time interval specified");
+								status.setStatus("False");
+								response.put("Status", status);
+								return response;
+							}
 						} else {
 							if (req.getPeriod_to().compareTo(loginUsersRequests.getPeriod_from()) > 0) {
 								if (!userRequest.getAttendanceType().equals(new Long(6)) && !userRequest.getAttendanceType().equals(new Long(4))) {

@@ -46,6 +46,7 @@ import com._4s_.common.util.Page;
 import com._4s_.requestsApproval.model.EmpReqApproval;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
+import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.RequestOutput;
 //import com._4s_.requestsApproval.model.TimeAttend;
@@ -1993,6 +1994,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			criteria.add(Expression.isNull("period_to"));
 			
 			criteria.add(Restrictions.eq("request_id.id", new Long(3)));
+			criteria.add(Restrictions.and(Restrictions.ne("request_id.id", new Long(10)), Restrictions.ne("request_id.id", new Long(11))));
 		} else if (requestType.equals(new Long(2))){
 			log.debug("request type " + requestType);
 			
@@ -2000,6 +2002,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			
 			criteria.add(Restrictions.eq("request_id.id", new Long(1)));
 			criteria.createCriteria("vacation").add(Restrictions.eq("vacation", "999"));
+			criteria.add(Restrictions.and(Restrictions.ne("request_id.id", new Long(10)), Restrictions.ne("request_id.id", new Long(11))));
 		} 
 		if (sDate !=null) {
 			final Date startDate =sDate;
@@ -2107,7 +2110,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 		//////////////////////////////////////
 		
-		list =new ArrayList();
+		List list2 =new ArrayList();
 		criteria = getCurrentSession()
 				.createCriteria(LoginUsersRequests.class);
 	
@@ -2121,19 +2124,24 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		criteria.add(Expression.le("period_from", endDate2));
 		criteria.addOrder(Property.forName("period_from").desc());
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		list = criteria.list();
+		list2 = criteria.list();
 
-		if (list.size()>0) {
-			LoginUsersRequests req = (LoginUsersRequests)list.get(0);
+		if (list2.size()>0) {
+			if (list2.size()==list.size()) {
+				LoginUsersRequests req = (LoginUsersRequests)list2.get(0);
 
-			if (req.getPeriod_from()!=null){
-				attStatus.setSignOut(new Boolean(true));
-				attStatus.setSignOutTime(req.getPeriod_from().getTime());
-				log.debug(req.getId() + " - " +req.getPeriod_from());
+				if (req.getPeriod_from()!=null){
+					attStatus.setSignOut(new Boolean(true));
+					attStatus.setSignOutTime(req.getPeriod_from().getTime());
+					log.debug(req.getId() + " - " +req.getPeriod_from());
+				} else {
+					attStatus.setSignOut(new Boolean(false));
+					attStatus.setSignOutTime(null);
+					log.debug(req.getId() + " - " +req.getPeriod_from());
+				}
 			} else {
 				attStatus.setSignOut(new Boolean(false));
 				attStatus.setSignOutTime(null);
-				log.debug(req.getId() + " - " +req.getPeriod_from());
 			}
 		} else {
 			attStatus.setSignOut(new Boolean(false));
@@ -2149,6 +2157,30 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		return response;
 	
 	}
+
+
+//	public List getAttendanceRequests(Date date, String empCode,RequestTypes reqType) {
+//		try{
+//			Criteria criteria = getCurrentSession()
+//					.createCriteria(LoginUsersRequests.class);
+//			criteria.add(Restrictions.eq("request_id", reqType));
+//			criteria.add(Restrictions.eq("empCode", empCode));
+//			criteria.add(Restrictions.eq("request_id", date));
+//			criteria
+//			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//			List list = criteria.list();
+//			Iterator itr = list.iterator();
+//			log.debug("empreqtypeacc size " + list.size());
+//			while(itr.hasNext()) {
+//				EmpReqTypeAcc acc = (EmpReqTypeAcc)itr.next();
+//				log.debug("EmpReqTypeAcc " + acc.getId() + " group id " + acc.getGroup_id().getId());
+//			}
+//			return list;
+//		}
+//		catch (Exception e) {
+//			return new ArrayList();
+//		}
+//	}
 	
 	
 

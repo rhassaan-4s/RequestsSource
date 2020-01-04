@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com._4s_.common.model.Employee;
 import com._4s_.common.service.BaseManager;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
+import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
@@ -20,8 +21,10 @@ import com._4s_.security.model.User;
 public interface RequestsService {// extends BaseManager {
 
 	public User login();
+	
+	public RequestsApprovalManager getRequestsApprovalManager();
 
-	public LoginUsersRequests signInOut(AttendanceRequest userRequest, Long empId);
+	public Map signInOut(AttendanceRequest userRequest, Long empId);
 
 	public Map userRequest(AttendanceRequest userRequest, Long empId);
 	

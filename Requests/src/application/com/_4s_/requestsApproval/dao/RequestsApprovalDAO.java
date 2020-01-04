@@ -91,4 +91,5 @@ public interface RequestsApprovalDAO extends BaseDAO {
 			Employee emp);
 	
 	public Map checkAttendance(Date today, String empCode);
+//	public List getAttendanceRequests(Date date, String empCode);
 }

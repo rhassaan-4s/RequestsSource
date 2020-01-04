@@ -140,5 +140,6 @@ public interface RequestsApprovalManager extends BaseManager {
 	public Map exportToExcelSheet(String reportName, List tableTitle,List results);
 	
 	public Map checkAttendance(Date today, String empCode);
+//	public List getAttendanceRequests(Date date, String empCode);
 }
 

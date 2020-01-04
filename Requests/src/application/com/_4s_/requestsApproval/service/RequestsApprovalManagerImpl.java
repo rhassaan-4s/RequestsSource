@@ -1503,6 +1503,11 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
        result.put("title", reportN);
 		return result;
 	}
+
+//	public List getAttendanceRequests(Date date, String empCode) {
+//		return requestsApprovalDAO.getAttendanceRequests(date,empCode);
+//	}
+	
 	
 	
 }

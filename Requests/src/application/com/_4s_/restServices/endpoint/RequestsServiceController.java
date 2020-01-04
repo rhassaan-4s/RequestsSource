@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com._4s_.common.model.Employee;
+import com._4s_.common.model.Settings;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.EmployeeResponse;
@@ -158,6 +159,9 @@ public class RequestsServiceController {
 		System.out.println("Controller sign in/out");
 		Map response = new HashMap();
 		RestStatus restStatus = new RestStatus();
+		Settings settings = (Settings)requestsService.getRequestsApprovalManager().getObject(Settings.class, new Long(1));
+		
+		
 		if (userRequest.getAttendanceType()==null || userRequest.getAttendanceTime() == null 
 				|| userRequest.getAttendanceTime().isEmpty()|| userRequest.getLatitude()==null || userRequest.getLongitude()==null){
 			restStatus.setCode("303");
@@ -172,20 +176,8 @@ public class RequestsServiceController {
 			UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 			UserDetails userDet = (UserDetails)token.getPrincipal();
 			User user = requestsService.getUser(userDet.getUsername());
-			LoginUsersRequests req = requestsService.signInOut(userRequest,user.getEmployee().getId());
-			if (req!=null){
-				restStatus.setMessage("Successful Manual Transaction");
-				response.put("Status", restStatus);
-				
-				Map output = new HashMap();
-				output.put("request_number", req.getRequestNumber());
-				response.put("Response" , output);
-			} else {
-				restStatus.setMessage("Successful Automatic Transaction");
-				response.put("Status", restStatus);
-				
-				response.put("Response" ,null);
-			}
+			response = requestsService.signInOut(userRequest,user.getEmployee().getId());
+			
 			return response;
 		}
 	}
