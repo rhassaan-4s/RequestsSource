@@ -241,7 +241,10 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 			restStatus.setMessage("Successful Manual Transaction");
 			response.put("Status", restStatus);
 			
-			response.put("Response" ,loginUsersRequests);
+			Map output = new HashMap();
+			output.put("request_number", loginUsersRequests.getRequestNumber());
+			response.put("Response" , output);
+			
 			return response;
 		}
 	} else {
@@ -807,7 +810,8 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				System.out.println("loginUsersRequests.getPeriod_from() " + loginUsersRequests.getPeriod_from());
 				System.out.println("loginUsersRequests.getPeriod_to() " + loginUsersRequests.getPeriod_to());
 				List requests = requestsApprovalManager.getRequestsByExactDatePeriodAndEmpCode(loginUsersRequests.getPeriod_from(), loginUsersRequests.getPeriod_to(), loginUsersRequests.getEmpCode());
-				System.out.println("validating non full errand requests " + requests.size());
+				Map  attendance = requestsApprovalManager.checkAttendance(loginUsersRequests.getPeriod_from(), loginUsers.getEmpCode());
+				System.out.println("#@#@validating non full errand requests " + requests.size());
 				
 //				Iterator itr = requests.iterator();
 				
@@ -816,13 +820,40 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					Iterator reqItr = requests.iterator();
 					while (reqItr.hasNext()) {
 						LoginUsersRequests req = (LoginUsersRequests)reqItr.next();
+						System.out.println("req.getPeriod_to() " + req.getPeriod_to());
 						if (req.getPeriod_to() == null) {
-							if (req.getRequest_id().getId().equals(new Long(10))) {
-								//request must be before sign in from date
-
-							}
-							else if (req.getRequest_id().getId().equals(new Long(11))) {
-								//must be after from date
+							System.out.println("checking if overlapping requests are sign in/out " + req.getRequest_id().getId());
+							if (req.getRequest_id().getId().equals(new Long(10)) || req.getRequest_id().getId().equals(new Long(11))) {
+								AttendanceStatus attendanceStatus = (AttendanceStatus)attendance.get("Response");
+								
+								System.out.println("attendanceStatus.getSignIn() " + attendanceStatus.getSignIn());
+								System.out.println("attendanceStatus.getSignOut() " + attendanceStatus.getSignOut());
+								
+								if (attendanceStatus.getSignIn().booleanValue() == true && attendanceStatus.getSignOut().booleanValue() == false) {
+									System.out.println("request in same interval " + req.getRequestNumber() + req.getPeriod_from());
+									status.setCode("327");
+									status.setMessage("Please sign out first before starting new request");
+									status.setStatus("False");
+									response.put("Status", status);
+									return response;
+								} else if (attendanceStatus.getSignIn().booleanValue() == true && attendanceStatus.getSignOut().booleanValue() == true) {
+									Calendar signInCal = Calendar.getInstance();
+									signInCal.setTimeInMillis(attendanceStatus.getSignInTime());
+									Date signIn = signInCal.getTime();
+											
+									Calendar signOutCal = Calendar.getInstance();
+									signOutCal.setTimeInMillis(attendanceStatus.getSignOutTime());
+									Date signOut = signOutCal.getTime();
+											
+									if (loginUsersRequests.getPeriod_from().after(signIn) && loginUsersRequests.getPeriod_from().after(signOut)) {
+										System.out.println("request in same interval " + req.getRequestNumber() + req.getPeriod_from());
+										status.setCode("328");
+										status.setMessage("Sign out time is after the request start time");
+										status.setStatus("False");
+										response.put("Status", status);
+										return response;
+									}
+								}
 							} else {
 								System.out.println("request in same interval " + req.getRequestNumber() + req.getFrom_date());
 								status.setCode("323");
@@ -835,7 +866,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 							if (req.getPeriod_to().compareTo(loginUsersRequests.getPeriod_from()) > 0) {
 								if (!userRequest.getAttendanceType().equals(new Long(6)) && !userRequest.getAttendanceType().equals(new Long(4))) {
 									status.setCode("324");
-									status.setMessage("The specified time interval is overlapping with one of your requests");
+									status.setMessage("The specified time interval is overlapping with one of your requests with request number "  + req.getRequestNumber());
 									status.setStatus("False");
 									response.put("Status", status);
 									return response;
