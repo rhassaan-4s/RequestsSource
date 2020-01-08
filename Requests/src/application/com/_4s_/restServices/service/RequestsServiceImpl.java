@@ -643,26 +643,38 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 //				List results = (List)response.get("Response");
 				Iterator itr = startedRequestsResponse.iterator();
 				System.out.println("checkStartedRequests: automatic errands end " + settings.getAutomaticErrandEnd());
+				Calendar dayBeforeEndDate = Calendar.getInstance();
+				dayBeforeEndDate.setTime(mCalDate.getDate());
+				dayBeforeEndDate.set(Calendar.HOUR, 0);
+				dayBeforeEndDate.set(Calendar.MINUTE, 0);
+				dayBeforeEndDate.set(Calendar.SECOND, 0);
+				dayBeforeEndDate.set(Calendar.MILLISECOND, 0);
 				if (settings.getAutomaticErrandEnd() != null && !settings.getAutomaticErrandEnd().isEmpty()) {
 					while (itr.hasNext()) {
 						LoginUsersRequests req = (LoginUsersRequests)itr.next();
 						System.out.println("checkStartedRequests: period to " + req.getPeriod_to());
-						if (req.getPeriod_to() == null) {
-							String requestEndTime = settings.getAutomaticErrandEnd();
-							String [] time =  requestEndTime.split(":");
-							System.out.println("Time hour " + time[0] + " minutes " + time[1]);
-							if (req.getPeriod_from() != null) {
-								Calendar cal2 = Calendar.getInstance();
-								cal2.setTime(req.getPeriod_from());
-								cal2.set(Calendar.HOUR, Integer.parseInt(time[0]));
-								cal2.set(Calendar.MINUTE, Integer.parseInt(time[1]));
-								cal2.set(Calendar.SECOND, 0);
-								req.setPeriod_to(cal2.getTime());
-								requestsApprovalManager.saveObject(req);
+						if (req.getPeriod_from().before(dayBeforeEndDate.getTime())) {
+							if (req.getPeriod_to() == null) {
+								String requestEndTime = settings.getAutomaticErrandEnd();
+								String [] time =  requestEndTime.split(":");
+								System.out.println("Time hour " + time[0] + " minutes " + time[1]);
+								if (req.getPeriod_from() != null) {
+									Calendar cal2 = Calendar.getInstance();
+									cal2.setTime(req.getPeriod_from());
+									cal2.set(Calendar.HOUR, Integer.parseInt(time[0]));
+									cal2.set(Calendar.MINUTE, Integer.parseInt(time[1]));
+									cal2.set(Calendar.SECOND, 0);
+									req.setPeriod_to(cal2.getTime());
+									req.setNotes(req.getNotes() + " (Request ended automatically by the system)");
+									requestsApprovalManager.saveObject(req);
+								}
 							}
+						} else {
+							System.out.println("request opened in the last 24hrs is not ended");
 						}
 					}
 					startedRequests = requestsApprovalManager.checkStartedRequests(requestQuery,emp);
+					startedRequestsResponse = (List)startedRequests.get("Response");
 				}
 				////////////////////////////////////////////////////////////////////////////////////////////////////
 				System.out.println("permission/errand start , size =" + startedRequestsResponse.size());
