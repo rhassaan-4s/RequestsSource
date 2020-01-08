@@ -857,7 +857,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 									signOutCal.setTimeInMillis(attendanceStatus.getSignOutTime());
 									Date signOut = signOutCal.getTime();
 											
-									if (loginUsersRequests.getPeriod_from().after(signIn) && loginUsersRequests.getPeriod_from().after(signOut)) {
+									if (loginUsersRequests.getPeriod_from().after(signIn) && loginUsersRequests.getPeriod_from().before(signOut)) {
 										System.out.println("request in same interval " + req.getRequestNumber() + req.getPeriod_from());
 										status.setCode("328");
 										status.setMessage("Sign out time is after the request start time");
