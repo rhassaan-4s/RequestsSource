@@ -2022,6 +2022,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		criteria
 		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		list = criteria.list();
+		log.debug("check started requests list size " + list.size());
 		status.setCode("200");
 		status.setMessage("Successful Transaction");
 		status.setStatus("True");
