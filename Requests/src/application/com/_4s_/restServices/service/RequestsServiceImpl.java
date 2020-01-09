@@ -142,6 +142,17 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 	if (settings.getAutomaticSignInOut().booleanValue() == false) {
 //		List attendanceRequests = requestsApprovalManager.getAttendanceRequests(mCalDate.getDate(),loginUsers.getEmpCode());
 		Map attendanceToday = checkAttendance(mCalDate.getDate(), loginUsers.getEmpCode());
+		List requests2 = requestsApprovalManager.getRequestsByExactDatePeriodAndRequestTypeForEmployee(dateOnly, dateOnly, new Long(1), loginUsers.getEmpCode());
+		LoginUsersRequests req = null;
+		if (requests2.size() > 0) {
+			req = (LoginUsersRequests)requests2.get(0);
+			System.out.println("request " + req.getRequestNumber());
+			System.out.println("req.getTo_date().getDay()-req.getFrom_date().getDay() " + (req.getTo_date().getDay()-req.getFrom_date().getDay()));
+			if (req.getVacation()!=null) {
+				System.out.println("req.getVacation() " + req.getVacation().getVacation());
+			}
+		}
+		System.out.println("requests same day size " + requests2.size());
 		AttendanceStatus attendanceStatus = (AttendanceStatus)attendanceToday.get("Response"); 
 		if (settings.getAutomaticSignInOut().booleanValue() == false 
 				&& userRequest.getAttendanceType().equals(new Long(1))
@@ -152,7 +163,6 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 			restStatus.setStatus("False");
 			response.put("Status", restStatus);
 			return response;
-			
 			/////////////////////////////////////////////////////////////////////////////////////
 		} else if (settings.getAutomaticSignInOut().booleanValue() == false 
 				&& userRequest.getAttendanceType().equals(new Long(2))
@@ -164,7 +174,6 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 			restStatus.setStatus("False");
 			response.put("Status", restStatus);
 			return response;
-			
 			/////////////////////////////////////////////////////////////////////////////////////
 		}  else if (settings.getAutomaticSignInOut().booleanValue() == false 
 				&& userRequest.getAttendanceType().equals(new Long(2))
@@ -176,9 +185,25 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 			restStatus.setStatus("False");
 			response.put("Status", restStatus);
 			return response;
-			
 			/////////////////////////////////////////////////////////////////////////////////////
-		} else {
+		} else if (userRequest.getAttendanceType().equals(new Long(1)) 
+				&& req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && req.getTo_date()!=null 
+				&& req.getTo_date().getDay()-req.getFrom_date().getDay()>=1) {
+			////////////////check full day errand///////////////////////////////////////////////
+			//			Iterator reqItr = requests.iterator();
+			//			while(reqItr.hasNext()) {
+			//				LoginUsersRequests req = (LoginUsersRequests)reqItr.next()
+			//				if (req.getVacation().getId().equals(new Long(99)) && req.getTo_date()!=null && req.getTo_date().getDay()-req.getFrom_date().getDay()>=1) {
+			
+			restStatus.setCode("329");
+			restStatus.setMessage("You Can't Sign in on a full errand day");
+			restStatus.setStatus("False");
+			response.put("Status", restStatus);
+			return response;
+			//				}
+			//			}
+			///////////////////////////////////////////////////////////////////////////////////
+		}else {
 			LoginUsersRequests loginUsersRequests = new LoginUsersRequests();
 
 			loginUsersRequests.setLogin_user(loginUsers);
