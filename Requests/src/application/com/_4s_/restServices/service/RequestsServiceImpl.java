@@ -201,7 +201,7 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 			System.out.println("full day errand on this day");
 			restStatus.setCode("329");
 			restStatus.setMessage("Sign in on a full errand day is not allowed");
-			restStatus.setStatus("False");
+			restStatus.setStatus("false");
 			response.put("Status", restStatus);
 			return response;
 			//				}
