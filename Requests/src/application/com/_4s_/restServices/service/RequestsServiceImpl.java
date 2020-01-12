@@ -152,7 +152,10 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 				System.out.println("req.getVacation() " + req.getVacation().getVacation());
 			}
 		}
+		System.out.println("req.getTo_date().getDay()-req.getFrom_date().getDay()>=1 " + (req.getTo_date().getDay()-req.getFrom_date().getDay()>=1));
 		System.out.println("requests same day size " + requests2.size());
+		System.out.println("userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals(999) && req.getTo_date()!=null 	&& req.getTo_date().getDay()-req.getFrom_date().getDay()>=1" + 
+		(userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && req.getTo_date()!=null && req.getTo_date().getDay()-req.getFrom_date().getDay()>=1));
 		AttendanceStatus attendanceStatus = (AttendanceStatus)attendanceToday.get("Response"); 
 		if (settings.getAutomaticSignInOut().booleanValue() == false 
 				&& userRequest.getAttendanceType().equals(new Long(1))
@@ -195,8 +198,9 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 			//				LoginUsersRequests req = (LoginUsersRequests)reqItr.next()
 			//				if (req.getVacation().getId().equals(new Long(99)) && req.getTo_date()!=null && req.getTo_date().getDay()-req.getFrom_date().getDay()>=1) {
 			
+			System.out.println("full day errand on this day");
 			restStatus.setCode("329");
-			restStatus.setMessage("You Can't Sign in on a full errand day");
+			restStatus.setMessage("Sign in on a full errand day is not allowed");
 			restStatus.setStatus("False");
 			response.put("Status", restStatus);
 			return response;
