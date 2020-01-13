@@ -201,7 +201,7 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 			System.out.println("full day errand on this day");
 			restStatus.setCode("329");
 			restStatus.setMessage("Sign in on a full errand day is not allowed");
-			restStatus.setStatus("false");
+			restStatus.setStatus("False");
 			response.put("Status", restStatus);
 			return response;
 			//				}
@@ -829,7 +829,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					status.setStatus("False");
 					response.put("Status", status);
 					return response;
-				}
+				} 
 				////////////////////////////////////////////////////////////////////////////////////////////////////
 			} else {
 				//if not full day errand check requests overlapping/////////////////
