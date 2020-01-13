@@ -1992,13 +1992,16 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 //							Restrictions.eq("vacation.vacation", "999"))
 //					));
 			
+			
 			criteria.add(Restrictions.and(Restrictions.ne("request_id.id", new Long(10)), Restrictions.ne("request_id.id", new Long(11))));
 			if (sDate !=null && eDate != null) {
 				final Date startDate =sDate;
 				final Date endDate = eDate;
-				criteria.add(Restrictions.or(
+				criteria.add(Restrictions.or(Restrictions.or(
 						Expression.isNull("period_to"),
 						Restrictions.and(Expression.ge("period_to", startDate),Expression.le("period_to", endDate))
+						),
+						Restrictions.and(Expression.ge("period_from", startDate), Expression.le("period_from", endDate))
 						));
 			}					
 		} else if (requestType.equals(new Long(1))){
@@ -2009,6 +2012,14 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			
 			criteria.add(Restrictions.eq("request_id.id", new Long(3)));
 			criteria.add(Restrictions.and(Restrictions.ne("request_id.id", new Long(10)), Restrictions.ne("request_id.id", new Long(11))));
+			if (sDate !=null) {
+				final Date startDate =sDate;
+				criteria.add(Expression.ge("period_from", startDate));
+			}
+			if (eDate != null) {
+				final Date endDate = eDate;
+				criteria.add(Expression.le("period_from", endDate));
+			}
 		} else if (requestType.equals(new Long(2))){
 			log.debug("request type " + requestType);
 			
@@ -2017,15 +2028,17 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			criteria.add(Restrictions.eq("request_id.id", new Long(1)));
 			criteria.createCriteria("vacation").add(Restrictions.eq("vacation", "999"));
 			criteria.add(Restrictions.and(Restrictions.ne("request_id.id", new Long(10)), Restrictions.ne("request_id.id", new Long(11))));
+			
+			if (sDate !=null) {
+				final Date startDate =sDate;
+				criteria.add(Expression.ge("period_from", startDate));
+			}
+			if (eDate != null) {
+				final Date endDate = eDate;
+				criteria.add(Expression.le("period_from", endDate));
+			}
 		} 
-		if (sDate !=null) {
-			final Date startDate =sDate;
-			criteria.add(Expression.ge("period_from", startDate));
-		}
-		if (eDate != null) {
-			final Date endDate = eDate;
-			criteria.add(Expression.le("period_from", endDate));
-		}
+		
 		criteria.add(Restrictions.eq("empCode", emp.getEmpCode()));
 		criteria.addOrder(Property.forName("period_from").desc());
 		criteria
