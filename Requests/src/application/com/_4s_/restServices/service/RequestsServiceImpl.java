@@ -825,7 +825,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					////////////////////////////////
 				} else if (startedRequests != null && startedRequests.size() > 0) {
 					status.setCode("322");
-					status.setMessage("Another request is made already on the specified date, full day errand is not allowed.");
+					status.setMessage("Another request (" + ((LoginUsersRequests)startedRequests.get(0)).getRequestNumber() + ") is made already on the specified date, full day errand is not allowed.");
 					status.setStatus("False");
 					response.put("Status", status);
 					return response;
