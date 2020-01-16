@@ -155,12 +155,11 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 			if (req.getVacation()!=null) {
 				System.out.println("req.getVacation() " + req.getVacation().getVacation());
 			}
-			System.out.println("req.getTo_date().getDay()-req.getFrom_date().getDay()>=1 " + (req.getTo_date().getDay()-req.getFrom_date().getDay()>=1));
 		}
-		
+		System.out.println("req.getTo_date().getDay()-req.getFrom_date().getDay()>=1 " + (req.getTo_date().getDay()-req.getFrom_date().getDay()>=1));
 		System.out.println("requests same day size " + requests2.size());
 //		System.out.println("userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals(999) && req.getTo_date()!=null 	&& req.getTo_date().getDay()-req.getFrom_date().getDay()>=1" + 
-		(userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && req.getTo_date()!=null && req.getTo_date().getDay()-req.getFrom_date().getDay()>=1));
+//		(userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && req.getTo_date()!=null && req.getTo_date().getDay()-req.getFrom_date().getDay()>=1));
 		AttendanceStatus attendanceStatus = (AttendanceStatus)attendanceToday.get("Response"); 
 		if (settings.getAutomaticSignInOut().booleanValue() == false 
 				&& userRequest.getAttendanceType().equals(new Long(1))

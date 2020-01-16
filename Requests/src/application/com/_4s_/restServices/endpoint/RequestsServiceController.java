@@ -175,8 +175,11 @@ public class RequestsServiceController {
 			restStatus.setCode("200");
 			System.out.println("will sign in");
 			UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+			System.out.println("token " + token);
 			UserDetails userDet = (UserDetails)token.getPrincipal();
+			System.out.println("userdet" + userDet);
 			User user = requestsService.getUser(userDet.getUsername());
+			System.out.println("user " + user);
 			response = requestsService.signInOut(userRequest,user.getEmployee().getId());
 			
 			return response;
