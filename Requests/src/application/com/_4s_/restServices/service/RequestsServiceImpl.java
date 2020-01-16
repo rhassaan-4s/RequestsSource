@@ -851,10 +851,21 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					temp.setTime(loginUsersRequests.getFrom_date());
 				}
 
+				cal = Calendar.getInstance();
+				cal.setTime(loginUsersRequests.getPeriod_from());
+				cal.set(Calendar.HOUR, 0);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				Date from = cal.getTime();
+				cal.set(Calendar.HOUR, 23);
+				cal.set(Calendar.MINUTE, 59);
+				cal.set(Calendar.SECOND, 59);
+				Date t = cal.getTime();
 				System.out.println("validating non full errand requests 2");
 				System.out.println("loginUsersRequests.getPeriod_from() " + loginUsersRequests.getPeriod_from());
 				System.out.println("loginUsersRequests.getPeriod_to() " + loginUsersRequests.getPeriod_to());
-				List requests = requestsApprovalManager.getRequestsByExactDatePeriodAndEmpCode(loginUsersRequests.getPeriod_from(), loginUsersRequests.getPeriod_to(), loginUsersRequests.getEmpCode());
+				System.out.println("from " + from + " to " + t);
+				List requests = requestsApprovalManager.getRequestsByExactDatePeriodAndEmpCode(from, t, loginUsersRequests.getEmpCode());
 				Map  attendance = requestsApprovalManager.checkAttendance(loginUsersRequests.getPeriod_from(), loginUsers.getEmpCode());
 				System.out.println("#@#@validating non full errand requests " + requests.size());
 				
