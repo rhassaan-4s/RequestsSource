@@ -143,9 +143,13 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 //		List attendanceRequests = requestsApprovalManager.getAttendanceRequests(mCalDate.getDate(),loginUsers.getEmpCode());
 		Map attendanceToday = checkAttendance(mCalDate.getDate(), loginUsers.getEmpCode());
 		List requests2 = requestsApprovalManager.getRequestsByExactDatePeriodAndRequestTypeForEmployee(dateOnly, dateOnly, new Long(1), loginUsers.getEmpCode());
+		System.out.println("requests2 " + requests2.size());
 		LoginUsersRequests req = null;
 		if (requests2.size() > 0) {
+			System.out.println("requests size greater than 1 can't allow sign in probably");
 			req = (LoginUsersRequests)requests2.get(0);
+			System.out.println("req " + req);
+			
 			System.out.println("request " + req.getRequestNumber());
 			System.out.println("req.getTo_date().getDay()-req.getFrom_date().getDay() " + (req.getTo_date().getDay()-req.getFrom_date().getDay()));
 			if (req.getVacation()!=null) {

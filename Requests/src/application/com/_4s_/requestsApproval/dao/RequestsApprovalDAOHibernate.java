@@ -1997,12 +1997,13 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			if (sDate !=null && eDate != null) {
 				final Date startDate =sDate;
 				final Date endDate = eDate;
-				criteria.add(Restrictions.and(Restrictions.or(
-						Expression.isNull("period_to"),
-						Restrictions.and(Expression.ge("period_to", startDate),Expression.le("period_to", endDate))
-						),
-						Restrictions.and(Expression.ge("period_from", startDate), Expression.le("period_from", endDate))
-						));
+				criteria.add(Restrictions.or(
+												Restrictions.and(Expression.isNull("period_to"),Expression.between("period_from", startDate, endDate)),
+												Restrictions.or(Restrictions.or(Expression.between("period_to", startDate,endDate),Expression.between("period_from",startDate,endDate)),
+																Restrictions.and(Expression.ge("period_to", startDate),Expression.le("period_from", startDate))
+												)
+											)
+							);
 			}					
 		} else if (requestType.equals(new Long(1))){
 			
