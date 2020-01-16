@@ -161,7 +161,8 @@ public class RequestsServiceController {
 		RestStatus restStatus = new RestStatus();
 		Settings settings = (Settings)requestsService.getRequestsApprovalManager().getObject(Settings.class, new Long(1));
 		
-		
+		System.out.println("userRequest.getAttendanceType() "+userRequest.getAttendanceType());
+		System.out.println("userRequest.getAttendanceTime() " + userRequest.getAttendanceTime());
 		if (userRequest.getAttendanceType()==null || userRequest.getAttendanceTime() == null 
 				|| userRequest.getAttendanceTime().isEmpty()|| userRequest.getLatitude()==null || userRequest.getLongitude()==null){
 			restStatus.setCode("303");
@@ -172,7 +173,7 @@ public class RequestsServiceController {
 		} else {
 			restStatus.setStatus("true");
 			restStatus.setCode("200");
-			
+			System.out.println("will sign in");
 			UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 			UserDetails userDet = (UserDetails)token.getPrincipal();
 			User user = requestsService.getUser(userDet.getUsername());
