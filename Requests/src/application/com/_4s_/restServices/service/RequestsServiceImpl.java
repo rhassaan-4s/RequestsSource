@@ -902,7 +902,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 							} else {
 								System.out.println("request in same interval " + req.getRequestNumber() + req.getFrom_date());
 								status.setCode("323");
-								status.setMessage("Please finish your started requests during the same time interval specified");
+								status.setMessage("Please finish your started requests ("+ req.getRequestNumber()+") during the same time interval specified");
 								status.setStatus("False");
 								response.put("Status", status);
 								return response;
