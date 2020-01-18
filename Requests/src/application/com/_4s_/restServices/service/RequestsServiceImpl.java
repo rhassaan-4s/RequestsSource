@@ -142,7 +142,15 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 	if (settings.getAutomaticSignInOut().booleanValue() == false) {
 //		List attendanceRequests = requestsApprovalManager.getAttendanceRequests(mCalDate.getDate(),loginUsers.getEmpCode());
 		Map attendanceToday = checkAttendance(mCalDate.getDate(), loginUsers.getEmpCode());
-		List requests2 = requestsApprovalManager.getRequestsByExactDatePeriodAndRequestTypeForEmployee(dateOnly, dateOnly, new Long(1), loginUsers.getEmpCode());
+//		List requests2 = requestsApprovalManager.getRequestsByExactDatePeriodAndRequestTypeForEmployee(dateOnly, dateOnly, new Long(1), loginUsers.getEmpCode());
+		RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
+		
+		requestQuery.setDateFrom(df.format(dateOnly));
+		
+		requestQuery.setDateTo(df.format(dateOnly));
+		
+		Map reqs = checkStartedRequests(requestQuery, emp);
+		List requests2 = (List)reqs.get("Response");
 		System.out.println("requests2 " + requests2.size());
 		LoginUsersRequests req = null;
 		if (requests2.size() > 0) {
