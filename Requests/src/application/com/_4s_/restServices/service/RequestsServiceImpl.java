@@ -850,6 +850,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				} else {
 					temp.setTime(loginUsersRequests.getFrom_date());
 				}
+				
 
 				cal = Calendar.getInstance();
 				cal.setTime(loginUsersRequests.getPeriod_from());
@@ -869,9 +870,9 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				
 				RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
 				
-//				requestQuery.setDateFrom(userRequest.getAttendanceTime());
+				requestQuery.setDateFrom(df.format(from));
 				
-				requestQuery.setDateTo(userRequest.getAttendanceTime());
+				requestQuery.setDateTo(df.format(t));
 				Map reqs = checkStartedRequests(requestQuery, emp);
 				List requests = (List)reqs.get("Response");
 				
