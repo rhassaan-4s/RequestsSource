@@ -155,13 +155,19 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 		LoginUsersRequests req = null;
 		if (requests2.size() > 0) {
 			System.out.println("requests size greater than 1 can't allow sign in probably");
-			req = (LoginUsersRequests)requests2.get(0);
-			System.out.println("req " + req);
-			
-			System.out.println("request " + req.getRequestNumber());
-			System.out.println("req.getTo_date().getDay()-req.getFrom_date().getDay() " + (req.getTo_date().getDay()-req.getFrom_date().getDay()));
-			if (req.getVacation()!=null) {
-				System.out.println("req.getVacation() " + req.getVacation().getVacation());
+
+			Iterator itr = requests2.iterator();
+			while (itr.hasNext()) {
+				req = (LoginUsersRequests)itr.next();
+				System.out.println("req " + req);
+
+				System.out.println("request " + req.getRequestNumber());
+				System.out.println("req.getTo_date().getDay()-req.getFrom_date().getDay() " + (req.getTo_date().getDay()-req.getFrom_date().getDay()));
+				
+				System.out.println("condition for full day errand validation:####  "+(userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && req.getTo_date()!=null && req.getTo_date().getDay()-req.getFrom_date().getDay()>=1));
+				if (req.getVacation()!=null) {
+					System.out.println("req.getVacation() " + req.getVacation().getVacation());
+				}
 			}
 		}
 //		System.out.println("req.getTo_date().getDay()-req.getFrom_date().getDay()>=1 " + (req.getTo_date().getDay()-req.getFrom_date().getDay()>=1));
@@ -201,14 +207,7 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 			response.put("Status", restStatus);
 			return response;
 			/////////////////////////////////////////////////////////////////////////////////////
-		} else if (userRequest.getAttendanceType().equals(new Long(1)) 
-				&& req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && req.getTo_date()!=null 
-				&& req.getTo_date().getDay()-req.getFrom_date().getDay()>=1) {
-			////////////////check full day errand///////////////////////////////////////////////
-			//			Iterator reqItr = requests.iterator();
-			//			while(reqItr.hasNext()) {
-			//				LoginUsersRequests req = (LoginUsersRequests)reqItr.next()
-			//				if (req.getVacation().getId().equals(new Long(99)) && req.getTo_date()!=null && req.getTo_date().getDay()-req.getFrom_date().getDay()>=1) {
+		} else if (userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && req.getTo_date()!=null && req.getTo_date().getDay()-req.getFrom_date().getDay()>=1) {
 			
 			System.out.println("full day errand on this day");
 			restStatus.setCode("329");
