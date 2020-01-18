@@ -865,7 +865,17 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				System.out.println("loginUsersRequests.getPeriod_from() " + loginUsersRequests.getPeriod_from());
 				System.out.println("loginUsersRequests.getPeriod_to() " + loginUsersRequests.getPeriod_to());
 				System.out.println("from " + from + " to " + t);
-				List requests = requestsApprovalManager.getRequestsByExactDatePeriodAndEmpCode(from, t, loginUsersRequests.getEmpCode());
+//				List requests = requestsApprovalManager.getRequestsByExactDatePeriodAndEmpCode(from, t, loginUsersRequests.getEmpCode());
+				
+				RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
+				
+//				requestQuery.setDateFrom(userRequest.getAttendanceTime());
+				
+				requestQuery.setDateTo(userRequest.getAttendanceTime());
+				Map reqs = checkStartedRequests(requestQuery, emp);
+				List requests = (List)reqs.get("Response");
+				
+				
 				Map  attendance = requestsApprovalManager.checkAttendance(loginUsersRequests.getPeriod_from(), loginUsers.getEmpCode());
 				System.out.println("#@#@validating non full errand requests " + requests.size());
 				
