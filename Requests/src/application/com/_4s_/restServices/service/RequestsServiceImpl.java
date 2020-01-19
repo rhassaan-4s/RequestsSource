@@ -229,7 +229,16 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 					restStatus.setStatus("False");
 					response.put("Status", restStatus);
 					return response;
-				} 
+				} else {
+					if (req.getTo_date() == null) {
+						System.out.println("Finish Started Request First");
+						restStatus.setCode("330");
+						restStatus.setMessage("Finish Started Request First ("+req.getRequestNumber()+")");
+						restStatus.setStatus("False");
+						response.put("Status", restStatus);
+						return response;
+					}
+				}
 			}
 			return createManualAttendance(loginUsers,mCalDate,emp,userRequest);
 			///////////////////////////////////////////////////////////////////////////////////
