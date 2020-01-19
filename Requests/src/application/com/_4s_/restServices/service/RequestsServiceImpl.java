@@ -710,6 +710,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				requestQuery.setDateTo(userRequest.getAttendanceTime());
 				requestQuery.setEmp_code(emp.getEmpCode());
 				
+				
 				Map startedRequests = checkStartedRequests(requestQuery, emp);
 				List startedRequestsResponse = (List)startedRequests.get("Response");
 				System.out.println("#$#$starting permissions or errands ---- checked started requests ---" + startedRequestsResponse.size());
@@ -717,6 +718,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 //				Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
 //				List results = (List)response.get("Response");
 				Iterator itr = startedRequestsResponse.iterator();
+				
 				System.out.println("checkStartedRequests: automatic errands end " + settings.getAutomaticErrandEnd());
 				Calendar dayBeforeEndDate = Calendar.getInstance();
 				dayBeforeEndDate.setTime(mCalDate.getDate());
@@ -926,7 +928,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				
 				
 				Map  attendance = requestsApprovalManager.checkAttendance(loginUsersRequests.getPeriod_from(), loginUsers.getEmpCode());
-				System.out.println("#@#@validating non full errand requests " + requests.size());
+				System.out.println("Bug check#@#@validating non full errand requests " + requests.size());
 				
 //				Iterator itr = requests.iterator();
 				
@@ -935,6 +937,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					Iterator reqItr = requests.iterator();
 					while (reqItr.hasNext()) {
 						LoginUsersRequests req = (LoginUsersRequests)reqItr.next();
+						System.out.println("request number " + req.getRequestNumber());
 						System.out.println("req.getPeriod_to() " + req.getPeriod_to());
 						if (req.getPeriod_to() == null) {
 							System.out.println("checking if overlapping requests are sign in/out " + req.getRequest_id().getId());
