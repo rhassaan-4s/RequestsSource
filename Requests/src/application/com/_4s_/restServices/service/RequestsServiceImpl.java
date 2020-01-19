@@ -153,27 +153,8 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 		List requests2 = (List)reqs.get("Response");
 		System.out.println("requests2 " + requests2.size());
 		LoginUsersRequests req = null;
-		if (requests2.size() > 0) {
-			System.out.println("requests size greater than 1 can't allow sign in probably");
-
-			Iterator itr = requests2.iterator();
-			while (itr.hasNext()) {
-				req = (LoginUsersRequests)itr.next();
-				System.out.println("req " + req);
-
-				System.out.println("request " + req.getRequestNumber());
-				System.out.println("req.getTo_date().getDay()-req.getFrom_date().getDay() " + (req.getTo_date().getDay()-req.getFrom_date().getDay()));
-				
-				System.out.println("condition for full day errand validation:####  "+(userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && req.getTo_date()!=null && req.getTo_date().getDay()-req.getFrom_date().getDay()>=1));
-				if (req.getVacation()!=null) {
-					System.out.println("req.getVacation() " + req.getVacation().getVacation());
-				}
-			}
-		}
-//		System.out.println("req.getTo_date().getDay()-req.getFrom_date().getDay()>=1 " + (req.getTo_date().getDay()-req.getFrom_date().getDay()>=1));
-//		System.out.println("requests same day size " + requests2.size());
-//		System.out.println("userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals(999) && req.getTo_date()!=null 	&& req.getTo_date().getDay()-req.getFrom_date().getDay()>=1" + 
-//		(userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && req.getTo_date()!=null && req.getTo_date().getDay()-req.getFrom_date().getDay()>=1));
+		
+		System.out.println("will validate");
 		AttendanceStatus attendanceStatus = (AttendanceStatus)attendanceToday.get("Response"); 
 		if (settings.getAutomaticSignInOut().booleanValue() == false 
 				&& userRequest.getAttendanceType().equals(new Long(1))
@@ -207,86 +188,41 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 			response.put("Status", restStatus);
 			return response;
 			/////////////////////////////////////////////////////////////////////////////////////
-		} else if (userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && req.getTo_date()!=null && req.getTo_date().getDay()-req.getFrom_date().getDay()>=1) {
-			
-			System.out.println("full day errand on this day");
-			restStatus.setCode("329");
-			restStatus.setMessage("Sign in on a full errand day is not allowed");
-			restStatus.setStatus("False");
-			response.put("Status", restStatus);
-			return response;
-			//				}
-			//			}
+		} else if (requests2.size() > 0) { 
+			System.out.println("requests size greater than 1 can't allow sign in probably");
+
+			Iterator itr = requests2.iterator();
+			while (itr.hasNext()) {
+				req = (LoginUsersRequests)itr.next();
+				System.out.println("req " + req);
+
+				System.out.println("request " + req.getRequestNumber());
+				System.out.println("userRequest.getAttendanceType().equals(new Long(1)) " + userRequest.getAttendanceType().equals(new Long(1)));
+				System.out.println("req.getVacation().getVacation().equals(999)" + req.getVacation().getVacation().equals("999"));
+				System.out.println("req.getTo_date().getDay()-req.getFrom_date().getDay() " + (req.getTo_date().getDate()-req.getFrom_date().getDate()>=1));
+
+				System.out.println("condition for full day errand validation:####  "+(userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && req.getTo_date()!=null && req.getTo_date().getDate()-req.getFrom_date().getDate()>=1));
+				if (req.getVacation()!=null) {
+					System.out.println("req.getVacation() " + req.getVacation().getVacation());
+				}
+
+
+				if (userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && req.getTo_date()!=null && req.getTo_date().getDate()-req.getFrom_date().getDate()>=1) {  
+
+					System.out.println("full day errand on this day");
+					restStatus.setCode("329");
+					restStatus.setMessage("Sign in on a full errand day is not allowed");
+					restStatus.setStatus("False");
+					response.put("Status", restStatus);
+					return response;
+				} 
+			}
+			return createManualAttendance(loginUsers,mCalDate,emp,userRequest);
 			///////////////////////////////////////////////////////////////////////////////////
-		}else {
-			LoginUsersRequests loginUsersRequests = new LoginUsersRequests();
-
-			loginUsersRequests.setLogin_user(loginUsers);
-			/////////////////////////////////////////////////////
-
-			// request number
-			if (loginUsersRequests.getId() == null){
-				String requestNumber="";
-				requestNumber=requestsApprovalManager.CreateRequestNumber();
-				loginUsersRequests.setRequestNumber(requestNumber);
-			}
-
-			loginUsersRequests.setRequest_date(mCalDate.getDate());
-			loginUsersRequests.setPeriod_from(mCalDate.getDate());
-
-			if(loginUsersRequests.getApproved()==null || loginUsersRequests.getApproved().equals("")){
-				loginUsersRequests.setApproved(new Long(0));	
-			}
-			if(loginUsersRequests.getApplicable()==null || loginUsersRequests.getApplicable().equals("")){
-				loginUsersRequests.setApplicable(new Long(1));			
-			}
-			if(loginUsersRequests.getPosted()==null||loginUsersRequests.getPosted().equals("")){
-				loginUsersRequests.setPosted(new Long(0));
-			}
-			if(loginUsersRequests.getReply()==null||loginUsersRequests.getReply().equals("")){
-				loginUsersRequests.setReply("--");
-			}
-			if(loginUsersRequests.getLeave_effect()==null||loginUsersRequests.getLeave_effect().equals("")){
-				loginUsersRequests.setLeave_effect("0");
-			}
-			if(loginUsersRequests.getLeave_type()==null||loginUsersRequests.getLeave_type().equals("")){
-				loginUsersRequests.setLeave_type("0");
-			}
-			if(loginUsersRequests.getFrom_date()==null|| loginUsersRequests.getFrom_date().equals("")){
-				loginUsersRequests.setFrom_date(loginUsersRequests.getPeriod_from());
-			}
-
-			loginUsersRequests.setEmpCode(emp.getEmpCode());
-			loginUsersRequests.setNotes("Android Sign In/Out");
-
-
-			//10 signin 11 signout
-			RequestTypes reqType = null;
-			System.out.println("userRequest.getAttendanceType() " + userRequest.getAttendanceType());
-			if (userRequest.getAttendanceType().equals(new Long(1))) {
-				reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(10));
-			} else {
-				reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(11));
-			}
-			loginUsersRequests.setRequest_id(reqType);
-
-			loginUsersRequests.setLatitude(userRequest.getLatitude());
-			loginUsersRequests.setLongitude(userRequest.getLongitude());
-
-			requestsApprovalManager.saveObject(loginUsersRequests);
-
-//			return loginUsersRequests;
-			restStatus.setStatus("true");
-			restStatus.setCode("200");
-			restStatus.setMessage("Successful Manual Transaction");
-			response.put("Status", restStatus);
-			
-			Map output = new HashMap();
-			output.put("request_number", loginUsersRequests.getRequestNumber());
-			response.put("Response" , output);
-			
-			return response;
+		} else {
+			return createManualAttendance(loginUsers,mCalDate,emp,userRequest);
 		}
+		
 	} else {
 		String trans_type = null;
 		if (userRequest.getAttendanceType().equals(new Long(1))) {
@@ -308,6 +244,78 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 }
 
 
+
+private Map createManualAttendance(LoginUsers loginUsers, MultiCalendarDate mCalDate, Employee emp, AttendanceRequest userRequest) {
+	LoginUsersRequests loginUsersRequests = new LoginUsersRequests();
+
+	loginUsersRequests.setLogin_user(loginUsers);
+	/////////////////////////////////////////////////////
+
+	// request number
+	if (loginUsersRequests.getId() == null){
+		String requestNumber="";
+		requestNumber=requestsApprovalManager.CreateRequestNumber();
+		loginUsersRequests.setRequestNumber(requestNumber);
+	}
+
+	loginUsersRequests.setRequest_date(mCalDate.getDate());
+	loginUsersRequests.setPeriod_from(mCalDate.getDate());
+
+	if(loginUsersRequests.getApproved()==null || loginUsersRequests.getApproved().equals("")){
+		loginUsersRequests.setApproved(new Long(0));	
+	}
+	if(loginUsersRequests.getApplicable()==null || loginUsersRequests.getApplicable().equals("")){
+		loginUsersRequests.setApplicable(new Long(1));			
+	}
+	if(loginUsersRequests.getPosted()==null||loginUsersRequests.getPosted().equals("")){
+		loginUsersRequests.setPosted(new Long(0));
+	}
+	if(loginUsersRequests.getReply()==null||loginUsersRequests.getReply().equals("")){
+		loginUsersRequests.setReply("--");
+	}
+	if(loginUsersRequests.getLeave_effect()==null||loginUsersRequests.getLeave_effect().equals("")){
+		loginUsersRequests.setLeave_effect("0");
+	}
+	if(loginUsersRequests.getLeave_type()==null||loginUsersRequests.getLeave_type().equals("")){
+		loginUsersRequests.setLeave_type("0");
+	}
+	if(loginUsersRequests.getFrom_date()==null|| loginUsersRequests.getFrom_date().equals("")){
+		loginUsersRequests.setFrom_date(loginUsersRequests.getPeriod_from());
+	}
+
+	loginUsersRequests.setEmpCode(emp.getEmpCode());
+	loginUsersRequests.setNotes("Android Sign In/Out");
+
+
+	//10 signin 11 signout
+	RequestTypes reqType = null;
+	System.out.println("userRequest.getAttendanceType() " + userRequest.getAttendanceType());
+	if (userRequest.getAttendanceType().equals(new Long(1))) {
+		reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(10));
+	} else {
+		reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(11));
+	}
+	loginUsersRequests.setRequest_id(reqType);
+
+	loginUsersRequests.setLatitude(userRequest.getLatitude());
+	loginUsersRequests.setLongitude(userRequest.getLongitude());
+
+	requestsApprovalManager.saveObject(loginUsersRequests);
+
+//	return loginUsersRequests;
+	Map response = new HashMap();
+	RestStatus restStatus = new RestStatus();
+	restStatus.setStatus("true");
+	restStatus.setCode("200");
+	restStatus.setMessage("Successful Manual Transaction");
+	response.put("Status", restStatus);
+	
+	Map output = new HashMap();
+	output.put("request_number", loginUsersRequests.getRequestNumber());
+	response.put("Response" , output);
+	
+	return response;
+}
 
 public User getUser(String username) {
 	// TODO Auto-generated method stub
