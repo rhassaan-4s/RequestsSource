@@ -697,13 +697,13 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
 				System.out.println("#$#$starting permissions or errands");
 //				//1 permission 2 errands
-//				if (userRequest.getAttendanceType().equals(new Long(3))) {//permission start
-//					requestQuery.setRequestType("1");
-//				} else if (userRequest.getAttendanceType().equals(new Long(5))) {//errand start
-//					requestQuery.setRequestType("2");
-//				} else {
-//					System.out.println("condition not handled 2 " + userRequest.getAttendanceType());
-//				}
+				if (userRequest.getAttendanceType().equals(new Long(3))) {//permission start
+					requestQuery.setRequestType("1");
+				} else if (userRequest.getAttendanceType().equals(new Long(5))) {//errand start
+					requestQuery.setRequestType("2");
+				} else {
+					System.out.println("condition not handled 2 " + userRequest.getAttendanceType());
+				}
 				
 //				requestQuery.setDateFrom(userRequest.getAttendanceTime());
 				
