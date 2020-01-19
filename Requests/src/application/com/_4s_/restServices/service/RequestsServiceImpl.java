@@ -141,7 +141,9 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 	System.out.println("settings.getAutomaticSignInOut().booleanValue() " + settings.getAutomaticSignInOut().booleanValue());
 	if (settings.getAutomaticSignInOut().booleanValue() == false) {
 //		List attendanceRequests = requestsApprovalManager.getAttendanceRequests(mCalDate.getDate(),loginUsers.getEmpCode());
+		System.out.println("Will sign in manually");
 		Map attendanceToday = checkAttendance(mCalDate.getDate(), loginUsers.getEmpCode());
+		System.out.println("attendance today size " + ((List)attendanceToday.get("Response")).size());
 //		List requests2 = requestsApprovalManager.getRequestsByExactDatePeriodAndRequestTypeForEmployee(dateOnly, dateOnly, new Long(1), loginUsers.getEmpCode());
 		RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
 		
