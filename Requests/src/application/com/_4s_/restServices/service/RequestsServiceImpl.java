@@ -728,8 +728,8 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					while (itr.hasNext()) {
 						LoginUsersRequests req = (LoginUsersRequests)itr.next();
 						System.out.println("checkStartedRequests: period to " + req.getPeriod_to());
-						System.out.println("req.getRequest_id().equals(loginUsersRequests.getRequest_id() " + req.getRequest_id().equals(loginUsersRequests.getRequest_id()));
-						if (!req.getRequest_id().getId().equals(new Long(10)) && !req.getRequest_id().getId().equals(new Long(11)) &&req.getPeriod_from().before(dayBeforeEndDate.getTime()) && req.getPeriod_to() == null && req.getRequest_id().equals(loginUsersRequests.getRequest_id())) {
+						System.out.println("req.getRequest_id().equals(loginUsersRequests.getRequest_id() " + req.getRequest_id().equals(reqType));
+						if (!req.getRequest_id().getId().equals(new Long(10)) && !req.getRequest_id().getId().equals(new Long(11)) &&req.getPeriod_from().before(dayBeforeEndDate.getTime()) && req.getPeriod_to() == null && req.getRequest_id().equals(reqType)) {
 							String requestEndTime = settings.getAutomaticErrandEnd();
 							String [] time =  requestEndTime.split(":");
 							System.out.println("Time hour " + time[0] + " minutes " + time[1]);
