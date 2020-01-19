@@ -208,18 +208,21 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 				long diff = 0;
 				
 				if(req.getTo_date() != null) {
-					diff = req.getFrom_date().getTime() - req.getTo_date().getTime();
+					diff = req.getTo_date().getTime() - req.getFrom_date().getTime() ;
 				}
 				 
 				int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
-				double diffhours = (double) (diff / (60 * 60 * 1000));
-				System.out.println("difference between hours: " + diffhours);
-
 				System.out.println("difference between days: " + diffDays);
-				System.out.println(" diffDays>=1 " +  (diffDays>=1));
+//				double diffhours = (double) (diff / (60 * 60 * 1000));
+//				System.out.println("difference between hours: " + diffhours);
+				int diffmin = (int) (diff / (60 * 1000));
+				System.out.println("difference between minutues: " + diffmin);
 
-				System.out.println("condition for full day errand validation:####  "+ (userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && diffhours>=23));
-				if (userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && diffhours>=23) {  
+				
+				System.out.println(" diffmin>=1439 " +  (diffmin>=1439));
+
+				System.out.println("condition for full day errand validation:####  "+ (userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && diffmin>=1439));
+				if (userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && diffmin>=1439) {  
 
 					System.out.println("full day errand on this day");
 					restStatus.setCode("329");
