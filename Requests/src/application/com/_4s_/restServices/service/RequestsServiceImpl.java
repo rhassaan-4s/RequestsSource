@@ -695,15 +695,15 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				}
 			} else {//starting permissions and errands
 				RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
-				
-				//1 permission 2 errands
-				if (userRequest.getAttendanceType().equals(new Long(3))) {//permission start
-					requestQuery.setRequestType("1");
-				} else if (userRequest.getAttendanceType().equals(new Long(5))) {//errand start
-					requestQuery.setRequestType("2");
-				} else {
-					System.out.println("condition not handled 2 " + userRequest.getAttendanceType());
-				}
+				System.out.println("#$#$starting permissions or errands");
+//				//1 permission 2 errands
+//				if (userRequest.getAttendanceType().equals(new Long(3))) {//permission start
+//					requestQuery.setRequestType("1");
+//				} else if (userRequest.getAttendanceType().equals(new Long(5))) {//errand start
+//					requestQuery.setRequestType("2");
+//				} else {
+//					System.out.println("condition not handled 2 " + userRequest.getAttendanceType());
+//				}
 				
 //				requestQuery.setDateFrom(userRequest.getAttendanceTime());
 				
@@ -711,7 +711,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				
 				Map startedRequests = checkStartedRequests(requestQuery, emp);
 				List startedRequestsResponse = (List)startedRequests.get("Response");
-				
+				System.out.println("#$#$starting permissions or errands ---- checked started requests ---" + startedRequestsResponse.size());
 				///////////////////////end requests automatically////////////////////////////////////////////////
 //				Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
 //				List results = (List)response.get("Response");
@@ -727,7 +727,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					while (itr.hasNext()) {
 						LoginUsersRequests req = (LoginUsersRequests)itr.next();
 						System.out.println("checkStartedRequests: period to " + req.getPeriod_to());
-						if (req.getPeriod_from().before(dayBeforeEndDate.getTime())) {
+						if ( !req.getRequest_id().getId().equals(new Long(10)) && !req.getRequest_id().getId().equals(new Long(11)) &&req.getPeriod_from().before(dayBeforeEndDate.getTime())) {
 							if (req.getPeriod_to() == null) {
 								String requestEndTime = settings.getAutomaticErrandEnd();
 								String [] time =  requestEndTime.split(":");
@@ -743,8 +743,15 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 									requestsApprovalManager.saveObject(req);
 								}
 							}
-						} else {
+						} else if ( !req.getRequest_id().getId().equals(new Long(10)) && !req.getRequest_id().getId().equals(new Long(11))) {
 							System.out.println("request opened in the last 24hrs is not ended");
+						} else if (req.getRequest_id().getId().equals(new Long(10))){
+							System.out.println("sign in request opened in the last 24hrs is not ended");
+							status.setCode("331");
+							status.setMessage("A sign in request is already started (#" + ((LoginUsersRequests)startedRequestsResponse.get(0)).getRequestNumber() + ") that hasn't been ended yet.");
+							status.setStatus("False");
+							response.put("Status", status);
+							return response;
 						}
 					}
 					startedRequests = requestsApprovalManager.checkStartedRequests(requestQuery,emp);
