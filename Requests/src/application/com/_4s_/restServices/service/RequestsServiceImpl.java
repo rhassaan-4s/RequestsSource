@@ -708,6 +708,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 //				requestQuery.setDateFrom(userRequest.getAttendanceTime());
 				
 				requestQuery.setDateTo(userRequest.getAttendanceTime());
+				requestQuery.setEmp_code(emp.getEmpCode());
 				
 				Map startedRequests = checkStartedRequests(requestQuery, emp);
 				List startedRequestsResponse = (List)startedRequests.get("Response");
