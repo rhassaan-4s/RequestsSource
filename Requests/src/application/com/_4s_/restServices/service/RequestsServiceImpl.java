@@ -143,7 +143,8 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 //		List attendanceRequests = requestsApprovalManager.getAttendanceRequests(mCalDate.getDate(),loginUsers.getEmpCode());
 		System.out.println("Will sign in manually");
 		Map attendanceToday = checkAttendance(mCalDate.getDate(), loginUsers.getEmpCode());
-		System.out.println("attendance today size " + ((List)attendanceToday.get("Response")).size());
+		AttendanceStatus attendanceStatus = (AttendanceStatus)attendanceToday.get("Response"); 
+		System.out.println("attendance today size " + attendanceStatus.getSignInTime() + " - " + attendanceStatus.getSignOutTime());
 //		List requests2 = requestsApprovalManager.getRequestsByExactDatePeriodAndRequestTypeForEmployee(dateOnly, dateOnly, new Long(1), loginUsers.getEmpCode());
 		RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
 		
@@ -157,7 +158,7 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 		LoginUsersRequests req = null;
 		
 		System.out.println("will validate");
-		AttendanceStatus attendanceStatus = (AttendanceStatus)attendanceToday.get("Response"); 
+		
 		if (settings.getAutomaticSignInOut().booleanValue() == false 
 				&& userRequest.getAttendanceType().equals(new Long(1))
 				&& (attendanceStatus.getSignIn().booleanValue()==true && attendanceStatus.getSignOut().booleanValue()==false)) {
