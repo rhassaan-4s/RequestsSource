@@ -728,23 +728,22 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					while (itr.hasNext()) {
 						LoginUsersRequests req = (LoginUsersRequests)itr.next();
 						System.out.println("checkStartedRequests: period to " + req.getPeriod_to());
-						if ( !req.getRequest_id().getId().equals(new Long(10)) && !req.getRequest_id().getId().equals(new Long(11)) &&req.getPeriod_from().before(dayBeforeEndDate.getTime())) {
-							if (req.getPeriod_to() == null) {
-								String requestEndTime = settings.getAutomaticErrandEnd();
-								String [] time =  requestEndTime.split(":");
-								System.out.println("Time hour " + time[0] + " minutes " + time[1]);
-								if (req.getPeriod_from() != null) {
-									Calendar cal2 = Calendar.getInstance();
-									cal2.setTime(req.getPeriod_from());
-									cal2.set(Calendar.HOUR, Integer.parseInt(time[0]));
-									cal2.set(Calendar.MINUTE, Integer.parseInt(time[1]));
-									cal2.set(Calendar.SECOND, 0);
-									req.setPeriod_to(cal2.getTime());
-									req.setNotes(req.getNotes() + " (Request ended automatically by the system)");
-									requestsApprovalManager.saveObject(req);
-								}
+						System.out.println("req.getRequest_id().equals(loginUsersRequests.getRequest_id() " + req.getRequest_id().equals(loginUsersRequests.getRequest_id()));
+						if (!req.getRequest_id().getId().equals(new Long(10)) && !req.getRequest_id().getId().equals(new Long(11)) &&req.getPeriod_from().before(dayBeforeEndDate.getTime()) && req.getPeriod_to() == null && req.getRequest_id().equals(loginUsersRequests.getRequest_id())) {
+							String requestEndTime = settings.getAutomaticErrandEnd();
+							String [] time =  requestEndTime.split(":");
+							System.out.println("Time hour " + time[0] + " minutes " + time[1]);
+							if (req.getPeriod_from() != null) {
+								Calendar cal2 = Calendar.getInstance();
+								cal2.setTime(req.getPeriod_from());
+								cal2.set(Calendar.HOUR, Integer.parseInt(time[0]));
+								cal2.set(Calendar.MINUTE, Integer.parseInt(time[1]));
+								cal2.set(Calendar.SECOND, 0);
+								req.setPeriod_to(cal2.getTime());
+								req.setNotes(req.getNotes() + " (Request ended automatically by the system)");
+								requestsApprovalManager.saveObject(req);
 							}
-						} else if ( !req.getRequest_id().getId().equals(new Long(10)) && !req.getRequest_id().getId().equals(new Long(11))) {
+						} else if ( !req.getRequest_id().getId().equals(new Long(10)) && !req.getRequest_id().getId().equals(new Long(11)) && req.getPeriod_to() == null) {
 							System.out.println("request opened in the last 24hrs is not ended");
 						} else if (req.getRequest_id().getId().equals(new Long(10))){
 							System.out.println("sign in request opened in the last 24hrs is not ended");
