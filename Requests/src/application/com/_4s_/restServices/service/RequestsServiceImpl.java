@@ -198,7 +198,6 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 
 				System.out.println("request " + req.getRequestNumber());
 				System.out.println("userRequest.getAttendanceType().equals(new Long(1)) " + userRequest.getAttendanceType().equals(new Long(1)));
-				System.out.println("req.getVacation().getVacation().equals(999)" + req.getVacation().getVacation().equals("999"));
 
 				if (req.getVacation()!=null) {
 					System.out.println("req.getVacation() " + req.getVacation().getVacation());
