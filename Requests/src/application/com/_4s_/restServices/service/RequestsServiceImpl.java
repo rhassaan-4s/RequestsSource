@@ -199,15 +199,24 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 				System.out.println("request " + req.getRequestNumber());
 				System.out.println("userRequest.getAttendanceType().equals(new Long(1)) " + userRequest.getAttendanceType().equals(new Long(1)));
 				System.out.println("req.getVacation().getVacation().equals(999)" + req.getVacation().getVacation().equals("999"));
-				System.out.println("req.getTo_date().getDay()-req.getFrom_date().getDay() " + (req.getTo_date().getDate()-req.getFrom_date().getDate()>=1));
 
-				System.out.println("condition for full day errand validation:####  "+(userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && req.getTo_date()!=null && req.getTo_date().getDate()-req.getFrom_date().getDate()>=1));
 				if (req.getVacation()!=null) {
 					System.out.println("req.getVacation() " + req.getVacation().getVacation());
 				}
 
 
-				if (userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && req.getTo_date()!=null && req.getTo_date().getDate()-req.getFrom_date().getDate()>=1) {  
+				long diff = 0;
+				
+				if(req.getTo_date() != null) {
+					diff = req.getFrom_date().getTime() - req.getTo_date().getTime();
+				}
+				 
+				int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+				System.out.println("difference between days: " + diffDays);
+				System.out.println(" diffDays>=1 " +  (diffDays>=1));
+
+				System.out.println("condition for full day errand validation:####  "+ (userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && diffDays>=1));
+				if (userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && diffDays>=1) {  
 
 					System.out.println("full day errand on this day");
 					restStatus.setCode("329");
