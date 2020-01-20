@@ -1985,14 +1985,6 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		
 		log.debug("request type " + requestType);
 		if (requestType== null){
-//			criteria.add(Restrictions.or(
-//					Restrictions.eq("request_id.id", new Long(3)),
-//					Restrictions.and(
-//							Restrictions.eq("request_id.id", new Long(1)), 
-//							Restrictions.eq("vacation.vacation", "999"))
-//					));
-			
-			
 			criteria.add(Restrictions.and(Restrictions.ne("request_id.id", new Long(10)), Restrictions.ne("request_id.id", new Long(11))));
 			if (sDate !=null && eDate != null) {
 				final Date startDate =sDate;
@@ -2039,6 +2031,126 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				criteria.add(Expression.le("period_from", endDate));
 			}
 		} 
+		
+		criteria.add(Restrictions.eq("empCode", emp.getEmpCode()));
+		criteria.addOrder(Property.forName("period_from").desc());
+		criteria
+		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		list = criteria.list();
+		log.debug("check started requests list size " + list.size());
+		status.setCode("200");
+		status.setMessage("Successful Transaction");
+		status.setStatus("True");
+		response.put("Status", status);
+		response.put("Response", list) ;
+		return response;
+	}
+	
+	public Map checkStartedRequestsIncludingAttendance(RequestsApprovalQuery requestQuery,
+			Employee emp) {
+		log.debug("inside checkStartedRequests dao");
+		Map response = new HashMap();
+		DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
+		RestStatus status = new RestStatus();
+		log.debug("requestQuery.getRequestType() " +requestQuery.getRequestType());
+		Long requestType = null;
+		if (requestQuery.getRequestType()!=null && !requestQuery.getRequestType().isEmpty()) {
+			requestType =  Long.parseLong(requestQuery.getRequestType());
+		} 
+		log.debug("inside checkStartedRequests dao request type " + requestType);
+		Date dateFrom = null;
+		Date dateTo = null;
+		
+		log.debug("inside checkStartedRequests");
+		Date newDate1 = null;
+		log.debug(requestQuery.getDateFrom());
+		if (requestQuery.getDateFrom()!=null && !requestQuery.getDateFrom().isEmpty()) {
+			try {
+				newDate1 = df.parse(requestQuery.getDateFrom());
+			} catch(Exception e){
+				e.printStackTrace();
+				status.setCode("312");
+				status.setMessage("Date is not well formated");
+				status.setStatus("False");
+				response.put("Status", status);
+				return response;
+			}
+
+
+			Calendar cFrom= Calendar.getInstance();
+			cFrom.setTime(newDate1);
+			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+			cFrom.set(Calendar.MINUTE, 0);
+			cFrom.set(Calendar.SECOND, 0);
+			dateFrom=cFrom.getTime();
+			log.debug("------dateFrom---"+dateFrom);
+		}
+		Date newDate2 = null;
+		log.debug(requestQuery.getDateTo());
+		if (requestQuery.getDateTo()!=null && !requestQuery.getDateTo().isEmpty()) {
+			try {
+				newDate2 = df.parse(requestQuery.getDateTo());
+			} catch(Exception e){
+				e.printStackTrace();
+				status.setCode("312");
+				status.setMessage("Date is not well formated");
+				status.setStatus("False");
+				response.put("Status", status);
+				return response;
+			}
+			Calendar cTo= Calendar.getInstance();
+			cTo.setTime(newDate2);
+			cTo.set(Calendar.HOUR_OF_DAY, 23);
+			cTo.set(Calendar.MINUTE, 59);
+			cTo.set(Calendar.SECOND, 59);
+
+			dateTo=cTo.getTime();
+			log.debug("------dateTo---"+dateTo);
+		}
+
+		DateFormat format =	new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date sDate =null;
+		if (dateFrom != null) {
+			try {
+				sDate = (Date) format.parse(format.format(dateFrom));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		Date eDate = null;
+		if (dateTo != null) {
+			try {
+				eDate = (Date)format.parse(format.format(dateTo));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		log.debug("sDate " + sDate);
+		log.debug("eDate " + eDate);
+		
+		List list =new ArrayList();
+		Criteria criteria = getCurrentSession()
+				.createCriteria(LoginUsersRequests.class);
+	
+		
+		
+		log.debug("request type " + requestType);
+//			criteria.add(Restrictions.and(Restrictions.ne("request_id.id", new Long(10)), Restrictions.ne("request_id.id", new Long(11))));
+			if (sDate !=null && eDate != null) {
+				final Date startDate =sDate;
+				final Date endDate = eDate;
+				criteria.add(Restrictions.or(
+												Restrictions.and(Expression.isNull("period_to"),Expression.between("period_from", startDate, endDate)),
+												Restrictions.or(Restrictions.or(Expression.between("period_to", startDate,endDate),Expression.between("period_from",startDate,endDate)),
+																Restrictions.and(Expression.ge("period_to", startDate),Expression.le("period_from", startDate))
+												)
+											)
+							);
+			}					
+		
 		
 		criteria.add(Restrictions.eq("empCode", emp.getEmpCode()));
 		criteria.addOrder(Property.forName("period_from").desc());

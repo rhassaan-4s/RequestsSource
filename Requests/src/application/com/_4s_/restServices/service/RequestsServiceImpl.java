@@ -736,12 +736,15 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 							String [] time =  requestEndTime.split(":");
 							System.out.println("Time hour " + time[0] + " minutes " + time[1]);
 							if (req.getPeriod_from() != null) {
+								System.out.println("request no " + req.getRequestNumber() + " started on " + req.getPeriod_from());
 								Calendar cal2 = Calendar.getInstance();
 								cal2.setTime(req.getPeriod_from());
-								cal2.set(Calendar.HOUR, Integer.parseInt(time[0]));
+								cal2.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
 								cal2.set(Calendar.MINUTE, Integer.parseInt(time[1]));
 								cal2.set(Calendar.SECOND, 0);
+								System.out.println("will end request on " + cal2.getTime());
 								req.setPeriod_to(cal2.getTime());
+								req.setTo_date(cal2.getTime());
 								req.setNotes(req.getNotes() + " (Request ended automatically by the system)");
 								requestsApprovalManager.saveObject(req);
 							}
@@ -923,7 +926,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				requestQuery.setDateFrom(df.format(from));
 				
 				requestQuery.setDateTo(df.format(t));
-				Map reqs = checkStartedRequests(requestQuery, emp);
+				Map reqs = checkStartedRequestsIncludingAttendance(requestQuery, emp);
 				List requests = (List)reqs.get("Response");
 				
 				
@@ -932,12 +935,12 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				
 //				Iterator itr = requests.iterator();
 				
-				
+				int i=0;
 				if (requests.size() >0) {
 					Iterator reqItr = requests.iterator();
 					while (reqItr.hasNext()) {
 						LoginUsersRequests req = (LoginUsersRequests)reqItr.next();
-						System.out.println("request number " + req.getRequestNumber());
+						System.out.println(i+". request number " + req.getRequestNumber());
 						System.out.println("req.getPeriod_to() " + req.getPeriod_to());
 						if (req.getPeriod_to() == null) {
 							System.out.println("checking if overlapping requests are sign in/out " + req.getRequest_id().getId());
@@ -981,7 +984,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 								return response;
 							}
 						} else {
-							if (req.getPeriod_to().compareTo(loginUsersRequests.getPeriod_from()) > 0) {
+							if (req.getPeriod_to().compareTo(loginUsersRequests.getPeriod_from()) > 0 && req.getPeriod_from().compareTo(loginUsersRequests.getPeriod_from())<0) {
 								if (!userRequest.getAttendanceType().equals(new Long(6)) && !userRequest.getAttendanceType().equals(new Long(4))) {
 									status.setCode("324");
 									status.setMessage("The specified time interval is overlapping with one of your requests with request number "  + req.getRequestNumber());
@@ -991,6 +994,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 								}
 							}
 						}
+						i++;
 					}
 				}
 			}
@@ -1067,6 +1071,15 @@ public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
 	System.out.println("checkStartedRequests: logged in user " + loggedInUser);
 	Map response = requestsApprovalManager.checkStartedRequests(requestQuery,emp);
+	System.out.println("checkStartedRequests: response " + response);
+	return response;
+}
+
+public Map checkStartedRequestsIncludingAttendance(RequestsApprovalQuery requestQuery,
+		Employee emp) {
+	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+	System.out.println("checkStartedRequests: logged in user " + loggedInUser);
+	Map response = requestsApprovalManager.checkStartedRequestsIncludingAttendance(requestQuery, emp);
 	System.out.println("checkStartedRequests: response " + response);
 	return response;
 }

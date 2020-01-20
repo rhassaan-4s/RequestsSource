@@ -1504,6 +1504,11 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		return result;
 	}
 
+	public Map checkStartedRequestsIncludingAttendance(
+			RequestsApprovalQuery requestQuery, Employee emp) {
+		return requestsApprovalDAO.checkStartedRequestsIncludingAttendance(requestQuery, emp);
+	}
+
 //	public List getAttendanceRequests(Date date, String empCode) {
 //		return requestsApprovalDAO.getAttendanceRequests(date,empCode);
 //	}
