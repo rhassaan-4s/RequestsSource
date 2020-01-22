@@ -16023,4 +16023,22 @@ INSERT INTO i18n_message VALUES (202116386,'تفعيل الامضاء بالبص
 INSERT INTO i18n_message VALUES (202116387, 'Enable fingerprint sign in/out', 101437, 3);&#xD;
 INSERT INTO I18N_KEY VALUES (101438, 'requestsApproval.header.automaticErrandEnd', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116388,'وقت انهاء المأموريات آليًا', 101438, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116389, 'Automatic end of errand time', 101438, 3);</statment></query><query><sqlindex>128</sqlindex><statment>update COMMON_SETTINGS set AUTOMATICREQUESTSVALIDATION=0;</statment></query><query><sqlindex>129</sqlindex><statment>update common_settings set fingerprintEnabled = 0;</statment></query><query><sqlindex>130</sqlindex><statment>ALTER TABLE COMMON_SETTINGS MODIFY AUTOMATICERRANDEND VARCHAR(5);</statment></query><query><sqlindex>131</sqlindex><statment>ALTER TABLE LOGIN_USERS_REQUESTS MODIFY NOTES VARCHAR2(255);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116389, 'Automatic end of errand time', 101438, 3);</statment></query><query><sqlindex>128</sqlindex><statment>update COMMON_SETTINGS set AUTOMATICREQUESTSVALIDATION=0;</statment></query><query><sqlindex>129</sqlindex><statment>update common_settings set fingerprintEnabled = 0;</statment></query><query><sqlindex>130</sqlindex><statment>ALTER TABLE COMMON_SETTINGS MODIFY AUTOMATICERRANDEND VARCHAR(5);</statment></query><query><sqlindex>131</sqlindex><statment>ALTER TABLE LOGIN_USERS_REQUESTS MODIFY NOTES VARCHAR2(255);</statment></query><query><sqlindex>132</sqlindex><statment>ALTER TABLE  COMMON_SETTINGS ADD LOCATIONACCURACY2 FLOAT;</statment></query><query><sqlindex>133</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101439, 'commons.caption.locationAccuracy2', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116390,'دقة الموقع البديلة', 101439, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116391, 'Alternative Location Accuracy', 101439, 3);</statment></query><query><sqlindex>134</sqlindex><statment>CREATE TABLE COMMON_CLIENTS (&#xD;
+	ID NUMBER NOT NULL,&#xD;
+	CLIENTNAME VARCHAR2(100) NOT NULL,&#xD;
+	PORTNO VARCHAR2(100) NOT NULL&#xD;
+)&#xD;
+TABLESPACE USERS;</statment></query><query><sqlindex>135</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101440, 'commons.caption.clientsForm', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116392,'اضافة/تعديل عميل', 101440, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116393, 'Add/Edit Client', 101440, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101441, 'commons.caption.clientName', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116394,'اسم العميل', 101441, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116395, 'Client Name', 101441, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101442, 'commons.caption.clientPort', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116396,'Port No.', 101442, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116397, 'Client Port No', 101442, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101443, 'commons.caption.clientsView', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116398,'عملاء فور اس لبرنامج الطلبات', 101443, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116399, '4S Clients', 101443, 3);</statment></query><query><sqlindex>136</sqlindex><statment>CREATE SEQUENCE CLIENT_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 9999999999999999999999 NOCYCLE CACHE 20 NOORDER ;</statment></query></SQL>

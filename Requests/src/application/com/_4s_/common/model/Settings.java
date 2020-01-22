@@ -76,6 +76,16 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Float locationAccuracy;
 	
+	private Float locationAccuracy2;
+	
+	public Float getLocationAccuracy2() {
+		return locationAccuracy2;
+	}
+
+	public void setLocationAccuracy2(Float locationAccuracy2) {
+		this.locationAccuracy2 = locationAccuracy2;
+	}
+
 	private Boolean isLocationAccuracyEnabled;
 	
 	private Boolean showAddressOnForm;

@@ -34,6 +34,43 @@ public class SettingsForm extends BaseSimpleFormController{
 			if(annualVacBalDaysEnabled == null || annualVacBalDaysEnabled.equals("")){
 				settings.setAnnualVacBalDaysEnabled(false);
 			}
+			
+			String attendanceRequestEn = request.getParameter("attendanceRequestEn");
+			if(attendanceRequestEn == null || attendanceRequestEn.equals("")){
+				settings.setAttendanceRequestEn(false);
+			}
+			
+			String automaticRequestsValidation = request.getParameter("automaticRequestsValidation");
+			if(automaticRequestsValidation == null || automaticRequestsValidation.equals("")){
+				settings.setAutomaticRequestsValidation(false);
+			}
+			
+			String fingerprintEnabled = request.getParameter("fingerprintEnabled");
+			if(fingerprintEnabled == null || fingerprintEnabled.equals("")){
+				settings.setFingerprintEnabled(false);
+			}
+			
+			String isLocationAccuracyEnabled = request.getParameter("isLocationAccuracyEnabled");
+			if(isLocationAccuracyEnabled == null || isLocationAccuracyEnabled.equals("")){
+				settings.setIsLocationAccuracyEnabled(false);
+			}
+			String showAddressOnForm = request.getParameter("showAddressOnForm");
+			if(showAddressOnForm == null || showAddressOnForm.equals("")){
+				settings.setShowAddressOnForm(false);
+			}
+			String showRequestsOnCalendar = request.getParameter("showRequestsOnCalendar");
+			if(showRequestsOnCalendar == null || showRequestsOnCalendar.equals("")){
+				settings.setShowRequestsOnCalendar(false);
+			}
+			String errandTimeFromSystem = request.getParameter("errandTimeFromSystem");
+			if(errandTimeFromSystem == null || errandTimeFromSystem.equals("")){
+				settings.setErrandTimeFromSystem(false);
+			}
+			String obligateNotes = request.getParameter("obligateNotes");
+			if(obligateNotes == null || obligateNotes.equals("")){
+				settings.setObligateNotes(false);
+			}
+			
 		}
 		return settings;
 

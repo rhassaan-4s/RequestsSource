@@ -1,3 +1,4 @@
+<%@page import="com._4s_.common.model.Settings"%>
 <%@ include file="/web/common/includes/taglibs.jsp"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
@@ -9,7 +10,6 @@
 	rel="stylesheet" media="screen" />
 <link rel="stylesheet" type="text/css" media="print, handheld"
 	href="/Requests/web/common/css/print.css">
-
 
 <div id="smoothmenu1" class="ddsmoothmenu">
 
@@ -29,6 +29,15 @@
 	</li>
 	<li><a href="#"><fmt:message key="commons.menu.common" /></a>
 	<ul>
+	<%
+	Settings settings = (Settings) request.getSession().getAttribute("settings");
+	System.out.println(settings);
+	if (settings.getCompany().getDescription().equals("4s")) {
+		%>
+		<li><a href="/Requests/common/commonAdminClientsView.html"><abc:i18n
+				property="commons.caption.clientsView" /> <fmt:message
+				key="commons.caption.clientsView" /></a></li>
+				<%} %>
 	<sec:authorize ifAllGranted="CAN_UPDATE_settings">
 		<li><a href="/Requests/common/settingsForm.html"><abc:i18n
 			property="commons.caption.settings" /> <fmt:message

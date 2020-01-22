@@ -107,7 +107,7 @@
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.annualVacBalDaysEnabled">
-						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''}  />
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
@@ -119,7 +119,7 @@
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.attendanceRequestEn">
-						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''}  />
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
@@ -131,7 +131,7 @@
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.automaticRequestsValidation">
-						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''}  value="${status.value}" />
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
@@ -142,7 +142,7 @@
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.fingerprintEnabled">
-						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''}   value="${status.value}"/>
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
@@ -321,13 +321,26 @@
 				<TD width="50%">&nbsp;</TD>
 			</tr>
 			
+			<tr>
+				<td nowrap class="formBodControl" >
+					<abc:i18n property="commons.caption.locationAccuracy2" />
+					<fmt:message key="commons.caption.locationAccuracy2" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.locationAccuracy2">
+						<input type="text" maxlength="4" name="${status.expression}" value="${status.value}"/>
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			
 			<tr><td nowrap class="formBodControl" >
 					<abc:i18n property="commons.caption.isLocationAccuracyEnabled" />
 					<fmt:message key="commons.caption.isLocationAccuracyEnabled" />
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.isLocationAccuracyEnabled">
-						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''}  />
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
@@ -340,7 +353,7 @@
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.showAddressOnForm">
-						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''}  />
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
@@ -351,7 +364,7 @@
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.showRequestsOnCalendar">
-						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''}  />
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
@@ -362,7 +375,7 @@
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.errandTimeFromSystem">
-						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''}  />
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
@@ -373,7 +386,7 @@
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.obligateNotes">
-						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} value="true" />
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''}  />
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>

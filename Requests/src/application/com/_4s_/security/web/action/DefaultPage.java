@@ -171,6 +171,7 @@ public class DefaultPage extends BaseController {
 		request.getSession().setAttribute("locale", user.getLanguage().getCode());
 		request.getSession().setAttribute("activeApplications", securityManager.getApplicationsByUser(user));
 		
+		System.out.println("settings - default page controller "+settings);
 		request.getSession().setAttribute("settings",settings);
 		request.getSession().setAttribute("salary_from_day", salary_from_day);
 		request.getSession().setAttribute("requestsDeadline", requestsDeadline);

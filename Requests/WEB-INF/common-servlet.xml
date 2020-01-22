@@ -247,6 +247,16 @@
 	</bean-->
 
 
+	<bean id="ClientsController" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.common.web.action.ClientsController">
+				<property name="commonManager">
+					<ref bean="commonManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
 	<bean id="CompanyController" parent="txProxyTemplate">
 		<property name="target">
 			<bean
@@ -286,6 +296,31 @@
 		</property>
 	</bean-->
 
+	<bean id="ClientsFormController" parent="txProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.common.web.action.ClientsFormController">
+				<property name="commandName">
+					<value>client</value>
+				</property>
+
+				<property name="commandClass">
+					<value>com._4s_.common.model.Clients</value>
+				</property>
+
+				<property name="formView">
+					<value>commonAdminClientsForm</value>
+				</property>
+				<property name="successView">
+					<value>commonAdminClientsView.html</value>
+				</property>
+
+				<property name="baseManager">
+					<ref bean="baseManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
 
 
 	<bean id="CompanyFormController" parent="txProxyTemplate">
@@ -481,6 +516,9 @@
 				<prop key="/commonAdminEmpBasic.html">empBasicFormController</prop>
 				
 				<prop key="/settingsForm.html">settingsForm</prop>
+				
+				<prop key="/commonAdminClientsView.html">ClientsController</prop>
+				<prop key="/commonAdminClientsForm.html">ClientsFormController</prop>
 			</props>
         </property>
     </bean>

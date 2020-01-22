@@ -1,3 +1,4 @@
+<%@page import="com._4s_.common.model.Settings"%>
 <%@ include file="/web/common/includes/taglibs.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
@@ -138,6 +139,9 @@
 <%
 	String applicationName = (String) session.getAttribute("appName");
 //System.out.println("applicationName " + applicationName);
+
+	Settings settings = (Settings)request.getSession().getAttribute("settings");
+	System.out.println("settings in header" + settings);
 	List activeApplications = (List) request.getSession().getAttribute(
 			"activeApplications");
 	String locale = ((String) request.getSession().getAttribute(

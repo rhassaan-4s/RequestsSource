@@ -1052,8 +1052,9 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			if(requestNumber!=null && !requestNumber.isEmpty()) {
 				criteria.add(Restrictions.eq("requestNumber", requestNumber));
 			}
+			log.debug("requesttype " + requestType);
 			if(requestType!=null) {
-				log.debug("requesttype " + requestType);
+				log.debug("1.requesttype " + requestType);
 				if (requestType.equals(new Long(1))){
 					log.debug("requesttype is 1");
 					criteria.add(Restrictions.or(
@@ -1083,6 +1084,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 				}
 			} else {
+				log.debug("2. requesttype " + requestType);
 				criteria.add(Restrictions.or(
 											Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
 															Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))),
@@ -1169,12 +1171,16 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 							Restrictions.eq("request_id.id", requestType),
 							Restrictions.eq("request_id.id", new Long(4)))
 							);
+					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 				} else if (requestType.equals(new Long(4))) {
 					log.debug("requesttype is 4");
 					criteria.add(Restrictions.or(Restrictions.or(
 							Restrictions.eq("request_id.id", new Long(1)),
 							Restrictions.eq("request_id.id", new Long(2)))
 							,Restrictions.eq("request_id.id", new Long(4))));
+					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 				} else if (requestType.equals(new Long(5))) {
 					log.debug("requesttype is 5");
 					criteria.add(Restrictions.or(
@@ -1184,7 +1190,17 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				} else {
 					log.debug("requesttype is else");
 					criteria.add(Restrictions.eq("request_id.id", requestType));
+					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 				}
+			} else {
+				log.debug("2. requesttype " + requestType);
+				criteria.add(Restrictions.or(
+											Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+															Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))),
+											Restrictions.or(Restrictions.eq("request_id.id", new Long(10)),Restrictions.eq("request_id.id", new Long(11)))
+								)
+							);
 			}
 			/////////////////////////////////////////////////////////////////////////////////
 			if (empCode!=null && !empCode.isEmpty()) {
