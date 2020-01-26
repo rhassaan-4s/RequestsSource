@@ -1234,6 +1234,7 @@ public Map getSettings() {
 	Map temp = new HashMap();
 	temp.put("companyName", settings.getCompany().getDescription());
 	temp.put("locationAccuracy",settings.getLocationAccuracy());
+	temp.put("locationAccuracy2",settings.getLocationAccuracy2());
 	temp.put("isLocationAccuracyEnabled", settings.getIsLocationAccuracyEnabled());
 	temp.put("showAddressOnForm", settings.getShowAddressOnForm());
 	temp.put("showRequestsOnCalendar", settings.getShowRequestsOnCalendar());
