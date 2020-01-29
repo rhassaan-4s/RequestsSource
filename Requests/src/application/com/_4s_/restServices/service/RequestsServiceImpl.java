@@ -950,7 +950,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 								System.out.println("attendanceStatus.getSignIn() " + attendanceStatus.getSignIn());
 								System.out.println("attendanceStatus.getSignOut() " + attendanceStatus.getSignOut());
 								
-								if (attendanceStatus.getSignIn().booleanValue() == true && attendanceStatus.getSignOut().booleanValue() == false) {
+								if (attendanceStatus.getSignIn().booleanValue() == true && attendanceStatus.getSignOut().booleanValue() == false  && settings.getSignoutBeforePermissionErrand().equals(new Boolean(true))) {
 									System.out.println("request in same interval " + req.getRequestNumber() + req.getPeriod_from());
 									status.setCode("327");
 									status.setMessage("Please sign out first before starting new request");
