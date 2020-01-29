@@ -98,6 +98,17 @@ public class Settings  implements Serializable,Auditable {
 
 	private Boolean automaticRequestsValidation;
 	
+	private Boolean signoutBeforePermissionErrand;
+	
+	public Boolean getSignoutBeforePermissionErrand() {
+		return signoutBeforePermissionErrand;
+	}
+
+	public void setSignoutBeforePermissionErrand(
+			Boolean signoutBeforePermissionErrand) {
+		this.signoutBeforePermissionErrand = signoutBeforePermissionErrand;
+	}
+
 	private String automaticErrandEnd;
 	
 	private Boolean fingerprintEnabled;

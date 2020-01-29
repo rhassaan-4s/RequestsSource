@@ -71,6 +71,11 @@ public class SettingsForm extends BaseSimpleFormController{
 				settings.setObligateNotes(false);
 			}
 			
+			String signoutBeforePermissionErrand = request.getParameter("signoutBeforePermissionErrand");
+			if (signoutBeforePermissionErrand == null || signoutBeforePermissionErrand.equals("")) {
+				settings.setSignoutBeforePermissionErrand(false);
+			}
+			
 		}
 		return settings;
 

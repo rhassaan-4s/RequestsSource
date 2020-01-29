@@ -750,7 +750,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 							}
 						} else if ( !req.getRequest_id().getId().equals(new Long(10)) && !req.getRequest_id().getId().equals(new Long(11)) && req.getPeriod_to() == null) {
 							System.out.println("request opened in the last 24hrs is not ended");
-						} else if (req.getRequest_id().getId().equals(new Long(10))){
+						} else if (req.getRequest_id().getId().equals(new Long(10)) && settings.getSignoutBeforePermissionErrand().equals(new Boolean(true))){
 							System.out.println("sign in request opened in the last 24hrs is not ended");
 							status.setCode("331");
 							status.setMessage("A sign in request is already started (#" + ((LoginUsersRequests)startedRequestsResponse.get(0)).getRequestNumber() + ") that hasn't been ended yet.");

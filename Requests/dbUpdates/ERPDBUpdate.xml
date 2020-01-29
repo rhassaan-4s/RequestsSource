@@ -16041,4 +16041,6 @@ INSERT INTO i18n_message VALUES (202116396,'Port No.', 101442, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116397, 'Client Port No', 101442, 3);&#xD;
 INSERT INTO I18N_KEY VALUES (101443, 'commons.caption.clientsView', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116398,'عملاء فور اس لبرنامج الطلبات', 101443, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116399, '4S Clients', 101443, 3);</statment></query><query><sqlindex>136</sqlindex><statment>CREATE SEQUENCE CLIENT_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 9999999999999999999999 NOCYCLE CACHE 20 NOORDER ;</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116399, '4S Clients', 101443, 3);</statment></query><query><sqlindex>136</sqlindex><statment>CREATE SEQUENCE CLIENT_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 9999999999999999999999 NOCYCLE CACHE 20 NOORDER ;</statment></query><query><sqlindex>137</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD SIGNOUTBEFOREPERMISSIONERRAND NUMBER;</statment></query><query><sqlindex>138</sqlindex><statment>update COMMON_SETTINGS set SIGNOUTBEFOREPERMISSIONERRAND=0;</statment></query><query><sqlindex>139</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101444, 'requestsApproval.header.signoutBeforePermissionErrand', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116400,'الزام الانصراف قبل بدء تصريح/مأمورية', 101444, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116401, 'ٍSign out before permission/errand', 101444, 3);</statment></query></SQL>

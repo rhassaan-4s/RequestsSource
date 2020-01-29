@@ -131,18 +131,18 @@
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.automaticRequestsValidation">
-						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''}  value="${status.value}" />
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''}   />
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
 			</tr>
 			<tr><td nowrap class="formBodControl" >
-					<abc:i18n property="requestsApproval.header.fingerprintEnabled" />
-					<fmt:message key="requestsApproval.header.fingerprintEnabled" />
+					<abc:i18n property="requestsApproval.header.signoutBeforePermissionErrand" />
+					<fmt:message key="requestsApproval.header.signoutBeforePermissionErrand" />
 				</td>
 				<td  class="formBod"> 
-					<spring:bind path="settings.fingerprintEnabled">
-						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''}   value="${status.value}"/>
+					<spring:bind path="settings.signoutBeforePermissionErrand">
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} />
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
