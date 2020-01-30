@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com._4s_.common.model.Clients;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
@@ -1249,6 +1250,37 @@ public Map getSettings() {
 	status.setMessage("Success");
 	status.setStatus("true");
 	response.put("Status", status);
+	
+	
+	return response;
+}
+
+public Map getPortNo(String clientName) {
+	Map response = new HashMap();
+	
+	Object client = requestsApprovalManager.getObjectByParameter(Clients.class, "clientName", clientName);
+	
+	if (client == null) {
+		RestStatus status = new RestStatus();
+		status.setCode("330");
+		status.setMessage("Client Name Doesn't Exist");
+		status.setStatus("false");
+		response.put("Status", status);
+		return response;
+	} else {
+		Clients c = (Clients)client;
+		Map temp = new HashMap();
+		temp.put("PortNo",c.getPortNo());
+		response.put("Response", temp);
+		RestStatus status = new RestStatus();
+		status.setCode("200");
+		status.setMessage("Success");
+		status.setStatus("true");
+		response.put("Status", status);
+	}
+	
+	
+	
 	
 	
 	return response;

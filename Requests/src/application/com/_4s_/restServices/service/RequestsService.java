@@ -46,4 +46,6 @@ public interface RequestsService {// extends BaseManager {
 			Employee employee);
 
 	public Map getSettings();
+
+	public Map getPortNo(String clientName);
 }
