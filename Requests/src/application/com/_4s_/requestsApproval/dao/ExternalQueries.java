@@ -85,7 +85,7 @@ public class ExternalQueries {
 			basicDataSource = new BasicDataSource();
 			basicDataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
 			basicDataSource.setUrl("jdbc:oracle:thin:@"
-					+ hostName + ":1521:"
+					+ hostName + ":1521/"
 					+ serviceName);
 			basicDataSource.setUsername(userName);
 			basicDataSource.setPassword(password);
