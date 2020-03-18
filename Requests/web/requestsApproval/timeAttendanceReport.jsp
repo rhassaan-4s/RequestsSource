@@ -223,9 +223,7 @@ function printthis(which) {
 												${record.timeOut }
 											</td>
 											<td class="helpBod" nowrap>
-											<c:if test="${record.diffMins!=0 && record.diffHrs!=0}">
-												${record.diffMins } : 0${record.diffHrs } 
-											</c:if>
+												${record.diffMins } : ${record.diffHrs } 
 											</td>
 										</tr>
 									</c:forEach>
