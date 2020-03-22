@@ -16048,4 +16048,4 @@ INSERT INTO SECURITY_USER_ROLES (USERS, "ROLE") VALUES(1, 1);&#xD;
 INSERT INTO SECURITY_USER_ROLES (USERS, "ROLE") VALUES(1, 5);&#xD;
 INSERT INTO SECURITY_USER_ROLES (USERS, "ROLE") VALUES(1, 6);&#xD;
 &#xD;
-</statment></query></SQL>
+</statment></query><query><sqlindex>141</sqlindex><statment>ALTER TABLE LOGIN_USERS_REQUESTS ADD INPUTTYPE NUMBER;</statment></query><query><sqlindex>142</sqlindex><statment>update  LOGIN_USERS_REQUESTS SET INPUTTYPE=1 WHERE NOTES  NOT LIKE 'Android Sign In/Out%' AND (REQUEST_TYPE=10 OR REQUEST_TYPE=11);</statment></query><query><sqlindex>143</sqlindex><statment>update  LOGIN_USERS_REQUESTS SET INPUTTYPE=2 WHERE NOTES like 'Android Sign In/Out%' AND (REQUEST_TYPE=10 OR REQUEST_TYPE=11) ;</statment></query></SQL>
