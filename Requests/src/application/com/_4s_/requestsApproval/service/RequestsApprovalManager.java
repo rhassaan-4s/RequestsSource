@@ -131,6 +131,7 @@ public interface RequestsApprovalManager extends BaseManager {
 	public Map getRequestsForApproval(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
 			String requestType, String codeFrom, String codeTo, String statusId, String sort,LoginUsers loggedInUser, List empReqTypeAccs, boolean isWeb, int pageNumber, int pageSize);
 	public Map approvalsAccessLevels(RequestApproval approval, LoginUsersRequests requestInfo, Employee emp);
+	public void automaticApprovalsAccessLevels(RequestApproval approval, LoginUsersRequests requestInfo);
 	public Map getVacInfo(Vacation vac, Date from_date, String empCode);
 	public List getEmpReqTypeAccs(List accessLevels,Long requestType);
 	public int insertTimeAttendance(String hostName, String  serviceName, String  userName, String password,String empCode, Date date, Date date2,

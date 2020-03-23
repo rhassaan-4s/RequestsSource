@@ -1308,6 +1308,130 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		
 	}
 	
+	
+	public void automaticApprovalsAccessLevels(RequestApproval approval, LoginUsersRequests requestInfo) {//, Employee emp
+
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+//		Map model = new HashMap();
+		Map response = new HashMap();
+		
+		RestStatus restStatus = new RestStatus();
+		
+		List approvalList = new ArrayList();
+		
+		LoginUsers empInfo = new LoginUsers();
+//		LoginUsers loginUsers = new LoginUsers();
+		
+		String status = null;
+		String accId = null;
+		String note = null;
+		String last = null;
+		
+		
+		Boolean lastOne = false;
+		Boolean done = false;
+		//String canCancel = null;
+		Long idToBeCanceled = null;
+		String cancelApproval = null;
+		
+		List empReqAcc = new ArrayList();
+		log.debug("request info " + requestInfo);
+		if (requestInfo != null) {
+			List<String> orderfieldList = new ArrayList();
+			orderfieldList.add(new String("order"));
+
+			empReqAcc = getObjectsByTwoParametersOrderedByFieldList(
+							EmpReqTypeAcc.class, "req_id", requestInfo
+									.getRequest_id(), "emp_id", requestInfo
+									.getLogin_user(), orderfieldList);
+//			EmpReqApproval empReqApproval = null;
+
+//			loginUsers=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+			Map approvalRequest = new HashMap();
+			List<String> ordered1= new ArrayList();
+			ordered1.add("emp_id");
+
+			
+			orderfieldList.clear();
+			orderfieldList.add(new String("level_id"));
+
+			String showbSubmit = "1";
+			last = "0";
+
+			log.debug("---- size of list empReqAcc---"+empReqAcc.size());
+			if(empReqAcc.size()>0){
+				log.debug("---- size of list---"+empReqAcc.size());
+			for (int i = 0; i < empReqAcc.size(); i++) {
+				log.debug("---- i equals ---"+i);
+					
+					/**
+					 * Detect if access level is the last order
+					 **/
+					
+					if (i == (empReqAcc.size() - 1)){
+						last = "1";
+					}
+					else{
+						last="0";
+					}
+					/*************************************/
+
+					EmpReqTypeAcc temp = new EmpReqTypeAcc();
+					temp = (EmpReqTypeAcc) empReqAcc.get(i);
+					List accessLevels = temp.getGroup_id().getAccessLevel();
+					log.debug("-----temp id---"+temp.getId());
+					log.debug("-----temp group--"+temp.getGroup_id().getId());
+					
+					log.debug("request info " + requestInfo.getId());
+					Iterator accessItr = accessLevels.iterator();
+					while(accessItr.hasNext()) {
+						AccessLevels accessLevel = (AccessLevels)accessItr.next();
+						LoginUsers loginUsers = accessLevel.getEmp_id();
+						log.debug("login user of access level " + loginUsers.getEmpCode());
+
+						////////////////////////////////////////////////////////////
+						/////approve///////////////////////////////////////////////
+						//////////////////////////////////////////////////////////
+//						if (status!=null && !status.isEmpty() && status.equals("2") && (requestInfo.getPosted()==null || !requestInfo.getPosted().equals(new Long("1")))) {
+							log.debug("requestInfo " + requestInfo.getId());
+
+							requestInfo.setApproved(new Long(1));
+							saveObject(requestInfo);
+							EmpReqApproval empReqApproval = new EmpReqApproval();
+
+							empReqApproval.setApproval(new Integer(2));
+							log.debug("request info " + requestInfo.getId());
+							empReqApproval.setReq_id(requestInfo);
+							empReqApproval.setLevel_id(temp);
+							empReqApproval.setUser_id(loginUsers);
+							empReqApproval.setNote(approval.getNotes());
+							saveObject(empReqApproval);
+								
+//						}
+
+						////////////////////////////////////////////////////////////
+
+
+					}
+					
+					
+					
+					
+			}
+			}
+
+
+			log.debug("request+info " + requestInfo.getId());
+
+
+		} 
+
+
+//		return response;
+		
+	}
+	
 	public Map getVacInfo(Vacation vac, Date from_date, String empCode) {
 		Map model = new HashMap();
 		if (vac !=null){

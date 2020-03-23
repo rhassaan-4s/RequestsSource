@@ -61,8 +61,19 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	private Date vac_period_to;
 	
 	private Double latitude = new Double(0);
+	
+	private Integer inputType = 0; //0: attendance from application sign in and out
+								   //1: attendance request (for those who forgot to attend)
+								   //2: Mobile attendance
+								
     
-    public Double getLatitude() {
+    public Integer getInputType() {
+		return inputType;
+	}
+	public void setInputType(Integer inputType) {
+		this.inputType = inputType;
+	}
+	public Double getLatitude() {
 		return latitude;
 	}
 	public void setLatitude(Double latitude) {

@@ -93,14 +93,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 	</tr>
 	<tr>
 		<td colspan="2">
-			<spring:bind path="loginUsersRequests.*">
-				<c:if test="${not empty status.errorMessages}">
-					<div><c:forEach var="error" items="${status.errorMessages}">
-						<font color="red"> <c:out value="${error}" escapeXml="false" /><br />
-						</font>
-					</c:forEach></div>
-				</c:if>
-			</spring:bind>
+			
 		</td>
 	</tr>
 	<tr>
@@ -218,7 +211,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 						<tr id="btnPrint">
 							<td>
 								<abc:i18n property="commons.button.search"/>
-								<input type="button" name="aaa" onclick="searchForm()" value="<fmt:message key="commons.button.search"/> " class="button"/>
+								<input type="submit" name="aaa" onclick="searchForm()" value="<fmt:message key="commons.button.search"/> " class="button"/>
 								&nbsp;&nbsp;&nbsp;
 							</td>
 						</tr>
@@ -332,6 +325,9 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										<c:if test="${record.approved==0}">
 										
 									    	لم تكتمل
+									    	<br>
+									    	<input type="checkbox"
+											name="approve${loop.index}" id="approve${loop.index}" />
 										
 										</c:if>
 										</td>										
@@ -354,6 +350,10 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										<td colspan="2" align="center">
 											<abc:i18n property="commons.button.print"/>
 											<input type="button" id="btnPrint" class="button" value="<fmt:message key="commons.button.print"/>" onClick="printthis('result')"></input>
+										</td>
+										<td colspan="2" align="center">
+											<abc:i18n property="requestsApproval.button.approveAll"/>
+											<input type="submit" id="approveAll" name="approveAll" class="button" value="<fmt:message key="requestsApproval.button.approveAll"/>" onClick="approveAll()"></input>
 										</td>
 									</tr>
 								</table>								

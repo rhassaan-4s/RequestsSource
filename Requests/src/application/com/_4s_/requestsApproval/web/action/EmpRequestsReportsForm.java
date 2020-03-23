@@ -365,25 +365,6 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 						approveCounter ++;
 						log.debug("approveCounter"+approveCounter);
 						
-//						
-//						EmpReqTypeAcc empReqTypeAcc = new EmpReqTypeAcc();
-////						empReqTypeAcc = (EmpReqTypeAcc) requestsApprovalManager.getObject(
-////								EmpReqTypeAcc.class, new Long(accId));
-//
-//						EmpReqApproval empReqApproval = new EmpReqApproval();
-//
-//						empReqApproval.setApproval(new Integer(1));
-//						empReqApproval.setReq_id(loginUserRequest);
-//						empReqApproval.setLevel_id(empReqTypeAcc);
-//						empReqApproval.setUser_id(loginUsers);
-//						empReqApproval.setNote("Approve All Option");
-//						empReqApproval.setApproval(new Integer(1));
-//						
-//						
-//						
-//						loginUserRequest.setApproved(new Long(1));
-//						baseManager.saveObject(loginUserRequest);
-						
 						RequestApproval approval = new RequestApproval();
 						approval.setApprove("1");
 						approval.setRequestId(loginUserRequest.getId()+"");

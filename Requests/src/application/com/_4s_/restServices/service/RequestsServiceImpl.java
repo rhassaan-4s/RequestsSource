@@ -313,6 +313,7 @@ private Map createManualAttendance(LoginUsers loginUsers, MultiCalendarDate mCal
 	loginUsersRequests.setEmpCode(emp.getEmpCode());
 	loginUsersRequests.setNotes("Android Sign In/Out");
 
+	loginUsersRequests.setInputType(new Integer(2));//android request
 
 	//10 signin 11 signout
 	RequestTypes reqType = null;
@@ -327,6 +328,12 @@ private Map createManualAttendance(LoginUsers loginUsers, MultiCalendarDate mCal
 	loginUsersRequests.setLatitude(userRequest.getLatitude());
 	loginUsersRequests.setLongitude(userRequest.getLongitude());
 
+	RequestApproval approvals = new RequestApproval();
+	approvals.setApprove("1");
+	approvals.setNotes("Android Sign in/out Automatic Approval");
+	approvals.setRequestId(loginUsersRequests.getId()+"");
+	requestsApprovalManager.automaticApprovalsAccessLevels(approvals, loginUsersRequests);
+	
 	requestsApprovalManager.saveObject(loginUsersRequests);
 
 //	return loginUsersRequests;

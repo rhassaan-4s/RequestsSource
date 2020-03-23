@@ -283,6 +283,8 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests)command;
+		
+		loginUsersRequests.setInputType(new Integer(1));//request to sign in
 
 		log.debug("----loginUsersRequests.getId()-onsubmit-----"+loginUsersRequests.getId()+"-----loginUsersRequests---"+loginUsersRequests.getLogin_user().getEmpCode());
 		

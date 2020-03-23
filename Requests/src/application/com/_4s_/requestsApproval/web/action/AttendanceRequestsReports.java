@@ -25,6 +25,7 @@ import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
+import com._4s_.restServices.json.RequestApproval;
 import com._4s_.common.model.Employee;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
@@ -60,7 +61,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
 		int year, month;
-		List tempneededRequestTypes = new ArrayList();
+		
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
 		Map model=new HashMap();		
 		
@@ -106,6 +107,52 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		String statusId=request.getParameter("statusId");
 		String codeFrom=request.getParameter("codeFrom");
 		String codeTo=request.getParameter("codeTo");
+		
+		
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		return model;
+	}
+
+	//**************************************** onBind ***********************************************\\	
+	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception{
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		
+		
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+	}
+//**************************************** onBindAndValidate ***********************************************\\
+	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
+	{
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+	}
+	
+	//**************************************** onSubmit ***********************************************\\	
+	public ModelAndView onSubmit(HttpServletRequest request,
+			HttpServletResponse response, Object command, BindException errors)throws Exception 
+	{	
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
+		
+		List tempneededRequestTypes = new ArrayList();
+		
+		String statusId=request.getParameter("statusId");
+		String codeFrom=request.getParameter("codeFrom");
+		String codeTo=request.getParameter("codeTo");
+		
+		MultiCalendarDate mCalDate = new MultiCalendarDate();
+		int year, month;
+		
+		
+		
+		
+		Map model=new HashMap();
+		
+		String emp_code = request.getParameter("empCode");
+//		log.debug("----emp_code---"+emp_code);
+		model.put("employeeCode", emp_code);
+		
 		if(codeFrom!=null && codeTo!=null && !codeFrom.equals("")&& !codeTo.equals("")){
 			List loginUserReqs=(List) requestsApprovalManager.getEmployeesByCodes(codeFrom, codeTo);
 //			log.debug("---codesList---"+loginUserReqs.size());
@@ -124,14 +171,58 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		}
 		
 		String dateFrom = request.getParameter("dateFrom");
+		String dateTo = request.getParameter("dateTo");
+		
+		log.debug("---xxxxxxxDatePeriod--");	
+		
+		Calendar c = Calendar.getInstance();
+//		log.debug("----c---"+c.getTime());
+		c.setTime(new Date());
+		year=c.get(Calendar.YEAR);
+//		log.debug("----year---"+year);
+		month=c.get(Calendar.MONTH);
+//		log.debug("----month---"+month);
+		int salary_from_day = (Integer)request.getSession().getAttribute("salary_from_day");
+		if (salary_from_day == 0) {
+			c.set(year,month, 1);
+		} else {
+			c.set(year, month-1, salary_from_day);
+		}
+		
+		Date firstDay = c.getTime();
+//		log.debug("----firstDay---"+firstDay);
+		DateFormat d=new SimpleDateFormat("dd/MM/yyyy");
+		String formattedDate=d.format(firstDay);
+//		log.debug("----formattedDate---"+formattedDate);
+		
+		model.put("firstDay", formattedDate);
+		Date today=new Date();
+		String formatedToday=d.format(today);
+//		log.debug("----formatedToday---"+formatedToday);
+		model.put("today", formatedToday);
+
+		String request_date_from = request.getParameter("request_date_from");
+//		log.debug("---request_date_from--"+request_date_from);
+		model.put("request_date_from", request_date_from);
+	
+		String request_date_to = request.getParameter("request_date_to");
+		log.debug("---request_date_to--"+request_date_to);
+		model.put("request_date_to", request_date_to);
+		
+		dateFrom = request_date_from;
+		dateTo = request_date_to;
+		
+		
 		log.debug("--dateFrom--"+dateFrom);
 		model.put("dateFrom", dateFrom);
-		String dateTo = request.getParameter("dateTo");
+		
 		log.debug("--dateTo--"+dateTo);
 		model.put("dateTo", dateTo);
-		log.debug("---xxxxxxxDatePeriod--");		
+		log.debug("dateFrom != null && dateTo != null " + (dateFrom != null && dateTo != null) );
+		log.debug(" 2: " + ( emp_code.equals("") && codeFrom.equals("") && codeTo.equals("") && statusId.equals("")));
 		
 		if (dateFrom != null && dateTo != null && emp_code.equals("") && codeFrom.equals("") && codeTo.equals("") && statusId.equals("")){
+			log.debug("%%%%%%%if condition for report%%%%%%%");
 			if (!dateFrom.equals("") && !dateTo.equals("") ) {
 				
 				Date fromDate = null;
@@ -163,8 +254,6 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 				tempneededRequestTypes=neededRequestTypes;
 			}
 		}
-		
-		
 		
 		if(emp_code!=null  && dateFrom!=null && dateTo!=null && codeFrom!=null && codeTo!=null && statusId!=null){
 			if((emp_code.equals(""))&&(dateFrom.equals(""))&&(dateTo.equals(""))&&(codeTo.equals(""))&&(codeFrom.equals(""))&&(statusId.equals(""))){
@@ -250,20 +339,6 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 				log.debug("------allRequests.size()>0---");
 				for(int j=0;j<allRequests.size() ;j++){
 					EmpReqTypeAcc tempEmpReqTypeAcc=(EmpReqTypeAcc)allRequests.get(j);
-//					try{
-//						approval =  requestsApprovalManager.getObjectsByParameter(EmpReqApproval.class, "req_id", temp);
-//						log.debug("------approval.size-----"+approval.size());
-//						if(approval.size()>0){
-//							for (int k = 0; k <approval.size(); k++) {
-//								empReqApproval=(EmpReqApproval) approval.get(k);	
-//
-//							}
-//	
-//						}
-//					}
-//					catch (Exception e) {
-//						// TODO: handle exception
-//					}
 					List accessLevels= requestsApprovalManager.getObjectsByTwoParametersOrderedByFieldList(AccessLevels.class, "level_id",tempEmpReqTypeAcc.getGroup_id() , "emp_id", loginUsers, ordered1);
 					
 					
@@ -280,25 +355,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 						
 						//log.debug("------id ele wafe2-----"+empReqApproval.getUser_id().getId());
 					}					
-					
-//					if(empReqApproval==null || empReqApproval.equals("")){
-//						log.debug("------empreqapp-----"+empReqApproval.getId());
-//						
-//						log.debug("------id ele wafe2-----"+empReqApproval.getUser_id().getId());
-//					
-//						List accessLevels= requestsApprovalManager.getObjectsByTwoParametersOrderedByFieldList(AccessLevels.class, "level_id",tempEmpReqTypeAcc.getGroup_id() , "emp_id", loginUsers, ordered1);
-//						
-//						
-//						if(accessLevels.size()>0&&flag){
-//							log.debug("-------my order---"+tempEmpReqTypeAcc.getOrder());
-//							if(tempEmpReqTypeAcc.getOrder()==1){
-//								actualRequest.add(temp);
-//								flag=false;
-//							}//20120000069
-//						}
-//					
-//					}	
-					
+										
 				}
 			}
 		}
@@ -309,58 +366,52 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 			log.debug("-----actualRequest----"+s.getEmpCode());
 		}
 		
+		
+		
+		
+		
 		model.put("loginUserReqs", actualRequest);
-//		List allRequests= new ArrayList();
-//		List errandRequests= new ArrayList();
-//		
-//				
-//		for (int i = 0; i < actualRequest.size(); i++) {
-//			LoginUsersRequests req=(LoginUsersRequests) actualRequest.get(i);
-//			if(req.getRequest_id().getId()==1 && req.getVacation().getVacation().equals("999")){
-//				log.debug("-----m2morea----");
-//				errandRequests.add(req);
-//			}else{
-//				allRequests.add(req);
-//			}
-//		}
-//		String errand=request.getParameter("errand");
-//		model.put("errand", errand);
-//		if(errand!=null && !errand.equals("")){
-//			model.put("loginUserReqs", errandRequests);
-//		}
-//		else{
-//			model.put("loginUserReqs", allRequests);
-//		}	
-
-		
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		return model;
-	}
-
-	//**************************************** onBind ***********************************************\\	
-	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception{
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		
-		
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	}
-//**************************************** onBindAndValidate ***********************************************\\
-	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
-	{
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	}
-	
-	//**************************************** onSubmit ***********************************************\\	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{	
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
-		
+	/////approve all////////////////////////////
+			int approveCounter = 0;
+			
+			 String check=request.getParameter("approveAll");
+				log.debug("value of check>>>>>>>>>>>>>"+check);
+				
+				List results = (List)model.get("loginUserReqs");
+				
+				if(check !=null && !check.equals(""))
+				{
+					log.debug("**********************if for second*********************");
+					
+					for(int i=0;i<results.size();i++) {
+						log.debug("**********************inside for *********************");
+						LoginUsersRequests loginUserRequest= (LoginUsersRequests)results.get(i);
+						String approve=request.getParameter("approve"+i);
+						log.debug("approve>>>>>>>>>>"+approve);
+						if(approve!=null && !approve.equals(""))
+						{
+							approveCounter ++;
+							log.debug("approveCounter"+approveCounter);
+							
+							RequestApproval approvals = new RequestApproval();
+							approvals.setApprove("1");
+							approvals.setRequestId(loginUserRequest.getId()+"");
+							requestsApprovalManager.approvalsAccessLevels(approvals, loginUserRequest, emp);
+						}
+						
+							
+					}
+				}
+				else
+				{
+					log.debug("**********************else for check*********************");
+					
+					
+				}
+			
+			////////////////////////////////////////////
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView("attendanceRequestsReports",model);
 	}
 	
 	public static boolean isOnlyNumbers(String str){
