@@ -15935,7 +15935,7 @@ INSERT INTO I18N_KEY VALUES (101406, 'commons.caption.empCode', NULL);&#xD;
 INSERT INTO i18n_message VALUES (20211624,'كود الموظف', 101406, 1);&#xD;
 INSERT INTO i18n_message VALUES (20211625, 'Employee Code', 101406, 3);</statment></query><query><sqlindex>101</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101407, 'commons.errors.empCodeShouldBe8Digits', NULL);&#xD;
 INSERT INTO i18n_message VALUES (20211626,'كود الموظف يجب أن يحتوي على 8 أرقام', 101407, 1);&#xD;
-INSERT INTO i18n_message VALUES (20211627, 'Employee Code Should Contain 8 Digits', 101407, 3);</statment></query><query><sqlindex>102</sqlindex><statment>ALTER TABLE FOURS_PAY.COMMON_SETTINGS ADD MAXEMP NUMBER;</statment></query><query><sqlindex>103</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101408, 'commons.caption.empBasicView', NULL);&#xD;
+INSERT INTO i18n_message VALUES (20211627, 'Employee Code Should Contain 8 Digits', 101407, 3);</statment></query><query><sqlindex>102</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD MAXEMP NUMBER;</statment></query><query><sqlindex>103</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101408, 'commons.caption.empBasicView', NULL);&#xD;
 INSERT INTO i18n_message VALUES (20211628,'الموظفين', 101408, 1);&#xD;
 INSERT INTO i18n_message VALUES (20211629, 'Employees', 101408, 3);</statment></query><query><sqlindex>104</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101409, 'commons.error.duplicateCode', NULL);&#xD;
 INSERT INTO i18n_message VALUES (20211630,'تم استخدام هذا الكود من قبل', 101409, 1);&#xD;
