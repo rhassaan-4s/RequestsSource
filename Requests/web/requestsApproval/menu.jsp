@@ -10,7 +10,14 @@
 <div id="smoothmenu1" class="ddsmoothmenu" >
 <ul>
 	<li><a href="#"><fmt:message key="requestsApproval.menu.basicScreens" /></a>
-		<ul>		
+		<ul>	
+		
+		<li>
+			<abc:i18n property="requestsApproval.header.AttendanceSignInOut" />
+			<a href="/Requests/requestsApproval/attendanceSignInOutForm.html"> &nbsp;&nbsp;
+				<fmt:message key="requestsApproval.header.AttendanceSignInOut" />
+			</a>
+		</li>
 		<li>
 			<abc:i18n property="requestsApproval.header.loginUsersRequests" />
 			<a href="/Requests/requestsApproval/loginUsersRequestsForm.html"> &nbsp;&nbsp;

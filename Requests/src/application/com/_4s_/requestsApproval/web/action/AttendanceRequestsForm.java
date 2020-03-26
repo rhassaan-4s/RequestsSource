@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.validation.BindException;
@@ -36,7 +36,6 @@ import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.model.Requests;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
-
 import com._4s_.common.model.Employee;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
@@ -212,6 +211,11 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 					{
 						log.debug(ex.getMessage());
 						log.debug(ex.getStackTrace());
+					}
+					catch(MailSendException me) {
+						log.debug("can't send email");
+					} finally {
+						log.debug(">>>>>>>>>>>>>>>>>>>>>>> finally block >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 					}
 					
 				}

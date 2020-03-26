@@ -497,6 +497,36 @@
 		</property>
 	</bean>
 	
+	<bean id="attendanceSignInOutForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.requestsApproval.web.action.AttendanceSignInOutForm">
+				<property name="commandName">
+					<value>loginUsersRequests</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.requestsApproval.model.LoginUsersRequests</value>
+				</property>
+				<property name="formView">
+					<value>attendanceSignInOutForm</value>
+				</property>
+				<property name="requestsApprovalManager">
+					<ref bean="requestsApprovalManager" />
+				</property>
+				<property name="mailSender">
+					<ref bean="mailSender"/>
+				</property>
+				
+				<property name="binders">
+					<list>
+						<ref bean="loginUsersBinder" />
+						<ref bean="dateTimeBinder" />
+						<ref bean="requestTypesBinder" />
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
 	
 	<bean id="attendanceRequestsReports" parent="txProxyTemplate">
 		<property name="target">
@@ -603,6 +633,7 @@
 				<prop key="/annualVacLimitSetting.html">annualVacLimitController</prop>
 				<prop key="/sendEmailAlarm.html">sendEmailAlarmForm</prop>
 				<prop key="/attendanceRequestForm.html">attendanceRequestForm</prop>
+				<prop key="/attendanceSignInOutForm.html">attendanceSignInOutForm</prop>
 				<prop key="/attendanceRequestsReports.html">attendanceRequestsReports</prop>
 				<prop key="/attendanceRequestsApprovalForm.html">attendanceRequestsApprovalForm</prop>
 				

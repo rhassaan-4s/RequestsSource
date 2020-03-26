@@ -31,6 +31,7 @@ import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
+import com._4s_.restServices.json.RestStatus;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
 @Transactional
@@ -145,6 +146,8 @@ public interface RequestsApprovalManager extends BaseManager {
 	
 	public Map checkStartedRequestsIncludingAttendance(RequestsApprovalQuery requestQuery,
 			Employee emp);
+	
+	public RestStatus validateSignInOut(Long attendanceType, Date date, Employee emp);
 //	public List getAttendanceRequests(Date date, String empCode);
 }
 

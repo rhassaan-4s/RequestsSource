@@ -2,7 +2,9 @@ package com._4s_.requestsApproval.service;
 
 
 import java.awt.Color;
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -56,6 +58,7 @@ import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
+import com._4s_.restServices.model.AttendanceStatus;
 import com.ibm.icu.util.Calendar;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
@@ -1643,6 +1646,125 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		return requestsApprovalDAO.checkStartedRequestsIncludingAttendance(requestQuery, emp);
 	}
 
+	public RestStatus validateSignInOut(Long attendanceType, Date date, Employee emp) {
+		Map attendanceToday = checkAttendance(date, emp.getEmpCode());
+		AttendanceStatus attendanceStatus = (AttendanceStatus)attendanceToday.get("Response"); 
+		
+		DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		
+		MultiCalendarDate mCalDateOnly = new MultiCalendarDate();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND,0);
+		Date dateOnly = cal.getTime();
+		mCalDateOnly.setDate(dateOnly);
+		
+		
+		RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
+		
+		requestQuery.setDateFrom(df.format(dateOnly));
+		
+		requestQuery.setDateTo(df.format(dateOnly));
+		
+		Map reqs = checkStartedRequests(requestQuery, emp);
+		List requests2 = (List)reqs.get("Response");
+		System.out.println("requests2 " + requests2.size());
+		
+		RestStatus restStatus = new RestStatus();
+		if (attendanceType.equals(new Long(1))
+				&& (attendanceStatus.getSignIn().booleanValue()==true && attendanceStatus.getSignOut().booleanValue()==false)) {
+			/////////////////////check sign in in the same day//////////////////////////////////////////////
+			restStatus.setCode("325");
+			restStatus.setMessage("User signed In Before and didn't signed out");
+			restStatus.setStatus("False");
+			return restStatus;
+			/////////////////////////////////////////////////////////////////////////////////////
+		} else if (attendanceType.equals(new Long(2))
+				&& ((attendanceStatus.getSignIn().booleanValue()==false && attendanceStatus.getSignOut().booleanValue()==false)
+						|| (attendanceStatus.getSignIn().booleanValue()==true && attendanceStatus.getSignOut().booleanValue()==true) )) {
+			/////////////////////check sign in in the same day//////////////////////////////////////////////
+			restStatus.setCode("326");
+			restStatus.setMessage("User didn't sign In yet");
+			restStatus.setStatus("False");
+			return restStatus;
+			/////////////////////////////////////////////////////////////////////////////////////
+		}  else if ( attendanceType.equals(new Long(2))
+				&& (attendanceStatus.getSignIn().booleanValue()==true && attendanceStatus.getSignOut().booleanValue()==false)
+				&& date.getTime() < attendanceStatus.getSignInTime()) {
+			/////////////////////check sign in in the same day//////////////////////////////////////////////
+			restStatus.setCode("327");
+			restStatus.setMessage("Sign out date is before sign in date");
+			restStatus.setStatus("False");
+			return restStatus;
+			/////////////////////////////////////////////////////////////////////////////////////
+		} else if (requests2.size() > 0) { 
+			System.out.println("requests size greater than 1 can't allow sign in probably");
+
+			Iterator itr = requests2.iterator();
+			LoginUsersRequests req = null;
+			while (itr.hasNext()) {
+				req = (LoginUsersRequests)itr.next();
+				System.out.println("req " + req);
+
+				System.out.println("request " + req.getRequestNumber());
+				System.out.println("attendanceType.equals(new Long(1)) " + attendanceType.equals(new Long(1)));
+
+				if (req.getVacation()!=null) {
+					System.out.println("req.getVacation() " + req.getVacation().getVacation());
+				}
+
+
+				long diff = 0;
+				
+				if(req.getTo_date() != null) {
+					diff = req.getTo_date().getTime() - req.getFrom_date().getTime() ;
+				}
+				 
+				int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+				System.out.println("difference between days: " + diffDays);
+//				double diffhours = (double) (diff / (60 * 60 * 1000));
+//				System.out.println("difference between hours: " + diffhours);
+				int diffmin = (int) (diff / (60 * 1000));
+				System.out.println("difference between minutues: " + diffmin);
+
+				
+				System.out.println(" diffmin>=1439 " +  (diffmin>=1439));
+
+				System.out.println("condition for full day errand validation:####  "+ (attendanceType.equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && diffmin>=1439));
+				if (attendanceType.equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && diffmin>=1439) {  
+
+					System.out.println("full day errand on this day");
+					restStatus.setCode("329");
+					restStatus.setMessage("Sign in on a full errand day is not allowed");
+					restStatus.setStatus("False");
+					return restStatus;
+				} else {
+					if (req.getTo_date() == null) {
+						System.out.println("Finish Started Request First");
+						restStatus.setCode("330");
+						restStatus.setMessage("Finish Started Request First ("+req.getRequestNumber()+")");
+						restStatus.setStatus("False");
+						return restStatus;
+					}
+				}
+			}
+			restStatus.setCode("200");
+			restStatus.setMessage("OK");
+			restStatus.setStatus("True");
+			return restStatus;
+			///////////////////////////////////////////////////////////////////////////////////
+		} else {
+			restStatus.setCode("200");
+			restStatus.setMessage("OK");
+			restStatus.setStatus("True");
+			return restStatus;
+		}
+	}
+
+	
 //	public List getAttendanceRequests(Date date, String empCode) {
 //		return requestsApprovalDAO.getAttendanceRequests(date,empCode);
 //	}
