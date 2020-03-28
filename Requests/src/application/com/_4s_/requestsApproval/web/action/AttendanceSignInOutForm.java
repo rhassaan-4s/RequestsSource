@@ -143,6 +143,8 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		}
 		
 	
+		String done=request.getParameter("done");
+		model.put("done", done);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		return model;
 	}
