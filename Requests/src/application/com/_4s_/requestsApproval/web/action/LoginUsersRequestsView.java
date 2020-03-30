@@ -210,6 +210,7 @@ public class LoginUsersRequestsView implements Controller{
 				toDate= mCalDate.getDate();
 				
 				List allRequests=new ArrayList();
+//				Map resultsMap = requestsApprovalManager.getRequestsForApproval(requestNumber, emp_code, dateFrom, dateTo, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, isWeb, pageNumber, pageSize)
 				if(!requestType.equals("4")){
 					allRequests= requestsApprovalManager.getRequestsByDatePeriodAndRequestTypeForEmployee(fromDate, toDate, new Long(requestType),emp.getEmpCode());
 					for (int i = 0; i < allRequests.size(); i++) {

@@ -1347,7 +1347,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			} else {
 				criteria.add(Restrictions.eq("request_id.id", requestType));
 			}
-			criteria.addOrder(Property.forName("period_from").asc());
+			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			list = criteria.list();
@@ -1369,7 +1369,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				.createCriteria(LoginUsersRequests.class);
 		criteria.add(Expression.ge("request_date", fromDate));
 		criteria.add(Expression.le("request_date", toDate));
-		//							criteria.addOrder(Property.forName("period_from").asc());
+									criteria.addOrder(Property.forName("period_from").desc());
 		criteria
 		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		log.debug("criteria.list().size()" + criteria.list().size());
@@ -1387,7 +1387,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				.createCriteria(LoginUsersRequests.class);
 		criteria.add(Expression.ge("from_date", fromDate));
 		criteria.add(Expression.le("from_date", toDate));
-		//							criteria.addOrder(Property.forName("period_from").asc());
+									criteria.addOrder(Property.forName("period_from").desc());
 		criteria
 		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		log.debug("criteria.list().size()" + criteria.list().size());
@@ -1431,7 +1431,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				criteria.add(Restrictions.eq("request_id.id", requestType));
 			}
 			criteria.add(Restrictions.eq("empCode", empCode));
-			criteria.addOrder(Property.forName("period_from").asc());
+			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			list = criteria.list();
@@ -1481,7 +1481,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				criteria.add(Restrictions.eq("request_id.id", requestType));
 			}
 			criteria.add(Restrictions.eq("empCode", empCode));
-			criteria.addOrder(Property.forName("period_from").asc());
+			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			list = criteria.list();
@@ -1524,7 +1524,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			criteria.add(Expression.ge("request_date", startDate));
 			criteria.add(Expression.le("request_date", endDate));
 			criteria.add(Restrictions.eq("empCode", empCode));
-			criteria.addOrder(Property.forName("period_from").asc());
+			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			list = criteria.list();
@@ -1570,7 +1570,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				criteria.add(Expression.le("from_date", endDate));
 			}
 			criteria.add(Restrictions.eq("empCode", empCode));
-			criteria.addOrder(Property.forName("period_from").asc());
+			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			list = criteria.list();
@@ -1613,7 +1613,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			criteria.add(Expression.le("request_date", endDate));
 			criteria.add(Restrictions.eq("request_id.id", requestType));
 			criteria.add(Restrictions.eq("empCode", empCode));
-			criteria.addOrder(Property.forName("period_from").asc());
+			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			list = criteria.list();
@@ -1655,7 +1655,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			criteria.add(Expression.le("from_date", endDate));
 			criteria.add(Restrictions.eq("request_id.id", requestType));
 			criteria.add(Restrictions.eq("empCode", empCode));
-			criteria.addOrder(Property.forName("period_from").asc());
+			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			list = criteria.list();
@@ -1697,7 +1697,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			criteria.add(Expression.ge("request_date", startDate));
 			criteria.add(Expression.le("request_date", endDate));
 			criteria.add(Restrictions.eq("empCode", empCode));
-			criteria.addOrder(Property.forName("period_from").asc());
+			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			list = criteria.list();
@@ -1738,7 +1738,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			criteria.add(Expression.ge("from_date", startDate));
 			criteria.add(Expression.le("from_date", endDate));
 			criteria.add(Restrictions.eq("empCode", empCode));
-			criteria.addOrder(Property.forName("period_from").asc());
+			criteria.addOrder(Property.forName("period_from").desc());
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			list = criteria.list();

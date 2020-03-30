@@ -1671,7 +1671,11 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		
 		Map reqs = checkStartedRequests(requestQuery, emp);
 		List requests2 = (List)reqs.get("Response");
-		System.out.println("requests2 " + requests2.size());
+		log.debug("requests2 " + requests2.size());
+		log.debug("attendanceType " + attendanceType);
+		log.debug("attendanceStatus.getSignIn() " + attendanceStatus.getSignIn());
+		log.debug("attendanceStatus.getSignOut() " + attendanceStatus.getSignOut());
+//		log.debug("date.getTime() < attendanceStatus.getSignInTime() " + (date.getTime() < attendanceStatus.getSignInTime()));
 		
 		RestStatus restStatus = new RestStatus();
 		if (attendanceType.equals(new Long(1))

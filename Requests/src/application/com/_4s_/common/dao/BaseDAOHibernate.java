@@ -460,7 +460,7 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 				Expression.eq(parameter, value));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		for (int i = 0; i < fieldList.size(); i++) {
-			criteria.addOrder(Property.forName(fieldList.get(i)).asc());
+			criteria.addOrder(Property.forName(fieldList.get(i)).desc());
 		}
 		List list = (List) criteria.list();
 		return list;

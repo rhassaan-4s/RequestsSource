@@ -36,6 +36,7 @@ import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.model.Requests;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
+import com._4s_.restServices.json.RestStatus;
 import com._4s_.common.model.Employee;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
@@ -107,7 +108,7 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 	
 	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
 	{
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>"+ Calendar.getInstance().getTime());
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
 		log.debug("-------period from--referense-"+loginUsersRequests.getPeriod_from());
 		Map model=new HashMap();
@@ -151,78 +152,83 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 		
 		String done=request.getParameter("done");
 		String reqId=request.getParameter("requestId");
+		
+		log.debug("before email sending " + Calendar.getInstance().getTime());
 		if(done!=null && reqId!=null){
 			model.put("done", done);
-			
-			MimeMessage msg=mailSender.createMimeMessage();	
-			MimeMessageHelper helper = new MimeMessageHelper(msg,"UTF-8");
-			
-			List toMgrs=new ArrayList();
-			log.debug("---empId---"+emp.getId());
-			LoginUsers employee= (LoginUsers) requestsApprovalManager.getObject(LoginUsers.class, emp.getId());
-			log.debug("---employee---"+employee.getId());
-			List fields=new ArrayList();
-			fields.add("id");
-			RequestTypes req=(RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, Long.parseLong(reqId));
-			List empAcc= (List)requestsApprovalManager.getObjectsByTwoParametersOrderedByFieldList(EmpReqTypeAcc.class, "emp_id", employee,"req_id",req,fields);
-			for (int j = 0; j < empAcc.size(); j++) {
-				EmpReqTypeAcc empacc= (EmpReqTypeAcc) empAcc.get(j);
-				log.debug("---empreqacc---"+empacc.getId());
-				log.debug("---group---"+empacc.getGroup_id().getId());
-				List mgrs=new ArrayList();
-				mgrs= (List) requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "level_id", empacc.getGroup_id());
-				//toMgrs.addAll(toMgrs);
-				log.debug("---mgrs list size---"+mgrs.size());
-				for (int i = 0; i < mgrs.size(); i++) {
-					AccessLevels mgr= (AccessLevels) mgrs.get(i);
-					//toMgrs.add(mgr);
-					log.debug("---mgr ---"+mgr.getEmp_id().getId());
-					String mm="<html dir=\"rtl\" lang=\"ar\">";
-					mm+="<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head>";
-					mm+="<body>";
-					
-					mm+="<br>√” «–/ "+mgr.getEmp_id().getName();
-					mm+="<br>·œÌﬂ ÿ·»«  ··„Ê«›ﬁÂ ⁄·ÌÂ« »—Ã«¡ «·«ÿ·«⁄ ⁄·ÌÂ« „‰: http://10.8.2.203:8080/Requests/security/login.html";
-					mm+="<br>„⁄ Œ«·’ «·‘ﬂ—";
-					
-					try
-					{	Properties props = new Properties();
-						props.put("mail.smtp.starttls.enable","true");
-						props.put( "mail.smtp.auth", "true" );
-						props.put("mail.smtp.starttls.required", "true");
-						props.put("mail.smtp.port", "25");
-						//props.put("mail.smtp.host", getServletContext().getInitParameter("host"));
-						
-						mailSender.setJavaMailProperties(props);
-						helper.setFrom("att@4s-systems.com");
-						helper.setTo(mgr.getEmp_id().getEmail());
-						//helper.setTo("wesamsobhy89@gmail.com");
-						//mailSender.setHost(getServletContext().getInitParameter("host"));
-				      // helper.setFrom(getServletContext().getInitParameter("username"));
-						//helper.setTo(getServletContext().getInitParameter("to"));
-						helper.setSubject("Requests to be approved");
-						helper.setText(mm,true);
-						helper.setSentDate(new Date());
-						
-						mailSender.send(msg);
-						log.debug("mail sent to emp");
-					}
-					catch(MessagingException ex)
-					{
-						log.debug(ex.getMessage());
-						log.debug(ex.getStackTrace());
-					}
-					catch(MailSendException me) {
-						log.debug("can't send email");
-					} finally {
-						log.debug(">>>>>>>>>>>>>>>>>>>>>>> finally block >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-					}
-					
-				}
-			}
 		}
+//		if(done!=null && reqId!=null){
+//			model.put("done", done);
+//			
+//			MimeMessage msg=mailSender.createMimeMessage();	
+//			MimeMessageHelper helper = new MimeMessageHelper(msg,"UTF-8");
+//			
+//			List toMgrs=new ArrayList();
+//			log.debug("---empId---"+emp.getId());
+//			LoginUsers employee= (LoginUsers) requestsApprovalManager.getObject(LoginUsers.class, emp.getId());
+//			log.debug("---employee---"+employee.getId());
+//			List fields=new ArrayList();
+//			fields.add("id");
+//			RequestTypes req=(RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, Long.parseLong(reqId));
+//			List empAcc= (List)requestsApprovalManager.getObjectsByTwoParametersOrderedByFieldList(EmpReqTypeAcc.class, "emp_id", employee,"req_id",req,fields);
+//			for (int j = 0; j < empAcc.size(); j++) {
+//				EmpReqTypeAcc empacc= (EmpReqTypeAcc) empAcc.get(j);
+//				log.debug("---empreqacc---"+empacc.getId());
+//				log.debug("---group---"+empacc.getGroup_id().getId());
+//				List mgrs=new ArrayList();
+//				mgrs= (List) requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "level_id", empacc.getGroup_id());
+//				//toMgrs.addAll(toMgrs);
+//				log.debug("---mgrs list size---"+mgrs.size());
+//				for (int i = 0; i < mgrs.size(); i++) {
+//					AccessLevels mgr= (AccessLevels) mgrs.get(i);
+//					//toMgrs.add(mgr);
+//					log.debug("---mgr ---"+mgr.getEmp_id().getId());
+//					String mm="<html dir=\"rtl\" lang=\"ar\">";
+//					mm+="<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head>";
+//					mm+="<body>";
+//					
+//					mm+="<br>√” «–/ "+mgr.getEmp_id().getName();
+//					mm+="<br>·œÌﬂ ÿ·»«  ··„Ê«›ﬁÂ ⁄·ÌÂ« »—Ã«¡ «·«ÿ·«⁄ ⁄·ÌÂ« „‰: http://10.8.2.203:8080/Requests/security/login.html";
+//					mm+="<br>„⁄ Œ«·’ «·‘ﬂ—";
+//					
+//					try
+//					{	Properties props = new Properties();
+//						props.put("mail.smtp.starttls.enable","true");
+//						props.put( "mail.smtp.auth", "true" );
+//						props.put("mail.smtp.starttls.required", "true");
+//						props.put("mail.smtp.port", "25");
+//						//props.put("mail.smtp.host", getServletContext().getInitParameter("host"));
+//						
+//						mailSender.setJavaMailProperties(props);
+//						helper.setFrom("att@4s-systems.com");
+//						helper.setTo(mgr.getEmp_id().getEmail());
+//						//helper.setTo("wesamsobhy89@gmail.com");
+//						//mailSender.setHost(getServletContext().getInitParameter("host"));
+//				      // helper.setFrom(getServletContext().getInitParameter("username"));
+//						//helper.setTo(getServletContext().getInitParameter("to"));
+//						helper.setSubject("Requests to be approved");
+//						helper.setText(mm,true);
+//						helper.setSentDate(new Date());
+//						
+//						mailSender.send(msg);
+//						log.debug("mail sent to emp");
+//					}
+//					catch(MessagingException ex)
+//					{
+//						log.debug(ex.getMessage());
+//						log.debug(ex.getStackTrace());
+//					}
+//					catch(MailSendException me) {
+//						log.debug("can't send email");
+//					} finally {
+//						log.debug(">>>>>>>>>>>>>>>>>>>>>>> finally block >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//					}
+//					
+//				}
+//			}
+//		}
 	
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>"+ Calendar.getInstance().getTime());
 		return model;
 	}
 	
@@ -249,7 +255,7 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 	
 	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
 	{
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>" + Calendar.getInstance().getTime());
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests)command;
 	
 		
@@ -259,7 +265,7 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 				errors.rejectValue("empCode", "commons.errors.requiredFields");
 			}
 			else{
-					
+				Date now = Calendar.getInstance().getTime();	
 				if(loginUsersRequests.getRequest_id()==null || loginUsersRequests.getRequest_id().equals(""))
 				{
 					errors.rejectValue("request_id", "commons.errors.requiredFields");
@@ -268,7 +274,35 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 				if(loginUsersRequests.getPeriod_from()==null || loginUsersRequests.getPeriod_from().equals(""))
 				{
 					errors.rejectValue("request_id", "commons.errors.requiredFields");
-				}	
+				} else {
+					Long attendanceType = null;
+					Employee emp = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", loginUsersRequests.getEmpCode());
+					if (loginUsersRequests.getRequest_id().getId().equals(new Long(10))) {
+						attendanceType  = new Long(1);
+					} else if (loginUsersRequests.getRequest_id().getId().equals(new Long(11))) {
+						attendanceType  = new Long(2);
+					}
+					RestStatus status = requestsApprovalManager.validateSignInOut(attendanceType, loginUsersRequests.getPeriod_from(), emp);
+					if (status.getStatus().equals("False")) {
+						String statusMsg = status.getMessage();
+						String i18nkey = "";
+						if (statusMsg.equals("User signed In Before and didn't signed out")) {
+							i18nkey = "requests.errors.signedInBefore";
+						} else if (statusMsg.equals("User didn't sign In yet")) {
+							i18nkey = "requests.errors.didnotSignInYet";
+						} else if (statusMsg.equals("Sign out date is before sign in date")) {
+							i18nkey = "requests.errors.signoutBeforeSignin";
+						} else if (statusMsg.equals("Sign in on a full errand day is not allowed")) {
+							i18nkey = "requests.errors.signinOnFullErrandDay";
+						} else if (statusMsg.contains("Finish Started Request First")) {
+							i18nkey = "requests.errors.finishStartedRequestFirst";
+						}  else {
+							log.debug(statusMsg);
+							i18nkey = "requests.errors.unknownError";
+						}
+						errors.reject(i18nkey);
+					}
+				}
 				
 //				if(loginUsersRequests.getNotes()==null || loginUsersRequests.getNotes().equals(""))
 //				{
@@ -279,13 +313,13 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 		}
 
 		
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>"+ Calendar.getInstance().getTime());
 	}
 	
 	public ModelAndView onSubmit(HttpServletRequest request,
 			HttpServletResponse response, Object command, BindException errors)throws Exception 
 	{
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>" + Calendar.getInstance().getTime());
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests)command;
 		
 		loginUsersRequests.setInputType(new Integer(1));//request to sign in
@@ -340,7 +374,7 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 			
 			String url="attendanceRequestForm.html?done=true&requestId="+reqId;
 	
-			log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<  End onSubmit : <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+			log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<  End onSubmit : <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"+ Calendar.getInstance().getTime());
 	
 			return new ModelAndView(new RedirectView(url));
 		
