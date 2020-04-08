@@ -3459,7 +3459,341 @@ public List getTimeAttendAndroid (String hostName,String serviceName,String user
 	
 	
 	
+public List getTimeAttendFromView (String hostName,String serviceName,String userName,String password, String empCode, Date from_date, Date to_date){
 	
+	List result = new ArrayList();
+	List totalList = new ArrayList();
+	
+	log.debug("----fromdate---"+from_date);
+    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    
+    String from_dateString=df.format(from_date);
+    log.debug("----from_dateString- after formatting--"+from_dateString);
+    
+    String to_dateString=df.format(to_date);
+    log.debug("----to_dateString- after formatting--"+to_dateString);
+    try {
+    	log.debug("----xxxxxxxxxxxxxxxx-----");
+		to_date=df.parse(to_dateString);
+		log.debug("----to_dateString- after formatting--"+to_date);
+		log.debug("----xxxxxxxxxxxxxxxx-----");
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+    
+    MultiCalendarDate mCalDate = new MultiCalendarDate();
+	if(from_dateString!=null){
+		log.debug("-----date entered---"+from_dateString);
+		mCalDate.setDateTimeString(from_dateString,new Boolean(true));
+	}
+	from_date = mCalDate.getDate();
+	log.debug("----fromdate- after formatting--"+from_date);
+	
+	String emp = "";
+	if (empCode!= null && !empCode.equals("")){
+		emp = " t.empcode='" +empCode+ "' and ";
+	}
+	jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
+	
+	StringBuilder sql = new StringBuilder(
+			"select t.ATTENDANCE_DATE AS ATTENDANCE_DATE, t.attendance_time as attendance_time,t.ATTENDANCE_TYPE AS ATTENDANCE_TYPE,\n" + 
+					"t.INPUT_TYPE AS INPUT_TYPE, t.APPROVAL,t.longitude,t.latitude,\n" + 
+					"t.empcode as emp , e.firstName fName, e.lastName lName\n" + 
+					"from EMP_ATTENDANCE t, common_employee e\n"
+					+ " where e.empCode=t.empcode and e.empCode='"+empCode+"' and t.attendance_date >= to_date('" + from_dateString + "', 'DD/MM/YYYY') and t.attendance_date <= to_date('"
+					+ to_dateString+"', 'DD/MM/YYYY') ");
+//							+ "group by t.attendance_date, t.empcode,e.firstName,e.lastName order by t.attendance_date");
+
+//	StringBuilder sql = new StringBuilder(
+//			" select min(t.attendance_time) as minDate, max(t.attendance_time) as maxDate, t.empcode as emp , e.firstName fName, e.lastName lName " 
+//	+" from EMP_ATTENDANCE t, common_employee e where " + emp
+//					+ " e.empCode=t.empcode and t.attendance_date >= to_date('" + from_dateString + "', 'DD/MM/YYYY') and t.attendance_date <= to_date('"
+//					+ to_dateString+"', 'DD/MM/YYYY') group by t.attendance_date, t.empcode,e.firstName,e.lastName order by t.attendance_date");
+	log.debug("host name " + hostName);
+	log.debug("service name " + serviceName);
+	log.debug("username " + userName);
+	log.debug("password " + password);
+	log.debug("----sql 1---"+sql);
+
+	
+	List in=(List) jdbcTemplate.queryForList(sql.toString());
+	
+		
+	LinkedCaseInsensitiveMap inMap ;
+	LinkedCaseInsensitiveMap inMap2 ;
+	
+	String minDate = null;
+	
+	
+	log.debug("----in---"+in);		
+	//result.add(minDate);	
+
+
+	if(to_dateString!=null){
+		log.debug("-----to_dateString entered---"+to_dateString);
+		mCalDate.setDateTimeString(to_dateString,new Boolean(true));
+	}
+	to_date = mCalDate.getDate();
+	log.debug("----to_dateString- after formatting--"+to_date);
+	
+//	String maxDate = null;
+	
+	TimeAttend timeAttend=null;
+	Date inDate=null, outDate= null;
+	long totalMins=0, totalHrs=0;
+	
+	int i=0;
+	
+	
+	DateFormat d= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S",Locale.US);
+	log.debug("size "+in.size());
+	while(i<in.size()){
+		timeAttend=new TimeAttend();
+		
+		String attendanceTime = null;
+		String attendanceDate = null;
+		String attendanceType = null;
+		String inputType = null;
+		String latitude = null;
+		String longitude = null;
+		
+		String attendanceTime2 = null;
+		String attendanceDate2 = null;
+		String attendanceType2 = null;
+		String inputType2 = null;
+		String latitude2 = null;
+		String longitude2 = null;
+		
+		
+//		log.debug("in.get(i) " + in.get(i).getClass());
+		inMap = (LinkedCaseInsensitiveMap) in.get(i);
+		
+		attendanceTime = inMap.get("attendance_time").toString();
+		attendanceType = inMap.get("ATTENDANCE_TYPE").toString();
+		inputType = inMap.get("INPUT_TYPE").toString();
+		if (inMap.get("latitude")!=null) {
+			latitude = inMap.get("latitude").toString();
+		} else {
+			latitude = null;
+		}
+		if (inMap.get("longitude")!=null) {
+			longitude = inMap.get("longitude").toString();
+		} else {
+			longitude = null;
+		}
+		
+		
+		if (attendanceType.equals("IN")) {
+			try {
+				inDate=d.parse(attendanceTime);
+				log.debug("inDate  = "+inDate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(in.size()>(i+1)) {
+			inMap2 = (LinkedCaseInsensitiveMap)in.get(i+1);
+			
+			attendanceTime2 = inMap2.get("attendance_time").toString();
+			attendanceType2 = inMap2.get("ATTENDANCE_TYPE").toString();
+			inputType2 = inMap2.get("INPUT_TYPE").toString();
+			if (inMap2.get("latitude")!=null) {
+				latitude2 = inMap2.get("latitude").toString();
+			} else {
+				latitude2 = null;
+			}
+			if (inMap2.get("longitude")!=null) {
+				longitude2 = inMap2.get("longitude").toString();
+			} else {
+				longitude2 = null;
+			}
+			i++;
+		}
+		
+		timeAttend.setTimeIn(attendanceTime.substring(10));
+		String[] dateOnly = attendanceTime.split(" ");
+		String[] letters=dateOnly[0].split("-");
+
+		int year= Integer.parseInt(letters[0]);
+		int month =Integer.parseInt(letters[1]);
+		int day =Integer.parseInt(letters[2]);
+		String dateString=year+"/"+month+"/"+day;
+		log.debug("-----dateString-0--"+dateString);
+		timeAttend.setDay(dateString);
+
+		mCalDate.setDateString(dateString);
+		Date date=mCalDate.getDate();
+		log.debug("-----date-0--"+date);
+
+		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEEE",new Locale("ar","SA")); // the day of the week spelled out completely  
+		log.debug("-------simpleDateformat.format(mCalDate.getDate())---"+simpleDateformat.format(mCalDate.getDate()));
+		timeAttend.setDayString(simpleDateformat.format(mCalDate.getDate()));
+
+		String empStr =  inMap.get("emp").toString();
+		timeAttend.setEmployee(empStr);
+
+		String empName =  inMap.get("fName").toString();
+		timeAttend.setEmpName(empName);
+		log.debug("------timeAttend.getDay()---"+timeAttend.getDay());
+		result.add(timeAttend);
+		
+
+		
+		if (attendanceType2!= null && attendanceType2.equals("OUT")) {
+			try {
+				outDate=d.parse(attendanceTime2);
+				log.debug("outDate  = "+outDate);
+				Calendar inCal = Calendar.getInstance();
+				inCal.setTime(inDate);
+				Calendar outCal = Calendar.getInstance();
+				outCal.setTime(outDate);
+				if (inCal.get(Calendar.DAY_OF_MONTH) == outCal.get(Calendar.DAY_OF_MONTH) 
+						&& inCal.get(Calendar.MONTH) == outCal.get(Calendar.MONTH)
+						&& inCal.get(Calendar.YEAR) == outCal.get(Calendar.YEAR) ) {
+					log.debug("same day");
+					
+					long diffHrs= (outDate.getTime()-inDate.getTime())/(1000*60*60);
+					long diffMins= ((outDate.getTime()-inDate.getTime())%(1000*60*60))/(1000*60);
+					log.debug("diffHrs=== "+diffHrs);
+					log.debug("diffMins=== "+diffMins);
+					totalMins+=diffMins;
+					totalHrs+=diffHrs;
+					timeAttend.setDiffHrs(diffHrs+"");
+					timeAttend.setDiffMins(diffMins+"");
+					
+					
+					timeAttend.setTimeOut(attendanceTime2.substring(10));
+										
+				} else {
+					timeAttend.setTimeOut(null);
+				}
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		i++;
+		
+	}
+		
+		
+//	while(i<in.size()){
+//		timeAttend=new TimeAttend();
+//		log.debug("in.get(i) " + in.get(i).getClass());
+//		inMap = (LinkedCaseInsensitiveMap) in.get(i);
+//		minDate = inMap.get("minDate").toString();
+//		log.debug("----minDate---"+minDate);
+//		
+////		minDate=minDate.substring(0,19);
+//		log.debug("----minDate---"+minDate);
+//		
+//		DateFormat d= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S",Locale.US);
+//		
+//		try {
+//			inDate=d.parse(minDate);
+//			log.debug("inDate  = "+inDate);
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//			maxDate = inMap.get("maxDate").toString();
+//			//			maxDate=maxDate.substring(0,19);
+//			log.debug("----maxDate---"+maxDate);
+//			//			mCalDate = new MultiCalendarDate();
+//			//			mCalDate.setDateTimeString(maxDate);
+//			//			outDate=mCalDate.getDate();
+//			try {
+//				outDate=d.parse(maxDate);
+//				log.debug("outDate  = "+outDate);
+//			} catch (ParseException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		log.debug("indate " + inDate + " outdate " + outDate);
+//		if(inDate!=null && outDate!=null){
+//			long diffHrs= (outDate.getTime()-inDate.getTime())/(1000*60*60);
+//			long diffMins= ((outDate.getTime()-inDate.getTime())%(1000*60*60))/(1000*60);
+//			log.debug("diffHrs=== "+diffHrs);
+//			log.debug("diffMins=== "+diffMins);
+//			totalMins+=diffMins;
+//			totalHrs+=diffHrs;
+//			timeAttend.setDiffHrs(diffHrs+"");
+//			timeAttend.setDiffMins(diffMins+"");
+//		}
+//		
+//		
+////		if (maxDate!=null) {
+////			if(minDate.equals(maxDate)){
+////				timeAttend.setTimeOut(null);
+////			}
+////			else{			
+//				maxDate=maxDate.substring(0, maxDate.length()-5);
+//				log.debug("----maxDate.substring(10)----"+maxDate.substring(10));
+//				timeAttend.setTimeOut(maxDate.substring(10));
+////			}
+////		}
+//		
+//		minDate=minDate.substring(0, minDate.length()-5);
+//		log.debug("----minDate.substring(10)----"+minDate.substring(10));
+//		timeAttend.setTimeIn(minDate.substring(10));
+//		log.debug("----minDate.substring(0,10)----"+minDate.substring(0,10));
+//		String date1=minDate.substring(0,10);
+//		String[] letters=date1.split("-");
+//		 
+//		//for (int j = 0; j < letters.length; j++) {
+//		//	log.debug("-----letters-0--"+letters[j]);
+//			int year= Integer.parseInt(letters[0]);
+//			int month =Integer.parseInt(letters[1]);
+//			int day =Integer.parseInt(letters[2]);
+//			String dateString=year+"/"+month+"/"+day;
+//			log.debug("-----dateString-0--"+dateString);
+//			timeAttend.setDay(dateString);
+//			
+//			mCalDate.setDateString(dateString);
+//			Date date=mCalDate.getDate();
+//			log.debug("-----date-0--"+date);
+//			//log.debug("----after parsing--"+df.format(date));
+//			//mCalDate.setDate(date);
+//			//log.debug("---mCalDate--date-0--"+mCalDate.getDate());
+//			
+//			SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEEE",new Locale("ar","SA")); // the day of the week spelled out completely  
+//			log.debug("-------simpleDateformat.format(mCalDate.getDate())---"+simpleDateformat.format(mCalDate.getDate()));
+//			timeAttend.setDayString(simpleDateformat.format(mCalDate.getDate()));
+//			
+//			String empStr =  inMap.get("emp").toString();
+//			timeAttend.setEmployee(empStr);
+//			
+//			String empName =  inMap.get("fName").toString();
+//			timeAttend.setEmpName(empName);
+//		//}
+//		//timeAttend.setDay();
+//		log.debug("------timeAttend.getDay()---"+timeAttend.getDay());
+//		result.add(timeAttend);
+//		i++;
+//		log.debug("------end of loop---");
+//	}
+	
+	
+//	for (int i = 0; i < result.size(); i++) {
+//		TimeAttend x = (TimeAttend) result.get(i);
+//		log.debug("-----from result---"+x.getDay()+"------in---"+x.getTimeIn()+"----out---"+x.getTimeOut());
+//	}
+	 
+	
+	
+	//result.add(out);
+	
+	totalList.add(result);
+	totalList.add(totalMins+","+totalHrs);
+	
+	return totalList;
+	
+}
+
 	
 	
 	public List getVacations (String hostName,String serviceName,String userName,String password, String empCode, Long reqId, String vacId, Date from_date){

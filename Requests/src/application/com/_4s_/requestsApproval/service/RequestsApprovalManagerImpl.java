@@ -592,6 +592,15 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		return externalQueries.getTimeAttendAndroid(hostName, serviceName, userName, password, empCode,from_date,to_date);
 	}
 	
+	public List getTimeAttendFromView (String empCode, Date from_date, Date to_date){
+		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
+		String hostName = settings.getServer();
+		String serviceName = settings.getService();
+		String userName = settings.getUsername();
+		String password = settings.getPassword();
+		return externalQueries.getTimeAttendFromView(hostName, serviceName, userName, password, empCode,from_date,to_date);
+	}
+	
 	public void setSequenceManager(SequenceManager sequenceManager) {
 		this.sequenceManager = sequenceManager;
 	}

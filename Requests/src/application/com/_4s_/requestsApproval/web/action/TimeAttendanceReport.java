@@ -109,55 +109,91 @@ public class TimeAttendanceReport implements Controller{
 				
 				// VIP
 				List totalObjects= new ArrayList();
-				totalObjects=requestsApprovalManager.getTimeAttend(emp.getEmpCode(), fromDate, toDate);
-				if (totalObjects!=null) {
-					totalObjects.addAll(requestsApprovalManager.getTimeAttendAndroid(emp.getEmpCode(), fromDate, toDate));
-				} else {
-					totalObjects=requestsApprovalManager.getTimeAttendAndroid(emp.getEmpCode(), fromDate, toDate);
-				}
+//				totalObjects=requestsApprovalManager.getTimeAttend(emp.getEmpCode(), fromDate, toDate);
+//				if (totalObjects!=null) {
+//					totalObjects.addAll(requestsApprovalManager.getTimeAttendAndroid(emp.getEmpCode(), fromDate, toDate));
+//				} else {
+//					totalObjects=requestsApprovalManager.getTimeAttendAndroid(emp.getEmpCode(), fromDate, toDate);
+//				}
+				log.debug("getting attendance from view");
+				totalObjects = requestsApprovalManager.getTimeAttendFromView(emp.getEmpCode(), fromDate, toDate);
 				objects=(List) totalObjects.get(0);
-				if(totalObjects.size() ==4) {
-					objects.addAll((List)totalObjects.get(2));
-				}
+//				if(totalObjects.size() ==4) {
+//					objects.addAll((List)totalObjects.get(2));
+//				}
 				
 				//Lehaa/////////////////////////////////////////////////
-//				if (tAttRepWithHrsMin == true) {
 					
-					String totalSum=(String) totalObjects.get(1);
-					String [] totalValues=totalSum.split(",");
-					log.debug("totalMins=== "+totalValues[0]+" && totalHrs=== "+totalValues[1]);
-					String totalMins=totalValues[0];
-					String totalHrs=totalValues[1];
-					Long hrs=new Long(0), mins=new Long(0);
-					Long hrs2=new Long(0), mins2=new Long(0);
-					
-					hrs= Long.parseLong(totalHrs);
-					mins=Long.parseLong(totalMins);
-					
-					if(totalObjects.size() ==4) {
-						String totalSum2=(String) totalObjects.get(3);
-						String [] totalValues2=totalSum2.split(",");
-						log.debug("totalMins=== "+totalValues2[0]+" && totalHrs=== "+totalValues2[1]);
-						String totalMins2=totalValues2[0];
-						String totalHrs2=totalValues2[1];
-						
-						hrs2= Long.parseLong(totalHrs2);
-						mins2=Long.parseLong(totalMins2);
-					}
-					
-					hrs += hrs2;
-					mins += mins2;
-					
-					if(mins>60){
-						hrs+=mins/60;
-						mins=mins%60;
-					} 
-					
-					log.debug("sent mins=== "+mins+" && sent hrs=== "+hrs);
-					
-					model.put("totalMins", mins);
-					model.put("totalHrs", hrs);
+//				String totalSum=(String) totalObjects.get(1);
+//				String [] totalValues=totalSum.split(",");
+//				log.debug("totalMins=== "+totalValues[0]+" && totalHrs=== "+totalValues[1]);
+//				String totalMins=totalValues[0];
+//				String totalHrs=totalValues[1];
+//				Long hrs=new Long(0), mins=new Long(0);
+//				Long hrs2=new Long(0), mins2=new Long(0);
+//
+//				hrs= Long.parseLong(totalHrs);
+//				mins=Long.parseLong(totalMins);
+//
+//				if(totalObjects.size() ==4) {
+//					String totalSum2=(String) totalObjects.get(3);
+//					String [] totalValues2=totalSum2.split(",");
+//					log.debug("totalMins=== "+totalValues2[0]+" && totalHrs=== "+totalValues2[1]);
+//					String totalMins2=totalValues2[0];
+//					String totalHrs2=totalValues2[1];
+//
+//					hrs2= Long.parseLong(totalHrs2);
+//					mins2=Long.parseLong(totalMins2);
+//				}
+//
+//				hrs += hrs2;
+//				mins += mins2;
+//
+//				if(mins>60){
+//					hrs+=mins/60;
+//					mins=mins%60;
 //				} 
+//
+//				log.debug("sent mins=== "+mins+" && sent hrs=== "+hrs);
+//
+//				model.put("totalMins", mins);
+//				model.put("totalHrs", hrs);
+				
+				
+				String totalSum=(String) totalObjects.get(1);
+				String [] totalValues=totalSum.split(",");
+				log.debug("totalMins=== "+totalValues[0]+" && totalHrs=== "+totalValues[1]);
+				String totalMins=totalValues[0];
+				String totalHrs=totalValues[1];
+				Long hrs=new Long(0), mins=new Long(0);
+//				Long hrs2=new Long(0), mins2=new Long(0);
+
+				hrs= Long.parseLong(totalHrs);
+				mins=Long.parseLong(totalMins);
+
+				if(totalObjects.size() ==4) {
+					String totalSum2=(String) totalObjects.get(3);
+					String [] totalValues2=totalSum2.split(",");
+					log.debug("totalMins=== "+totalValues2[0]+" && totalHrs=== "+totalValues2[1]);
+					String totalMins2=totalValues2[0];
+					String totalHrs2=totalValues2[1];
+
+//					hrs2= Long.parseLong(totalHrs2);
+//					mins2=Long.parseLong(totalMins2);
+				}
+
+//				hrs += hrs2;
+//				mins += mins2;
+
+				if(mins>60){
+					hrs+=mins/60;
+					mins=mins%60;
+				} 
+
+				log.debug("sent mins=== "+mins+" && sent hrs=== "+hrs);
+
+				model.put("totalMins", mins);
+				model.put("totalHrs", hrs);
 				//////////////////////////////////////////////////////////
 				
 				log.debug("-------objects- size--"+objects.size());

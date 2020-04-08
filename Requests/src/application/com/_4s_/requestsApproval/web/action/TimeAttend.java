@@ -23,8 +23,38 @@ public class TimeAttend {
 	
 	private String empName;
 	
+	private String inputType;
+	
+	private String attendanceType;
+	
+	private String approval;
 	
 	
+	
+	
+	public String getInputType() {
+		return inputType;
+	}
+
+	public void setInputType(String inputType) {
+		this.inputType = inputType;
+	}
+
+	public String getAttendanceType() {
+		return attendanceType;
+	}
+
+	public void setAttendanceType(String attendanceType) {
+		this.attendanceType = attendanceType;
+	}
+
+	public String getApproval() {
+		return approval;
+	}
+
+	public void setApproval(String approval) {
+		this.approval = approval;
+	}
 	
 
 	public String getEmpName() {

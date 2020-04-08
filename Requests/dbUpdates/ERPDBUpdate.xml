@@ -16068,4 +16068,21 @@ INSERT INTO i18n_message VALUES (202116412,'قم باتمام اخر طلب او
 INSERT INTO i18n_message VALUES (202116413, 'Finish Started Request First', 101450, 3);&#xD;
 INSERT INTO I18N_KEY VALUES (101451, 'requests.errors.unknownError', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116414,'يوجد خطأ تسبب في عدم اتمام التسجيل', 101451, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116455, 'Unkown error', 101451, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116455, 'Unkown error', 101451, 3);</statment></query><query><sqlindex>146</sqlindex><statment>CREATE VIEW emp_attendance AS&#xD;
+SELECT empDays.EMPCODE empCode , EMPDAYS.DD dayDate,&#xD;
+(CASE WHEN ta.DATE_ IS NOT NULL THEN ta.DATE_ WHEN req.from_date IS NOT NULL THEN req.FROM_DATE END) AS  attendance_date,&#xD;
+(CASE WHEN ta.DATE_ IS NOT NULL THEN ta.TIME_ WHEN req.from_date IS NOT NULL THEN req.PERIOD_FROM END) AS attendance_time,&#xD;
+(CASE WHEN ta.DATE_ IS NOT NULL THEN &#xD;
+	(CASE WHEN ta.TRANS_TYPE='I' THEN 'IN' ELSE 'OUT' END )&#xD;
+WHEN req.FROM_DATE IS NOT NULL THEN &#xD;
+	(CASE WHEN req.REQUEST_TYPE=10 THEN 'IN' WHEN req.REQUEST_TYPE=11 THEN 'OUT' END )&#xD;
+END ) AS ATTENDANCE_Type,&#xD;
+--(CASE WHEN ta.DATE_ IS NOT NULL THEN 'Fingerprint' WHEN req.from_date IS NOT NULL THEN 'Web' END) AS attendance_source,&#xD;
+(CASE WHEN req.APPROVED =1 THEN 'Approved' WHEN req.APPROVED =99 THEN 'Rejected' WHEN ta.date_ IS NOT NULL THEN 'DontNeedApproval' WHEN (req.FROM_DATE IS NULL AND ta.DATE_ IS null) THEN 'DontNeedApproval' ELSE 'Incomplete' END) AS approval,&#xD;
+(CASE WHEN req.INPUTTYPE=0 THEN 'Web_Attendance' WHEN req.INPUTTYPE=1 THEN 'Request_Attendance' WHEN req.INPUTTYPE=2 THEN 'Android_Attendance' WHEN ta.date_ IS NOT NULL THEN 'Fingerprint_Attendance' ELSE 'Absent' END) AS input_type,&#xD;
+req.LONGITUDE AS longitude, req.LATITUDE latitude&#xD;
+FROM ALL_EMP_DAYS empDays&#xD;
+LEFT join TIME_ATTEND ta ON ta.EMP_CODE=empDays.EMPCODE AND ta.DATE_=EMPDAYS.DD &#xD;
+LEFT join LOGIN_USERS_REQUESTS req ON req.EMPCODE=empDays.EMPCODE  AND ((req.REQUEST_TYPE=10 OR req.REQUEST_TYPE=11) and TO_DATE(req.FROM_DATE,'DD-MM-YYYY')=TO_DATE(EMPDAYS.DD,'DD-MM-YYYY'))&#xD;
+JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE = empDays.EMPCODE &#xD;
+ORDER BY empdays.DD,ta.time_,req.PERIOD_FROM asc;</statment></query></SQL>
