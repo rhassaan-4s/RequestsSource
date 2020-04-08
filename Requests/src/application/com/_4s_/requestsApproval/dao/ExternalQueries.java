@@ -3647,27 +3647,32 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 			try {
 				outDate=d.parse(attendanceTime2);
 				log.debug("outDate  = "+outDate);
-				Calendar inCal = Calendar.getInstance();
-				inCal.setTime(inDate);
 				Calendar outCal = Calendar.getInstance();
 				outCal.setTime(outDate);
-				if (inCal.get(Calendar.DAY_OF_MONTH) == outCal.get(Calendar.DAY_OF_MONTH) 
-						&& inCal.get(Calendar.MONTH) == outCal.get(Calendar.MONTH)
-						&& inCal.get(Calendar.YEAR) == outCal.get(Calendar.YEAR) ) {
-					log.debug("same day");
-					
-					long diffHrs= (outDate.getTime()-inDate.getTime())/(1000*60*60);
-					long diffMins= ((outDate.getTime()-inDate.getTime())%(1000*60*60))/(1000*60);
-					log.debug("diffHrs=== "+diffHrs);
-					log.debug("diffMins=== "+diffMins);
-					totalMins+=diffMins;
-					totalHrs+=diffHrs;
-					timeAttend.setDiffHrs(diffHrs+"");
-					timeAttend.setDiffMins(diffMins+"");
-					
-					
+
+				if (inDate!=null) {
+					Calendar inCal = Calendar.getInstance();
+					inCal.setTime(inDate);
+
+
+					if (inCal.get(Calendar.DAY_OF_MONTH) == outCal.get(Calendar.DAY_OF_MONTH) 
+							&& inCal.get(Calendar.MONTH) == outCal.get(Calendar.MONTH)
+							&& inCal.get(Calendar.YEAR) == outCal.get(Calendar.YEAR) ) {
+						log.debug("same day");
+
+						long diffHrs= (outDate.getTime()-inDate.getTime())/(1000*60*60);
+						long diffMins= ((outDate.getTime()-inDate.getTime())%(1000*60*60))/(1000*60);
+						log.debug("diffHrs=== "+diffHrs);
+						log.debug("diffMins=== "+diffMins);
+						totalMins+=diffMins;
+						totalHrs+=diffHrs;
+						timeAttend.setDiffHrs(diffHrs+"");
+						timeAttend.setDiffMins(diffMins+"");
+
+					}
+
 					timeAttend.setTimeOut(attendanceTime2.substring(10));
-										
+
 				} else {
 					timeAttend.setTimeOut(null);
 				}
