@@ -206,6 +206,17 @@ public class TimeAttendanceReport implements Controller{
 					Date day=df.parse(ob.getDay());
 					log.debug("-------day---"+day);
 					log.debug("-------objects---"+ob.getDay()+"-------getTimeIn---"+ob.getTimeIn()+"-------getTimeOut---"+ob.getTimeOut());
+					
+					if (ob.getAddress1()== null && ob.getLatitude1()!=null) {
+						String address1 = requestsApprovalManager.getAddressByGpsCoordinates(ob.getLongitude1(), ob.getLatitude1());
+						log.debug("address 1 " + address1);
+						ob.setAddress1(address1);
+					}
+					if(ob.getAddress2()==null && ob.getLatitude2()!=null) {
+						String address2 = requestsApprovalManager.getAddressByGpsCoordinates(ob.getLongitude2(), ob.getLatitude2());
+						log.debug("address 2 " + address2);
+						ob.setAddress2(address2);
+					}
 				}
 				model.put("records", objects);
 				// VIP

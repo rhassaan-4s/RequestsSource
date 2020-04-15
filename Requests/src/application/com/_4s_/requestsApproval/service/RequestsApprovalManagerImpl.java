@@ -1,7 +1,12 @@
 package com._4s_.requestsApproval.service;
 
 
-import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -12,19 +17,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.ojb.broker.accesslayer.conversions.Calendar2DateFieldConversion;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +48,7 @@ import com._4s_.common.model.LastSequence;
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.BaseManagerImpl;
 import com._4s_.common.service.SequenceManager;
+import com._4s_.common.util.LocaleUtil;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.i18n.model.MyLocale;
 import com._4s_.i18n.model.MyMessage;
@@ -62,6 +68,8 @@ import com._4s_.restServices.model.AttendanceStatus;
 import com.ibm.icu.util.Calendar;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
+
+import sun.net.www.protocol.https.HttpsURLConnectionImpl;
 
 @Service
 @Transactional
@@ -1777,6 +1785,45 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		}
 	}
 
+	
+
+	 public String getAddressByGpsCoordinates(String lng, String lat)
+	            throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
+	         String key = "AIzaSyBeCCPQ7VdCQiJxjXGfVO98LyirL1-hC74";
+	         LocaleUtil localeUtil = LocaleUtil.getInstance();
+	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
+	        log.debug("url " + url);
+	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
+	        String formattedAddress = "";
+	 
+	        try {
+	            InputStream in = url.openStream();
+	            BufferedReader reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+	            String result, line = reader.readLine();
+	            result = line;
+	            while ((line = reader.readLine()) != null) {
+	                result += line;
+	            }
+	 
+	            JSONParser parser = new JSONParser();
+	            JSONObject rsp = (JSONObject) parser.parse(result);
+	 
+	            if (rsp.containsKey("results")) {
+	                JSONArray matches = (JSONArray) rsp.get("results");
+	                String error = (String)rsp.get("error_message");
+	                log.debug("error " + error);
+	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
+	                formattedAddress = (String) data.get("formatted_address");
+	            }
+	 
+	            return "";
+	        } catch (Exception e) {
+	        	e.printStackTrace();
+	        } finally {
+	            urlConnection.disconnect();
+	            return formattedAddress;
+	        }
+	    }
 	
 //	public List getAttendanceRequests(Date date, String empCode) {
 //		return requestsApprovalDAO.getAttendanceRequests(date,empCode);

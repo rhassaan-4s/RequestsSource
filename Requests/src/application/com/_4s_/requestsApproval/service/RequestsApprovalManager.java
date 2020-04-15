@@ -1,5 +1,7 @@
 package com._4s_.requestsApproval.service;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -150,6 +152,8 @@ public interface RequestsApprovalManager extends BaseManager {
 			Employee emp);
 	
 	public RestStatus validateSignInOut(Long attendanceType, Date date, Employee emp);
+	
+	public String getAddressByGpsCoordinates(String lng, String lat) throws MalformedURLException, IOException, org.json.simple.parser.ParseException ;
 //	public List getAttendanceRequests(Date date, String empCode);
 }
 

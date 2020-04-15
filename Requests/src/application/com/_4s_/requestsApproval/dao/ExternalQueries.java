@@ -3497,20 +3497,51 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 	}
 	jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
 	
-	StringBuilder sql = new StringBuilder(
-			"select t.ATTENDANCE_DATE AS ATTENDANCE_DATE, t.attendance_time as attendance_time,t.ATTENDANCE_TYPE AS ATTENDANCE_TYPE,\n" + 
-					"t.INPUT_TYPE AS INPUT_TYPE, t.APPROVAL,t.longitude,t.latitude,\n" + 
-					"t.empcode as emp , e.firstName fName, e.lastName lName\n" + 
-					"from EMP_ATTENDANCE t, common_employee e\n"
-					+ " where e.empCode=t.empcode and e.empCode='"+empCode+"' and t.attendance_date >= to_date('" + from_dateString + "', 'DD/MM/YYYY') and t.attendance_date <= to_date('"
-					+ to_dateString+"', 'DD/MM/YYYY') ");
-//							+ "group by t.attendance_date, t.empcode,e.firstName,e.lastName order by t.attendance_date");
-
 //	StringBuilder sql = new StringBuilder(
-//			" select min(t.attendance_time) as minDate, max(t.attendance_time) as maxDate, t.empcode as emp , e.firstName fName, e.lastName lName " 
-//	+" from EMP_ATTENDANCE t, common_employee e where " + emp
-//					+ " e.empCode=t.empcode and t.attendance_date >= to_date('" + from_dateString + "', 'DD/MM/YYYY') and t.attendance_date <= to_date('"
-//					+ to_dateString+"', 'DD/MM/YYYY') group by t.attendance_date, t.empcode,e.firstName,e.lastName order by t.attendance_date");
+//			"select t.ATTENDANCE_DATE AS ATTENDANCE_DATE, t.attendance_time as attendance_time,t.ATTENDANCE_TYPE AS ATTENDANCE_TYPE,\n" + 
+//					"t.INPUT_TYPE AS INPUT_TYPE, t.APPROVAL,t.longitude,t.latitude,\n" + 
+//					"t.empcode as emp , e.firstName fName, e.lastName lName\n" + 
+//					"from EMP_ATTENDANCE t, common_employee e\n"
+//					+ " where e.empCode=t.empcode and e.empCode='"+empCode+"' and t.attendance_date >= to_date('" + from_dateString + "', 'DD/MM/YYYY') and t.attendance_date <= to_date('"
+//					+ to_dateString+"', 'DD/MM/YYYY') ");
+	
+	StringBuilder sql = new StringBuilder("(SELECT empdays.DD , empdays.EMPCODE,emp.FIRSTNAME fName,-- empcode1, req.FROM_DATE requestfromdate, req.PERIOD_FROM requestperiod , req.POSTED posted, req.APPROVED approved\n" + 
+			"req.FROM_DATE AS  attendance_date,\n" + 
+			"TO_CHAR(req.PERIOD_FROM,'YYYY-MM-DD hh24:MI:ss') AS attendance_time,\n" + 
+			"(CASE WHEN req.REQUEST_TYPE=10 THEN 'IN' WHEN req.REQUEST_TYPE=11 THEN 'OUT' END ) AS ATTENDANCE_Type,\n" + 
+			"(CASE WHEN req.APPROVED =1 THEN 'Approved' WHEN req.APPROVED =99 THEN 'Rejected' WHEN (req.PERIOD_FROM IS NOT NULL AND req.approved IS NULL) THEN  'Incomplete' END) AS approval ,\n" + 
+			"(CASE WHEN req.INPUTTYPE=0 THEN 'Web_Attendance' WHEN req.INPUTTYPE=1 THEN 'Request_Attendance' WHEN req.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Absent' END) AS input_type,\n" +
+			"longitude as longitude, latitude as latitude \n"+
+			"FROM ALL_EMP_DAYS empdays join LOGIN_USERS_REQUESTS req\n" + 
+			"on req.EMPCODE=empdays.EMPCODE  AND (\n" + 
+			"(req.REQUEST_TYPE=10 OR req.REQUEST_TYPE=11)\n" + 
+			"and TO_CHAR(req.FROM_DATE,'YYYY-MM-DD')=TO_CHAR(empdays.DD,'YYYY-MM-DD')\n" + 
+			"AND req.POSTED != 1\n" + 
+			")\n" + 
+			"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
+			"where\n" + 
+			"empdays.EMPCODE='"+empCode+"'\n" + 
+			"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
+			")\n" + 
+			"UNION ALL\n" + 
+			"(SELECT empdays.DD , empdays.EMPCODE,emp.FIRSTNAME fName,-- empcode2, ta.DATE_ attendanceDate, ta.TIME_ attendanceTime\n" + 
+			"ta.DATE_  AS  attendance_date,\n" + 
+			"TO_CHAR(ta.TIME_,'YYYY-MM-DD hh24:MI:ss')  AS attendance_time,\n" + 
+			"(CASE WHEN ta.TRANS_TYPE='I' THEN 'IN' WHEN ta.TRANS_TYPE='O' THEN 'OUT' END ) AS ATTENDANCE_Type,\n" + 
+			"(CASE WHEN ta.date_ IS NOT NULL THEN 'Approved' END) AS approval,\n" + 
+			"(CASE WHEN ta.INPUTTYPE=0 THEN 'Web_Attendance' WHEN ta.INPUTTYPE=1 THEN 'Request_Attendance' WHEN ta.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Fingerprint_Attendance' END) AS input_type,\n" +
+			"longitude as longitude, latitude as latitude \n"+
+			"FROM ALL_EMP_DAYS empdays JOIN TIME_ATTEND ta\n" + 
+			"ON  ta.EMP_CODE=empDays.EMPCODE AND TO_CHAR(ta.DATE_,'YYYY-MM-DD')=TO_CHAR(EMPDAYS.DD,'YYYY-MM-DD')\n" + 
+			"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
+			"where\n" + 
+			"empdays.EMPCODE='"+empCode+"'\n" + 
+			"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
+			")\n" + 
+			"ORDER BY DD,attendance_time ASC --DD,\n");
+	
+	
+
 	log.debug("host name " + hostName);
 	log.debug("service name " + serviceName);
 	log.debug("username " + userName);
@@ -3547,17 +3578,20 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 	int i=0;
 	
 	
-	DateFormat d= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S",Locale.US);
+	DateFormat d= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.US);
 	log.debug("size "+in.size());
+	
+	String attendanceTime = null;
+	String attendanceDate = null;
+	String attendanceType = null;
+	String inputType1 = null;
+	String latitude1 = null;
+	String longitude1 = null;
+	
 	while(i<in.size()){
 		timeAttend=new TimeAttend();
 		
-		String attendanceTime = null;
-		String attendanceDate = null;
-		String attendanceType = null;
-		String inputType = null;
-		String latitude = null;
-		String longitude = null;
+
 		
 		String attendanceTime2 = null;
 		String attendanceDate2 = null;
@@ -3569,52 +3603,67 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 		
 //		log.debug("in.get(i) " + in.get(i).getClass());
 		inMap = (LinkedCaseInsensitiveMap) in.get(i);
-		
-		attendanceTime = inMap.get("attendance_time").toString();
-		attendanceType = inMap.get("ATTENDANCE_TYPE").toString();
-		inputType = inMap.get("INPUT_TYPE").toString();
-		if (inMap.get("latitude")!=null) {
-			latitude = inMap.get("latitude").toString();
-		} else {
-			latitude = null;
-		}
-		if (inMap.get("longitude")!=null) {
-			longitude = inMap.get("longitude").toString();
-		} else {
-			longitude = null;
-		}
-		
-		
-		if (attendanceType.equals("IN")) {
-			try {
-				inDate=d.parse(attendanceTime);
-				log.debug("inDate  = "+inDate);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		Object atimeObj = inMap.get("attendance_time");
+		if (atimeObj != null) {
+			attendanceTime = atimeObj.toString();
+			attendanceType = inMap.get("ATTENDANCE_TYPE").toString();
+			inputType1 = inMap.get("INPUT_TYPE").toString();
+			if (inMap.get("latitude")!=null) {
+				latitude1 = inMap.get("latitude").toString();
+			} else {
+				latitude1 = null;
+			}
+			if (inMap.get("longitude")!=null) {
+				longitude1 = inMap.get("longitude").toString();
+			} else {
+				longitude1 = null;
+			}
+
+			if (attendanceType.equals("IN")) {
+				try {
+					inDate=d.parse(attendanceTime);
+					log.debug("inDate  = "+inDate);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		
+		log.debug("i " + i);
 		if(in.size()>(i+1)) {
 			inMap2 = (LinkedCaseInsensitiveMap)in.get(i+1);
-			
-			attendanceTime2 = inMap2.get("attendance_time").toString();
-			attendanceType2 = inMap2.get("ATTENDANCE_TYPE").toString();
-			inputType2 = inMap2.get("INPUT_TYPE").toString();
-			if (inMap2.get("latitude")!=null) {
-				latitude2 = inMap2.get("latitude").toString();
-			} else {
-				latitude2 = null;
+
+			Object atimeObj2 = inMap2.get("attendance_time");
+			if (atimeObj2!=null) {
+				attendanceTime2 = atimeObj2.toString();
+				log.debug("out time " + attendanceTime2);
+				attendanceType2 = inMap2.get("ATTENDANCE_TYPE").toString();
+				inputType2 = inMap2.get("INPUT_TYPE").toString();
+				if (inMap2.get("latitude")!=null) {
+					latitude2 = inMap2.get("latitude").toString();
+				} else {
+					latitude2 = null;
+				}
+				if (inMap2.get("longitude")!=null) {
+					longitude2 = inMap2.get("longitude").toString();
+				} else {
+					longitude2 = null;
+				}
+				if(attendanceType2!= null && attendanceType2.equals("OUT")) {
+					i++;
+				}
+				log.debug("i " + i);
 			}
-			if (inMap2.get("longitude")!=null) {
-				longitude2 = inMap2.get("longitude").toString();
-			} else {
-				longitude2 = null;
-			}
-			i++;
 		}
-		
 		timeAttend.setTimeIn(attendanceTime.substring(10));
+		
+		timeAttend.setLatitude1(latitude1);
+		timeAttend.setLatitude2(latitude2);
+		timeAttend.setLongitude1(longitude1);
+		timeAttend.setLongitude2(longitude2);
+		timeAttend.setInputType1(inputType1);
+		timeAttend.setInputType2(inputType2);
 		String[] dateOnly = attendanceTime.split(" ");
 		String[] letters=dateOnly[0].split("-");
 
@@ -3633,7 +3682,7 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 		log.debug("-------simpleDateformat.format(mCalDate.getDate())---"+simpleDateformat.format(mCalDate.getDate()));
 		timeAttend.setDayString(simpleDateformat.format(mCalDate.getDate()));
 
-		String empStr =  inMap.get("emp").toString();
+		String empStr =  inMap.get("empcode").toString();
 		timeAttend.setEmployee(empStr);
 
 		String empName =  inMap.get("fName").toString();
@@ -3642,42 +3691,40 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 		result.add(timeAttend);
 		
 
-		
+		log.debug("attendanceType2 " + attendanceType2);
+//		log.debug("attendanceType2!= null " + attendanceType2!= null + " attendanceType2.equals(OUT) " + attendanceType2.equals("OUT"));
 		if (attendanceType2!= null && attendanceType2.equals("OUT")) {
+			log.debug("attendanceType2 " + attendanceType2);
 			try {
 				outDate=d.parse(attendanceTime2);
 				log.debug("outDate  = "+outDate);
+				Calendar inCal = Calendar.getInstance();
+				inCal.setTime(inDate);
 				Calendar outCal = Calendar.getInstance();
 				outCal.setTime(outDate);
-
-				if (inDate!=null) {
-					Calendar inCal = Calendar.getInstance();
-					inCal.setTime(inDate);
-
-
-					if (inCal.get(Calendar.DAY_OF_MONTH) == outCal.get(Calendar.DAY_OF_MONTH) 
-							&& inCal.get(Calendar.MONTH) == outCal.get(Calendar.MONTH)
-							&& inCal.get(Calendar.YEAR) == outCal.get(Calendar.YEAR) ) {
-						log.debug("same day");
-
-						long diffHrs= (outDate.getTime()-inDate.getTime())/(1000*60*60);
-						long diffMins= ((outDate.getTime()-inDate.getTime())%(1000*60*60))/(1000*60);
-						log.debug("diffHrs=== "+diffHrs);
-						log.debug("diffMins=== "+diffMins);
-						totalMins+=diffMins;
-						totalHrs+=diffHrs;
-						timeAttend.setDiffHrs(diffHrs+"");
-						timeAttend.setDiffMins(diffMins+"");
-
-					}
-
+				if (inCal.get(Calendar.DAY_OF_MONTH) == outCal.get(Calendar.DAY_OF_MONTH) 
+						&& inCal.get(Calendar.MONTH) == outCal.get(Calendar.MONTH)
+						&& inCal.get(Calendar.YEAR) == outCal.get(Calendar.YEAR) ) {
+					log.debug("same day");
+					
+					long diffHrs= (outDate.getTime()-inDate.getTime())/(1000*60*60);
+					long diffMins= ((outDate.getTime()-inDate.getTime())%(1000*60*60))/(1000*60);
+					log.debug("diffHrs=== "+diffHrs);
+					log.debug("diffMins=== "+diffMins);
+					totalMins+=diffMins;
+					totalHrs+=diffHrs;
+					timeAttend.setDiffHrs(diffHrs+"");
+					timeAttend.setDiffMins(diffMins+"");
+					
+					
 					timeAttend.setTimeOut(attendanceTime2.substring(10));
-
+										
 				} else {
 					timeAttend.setTimeOut(null);
 				}
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
+				log.debug("parsing exception of attendanceTime2");
 				e.printStackTrace();
 			}
 		}
