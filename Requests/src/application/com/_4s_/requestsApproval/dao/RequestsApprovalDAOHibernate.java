@@ -1889,8 +1889,10 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			if (accessLevels.size()>0) {
 				Criteria criteria = getCurrentSession()
 						.createCriteria(EmpReqTypeAcc.class);
-				if (requestType != null) {
+				if (requestType != null && !requestType.equals(new Long(5))) {
 					criteria.createCriteria("req_id").add(Restrictions.eq("id", requestType));
+				} else if (requestType.equals(new Long(5))) {
+					criteria.createCriteria("req_id").add(Restrictions.or(Restrictions.eq("id", new Long(10)), Restrictions.eq("id", new Long(11))));
 				}
 				criteria.createCriteria("group_id").add(Restrictions.in("id", accessLevels));
 				criteria.addOrder(Property.forName("id").asc());

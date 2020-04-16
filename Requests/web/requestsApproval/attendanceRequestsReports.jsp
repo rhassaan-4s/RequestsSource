@@ -126,7 +126,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 									firstParam="empCode"
 									secondParam="name"
 									bindById="true"
-									valueString="${employeeCode}"
+									valueString="${empCode}"
 									valueId=""/>
 							</td>
 							
@@ -137,9 +137,9 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 							<td  class="formBodControl" >
 								<select name="statusId" id="statusId">
 									<option value=""><fmt:message key="commons.caption.select" /></option>
-									<option value="0" ${statusId.value == "0" ?' selected' : ''}">لم تكتمل</option>
-									<option value="1" ${statusId.value == "1" ?' selected' : ''}">موافق</option>
-									<option value="99" ${statusId.value == "99" ?' selected' : ''}">مرفوض</option>
+									<option value="0" ${statusId == "0" ?' selected' : ''}">لم تكتمل</option>
+									<option value="1" ${statusId == "1" ?' selected' : ''}">موافق</option>
+									<option value="99" ${statusId == "99" ?' selected' : ''}">مرفوض</option>
 								</select>
 							</td>																				
 						</tr>
@@ -222,6 +222,8 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 						<tr>
 						</tr>										
 					</table>
+					<abc:paging url="attendanceRequestsReports.html" 
+					parametersString="empCode=${empCode}&statusId=${statusId}&request_date_from=${request_date_from}&request_date_to=${request_date_to}&codeFrom=${codeFrom}&codeTo=${codeTo}"/>
 					<table rules="all" align="center" class="sofT">
 									<tr>
 										<td colspan="14" class="helpTitle">
@@ -256,6 +258,17 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											<abc:i18n property="commons.caption.inDate"/>
 											<fmt:message key="commons.caption.inDate"/>
 										</td>										
+										
+										<td class="helpHed" nowrap="nowrap"><abc:i18n
+											property="requestsApproval.caption.location" /> <fmt:message
+											key="requestsApproval.caption.location" /></td>
+										<td class="helpHed" nowrap="nowrap"><abc:i18n
+											property="commons.caption.address" /> <fmt:message
+											key="commons.caption.address" /></td>
+											
+											<td class="helpHed" nowrap="nowrap"><abc:i18n
+										property="requestsApproval.caption.InputTypeIn" /> <fmt:message
+										key="requestsApproval.caption.InputTypeIn" /></td>
 								  		
 										<td class="helpHed" nowrap="nowrap">
 											<abc:i18n
@@ -277,7 +290,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										</td>										
 									</tr>
 									
-								<c:forEach varStatus="loop" var="record" items="${loginUserReqs}">
+								<c:forEach varStatus="loop" var="record" items="${results}">
 									<tr height=20 bgcolor="#F8F8F8">
 										<td  nowrap>
 											${record.empCode}
@@ -304,6 +317,37 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											<_4s_:formatMiladiDate value="${record.period_from}"/>
 											<_4s_:timeString value="${record.period_from}"/>
 										</td>
+										
+										<td  nowrap>
+							<c:choose>
+								<c:when test="${record.isInsideCompany==true}">
+									<fmt:message key="requestsApproval.caption.insideCompany" />
+								</c:when>
+								<c:otherwise>
+									<fmt:message key="requestsApproval.caption.outsideCompany" />
+								</c:otherwise>
+							</c:choose>
+								
+							</td>
+							
+							<td  nowrap>
+								${record.locationAddress}
+							</td>
+							<td  nowrap>
+									<c:choose>
+									<c:when test="${record.inputType==0}">
+										<fmt:message key="requestsApproval.caption.webAttendance" />
+									</c:when>
+									<c:when test="${record.inputType==1}">
+										<fmt:message key="requestsApproval.caption.requestAttendance" />
+									</c:when>
+									<c:when test="${record.inputType==2}">
+										<fmt:message key="requestsApproval.caption.androidAttendance" />
+									</c:when>
+									<c:otherwise>${record.inputType}</c:otherwise>
+									</c:choose>
+									</td>
+										
 										<td  nowrap>
 											${record.notes}
 										</td>
@@ -334,13 +378,18 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										<td  nowrap>
 											${record.reply}
 										</td>
-										<c:if test="${record.approved==0}">
+										<c:choose>
+										<c:when test="${record.approved==0}">
 										<td  id="btnPrint" nowrap><abc:i18n
 											property="commons.button.approve" /><a
 											href="attendanceRequestsApprovalForm.html?reqId=${record.id}"><fmt:message
 											key="commons.button.approve" /></a>
 										</td>								
-										</c:if>		
+										</c:when>
+										<c:otherwise>
+										<td   id="btnPrint" nowrap>&nbsp;</td>
+										</c:otherwise>
+										</c:choose>
 									</tr>
 								</c:forEach>									
 								</table>

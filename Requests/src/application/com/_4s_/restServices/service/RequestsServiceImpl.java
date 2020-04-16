@@ -301,7 +301,26 @@ private Map createManualAttendance(LoginUsers loginUsers, MultiCalendarDate mCal
 	loginUsersRequests.setNotes("Android Sign In/Out");
 
 	loginUsersRequests.setInputType(new Integer(2));//android request
-
+	
+	////////////////////////////////////////////////////////////////////////////
+	Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class, new Long(1));
+	
+	Double distance = requestsApprovalManager.distance(new Double(userRequest.getLatitude()), new Double(userRequest.getLongitude()), new Double(settings.getCompanyLat()), new Double(settings.getCompanyLong()));
+	if (distance>settings.getDistAllowedFromCompany()) {
+		loginUsersRequests.setIsInsideCompany(false);
+	} else {
+		loginUsersRequests.setIsInsideCompany(true);
+	}
+	//////////////////////////////////////////////////////////////////////////
+	try{
+		String address = requestsApprovalManager.getAddressByGpsCoordinates(userRequest.getLongitude()+"", userRequest.getLatitude()+"");
+		loginUsersRequests.setLocationAddress(address);
+	} catch(Exception e) {
+		e.printStackTrace();
+	}
+	
+	////////////////////////////////////////////////////////////////////////////
+	
 	//10 signin 11 signout
 	RequestTypes reqType = null;
 	System.out.println("userRequest.getAttendanceType() " + userRequest.getAttendanceType());

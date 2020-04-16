@@ -112,6 +112,15 @@ public class Settings  implements Serializable,Auditable {
 	private String automaticErrandEnd;
 	
 	private Boolean fingerprintEnabled;
+	
+	private Float companyLat;
+	
+	private Float companyLong;
+	
+	private Float distAllowedFromCompany;
+	
+	
+	
 
 	
 	////////////////////////////////////////////////////
@@ -153,6 +162,30 @@ public class Settings  implements Serializable,Auditable {
 	
 
 	
+	public Float getCompanyLat() {
+		return companyLat;
+	}
+
+	public void setCompanyLat(Float companyLat) {
+		this.companyLat = companyLat;
+	}
+
+	public Float getCompanyLong() {
+		return companyLong;
+	}
+
+	public void setCompanyLong(Float companyLong) {
+		this.companyLong = companyLong;
+	}
+
+	public Float getDistAllowedFromCompany() {
+		return distAllowedFromCompany;
+	}
+
+	public void setDistAllowedFromCompany(Float distAllowedFromCompany) {
+		this.distAllowedFromCompany = distAllowedFromCompany;
+	}
+
 	public String getAutomaticErrandEnd() {
 		return automaticErrandEnd;
 	}

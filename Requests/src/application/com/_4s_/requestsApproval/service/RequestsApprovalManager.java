@@ -154,6 +154,8 @@ public interface RequestsApprovalManager extends BaseManager {
 	public RestStatus validateSignInOut(Long attendanceType, Date date, Employee emp);
 	
 	public String getAddressByGpsCoordinates(String lng, String lat) throws MalformedURLException, IOException, org.json.simple.parser.ParseException ;
+	
+	public double distance(double lat1, double lon1, double lat2, double lon2);
 //	public List getAttendanceRequests(Date date, String empCode);
 }
 

@@ -195,7 +195,6 @@ public class TimeAttendanceReport implements Controller{
 				model.put("totalMins", mins);
 				model.put("totalHrs", hrs);
 				//////////////////////////////////////////////////////////
-				
 				log.debug("-------objects- size--"+objects.size());
 				for (int i = 0; i < objects.size(); i++) {
 					TimeAttend ob= (TimeAttend) objects.get(i);
@@ -216,6 +215,9 @@ public class TimeAttendanceReport implements Controller{
 						String address2 = requestsApprovalManager.getAddressByGpsCoordinates(ob.getLongitude2(), ob.getLatitude2());
 						log.debug("address 2 " + address2);
 						ob.setAddress2(address2);
+					}
+					if( ob.getLatitude1()!=null && ob.getLatitude2()!=null) {
+						log.debug(requestsApprovalManager.distance(new Double(ob.getLatitude1()), new Double(ob.getLongitude1()), new Double(settings.getCompanyLat()), new Double(settings.getCompanyLong())));
 					}
 				}
 				model.put("records", objects);

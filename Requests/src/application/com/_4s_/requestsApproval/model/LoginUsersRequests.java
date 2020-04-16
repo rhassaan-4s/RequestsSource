@@ -65,9 +65,27 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	private Integer inputType = 0; //0: attendance from application sign in and out
 								   //1: attendance request (for those who forgot to attend)
 								   //2: Mobile attendance
+	
+	private String locationAddress = null;
+	
+	private Boolean isInsideCompany = true;
+	
+	
 								
     
-    public Integer getInputType() {
+    public String getLocationAddress() {
+		return locationAddress;
+	}
+	public void setLocationAddress(String locationAddress) {
+		this.locationAddress = locationAddress;
+	}
+	public Boolean getIsInsideCompany() {
+		return isInsideCompany;
+	}
+	public void setIsInsideCompany(Boolean isInsideCompany) {
+		this.isInsideCompany = isInsideCompany;
+	}
+	public Integer getInputType() {
 		return inputType;
 	}
 	public void setInputType(Integer inputType) {

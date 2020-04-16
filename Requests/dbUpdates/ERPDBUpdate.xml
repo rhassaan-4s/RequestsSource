@@ -16135,4 +16135,8 @@ INSERT INTO i18n_message VALUES (202116436, 'Inside the company', 101461, 3);&#x
 INSERT INTO I18N_KEY VALUES (101462, 'requestsApproval.caption.outsideCompany', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116437,'خارج الشركة', 101462, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116438, 'Outside the company', 101462, 3);</statment></query><query><sqlindex>150</sqlindex><statment>ALTER TABLE LOGIN_USERS_REQUESTS ADD LOCATIONADDRESS VARCHAR2(255);&#xD;
-ALTER TABLE LOGIN_USERS_REQUESTS ADD ISINSIDECOMPANY VARCHAR2(1);</statment></query></SQL>
+ALTER TABLE LOGIN_USERS_REQUESTS ADD ISINSIDECOMPANY VARCHAR2(1);</statment></query><query><sqlindex>151</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD COMPANYLONG FLOAT;&#xD;
+ALTER TABLE COMMON_SETTINGS ADD COMPANYLAT FLOAT;&#xD;
+ALTER TABLE COMMON_SETTINGS ADD DISTALLOWEDFROMCOMPANY FLOAT;</statment></query><query><sqlindex>152</sqlindex><statment>update COMMON_SETTINGS set COMPANYLONG= 31.193424 , COMPANYLAT = 30.051791 , DISTALLOWEDFROMCOMPANY = 1000;</statment></query><query><sqlindex>153</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101463, 'requestsApproval.caption.location', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116439,'الموقع من الشركة', 101463, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116440, 'Location from company', 101463, 3);</statment></query></SQL>
