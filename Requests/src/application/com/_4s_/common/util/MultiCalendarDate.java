@@ -46,17 +46,17 @@ public class MultiCalendarDate implements ApplicationContextAware{
 	
 	public String getDateString() {
 		String dateString = null;
-		log.debug(" -- dateCalendarType : "+this.dateCalendarType);
+//		log.debug(" -- dateCalendarType : "+this.dateCalendarType);
 		switch (dateCalendarType) {
 		case HIJRI: 
-			log.debug("Going for Hijri");
+//			log.debug("Going for Hijri");
 			dateString = getHijriString();
-			log.debug("Hijri :"+dateString);
+//			log.debug("Hijri :"+dateString);
 			break;
 		case MILADI: 
-			log.debug("Going for Miladi");
+//			log.debug("Going for Miladi");
 			dateString = getMeladiString();
-			log.debug("Miladi :"+dateString);
+//			log.debug("Miladi :"+dateString);
 			break;
 		}
 		return dateString;
@@ -75,21 +75,21 @@ public class MultiCalendarDate implements ApplicationContextAware{
 
 	public void setDateString(String dateString) throws IllegalArgumentException {
 		int year,month,day;
-		log.debug(">>>>>>> getDateArray" + dateString);
+//		log.debug(">>>>>>> getDateArray" + dateString);
 		Map dateMap = null ;
 		try{
 			dateMap = getDateArray(dateString);
 		}catch(IllegalArgumentException e){
 			throw new IllegalArgumentException(e.getMessage());
 		}
-		log.debug(">>>>>>> dateMap not empty");
+//		log.debug(">>>>>>> dateMap not empty");
 		year = ((Integer)dateMap.get("year")).intValue();
 		month = ((Integer)dateMap.get("month")).intValue();
 		day = ((Integer)dateMap.get("day")).intValue();
 
-		log.debug(">>>>>>>>>>>>>>>>>year "+year);
-		log.debug(">>>>>>>>>>>>>>>>>month "+month);
-		log.debug(">>>>>>>>>>>>>>>>>day "+day);
+//		log.debug(">>>>>>>>>>>>>>>>>year "+year);
+//		log.debug(">>>>>>>>>>>>>>>>>month "+month);
+//		log.debug(">>>>>>>>>>>>>>>>>day "+day);
 		if ( year < 1700 ) {
 			setHijriDate(year,month,day);
 		} else {
@@ -100,25 +100,25 @@ public class MultiCalendarDate implements ApplicationContextAware{
 	
 	public void setDateTimeString(String dateString,Boolean startOfDay) throws IllegalArgumentException {
 		int year,month,day,hour,min;
-		log.debug(">>>>>>> getDateArray" + dateString);
+//		log.debug(">>>>>>> getDateArray" + dateString);
 		Map dateMap = null ;
 		try{
 			dateMap = getDateTimeArray(dateString,startOfDay);
 		}catch(IllegalArgumentException e){
 			throw new IllegalArgumentException(e.getMessage());
 		}
-		log.debug(">>>>>>> dateMap not empty");
+//		log.debug(">>>>>>> dateMap not empty");
 		year = ((Integer)dateMap.get("year")).intValue();
 		month = ((Integer)dateMap.get("month")).intValue();
 		day = ((Integer)dateMap.get("day")).intValue();
 		hour= ((Integer)dateMap.get("hour")).intValue();
 		min = ((Integer)dateMap.get("min")).intValue();
 		
-		log.debug(">>>>>>>>>>>>>>>>>year "+year);
-		log.debug(">>>>>>>>>>>>>>>>>month "+month);
-		log.debug(">>>>>>>>>>>>>>>>>day "+day);
-		log.debug(">>>>>>>>>>>>>>>>>hour "+hour);
-		log.debug(">>>>>>>>>>>>>>>>>min "+min);
+//		log.debug(">>>>>>>>>>>>>>>>>year "+year);
+//		log.debug(">>>>>>>>>>>>>>>>>month "+month);
+//		log.debug(">>>>>>>>>>>>>>>>>day "+day);
+//		log.debug(">>>>>>>>>>>>>>>>>hour "+hour);
+//		log.debug(">>>>>>>>>>>>>>>>>min "+min);
 		if ( year < 1700 ) {
 			setHijriDateTime(year,month,day,hour,min,startOfDay);
 		} else {
@@ -196,12 +196,12 @@ public class MultiCalendarDate implements ApplicationContextAware{
 		Calendar miladiCalendar = Calendar.getInstance();
 		miladiCalendar.setLenient(false);
 		try {
-			log.debug(">>>>>>>>>>>>>>>hour "+hour);
+//			log.debug(">>>>>>>>>>>>>>>hour "+hour);
 			miladiCalendar.set(year,month-1,day,hour,min);
 			this.millis = miladiCalendar.getTimeInMillis();
 			this.dateCalendarType = MILADI ;
 		} catch (Exception ex) {
-			log.debug(">>>>>>>>>>>>>>>>>>>> ERROR "+ex.getMessage());
+//			log.debug(">>>>>>>>>>>>>>>>>>>> ERROR "+ex.getMessage());
 			throw new IllegalArgumentException(ex.getMessage());
 		} 
 	}
@@ -503,17 +503,17 @@ public class MultiCalendarDate implements ApplicationContextAware{
 	
 	private Map getDateArray(String date) throws IllegalArgumentException {
 		
-		log.debug(">>>>>>> getDateArray in function" + date);		
+//		log.debug(">>>>>>> getDateArray in function" + date);		
 		DateFormatUtils dd = new DateFormatUtils();
 		HashMap dateMap = new HashMap();
 		String dateSection ;
 		boolean firstIsDay;
 
-		log.debug(">>>>>>>>> getDateArray() "+date);
+//		log.debug(">>>>>>>>> getDateArray() "+date);
 		
 			String arr[] = date.split(this.delimeter );
 			if (arr.length != 3){
-				log.debug(">>>>>>>>>>>>>>>>arr.length  "+ arr.length );
+//				log.debug(">>>>>>>>>>>>>>>>arr.length  "+ arr.length );
 				throw new IllegalArgumentException("Could not parse date");
 			}
 				dateSection = arr[0];
@@ -537,14 +537,14 @@ public class MultiCalendarDate implements ApplicationContextAware{
 				} else {
 					dateMap.put("day",new Integer(dateSection));
 				}	
-				log.debug (">>>>>>>>>>>> dateMap "+dateMap);
+//				log.debug (">>>>>>>>>>>> dateMap "+dateMap);
 				return dateMap;
 	}
 
 	
 	private Map getDateTimeArray(String date,Boolean startOfDay) throws IllegalArgumentException {
 		
-		log.debug(">>>>>>> getDateArray in function" + date);		
+//		log.debug(">>>>>>> getDateArray in function" + date);		
 		DateFormatUtils dd = new DateFormatUtils();
 		
 
@@ -552,11 +552,11 @@ public class MultiCalendarDate implements ApplicationContextAware{
 		String dateSection ;
 		boolean firstIsDay;
 		BindException errors = new BindException("","");
-		log.debug(">>>>>>>>> getDateArray() "+date);
+//		log.debug(">>>>>>>>> getDateArray() "+date);
 		
 			String arr[] = date.split(this.delimeter );
 			if (arr.length != 3){
-				log.debug(">>>>>>>>>>>>>>>>arr.length  "+ arr.length );
+//				log.debug(">>>>>>>>>>>>>>>>arr.length  "+ arr.length );
 				throw new IllegalArgumentException("Could not parse date");
 			}
 			dateSection = arr[0];
@@ -585,7 +585,7 @@ public class MultiCalendarDate implements ApplicationContextAware{
 				dateMap.put("hour",new Integer(23));
 				dateMap.put("min",new Integer(59));
 			}
-			log.debug (">>>>>>>>>>>> dateMap "+dateMap);
+//			log.debug (">>>>>>>>>>>> dateMap "+dateMap);
 		return dateMap;
 		
 	}

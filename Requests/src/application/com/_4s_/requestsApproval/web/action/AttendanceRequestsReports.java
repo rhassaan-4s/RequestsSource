@@ -70,7 +70,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		
 		String emp_code = request.getParameter("empCode");
 //		log.debug("----emp_code---"+emp_code);
-		model.put("employeeCode", emp_code);
+		
 		
 		String pageString = request.getParameter("page");
 		int pageNumber;
@@ -101,25 +101,30 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		String formattedDate=d.format(firstDay);
 //		log.debug("----formattedDate---"+formattedDate);
 		
-		model.put("firstDay", formattedDate);
 		Date today=new Date();
 		String formatedToday=d.format(today);
 //		log.debug("----formatedToday---"+formatedToday);
-		model.put("today", formatedToday);
+		
 
 		String request_date_from = request.getParameter("request_date_from");
 		log.debug("---request_date_from--"+request_date_from);
-		model.put("request_date_from", request_date_from);
+		if (request_date_from==null || request_date_from.equals("")) {
+			request_date_from = request.getParameter("date_from");
+		}
+		log.debug("---request_date_from--"+request_date_from);
+		
 	
 		String request_date_to = request.getParameter("request_date_to");
 		log.debug("---request_date_to--"+request_date_to);
-		model.put("request_date_to", request_date_to);
+		if (request_date_to==null || request_date_from.equals("")) {
+			request_date_to = request.getParameter("date_to");
+		}
+		log.debug("---request_date_to--"+request_date_to);
+		
 
 		String statusId=request.getParameter("statusId");
 		String codeFrom=request.getParameter("codeFrom");
 		String codeTo=request.getParameter("codeTo");
-		
-		model.put("pageNumber", pageNumber);
 		
 		Employee employee = (Employee)request.getSession().getAttribute("employee");
 		
@@ -138,49 +143,54 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", employee.getEmpCode());
 			List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(employee, requestType);
 			log.debug("empReqTypeAccs " + empReqTypeAccs);
-			model = requestsApprovalManager.getRequestsForApproval(requestNumber, emp_code, dateFrom, dateTo, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true, pageNumber, 30);
+			model = requestsApprovalManager.getRequestsForApproval(requestNumber, emp_code, request_date_from, request_date_to, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true, pageNumber, 20);
 			
-			
+			model.put("employeeCode", emp_code);
+			model.put("firstDay", formattedDate);
+			model.put("today", formatedToday);
+			model.put("request_date_from", request_date_from);
+			model.put("request_date_to", request_date_to);
+			model.put("pageNumber", pageNumber);
 
-			///////////////////////////////////////////////////////////
-			List results2 = (List)model.get("results");
-			Iterator itr = results2.iterator();
-			while(itr.hasNext()) {
-				LoginUsersRequests s = (LoginUsersRequests)itr.next();
-				////////////////////////////////////////////////////////////////////////////
-				/////////////////started temp  code
-				////////////////////////////////////////////////////////////////////////////
-				Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
-
-				if (s.getLatitude()!=null && s.getLongitude()!=null && s.getLatitude()>0 && s.getLongitude()>0) {
-					Double distance = requestsApprovalManager.distance(new Double(s.getLatitude()), new Double(s.getLongitude()), new Double(settings.getCompanyLat()), new Double(settings.getCompanyLong()));
-					log.debug("distance " +distance);
-					if (distance>settings.getDistAllowedFromCompany()) {
-						s.setIsInsideCompany(false);
-					} else {
-						s.setIsInsideCompany(true);
-					}
-
-					//////////////////////////////////////////////////////////////////////////
-					try{
-						String address = requestsApprovalManager.getAddressByGpsCoordinates(s.getLongitude()+"", s.getLatitude()+"");
-						log.debug("address " + address);
-						s.setLocationAddress(address);
-					} catch(Exception e) {
-						e.printStackTrace();
-					}
-
-					////////////////////////////////////////////////////////////////////////////
-				} else {
-					s.setIsInsideCompany(true);	
-				}
-
-				requestsApprovalManager.saveObject(s);
-				////////////////////////////////////////////////////////////////////////////
-				/////////////////ended temp  code
-				////////////////////////////////////////////////////////////////////////////
-			}
-			//////////////////////////////////////////////////////
+//			///////////////////////////////////////////////////////////
+//			List results2 = (List)model.get("results");
+//			Iterator itr = results2.iterator();
+//			while(itr.hasNext()) {
+//				LoginUsersRequests s = (LoginUsersRequests)itr.next();
+//				////////////////////////////////////////////////////////////////////////////
+//				/////////////////started temp  code
+//				////////////////////////////////////////////////////////////////////////////
+//				Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+//
+//				if (s.getLatitude()!=null && s.getLongitude()!=null && s.getLatitude()>0 && s.getLongitude()>0) {
+//					Double distance = requestsApprovalManager.distance(new Double(s.getLatitude()), new Double(s.getLongitude()), new Double(settings.getCompanyLat()), new Double(settings.getCompanyLong()));
+//					log.debug("distance " +distance);
+//					if (distance>settings.getDistAllowedFromCompany()) {
+//						s.setIsInsideCompany(false);
+//					} else {
+//						s.setIsInsideCompany(true);
+//					}
+//
+//					//////////////////////////////////////////////////////////////////////////
+//					try{
+//						String address = requestsApprovalManager.getAddressByGpsCoordinates(s.getLongitude()+"", s.getLatitude()+"");
+//						log.debug("address " + address);
+//						s.setLocationAddress(address);
+//					} catch(Exception e) {
+//						e.printStackTrace();
+//					}
+//
+//					////////////////////////////////////////////////////////////////////////////
+//				} else {
+//					s.setIsInsideCompany(true);	
+//				}
+//
+//				requestsApprovalManager.saveObject(s);
+//				////////////////////////////////////////////////////////////////////////////
+//				/////////////////ended temp  code
+//				////////////////////////////////////////////////////////////////////////////
+//			}
+//			//////////////////////////////////////////////////////
 		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		return model;
@@ -276,10 +286,19 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 
 		String request_date_from = request.getParameter("request_date_from");
 		log.debug("---request_date_from--"+request_date_from);
-		
+		if (request_date_from==null || request_date_from.equals("")) {
+			request_date_from = request.getParameter("date_from");
+		}
+		log.debug("---request_date_from--"+request_date_from);
+		model.put("request_date_from", request_date_from);
 	
 		String request_date_to = request.getParameter("request_date_to");
 		log.debug("---request_date_to--"+request_date_to);
+		if (request_date_to==null || request_date_from.equals("")) {
+			request_date_to = request.getParameter("date_to");
+		}
+		log.debug("---request_date_to--"+request_date_to);
+		model.put("request_date_to", request_date_to);
 		
 		
 		dateFrom = request_date_from;
@@ -314,50 +333,50 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", employee.getEmpCode());
 		List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(employee, requestType);
 		log.debug("empReqTypeAccs " + empReqTypeAccs);
-		model = requestsApprovalManager.getRequestsForApproval(requestNumber, emp_code, dateFrom, dateTo, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true, pageNumber, 30);
+		model = requestsApprovalManager.getRequestsForApproval(requestNumber, emp_code, dateFrom, dateTo, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true, pageNumber, 20);
 		
 		
 		model.put("pageNumber", pageNumber);
 		
-		///////////////////////////////////////////////////////////
-		List results2 = (List)model.get("results");
-		Iterator itr = results2.iterator();
-		while(itr.hasNext()) {
-			LoginUsersRequests s = (LoginUsersRequests)itr.next();
-			////////////////////////////////////////////////////////////////////////////
-			/////////////////started temp  code
-			////////////////////////////////////////////////////////////////////////////
-			Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
-
-			if (s.getLatitude()!=null && s.getLongitude()!=null && s.getLatitude()>0 && s.getLongitude()>0) {
-				Double distance = requestsApprovalManager.distance(new Double(s.getLatitude()), new Double(s.getLongitude()), new Double(settings.getCompanyLat()), new Double(settings.getCompanyLong()));
-				log.debug("distance " +distance);
-				if (distance>settings.getDistAllowedFromCompany()) {
-					s.setIsInsideCompany(false);
-				} else {
-					s.setIsInsideCompany(true);
-				}
-
-				//////////////////////////////////////////////////////////////////////////
-				try{
-					String address = requestsApprovalManager.getAddressByGpsCoordinates(s.getLongitude()+"", s.getLatitude()+"");
-					log.debug("address " + address);
-					s.setLocationAddress(address);
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-
-				////////////////////////////////////////////////////////////////////////////
-			} else {
-				s.setIsInsideCompany(true);	
-			}
-			
-			requestsApprovalManager.saveObject(s);
-////////////////////////////////////////////////////////////////////////////
-/////////////////ended temp  code
-////////////////////////////////////////////////////////////////////////////
-		}
-		//////////////////////////////////////////////////////
+//		///////////////////////////////////////////////////////////
+//		List results2 = (List)model.get("results");
+//		Iterator itr = results2.iterator();
+//		while(itr.hasNext()) {
+//			LoginUsersRequests s = (LoginUsersRequests)itr.next();
+//			////////////////////////////////////////////////////////////////////////////
+//			/////////////////started temp  code
+//			////////////////////////////////////////////////////////////////////////////
+//			Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+//
+//			if (s.getLatitude()!=null && s.getLongitude()!=null && s.getLatitude()>0 && s.getLongitude()>0) {
+//				Double distance = requestsApprovalManager.distance(new Double(s.getLatitude()), new Double(s.getLongitude()), new Double(settings.getCompanyLat()), new Double(settings.getCompanyLong()));
+//				log.debug("distance " +distance);
+//				if (distance>settings.getDistAllowedFromCompany()) {
+//					s.setIsInsideCompany(false);
+//				} else {
+//					s.setIsInsideCompany(true);
+//				}
+//
+//				//////////////////////////////////////////////////////////////////////////
+//				try{
+//					String address = requestsApprovalManager.getAddressByGpsCoordinates(s.getLongitude()+"", s.getLatitude()+"");
+//					log.debug("address " + address);
+//					s.setLocationAddress(address);
+//				} catch(Exception e) {
+//					e.printStackTrace();
+//				}
+//
+//				////////////////////////////////////////////////////////////////////////////
+//			} else {
+//				s.setIsInsideCompany(true);	
+//			}
+//			
+//			requestsApprovalManager.saveObject(s);
+//////////////////////////////////////////////////////////////////////////////
+///////////////////ended temp  code
+//////////////////////////////////////////////////////////////////////////////
+//		}
+//		//////////////////////////////////////////////////////
 		
 //		if (dateFrom != null && dateTo != null && emp_code.equals("") && codeFrom.equals("") && codeTo.equals("") && statusId.equals("")){
 //			log.debug("%%%%%%%if condition for report%%%%%%%");
@@ -628,8 +647,8 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 				model.put("today", formatedToday);
 				model.put("request_date_from", request_date_from);
 				model.put("request_date_to", request_date_to);
-				model.put("dateFrom", dateFrom);
-				model.put("dateTo", dateTo);
+//				model.put("dateFrom", dateFrom);
+//				model.put("dateTo", dateTo);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 		return new ModelAndView("attendanceRequestsReports",model);
 	}

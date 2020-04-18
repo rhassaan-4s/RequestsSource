@@ -211,7 +211,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 						<tr id="btnPrint">
 							<td>
 								<abc:i18n property="commons.button.search"/>
-								<input type="submit" name="aaa" onclick="searchForm()" value="<fmt:message key="commons.button.search"/> " class="button"/>
+								<input type="submit" name="aaa"  value="<fmt:message key="commons.button.search"/> " class="button"/>
 								&nbsp;&nbsp;&nbsp;
 							</td>
 						</tr>
@@ -223,7 +223,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 						</tr>										
 					</table>
 					<abc:paging url="attendanceRequestsReports.html" 
-					parametersString="empCode=${empCode}&statusId=${statusId}&request_date_from=${request_date_from}&request_date_to=${request_date_to}&codeFrom=${codeFrom}&codeTo=${codeTo}"/>
+					parametersString="empCode=${empCode}&statusId=${statusId}&date_from=${request_date_from}&date_to=${request_date_to}&codeFrom=${codeFrom}&codeTo=${codeTo}"/>
 					<table rules="all" align="center" class="sofT">
 									<tr>
 										<td colspan="14" class="helpTitle">

@@ -41,7 +41,7 @@ private final Log log = LogFactory.getLog(getClass());
 				NumberFormat nf = NumberFormat.getInstance();
 				nf.setMinimumIntegerDigits(2);
 				nf.setMaximumIntegerDigits(2);
-				log.debug(">>>>>>>>>>>>> value "+value);
+//				log.debug(">>>>>>>>>>>>> value "+value);
 				//DateUtil.setDatePattern("dd-MM-yyyy HH:mm:ss");
 				//String timeString = DateUtil.convertDateToString(value);
 				//log.debug(">>>>>>>>>>>>>>>>>>>>> timeString "+timeString);

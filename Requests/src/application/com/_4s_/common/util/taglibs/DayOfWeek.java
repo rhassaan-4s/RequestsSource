@@ -35,17 +35,17 @@ private Date value = null;
 			try{
 				Calendar cal = Calendar.getInstance();
 				//cal.setTime(value);
-				log.debug(">>>>>>>>>>>>>>>>>>>>>>>> date "+cal.getTime());
+//				log.debug(">>>>>>>>>>>>>>>>>>>>>>>> date "+cal.getTime());
 				int day = cal.get(Calendar.DAY_OF_WEEK);
-				log.debug(">>>>>>>>>>>>>>>>>>>>>>> day "+day);
+//				log.debug(">>>>>>>>>>>>>>>>>>>>>>> day "+day);
 				String dayString = new Long(day).toString();
 				if (dayString.equals("7")){
-					log.debug(">>>>>>>>>>>>>>>>>>>>>>> 7 ");
+//					log.debug(">>>>>>>>>>>>>>>>>>>>>>> 7 ");
 					//pageContext.getOut().write("<fmt:message key='commons.caption.sunday'/>");
 					pageContext.setAttribute("dayOfWeek","commons.caption.saturday");
 				}
 				if (dayString.equals("1")){
-					log.debug(">>>>>>>>>>>>>>>>>>>>>>> 1 ");
+//					log.debug(">>>>>>>>>>>>>>>>>>>>>>> 1 ");
 					//pageContext.getOut().write("<fmt:message key='commons.caption.monday'/>");
 					pageContext.setAttribute("dayOfWeek","commons.caption.sunday");
 				}
