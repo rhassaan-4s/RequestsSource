@@ -157,14 +157,14 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 							</td>
 							<c:choose>
 								<c:when  test="${request_date_from ==null || request_date_from==''}">
-								<td  class="formBodControl" >
-									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${firstDay}" />
-								</td>
+									<td  class="formBodControl" >
+										<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${firstDay}" />
+									</td>
 								</c:when>
 								<c:when test="${request_date_from !=null || request_date_from!=''}">
-								<td  class="formBodControl" >
-									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${request_date_from}" />
-								</td>
+									<td  class="formBodControl" >
+										<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${request_date_from}" />
+									</td>
 								</c:when>
 							</c:choose>
 					  		<td nowrap class="formBodControl" >

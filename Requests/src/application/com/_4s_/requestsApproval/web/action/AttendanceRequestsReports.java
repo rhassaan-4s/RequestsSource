@@ -99,11 +99,11 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 //		log.debug("----firstDay---"+firstDay);
 		DateFormat d=new SimpleDateFormat("dd/MM/yyyy");
 		String formattedDate=d.format(firstDay);
-//		log.debug("----formattedDate---"+formattedDate);
+		log.debug("----formattedDate---"+formattedDate);
 		
 		Date today=new Date();
 		String formatedToday=d.format(today);
-//		log.debug("----formatedToday---"+formatedToday);
+		log.debug("----formatedToday---"+formatedToday);
 		
 
 		String request_date_from = request.getParameter("request_date_from");
@@ -145,12 +145,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 			log.debug("empReqTypeAccs " + empReqTypeAccs);
 			model = requestsApprovalManager.getRequestsForApproval(requestNumber, emp_code, request_date_from, request_date_to, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true, pageNumber, 20);
 			
-			model.put("employeeCode", emp_code);
-			model.put("firstDay", formattedDate);
-			model.put("today", formatedToday);
-			model.put("request_date_from", request_date_from);
-			model.put("request_date_to", request_date_to);
-			model.put("pageNumber", pageNumber);
+			
 
 //			///////////////////////////////////////////////////////////
 //			List results2 = (List)model.get("results");
@@ -192,6 +187,13 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 //			}
 //			//////////////////////////////////////////////////////
 		}
+		
+		model.put("employeeCode", emp_code);
+		model.put("firstDay", formattedDate);
+		model.put("today", formatedToday);
+		model.put("request_date_from", request_date_from);
+		model.put("request_date_to", request_date_to);
+		model.put("pageNumber", pageNumber);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		return model;
 	}
