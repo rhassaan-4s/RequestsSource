@@ -1889,22 +1889,32 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			if (accessLevels.size()>0) {
 				Criteria criteria = getCurrentSession()
 						.createCriteria(EmpReqTypeAcc.class);
-				if (requestType != null && !requestType.equals(new Long(5))) {
+				log.debug("request type " + requestType);
+				if (requestType == null) {
+					log.debug("requestType " + requestType);
+				} else if (requestType != null && !requestType.equals(new Long(5))) {
+					log.debug("request type not null  " + requestType);
 					criteria.createCriteria("req_id").add(Restrictions.eq("id", requestType));
 				} else if (requestType.equals(new Long(5))) {
+					log.debug("requestType " + requestType);
 					criteria.createCriteria("req_id").add(Restrictions.or(Restrictions.eq("id", new Long(10)), Restrictions.eq("id", new Long(11))));
+				} else {
+					log.debug("requestType " + requestType);
 				}
+				log.debug("will query levels");
 				criteria.createCriteria("group_id").add(Restrictions.in("id", accessLevels));
+				log.debug("will query levels 2");
 				criteria.addOrder(Property.forName("id").asc());
 				criteria
 				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 				List list = criteria.list();
+				log.debug("queried levels");
 				Iterator itr = list.iterator();
-//				log.debug("empreqtypeacc size " + list.size());
-//				while(itr.hasNext()) {
-//					EmpReqTypeAcc acc = (EmpReqTypeAcc)itr.next();
-//					log.debug("EmpReqTypeAcc " + acc.getId() + " group id " + acc.getGroup_id().getId());
-//				}
+				log.debug("empreqtypeacc size " + list.size());
+				while(itr.hasNext()) {
+					EmpReqTypeAcc acc = (EmpReqTypeAcc)itr.next();
+					log.debug("EmpReqTypeAcc " + acc.getId() + " group id " + acc.getGroup_id().getId());
+				}
 				return list;
 			} else return new ArrayList();
 		}
