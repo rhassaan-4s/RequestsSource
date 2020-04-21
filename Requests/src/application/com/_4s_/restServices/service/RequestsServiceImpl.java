@@ -866,6 +866,30 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		
+		loginUsersRequests.setInputType(new Integer(2));//android request
+		
+		////////////////////////////////////////////////////////////////////////////
+//		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class, new Long(1));
+		
+		Double distance = requestsApprovalManager.distance(new Double(userRequest.getLatitude()), new Double(userRequest.getLongitude()), new Double(settings.getCompanyLat()), new Double(settings.getCompanyLong()));
+		if (distance>settings.getDistAllowedFromCompany()) {
+			loginUsersRequests.setIsInsideCompany(false);
+		} else {
+			loginUsersRequests.setIsInsideCompany(true);
+		}
+		//////////////////////////////////////////////////////////////////////////
+		try{
+			String address = requestsApprovalManager.getAddressByGpsCoordinates(userRequest.getLongitude()+"", userRequest.getLatitude()+"");
+			loginUsersRequests.setLocationAddress(address);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		////////////////////////////////////////////////////////////////////////////
+		
+		
 		System.out.println("after validation");
 		if (automaticRequestsValidation==true) {
 			if (userRequest.getAttendanceType().equals(new Long(9))) {
