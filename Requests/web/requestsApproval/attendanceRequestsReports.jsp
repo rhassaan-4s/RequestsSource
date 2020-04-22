@@ -137,9 +137,9 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 							<td  class="formBodControl" >
 								<select name="statusId" id="statusId">
 									<option value=""><fmt:message key="commons.caption.select" /></option>
-									<option value="0" ${statusId == "0" ?' selected' : ''}">لم تكتمل</option>
-									<option value="1" ${statusId == "1" ?' selected' : ''}">موافق</option>
-									<option value="99" ${statusId == "99" ?' selected' : ''}">مرفوض</option>
+									<option value="0" ${status==0?'selected':''}>لم تكتمل</option>
+									<option value="1" ${status==1?'selected':''}>موافق</option>
+									<option value="99" ${status==99?'selected' : ''}>مرفوض</option>
 								</select>
 							</td>																				
 						</tr>
@@ -223,7 +223,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 						</tr>										
 					</table>
 					<abc:paging url="attendanceRequestsReports.html" 
-					parametersString="empCode=${empCode}&statusId=${statusId}&date_from=${request_date_from}&date_to=${request_date_to}&codeFrom=${codeFrom}&codeTo=${codeTo}"/>
+					parametersString="empCode=${empCode}&statusId=${status}&date_from=${request_date_from}&date_to=${request_date_to}&codeFrom=${codeFrom}&codeTo=${codeTo}"/>
 					<table rules="all" align="center" class="sofT">
 									<tr>
 										<td colspan="14" class="helpTitle">

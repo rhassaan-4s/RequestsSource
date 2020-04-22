@@ -35,11 +35,13 @@ import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.restServices.json.AttendanceRequest;
+import com._4s_.restServices.json.ImeiWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
 import com._4s_.restServices.model.AttendanceStatus;
 import com._4s_.security.dao.MySecurityDAO;
+import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
 //import com.javacodegeeks.gwtspring.server.utils.NotificationsProducer;
 //import com.javacodegeeks.gwtspring.shared.dto.EmployeeDTO;
@@ -98,6 +100,36 @@ public void setSecurityDao(MySecurityDAO securityDao) {
 	 return securityDao.login();
  }
 
+
+public Boolean checkImei(String imei, User user) {
+	// TODO Auto-generated method stub
+	Imei im = securityDao.checkImei(imei,user);
+	System.out.println("imei " + im);
+	if (im != null) {
+		return new Boolean(true);
+	} else {
+		return new Boolean(false);
+	}
+}
+
+public List getUsersImei(User user) {
+	List imei = requestsApprovalDAO.getObjectsByParameter(Imei.class, "users", user);
+	return imei;
+}
+
+public void saveImei(Imei im) {
+	requestsApprovalDAO.saveObject(im);
+}
+
+public User getImeiUsers(String imei) {
+	Object imeiObject = requestsApprovalDAO.getObjectByParameter(Imei.class, "imei", imei);
+	if (imeiObject != null) {
+		Imei im = (Imei)imeiObject;
+		return im.getUsers();
+	} else {
+		return null;
+	}
+}
 
 public Map signInOut(AttendanceRequest userRequest,Long empId) {
 	// TODO Auto-generated method stub

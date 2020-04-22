@@ -2953,16 +2953,16 @@ public class ExternalQueries {
 		int year; 
 //		= from_date.getYear();
 		
-		log.debug("----fromdate---"+from_date);
+		log.debug("getVacationCredit----fromdate---"+from_date);
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         
         String from_dateString=df.format(from_date);
-        log.debug("----from_dateString- after formatting--"+from_dateString);
+        log.debug("getVacationCredit----from_dateString- after formatting--"+from_dateString);
         
         try {
         	log.debug("----xxxxxxxxxxxxxxxx-----");
 			from_date=df.parse(from_dateString);
-			log.debug("----from_date- after formatting--"+from_date);
+			log.debug("getVacationCredit----from_date- after formatting--"+from_date);
 			log.debug("----xxxxxxxxxxxxxxxx-----");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -2987,6 +2987,7 @@ public class ExternalQueries {
 //            System.out.println("Day = " + c.get(Calendar.DAY_OF_MONTH));
 
             
+        log.debug("getVacationCredit: host " + hostName + " serviceName " + serviceName + " username " + userName + " password " + password);
 		
 		jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
 		StringBuilder sql = new StringBuilder(
@@ -2994,7 +2995,7 @@ public class ExternalQueries {
 						+ "' and vacation = '" + vacId + "' and year = '"
 						+ year+"'");
 		
-		log.debug("----sql1---"+sql);
+		log.debug("getVacationCredit----sql1---"+sql);
 		try{
 			cc1=jdbcTemplate.queryForLong(sql.toString());
 			log.debug("----cc1---"+cc1);

@@ -121,7 +121,7 @@ public interface RequestsApprovalManager extends BaseManager {
 	
 	public Long getEmpVacation (String empCode, String vacId, Date from_date);
 	public Long getVacationLimit (String empCode, String vacId, Date from_date);
-	public Long getVacationCredit (String empCode, Long reqId, String vacId, Date from_date);
+	public Long getVacationCredit (String empCode, Long reqId, String vacId, Date from_date, String hostName, String serviceName, String userName, String password);
 	public List getTimeAttend (String empCode, Date from_date, Date to_date);
 	public List getTimeAttendAndroid(String empCode, Date from_date, Date to_date);
 	

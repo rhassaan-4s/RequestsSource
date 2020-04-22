@@ -11,9 +11,11 @@ import com._4s_.common.service.BaseManager;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.restServices.json.AttendanceRequest;
+import com._4s_.restServices.json.ImeiWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
+import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
 
 
@@ -48,4 +50,12 @@ public interface RequestsService {// extends BaseManager {
 	public Map getSettings();
 
 	public Map getPortNo(String clientName);
+
+	public Boolean checkImei(String imei, User user);
+
+	public List getUsersImei(User user);
+
+	public void saveImei(Imei im);
+
+	public User getImeiUsers(String imei);
 }

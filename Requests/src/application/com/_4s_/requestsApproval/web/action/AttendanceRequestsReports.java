@@ -187,8 +187,9 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 //			}
 //			//////////////////////////////////////////////////////
 		}
-		
-		model.put("employeeCode", emp_code);
+		log.debug("status " + statusId);
+		model.put("empCode", emp_code);
+		model.put("status", statusId);
 		model.put("firstDay", formattedDate);
 		model.put("today", formatedToday);
 		model.put("request_date_from", request_date_from);
@@ -223,6 +224,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		List tempneededRequestTypes = new ArrayList();
 		
 		String statusId=request.getParameter("statusId");
+		log.debug("statusId " + statusId);
 		String codeFrom=request.getParameter("codeFrom");
 		String codeTo=request.getParameter("codeTo");
 		
@@ -379,26 +381,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 //////////////////////////////////////////////////////////////////////////////
 //		}
 //		//////////////////////////////////////////////////////
-		
-//		if (dateFrom != null && dateTo != null && emp_code.equals("") && codeFrom.equals("") && codeTo.equals("") && statusId.equals("")){
-//			log.debug("%%%%%%%if condition for report%%%%%%%");
-//			if (!dateFrom.equals("") && !dateTo.equals("") ) {
-//				
-//				Date fromDate = null;
-//				Date toDate = null;
-//				log.debug(">>>>>>>>>>>>> if ");
-//				log.debug(">>>>>>>>>>>Valid date format");
-//				log.debug(">>>>>>>>>>>>>fromDateString "+ dateFrom);
-//				//fromDateStr = fromDateString +" 00:00";
-//				mCalDate.setDateTimeString(dateFrom,new Boolean(true));
-//				fromDate = mCalDate.getDate();
-//				log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
-//				log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
-//				//toDateStr = toDateString+ " 23:59";
-//				mCalDate.setDateTimeString(dateTo,new Boolean(false));
-//				toDate= mCalDate.getDate();
-//				log.debug(">>>>>>>>>>>>>toDate "+ toDate);
-//				List neededRequestTypes = new ArrayList();
+	
 //				List loginUserReqs=(List) requestsApprovalManager.getRequestsByDatePeriod(fromDate, toDate);
 //				for (int i = 0; i < loginUserReqs.size(); i++) {
 //					LoginUsersRequests s=(LoginUsersRequests) loginUserReqs.get(i);
@@ -449,111 +432,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 //				tempneededRequestTypes=neededRequestTypes;
 //			}
 //		}
-//		
-//		if(emp_code!=null  && dateFrom!=null && dateTo!=null && codeFrom!=null && codeTo!=null && statusId!=null){
-//			if((emp_code.equals(""))&&(dateFrom.equals(""))&&(dateTo.equals(""))&&(codeTo.equals(""))&&(codeFrom.equals(""))&&(statusId.equals(""))){
-//				List neededRequestTypes = new ArrayList();
-//				List allRequests=requestsApprovalManager.getObjects(LoginUsersRequests.class);
-//				for (int i = 0; i < allRequests.size(); i++) {
-//					LoginUsersRequests s=(LoginUsersRequests) allRequests.get(i);
-//					if(s.getRequest_id().getId().equals(new Long(10)) || s.getRequest_id().getId().equals(new Long(11))){
-//						neededRequestTypes.add(s);
-//						log.debug("---neededList---"+neededRequestTypes.size());
-//					}
-//					log.debug("---code code---"+s.getEmpCode());
-//				}
-//				log.debug("--dateList.size--"+neededRequestTypes.size());
-//				log.debug("case 3");
-//				tempneededRequestTypes=neededRequestTypes;
-//			}
-//		}
-//		
-//		if(emp_code!=null  && dateFrom!=null && dateTo!=null){
-//			if((!emp_code.equals(""))&&(!dateFrom.equals(""))&&(!dateTo.equals(""))){
-//				
-//				Date fromDate = null;
-//				Date toDate = null;
-//				mCalDate.setDateTimeString(dateFrom,new Boolean(true));
-//				fromDate = mCalDate.getDate();
-//				
-//				mCalDate.setDateTimeString(dateTo,new Boolean(false));
-//				toDate= mCalDate.getDate();
-//			
-//				List allRequests= requestsApprovalManager.getRequestsByDatePeriodAndEmpCode(fromDate, toDate, emp_code);
-//				List neededRequestTypes = new ArrayList();
-//				for (int i = 0; i < allRequests.size(); i++) {
-//					LoginUsersRequests s=(LoginUsersRequests) allRequests.get(i);
-//					if(s.getRequest_id().getId().equals(new Long(10)) || s.getRequest_id().getId().equals(new Long(11))){
-//						neededRequestTypes.add(s);
-//						log.debug("---neededList case 4---"+neededRequestTypes.size());
-//					}
-//					
-//				}
-//				log.debug("--dateList.size--"+neededRequestTypes.size());
-//				log.debug("case 4");
-//				tempneededRequestTypes=neededRequestTypes;
-//			}
-//		}
-//		
-//		if(statusId!=null && !statusId.equals("")){
-//			List requests=requestsApprovalManager.getObjectsByParameter(LoginUsersRequests.class, "approved", new Long(statusId));
-//			List neededRequestTypes = new ArrayList();
-//			for (int i = 0; i < requests.size(); i++) {
-//				LoginUsersRequests s=(LoginUsersRequests) requests.get(i);
-//				if(s.getRequest_id().getId().equals(new Long(10)) || s.getRequest_id().getId().equals(new Long(11))){
-//					neededRequestTypes.add(s);
-//					log.debug("---neededList---"+neededRequestTypes.size());
-//				}
-//				log.debug("---code code---"+s.getEmpCode());
-//			}
-//			log.debug("--dateList.size--"+neededRequestTypes.size());
-//			log.debug("case 5");
-//			tempneededRequestTypes=neededRequestTypes;
-//		}
-		
-//		List actualRequest= new ArrayList();
-//		Employee emp =(Employee) request.getSession().getAttribute("employee");
-//		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
-//		List<String> ordered= new ArrayList();
-//		ordered.add("order");
-//		List<String> ordered1= new ArrayList();
-//		ordered1.add("emp_id");
-//		List approval=new ArrayList();
-//		EmpReqApproval empReqApproval=null;
-//		log.debug("tempneededRequestTypes.size()"+tempneededRequestTypes.size());
-//		for(int i=0;i<tempneededRequestTypes.size() ;i++){
-//			boolean flag=true;
-//			LoginUsersRequests temp=(LoginUsersRequests)tempneededRequestTypes.get(i);
-//			log.debug("-----temp- code---"+temp.getEmpCode());
-//			log.debug("-----req ID---"+temp.getId());
-//			List allRequests= requestsApprovalManager.getObjectsByTwoParametersOrderedByFieldList(EmpReqTypeAcc.class, "req_id", temp.getRequest_id() , "emp_id", temp.getLogin_user(), ordered);
-//			
-//			log.debug("------allRequests.size()--------"+allRequests.size());
-//			
-//			if(allRequests.size()>0){
-//				log.debug("------allRequests.size()>0---");
-//				for(int j=0;j<allRequests.size() ;j++){
-//					EmpReqTypeAcc tempEmpReqTypeAcc=(EmpReqTypeAcc)allRequests.get(j);
-//					List accessLevels= requestsApprovalManager.getObjectsByTwoParametersOrderedByFieldList(AccessLevels.class, "level_id",tempEmpReqTypeAcc.getGroup_id() , "emp_id", loginUsers, ordered1);
-//					
-//					
-//					if(accessLevels.size()>0&&flag){
-//						log.debug("-------my order---"+tempEmpReqTypeAcc.getOrder());
-//						//if(tempEmpReqTypeAcc.getOrder()==1){
-//							actualRequest.add(temp);
-//							flag=false;
-//						//}
-//					}	
-//					
-//					else{
-//						//log.debug("------empreqapp-----"+empReqApproval.getId());
-//						
-//						//log.debug("------id ele wafe2-----"+empReqApproval.getUser_id().getId());
-//					}					
-//										
-//				}
-//			}
-//		}
+
 		
 		List actualRequest = (List)model.get("results");
 //		log.debug("-----actualRequest---size-"+actualRequest.size());
@@ -607,7 +486,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 			 String check=request.getParameter("approveAll");
 				log.debug("value of check>>>>>>>>>>>>>"+check);
 				
-				List results = (List)model.get("loginUserReqs");
+				List results = (List)model.get("results");
 				
 				if(check !=null && !check.equals(""))
 				{
@@ -643,7 +522,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 				
 				model.put("firstDay", formattedDate);
 				model.put("empCode", emp_code);
-				model.put("statusId", statusId);
+				model.put("status", statusId);
 				model.put("codeFrom", codeFrom);
 				model.put("codeTo", codeTo);
 				model.put("today", formatedToday);

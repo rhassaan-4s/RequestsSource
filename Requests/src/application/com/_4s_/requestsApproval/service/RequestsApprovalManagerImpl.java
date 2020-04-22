@@ -557,12 +557,14 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		return externalQueries.getVacationLimit(hostName, serviceName, userName, password, empCode, vacId, from_date);
 	}
 
-	public Long getVacationCredit (String empCode, Long reqId, String vacId, Date from_date){
-		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
-		String hostName = settings.getServer();
-		String serviceName = settings.getService();
-		String userName = settings.getUsername();
-		String password = settings.getPassword();
+	public Long getVacationCredit (String empCode, Long reqId, String vacId, Date from_date,String hostName,String serviceName, String userName,String password){
+		log.debug("empCode " + empCode + " reqId " + reqId + " vacId " );
+		Settings settings = (Settings)getObject(Settings.class,new Long(1));
+		log.debug("settings " + settings);
+//		String hostName = settings.getServer();
+//		String serviceName = settings.getService();
+//		String userName = settings.getUsername();
+//		String password = settings.getPassword();
 		return externalQueries.getVacationCredit(hostName, serviceName, userName, password, empCode, reqId, vacId, from_date);
 	}
 	
@@ -937,7 +939,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	
 	public Map approvalsAccessLevels(RequestApproval approval, LoginUsersRequests requestInfo, Employee emp) {
 
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting approvals access levels >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
 //		Map model = new HashMap();
 		Map response = new HashMap();
@@ -1108,6 +1110,8 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					/**
 					 * Detect if access level is finished to hide submit button
 					 ***/
+					log.debug("empReqAcc.size() " + empReqAcc.size());
+					log.debug(" i " + i);
 					if ((i == (empReqAcc.size() - 1))){
 						log.debug("-------last one---- & not posted");
 //						model.put("lastOne", "true");
@@ -1302,10 +1306,12 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
 					saveObject(requestOb);
 
-				}else {
-
-					requestOb.setApproved(new Long(1));
-					saveObject(requestOb);
+				}
+				else {
+					if (approvalList.size() == empReqAcc.size()) {
+						requestOb.setApproved(new Long(1));
+						saveObject(requestOb);
+					}
 				}
 				
 				

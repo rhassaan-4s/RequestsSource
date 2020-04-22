@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -78,6 +79,9 @@ public class User implements  Serializable,Auditable,UserDetails {
 	@JoinColumn(name = "id", referencedColumnName = "user_id")
 	private UserPrivilege userPrivilege;
 	
+//	@OneToMany(mappedBy ="users",cascade=CascadeType.ALL)
+//	private List<Imei> imei = new ArrayList<Imei>();
+//	
 /**
 	 * @author hfouad
 	 * @hibernate.many-to-one column="defaultLocale"
@@ -271,5 +275,15 @@ public class User implements  Serializable,Auditable,UserDetails {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+//	public List<Imei> getImei() {
+//		return imei;
+//	}
+//
+//	public void setImei(List<Imei> imei) {
+//		this.imei = imei;
+//	}
+//	
+	
 
 }

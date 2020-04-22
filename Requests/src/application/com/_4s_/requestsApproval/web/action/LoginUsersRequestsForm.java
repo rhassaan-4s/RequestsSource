@@ -766,8 +766,10 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 							Calendar c = Calendar.getInstance();
 							c.add(Calendar.HOUR_OF_DAY, (-1)*requestsDeadline);
 							log.debug("deadline time " + c.getTime());
-							log.debug("loginUsersRequests.getFrom_date().before(c.getTime()) " + loginUsersRequests.getFrom_date().before(c.getTime()));
-							if (loginUsersRequests.getFrom_date().before(c.getTime())){
+//							log.debug("loginUsersRequests.getFrom_date().before(c.getTime()) " + loginUsersRequests.getFrom_date().before(c.getTime()));
+							if (loginUsersRequests.getFrom_date()==null) {
+								errors.reject("commons.errors.requiredFields");
+							} else if (loginUsersRequests.getFrom_date().before(c.getTime())){
 								errors.rejectValue("from_date","requestsApproval.errors.requestDeadlineExceeded");
 							}
 							if(loginUsersRequests.getVacation()!=null && loginUsersRequests.getVacation().getVacation()!= null && 
@@ -1147,7 +1149,8 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 	
 			log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<  End onSubmit : <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 	
-			return new ModelAndView(new RedirectView(url));
+			model.put("settings", settings);
+			return new ModelAndView(new RedirectView(url),model);
 		
 		//return new ModelAndView(new RedirectView(getSuccessView()));
 	}

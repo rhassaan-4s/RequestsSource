@@ -314,22 +314,29 @@ function calculateDiff2(){
 	 var empCode =document.getElementById('empCode').value;
 	 var vacId=document.getElementById("annualVacation").value;
 	 var from_date=document.getElementById("from_date").value;
+	 var hostName=document.getElementById('hostName').value;;
+	 var serviceName=document.getElementById('serviceName').value;;
+	 var userName=document.getElementById('userName').value;;
+	 var password=document.getElementById('password').value;;
 	 
 	 
+	// alert("1 "+from_date);
 	 if(vacId!=null && vacId!=''){
 	 
 	 	 if(from_date==null || from_date==""){
 			var period_from= document.getElementById("period_from").value;
 			var z1;
 				z1=period_from.substring(0,10);
+				// alert("2 "+z1);
 			 var x = z1.split("/");
+			// alert("3  "+x);
 			 var dFrom=new Date();
 				 dFrom.setDate(x[2]) ;
 				 dFrom.setFullYear(x[0]);
 			 dFrom.setMonth(x[1]-1);
 			 
-
-			 requestsDwr.getVacationCredit(fillBalance,empCode,2,vacId, dFrom);
+			// alert("4 "+dFrom);
+			 requestsDwr.getVacationCredit(fillBalance,empCode,2,vacId, dFrom, hostName, serviceName, userName, password);
 			
 		} else if(from_date!=null && from_date!=''){
 		 var z1=from_date.substring(0,10);
@@ -347,7 +354,7 @@ function calculateDiff2(){
  }
   
  function  fillBalance(data){
-	 //alert('--data='+data);
+	// alert('--data='+data);
 	 if (data!=null){
 		 document.getElementById('vacCredit').value=data;
 	 }
@@ -413,6 +420,12 @@ function calculateDiff2(){
 					 <c:set var="dateNow" value="<%=nowDate%>" />
 					 
 					 <input type="hidden"  id="empRequestTypeId" name="empRequestTypeId" value="${empRequestTypeId }"/>
+					 
+					 <input type="hidden" name="hostName" id="hostName" value="${settings.server}"/>
+					 <input type="hidden" name="serviceName" id="serviceName" value="${settings.service}"/>
+					 <input type="hidden" name="userName" id="userName" value="${settings.username}"/>
+					 <input type="hidden" name="password" id="password" value="${settings.password}"/>
+					 
 					<table border=0 cellspacing=1 cellpadding=0 id="ep" style="margin-right:40px">
 						<tr id="head_1_ep">
 							<td class="bodyBold" colspan=4 nowrap>
@@ -495,7 +508,7 @@ function calculateDiff2(){
 										property="requestsApproval.caption.vacationType" /> <fmt:message
 										key="requestsApproval.caption.vacationType" /></td>
 								<td class="formBodControl"><select name="annualVacation"
-									id="annualVacation" onchange="showVacationTypes()">
+									id="annualVacation" onchange="getBalanceVac();showVacationTypes()">
 										<option value=""><fmt:message
 												key="commons.caption.select" /></option>
 										<c:forEach items="${annualVacations}" var="vacation">
@@ -513,7 +526,7 @@ function calculateDiff2(){
 
 
 									<td class="formBodControl"><input type="text" size="10"
-										readonly="readonly" onfocus="getBalanceVac()" name="vacCredit"
+										readonly="readonly" name="vacCredit"
 										id="vacCredit" value="${vacCredit}" /></td>
 								</c:if>
 

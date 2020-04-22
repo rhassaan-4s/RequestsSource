@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
 import com._4s_.common.dao.BaseDAO;
+import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
 
 @Transactional
@@ -21,4 +22,5 @@ public abstract List getUserByEmail(String email);
 public List getActiveApplications();
 public User login();
 public User getUser(String username);
+public Imei checkImei(String imei, User user);
 }

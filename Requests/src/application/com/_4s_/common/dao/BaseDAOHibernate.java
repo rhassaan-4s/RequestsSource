@@ -109,22 +109,40 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
         if (log.isDebugEnabled()) {
             log.debug("Getting object of class :"+ clazz +", with id :"+ id);
         }
-        Object object = getCurrentSession().get(clazz, id);
+        try {
+        	Object object = getCurrentSession().get(clazz, id);
+        	log.debug("Getting object of class :"+ clazz +" 2");
+        	if (object == null) {
+        		//            throw new ObjectRetrievalFailureException(clazz, id);
+        		try {
+        			throw new Exception("object of class " + clazz.getCanonicalName()+ " with id " + id + " is not found");
+        		} catch (Exception e) {
+        			// TODO Auto-generated catch block
+        			e.printStackTrace();
+        		}
+        	}
 
-        if (object == null) {
-//            throw new ObjectRetrievalFailureException(clazz, id);
+        	if (log.isDebugEnabled()) {
+        		log.debug("Got object :"+ object);
+        	}
+        	return object;
+        } catch (Exception e) {
+//        	e.printStackTrace();
+//        	log.debug(e.getClass() + " - " +e.getMessage());
+        	StackTraceElement[] stackTrace = e.getStackTrace();
+        	System.out.println(e.getClass());
+        	System.out.println(e.getMessage());
+        	for (int i= 0 ; i < stackTrace.length ; i++) {
+        		System.out.println(stackTrace[i]);
+        	}
         	try {
-				throw new Exception("object of class " + clazz.getCanonicalName()+ " with id " + id + " is not found");
-			} catch (Exception e) {
+				throw e;
+			} catch (Exception e1) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e1.printStackTrace();
 			}
+        	return null;
         }
-
-        if (log.isDebugEnabled()) {
-            log.debug("Got object :"+ object);
-        }
-        return object;
     }
 
     /* (non-Javadoc)

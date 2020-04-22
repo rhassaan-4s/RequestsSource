@@ -24,11 +24,13 @@ import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.ClientWrapper;
 import com._4s_.restServices.json.EmployeeResponse;
+import com._4s_.restServices.json.ImeiWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestTypeWrapper;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
 import com._4s_.restServices.service.RequestsService;
+import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
 
 
@@ -45,9 +47,9 @@ public class RequestsServiceController {
 
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST,
-			produces=MediaType.APPLICATION_JSON)
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody
-	public Map login() {
+	public Map login(ImeiWrapper imei) {
 		Map response = new HashMap();
 		try {
 			System.out.println("trying to login");
@@ -59,44 +61,80 @@ public class RequestsServiceController {
 			} else {
 				System.out.println("Authenticated with employee id is " + user.getEmployee().getId());
 
-				UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
-//
-//				HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request) {
-//				    @Override public String getParameter(String name) { return "true"; }            
-//				};
-//		
-//				getRememberMeServices().loginSuccess(wrapper, response, auth);  
-				
-				RestStatus status = new RestStatus();
-				status.setStatus("true");
-				status.setCode("200");
-				status.setMessage("Successful Authorization");
+				Boolean checked = requestsService.checkImei(imei.getImei(),user);
+				if(checked.equals(true)) {
+					UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 
-				response.put("Status", status);
-				Employee emp = user.getEmployee();
-				EmployeeResponse e = new EmployeeResponse();
-				e.setAddress(emp.getAddress());
-				e.setAttendanceCode(emp.getAttendanceCode());
-				e.setBranch(emp.getBranch());
-				e.setCity(emp.getCity());
-				e.setDepartment(emp.getDepartment());
-				e.setEmail(emp.getEmail());
-				e.setEmpCode(emp.getEmpCode());
-				e.setEmployeeCode(emp.getEmployeeCode());
-				e.setExt(emp.getExt());
-				e.setFirstName(emp.getFirstName());
-				e.setGender(emp.getGender());
-				e.setId(emp.getId());
-				e.setIsDepartmentManager(emp.getIsDepartmentManager());
-				e.setIsManager(emp.getIsManager());
-				e.setJobTitle(emp.getJobTitle());
-				e.setLastName(emp.getLastName());
-				e.setTel(emp.getTel());
-				response.put("Response", e);
-				return response;
+					RestStatus status = new RestStatus();
+					status.setStatus("true");
+					status.setCode("200");
+					status.setMessage("Successful Authorization");
+
+					response.put("Status", status);
+					Employee emp = user.getEmployee();
+					EmployeeResponse e = new EmployeeResponse();
+					e.setAddress(emp.getAddress());
+					e.setAttendanceCode(emp.getAttendanceCode());
+					e.setBranch(emp.getBranch());
+					e.setCity(emp.getCity());
+					e.setDepartment(emp.getDepartment());
+					e.setEmail(emp.getEmail());
+					e.setEmpCode(emp.getEmpCode());
+					e.setEmployeeCode(emp.getEmployeeCode());
+					e.setExt(emp.getExt());
+					e.setFirstName(emp.getFirstName());
+					e.setGender(emp.getGender());
+					e.setId(emp.getId());
+					e.setIsDepartmentManager(emp.getIsDepartmentManager());
+					e.setIsManager(emp.getIsManager());
+					e.setJobTitle(emp.getJobTitle());
+					e.setLastName(emp.getLastName());
+					e.setTel(emp.getTel());
+					response.put("Response", e);
+					return response;
+				} else {
+					System.out.println("user's persisted imei doesn't match the input imei");
+					List userImeis = requestsService.getUsersImei(user);
+					if (userImeis.isEmpty()) {
+						System.out.println("user didn't register imei yet");
+						User ifuserexist = requestsService.getImeiUsers(imei.getImei());
+						if(ifuserexist == null) {
+							Imei im = new Imei();
+							im.setUsers(user);
+							im.setImei(imei.getImei());
+							requestsService.saveImei(im);
+							System.out.println("new imei id " + im.getId());
+							//						requestsService.getRequestsApprovalManager().initializeCollection(user.getImei());
+							//						user.getImei().add(im);
+							//						requestsService.getRequestsApprovalManager().saveObject(user);
+							RestStatus status = new RestStatus();
+							status.setStatus("true");
+							status.setCode("200");
+							status.setMessage("Successful Authorization. IMEI Initialized");
+							response.put("Status", status);
+							return response;
+						} else {
+							RestStatus status = new RestStatus();
+							status.setStatus("False");
+							status.setCode("341");
+							status.setMessage("IMEI is already registered for another user");
+							response.put("Status", status);
+							return response;
+						}
+					} else {
+						RestStatus status = new RestStatus();
+						status.setStatus("False");
+						status.setCode("340");
+						status.setMessage("Successful Authorization with wrong IMEI");
+						response.put("Status", status);
+						return response;
+					}
+				}
 			}
 		} catch (Exception e) {
 			System.out.println("Exception " + e.getClass());
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 			return null;
 		}
 	}
