@@ -164,11 +164,11 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 							<td  class="formBodControl" >
 								<select name="statusId" id="statusId">
 									<option value=""><fmt:message key="commons.caption.select" /></option>
-									<option value="0" ${statusId.value == "0" ?' selected' : ''}">لم تكتمل</option>
-									<option value="1" ${statusId.value == "1" ?' selected' : ''}">موافق</option>
-									<option value="99" ${statusId.value == "99" ?' selected' : ''}">مرفوض</option>
+									<option value="0" ${status==0?'selected':''}>لم تكتمل</option>
+									<option value="1" ${status==1?'selected':''}>موافق</option>
+									<option value="99" ${status==99?'selected' : ''}>مرفوض</option>
 								</select>
-							</td>
+							</td>		
 							
 						</tr>
 						
@@ -294,7 +294,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 					</table>
 					
 					<abc:paging url="empRequestsReportsForm.html" 
-					parametersString="empCode=${empCode}&statusId=${statusId}&request_date_from=${request_date_from}&request_date_to=${request_date_to}&exact_request_date_from=${exact_request_date_from}&exact_request_date_to=${exact_request_date_to}&codeFrom=${codeFrom}&codeTo=${codeTo}"/>
+					parametersString="requestType=${requestType}&empCode=${empCode}&statusId=${status}&request_date_from=${request_date_from}&request_date_to=${request_date_to}&exact_request_date_from=${exact_request_date_from}&exact_request_date_to=${exact_request_date_to}&codeFrom=${codeFrom}&codeTo=${codeTo}"/>
 					<table rules="all" align="center" class="sofT">
 									<tr>
 									<c:if test="${requestType=='1' && errand!='true'}">
