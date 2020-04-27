@@ -56,16 +56,20 @@ $(document).ready(function()
 		<fmt:message key="commons.caption.username" />&nbsp;</td>
 
 		<td class="helpHed">&nbsp;</td>
+		<td class="helpHed">&nbsp;</td>
 
 	</tr>
 	<c:forEach var="result" items="${users}">
-		<c:if test="${result.username!='1'}">
+		<c:if test="${result.username!='admin'}">
 		<tr>
 			<td class="helpBod">${result.username}</td>
 			<td class="helpBod">${result.employee.firstName}</td>
 			<TD class="helpBod">&nbsp; <abc:i18n property="commons.button.edit" /> <a
 				href="javascript:createWindow('addUserToRole.html?userId=${result.id}',450,900)"
 				class="actionLink"><fmt:message key="commons.button.edit" /></a></TD>
+			<TD class="helpBod">&nbsp; <abc:i18n property="commons.button.imei" /> <a
+				href="javascript:createWindow('imeiView.html?userId=${result.id}',450,900)"
+				class="actionLink"><fmt:message key="commons.button.imei" /></a></TD>
 			<!-- <TD class="helpBod">&nbsp; <abc:i18n property="commons.button.delete" /> <a
 				href="userDetails.html?deleteId=${result.id}"
 				class="actionLink"><fmt:message key="commons.button.delete" /></a></TD>

@@ -26,6 +26,8 @@ public class RequestOutput {
 	private Double vacDuration;
 	private Double longitude;
 	private Double latitude;
+	private Boolean isInsideCompany;
+	private String locationAddress;
 	
 	public String getRequestNumber() {
 		return requestNumber;
@@ -93,6 +95,19 @@ public class RequestOutput {
 //		TimeZone.getDefault().inDaylightTime(fromDate)
 //		System.out.println("time zone " + TimeZone.getDefault().getDisplayName() + " date time saving " + TimeZone.getDefault().inDaylightTime(fromDate));
 		return fromDate;
+	}
+	
+	public Boolean getIsInsideCompany() {
+		return isInsideCompany;
+	}
+	public void setIsInsideCompany(Boolean isInsideCompany) {
+		this.isInsideCompany = isInsideCompany;
+	}
+	public String getLocationAddress() {
+		return locationAddress;
+	}
+	public void setLocationAddress(String locationAddress) {
+		this.locationAddress = locationAddress;
 	}
 	public void setFromDate(Date fromDate) {
 		this.fromDate = fromDate;
