@@ -1311,6 +1311,7 @@ public Map getSettings() {
 	temp.put("errandTimeFromSystem", settings.getErrandTimeFromSystem());
 	temp.put("obligateNotes", settings.getObligateNotes());
 	temp.put("showVacationBalance", settings.getAnnualVacBalDaysEnabled());
+	temp.put("requiredAndroidVersion", settings.getRequiredAndroidVersion());
 	
 	
 	response.put("Response", temp);

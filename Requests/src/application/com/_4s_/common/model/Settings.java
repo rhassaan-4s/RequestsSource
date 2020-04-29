@@ -119,6 +119,8 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Float distAllowedFromCompany;
 	
+	private Integer requiredAndroidVersion;
+	
 	
 	
 
@@ -162,6 +164,14 @@ public class Settings  implements Serializable,Auditable {
 	
 
 	
+	public Integer getRequiredAndroidVersion() {
+		return requiredAndroidVersion;
+	}
+
+	public void setRequiredAndroidVersion(Integer requiredAndroidVersion) {
+		this.requiredAndroidVersion = requiredAndroidVersion;
+	}
+
 	public Float getCompanyLat() {
 		return companyLat;
 	}

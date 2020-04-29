@@ -16141,4 +16141,6 @@ ALTER TABLE COMMON_SETTINGS ADD DISTALLOWEDFROMCOMPANY FLOAT;</statment></query>
 INSERT INTO i18n_message VALUES (202116439,'الموقع من الشركة', 101463, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116440, 'Location from company', 101463, 3);</statment></query><query><sqlindex>154</sqlindex><statment>CREATE TABLE SECURITY_IMEI (ID NUMBER NOT NULL,IMEI VARCHAR2(16) NOT NULL,USERS NUMBER NOT NULL) TABLESPACE USERS;</statment></query><query><sqlindex>155</sqlindex><statment>CREATE SEQUENCE IMEI_ID INCREMENT BY 1 MINVALUE 1 MAXVALUE 9999999999999999999999999999 NOCYCLE CACHE 20 NOORDER ;</statment></query><query><sqlindex>156</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101464, 'commons.button.imei', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116441,'IMEI', 101464, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116442, 'IMEI', 101464, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116442, 'IMEI', 101464, 3);</statment></query><query><sqlindex>157</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD REQUIREDANDROIDVERSION INTEGER;</statment></query><query><sqlindex>158</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101465, 'requestsApproval.caption.requiredAndroidVersion', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116443,'رقم اصدار اندرويد', 101465, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116444, 'Required Android Version', 101465, 3);</statment></query></SQL>

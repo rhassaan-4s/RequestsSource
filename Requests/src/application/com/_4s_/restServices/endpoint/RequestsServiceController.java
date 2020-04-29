@@ -55,6 +55,13 @@ public class RequestsServiceController {
 			System.out.println("trying to login");
 			User user = requestsService.login();
 			System.out.println("after login");
+			
+			Map settingsMap = requestsService.getSettings();
+			Map settings = (Map)settingsMap.get("Response");
+			Integer requiredVersion = (Integer)settings.get("requiredAndroidVersion");
+			System.out.println("settings " + settings);
+			System.out.println("version required " + requiredVersion);
+			
 			if (user == null) {
 				System.out.println("Not authenticated");
 				return null;
@@ -90,6 +97,9 @@ public class RequestsServiceController {
 					e.setJobTitle(emp.getJobTitle());
 					e.setLastName(emp.getLastName());
 					e.setTel(emp.getTel());
+					
+					e.setRequiredAndroidVersion(requiredVersion);
+					
 					response.put("Response", e);
 					return response;
 				} else {
@@ -104,14 +114,37 @@ public class RequestsServiceController {
 							im.setImei(imei.getImei());
 							requestsService.saveImei(im);
 							System.out.println("new imei id " + im.getId());
-							//						requestsService.getRequestsApprovalManager().initializeCollection(user.getImei());
-							//						user.getImei().add(im);
-							//						requestsService.getRequestsApprovalManager().saveObject(user);
+							
 							RestStatus status = new RestStatus();
 							status.setStatus("true");
 							status.setCode("200");
 							status.setMessage("Successful Authorization. IMEI Initialized");
 							response.put("Status", status);
+							
+							Employee emp = user.getEmployee();
+							EmployeeResponse e = new EmployeeResponse();
+							e.setAddress(emp.getAddress());
+							e.setAttendanceCode(emp.getAttendanceCode());
+							e.setBranch(emp.getBranch());
+							e.setCity(emp.getCity());
+							e.setDepartment(emp.getDepartment());
+							e.setEmail(emp.getEmail());
+							e.setEmpCode(emp.getEmpCode());
+							e.setEmployeeCode(emp.getEmployeeCode());
+							e.setExt(emp.getExt());
+							e.setFirstName(emp.getFirstName());
+							e.setGender(emp.getGender());
+							e.setId(emp.getId());
+							e.setIsDepartmentManager(emp.getIsDepartmentManager());
+							e.setIsManager(emp.getIsManager());
+							e.setJobTitle(emp.getJobTitle());
+							e.setLastName(emp.getLastName());
+							e.setTel(emp.getTel());
+							
+							e.setRequiredAndroidVersion(requiredVersion);
+							
+							response.put("Response", e);
+							
 							return response;
 						} else {
 							RestStatus status = new RestStatus();
@@ -134,7 +167,10 @@ public class RequestsServiceController {
 		} catch (Exception e) {
 			System.out.println("Exception " + e.getClass());
 			System.out.println(e.getMessage());
-			e.printStackTrace();
+			StackTraceElement[] elements = e.getStackTrace();
+			for(int i = 0; i<elements.length; i++) {
+				System.out.println(elements[i]);
+			}
 			return null;
 		}
 	}

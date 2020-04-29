@@ -310,12 +310,23 @@
 			</tr>
 			<tr>
 				<td nowrap class="formBodControl" >
+					<abc:i18n property="requestsApproval.caption.requiredAndroidVersion" />
+					<fmt:message key="requestsApproval.caption.requiredAndroidVersion" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.requiredAndroidVersion">
+						<input type="text" size="3" maxlength="3" name="${status.expression}" value="${status.value}"/>
+					</spring:bind> 
+				</td>
+			</tr>
+			<tr>
+				<td nowrap class="formBodControl" >
 					<abc:i18n property="commons.caption.locationAccuracy" />
 					<fmt:message key="commons.caption.locationAccuracy" />
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.locationAccuracy">
-						<input type="text" maxlength="3" name="${status.expression}" value="${status.value}"/>
+						<input type="text" size="3" maxlength="3" name="${status.expression}" value="${status.value}"/>
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>
@@ -328,7 +339,7 @@
 				</td>
 				<td  class="formBod"> 
 					<spring:bind path="settings.locationAccuracy2">
-						<input type="text" maxlength="4" name="${status.expression}" value="${status.value}"/>
+						<input type="text" size="4" maxlength="4" name="${status.expression}" value="${status.value}"/>
 					</spring:bind> 
 				</td>
 				<TD width="50%">&nbsp;</TD>

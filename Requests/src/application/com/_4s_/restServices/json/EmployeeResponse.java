@@ -27,6 +27,14 @@ public class EmployeeResponse {
 	private Branch branch;
 	
 	
+	private Integer requiredAndroidVersion;
+	
+	public Integer getRequiredAndroidVersion() {
+		return requiredAndroidVersion;
+	}
+	public void setRequiredAndroidVersion(Integer requiredAndroidVersion) {
+		this.requiredAndroidVersion = requiredAndroidVersion;
+	}
 	public RestStatus getRestStatus() {
 		return restStatus;
 	}
