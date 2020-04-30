@@ -1300,7 +1300,8 @@ public Map getVacTypes(Long requestType) {
 
 public Map getSettings() {
 	Map response = new HashMap();
-	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class, new Long(1));
+	System.out.println("settings " + settings);
 	Map temp = new HashMap();
 	temp.put("companyName", settings.getCompany().getDescription());
 	temp.put("locationAccuracy",settings.getLocationAccuracy());

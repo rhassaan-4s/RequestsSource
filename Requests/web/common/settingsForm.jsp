@@ -308,17 +308,19 @@
 					<fmt:message key="commons.caption.androidSettings" />
 				</td>
 			</tr>
-			<tr>
-				<td nowrap class="formBodControl" >
-					<abc:i18n property="requestsApproval.caption.requiredAndroidVersion" />
-					<fmt:message key="requestsApproval.caption.requiredAndroidVersion" />
-				</td>
-				<td  class="formBod"> 
-					<spring:bind path="settings.requiredAndroidVersion">
-						<input type="text" size="3" maxlength="3" name="${status.expression}" value="${status.value}"/>
-					</spring:bind> 
-				</td>
-			</tr>
+			<c:if test="${settings.company.description=='4s'}">
+				<tr>
+					<td nowrap class="formBodControl" >
+						<abc:i18n property="requestsApproval.caption.requiredAndroidVersion" />
+						<fmt:message key="requestsApproval.caption.requiredAndroidVersion" />
+					</td>
+					<td  class="formBod"> 
+						<spring:bind path="settings.requiredAndroidVersion">
+							<input type="text" size="3" maxlength="3" name="${status.expression}" value="${status.value}"/>
+						</spring:bind> 
+					</td>
+				</tr>
+			</c:if>
 			<tr>
 				<td nowrap class="formBodControl" >
 					<abc:i18n property="commons.caption.locationAccuracy" />

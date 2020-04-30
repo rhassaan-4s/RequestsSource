@@ -66,12 +66,104 @@ public class RequestsServiceController {
 				System.out.println("Not authenticated");
 				return null;
 			} else {
-				System.out.println("Authenticated with employee id is " + user.getEmployee().getId());
+				if (imei!= null && imei.getImei()!= null && !imei.getImei().isEmpty()) {
+					System.out.println("Authenticated with employee id is " + user.getEmployee().getId());
+					Boolean checked = requestsService.checkImei(imei.getImei(),user);
+					if(checked.equals(true)) {
+						UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 
-				Boolean checked = requestsService.checkImei(imei.getImei(),user);
-				if(checked.equals(true)) {
-					UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+						RestStatus status = new RestStatus();
+						status.setStatus("true");
+						status.setCode("200");
+						status.setMessage("Successful Authorization");
 
+						response.put("Status", status);
+						Employee emp = user.getEmployee();
+						EmployeeResponse e = new EmployeeResponse();
+						e.setAddress(emp.getAddress());
+						e.setAttendanceCode(emp.getAttendanceCode());
+						e.setBranch(emp.getBranch());
+						e.setCity(emp.getCity());
+						e.setDepartment(emp.getDepartment());
+						e.setEmail(emp.getEmail());
+						e.setEmpCode(emp.getEmpCode());
+						e.setEmployeeCode(emp.getEmployeeCode());
+						e.setExt(emp.getExt());
+						e.setFirstName(emp.getFirstName());
+						e.setGender(emp.getGender());
+						e.setId(emp.getId());
+						e.setIsDepartmentManager(emp.getIsDepartmentManager());
+						e.setIsManager(emp.getIsManager());
+						e.setJobTitle(emp.getJobTitle());
+						e.setLastName(emp.getLastName());
+						e.setTel(emp.getTel());
+
+						e.setRequiredAndroidVersion(requiredVersion);
+
+						response.put("Response", e);
+						return response;
+					} else {
+						System.out.println("user's persisted imei doesn't match the input imei");
+						List userImeis = requestsService.getUsersImei(user);
+						if (userImeis.isEmpty()) {
+							System.out.println("user didn't register imei yet");
+							User ifuserexist = requestsService.getImeiUsers(imei.getImei());
+							if(ifuserexist == null) {
+								Imei im = new Imei();
+								im.setUsers(user);
+								im.setImei(imei.getImei());
+								requestsService.saveImei(im);
+								System.out.println("new imei id " + im.getId());
+
+								RestStatus status = new RestStatus();
+								status.setStatus("true");
+								status.setCode("200");
+								status.setMessage("Successful Authorization. IMEI Initialized");
+								response.put("Status", status);
+
+								Employee emp = user.getEmployee();
+								EmployeeResponse e = new EmployeeResponse();
+								e.setAddress(emp.getAddress());
+								e.setAttendanceCode(emp.getAttendanceCode());
+								e.setBranch(emp.getBranch());
+								e.setCity(emp.getCity());
+								e.setDepartment(emp.getDepartment());
+								e.setEmail(emp.getEmail());
+								e.setEmpCode(emp.getEmpCode());
+								e.setEmployeeCode(emp.getEmployeeCode());
+								e.setExt(emp.getExt());
+								e.setFirstName(emp.getFirstName());
+								e.setGender(emp.getGender());
+								e.setId(emp.getId());
+								e.setIsDepartmentManager(emp.getIsDepartmentManager());
+								e.setIsManager(emp.getIsManager());
+								e.setJobTitle(emp.getJobTitle());
+								e.setLastName(emp.getLastName());
+								e.setTel(emp.getTel());
+
+								e.setRequiredAndroidVersion(requiredVersion);
+
+								response.put("Response", e);
+
+								return response;
+							} else {
+								RestStatus status = new RestStatus();
+								status.setStatus("False");
+								status.setCode("341");
+								status.setMessage("IMEI is already registered for another user");
+								response.put("Status", status);
+								return response;
+							}
+						} else {
+							RestStatus status = new RestStatus();
+							status.setStatus("False");
+							status.setCode("340");
+							status.setMessage("Successful Authorization with wrong IMEI");
+							response.put("Status", status);
+							return response;
+						}
+					}
+				} else {
 					RestStatus status = new RestStatus();
 					status.setStatus("true");
 					status.setCode("200");
@@ -97,71 +189,11 @@ public class RequestsServiceController {
 					e.setJobTitle(emp.getJobTitle());
 					e.setLastName(emp.getLastName());
 					e.setTel(emp.getTel());
-					
+
 					e.setRequiredAndroidVersion(requiredVersion);
-					
+
 					response.put("Response", e);
 					return response;
-				} else {
-					System.out.println("user's persisted imei doesn't match the input imei");
-					List userImeis = requestsService.getUsersImei(user);
-					if (userImeis.isEmpty()) {
-						System.out.println("user didn't register imei yet");
-						User ifuserexist = requestsService.getImeiUsers(imei.getImei());
-						if(ifuserexist == null) {
-							Imei im = new Imei();
-							im.setUsers(user);
-							im.setImei(imei.getImei());
-							requestsService.saveImei(im);
-							System.out.println("new imei id " + im.getId());
-							
-							RestStatus status = new RestStatus();
-							status.setStatus("true");
-							status.setCode("200");
-							status.setMessage("Successful Authorization. IMEI Initialized");
-							response.put("Status", status);
-							
-							Employee emp = user.getEmployee();
-							EmployeeResponse e = new EmployeeResponse();
-							e.setAddress(emp.getAddress());
-							e.setAttendanceCode(emp.getAttendanceCode());
-							e.setBranch(emp.getBranch());
-							e.setCity(emp.getCity());
-							e.setDepartment(emp.getDepartment());
-							e.setEmail(emp.getEmail());
-							e.setEmpCode(emp.getEmpCode());
-							e.setEmployeeCode(emp.getEmployeeCode());
-							e.setExt(emp.getExt());
-							e.setFirstName(emp.getFirstName());
-							e.setGender(emp.getGender());
-							e.setId(emp.getId());
-							e.setIsDepartmentManager(emp.getIsDepartmentManager());
-							e.setIsManager(emp.getIsManager());
-							e.setJobTitle(emp.getJobTitle());
-							e.setLastName(emp.getLastName());
-							e.setTel(emp.getTel());
-							
-							e.setRequiredAndroidVersion(requiredVersion);
-							
-							response.put("Response", e);
-							
-							return response;
-						} else {
-							RestStatus status = new RestStatus();
-							status.setStatus("False");
-							status.setCode("341");
-							status.setMessage("IMEI is already registered for another user");
-							response.put("Status", status);
-							return response;
-						}
-					} else {
-						RestStatus status = new RestStatus();
-						status.setStatus("False");
-						status.setCode("340");
-						status.setMessage("Successful Authorization with wrong IMEI");
-						response.put("Status", status);
-						return response;
-					}
 				}
 			}
 		} catch (Exception e) {
