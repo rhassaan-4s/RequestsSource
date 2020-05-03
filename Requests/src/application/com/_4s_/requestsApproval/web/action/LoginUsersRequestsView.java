@@ -115,6 +115,8 @@ public class LoginUsersRequestsView implements Controller{
 				for (int i = 0; i < loginUserReqs.size(); i++) {
 					LoginUsersRequests loginUsersRequests=(LoginUsersRequests) loginUserReqs.get(i);
 					model.put("empRequestTypeId", loginUsersRequests.getId());
+					
+						log.debug("to date " + loginUsersRequests.getTo_date());
 				}
 				
 				List reList = new ArrayList();
@@ -257,8 +259,8 @@ public class LoginUsersRequestsView implements Controller{
 				
 				for (int i = 0; i < requests.size(); i++) {
 					LoginUsersRequests loginUsersRequests=(LoginUsersRequests) requests.get(i);
-					log.debug("----i----"+loginUsersRequests.getEmpCode());
-					log.debug("----req id----"+loginUsersRequests.getId());
+//					log.debug("----i----"+loginUsersRequests.getEmpCode());
+//					log.debug("----req id----"+loginUsersRequests.getId());
 					
 					if(loginUsersRequests.getRequest_id().getId()==3){
 						loginUsersRequests.setFrom_date(null);
@@ -275,7 +277,7 @@ public class LoginUsersRequestsView implements Controller{
 					}
 					
 					if(loginUsersRequests.getLogin_user().getEndServ()==null || loginUsersRequests.getLogin_user().getEndServ().equals("")){
-						log.debug("---before removing--i----"+loginUsersRequests.getEmpCode());
+//						log.debug("---before removing--i----"+loginUsersRequests.getEmpCode());
 						all.add(loginUsersRequests);
 						model.put("empRequestTypeId", loginUsersRequests.getId());
 //						log.debug("----login----"+requests.get(i));
@@ -298,6 +300,7 @@ public class LoginUsersRequestsView implements Controller{
 //					}
 //					
 //				}
+				
 				log.debug("records size " + all.size());
 				model.put("records", all);
 						

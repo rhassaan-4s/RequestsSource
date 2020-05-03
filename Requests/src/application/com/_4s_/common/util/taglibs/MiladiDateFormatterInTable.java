@@ -29,10 +29,12 @@ public class MiladiDateFormatterInTable extends TagSupport {
 		// TODO Auto-generated method stub
 		
 		String result = "";
+		System.out.println("date value " + value);
 		if (( value != null ) && ( !value.equals("") ) ) {
 			try {
 				MultiCalendarDate mCalDate = new MultiCalendarDate();
 				mCalDate.setDate(value);
+				System.out.println("mcaldate value " + mCalDate.getDateString());
 				String dateString = mCalDate.getMeladiString();
 				if(dateString != null && !dateString.equals("")){
 					String[] dateElements = dateString.split("/");

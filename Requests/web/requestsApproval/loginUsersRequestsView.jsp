@@ -220,9 +220,6 @@ function printSelection(node){
 								property="requestsApproval.caption.location" /> <fmt:message
 								key="requestsApproval.caption.location" /></td>
 							<td class="helpHed" nowrap="nowrap"><abc:i18n
-								property="commons.caption.address" /> <fmt:message
-								key="commons.caption.address" /></td>
-							<td class="helpHed" nowrap="nowrap"><abc:i18n
 									property="requestsApproval.requestsApprovalForm.reqStatus" /> <fmt:message
 									key="requestsApproval.requestsApprovalForm.reqStatus" /></td>
 							<td class="helpHed" nowrap="nowrap">
@@ -285,7 +282,7 @@ function printSelection(node){
 						         <_4s_:formatMiladiDate value="${record.period_to}"/>
 											<_4s_:timeString value="${record.period_to}"/>
 							</td>
-							<td  nowrap>
+							<td  nowrap title="${record.locationAddress}">
 							<c:choose>
 								<c:when test="${record.isInsideCompany==true}">
 									<fmt:message key="requestsApproval.caption.insideCompany" />
@@ -297,10 +294,6 @@ function printSelection(node){
 								
 							</td>
 							
-							<td  nowrap>
-								${record.locationAddress}
-							</td>
-
 									<c:choose>
 										<c:when test="${record.approved==1}">
 											<td nowrap><abc:i18n
