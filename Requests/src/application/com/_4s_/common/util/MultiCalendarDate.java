@@ -41,6 +41,7 @@ public class MultiCalendarDate implements ApplicationContextAware{
 //	private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM,new Locale("ar","",""));
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", new Locale("ar","",""));
 	private SimpleDateFormat  dateFormat3 = new SimpleDateFormat("dd/MM/yyyy");
+	private SimpleDateFormat dateFormat4 = new SimpleDateFormat("HH:mm:ss");
 	public void setCalendarType (int dateCalendarType){
 		this.dateCalendarType = dateCalendarType;
 	}
@@ -154,16 +155,16 @@ public class MultiCalendarDate implements ApplicationContextAware{
 		
 		Calendar calendar = Calendar.getInstance();
 		if (calendar.get(Calendar.YEAR)%4==0) {
-			log.debug("lenient");
+//			log.debug("lenient");
 			calendar.setLenient(true);
 //			dateFormat.setLenient(true);
 		} else {
 			calendar.setLenient(false);
 //			dateFormat.setLenient(false)
-			log.debug("non lenient");
+//			log.debug("non lenient");
 		}
 		calendar.setTimeInMillis(this.millis);
-		log.debug("date " + calendar.getTime());
+//		log.debug("date " + calendar.getTime());
 		dateString = dateFormat.format(calendar.getTime());
 		log.debug("date string " + dateString);
 		return dateString;
@@ -884,7 +885,7 @@ public class MultiCalendarDate implements ApplicationContextAware{
 		calendar.setLenient(false);
 		calendar.setTimeInMillis(this.millis);
 	
-		dateString = dateFormat3.format(calendar.getTime());
+		dateString = dateFormat4.format(calendar.getTime());
 		log.debug(">>>>>>>>>>>>>>>>>7agaa momayazaaaaaaaaa "+dateString);
 		return dateString;
 	}

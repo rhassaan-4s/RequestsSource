@@ -47,13 +47,24 @@ private final Log log = LogFactory.getLog(getClass());
 				//log.debug(">>>>>>>>>>>>>>>>>>>>> timeString "+timeString);
 				//timeString = timeString.substring(11,16);
 				//log.debug(">>>>>>>>>>>>>>>>>>>>> timeString "+timeString);
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(value);
+				MultiCalendarDate cal = new MultiCalendarDate();
+				cal.setDate(value);
+				log.debug("cal.gettime " + cal.getDate());
 				//String hour = nf.format(new Integer(cal.get(Calendar.HOUR_OF_DAY)).toString());
 				//String minute = nf.format(new Integer(cal.get(Calendar.MINUTE)).toString());
-				String hour = nf.format(cal.get(Calendar.HOUR_OF_DAY));
-				String minute = nf.format(cal.get(Calendar.MINUTE));	
-				String timeString = hour+":"+minute;
+//				if(cal.getMainTime()(Calendar.YEAR)%4==0) {
+//					cal.setLenient(true);
+//				} else {
+//					cal.setLenient(false);
+//				}
+				
+				
+				log.debug("cal.getTimeString() " + cal.getTimeString());
+//				String hour = nf.format(cal.get(Calendar.HOUR_OF_DAY));
+//				String minute = nf.format(cal.get(Calendar.MINUTE));	
+//				String timeString = hour+":"+minute;
+				String timeString = cal.getTimeString();
+				log.debug("timestring " + timeString);
 				pageContext.getOut().write(timeString);
 			}catch(Exception e){
 			

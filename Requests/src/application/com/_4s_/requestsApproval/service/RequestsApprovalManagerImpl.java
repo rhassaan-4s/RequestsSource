@@ -1674,7 +1674,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		Map attendanceToday = checkAttendance(date, emp.getEmpCode());
 		AttendanceStatus attendanceStatus = (AttendanceStatus)attendanceToday.get("Response"); 
 		
-		DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		SimpleDateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		
 		MultiCalendarDate mCalDateOnly = new MultiCalendarDate();
 		Calendar cal = Calendar.getInstance();
@@ -1692,6 +1692,9 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		requestQuery.setDateFrom(df.format(dateOnly));
 		
 		requestQuery.setDateTo(df.format(dateOnly));
+		
+		log.debug("date from validation " + requestQuery.getDateFrom());
+		log.debug("date to validation " + requestQuery.getDateTo());
 		
 		Map reqs = checkStartedRequests(requestQuery, emp);
 		List requests2 = (List)reqs.get("Response");
@@ -1762,7 +1765,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				System.out.println(" diffmin>=1439 " +  (diffmin>=1439));
 
 				System.out.println("condition for full day errand validation:####  "+ (attendanceType.equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && diffmin>=1439));
-				if (attendanceType.equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && diffmin>=1439) {  
+				if (attendanceType.equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && diffmin>=1440) {  
 
 					System.out.println("full day errand on this day");
 					restStatus.setCode("329");
