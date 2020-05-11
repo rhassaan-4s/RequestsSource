@@ -12,10 +12,17 @@ public class RequestsApprovalQuery {
 	private String codeFrom; 
 	private String codeTo; 
 	private String statusId;
+	private String isInsideCompany;//0:false 1: true
 	private int pageNumber;
 	private int pageSize;
 	private String sort; //asc, desc 
 	
+	public String getIsInsideCompany() {
+		return isInsideCompany;
+	}
+	public void setIsInsideCompany(String isInsideCompany) {
+		this.isInsideCompany = isInsideCompany;
+	}
 	public String getSort() {
 		return sort;
 	}

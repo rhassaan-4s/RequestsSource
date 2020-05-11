@@ -143,7 +143,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", employee.getEmpCode());
 			List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(employee, requestType);
 			log.debug("empReqTypeAccs " + empReqTypeAccs);
-			model = requestsApprovalManager.getRequestsForApproval(requestNumber, emp_code, request_date_from, request_date_to, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true, pageNumber, 20);
+			model = requestsApprovalManager.getRequestsForApproval(requestNumber, emp_code, request_date_from, request_date_to, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true,null, pageNumber, 20);
 			
 			
 
@@ -337,7 +337,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", employee.getEmpCode());
 		List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(employee, requestType);
 		log.debug("empReqTypeAccs " + empReqTypeAccs);
-		model = requestsApprovalManager.getRequestsForApproval(requestNumber, emp_code, dateFrom, dateTo, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true, pageNumber, 20);
+		model = requestsApprovalManager.getRequestsForApproval(requestNumber, emp_code, dateFrom, dateTo, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true,null, pageNumber, 20);
 		
 		
 		model.put("pageNumber", pageNumber);

@@ -944,7 +944,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 
 	public Map getPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
-			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, String sort, List empReqTypeAccs,String requestNumber,boolean isWeb, final int pageNumber, final int pageSize)  {
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, String sort, List empReqTypeAccs,String requestNumber,boolean isWeb,String isInsideCompany, final int pageNumber, final int pageSize)  {
 		Calendar cFrom= Calendar.getInstance();
 		
 		Date dateFrom=null;
@@ -1105,6 +1105,15 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				criteria.add(Restrictions.eq("approved", statusId));
 			}
 			///////////////////////////////////////////////////////////////////////////////
+			///////////////////////////////////////////////////////////////////////////////
+			if (isInsideCompany!=null) {
+				if (isInsideCompany.equals("0")) {
+					criteria.add(Restrictions.eq("isInsideCompany", false));
+				} else if (isInsideCompany.equals("1")) {
+					criteria.add(Restrictions.eq("isInsideCompany", true));
+				}
+			}
+			///////////////////////////////////////////////////////////////////////////////
 
 			log.debug("empReqTypeAccs " + empReqTypeAccs);
 			if (empReqTypeAccs != null) {
@@ -1213,6 +1222,16 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			///////////////////////////////////////////////////////////////////////////////
 			if (statusId!=null) {
 				criteria.add(Restrictions.eq("approved", statusId));
+			}
+			///////////////////////////////////////////////////////////////////////////////
+
+			///////////////////////////////////////////////////////////////////////////////
+			if (isInsideCompany!=null) {
+				if (isInsideCompany.equals("0")) {
+					criteria.add(Restrictions.eq("isInsideCompany", false));
+				} else if (isInsideCompany.equals("1")) {
+					criteria.add(Restrictions.eq("isInsideCompany", true));
+				}
 			}
 			///////////////////////////////////////////////////////////////////////////////
 

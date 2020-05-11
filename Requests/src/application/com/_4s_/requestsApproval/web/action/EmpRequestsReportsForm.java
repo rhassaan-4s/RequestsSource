@@ -169,7 +169,7 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 					&& (exactDateFrom==null || exactDateFrom.isEmpty()) && (exactDateTo==null || exactDateTo.isEmpty()))) {
 				//			tempneededRequestTypes = requestsApprovalManager.getRequestsForApprovalList(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId);
 				List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(emp, requestType);
-				model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,pageNumber,10);
+				model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
 			}
 		}
 		model.put("dateTo", dateTo);
@@ -313,7 +313,7 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 				&& (exactDateFrom==null || exactDateFrom.isEmpty()) && (exactDateTo==null || exactDateTo.isEmpty()))) {
 //			tempneededRequestTypes = requestsApprovalManager.getRequestsForApprovalList(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId);
 			List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(emp, requestType);
-			model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,pageNumber,10);
+			model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
 		}
 		
 		int approveCounter = 0;
