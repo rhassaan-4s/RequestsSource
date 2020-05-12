@@ -24,6 +24,7 @@ import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.ClientWrapper;
 import com._4s_.restServices.json.EmployeeResponse;
+import com._4s_.restServices.json.EmployeeWrapper;
 import com._4s_.restServices.json.ImeiWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestTypeWrapper;
@@ -450,6 +451,14 @@ public class RequestsServiceController {
 	public Map getPortNo(ClientWrapper client) {
 		Map m =  requestsService.getPortNo(client.getClientName());
 		System.out.println("test getPortNo");
+		return m;
+	}
+	
+	@RequestMapping(value="/searchEmployees" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map searchEmployees(EmployeeWrapper emp) {
+		Map m = requestsService.searchEmployees(emp);
 		return m;
 	}
 }

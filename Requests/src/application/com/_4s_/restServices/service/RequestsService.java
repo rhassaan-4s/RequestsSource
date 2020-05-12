@@ -11,6 +11,7 @@ import com._4s_.common.service.BaseManager;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.restServices.json.AttendanceRequest;
+import com._4s_.restServices.json.EmployeeWrapper;
 import com._4s_.restServices.json.ImeiWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
@@ -58,4 +59,6 @@ public interface RequestsService {// extends BaseManager {
 	public void saveImei(Imei im);
 
 	public User getImeiUsers(String imei);
+
+	public Map searchEmployees(EmployeeWrapper emp);
 }

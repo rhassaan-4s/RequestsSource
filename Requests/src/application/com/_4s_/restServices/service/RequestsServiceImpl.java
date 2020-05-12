@@ -21,9 +21,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com._4s_.common.dao.Queries;
 import com._4s_.common.model.Clients;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
+import com._4s_.common.service.CommonManager;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.requestsApproval.dao.ExternalQueries;
 import com._4s_.requestsApproval.dao.RequestsApprovalDAO;
@@ -35,6 +37,7 @@ import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.restServices.json.AttendanceRequest;
+import com._4s_.restServices.json.EmployeeWrapper;
 import com._4s_.restServices.json.ImeiWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
@@ -57,6 +60,13 @@ public class RequestsServiceImpl implements RequestsService, UserDetailsService 
  
  @Autowired
  private RequestsApprovalManager requestsApprovalManager;
+ 
+ @Autowired
+ private MySecurityDAO securityDao;
+
+
+ @Autowired
+ private Queries qry;
  
  @Transactional
  public RequestsApprovalManager getRequestsApprovalManager() {
@@ -84,8 +94,17 @@ public void setSecurityDao(MySecurityDAO securityDao) {
 	this.securityDao = securityDao;
 }
 
-@Autowired
- private MySecurityDAO securityDao;
+
+
+public Queries getQry() {
+	return qry;
+}
+
+public void setQry(Queries qry) {
+	this.qry = qry;
+}
+
+
 
  @PostConstruct
  public void init() throws Exception {
@@ -1349,12 +1368,20 @@ public Map getPortNo(String clientName) {
 		status.setStatus("true");
 		response.put("Status", status);
 	}
-	
-	
-	
-	
-	
 	return response;
+}
+
+public Map searchEmployees(EmployeeWrapper emp) {
+	//table=login_users&firstKey=commons.caption.code&secondKey=commons.caption.name&firstParam=empCode&secondParam=name&inputId=empCode&paramString=&onblur=&onlinkclick=&jsIncludes=
+	Map map = qry.search(emp.getEmpCode(),emp.getEmpName(),"login_users","empCode","name","","1","1",emp.getPageNumber(),emp.getPageSize(),"");	
+	Map response = new HashMap();
+	response.put("Response", map);
+	RestStatus status = new RestStatus();
+	status.setCode("200");
+	status.setMessage("Successfull Request");
+	status.setStatus("true");
+	response.put("Status", status);
+	return response ;
 }
 
 
