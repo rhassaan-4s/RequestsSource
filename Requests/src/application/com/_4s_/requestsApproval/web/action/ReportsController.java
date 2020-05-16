@@ -127,7 +127,7 @@ public class ReportsController extends BaseSimpleFormController{
 		else{
 			pageNumber = 0;
 		}
-		if(!requestType.equals("4")) {
+		if(requestType== null || !requestType.equals("4")) {
 			model = requestsApprovalManager.getRequestsForApproval(null,null,dateFrom,dateTo,null,null,requestType,codeFrom,codeTo,null,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
 		} else {
 			model = requestsApprovalManager.getRequestsForApproval(null,null,dateFrom,dateTo,null,null,"12",codeFrom,codeTo,null,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
@@ -281,7 +281,7 @@ public class ReportsController extends BaseSimpleFormController{
 				e.printStackTrace();
 			}
 		}
-		if(!requestType.equals("4")) {
+		if(requestType== null || !requestType.equals("4")) {
 			model = requestsApprovalManager.getRequestsForApproval(null,null,dateFrom,dateTo,null,null,requestType,codeFrom,codeTo,null,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
 		} else {
 			model = requestsApprovalManager.getRequestsForApproval(null,null,dateFrom,dateTo,null,null,"12",codeFrom,codeTo,null,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
