@@ -45,6 +45,7 @@ import com._4s_.common.util.DBUtils;
 import com._4s_.common.util.Page;
 import com._4s_.requestsApproval.model.EmpReqApproval;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
+import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.restServices.json.AttendanceRequest;
@@ -1077,7 +1078,16 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 							Restrictions.eq("request_id.id", new Long(10)),
 							Restrictions.eq("request_id.id", new Long(11)))
 							);
-				} else {
+				} else if (requestType.equals(new Long(10)) || requestType.equals(new Long(11))) {
+					log.debug("requesttype is else");
+					criteria.add(Restrictions.eq("request_id.id", requestType));
+				} else if (requestType.equals(new Long(12))) {
+					log.debug("requesttype is 4");
+					criteria.add(Restrictions.or(Restrictions.eq("request_id.id", new Long(4)),
+							Restrictions.and(Restrictions.eq("request_id.id", new Long(1)), Restrictions.eq("vacation.vacation", "999"))));
+					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+				}  else {
 					log.debug("requesttype is else");
 					criteria.add(Restrictions.eq("request_id.id", requestType));
 					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
@@ -1196,7 +1206,16 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 							Restrictions.eq("request_id.id", new Long(10)),
 							Restrictions.eq("request_id.id", new Long(11)))
 							);
-				} else {
+				} else if (requestType.equals(new Long(10)) || requestType.equals(new Long(11))) {
+					log.debug("requesttype is else");
+					criteria.add(Restrictions.eq("request_id.id", requestType));
+				} else if (requestType.equals(new Long(12))) {
+					log.debug("requesttype is 4");
+					criteria.add(Restrictions.or(Restrictions.eq("request_id.id", new Long(4)),
+							Restrictions.and(Restrictions.eq("request_id.id", new Long(1)), Restrictions.eq("vacation.vacation", "999"))));
+					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+				}else {
 					log.debug("requesttype is else");
 					criteria.add(Restrictions.eq("request_id.id", requestType));
 					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
@@ -1932,10 +1951,10 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				log.debug("queried levels");
 				Iterator itr = list.iterator();
 				log.debug("empreqtypeacc size " + list.size());
-				while(itr.hasNext()) {
-					EmpReqTypeAcc acc = (EmpReqTypeAcc)itr.next();
-					log.debug("EmpReqTypeAcc " + acc.getId() + " group id " + acc.getGroup_id().getId());
-				}
+//				while(itr.hasNext()) {
+//					EmpReqTypeAcc acc = (EmpReqTypeAcc)itr.next();
+//					log.debug("EmpReqTypeAcc " + acc.getId() + " group id " + acc.getGroup_id().getId());
+//				}
 				return list;
 			} else return new ArrayList();
 		}
@@ -2358,6 +2377,15 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		
 		return response;
 	
+	}
+	
+	public List getLoginUsersByCodes(final String codeFrom,final String codeTo){
+		Criteria criteria = getCurrentSession()
+				.createCriteria(LoginUsers.class);
+		criteria.add(Restrictions.between("empCode", codeFrom, codeTo));
+		criteria
+		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
 	}
 
 

@@ -93,5 +93,6 @@ public interface RequestsApprovalDAO extends BaseDAO {
 	public Map checkAttendance(Date today, String empCode);
 	public Map checkStartedRequestsIncludingAttendance(RequestsApprovalQuery requestQuery,
 			Employee emp) ;
+	public List getLoginUsersByCodes(final String codeFrom,final String codeTo);
 //	public List getAttendanceRequests(Date date, String empCode);
 }

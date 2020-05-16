@@ -1524,7 +1524,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 //		log.debug("will loop on levels");
 		while(itr.hasNext()) {
 			AccessLevels level = (AccessLevels)itr.next();
-			log.debug("will loop on levels " + level.getLevel_id().getId());
+//			log.debug("will loop on levels " + level.getLevel_id().getId());
 			accessLevels.add(level.getLevel_id().getId());
 		}
 		log.debug("access levels " + accessLevels.size());
@@ -1540,9 +1540,9 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		Iterator it = tempAcc.iterator();
 		log.debug("will loop on empreqtypeAccs " + tempAcc.size());
 		while(it.hasNext()) {
-			log.debug("looping empreqtypeAccs");
+//			log.debug("looping empreqtypeAccs");
 			EmpReqTypeAcc acc = (EmpReqTypeAcc)it.next();
-			log.debug("acc " + acc.getEmp_id().getId());
+//			log.debug("acc " + acc.getEmp_id().getId());
 			empReqTypeAccs.add(acc.getEmp_id().getId());
 		}
 		return empReqTypeAccs;
@@ -1863,6 +1863,10 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	    private double rad2deg(double rad) {
 	      return (rad * 180.0 / Math.PI);
 	    }
+
+		public List getLoginUsersByCodes(String codeFrom, String codeTo) {
+			return requestsApprovalDAO.getLoginUsersByCodes(codeFrom, codeTo);
+		}
 	    
 	    
 //	public List getAttendanceRequests(Date date, String empCode) {
@@ -1870,5 +1874,6 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 //	}
 	
 	
+	    
 	
 }
