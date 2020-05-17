@@ -16143,4 +16143,9 @@ INSERT INTO i18n_message VALUES (202116440, 'Location from company', 101463, 3);
 INSERT INTO i18n_message VALUES (202116441,'IMEI', 101464, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116442, 'IMEI', 101464, 3);</statment></query><query><sqlindex>157</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD REQUIREDANDROIDVERSION INTEGER;</statment></query><query><sqlindex>158</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101465, 'requestsApproval.caption.requiredAndroidVersion', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116443,'رقم اصدار اندرويد', 101465, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116444, 'Required Android Version', 101465, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116444, 'Required Android Version', 101465, 3);</statment></query><query><sqlindex>159</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101466, 'requestsApproval.header.annualVacation', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116445,'الاجازات السنوية', 101466, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116446, 'Annual Vacations', 101466, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101467, 'requestsApproval.header.specialVacation', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116447,'الاجازات الخاصة', 101467, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116448, 'Special Vacations', 101467, 3);</statment></query></SQL>
