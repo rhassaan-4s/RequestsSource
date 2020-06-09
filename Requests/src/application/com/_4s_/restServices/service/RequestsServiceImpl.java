@@ -1503,7 +1503,7 @@ if (dateFrom != null && dateTo != null && empCode != null){
 }  else {
 	results.put("Results", response);
 	status.setCode("350");
-	status.setMessage("Request Failure");
+	status.setMessage("Request Failure, (empCode, fromDate, toDate all are mandatory)");
 	status.setStatus("False");
 	results.put("Status", status);
 }
