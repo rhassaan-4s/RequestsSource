@@ -1417,8 +1417,8 @@ Map results = new HashMap();
 
 RestStatus status = new RestStatus();
 
-if (dateFrom != null && dateTo != null){
-	if (!dateFrom.equals("") && !dateTo.equals("") ) {
+if (dateFrom != null && dateTo != null && empCode != null){
+	if (!dateFrom.equals("") && !dateTo.equals("")  && !empCode.isEmpty()) {
 		Date fromDate = null;
 		Date toDate = null;
 		System.out.println(">>>>>>>>>>>>>fromDateString "+ dateFrom);
@@ -1491,20 +1491,20 @@ if (dateFrom != null && dateTo != null){
 		results.put("Results", response);
 		status.setCode("200");
 		status.setMessage("Request Success");
-		status.setStatus("true");
+		status.setStatus("True");
 		results.put("Status", status);
 	} else {
 		results.put("Results", response);
 		status.setCode("350");
 		status.setMessage("Request Failure");
-		status.setStatus("false");
+		status.setStatus("False");
 		results.put("Status", status);
 	}
 }  else {
 	results.put("Results", response);
 	status.setCode("350");
 	status.setMessage("Request Failure");
-	status.setStatus("false");
+	status.setStatus("False");
 	results.put("Status", status);
 }
 
