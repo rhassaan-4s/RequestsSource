@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -172,7 +173,9 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 				errors.rejectValue("empCode", "commons.errors.requiredFields");
 			}
 			else {
-				Date now = Calendar.getInstance().getTime();
+				Calendar c = Calendar.getInstance();
+				c.setTimeZone(TimeZone.getTimeZone("EST"));
+				Date now = c.getTime();
 				if(loginUsersRequests.getRequest_id()==null || loginUsersRequests.getRequest_id().equals(""))
 				{
 					errors.rejectValue("request_id", "commons.errors.requiredFields");
@@ -221,7 +224,10 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests)command;
 		
 		loginUsersRequests.setInputType(new Integer(0));//request to sign in
-		Date now = Calendar.getInstance().getTime();
+		
+		Calendar c = Calendar.getInstance();
+//		c.setTimeZone(TimeZone.getTimeZone("EST"));
+		Date now = c.getTime();
 		loginUsersRequests.setPeriod_from(now);
 		loginUsersRequests.setRequest_date(now);
 

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -36,6 +37,7 @@ import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
+import com._4s_.requestsApproval.web.action.TimeAttend;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.EmployeeWrapper;
 import com._4s_.restServices.json.ImeiWrapper;
@@ -154,16 +156,31 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 	// TODO Auto-generated method stub
 	Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class, new Long(1));
 
+//	 System.setProperty("user.timezone", "Europe/Rome");
+	 System.out.println("#########################"+System.getProperty("user.timezone"));
+	    
 	DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	Date newDate = null;
 	
 	Map response = new HashMap();
 	RestStatus restStatus = new RestStatus();
-
-	newDate = Calendar.getInstance().getTime();
+	
+	
+//	TimeZone tz = TimeZone.getTimeZone("Europe/Rome");
+//	TimeZone.setDefault(tz);
+//	Calendar c = Calendar.getInstance(tz);
+	
+	Calendar c= Calendar.getInstance();
+	
+	System.out.println("timezone " + c.getTimeZone());
+//	c.setTimeZone(TimeZone.getTimeZone("EST"));
+//	System.out.println("timezone " + c.getTimeZone());
+	newDate = c.getTime();
 	System.out.println("parsed date " + newDate);
 	MultiCalendarDate mCalDate = new MultiCalendarDate();
 	mCalDate.setDate(newDate);
+	
+	System.out.println("SignInOunt: mcaldate " + mCalDate.getDate());
 	
 	MultiCalendarDate mCalDateOnly = new MultiCalendarDate();
 	Calendar cal = Calendar.getInstance();
@@ -1298,7 +1315,7 @@ public Map getVacTypes(Long requestType) {
 					vacations.remove(vac);
 				}
 			}
-//			log.debug("------vacation- after--==="+vac.getVacation());
+//			System.out.println("------vacation- after--==="+vac.getVacation());
 		}
 		response.put("Response", vacations);
 	} else if (requestType.equals(new Long(2))) {//periodic vacations
@@ -1382,6 +1399,116 @@ public Map searchEmployees(EmployeeWrapper emp) {
 	status.setStatus("true");
 	response.put("Status", status);
 	return response ;
+}
+
+public Map getAttendanceVacationReport(RequestApproval requestApproval) {
+Map response = new HashMap();
+	
+MultiCalendarDate mCalDate = new MultiCalendarDate();
+
+String dateFrom = requestApproval.getFromDate();
+String dateTo = requestApproval.getToDate();
+String empCode = requestApproval.getEmpCode();
+
+List objects = new ArrayList();
+List days = new ArrayList();
+
+Map results = new HashMap();
+
+RestStatus status = new RestStatus();
+
+if (dateFrom != null && dateTo != null){
+	if (!dateFrom.equals("") && !dateTo.equals("") ) {
+		Date fromDate = null;
+		Date toDate = null;
+		System.out.println(">>>>>>>>>>>>>fromDateString "+ dateFrom);
+		mCalDate.setDateTimeString(dateFrom,new Boolean(true));
+		fromDate = mCalDate.getDate();
+		System.out.println(">>>>>>>>>>>>>fromDate "+ fromDate);
+		System.out.println(">>>>>>>>>>>>>toDateString "+ dateTo);
+		mCalDate.setDateTimeString(dateTo,new Boolean(false));
+		toDate= mCalDate.getDate();
+		
+		// VIP
+		List totalObjects= new ArrayList();
+		
+		totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
+		objects=(List) totalObjects.get(0);
+		
+//		//Lehaa/////////////////////////////////////////////////
+//		if (tAttRepWithHrsMin == true) {
+			
+			String totalSum=(String) totalObjects.get(1);
+			String [] totalValues=totalSum.split(",");
+			System.out.println("totalMins=== "+totalValues[0]+" && totalHrs=== "+totalValues[1]);
+			String totalMins=totalValues[0];
+			String totalHrs=totalValues[1];
+			Long hrs=new Long(0), mins=new Long(0);
+			hrs= Long.parseLong(totalHrs);
+			mins=Long.parseLong(totalMins);
+			if(mins>60){
+				hrs+=mins/60;
+				mins=mins%60;
+			} 
+			
+			System.out.println("sent mins=== "+mins+" && sent hrs=== "+hrs);
+			
+			response.put("TotalMins", mins);
+			response.put("TotalHrs", hrs);
+//		} 
+		//////////////////////////////////////////////////////////
+		
+		System.out.println("-------objects- size--"+objects.size());
+		for (int i = 0; i < objects.size(); i++) {
+			TimeAttend ob= (TimeAttend) objects.get(i);
+			
+			// mCalDate.setDateString(ob.getDay());
+			DateFormat df=new SimpleDateFormat("dd/mm/yyyy");
+			
+			Date day;
+			try {
+				day = df.parse(ob.getDay());
+				System.out.println("-------day---"+day);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			System.out.println("-------objects---"+ob.getDay()+"-------getTimeIn---"+ob.getTimeIn()+"-------getTimeOut---"+ob.getTimeOut());
+		}
+		response.put("Attendance", objects);
+		// VIP
+		
+		
+		days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate);
+		System.out.println("-----days 001 ---"+days.size());
+		response.put("Vacations", days);
+		
+//		days=requestsApprovalManager.getVacations(emp.getEmpCode(), new Long(2), "002", fromDate,toDate);
+//		System.out.println("-----days 002 ---"+days.size());
+		//		model.put("days2", days);
+
+		results.put("Results", response);
+		status.setCode("200");
+		status.setMessage("Request Success");
+		status.setStatus("true");
+		results.put("Status", status);
+	} else {
+		results.put("Results", response);
+		status.setCode("350");
+		status.setMessage("Request Failure");
+		status.setStatus("false");
+		results.put("Status", status);
+	}
+}  else {
+	results.put("Results", response);
+	status.setCode("350");
+	status.setMessage("Request Failure");
+	status.setStatus("false");
+	results.put("Status", status);
+}
+
+return results;
 }
 
 

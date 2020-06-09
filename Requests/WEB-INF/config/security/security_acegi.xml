@@ -24,7 +24,7 @@
          user-service-ref="restService" token-repository-ref="tokenRepository" />
          -->
         
-   			 
+   		
 		<form-login login-page="/api/workflow/login*" 
 			username-parameter="username" password-parameter="password" 
 			authentication-success-handler-ref="mySuccessHandler"
@@ -58,6 +58,11 @@
 		<intercept-url pattern="/api/workflow/checkStartedRequests"
 			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 
+		<intercept-url pattern="/api/workflow/getSettings"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			
+		 <intercept-url pattern="/api/workflow/getPortNo" access="IS_AUTHENTICATED_ANONYMOUSLY"/> 
+			
 		<custom-filter ref="authenticationFilter" before="PRE_AUTH_FILTER" />
 		<custom-filter ref="rememberMeFilter" before="REMEMBER_ME_FILTER"/>
 
@@ -67,6 +72,11 @@
  
  <beans:bean id="passwordEncoder"
           class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+          
+    <!--   <anonymous 
+      granted-authority="ROLE_ANONYMOUS"
+      key="123"
+      username="anonymousUser"/> -->
 
  <beans:bean id="rememberMeServices"
       class="org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices">

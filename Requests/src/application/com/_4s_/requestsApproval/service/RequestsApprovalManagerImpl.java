@@ -1158,6 +1158,10 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				} catch (Exception e) {
 					log.debug("execption " + e);
 					e.printStackTrace();
+//					StackTraceElement[] trace =  e.getStackTrace();
+//					for(int j=0; j<trace.length; j++) {
+//						log.debug(trace[j]);
+//					}
 					
 					/**
 					 * Data of  user which will approve

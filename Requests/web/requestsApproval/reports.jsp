@@ -15,14 +15,16 @@
 <script type="text/javascript">
 	
 function exportExcel() {
-	//alert("test");
+	alert("test");
 	var fromDate = document.getElementById('request_date_from').value;
 	var toDate = document.getElementById('request_date_to').value;
 	var requestId = document.getElementById('request_id').value;
 	var codeFrom = document.getElementById('codeFrom').value;
-	//alert(document.forms[0].export);
+	document.getElementById('export').value="true";
+	alert(document.getElementById('export').value);
 	var codeTo = document.getElementById('codeTo').value;
 	document.forms[0].export.value = "true";
+	alert(document.forms[0].export.value);
 	//var link = '/Requests/requestsApproval/reports.html?export=true&dateFrom='+fromDate+'&dateTo='+toDate+'&requestType='+requestId+'&codeFrom='+codeFrom+'&codeTo='+codeTo;
 	document.getElementById("reports").submit();
 	//window.open(link);
@@ -394,7 +396,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 					
 					<td colspan="2" align="center">
 						<abc:i18n property="commons.button.export"/>
-						<input type="submit" id="btnexport" class="button" value="<fmt:message key="commons.button.export"/>" onClick="exportExcel();"></input><!--   -->
+						<input type="submit" id="btnexport" onselect="exportExcel();" class="button" value="<fmt:message key="commons.button.export"/>" onClick="exportExcel();"></input><!--   -->
 					</td>
 				</tr>
 			</table>								

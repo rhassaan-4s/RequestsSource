@@ -8,8 +8,15 @@ public class RequestApproval {
 	private String vac;
 	private String empCode;
 	private String fromDate;
+	private String toDate;
 	
 	
+	public String getToDate() {
+		return toDate;
+	}
+	public void setToDate(String toDate) {
+		this.toDate = toDate;
+	}
 	public String getFromDate() {
 		return fromDate;
 	}

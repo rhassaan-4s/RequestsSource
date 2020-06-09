@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.logging.Log;
@@ -138,7 +139,9 @@ public class MultiCalendarDate implements ApplicationContextAware{
 	
 	public void setDate(Date date) {
 		Calendar cal = Calendar.getInstance();
+//		TimeZone zone = TimeZone.getTimeZone("EST");
 		cal.setTime(date);
+//		cal.setTimeZone(zone);
 		this.millis = cal.getTimeInMillis();
 		
 		int seconds = cal.get(Calendar.SECOND);

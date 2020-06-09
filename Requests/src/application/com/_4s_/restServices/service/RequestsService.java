@@ -61,4 +61,6 @@ public interface RequestsService {// extends BaseManager {
 	public User getImeiUsers(String imei);
 
 	public Map searchEmployees(EmployeeWrapper emp);
+
+	public Map getAttendanceVacationReport(RequestApproval requestApproval);
 }

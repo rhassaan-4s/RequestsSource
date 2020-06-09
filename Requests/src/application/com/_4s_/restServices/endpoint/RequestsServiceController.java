@@ -461,4 +461,15 @@ public class RequestsServiceController {
 		Map m = requestsService.searchEmployees(emp);
 		return m;
 	}
+	
+	
+	@RequestMapping(value="/getAttendanceVacationReport" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map getAttendanceVacationReport(RequestApproval requestApproval) {
+		System.out.println("getAttendanceVacationReport ");
+		Map m = requestsService.getAttendanceVacationReport(requestApproval);
+		return m;
+	}
+	
 }
