@@ -144,6 +144,7 @@ public interface RequestsApprovalManager extends BaseManager {
 	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 			Employee emp);
 	public List getEmpReqTypeAcc(Employee emp,String requestType);
+	public List getEmpReqTypeAccEmpCode(Employee emp,String requestType);
 	public Map exportToExcelSheet(String reportName, List tableTitle,List results);
 	
 	public Map checkAttendance(Date today, String empCode);
@@ -159,5 +160,6 @@ public interface RequestsApprovalManager extends BaseManager {
 	
 	public List getLoginUsersByCodes(final String codeFrom,final String codeTo);
 //	public List getAttendanceRequests(Date date, String empCode);
+	public List getTimeAttendAll(String empArray, Date fromDate, Date toDate);
 }
 

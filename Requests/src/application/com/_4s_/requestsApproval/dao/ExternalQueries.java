@@ -3072,7 +3072,7 @@ public class ExternalQueries {
 		
 		String emp = "";
 		if (empCode!= null && !empCode.equals("")){
-			emp = " emp_code='" +empCode+ "' and ";
+			emp = " emp_code in (" +empCode+ ") and ";
 		}
 		jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
 		StringBuilder sql = new StringBuilder(
@@ -3096,30 +3096,8 @@ public class ExternalQueries {
 		LinkedCaseInsensitiveMap inMap ;
 
 		String minDate = null;
-//		Date min_date;
-//		Calendar cal= Calendar.getInstance();
-		
-		//log.debug("----minDate--sub-"+minDate);
-		//log.debug("--------xdeeeeeee-----"+mCalDate.getDateTimeString());
-//		try {
-//			Date d = (new SimpleDateFormat("dd/MM/yyyy HH:mm")).parse(minDate);
-//			//DateFormat d= new SimpleDateFormat("dd/MM/yyyy hh:mm");
-//			//d.parse(minDate);
-//			log.debug("----minDate--parseed-"+d);
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-	//	mCalDate.setDateTimeString(minDate);
-	//	min_date=mCalDate.getDate();
-		//log.debug("----min_date-date--"+min_date);
-		//cal.setTime(min_date);
-		//log.debug("--------xdeeeeeee-----"+mCalDate.getTimeString());
-		
 		
 		log.debug("----in---"+in);		
-		//result.add(minDate);
 
 
 		if(to_dateString!=null){
@@ -3129,13 +3107,6 @@ public class ExternalQueries {
 		to_date = mCalDate.getDate();
 		log.debug("----to_dateString- after formatting--"+to_date);
 		
-//		 sql = new StringBuilder(
-//				" select max(time_) as maxDate from time_attend t where emp_code='" +empCode
-//						+ "' and trans_type='O' and date_ >= to_date('" + from_dateString + "', 'DD-MM-YYYY') and date_<=to_date('"
-//						+ to_dateString+"', 'DD-MM-YYYY') group by date_, emp_code");
-//		log.debug("----sql2---"+sql);
-//		List out=(List) jdbcTemplate.queryForList(sql.toString());
-//		ListOrderedMap outMap ;
 		String maxDate = null;
 		
 		TimeAttend timeAttend=null;
@@ -3457,9 +3428,6 @@ public List getTimeAttendAndroid (String hostName,String serviceName,String user
 	}
 	
 	
-	
-	
-	
 public List getTimeAttendFromView (String hostName,String serviceName,String userName,String password, String empCode, Date from_date, Date to_date){
 	
 	List result = new ArrayList();
@@ -3494,17 +3462,10 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 	
 	String emp = "";
 	if (empCode!= null && !empCode.equals("")){
-		emp = " t.empcode='" +empCode+ "' and ";
+		emp = " t.empcode in (" +empCode+ ") and ";
 	}
 	jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
 	
-//	StringBuilder sql = new StringBuilder(
-//			"select t.ATTENDANCE_DATE AS ATTENDANCE_DATE, t.attendance_time as attendance_time,t.ATTENDANCE_TYPE AS ATTENDANCE_TYPE,\n" + 
-//					"t.INPUT_TYPE AS INPUT_TYPE, t.APPROVAL,t.longitude,t.latitude,\n" + 
-//					"t.empcode as emp , e.firstName fName, e.lastName lName\n" + 
-//					"from EMP_ATTENDANCE t, common_employee e\n"
-//					+ " where e.empCode=t.empcode and e.empCode='"+empCode+"' and t.attendance_date >= to_date('" + from_dateString + "', 'DD/MM/YYYY') and t.attendance_date <= to_date('"
-//					+ to_dateString+"', 'DD/MM/YYYY') ");
 	
 	StringBuilder sql = new StringBuilder("(SELECT empdays.DD , empdays.EMPCODE,emp.FIRSTNAME fName,-- empcode1, req.FROM_DATE requestfromdate, req.PERIOD_FROM requestperiod , req.POSTED posted, req.APPROVED approved\n" + 
 			"req.FROM_DATE AS  attendance_date,\n" + 
@@ -3521,7 +3482,7 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 			")\n" + 
 			"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
 			"where\n" + 
-			"empdays.EMPCODE='"+empCode+"'\n" + 
+			"empdays.EMPCODE in ("+empCode+")\n" + 
 			"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
 			")\n" + 
 			"UNION ALL\n" + 
@@ -3536,7 +3497,7 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 			"ON  ta.EMP_CODE=empDays.EMPCODE AND TO_CHAR(ta.DATE_,'YYYY-MM-DD')=TO_CHAR(EMPDAYS.DD,'YYYY-MM-DD')\n" + 
 			"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
 			"where\n" + 
-			"empdays.EMPCODE='"+empCode+"'\n" + 
+			"empdays.EMPCODE in ("+empCode+")\n" + 
 			"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
 			")\n" + 
 			"ORDER BY DD,attendance_time ASC --DD,\n");
@@ -3733,112 +3694,6 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 		
 	}
 		
-		
-//	while(i<in.size()){
-//		timeAttend=new TimeAttend();
-//		log.debug("in.get(i) " + in.get(i).getClass());
-//		inMap = (LinkedCaseInsensitiveMap) in.get(i);
-//		minDate = inMap.get("minDate").toString();
-//		log.debug("----minDate---"+minDate);
-//		
-////		minDate=minDate.substring(0,19);
-//		log.debug("----minDate---"+minDate);
-//		
-//		DateFormat d= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S",Locale.US);
-//		
-//		try {
-//			inDate=d.parse(minDate);
-//			log.debug("inDate  = "+inDate);
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//			maxDate = inMap.get("maxDate").toString();
-//			//			maxDate=maxDate.substring(0,19);
-//			log.debug("----maxDate---"+maxDate);
-//			//			mCalDate = new MultiCalendarDate();
-//			//			mCalDate.setDateTimeString(maxDate);
-//			//			outDate=mCalDate.getDate();
-//			try {
-//				outDate=d.parse(maxDate);
-//				log.debug("outDate  = "+outDate);
-//			} catch (ParseException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		log.debug("indate " + inDate + " outdate " + outDate);
-//		if(inDate!=null && outDate!=null){
-//			long diffHrs= (outDate.getTime()-inDate.getTime())/(1000*60*60);
-//			long diffMins= ((outDate.getTime()-inDate.getTime())%(1000*60*60))/(1000*60);
-//			log.debug("diffHrs=== "+diffHrs);
-//			log.debug("diffMins=== "+diffMins);
-//			totalMins+=diffMins;
-//			totalHrs+=diffHrs;
-//			timeAttend.setDiffHrs(diffHrs+"");
-//			timeAttend.setDiffMins(diffMins+"");
-//		}
-//		
-//		
-////		if (maxDate!=null) {
-////			if(minDate.equals(maxDate)){
-////				timeAttend.setTimeOut(null);
-////			}
-////			else{			
-//				maxDate=maxDate.substring(0, maxDate.length()-5);
-//				log.debug("----maxDate.substring(10)----"+maxDate.substring(10));
-//				timeAttend.setTimeOut(maxDate.substring(10));
-////			}
-////		}
-//		
-//		minDate=minDate.substring(0, minDate.length()-5);
-//		log.debug("----minDate.substring(10)----"+minDate.substring(10));
-//		timeAttend.setTimeIn(minDate.substring(10));
-//		log.debug("----minDate.substring(0,10)----"+minDate.substring(0,10));
-//		String date1=minDate.substring(0,10);
-//		String[] letters=date1.split("-");
-//		 
-//		//for (int j = 0; j < letters.length; j++) {
-//		//	log.debug("-----letters-0--"+letters[j]);
-//			int year= Integer.parseInt(letters[0]);
-//			int month =Integer.parseInt(letters[1]);
-//			int day =Integer.parseInt(letters[2]);
-//			String dateString=year+"/"+month+"/"+day;
-//			log.debug("-----dateString-0--"+dateString);
-//			timeAttend.setDay(dateString);
-//			
-//			mCalDate.setDateString(dateString);
-//			Date date=mCalDate.getDate();
-//			log.debug("-----date-0--"+date);
-//			//log.debug("----after parsing--"+df.format(date));
-//			//mCalDate.setDate(date);
-//			//log.debug("---mCalDate--date-0--"+mCalDate.getDate());
-//			
-//			SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEEE",new Locale("ar","SA")); // the day of the week spelled out completely  
-//			log.debug("-------simpleDateformat.format(mCalDate.getDate())---"+simpleDateformat.format(mCalDate.getDate()));
-//			timeAttend.setDayString(simpleDateformat.format(mCalDate.getDate()));
-//			
-//			String empStr =  inMap.get("emp").toString();
-//			timeAttend.setEmployee(empStr);
-//			
-//			String empName =  inMap.get("fName").toString();
-//			timeAttend.setEmpName(empName);
-//		//}
-//		//timeAttend.setDay();
-//		log.debug("------timeAttend.getDay()---"+timeAttend.getDay());
-//		result.add(timeAttend);
-//		i++;
-//		log.debug("------end of loop---");
-//	}
-	
-	
-//	for (int i = 0; i < result.size(); i++) {
-//		TimeAttend x = (TimeAttend) result.get(i);
-//		log.debug("-----from result---"+x.getDay()+"------in---"+x.getTimeIn()+"----out---"+x.getTimeOut());
-//	}
-	 
-	
-	
-	//result.add(out);
 	
 	totalList.add(result);
 	totalList.add(totalMins+","+totalHrs);
@@ -3848,6 +3703,235 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 }
 
 	
+public List getTimeAttendAll (String hostName,String serviceName,String userName,String password, String empCode, Date from_date, Date to_date){
+	
+	List result = new ArrayList();
+//	List totalList = new ArrayList();
+	
+	log.debug("----fromdate---"+from_date);
+    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    
+    String from_dateString=df.format(from_date);
+    log.debug("----from_dateString- after formatting--"+from_dateString);
+    
+    String to_dateString=df.format(to_date);
+    log.debug("----to_dateString- after formatting--"+to_dateString);
+    try {
+    	log.debug("----xxxxxxxxxxxxxxxx-----");
+		to_date=df.parse(to_dateString);
+		log.debug("----to_dateString- after formatting--"+to_date);
+		log.debug("----xxxxxxxxxxxxxxxx-----");
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+    
+    MultiCalendarDate mCalDate = new MultiCalendarDate();
+	if(from_dateString!=null){
+		log.debug("-----date entered---"+from_dateString);
+		mCalDate.setDateTimeString(from_dateString,new Boolean(true));
+	}
+	from_date = mCalDate.getDate();
+	log.debug("----fromdate- after formatting--"+from_date);
+	
+	String emp = "";
+	if (empCode!= null && !empCode.equals("")){
+		emp = " t.empcode in (" +empCode+ ") and ";
+	}
+	jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
+	
+	
+//	StringBuilder sql = new StringBuilder(
+//			" select min(time_) as minDate, max(time_) as maxDate, emp_code as emp , e.firstName fName, e.lastName lName " 
+//	+" from time_attend t, common_employee e where " + emp
+//					+ " e.empCode=emp_code and date_ between to_date('" + from_dateString + "', 'DD/MM/YYYY') and to_date('"
+//					+ to_dateString+"', 'DD/MM/YYYY') group by date_, emp_code,e.firstName,e.lastName order by date_");
+//	log.debug("----sql 1---"+sql);
+
+	
+	StringBuilder sql = new StringBuilder("SELECT min(attendance_time) as minDate, max(attendance_time) as maxDate, empcode as emp, fName from (\n"
+			+ "(SELECT empdays.DD , empdays.EMPCODE,emp.FIRSTNAME fName, -- empcode1, req.FROM_DATE requestfromdate, req.PERIOD_FROM requestperiod , req.POSTED posted, req.APPROVED approved\n" + 
+			"req.FROM_DATE AS  attendance_date,\n" + 
+			"TO_CHAR(req.PERIOD_FROM,'YYYY-MM-DD hh24:MI:ss') AS attendance_time,\n" + 
+			"(CASE WHEN req.REQUEST_TYPE=10 THEN 'IN' WHEN req.REQUEST_TYPE=11 THEN 'OUT' END ) AS ATTENDANCE_Type,\n" + 
+			"(CASE WHEN req.APPROVED =1 THEN 'Approved' WHEN req.APPROVED =99 THEN 'Rejected' WHEN (req.PERIOD_FROM IS NOT NULL AND req.approved IS NULL) THEN  'Incomplete' END) AS approval ,\n" + 
+			"(CASE WHEN req.INPUTTYPE=0 THEN 'Web_Attendance' WHEN req.INPUTTYPE=1 THEN 'Request_Attendance' WHEN req.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Absent' END) AS input_type,\n" +
+			"longitude as longitude, latitude as latitude \n"+
+			"FROM ALL_EMP_DAYS empdays join LOGIN_USERS_REQUESTS req\n" + 
+			"on req.EMPCODE=empdays.EMPCODE  AND (\n" + 
+			"(req.REQUEST_TYPE=10 OR req.REQUEST_TYPE=11)\n" + 
+			"and TO_CHAR(req.FROM_DATE,'YYYY-MM-DD')=TO_CHAR(empdays.DD,'YYYY-MM-DD')\n" + 
+			"AND req.POSTED != 1\n" + 
+			")\n" + 
+			"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
+			"where\n" + 
+			"empdays.EMPCODE in ("+empCode+")\n" + 
+			"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
+			")\n" + 
+			"UNION ALL\n" + 
+			"(SELECT empdays.DD , empdays.EMPCODE,emp.FIRSTNAME fName,-- empcode2, ta.DATE_ attendanceDate, ta.TIME_ attendanceTime\n" + 
+			"ta.DATE_  AS  attendance_date,\n" + 
+			"TO_CHAR(ta.TIME_,'YYYY-MM-DD hh24:MI:ss')  AS attendance_time,\n" + 
+			"(CASE WHEN ta.TRANS_TYPE='I' THEN 'IN' WHEN ta.TRANS_TYPE='O' THEN 'OUT' END ) AS ATTENDANCE_Type,\n" + 
+			"(CASE WHEN ta.date_ IS NOT NULL THEN 'Approved' END) AS approval,\n" + 
+			"(CASE WHEN ta.INPUTTYPE=0 THEN 'Web_Attendance' WHEN ta.INPUTTYPE=1 THEN 'Request_Attendance' WHEN ta.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Fingerprint_Attendance' END) AS input_type,\n" +
+			"longitude as longitude, latitude as latitude \n"+
+			
+			"FROM ALL_EMP_DAYS empdays JOIN TIME_ATTEND ta\n" + 
+			"ON  ta.EMP_CODE=empDays.EMPCODE AND TO_CHAR(ta.DATE_,'YYYY-MM-DD')=TO_CHAR(EMPDAYS.DD,'YYYY-MM-DD')\n" + 
+			"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
+			
+			"where\n" + 
+			"empdays.EMPCODE in ("+empCode+")\n" + 
+			"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
+			")\n" +
+			"ORDER BY DD" +
+			") group by DD,empcode,fName " +
+			"");
+	
+	
+
+	log.debug("host name " + hostName);
+	log.debug("service name " + serviceName);
+	log.debug("username " + userName);
+	log.debug("password " + password);
+	log.debug("----sql 1---"+sql);
+
+	
+	List in=(List) jdbcTemplate.queryForList(sql.toString());
+	
+		
+	LinkedCaseInsensitiveMap inMap ;
+	LinkedCaseInsensitiveMap inMap2 ;
+	
+	String minDate = null;
+	
+	log.debug("----in---"+in);		
+
+
+	if(to_dateString!=null){
+		log.debug("-----to_dateString entered---"+to_dateString);
+		mCalDate.setDateTimeString(to_dateString,new Boolean(true));
+	}
+	to_date = mCalDate.getDate();
+	log.debug("----to_dateString- after formatting--"+to_date);
+	
+	String maxDate = null;
+	
+	TimeAttend timeAttend=null;
+	Date inDate=null, outDate= null;
+	long totalMins=0, totalHrs=0;
+	for(int i=0;i<in.size();i++){
+		timeAttend=new TimeAttend();
+		log.debug("in.get(i) " + in.get(i).getClass());
+		inMap = (LinkedCaseInsensitiveMap) in.get(i);
+		minDate = inMap.get("minDate").toString();
+		log.debug("----minDate---"+minDate);
+		
+//		minDate=minDate.substring(0,19);
+		log.debug("----minDate---"+minDate);
+		
+		DateFormat d= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.US);
+		
+		try {
+			inDate=d.parse(minDate);
+			log.debug("inDate  = "+inDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+//		mCalDate = new MultiCalendarDate();
+//		mCalDate.setDateTimeString(minDate.substring(0, minDate.length()-2));
+//		inDate=mCalDate.getDate();
+		
+		
+		
+		 //df=new SimpleDateFormat("dd/MM/yyyy");
+	//	 log.debug("----Date1111---"+ inMap.get("dateDay").toString());
+		
+		//timeAttend.setDateDay(new Date (inMap.get("minDate").toString()));
+		
+		
+		maxDate = inMap.get("maxDate").toString();
+//		maxDate=maxDate.substring(0,19);
+		log.debug("----maxDate---"+maxDate);
+//		mCalDate = new MultiCalendarDate();
+//		mCalDate.setDateTimeString(maxDate);
+//		outDate=mCalDate.getDate();
+		try {
+			outDate=d.parse(maxDate);
+			log.debug("outDate  = "+outDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(inDate!=null || outDate!=null){
+			long diffHrs= (outDate.getTime()-inDate.getTime())/(1000*60*60);
+			long diffMins= ((outDate.getTime()-inDate.getTime())%(1000*60*60))/(1000*60);
+			log.debug("diffHrs=== "+diffHrs);
+			log.debug("diffMins=== "+diffMins);
+			totalMins+=diffMins;
+			totalHrs+=diffHrs;
+			timeAttend.setDiffHrs(diffHrs+"");
+			timeAttend.setDiffMins(diffMins+"");
+		}
+		
+		
+//		log.debug("outDate  = "+outDate);
+		//log.debug("----DateIn---"+test);
+		if(minDate.equals(maxDate)){
+			timeAttend.setTimeOut(null);
+		}
+		else{			
+			maxDate=maxDate.substring(0, maxDate.length()-3);
+			log.debug("----maxDate.substring(10)----"+maxDate.substring(10));
+			timeAttend.setTimeOut(maxDate.substring(10));
+		}
+		minDate=minDate.substring(0, minDate.length()-3);
+		log.debug("----minDate.substring(10)----"+minDate.substring(10));
+		timeAttend.setTimeIn(minDate.substring(10));
+		log.debug("----minDate.substring(0,10)----"+minDate.substring(0,10));
+		String date1=minDate.substring(0,10);
+		String[] letters=date1.split("-");
+		 
+		//for (int j = 0; j < letters.length; j++) {
+		//	log.debug("-----letters-0--"+letters[j]);
+			int year= Integer.parseInt(letters[0].trim());
+			int month =Integer.parseInt(letters[1].trim());
+			int day =Integer.parseInt(letters[2].trim());
+			String dateString=year+"/"+month+"/"+day;
+			log.debug("-----dateString-0--"+dateString);
+			timeAttend.setDay(dateString);
+			
+			mCalDate.setDateString(dateString);
+			Date date=mCalDate.getDate();
+			log.debug("-----date-0--"+date);
+			//log.debug("----after parsing--"+df.format(date));
+			//mCalDate.setDate(date);
+			//log.debug("---mCalDate--date-0--"+mCalDate.getDate());
+			
+			SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEEE",new Locale("ar","SA")); // the day of the week spelled out completely  
+			log.debug("-------simpleDateformat.format(mCalDate.getDate())---"+simpleDateformat.format(mCalDate.getDate()));
+			timeAttend.setDayString(simpleDateformat.format(mCalDate.getDate()));
+			
+			String empStr =  inMap.get("emp").toString();
+			timeAttend.setEmployee(empStr);
+			
+			String empName =  inMap.get("fName").toString();
+			timeAttend.setEmpName(empName);
+		//}
+		//timeAttend.setDay();
+		log.debug("------timeAttend.getDay()---"+timeAttend.getDay());
+		result.add(timeAttend);
+		log.debug("------end of loop---");
+	}
+	
+	return result;
+	
+}
+
 	
 	public List getVacations (String hostName,String serviceName,String userName,String password, String empCode, Long reqId, String vacId, Date from_date){
 		

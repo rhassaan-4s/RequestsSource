@@ -472,4 +472,16 @@ public class RequestsServiceController {
 		return m;
 	}
 	
+	@RequestMapping(value="/getAttendanceReport" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map getAttendanceReport(RequestApproval requestApproval) {
+		System.out.println("getAttendanceReport ");
+		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDet = (UserDetails)token.getPrincipal();
+		User user = requestsService.getUser(userDet.getUsername());
+		Map m = requestsService.getAttendanceReport(requestApproval,user.getEmployee());
+		return m;
+	}
+	
 }

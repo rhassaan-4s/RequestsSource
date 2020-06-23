@@ -1511,6 +1511,136 @@ if (dateFrom != null && dateTo != null && empCode != null){
 return results;
 }
 
+public Map getAttendanceReport(RequestApproval requestApproval, Employee emp) {
+Map response = new HashMap();
+	
+MultiCalendarDate mCalDate = new MultiCalendarDate();
+
+String dateFrom = requestApproval.getFromDate();
+String dateTo = requestApproval.getToDate();
+String empCode = requestApproval.getEmpCode();
+
+List objects = new ArrayList();
+List days = new ArrayList();
+
+Map results = new HashMap();
+
+RestStatus status = new RestStatus();
+
+List empReqTypeAccs = new ArrayList();
+
+if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals("")){
+		Date fromDate = null;
+		Date toDate = null;
+		System.out.println(">>>>>>>>>>>>>fromDateString "+ dateFrom);
+		mCalDate.setDateTimeString(dateFrom,new Boolean(true));
+		fromDate = mCalDate.getDate();
+		System.out.println(">>>>>>>>>>>>>fromDate "+ fromDate);
+		System.out.println(">>>>>>>>>>>>>toDateString "+ dateTo);
+		mCalDate.setDateTimeString(dateTo,new Boolean(false));
+		toDate= mCalDate.getDate();
+		
+		// VIP
+		List totalObjects= new ArrayList();
+		
+		if (empCode== null || empCode.isEmpty()) {
+			empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAccEmpCode(emp, null);
+			String empArray = "";
+			Iterator empItr = empReqTypeAccs.iterator();
+			int count = 0;
+			while(empItr.hasNext()) {
+				String empReq = ((String)(empItr.next()));
+//				System.out.println("empReq " + empReq);
+				if (count==0) {
+//					empArray = empReq.getEmp_id().getEmpCode();
+					empArray =  "'" + empReq +  "'";
+				} else {
+//					empArray += "," + empReq.getEmp_id().getEmpCode();
+					empArray += ",'" + empReq + "'";
+				}
+				count++;
+			}
+//			totalObjects=requestsApprovalManager.getTimeAttend(empArray, fromDate, toDate);
+//			totalObjects=requestsApprovalManager.getTimeAttendFromView(empArray, fromDate, toDate);
+			totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate);
+		} else {
+//			totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
+//			totalObjects=requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
+			totalObjects=requestsApprovalManager.getTimeAttendAll(empCode, fromDate, toDate);
+		}
+//		objects=(List) totalObjects.get(0);
+		
+		objects = totalObjects;
+		
+////		//Lehaa/////////////////////////////////////////////////
+////		if (tAttRepWithHrsMin == true) {
+//			
+//			String totalSum=(String) totalObjects.get(1);
+//			String [] totalValues=totalSum.split(",");
+//			System.out.println("totalMins=== "+totalValues[0]+" && totalHrs=== "+totalValues[1]);
+//			String totalMins=totalValues[0];
+//			String totalHrs=totalValues[1];
+//			Long hrs=new Long(0), mins=new Long(0);
+//			hrs= Long.parseLong(totalHrs);
+//			mins=Long.parseLong(totalMins);
+//			if(mins>60){
+//				hrs+=mins/60;
+//				mins=mins%60;
+//			} 
+//			
+//			System.out.println("sent mins=== "+mins+" && sent hrs=== "+hrs);
+//			
+//			response.put("TotalMins", mins);
+//			response.put("TotalHrs", hrs);
+////		} 
+//		//////////////////////////////////////////////////////////
+		
+		System.out.println("-------objects- size--"+objects.size());
+		for (int i = 0; i < objects.size(); i++) {
+			TimeAttend ob= (TimeAttend) objects.get(i);
+			
+			// mCalDate.setDateString(ob.getDay());
+			DateFormat df=new SimpleDateFormat("dd/mm/yyyy");
+			
+			Date day;
+			try {
+				day = df.parse(ob.getDay());
+//				System.out.println("-------day---"+day);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+//			System.out.println("-------objects---"+ob.getDay()+"-------getTimeIn---"+ob.getTimeIn()+"-------getTimeOut---"+ob.getTimeOut());
+		}
+		response.put("Attendance", objects);
+		// VIP
+		
+		
+//		days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate);
+//		System.out.println("-----days 001 ---"+days.size());
+//		response.put("Vacations", days);
+		
+//		days=requestsApprovalManager.getVacations(emp.getEmpCode(), new Long(2), "002", fromDate,toDate);
+//		System.out.println("-----days 002 ---"+days.size());
+		//		model.put("days2", days);
+
+		results.put("Results", response);
+		status.setCode("200");
+		status.setMessage("Request Success");
+		status.setStatus("True");
+		results.put("Status", status);
+}  else {
+	results.put("Results", response);
+	status.setCode("350");
+	status.setMessage("Request Failure, (empCode, fromDate, toDate all are mandatory)");
+	status.setStatus("False");
+	results.put("Status", status);
+}
+
+return results;
+}
+
 
 
 

@@ -1953,7 +1953,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				log.debug("empreqtypeacc size " + list.size());
 //				while(itr.hasNext()) {
 //					EmpReqTypeAcc acc = (EmpReqTypeAcc)itr.next();
-//					log.debug("EmpReqTypeAcc " + acc.getId() + " group id " + acc.getGroup_id().getId());
+//					log.debug("EmpReqTypeAcc " + acc.getId() + " group id " + acc.getGroup_id().getId() + " emp code " + acc.getEmp_id());
 //				}
 				return list;
 			} else return new ArrayList();

@@ -63,4 +63,7 @@ public interface RequestsService {// extends BaseManager {
 	public Map searchEmployees(EmployeeWrapper emp);
 
 	public Map getAttendanceVacationReport(RequestApproval requestApproval);
+
+	public Map getAttendanceReport(RequestApproval requestApproval,
+			Employee employee);
 }
