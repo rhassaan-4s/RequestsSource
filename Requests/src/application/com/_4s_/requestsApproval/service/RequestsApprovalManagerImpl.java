@@ -1569,7 +1569,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		
 		Iterator itr = tempLevels.iterator();
 		List<Long> accessLevels = new ArrayList();
-//		log.debug("will loop on levels");
+		log.debug("will loop on levels");
 		while(itr.hasNext()) {
 			AccessLevels level = (AccessLevels)itr.next();
 //			log.debug("will loop on levels " + level.getLevel_id().getId());
@@ -1591,8 +1591,11 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 //			log.debug("looping empreqtypeAccs");
 			EmpReqTypeAcc acc = (EmpReqTypeAcc)it.next();
 //			log.debug("acc " + acc.getEmp_id().getId());
-			if (!empReqTypeAccs.contains(acc.getEmp_id().getEmpCode())) {
-				empReqTypeAccs.add(acc.getEmp_id().getEmpCode());
+			String empCode = acc.getEmp_id().getEmpCode();
+			log.debug("group id " + acc.getGroup_id() + " emp code " + empCode);
+			if (!empReqTypeAccs.contains(empCode)) {
+				log.debug("new emp code");
+				empReqTypeAccs.add(empCode);
 			}
 		}
 		log.debug("resulting accs " + empReqTypeAccs.size());

@@ -3706,7 +3706,7 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 public List getTimeAttendAll (String hostName,String serviceName,String userName,String password, String empCode, Date from_date, Date to_date){
 	
 	List result = new ArrayList();
-//	List totalList = new ArrayList();
+	List totalList = new ArrayList();
 	
 	log.debug("----fromdate---"+from_date);
     DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -3740,14 +3740,6 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 		emp = " t.empcode in (" +empCode+ ") and ";
 	}
 	jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
-	
-	
-//	StringBuilder sql = new StringBuilder(
-//			" select min(time_) as minDate, max(time_) as maxDate, emp_code as emp , e.firstName fName, e.lastName lName " 
-//	+" from time_attend t, common_employee e where " + emp
-//					+ " e.empCode=emp_code and date_ between to_date('" + from_dateString + "', 'DD/MM/YYYY') and to_date('"
-//					+ to_dateString+"', 'DD/MM/YYYY') group by date_, emp_code,e.firstName,e.lastName order by date_");
-//	log.debug("----sql 1---"+sql);
 
 	
 	StringBuilder sql = new StringBuilder("SELECT min(attendance_time) as minDate, max(attendance_time) as maxDate, empcode as emp, fName from (\n"
@@ -3842,24 +3834,9 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 			e.printStackTrace();
 		}
 		
-//		mCalDate = new MultiCalendarDate();
-//		mCalDate.setDateTimeString(minDate.substring(0, minDate.length()-2));
-//		inDate=mCalDate.getDate();
-		
-		
-		
-		 //df=new SimpleDateFormat("dd/MM/yyyy");
-	//	 log.debug("----Date1111---"+ inMap.get("dateDay").toString());
-		
-		//timeAttend.setDateDay(new Date (inMap.get("minDate").toString()));
-		
 		
 		maxDate = inMap.get("maxDate").toString();
-//		maxDate=maxDate.substring(0,19);
 		log.debug("----maxDate---"+maxDate);
-//		mCalDate = new MultiCalendarDate();
-//		mCalDate.setDateTimeString(maxDate);
-//		outDate=mCalDate.getDate();
 		try {
 			outDate=d.parse(maxDate);
 			log.debug("outDate  = "+outDate);
@@ -3927,8 +3904,9 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 		result.add(timeAttend);
 		log.debug("------end of loop---");
 	}
-	
-	return result;
+	totalList.add(result);
+	totalList.add(totalMins+","+totalHrs);
+	return totalList;
 	
 }
 

@@ -1432,7 +1432,9 @@ if (dateFrom != null && dateTo != null && empCode != null){
 		// VIP
 		List totalObjects= new ArrayList();
 		
-		totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
+//		totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
+		totalObjects=requestsApprovalManager.getTimeAttendAll(empCode, fromDate, toDate);
+		
 		objects=(List) totalObjects.get(0);
 		
 //		//Lehaa/////////////////////////////////////////////////
@@ -1562,15 +1564,18 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 			}
 //			totalObjects=requestsApprovalManager.getTimeAttend(empArray, fromDate, toDate);
 //			totalObjects=requestsApprovalManager.getTimeAttendFromView(empArray, fromDate, toDate);
+			if (empArray == null || empArray.isEmpty()) {
+				empArray = "'" + emp.getEmpCode() +  "'";
+			}
 			totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate);
 		} else {
 //			totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
 //			totalObjects=requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
 			totalObjects=requestsApprovalManager.getTimeAttendAll(empCode, fromDate, toDate);
 		}
-//		objects=(List) totalObjects.get(0);
+		objects=(List) totalObjects.get(0);
 		
-		objects = totalObjects;
+//		objects = totalObjects;
 		
 ////		//Lehaa/////////////////////////////////////////////////
 ////		if (tAttRepWithHrsMin == true) {
