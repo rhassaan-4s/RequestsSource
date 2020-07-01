@@ -3779,7 +3779,7 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 			"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
 			")\n" +
 			"ORDER BY DD" +
-			") group by DD,empcode,fName " +
+			") group by DD,empcode,fName order by DD desc" +
 			"");
 	
 	
@@ -4023,7 +4023,7 @@ public List getVacations (String hostName,String serviceName,String userName,Str
         
         String empString ="";
         if (empCode !=null && !empCode.equals("")){
-        	empString = "empvac.empcode = '" +empCode+"' and ";
+        	empString = "empvac.empcode in (" +empCode+") and ";
         }
         
         try {

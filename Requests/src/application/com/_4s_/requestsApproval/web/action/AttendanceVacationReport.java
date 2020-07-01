@@ -117,7 +117,37 @@ public class AttendanceVacationReport implements Controller{
 				// VIP
 				List totalObjects= new ArrayList();
 				
-				totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
+//				totalObjects=requestsApprovalManager.getTimeAttendAll(empCode, fromDate, toDate);
+				
+				if (empCode== null || empCode.isEmpty()) {
+					List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAccEmpCode(emp, null);
+					String empArray = "";
+					Iterator empItr = empReqTypeAccs.iterator();
+					int count = 0;
+					while(empItr.hasNext()) {
+						String empReq = ((String)(empItr.next()));
+//						System.out.println("empReq " + empReq);
+						if (count==0) {
+//							empArray = empReq.getEmp_id().getEmpCode();
+							empArray =  "'" + empReq +  "'";
+						} else {
+//							empArray += "," + empReq.getEmp_id().getEmpCode();
+							empArray += ",'" + empReq + "'";
+						}
+						count++;
+					}
+//					totalObjects=requestsApprovalManager.getTimeAttend(empArray, fromDate, toDate);
+//					totalObjects=requestsApprovalManager.getTimeAttendFromView(empArray, fromDate, toDate);
+					if (empArray == null || empArray.isEmpty()) {
+						empArray = "'" + emp.getEmpCode() +  "'";
+					}
+					totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate);
+				} else {
+//					totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
+//					totalObjects=requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
+					totalObjects=requestsApprovalManager.getTimeAttendAll(empCode, fromDate, toDate);
+				}
+				
 				objects=(List) totalObjects.get(0);
 				
 //				//Lehaa/////////////////////////////////////////////////
@@ -157,8 +187,33 @@ public class AttendanceVacationReport implements Controller{
 				model.put("records", objects);
 				// VIP
 				
-				
-				days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate);
+				if (empCode== null || empCode.isEmpty()) {
+					List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAccEmpCode(emp, null);
+					String empArray = "";
+					Iterator empItr = empReqTypeAccs.iterator();
+					int count = 0;
+					while(empItr.hasNext()) {
+						String empReq = ((String)(empItr.next()));
+//						System.out.println("empReq " + empReq);
+						if (count==0) {
+//							empArray = empReq.getEmp_id().getEmpCode();
+							empArray =  "'" + empReq +  "'";
+						} else {
+//							empArray += "," + empReq.getEmp_id().getEmpCode();
+							empArray += ",'" + empReq + "'";
+						}
+						count++;
+					}
+					if (empArray == null || empArray.isEmpty()) {
+						empArray = "'" + emp.getEmpCode() +  "'";
+					}
+					days=requestsApprovalManager.getVacations( empArray, new Long(2), fromDate,toDate);
+				} else {
+//					totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
+//					totalObjects=requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
+					days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate);
+				}
+//				days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate);
 				log.debug("-----days 001 ---"+days.size());
 				model.put("days1", days);
 				
