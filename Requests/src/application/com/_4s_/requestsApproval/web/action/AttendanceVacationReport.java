@@ -141,11 +141,11 @@ public class AttendanceVacationReport implements Controller{
 					if (empArray == null || empArray.isEmpty()) {
 						empArray = "'" + emp.getEmpCode() +  "'";
 					}
-					totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate);
+					totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,null);
 				} else {
 //					totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
 //					totalObjects=requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
-					totalObjects=requestsApprovalManager.getTimeAttendAll(empCode, fromDate, toDate);
+					totalObjects=requestsApprovalManager.getTimeAttendAll(empCode, fromDate, toDate,null);
 				}
 				
 				objects=(List) totalObjects.get(0);
@@ -207,7 +207,7 @@ public class AttendanceVacationReport implements Controller{
 					if (empArray == null || empArray.isEmpty()) {
 						empArray = "'" + emp.getEmpCode() +  "'";
 					}
-					days=requestsApprovalManager.getVacations( empArray, new Long(2), fromDate,toDate);
+					days=requestsApprovalManager.getVacations(empArray, new Long(2), fromDate,toDate);
 				} else {
 //					totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
 //					totalObjects=requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);

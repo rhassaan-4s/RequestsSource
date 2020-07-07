@@ -3703,7 +3703,7 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 }
 
 	
-public List getTimeAttendAll (String hostName,String serviceName,String userName,String password, String empCode, Date from_date, Date to_date){
+public List getTimeAttendAll (String hostName,String serviceName,String userName,String password, String empCode, Date from_date, Date to_date, String statusId){
 	
 	List result = new ArrayList();
 	List totalList = new ArrayList();
@@ -3738,6 +3738,18 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 	String emp = "";
 	if (empCode!= null && !empCode.equals("")){
 		emp = " t.empcode in (" +empCode+ ") and ";
+	}
+	
+	
+	String status = "";
+	if (statusId!=null && !statusId.isEmpty()) {
+		if(statusId.equals("0")) {
+			status = " where approval like 'Incomplete' ";
+		} else if(statusId.equals("1")) {
+			status = " where approval like 'Approved' ";
+		} else if (statusId.equals("99")) {
+			status = " where approval like 'Rejected' ";
+		}
 	}
 	jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
 
@@ -3777,9 +3789,9 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 			"where\n" + 
 			"empdays.EMPCODE in ("+empCode+")\n" + 
 			"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
-			")\n" +
+			")\n "+
 			"ORDER BY DD" +
-			") group by DD,empcode,fName order by DD desc" +
+			") " + status +"\ngroup by DD,empcode,fName order by DD desc" +
 			"");
 	
 	

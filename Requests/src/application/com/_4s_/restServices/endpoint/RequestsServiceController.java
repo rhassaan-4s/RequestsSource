@@ -98,6 +98,7 @@ public class RequestsServiceController {
 						e.setJobTitle(emp.getJobTitle());
 						e.setLastName(emp.getLastName());
 						e.setTel(emp.getTel());
+						e.setEmail(emp.getEmail());
 
 						e.setRequiredAndroidVersion(requiredVersion);
 
@@ -466,7 +467,7 @@ public class RequestsServiceController {
 	@RequestMapping(value="/getAttendanceVacationReport" , method=RequestMethod.POST,
 			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody 
-	public Map getAttendanceVacationReport(RequestApproval requestApproval) {
+	public Map getAttendanceVacationReport(RequestsApprovalQuery requestApproval) {
 		System.out.println("getAttendanceVacationReport ");
 		Map m = requestsService.getAttendanceVacationReport(requestApproval);
 		return m;
@@ -475,7 +476,7 @@ public class RequestsServiceController {
 	@RequestMapping(value="/getAttendanceReport" , method=RequestMethod.POST,
 			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody 
-	public Map getAttendanceReport(RequestApproval requestApproval) {
+	public Map getAttendanceReport(RequestsApprovalQuery requestApproval) {
 		System.out.println("getAttendanceReport ");
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 		UserDetails userDet = (UserDetails)token.getPrincipal();

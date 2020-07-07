@@ -43,6 +43,7 @@ import com._4s_.common.dao.BaseDAOHibernate;
 import com._4s_.common.model.Employee;
 import com._4s_.common.util.DBUtils;
 import com._4s_.common.util.Page;
+import com._4s_.requestsApproval.model.AccessLevels;
 import com._4s_.requestsApproval.model.EmpReqApproval;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
@@ -2387,6 +2388,19 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
+
+
+	public List getAccessLevelsBetweenCodes(LoginUsers loggedInUser,
+			String codeFrom, String codeTo) {
+		Criteria criteria = getCurrentSession()
+				.createCriteria(AccessLevels.class);
+		criteria.createCriteria("emp_id").add(Restrictions.between("empCode", codeFrom, codeTo));
+		criteria
+		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
+	
+	
 
 
 //	public List getAttendanceRequests(Date date, String empCode,RequestTypes reqType) {

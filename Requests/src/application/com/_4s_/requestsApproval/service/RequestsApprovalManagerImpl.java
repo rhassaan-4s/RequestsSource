@@ -612,13 +612,13 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	}
 	
 	
-	public List getTimeAttendAll(String empCode, Date fromDate, Date toDate) {
+	public List getTimeAttendAll(String empCode, Date fromDate, Date toDate, String statusId) {
 		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
 		String hostName = settings.getServer();
 		String serviceName = settings.getService();
 		String userName = settings.getUsername();
 		String password = settings.getPassword();
-		return externalQueries.getTimeAttendAll(hostName, serviceName, userName, password, empCode,fromDate,toDate);
+		return externalQueries.getTimeAttendAll(hostName, serviceName, userName, password, empCode,fromDate,toDate,statusId);
 	}
 
 	public void setSequenceManager(SequenceManager sequenceManager) {
@@ -1565,6 +1565,48 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	public List getEmpReqTypeAccEmpCode(Employee emp,String requestType) {
 		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
 		List tempLevels = (List)getObjectsByParameter(AccessLevels.class, "emp_id", loggedInUser);
+		log.debug("access levels size " + tempLevels.size());
+		
+		Iterator itr = tempLevels.iterator();
+		List<Long> accessLevels = new ArrayList();
+		log.debug("will loop on levels");
+		while(itr.hasNext()) {
+			AccessLevels level = (AccessLevels)itr.next();
+//			log.debug("will loop on levels " + level.getLevel_id().getId());
+			accessLevels.add(level.getLevel_id().getId());
+		}
+		log.debug("access levels " + accessLevels.size());
+		log.debug("requestType " + requestType);
+		List tempAcc = new ArrayList();
+		if (requestType != null && !requestType.isEmpty()) {
+			tempAcc = getEmpReqTypeAccs(accessLevels,new Long(requestType));
+		} else {
+			log.debug("will get levels with null request type");
+			tempAcc = getEmpReqTypeAccs(accessLevels, null);
+		}
+		List empReqTypeAccs = new ArrayList();
+		Iterator it = tempAcc.iterator();
+		log.debug("will loop on empreqtypeAccs " + tempAcc.size());
+		while(it.hasNext()) {
+//			log.debug("looping empreqtypeAccs");
+			EmpReqTypeAcc acc = (EmpReqTypeAcc)it.next();
+//			log.debug("acc " + acc.getEmp_id().getId());
+			String empCode = acc.getEmp_id().getEmpCode();
+			log.debug("group id " + acc.getGroup_id() + " emp code " + empCode);
+			if (!empReqTypeAccs.contains(empCode)) {
+				log.debug("new emp code");
+				empReqTypeAccs.add(empCode);
+			}
+		}
+		log.debug("resulting accs " + empReqTypeAccs.size());
+		log.debug(empReqTypeAccs.toArray());
+		return empReqTypeAccs;
+	}
+	
+
+	public List getEmpReqTypeAccEmpCodeBetweenCodes(Employee emp,String requestType, String codeFrom, String codeTo) {
+		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		List tempLevels = (List)requestsApprovalDAO.getAccessLevelsBetweenCodes(loggedInUser,codeFrom,codeTo);
 		log.debug("access levels size " + tempLevels.size());
 		
 		Iterator itr = tempLevels.iterator();
