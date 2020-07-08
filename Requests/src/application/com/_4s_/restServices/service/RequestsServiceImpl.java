@@ -859,7 +859,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					response.put("Status", status);
 					return response;
 				} else if (startedRequestsResponse.size() > 0) {
-					status.setCode("314");
+					status.setCode("315");
 					status.setMessage("Another Request is already Started for the logged in user");
 					status.setStatus("False");
 					response.put("Status", status);
@@ -1058,7 +1058,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 								
 								if (attendanceStatus.getSignIn().booleanValue() == true && attendanceStatus.getSignOut().booleanValue() == false  && settings.getSignoutBeforePermissionErrand().equals(new Boolean(true))) {
 									System.out.println("request in same interval " + req.getRequestNumber() + req.getPeriod_from());
-									status.setCode("327");
+									status.setCode("323");
 									status.setMessage("Please sign out first before starting new request");
 									status.setStatus("False");
 									response.put("Status", status);
@@ -1074,7 +1074,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 											
 									if (loginUsersRequests.getPeriod_from().after(signIn) && loginUsersRequests.getPeriod_from().before(signOut)) {
 										System.out.println("request in same interval " + req.getRequestNumber() + req.getPeriod_from());
-										status.setCode("328");
+										status.setCode("324");
 										status.setMessage("Sign out time is after the request start time");
 										status.setStatus("False");
 										response.put("Status", status);
@@ -1083,7 +1083,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 								}
 							} else {
 								System.out.println("request in same interval " + req.getRequestNumber() + req.getFrom_date());
-								status.setCode("323");
+								status.setCode("328");
 								status.setMessage("Please finish your started requests ("+ req.getRequestNumber()+") during the same time interval specified");
 								status.setStatus("False");
 								response.put("Status", status);
@@ -1092,7 +1092,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 						} else {
 							if (req.getPeriod_to().compareTo(loginUsersRequests.getPeriod_from()) > 0 && req.getPeriod_from().compareTo(loginUsersRequests.getPeriod_from())<0) {
 								if (!userRequest.getAttendanceType().equals(new Long(6)) && !userRequest.getAttendanceType().equals(new Long(4))) {
-									status.setCode("324");
+									status.setCode("321");
 									status.setMessage("The specified time interval is overlapping with one of your requests with request number "  + req.getRequestNumber());
 									status.setStatus("False");
 									response.put("Status", status);
@@ -1369,7 +1369,7 @@ public Map getPortNo(String clientName) {
 	
 	if (client == null) {
 		RestStatus status = new RestStatus();
-		status.setCode("330");
+		status.setCode("320");
 		status.setMessage("Client Name Doesn't Exist");
 		status.setStatus("false");
 		response.put("Status", status);
@@ -1497,14 +1497,14 @@ if (dateFrom != null && dateTo != null && empCode != null){
 		results.put("Status", status);
 	} else {
 		results.put("Results", response);
-		status.setCode("350");
+		status.setCode("319");
 		status.setMessage("Request Failure");
 		status.setStatus("False");
 		results.put("Status", status);
 	}
 }  else {
 	results.put("Results", response);
-	status.setCode("350");
+	status.setCode("318");
 	status.setMessage("Request Failure, (empCode, fromDate, toDate all are mandatory)");
 	status.setStatus("False");
 	results.put("Status", status);
@@ -1637,7 +1637,7 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 		results.put("Status", status);
 }  else {
 	results.put("Results", response);
-	status.setCode("350");
+	status.setCode("318");
 	status.setMessage("Request Failure, (empCode, fromDate, toDate all are mandatory)");
 	status.setStatus("False");
 	results.put("Status", status);

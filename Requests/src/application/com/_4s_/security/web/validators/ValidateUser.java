@@ -40,6 +40,11 @@ public class ValidateUser implements Validator {
 			log.debug(">......>>>>>>>>>>>>>>>>>............getErrorCount==0");
 			validatePassword(user, error);
 		}
+		
+		if (error.getErrorCount() == 0) {
+			log.debug(">......>>>>>>>>>>>>>>>>>............getErrorCount==0");
+			validateEmail(user, error);
+		}
 
 //		if (error.getErrorCount() == 0) {
 //			log.debug(">......>>>>>>>>>>>>>>>>>............getErrorCount==0");

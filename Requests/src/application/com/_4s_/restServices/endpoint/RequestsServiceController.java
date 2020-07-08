@@ -272,8 +272,7 @@ public class RequestsServiceController {
 		
 		System.out.println("userRequest.getAttendanceType() "+userRequest.getAttendanceType());
 		System.out.println("userRequest.getAttendanceTime() " + userRequest.getAttendanceTime());
-		if (userRequest.getAttendanceType()==null || userRequest.getAttendanceTime() == null 
-				|| userRequest.getAttendanceTime().isEmpty()|| userRequest.getLatitude()==null || userRequest.getLongitude()==null){
+		if (userRequest.getAttendanceType()==null || userRequest.getLatitude()==null || userRequest.getLongitude()==null){//|| userRequest.getAttendanceTime() == null || userRequest.getAttendanceTime().isEmpty()
 			restStatus.setCode("303");
 			restStatus.setMessage("Null/Empty Input Parameter");
 			restStatus.setStatus("False");
@@ -340,7 +339,7 @@ public class RequestsServiceController {
 			response.put("Status", restStatus);
 		} else {
 			restStatus.setStatus("false");
-			restStatus.setCode("310");
+			restStatus.setCode("314");
 			restStatus.setMessage("Page Size Value Can't be ZERO");
 			response.put("Status", restStatus);
 		}
