@@ -163,7 +163,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 							</td>
 							<td  class="formBodControl" >
 								<select name="statusId" id="statusId">
-									<option value=""><fmt:message key="commons.caption.select" /></option>
+									<option value="" ${status==null?'selected':''}><fmt:message key="commons.caption.select" /></option>
 									<option value="0" ${status==0?'selected':''}>لم تكتمل</option>
 									<option value="1" ${status==1?'selected':''}>موافق</option>
 									<option value="99" ${status==99?'selected' : ''}>مرفوض</option>

@@ -46,6 +46,7 @@ import com._4s_.common.util.Page;
 import com._4s_.requestsApproval.model.AccessLevels;
 import com._4s_.requestsApproval.model.EmpReqApproval;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
+import com._4s_.requestsApproval.model.GroupAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
@@ -2390,11 +2391,23 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 
-	public List getAccessLevelsBetweenCodes(LoginUsers loggedInUser,
+	public List getAccessLevelsBetweenCodes(GroupAcc groupId,
 			String codeFrom, String codeTo) {
+//		Criteria criteria = getCurrentSession()
+//				.createCriteria(AccessLevels.class);
+//		if (codeFrom!= null && !codeFrom.isEmpty() && codeTo!= null && !codeTo.isEmpty() ) {
+//			criteria.createCriteria("emp_id").add(Restrictions.between("empCode", codeFrom, codeTo));
+//		}
+//		criteria
+//		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//		return criteria.list();
+		
 		Criteria criteria = getCurrentSession()
-				.createCriteria(AccessLevels.class);
-		criteria.createCriteria("emp_id").add(Restrictions.between("empCode", codeFrom, codeTo));
+				.createCriteria(EmpReqTypeAcc.class);
+		if (codeFrom!= null && !codeFrom.isEmpty() && codeTo!= null && !codeTo.isEmpty() ) {
+			criteria.createCriteria("emp_id").add(Restrictions.between("empCode", codeFrom, codeTo));
+		}
+		criteria.add(Restrictions.eq("group_id", groupId));
 		criteria
 		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();

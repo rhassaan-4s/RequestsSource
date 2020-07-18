@@ -1606,7 +1606,12 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
 	public List getEmpReqTypeAccEmpCodeBetweenCodes(Employee emp,String requestType, String codeFrom, String codeTo) {
 		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
-		List tempLevels = (List)requestsApprovalDAO.getAccessLevelsBetweenCodes(loggedInUser,codeFrom,codeTo);
+		Object obj = getObjectByParameter(AccessLevels.class, "emp_id", loggedInUser);
+		AccessLevels lev = null;
+		if (obj!= null) {
+		 lev = (AccessLevels)obj;
+		}
+		List tempLevels = (List)requestsApprovalDAO.getAccessLevelsBetweenCodes(lev.getLevel_id(),codeFrom,codeTo);
 		log.debug("access levels size " + tempLevels.size());
 		
 		Iterator itr = tempLevels.iterator();

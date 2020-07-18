@@ -1551,34 +1551,22 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 		System.out.println("emp code " + empCode);
 		System.out.println("codeFrom " + codeFrom + " codeTo " + codeTo);
 		if ((empCode== null || empCode.isEmpty()) && (codeFrom == null || codeFrom.isEmpty()) && (codeTo == null || codeTo.isEmpty())) {
-			empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAccEmpCode(emp, null);
-			String empArray = "";
-			Iterator empItr = empReqTypeAccs.iterator();
-			int count = 0;
-			while(empItr.hasNext()) {
-				String empReq = ((String)(empItr.next()));
-//				System.out.println("empReq " + empReq);
-				if (count==0) {
-//					empArray = empReq.getEmp_id().getEmpCode();
-					empArray =  "'" + empReq +  "'";
-				} else {
-//					empArray += "," + empReq.getEmp_id().getEmpCode();
-					empArray += ",'" + empReq + "'";
-				}
-				count++;
-			}
-//			totalObjects=requestsApprovalManager.getTimeAttend(empArray, fromDate, toDate);
-//			totalObjects=requestsApprovalManager.getTimeAttendFromView(empArray, fromDate, toDate);
-			if (empArray == null || empArray.isEmpty()) {
-				empArray = "'" + emp.getEmpCode() +  "'";
-			}
-			totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId);
-		} else if (codeFrom!= null && !codeFrom.isEmpty() && codeTo!= null && !codeTo.isEmpty()) {
-//			empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAccEmpCodeBetweenCodes(emp, null, codeFrom, codeTo);
-			String empArray = "";
+//			empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAccEmpCode(emp, null);
+			
 			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
-			List tempLevels = (List)requestsApprovalDAO.getAccessLevelsBetweenCodes(loggedInUser,codeFrom,codeTo);
+			Object obj = requestsApprovalManager.getObjectByParameter(AccessLevels.class, "emp_id", loggedInUser);
+			AccessLevels lev = null;
+			if (obj!= null) {
+			 lev = (AccessLevels)obj;
+			}
+			List tempLevels = new ArrayList();
+			if(lev!=null) {
+				tempLevels = (List)requestsApprovalDAO.getAccessLevelsBetweenCodes(lev.getLevel_id(),empCode,empCode);
+			}
 			System.out.println("access levels size " + tempLevels.size());
+			
+			String empArray = "";
+			
 			Iterator empItr = tempLevels.iterator();
 			int count = 0;
 			while(empItr.hasNext()) {
@@ -1593,20 +1581,92 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 				}
 				count++;
 			}
+			
 //			totalObjects=requestsApprovalManager.getTimeAttend(empArray, fromDate, toDate);
 //			totalObjects=requestsApprovalManager.getTimeAttendFromView(empArray, fromDate, toDate);
 			if (empArray == null || empArray.isEmpty()) {
 				empArray = "'" + emp.getEmpCode() +  "'";
+				totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId);
 			}
-			totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId);
+		} else if (codeFrom!= null && !codeFrom.isEmpty() && codeTo!= null && !codeTo.isEmpty()) {
+			String empArray = "";
+			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+//			List tempLevels = (List)requestsApprovalDAO.getAccessLevelsBetweenCodes(loggedInUser,codeFrom,codeTo);
+			
+			Object obj = requestsApprovalManager.getObjectByParameter(AccessLevels.class, "emp_id", loggedInUser);
+			AccessLevels lev = null;
+			if (obj!= null) {
+			 lev = (AccessLevels)obj;
+			}
+			List tempLevels = new ArrayList();
+			if(lev!=null) {
+				tempLevels = (List)requestsApprovalDAO.getAccessLevelsBetweenCodes(lev.getLevel_id(),codeFrom,codeTo);
+			}
+			System.out.println("access levels size " + tempLevels.size());
+			
+			Iterator empItr = tempLevels.iterator();
+			int count = 0;
+			while(empItr.hasNext()) {
+				EmpReqTypeAcc empReq = ((EmpReqTypeAcc)(empItr.next()));
+//				System.out.println("empReq " + empReq);
+				if (count==0) {
+//					empArray = empReq.getEmp_id().getEmpCode();
+					empArray =  "'" + empReq.getEmp_id().getEmpCode() +  "'";
+				} else {
+//					empArray += "," + empReq.getEmp_id().getEmpCode();
+					empArray += ",'" + empReq.getEmp_id().getEmpCode() + "'";
+				}
+				count++;
+			}
+//			totalObjects=requestsApprovalManager.getTimeAttend(empArray, fromDate, toDate);
+//			totalObjects=requestsApprovalManager.getTimeAttendFromView(empArray, fromDate, toDate);
+			if (empArray == null || empArray.isEmpty()) {
+//				empArray = "'" + emp.getEmpCode() +  "'";
+			} else {
+				totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId);
+			}
 		}
 		else {
 //			totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
 //			totalObjects=requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
-			totalObjects=requestsApprovalManager.getTimeAttendAll(empCode, fromDate, toDate,statusId);
+			String empArray = "";
+			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+//			List tempLevels = (List)requestsApprovalDAO.getAccessLevelsBetweenCodes(loggedInUser,codeFrom,codeTo);
+			
+			Object obj = requestsApprovalManager.getObjectByParameter(AccessLevels.class, "emp_id", loggedInUser);
+			AccessLevels lev = null;
+			if (obj!= null) {
+			 lev = (AccessLevels)obj;
+			}
+			List tempLevels = new ArrayList();
+			if(lev!=null) {
+				tempLevels = (List)requestsApprovalDAO.getAccessLevelsBetweenCodes(lev.getLevel_id(),codeFrom,codeTo);
+			}
+			System.out.println("access levels size " + tempLevels.size());
+			
+			Iterator empItr = tempLevels.iterator();
+			int count = 0;
+			while(empItr.hasNext()) {
+				EmpReqTypeAcc empReq = ((EmpReqTypeAcc)(empItr.next()));
+//				System.out.println("empReq " + empReq);
+				if (count==0) {
+//					empArray = empReq.getEmp_id().getEmpCode();
+					empArray =  "'" + empReq.getEmp_id().getEmpCode() +  "'";
+				} else {
+//					empArray += "," + empReq.getEmp_id().getEmpCode();
+					empArray += ",'" + empReq.getEmp_id().getEmpCode() + "'";
+				}
+				count++;
+			}
+			if (empArray == null || empArray.isEmpty()) {
+//				empArray = "'" + emp.getEmpCode() +  "'";
+			} else {
+				totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId);
+			}
 		}
-		objects=(List) totalObjects.get(0);
-		
+		if(!totalObjects.isEmpty()) {
+			objects=(List) totalObjects.get(0);
+		}
 		
 		System.out.println("-------objects- size--"+objects.size());
 		for (int i = 0; i < objects.size(); i++) {

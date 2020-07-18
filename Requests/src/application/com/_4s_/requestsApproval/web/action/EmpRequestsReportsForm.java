@@ -150,6 +150,9 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 		log.debug("--exactDateTo--"+exactDateTo);
 		
 		String statusId=request.getParameter("statusId");
+		if (statusId!= null && statusId.isEmpty()) {
+			statusId=null;
+		}
 		String codeFrom=request.getParameter("codeFrom");
 		String codeTo=request.getParameter("codeTo");
 	
@@ -306,6 +309,9 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 		log.debug("--exactDateTo--"+exactDateTo);
 		
 		String statusId=request.getParameter("statusId");
+		if (statusId.isEmpty()) {
+			statusId=null;
+		}
 		String codeFrom=request.getParameter("codeFrom");
 		String codeTo=request.getParameter("codeTo");
 		

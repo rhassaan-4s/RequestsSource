@@ -123,6 +123,9 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		
 
 		String statusId=request.getParameter("statusId");
+		if (statusId.isEmpty()) {
+			statusId=null;
+		}
 		String codeFrom=request.getParameter("codeFrom");
 		String codeTo=request.getParameter("codeTo");
 		
@@ -224,6 +227,9 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		List tempneededRequestTypes = new ArrayList();
 		
 		String statusId=request.getParameter("statusId");
+		if (statusId.isEmpty()) {
+			statusId=null;
+		}
 		log.debug("statusId " + statusId);
 		String codeFrom=request.getParameter("codeFrom");
 		String codeTo=request.getParameter("codeTo");
@@ -315,7 +321,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		log.debug("--dateTo--"+dateTo);
 		
 		log.debug("dateFrom != null && dateTo != null " + (dateFrom != null && dateTo != null) );
-		log.debug(" 2: " + ( emp_code.equals("") && codeFrom.equals("") && codeTo.equals("") && statusId.equals("")));
+		log.debug(" 2: " + ( emp_code.equals("") && codeFrom.equals("") && codeTo.equals("")));
 		
 		String requestNumber = null;
 		String exactDateFrom = null;
