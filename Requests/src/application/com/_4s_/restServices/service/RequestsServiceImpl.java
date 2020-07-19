@@ -1593,17 +1593,26 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
 //			List tempLevels = (List)requestsApprovalDAO.getAccessLevelsBetweenCodes(loggedInUser,codeFrom,codeTo);
 			
-			Object obj = requestsApprovalManager.getObjectByParameter(AccessLevels.class, "emp_id", loggedInUser);
+			List objectss = requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "emp_id", loggedInUser);
 			AccessLevels lev = null;
-			if (obj!= null) {
-			 lev = (AccessLevels)obj;
-			}
+			System.out.println("objectss size " + objectss.size());
+//			List levs = new ArrayList();
 			List tempLevels = new ArrayList();
-			if(lev!=null) {
-				tempLevels = (List)requestsApprovalDAO.getAccessLevelsBetweenCodes(lev.getLevel_id(),codeFrom,codeTo);
-			}
-			System.out.println("access levels size " + tempLevels.size());
 			
+			Iterator itrs = objectss.iterator();
+
+			while (itrs.hasNext()) {
+				Object obj = itrs.next();
+				System.out.println("obj " + obj);
+				if (obj!= null) {
+					lev = (AccessLevels)obj;
+				}
+				
+				if(lev!=null) {
+					tempLevels.addAll(requestsApprovalDAO.getAccessLevelsBetweenCodes(lev.getLevel_id(),codeFrom,codeTo));
+				}
+				System.out.println("access levels size " + tempLevels.size());
+			}
 			Iterator empItr = tempLevels.iterator();
 			int count = 0;
 			while(empItr.hasNext()) {
