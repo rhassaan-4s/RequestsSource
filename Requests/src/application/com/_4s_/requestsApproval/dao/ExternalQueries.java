@@ -3754,14 +3754,18 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 	jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
 
 	
-	StringBuilder sql = new StringBuilder("SELECT min(attendance_time) as minDate, max(attendance_time) as maxDate, empcode as emp, fName from (\n"
+	StringBuilder sql = new StringBuilder("SELECT min(attendance_time) as minDate, max(attendance_time) as maxDate, empcode as emp, fName "
+			+ ",longitudeIn, LONGITUDEOut, LATITUDEIn, LATITUDEOut \n from (\n"
 			+ "(SELECT empdays.DD , empdays.EMPCODE,emp.FIRSTNAME fName, -- empcode1, req.FROM_DATE requestfromdate, req.PERIOD_FROM requestperiod , req.POSTED posted, req.APPROVED approved\n" + 
 			"req.FROM_DATE AS  attendance_date,\n" + 
 			"TO_CHAR(req.PERIOD_FROM,'YYYY-MM-DD hh24:MI:ss') AS attendance_time,\n" + 
 			"(CASE WHEN req.REQUEST_TYPE=10 THEN 'IN' WHEN req.REQUEST_TYPE=11 THEN 'OUT' END ) AS ATTENDANCE_Type,\n" + 
 			"(CASE WHEN req.APPROVED =1 THEN 'Approved' WHEN req.APPROVED =99 THEN 'Rejected' WHEN (req.PERIOD_FROM IS NOT NULL AND req.approved IS NULL) THEN  'Incomplete' END) AS approval ,\n" + 
 			"(CASE WHEN req.INPUTTYPE=0 THEN 'Web_Attendance' WHEN req.INPUTTYPE=1 THEN 'Request_Attendance' WHEN req.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Absent' END) AS input_type,\n" +
-			"longitude as longitude, latitude as latitude \n"+
+			"(CASE WHEN req.REQUEST_TYPE=10 THEN  longitude end) as longitudeIn, \n" +
+			"(CASE WHEN req.REQUEST_TYPE=10 THEN  latitude END ) as latitudeIn , \n" +
+			"(CASE WHEN req.REQUEST_TYPE=11 THEN  longitude  END ) AS longitudeOut, \n" +
+			"(CASE WHEN req.REQUEST_TYPE=11 THEN  latitude  END )  AS latitudeOut \n"+
 			"FROM ALL_EMP_DAYS empdays join LOGIN_USERS_REQUESTS req\n" + 
 			"on req.EMPCODE=empdays.EMPCODE  AND (\n" + 
 			"(req.REQUEST_TYPE=10 OR req.REQUEST_TYPE=11)\n" + 
@@ -3780,7 +3784,10 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 			"(CASE WHEN ta.TRANS_TYPE='I' THEN 'IN' WHEN ta.TRANS_TYPE='O' THEN 'OUT' END ) AS ATTENDANCE_Type,\n" + 
 			"(CASE WHEN ta.date_ IS NOT NULL THEN 'Approved' END) AS approval,\n" + 
 			"(CASE WHEN ta.INPUTTYPE=0 THEN 'Web_Attendance' WHEN ta.INPUTTYPE=1 THEN 'Request_Attendance' WHEN ta.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Fingerprint_Attendance' END) AS input_type,\n" +
-			"longitude as longitude, latitude as latitude \n"+
+			"(CASE WHEN ta.TRANS_TYPE='I' THEN  longitude end) as longitudeIn, \n"+
+			"(CASE WHEN ta.TRANS_TYPE='I' THEN  latitude end) as latitudeIn , \n"+
+			"(CASE WHEN ta.TRANS_TYPE='O' THEN longitude end) AS longitudeOut,  \n"+
+			"(CASE WHEN ta.TRANS_TYPE='O' THEN latitude end) AS latitudeOut \n"+
 			
 			"FROM ALL_EMP_DAYS empdays JOIN TIME_ATTEND ta\n" + 
 			"ON  ta.EMP_CODE=empDays.EMPCODE AND TO_CHAR(ta.DATE_,'YYYY-MM-DD')=TO_CHAR(EMPDAYS.DD,'YYYY-MM-DD')\n" + 
@@ -3791,7 +3798,9 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 			"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
 			")\n "+
 			"ORDER BY DD" +
-			") " + status +"\ngroup by DD,empcode,fName order by DD desc" +
+			") " + status +"\ngroup by DD,empcode,fName\n"
+					+ ",longitudeIn, LONGITUDEOut, LATITUDEIn, LATITUDEOut\n"
+					+ " order by DD desc" +
 			"");
 	
 	
@@ -3825,6 +3834,9 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 	
 	TimeAttend timeAttend=null;
 	Date inDate=null, outDate= null;
+	
+	String longitude1=null, longitude2=null, latitude1= null, latitude2 = null;
+	
 	long totalMins=0, totalHrs=0;
 	for(int i=0;i<in.size();i++){
 		timeAttend=new TimeAttend();
@@ -3856,6 +3868,28 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		if (inMap.get("longitudeIn")!=null) {
+			longitude1 = inMap.get("longitudeIn").toString();
+		}
+		log.debug("----longitude1---"+longitude1);
+		
+		if (inMap.get("longitudeOut")!=null) {
+			longitude2 = inMap.get("longitudeOut").toString();
+		}
+		log.debug("----longitude2---"+longitude2);
+		
+		if (inMap.get("latitudeIn")!=null) {
+			latitude1 = inMap.get("latitudeIn").toString();
+		}
+		log.debug("----latitude1---"+latitude1);
+		
+		if (inMap.get("longitudeOut")!=null) {
+			latitude2 = inMap.get("latitudeOut").toString();
+		}
+		log.debug("----latitude2---"+latitude2);
+		
+		
 		if(inDate!=null || outDate!=null){
 			long diffHrs= (outDate.getTime()-inDate.getTime())/(1000*60*60);
 			long diffMins= ((outDate.getTime()-inDate.getTime())%(1000*60*60))/(1000*60);
@@ -3867,6 +3901,11 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 			timeAttend.setDiffMins(diffMins+"");
 		}
 		
+		
+		timeAttend.setLatitude1(latitude1);
+		timeAttend.setLatitude2(latitude2);
+		timeAttend.setLongitude1(longitude1);
+		timeAttend.setLongitude2(longitude2);
 		
 //		log.debug("outDate  = "+outDate);
 		//log.debug("----DateIn---"+test);
