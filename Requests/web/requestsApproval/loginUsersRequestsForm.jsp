@@ -593,21 +593,6 @@ function calculateDiff2(){
 								</spring:bind>
 							</td>
 							
-					  		<td nowrap class="formReq" >
-								<abc:i18n property="requestsApproval.caption.leaveType"/>
-								<fmt:message key="requestsApproval.caption.leaveType"/>
-							</td>
-							<td  class="formBodControl" >
-								<spring:bind path="loginUsersRequests.leave_type">
-									<select name="${status.expression}" id="${status.expression}" >
-										<option value=""><fmt:message key="commons.caption.select" /></option>						
-										<option value="0" ${status.value == "0" ? ' selected':''}><fmt:message key="requestsApproval.caption.special"/></option>
-										<option value="1" ${status.value == "1" ? ' selected':''}><fmt:message key="requestsApproval.caption.errand"/></option>
-										<option value="2" ${status.value == "2" ? ' selected':''}><fmt:message key="requestsApproval.caption.normal"/></option>
-									</select>
-								</spring:bind>
-							</td>
-							
 							<td nowrap class="formReq" >
 								<abc:i18n property="requestsApproval.caption.leaveEffect"/>
 								<fmt:message key="requestsApproval.caption.leaveEffect"/>
@@ -616,7 +601,7 @@ function calculateDiff2(){
 								<spring:bind path="loginUsersRequests.leave_effect">
 									<select name="${status.expression}" id="${status.expression}" >
 										<option value=""><fmt:message key="commons.caption.select" /></option>						
-										<option value="0" ${status.value == "0" ? ' selected':''}><fmt:message key="requestsApproval.caption.without"/></option>
+										<!-- <option value="0" ${status.value == "0" ? ' selected':''}><fmt:message key="requestsApproval.caption.without"/></option>-->
 										<option value="1" ${status.value == "1" ? ' selected':''}><fmt:message key="requestsApproval.caption.delay"/></option>
 										<option value="2" ${status.value == "2" ? ' selected':''}><fmt:message key="requestsApproval.caption.early"/></option>
 									</select>
@@ -1290,16 +1275,6 @@ function calculateDiff2(){
 								<abc:i18n property="requestsApproval.caption.leaveType"/>
 								<fmt:message key="requestsApproval.caption.leaveType"/>
 							</td>
-							<td  class="formBodControl" >
-								<spring:bind path="loginUsersRequests.leave_type">
-									<select name="${status.expression}" id="${status.expression}" >
-										<option value=""><fmt:message key="commons.caption.select" /></option>						
-										<option value="0" ${status.value == "0" ? ' selected':''}><fmt:message key="requestsApproval.caption.special"/></option>
-										<option value="1" ${status.value == "1" ? ' selected':''}><fmt:message key="requestsApproval.caption.errand"/></option>
-										<option value="1" ${status.value == "1" ? ' selected':''}><fmt:message key="requestsApproval.caption.normal"/></option>
-									</select>
-								</spring:bind>
-							</td>
 							
 							<td nowrap class="formReq" >
 								<abc:i18n property="requestsApproval.caption.leaveEffect"/>
@@ -1309,7 +1284,7 @@ function calculateDiff2(){
 								<spring:bind path="loginUsersRequests.leave_effect">
 									<select name="${status.expression}" id="${status.expression}" >
 										<option value=""><fmt:message key="commons.caption.select" /></option>						
-										<option value="0" ${status.value == "0" ? ' selected':''}><fmt:message key="requestsApproval.caption.without"/></option>
+										<!-- <option value="0" ${status.value == "0" ? ' selected':''}><fmt:message key="requestsApproval.caption.without"/></option> -->
 										<option value="1" ${status.value == "1" ? ' selected':''}><fmt:message key="requestsApproval.caption.delay"/></option>
 										<option value="2" ${status.value == "2" ? ' selected':''}><fmt:message key="requestsApproval.caption.early"/></option>
 									</select>
@@ -1340,21 +1315,6 @@ function calculateDiff2(){
 									</spring:bind>
 								</td>
 								
-						  		<td nowrap class="formReq" >
-									<abc:i18n property="requestsApproval.caption.leaveType"/>
-									<fmt:message key="requestsApproval.caption.leaveType"/>
-								</td>
-								<td  class="formBodControl" >
-									<spring:bind path="loginUsersRequests.leave_type">
-										<select name="${status.expression}" id="${status.expression}" >
-											<option value=""><fmt:message key="commons.caption.select" /></option>						
-											<option value="0" ${status.value == "0" ? ' selected':''}><fmt:message key="requestsApproval.caption.special"/></option>
-											<option value="1" ${status.value == "1" ? ' selected':''}><fmt:message key="requestsApproval.caption.errand"/></option>
-											<option value="1" ${status.value == "2" ? ' selected':''}><fmt:message key="requestsApproval.caption.normal"/></option>
-										</select>
-									</spring:bind>
-								</td>
-								
 								<td nowrap class="formReq" >
 									<abc:i18n property="requestsApproval.caption.leaveEffect"/>
 									<fmt:message key="requestsApproval.caption.leaveEffect"/>
@@ -1363,7 +1323,7 @@ function calculateDiff2(){
 									<spring:bind path="loginUsersRequests.leave_effect">
 										<select name="${status.expression}" id="${status.expression}" >
 											<option value=""><fmt:message key="commons.caption.select" /></option>						
-											<option value="0" ${status.value == "0" ? ' selected':''}><fmt:message key="requestsApproval.caption.without"/></option>
+											<!-- <option value="0" ${status.value == "0" ? ' selected':''}><fmt:message key="requestsApproval.caption.without"/></option> -->
 											<option value="1" ${status.value == "1" ? ' selected':''}><fmt:message key="requestsApproval.caption.delay"/></option>
 											<option value="2" ${status.value == "2" ? ' selected':''}><fmt:message key="requestsApproval.caption.early"/></option>
 										</select>

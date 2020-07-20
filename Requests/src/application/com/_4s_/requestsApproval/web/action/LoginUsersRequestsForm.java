@@ -880,10 +880,6 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 						if(loginUsersRequests.getLeave_effect()==null || loginUsersRequests.getLeave_effect().equals("")){
 							errors.reject("requestsApproval.errors.nullLeaveEffect");
 						}
-						if(loginUsersRequests.getLeave_type()==null || loginUsersRequests.getLeave_type().equals("")){
-							errors.reject("requestsApproval.errors.nullLeaveType");
-						}
-
 						
 						if(fromToRequestVald==true){//Lotus
 							String perFrom=loginUsersRequests.getPeriod_from()+"";
