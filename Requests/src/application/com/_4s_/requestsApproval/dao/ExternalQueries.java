@@ -3754,18 +3754,30 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 	jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
 
 	
-	StringBuilder sql = new StringBuilder("SELECT min(attendance_time) as minDate, max(attendance_time) as maxDate, empcode as emp, fName "
-			+ ",longitudeIn, LONGITUDEOut, LATITUDEIn, LATITUDEOut \n from (\n"
+	StringBuilder sql = new StringBuilder("SELECT  q.minDate, q.maxDate, q.emp, q.fName,\n"+
+			"(CASE WHEN r.REQUEST_TYPE IS NOT NULL THEN r.LONGITUDE WHEN tt.TRANS_TYPE IS NOT NULL THEN tt.LONGITUDE END ) AS longitudeIn,\n"+
+			"(CASE WHEN r.REQUEST_TYPE IS NOT NULL THEN r.LATITUDE WHEN tt.TRANS_TYPE IS NOT NULL THEN tt.LATITUDE END ) AS latitudeIn,\n"+
+			"(CASE WHEN r.REQUEST_TYPE IS NOT NULL THEN r.LOCATIONADDRESS WHEN tt.TRANS_TYPE IS NOT NULL THEN tt.LOCATIONADDRESS END ) AS addressIn,\n"+
+			"(CASE WHEN r2.REQUEST_TYPE IS NOT NULL THEN r2.LONGITUDE WHEN tt2.TRANS_TYPE IS NOT NULL THEN tt2.LONGITUDE END ) AS longitudeOut,\n"+
+			"(CASE WHEN r2.REQUEST_TYPE IS NOT NULL THEN r2.LATITUDE WHEN tt2.TRANS_TYPE IS NOT NULL THEN tt2.LATITUDE END ) AS latitudeOut,\n"+
+			"(CASE WHEN r2.REQUEST_TYPE IS NOT NULL THEN r2.LOCATIONADDRESS WHEN tt2.TRANS_TYPE IS NOT NULL THEN tt2.LOCATIONADDRESS END ) AS addressOut\n"+
+			"FROM \n"+
+			"(\n"
+			+ "SELECT min(attendance_time) as minDate, max(attendance_time) as maxDate, empcode as emp, fName "
+//			+ ",longitudeIn, LONGITUDEOut, LATITUDEIn, LATITUDEOut ,addressIn,addressOut \n"
+			+ " from (\n"
 			+ "(SELECT empdays.DD , empdays.EMPCODE,emp.FIRSTNAME fName, -- empcode1, req.FROM_DATE requestfromdate, req.PERIOD_FROM requestperiod , req.POSTED posted, req.APPROVED approved\n" + 
 			"req.FROM_DATE AS  attendance_date,\n" + 
 			"TO_CHAR(req.PERIOD_FROM,'YYYY-MM-DD hh24:MI:ss') AS attendance_time,\n" + 
 			"(CASE WHEN req.REQUEST_TYPE=10 THEN 'IN' WHEN req.REQUEST_TYPE=11 THEN 'OUT' END ) AS ATTENDANCE_Type,\n" + 
 			"(CASE WHEN req.APPROVED =1 THEN 'Approved' WHEN req.APPROVED =99 THEN 'Rejected' WHEN (req.PERIOD_FROM IS NOT NULL AND req.approved IS NULL) THEN  'Incomplete' END) AS approval ,\n" + 
-			"(CASE WHEN req.INPUTTYPE=0 THEN 'Web_Attendance' WHEN req.INPUTTYPE=1 THEN 'Request_Attendance' WHEN req.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Absent' END) AS input_type,\n" +
-			"(CASE WHEN req.REQUEST_TYPE=10 THEN  longitude end) as longitudeIn, \n" +
-			"(CASE WHEN req.REQUEST_TYPE=10 THEN  latitude END ) as latitudeIn , \n" +
-			"(CASE WHEN req.REQUEST_TYPE=11 THEN  longitude  END ) AS longitudeOut, \n" +
-			"(CASE WHEN req.REQUEST_TYPE=11 THEN  latitude  END )  AS latitudeOut \n"+
+			"(CASE WHEN req.INPUTTYPE=0 THEN 'Web_Attendance' WHEN req.INPUTTYPE=1 THEN 'Request_Attendance' WHEN req.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Absent' END) AS input_type\n" +
+//			"(CASE WHEN req.REQUEST_TYPE=10 THEN  longitude end) as longitudeIn, \n" +
+//			"(CASE WHEN req.REQUEST_TYPE=10 THEN  latitude END ) as latitudeIn , \n" +
+//			"(CASE WHEN req.REQUEST_TYPE=11 THEN  longitude  END ) AS longitudeOut, \n" +
+//			"(CASE WHEN req.REQUEST_TYPE=11 THEN  latitude  END )  AS latitudeOut, \n"+
+//			"(CASE WHEN req.REQUEST_TYPE=10 THEN locationAddress end) AS addressIn,\n"+
+//			"(CASE WHEN req.REQUEST_TYPE=11 THEN locationAddress end) AS addressOut \n"+
 			"FROM ALL_EMP_DAYS empdays join LOGIN_USERS_REQUESTS req\n" + 
 			"on req.EMPCODE=empdays.EMPCODE  AND (\n" + 
 			"(req.REQUEST_TYPE=10 OR req.REQUEST_TYPE=11)\n" + 
@@ -3783,25 +3795,30 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 			"TO_CHAR(ta.TIME_,'YYYY-MM-DD hh24:MI:ss')  AS attendance_time,\n" + 
 			"(CASE WHEN ta.TRANS_TYPE='I' THEN 'IN' WHEN ta.TRANS_TYPE='O' THEN 'OUT' END ) AS ATTENDANCE_Type,\n" + 
 			"(CASE WHEN ta.date_ IS NOT NULL THEN 'Approved' END) AS approval,\n" + 
-			"(CASE WHEN ta.INPUTTYPE=0 THEN 'Web_Attendance' WHEN ta.INPUTTYPE=1 THEN 'Request_Attendance' WHEN ta.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Fingerprint_Attendance' END) AS input_type,\n" +
-			"(CASE WHEN ta.TRANS_TYPE='I' THEN  longitude end) as longitudeIn, \n"+
-			"(CASE WHEN ta.TRANS_TYPE='I' THEN  latitude end) as latitudeIn , \n"+
-			"(CASE WHEN ta.TRANS_TYPE='O' THEN longitude end) AS longitudeOut,  \n"+
-			"(CASE WHEN ta.TRANS_TYPE='O' THEN latitude end) AS latitudeOut \n"+
-			
+			"(CASE WHEN ta.INPUTTYPE=0 THEN 'Web_Attendance' WHEN ta.INPUTTYPE=1 THEN 'Request_Attendance' WHEN ta.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Fingerprint_Attendance' END) AS input_type\n" +
+			//			"(CASE WHEN ta.TRANS_TYPE='I' THEN  longitude end) as longitudeIn, \n"+
+			//			"(CASE WHEN ta.TRANS_TYPE='I' THEN  latitude end) as latitudeIn , \n"+
+			//			"(CASE WHEN ta.TRANS_TYPE='O' THEN longitude end) AS longitudeOut,  \n"+
+			//			"(CASE WHEN ta.TRANS_TYPE='O' THEN latitude end) AS latitudeOut, \n"+
+			//			"(CASE WHEN ta.TRANS_TYPE='I' THEN locationAddress end) AS addressIn,\n"+
+			//			"(CASE WHEN ta.TRANS_TYPE='O' THEN locationAddress end) AS addressOut\n"+
 			"FROM ALL_EMP_DAYS empdays JOIN TIME_ATTEND ta\n" + 
 			"ON  ta.EMP_CODE=empDays.EMPCODE AND TO_CHAR(ta.DATE_,'YYYY-MM-DD')=TO_CHAR(EMPDAYS.DD,'YYYY-MM-DD')\n" + 
 			"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
-			
+
 			"where\n" + 
 			"empdays.EMPCODE in ("+empCode+")\n" + 
 			"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
 			")\n "+
 			"ORDER BY DD" +
 			") " + status +"\ngroup by DD,empcode,fName\n"
-					+ ",longitudeIn, LONGITUDEOut, LATITUDEIn, LATITUDEOut\n"
-					+ " order by DD desc" +
-			"");
+			//					+ ",longitudeIn, LONGITUDEOut, LATITUDEIn, LATITUDEOut,addressIn,addressOut \n"
+			+ " order by DD desc\n" +
+			") q\n"+
+			"LEFT JOIN LOGIN_USERS_REQUESTS r ON r.EMPCODE=q.EMP AND (r.PERIOD_FROM=TO_DATE(q.mindate,'yyyy-mm-dd HH24:MI:SS') AND r.REQUEST_TYPE=10) \n"+
+			"LEFT JOIN TIME_ATTEND tt ON tt.EMP_CODE=q.EMP AND tt.TRANS_TYPE='I' AND tt.DATE_=TO_DATE(q.mindate,'yyyy-mm-dd HH24:MI:SS')\n"+
+			"LEFT JOIN LOGIN_USERS_REQUESTS r2 ON r.EMPCODE=q.EMP AND (r2.FROM_DATE=TO_DATE(maxdate,'yyyy-mm-dd HH24:MI:SS') AND r2.REQUEST_TYPE=11)\n"+
+			"LEFT JOIN TIME_ATTEND tt2 ON tt2.EMP_CODE=q.EMP AND tt2.TRANS_TYPE='O' AND tt2.DATE_=TO_DATE(q.maxdate,'yyyy-mm-dd HH24:MI:SS')");
 	
 	
 
@@ -3835,7 +3852,7 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 	TimeAttend timeAttend=null;
 	Date inDate=null, outDate= null;
 	
-	String longitude1=null, longitude2=null, latitude1= null, latitude2 = null;
+	String longitude1=null, longitude2=null, latitude1= null, latitude2 = null, addressIn = null, addressOut = null;
 	
 	long totalMins=0, totalHrs=0;
 	for(int i=0;i<in.size();i++){
@@ -3889,6 +3906,15 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 		}
 		log.debug("----latitude2---"+latitude2);
 		
+		if (inMap.get("addressIn")!=null) {
+			addressIn = inMap.get("addressIn").toString();
+		}
+		log.debug("----addressIn---"+addressIn);
+		
+		if (inMap.get("addressOut")!=null) {
+			addressOut = inMap.get("addressOut").toString();
+		}
+		log.debug("----addressOut---"+addressOut);
 		
 		if(inDate!=null || outDate!=null){
 			long diffHrs= (outDate.getTime()-inDate.getTime())/(1000*60*60);
@@ -3906,6 +3932,8 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 		timeAttend.setLatitude2(latitude2);
 		timeAttend.setLongitude1(longitude1);
 		timeAttend.setLongitude2(longitude2);
+		timeAttend.setAddress1(addressIn);
+		timeAttend.setAddress2(addressOut);
 		
 //		log.debug("outDate  = "+outDate);
 		//log.debug("----DateIn---"+test);

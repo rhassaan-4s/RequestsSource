@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 
@@ -19,7 +20,7 @@ import com._4s_.auditing.model.Auditable;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Entity//(access=AccessType.FIELD)
-@Table(name="login_users_requests")
+@Table(name="login_users_requests" ,uniqueConstraints= {@UniqueConstraint(columnNames= {"empCode","request_date","from_date","request_type"})})
 public class LoginUsersRequests implements Auditable,Serializable  {
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="loginUsersRequests_seq")
 	@SequenceGenerator(name="loginUsersRequests_seq",sequenceName="loginUsersRequests_seq")//(generate=GeneratorType.IDENTITY)
@@ -233,6 +234,7 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 		 .append(this.request_date, rhs.getRequest_date())
 		 .append(this.from_date, rhs.getFrom_date())
 		 .append(this.request_id, rhs.getRequest_id())
+		 .append(this.empCode, rhs.getEmpCode())
 		 .isEquals();
 	}
 	public void setRequestNumber(String requestNumber) {
