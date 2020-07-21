@@ -369,7 +369,7 @@ function printSelection(node){
 			<td colspan="2" align="center"> 
 			<br>
 				<abc:i18n property="commons.button.delete"/>
-				<input type="button" id="btnPrint" value="<fmt:message key="commons.button.delete"/>" name="delete" class="button"	onclick="window.location='deleteLoginUsersRequestsForm.html'"></input>
+				<input type="button" id="btnPrint" value="<fmt:message key="commons.button.delete"/>" name="delete" class="button"	onclick="window.location='deleteLoginUsersRequestsForm.html?requestType=${request_id}&dateFrom=${request_date_from}&dateTo=${request_date_to}'"></input>
 			</td>
 			<td colspan="2" align="center">
 			<br>

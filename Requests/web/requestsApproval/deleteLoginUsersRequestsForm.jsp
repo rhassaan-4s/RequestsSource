@@ -115,7 +115,7 @@ function searchForm (){
 								<select name="request_id" id="request_id">
 									<option value=""><fmt:message key="commons.caption.select" /></option>						
 										<c:forEach items="${requestTypeList}" var="request">
-											<option value="${request.id}" ${request.id == loginUsersRequests.request_id.id ?' selected' : ''}">${request.description}</option>
+											<option value="${request.id}" ${request.id==requestType?'selected':''}>${request.description}</option>
 										</c:forEach>
 								</select>
 							</td>													
@@ -143,7 +143,7 @@ function searchForm (){
 								<fmt:message key="commons.caption.from"/>
 							</td>
 							<td  class="formBodControl" >
-								<input type="text"  class="MM_from_d" class="timepac"  title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from"/>
+								<input type="text"  class="calendar"  readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${dateFrom}" />
 							</td>
 
 					  		<td nowrap class="formBodControl" >
@@ -151,7 +151,7 @@ function searchForm (){
 								<fmt:message key="commons.caption.to"/>
 							</td>
 							<td  class="formBodControl" >
-								<input type="text"  class="timepac"  title="ccc" class="MM_to_d" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_to" id="request_date_to"/>
+								<input type="text"  class="calendar"  readonly="readonly" autocomplete="off" dir="ltr" name="request_date_to" id="request_date_to" value="${dateTo}" />
 							</td>
 						</tr>
 						

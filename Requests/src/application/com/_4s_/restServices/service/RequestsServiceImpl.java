@@ -571,6 +571,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	 
 	if (userRequest.getAttendanceType()==null || userRequest.getAttendanceTime() == null 
 			||(userRequest.getAttendanceType().equals(new Long(9)) && (userRequest.getAttendanceTime2() == null ||userRequest.getAttendanceTime2() == null))
+			||(userRequest.getAttendanceType().equals(new Long(3)) && (userRequest.getAttendanceTime2() == null ||userRequest.getAttendanceTime2() == null))
 			|| userRequest.getAttendanceTime().isEmpty()|| userRequest.getLatitude()==null || userRequest.getLongitude()==null){
 		status.setCode("303");
 		status.setMessage("Null/Empty Input Parameter");
@@ -600,6 +601,8 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	MultiCalendarDate mCalDate = new MultiCalendarDate();
 	mCalDate.setDate(newDate);
 	MultiCalendarDate mCalDateTo = new MultiCalendarDate();
+	
+	MultiCalendarDate mCalDateToPermission = new MultiCalendarDate();
 	Date to = null;
 	Calendar cal = Calendar.getInstance();
 	try {
@@ -612,6 +615,9 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 			}
 			
 			cal.setTime(to);
+			
+			mCalDateToPermission.setDate(cal.getTime());
+			
 			cal.set(Calendar.HOUR_OF_DAY, 23);
 			cal.set(Calendar.MINUTE, 59);
 			cal.set(Calendar.SECOND, 59);
@@ -657,7 +663,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 //			System.out.println("0 reqType " + reqType.getId()); 
 			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(1));
 			System.out.println(" reqType " + reqType.getId());
-		}  else if (userRequest.getAttendanceType().equals(new Long(3)) || userRequest.getAttendanceType().equals(new Long(4))) {//Permission
+		}  else if (userRequest.getAttendanceType().equals(new Long(3))) {//Permission	// || userRequest.getAttendanceType().equals(new Long(4))
 //			System.out.println("3 4 reqType " + reqType.getId());
 			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(3));
 			System.out.println(" reqType " + reqType.getId());
@@ -694,9 +700,9 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		} else {
 			System.out.println("userRequest.getAttendanceType() " + userRequest.getAttendanceType().getClass());
 		}
-		if (userRequest.getAttendanceType().equals(new Long(3)) || userRequest.getAttendanceType().equals(new Long(4))) {
+		if (userRequest.getAttendanceType().equals(new Long(3))) {
 			System.out.println("validating");
-			if (userRequest.getPermissionEffect() == null || userRequest.getPermissionType() == null) {
+			if (userRequest.getPermissionEffect() == null) {
 				System.out.println("validating2");
 				status.setCode("305");
 				status.setMessage("One or more of Permission Parameters is null");
@@ -709,17 +715,19 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		
 //		System.out.println("mCalDate " + mCalDate);
 		System.out.println("mCalDate.getDate() " + mCalDate.getDate());
-		if (userRequest.getAttendanceType().equals(new Long(4)) || userRequest.getAttendanceType().equals(new Long(6))
+		if (userRequest.getAttendanceType().equals(new Long(6))
 				||userRequest.getAttendanceType().equals(new Long(3)) || userRequest.getAttendanceType().equals(new Long(5))) {//Permission End || //Full Day Permission End
+			//userRequest.getAttendanceType().equals(new Long(4)) || 
 			
 			
-			if (userRequest.getAttendanceType().equals(new Long(4)) || userRequest.getAttendanceType().equals(new Long(6))) {
+			if (userRequest.getAttendanceType().equals(new Long(6))) {//userRequest.getAttendanceType().equals(new Long(4)) ||permission start and end depricated with only one request
 				RequestsApprovalQuery requestQueryending = new RequestsApprovalQuery();
 				
 				//1 permission 2 errands
-				if (userRequest.getAttendanceType().equals(new Long(4))) {//permission 
-					requestQueryending.setRequestType("1");
-				} else if (userRequest.getAttendanceType().equals(new Long(6))) {//errand 
+//				if (userRequest.getAttendanceType().equals(new Long(4))) {//permission 
+//					requestQueryending.setRequestType("1");
+//				} else
+					if (userRequest.getAttendanceType().equals(new Long(6))) {//errand 
 					requestQueryending.setRequestType("2");
 				} else {
 					System.out.println("condition not handled 3 " + userRequest.getAttendanceType());
@@ -876,6 +884,9 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 						requestNumber=requestsApprovalManager.CreateRequestNumber();
 						loginUsersRequests.setRequestNumber(requestNumber);
 						loginUsersRequests.setPeriod_from(mCalDate.getDate());
+						if (userRequest.getAttendanceType().equals(new Long(3))) {
+							loginUsersRequests.setPeriod_to(mCalDateToPermission.getDate());
+						}
 					}
 				}
 			}
@@ -1132,9 +1143,9 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	loginUsersRequests.setLatitude(userRequest.getLatitude());
 	loginUsersRequests.setLongitude(userRequest.getLongitude());
 	/////////////////////////////////////////////////////////////
-	if(userRequest.getPermissionType()!=null){
-		loginUsersRequests.setLeave_type(userRequest.getPermissionType());
-	}
+//	if(userRequest.getPermissionType()!=null){
+//		loginUsersRequests.setLeave_type(userRequest.getPermissionType());
+//	}
 	if(userRequest.getPermissionEffect()!=null){
 		loginUsersRequests.setLeave_effect(userRequest.getPermissionEffect());
 	}

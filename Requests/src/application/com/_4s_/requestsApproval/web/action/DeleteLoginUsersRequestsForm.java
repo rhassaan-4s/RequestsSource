@@ -197,22 +197,26 @@ public class DeleteLoginUsersRequestsForm extends BaseSimpleFormController{
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
 		
 		Settings settings = (Settings)request.getSession().getAttribute("settings");
+		log.debug("settings " + settings);
 		boolean checkPostedRequests = settings.getCheckPostedRequests();
 		
 		String[] requestId=request.getParameterValues("requestId");
-		log.debug("----requestId----"+requestId);
+		log.debug("----requestId----"+requestId.length);
 		String done="";
 		if(requestId!=null && !requestId.equals("")){
 			for(int i=0;i<requestId.length;i++){
 				loginUsersRequests=(LoginUsersRequests) requestsApprovalManager.getObjectByParameter(LoginUsersRequests.class, "id", Long.parseLong(requestId[i]));
 				if(loginUsersRequests!=null && !loginUsersRequests.equals("")){
 
+					log.debug("checkPostedRequests " + checkPostedRequests);
+					log.debug("checkPostedRequests " + loginUsersRequests);
+					
 					if(
 							//Lotus
-							(checkPostedRequests == true && (loginUsersRequests.getApproved()==0 || loginUsersRequests.getPosted()==0))
+							(checkPostedRequests == true && ((loginUsersRequests.getApproved()==null || loginUsersRequests.getApproved()==0) || loginUsersRequests.getPosted()==0))
 							||
 							//Lehaa
-							(checkPostedRequests == false && loginUsersRequests.getApproved()==0)){	
+							(checkPostedRequests == false && (loginUsersRequests.getApproved()==null || loginUsersRequests.getApproved()==0))){	
 						log.debug("----loginUsersRequests.getApproved()----"+loginUsersRequests.getApproved()+" ----loginUsersRequests.getPosted()---"+loginUsersRequests.getPosted());
 						requestsApprovalManager.removeObject(loginUsersRequests);
 						done="true";

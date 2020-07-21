@@ -32,9 +32,9 @@ public class AttendanceRequest implements Serializable{
 
     private String notes;
     
-    private String permissionType;//0: Special 1:Errand 2:Normal
+//    private String permissionType;//0: Special 1:Errand 2:Normal
     
-    private String permissionEffect;//0: Without Effect 1: Delay 2: Early Dismissal
+    private String permissionEffect;//0: Without Effect(depricated) 1: Delay 2: Early Dismissal
     
     
 	public String getVacation() {
@@ -53,13 +53,13 @@ public class AttendanceRequest implements Serializable{
 		this.attendanceTime2 = attendanceTime2;
 	}
 
-	public String getPermissionType() {
-		return permissionType;
-	}
-
-	public void setPermissionType(String permissionType) {
-		this.permissionType = permissionType;
-	}
+//	public String getPermissionType() {
+//		return permissionType;
+//	}
+//
+//	public void setPermissionType(String permissionType) {
+//		this.permissionType = permissionType;
+//	}
 
 	public String getPermissionEffect() {
 		return permissionEffect;
