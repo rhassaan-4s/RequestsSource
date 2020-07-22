@@ -123,7 +123,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		
 
 		String statusId=request.getParameter("statusId");
-		if (statusId.isEmpty()) {
+		if (statusId!=null && statusId.isEmpty()) {
 			statusId=null;
 		}
 		String codeFrom=request.getParameter("codeFrom");
