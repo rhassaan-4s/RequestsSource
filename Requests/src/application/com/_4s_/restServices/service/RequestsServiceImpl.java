@@ -1399,9 +1399,23 @@ public Map getPortNo(String clientName) {
 	return response;
 }
 
-public Map searchEmployees(EmployeeWrapper emp) {
+public Map searchEmployees(EmployeeWrapper emp, Employee loggedInEmployee) {
 	//table=login_users&firstKey=commons.caption.code&secondKey=commons.caption.name&firstParam=empCode&secondParam=name&inputId=empCode&paramString=&onblur=&onlinkclick=&jsIncludes=
-	Map map = qry.search(emp.getEmpCode(),emp.getEmpName(),"login_users","empCode","name","","1","1",emp.getPageNumber(),emp.getPageSize(),"");	
+	String level = "";
+	
+	List empReqTypeAcc = new ArrayList();
+	empReqTypeAcc = requestsApprovalManager.getEmpReqTypeAcc(loggedInEmployee, null);
+	Iterator itr = empReqTypeAcc.iterator();
+	while(itr.hasNext()) {
+		Long eCode = (Long)itr.next();
+		if(level.isEmpty()) {
+			level +=eCode;
+		} else {
+			level += ","+eCode;
+		}
+	}
+	
+	Map map = qry.search(emp.getEmpCode(),emp.getEmpName(),"login_users","empCode","name","","1","1",level,emp.getPageNumber(),emp.getPageSize(),"");	
 	Map response = new HashMap();
 	response.put("Response", map);
 	RestStatus status = new RestStatus();

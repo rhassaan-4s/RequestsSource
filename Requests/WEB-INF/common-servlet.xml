@@ -393,6 +393,9 @@
 				<property name="mgr">
 					<ref bean="commonManager"/>
 				</property>
+				<property name="reqMgr">
+					<ref bean="requestsApprovalManager"/>
+				</property>
 				<property name="qry">
 					<ref bean="queries"/>
 				</property>

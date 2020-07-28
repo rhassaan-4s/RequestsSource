@@ -68,7 +68,7 @@ public class Queries {
 		return basicDataSource;
 	}
 
-	public Map search(String code,String description,String table,String firstParam,String secondParam,String paramString,String match1,String match2,int pageNumber,int pageSize,String branchId){
+	public Map search(String code,String description,String table,String firstParam,String secondParam,String paramString,String match1,String match2,String level,int pageNumber,int pageSize,String branchId){
 		sql1= null;
 		where1= null;
 		whereFirstParam1= null;
@@ -226,14 +226,26 @@ public class Queries {
 		}else if(table.equals("store_item_data")){
 			log.error("have not branch");
 		}else{
-		if(branchId != null && !branchId.equals("")){
-			if(table != null && !table.equals("") &&  table.equals("store_c_trns_m")){
-				where3 = where3 +" and branch='"+branchId+"'";
-			}else{
-				where3 = where3 +" and (substr(code,0,"+branchId.length()+")='"+branchId+"')";
+			if(branchId != null && !branchId.equals("")){
+				if(table != null && !table.equals("") &&  table.equals("store_c_trns_m")){
+					where3 = where3 +" and branch='"+branchId+"'";
+				}else{
+					where3 = where3 +" and (substr(code,0,"+branchId.length()+")='"+branchId+"')";
+				}
+
 			}
-			
 		}
+		
+		String levelString = "";
+		
+		if (level!=null && !level.isEmpty()) {
+			levelString = " empCode in ("+level+")";
+		}
+		
+		if (where1.isEmpty() && !levelString.isEmpty()) {
+			where1 = " where " + levelString;
+		} else if (!where1.isEmpty() && !levelString.isEmpty()) {
+			where1 += " and " + levelString;
 		}
 		if (!where1.equals("")){
 			log.error(">>>>>>>>>>>>>>> where1 != ''");
@@ -326,6 +338,12 @@ public class Queries {
 		}
 		
 
+//String levelString = "";
+//		
+//		if (level!=null && !level.isEmpty()) {
+//			levelString = " empCode in ("+level+")";
+//		}
+		
 		if (code != null && code.length() > 0 && description != null && description.length() > 0){
 			log.debug(">>>>>>>>>>>>>>>>> both not null");
 			where2 = where2  + whereFirstParam2 +" and "+ whereSecondParam2;
@@ -341,6 +359,13 @@ public class Queries {
 		else {
 			log.debug(">>>>>>>>>>>>>>>>>else no where");
 			where2 = "";
+		}
+		
+
+		if (where2.isEmpty() && !levelString.isEmpty()) {
+			where2 = " where " + levelString;
+		} else if (!where2.isEmpty() && !levelString.isEmpty()) {
+			where2 += " and " + levelString;
 		}
 		
 		if (paramString != null && paramString.length() > 0 && !where2.equals("")){

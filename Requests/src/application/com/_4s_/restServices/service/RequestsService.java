@@ -60,7 +60,7 @@ public interface RequestsService {// extends BaseManager {
 
 	public User getImeiUsers(String imei);
 
-	public Map searchEmployees(EmployeeWrapper emp);
+	public Map searchEmployees(EmployeeWrapper emp, Employee loggedInEmployee);
 
 	public Map getAttendanceVacationReport(RequestsApprovalQuery requestApproval);
 

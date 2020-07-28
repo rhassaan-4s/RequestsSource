@@ -458,7 +458,10 @@ public class RequestsServiceController {
 			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody 
 	public Map searchEmployees(EmployeeWrapper emp) {
-		Map m = requestsService.searchEmployees(emp);
+		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDet = (UserDetails)token.getPrincipal();
+		User user = requestsService.getUser(userDet.getUsername());
+		Map m = requestsService.searchEmployees(emp,user.getEmployee());
 		return m;
 	}
 	
