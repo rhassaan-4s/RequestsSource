@@ -78,11 +78,6 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		log.debug("----newDate--"+newDate);
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
 		mCalDate.setDateString(newDate);
-//		Date reqDate =m;
-//		Calendar cal = Calendar.getInstance();
-//		java.sql.Date reqDate=new java.sql.Date (cal.getTimeInMillis());
-//		log.debug("----reqDate--"+reqDate);
-//		String newSearch= (String) request.getParameter("new");
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
 		log.debug("----emp from session---"+request.getSession().getAttribute("employee"));
 		
@@ -92,36 +87,22 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		}
 		LoginUsersRequests loginUsersRequests = new LoginUsersRequests();
 		String empRequestTypeId=request.getParameter("empRequestTypeId");
-//		log.debug("newSearch----"+newSearch);
-//		if(newSearch!=null && !newSearch.equals("")){
+
+		
 		if(empRequestTypeId == null || empRequestTypeId.equals("")){
-			
 			log.debug("loginUsersRequests------"+loginUsersRequests);
 			loginUsersRequests = new LoginUsersRequests();
 			if(loginUsers!=null){
 				loginUsersRequests.setLogin_user(loginUsers);
 				loginUsersRequests.setEmpCode(loginUsers.getEmpCode());
-//				loginUsersRequests.setRequest_date(reqDate);
 			}
 		}else{
 			log.debug("loginUsersRequests------"+loginUsersRequests);
 			loginUsersRequests = (LoginUsersRequests) requestsApprovalManager.getObject(LoginUsersRequests.class, new Long(empRequestTypeId));
 		}
-//		}else{
-//			
-//			log.debug("loginUsersRequests------"+loginUsersRequests);
-//			if(request.getSession().getAttribute("loginUsersRequests") !=null){
-//				loginUsersRequests=(LoginUsersRequests) request.getSession().getAttribute("loginUsersRequests");
-////				if(loginUsersRequests != null && !loginUsersRequests.equals("")){
-////					log.debug("empRequestCode----"+loginUsersRequests.getEmpCode());
-////					if(loginUsersRequests.getRequest_id()!=null){
-////						log.debug("getRequest_id----"+loginUsersRequests.getRequest_id().getId());
-////					}
-////				}
-//			}
-//			
-//		}
-	//	log.debug("newSearch----"+newSearch);
+		
+		log.debug("period from " + loginUsersRequests.getPeriod_from());
+		log.debug("period to " + loginUsersRequests.getPeriod_to());
 		
 		log.debug("empRequestTypeId------"+empRequestTypeId);
 		Settings settings = (Settings)request.getSession().getAttribute("settings");
@@ -139,9 +120,6 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 			}
 		}
 		
-//		log.debug("----loginUsersRequests.code----"+loginUsersRequests.getEmpCode());
-//		log.debug("----loginUsersRequests.getvacation----"+loginUsersRequests.getVacation());
-//		log.debug("---------loginUsersRequests.getId()-------"+loginUsersRequests.getId());
 		log.debug("-------period from--formbacking-"+loginUsersRequests.getPeriod_from());
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 //		String fromMail = request.getSession().getServletContext().getInitParameter("mailMgr");
@@ -491,6 +469,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests)command;
 		log.debug("-------period from---"+loginUsersRequests.getPeriod_from());
+		log.debug("period to " + loginUsersRequests.getPeriod_to());
 		String emp_code = request.getParameter("empCode");
 		log.debug("code entered--------"+emp_code);
 		
@@ -537,43 +516,28 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 			log.debug("specVac--loginUsersRequests.getPayed() --------"+loginUsersRequests.getPayed());
 		}
 		
-//		MultiCalendarDate mCalDate = new MultiCalendarDate();
-//		String vac_period_from=request.getParameter("vac_period_from");
-//		vac_period_from=vac_period_from.concat(":00");
-//		log.debug("----period-date from entered---"+vac_period_from);
-//		String vac_period_to=request.getParameter("vac_period_to");
-//		vac_period_to=vac_period_to.concat(":00");
-//		log.debug("----period-date to entered---"+vac_period_to);
 		if(loginUsersRequests.getRequest_id()!=null && !loginUsersRequests.getRequest_id().equals("")){
 			if(reqPeriodDate==true){//Lotus
 				if(loginUsersRequests.getRequest_id().getId()==1 && loginUsersRequests.getVacation()!=null && loginUsersRequests.getVacation().getVacation().equals("008")){
 					if(loginUsersRequests.getVac_period_from()!=null && !loginUsersRequests.getVac_period_from().equals("")){
 						log.debug("----period-date from entered---"+loginUsersRequests.getVac_period_from());
-						//mCalDate.setDateString(vac_period_from);
 						loginUsersRequests.setPeriod_from(loginUsersRequests.getVac_period_from());
 					}
 					if(loginUsersRequests.getVac_period_to()!=null && !loginUsersRequests.getVac_period_to().equals("")){
 						log.debug("----period-date to entered---"+loginUsersRequests.getVac_period_to());
-						//mCalDate.setDateString(vac_period_from);
 						loginUsersRequests.setPeriod_to(loginUsersRequests.getVac_period_to());
 					}
-					//Date date_period_from = mCalDate.getDate();
-					//log.debug("-------date_period_from--------"+date_period_from);
-					
 				}
 			} else {//Lehaa
 				if(loginUsersRequests.getRequest_id().getId()==2 && loginUsersRequests.getVacation().getVacation().equals("001")){
 					if(loginUsersRequests.getVac_period_from()!=null && !loginUsersRequests.getVac_period_from().equals("")){
 						log.debug("----period-date from entered---"+loginUsersRequests.getVac_period_from());
-						//mCalDate.setDateString(vac_period_from);
 						loginUsersRequests.setFrom_date(loginUsersRequests.getVac_period_from());
 					}
 					if(loginUsersRequests.getVac_period_to()!=null && !loginUsersRequests.getVac_period_to().equals("")){
 						log.debug("----period-date to entered---"+loginUsersRequests.getVac_period_to());
-						//mCalDate.setDateString(vac_period_from);
 						loginUsersRequests.setTo_date(loginUsersRequests.getVac_period_to());
 					}
-	
 				}
 			}
 		}
@@ -616,14 +580,6 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 					}
 					else if(withoutSalPeriod.equals("quar")){
 						loginUsersRequests.setWithdrawDays(new Double(2));
-					//}
-				//		else if(withoutSalPeriod.equals("full")){
-				//			if(withdraw==null || withdraw.equals("")){
-				//				errors.reject("requestsApproval.errors.nullRequestPeriod");
-				//			}
-				//			else{
-				//				loginUsersRequests.setWithdrawDays(Double.parseDouble(withdraw));
-				//			}
 						}
 				}
 			} else {//Lehaa
@@ -632,9 +588,6 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 					if(withoutSalPeriod.equals("half")){
 						loginUsersRequests.setWithdrawDays(0.5);
 					}
-	//				else if(withoutSalPeriod.equals("quar")){
-	//					loginUsersRequests.setWithdrawDays(0.25);
-	//				}
 					else if(withoutSalPeriod.equals("full")){
 						if(withdraw==null || withdraw.equals("")){
 							errors.reject("requestsApproval.errors.nullRequestDatesPeriod");
@@ -682,20 +635,10 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 						errors.rejectValue("empCode", "requestsApproval.errors.invalidEmpCode");
 					}
 					LoginUsers login_user=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", loginUsersRequests.getEmpCode());
-//					LoginUsers login_user2=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "name", empName);
-//					log.debug("----login_user-----"+login_user.getId());
 					if(login_user==null || login_user.equals("")){
 						log.debug("----login_user==null-----");
 						errors.rejectValue("empCode", "requestsApproval.errors.empCodeNotExistance");
 					}
-//					if(login_user!=null && !login_user.equals("") && login_user2!=null && !login_user2.equals("")){
-//						if(!login_user.getEmpCode().equals(login_user2.getEmpCode())){
-//							log.debug("----here-not match--");
-//							errors.reject("requestsApproval.errors.invalidEmpCodeOrName");
-//						}else{
-//							loginUsersRequests.setLogin_user(login_user);
-//						}
-//					}
 				}
 	
 				if(loginUsersRequests.getRequest_id()==null || loginUsersRequests.getRequest_id().equals(""))
@@ -881,9 +824,55 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 							errors.reject("requestsApproval.errors.nullLeaveEffect");
 						}
 						
-						if(fromToRequestVald==true){//Lotus
+//						if(fromToRequestVald==true){//Lotus
+							Date f = loginUsersRequests.getPeriod_from();
+							Calendar fCal = Calendar.getInstance();
+							fCal.setTime(f);
+							
+							Date t = loginUsersRequests.getPeriod_to();
+							Calendar tCal = Calendar.getInstance();
+							tCal.setTime(t);
+							
 							String perFrom=loginUsersRequests.getPeriod_from()+"";
 							String perTo=loginUsersRequests.getPeriod_to()+"";
+							String ar_from[]=perFrom.split(":");
+							String fromHour =fCal.get(Calendar.HOUR_OF_DAY)+"";
+//							fromHour=fromHour.substring(fromHour.length()-2);
+							log.debug("fromHour=== "+fromHour);
+							String fromMinutes =ar_from[1];
+							log.debug("fromMinutes=== "+fromMinutes);
+							String pmAM=perFrom.substring(6, perFrom.length()-1);
+							String ar_to[]=perTo.split(":");
+							String toHour =tCal.get(Calendar.HOUR_OF_DAY)+"";
+//							toHour=toHour.substring(toHour.length()-2);
+							log.debug("toHour=== "+toHour);
+							String toMinutes =ar_to[1];
+							log.debug("toMinutes=== "+toMinutes);
+							if(Integer.parseInt(fromHour)>Integer.parseInt(toHour)){
+								errors.reject("requestsApproval.errors.fromIsGreaterThanTo");
+							}else if((Integer.parseInt(fromHour)==Integer.parseInt(toHour))&& (Integer.parseInt(fromHour)!=0 && Integer.parseInt(toHour)!=0)){
+								log.debug("after parsing to int===fromMins=== "+Integer.parseInt(fromMinutes));
+								log.debug("after parsing to int===toMinutes=== "+Integer.parseInt(toMinutes));
+								if(Integer.parseInt(fromMinutes)>Integer.parseInt(toMinutes) || Integer.parseInt(fromMinutes)==Integer.parseInt(toMinutes)){
+									errors.reject("requestsApproval.errors.fromIsGreaterThanTo");
+								}
+							}
+							
+							if((Integer.parseInt(fromHour)==0)||(Integer.parseInt(toHour)==0)){
+								errors.reject("requestsApproval.errors.fromOrToIsZero");
+							}
+//						}
+						
+					} else if(loginUsersRequests.getRequest_id().getId()==5){
+						if((loginUsersRequests.getPeriod_from()==null || loginUsersRequests.getPeriod_from().equals(""))||(loginUsersRequests.getPeriod_to()==null||loginUsersRequests.getPeriod_to().equals(""))){
+							errors.reject("requestsApproval.errors.nullRequestPeriod");
+						}
+						
+//						if(fromToRequestVald==true){//Lotus
+							String perFrom=loginUsersRequests.getPeriod_from()+"";
+							log.debug("perfrom " + perFrom);
+							String perTo=loginUsersRequests.getPeriod_to()+"";
+							log.debug("perTo " + perTo);
 							String ar_from[]=perFrom.split(":");
 							String fromHour =ar_from[0];
 							fromHour=fromHour.substring(fromHour.length()-2);
@@ -907,10 +896,13 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 								}
 							}
 							
+							log.debug("(Integer.parseInt(fromHour)==0) " + (Integer.parseInt(fromHour)==0));
+							log.debug("(Integer.parseInt(toHour)==0) " + (Integer.parseInt(toHour)==0));
 							if((Integer.parseInt(fromHour)==0)||(Integer.parseInt(toHour)==0)){
+								log.debug("time is zero");
 								errors.reject("requestsApproval.errors.fromOrToIsZero");
 							}
-						}
+//						}
 						
 					}
 					
@@ -1007,34 +999,11 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		boolean periodFromToEnabled = settings.getPeriodFromToEnabled();
 		
 		String requestNumber="";
-		
-//		Date from_date=loginUsersRequests.getFrom_date();
-//		
-//		String vacId=loginUsersRequests.getVacation().getId()+"";
-//		
-//		log.debug("--------vacId---"+vacId);
-//		if(vacId!=null && !vacId.equals("") && from_date!=null){
-//			log.debug("----fromdate--"+from_date);
-//			model.put("vacCredit", requestsApprovalManager.getVacationCredit("oraserv", "oraserv", "lotus_pay10", "lotus_pay10", loginUsersRequests.getEmpCode(), new Long(2),vacId, from_date));
-//		}
-//		loginUsersRequests.setVacCredit(requestsApprovalManager.getVacationCredit("oraserv", "oraserv", "lotus_pay10", "lotus_pay10", loginUsersRequests.getEmpCode(), new Long(2),vacId, from_date));
-//		
-//		String getVac=request.getParameter("getVac");
-//		if(getVac!=null && !getVac.equals("")){
-//			return new ModelAndView(new RedirectView(),model);
-//		}
-//		else{
 			 // request number
 			if (loginUsersRequests.getId() == null){
 				requestNumber=requestsApprovalManager.CreateRequestNumber();
 				loginUsersRequests.setRequestNumber(requestNumber);
 			}
-			
-	//		String emp_code = request.getParameter("empCode");
-	//		log.debug("code entered--------"+emp_code);
-	//		if(emp_code!=null && !emp_code.equals("")){
-	//			loginUsersRequests.setEmpCode(emp_code);
-	//		}
 			log.debug("loginUsersRequests.getEmpCode() entered--------"+loginUsersRequests.getEmpCode());
 			
 			String withoutSalPeriod= request.getParameter("withoutSalPeriod");	
@@ -1044,7 +1013,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 			if(loginUsersRequests.getRequest_id()!=null && !loginUsersRequests.getRequest_id().equals("")){
 				log.debug("entered--1-----reqid=-"+loginUsersRequests.getRequest_id().getId());
 				reqId=loginUsersRequests.getRequest_id().getId().toString();
-				if(loginUsersRequests.getRequest_id().getId()==4 && loginUsersRequests.getRequest_id().getParentId()!=null && !loginUsersRequests.getRequest_id().getParentId().equals("")){
+				if((loginUsersRequests.getRequest_id().getId()==4 && loginUsersRequests.getRequest_id().getParentId()!=null && !loginUsersRequests.getRequest_id().getParentId().equals("")) || loginUsersRequests.getRequest_id().getId()==5){
 					log.debug("entered--2-----parent-"+loginUsersRequests.getRequest_id().getParentId());
 					loginUsersRequests.setRequest_id(loginUsersRequests.getRequest_id().getParentId());
 					Vacation vac= (Vacation)requestsApprovalManager.getObject(Vacation.class, "999");

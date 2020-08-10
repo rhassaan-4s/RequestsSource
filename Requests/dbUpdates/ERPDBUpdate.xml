@@ -16148,4 +16148,4 @@ INSERT INTO i18n_message VALUES (202116445,'الاجازات السنوية', 10
 INSERT INTO i18n_message VALUES (202116446, 'Annual Vacations', 101466, 3);&#xD;
 INSERT INTO I18N_KEY VALUES (101467, 'requestsApproval.header.specialVacation', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116447,'الاجازات الخاصة', 101467, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116448, 'Special Vacations', 101467, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116448, 'Special Vacations', 101467, 3);</statment></query><query><sqlindex>160</sqlindex><statment>INSERT INTO REQUEST_TYPES (ID, DESCRIPTION, PARENTID) VALUES(5, 'مأمورية', 1);</statment></query><query><sqlindex>161</sqlindex><statment>UPDATE I18N_MESSAGE SET MESSAGE='لابد من إدخال الوقت'  WHERE ID=20211586;</statment></query></SQL>

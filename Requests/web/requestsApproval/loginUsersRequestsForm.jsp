@@ -20,12 +20,14 @@
 
 function showVacationTypes(){
 
+	document.getElementById("errandDuration").className ='hideClass';
 	document.getElementById("leavePermission").className ='hideClass';
 	document.getElementById("vacationDates").className ='hideClass';
 	document.getElementById("alternativeDate").className='hideClass';
 	document.getElementById("annualVacationTypes").className ='hideClass';
 	document.getElementById("specialVacationTypes").className ='hideClass';
 	document.getElementById("vacWithoutSal").className ='hideClass';
+	
 	
 	var request_id=document.getElementById("request_id");
 	
@@ -38,6 +40,7 @@ function showVacationTypes(){
 			//alert('---1.sh');
 			document.getElementById("annualVacationTypes").className ='hideClass';
 			//alert('---1.hi');
+			document.getElementById("errandDuration").className ='hideClass';
 			document.getElementById("leavePermission").className ='hideClass';
 			//alert('---1.hi');
 			<% 
@@ -78,6 +81,7 @@ function showVacationTypes(){
 			<%if(settings.getSpecialVacExcep().booleanValue()==false){%>
 				document.getElementById("specialVacationTypes").className ='hideClass';
 				document.getElementById("annualVacationTypes").className ='showClass';
+				document.getElementById("errandDuration").className ='hideClass';
 				document.getElementById("leavePermission").className ='hideClass';
 				
 				var vac_id=document.getElementById("annualVacation");
@@ -99,6 +103,7 @@ function showVacationTypes(){
 			<%} else {%>
 				document.getElementById("specialVacationTypes").className ='hideClass';
 				document.getElementById("annualVacationTypes").className ='showClass';
+				document.getElementById("errandDuration").className ='hideClass';
 				document.getElementById("leavePermission").className ='hideClass';
 				document.getElementById("vacationDates").className ='showClass';
 				document.getElementById("vacWithoutSal").className ='hideClass';
@@ -108,6 +113,7 @@ function showVacationTypes(){
 		else if(request_id.value=="3"){
 			document.getElementById("specialVacationTypes").className ='hideClass';
 			document.getElementById("annualVacationTypes").className ='hideClass';
+			document.getElementById("errandDuration").className ='showClass';
 			document.getElementById("leavePermission").className ='showClass';
 			document.getElementById("vacationDates").className ='hideClass';
 			document.getElementById("vacWithoutSal").className ='hideClass';
@@ -116,14 +122,24 @@ function showVacationTypes(){
 		else if(request_id.value=="4"){
 			document.getElementById("specialVacationTypes").className ='hideClass';
 			document.getElementById("annualVacationTypes").className ='hideClass';
+			document.getElementById("errandDuration").className ='hideClass';
 			document.getElementById("leavePermission").className ='hideClass';
 			document.getElementById("vacationDates").className ='showClass';
+			document.getElementById("vacWithoutSal").className ='hideClass';
+			document.getElementById("alternativeDate").className='hideClass';
+		} else if(request_id.value=="5"){
+			document.getElementById("specialVacationTypes").className ='hideClass';
+			document.getElementById("annualVacationTypes").className ='hideClass';
+			document.getElementById("leavePermission").className ='hideClass';
+			document.getElementById("errandDuration").className ='showClass';
+			document.getElementById("vacationDates").className ='hideClass';
 			document.getElementById("vacWithoutSal").className ='hideClass';
 			document.getElementById("alternativeDate").className='hideClass';
 		}
 		else{
 			document.getElementById("specialVacationTypes").className ='hideClass';
 			document.getElementById("annualVacationTypes").className ='hideClass';
+			document.getElementById("errandDuration").className ='hideClass';
 			document.getElementById("leavePermission").className ='hideClass';
 			document.getElementById("vacationDates").className ='hideClass';
 			document.getElementById("vacWithoutSal").className ='hideClass';
@@ -572,27 +588,32 @@ function calculateDiff2(){
 								</spring:bind>
 							</td>
 						</tr>
-						<tr id="leavePermission" class="hideClass">						
-					  		<td nowrap class="formReq">
-								<abc:i18n property="commons.caption.from"/>
-								<fmt:message key="commons.caption.from"/>
-							</td>
-							<td  class="formBodControl" >
-								<spring:bind path="loginUsersRequests.period_from">
-									<input type="text"  class="MM_from" title="ccc" dir="ltr" name="${status.expression}" id="${status.expression}" value="${status.value}" />
-								</spring:bind>
-							</td>
 
-					  		<td nowrap class="formReq" >
-								<abc:i18n property="commons.caption.to"/>
-								<fmt:message key="commons.caption.to"/>
-							</td>
-							<td  class="formBodControl" >
-								<spring:bind path="loginUsersRequests.period_to">
-									<input type="text"  class="MM_to" title="ccc"  autocomplete="off" dir="ltr"  name="${status.expression}" id="${status.expression}" value="${status.value}" />
-								</spring:bind>
-							</td>
+							<tr id="errandDuration" class="hideClass">
+								<td nowrap class="formReq"><abc:i18n
+										property="commons.caption.from" /> <fmt:message
+										key="commons.caption.from" /></td>
+								<td class="formBodControl"><spring:bind
+										path="loginUsersRequests.period_from">
+										<input type="text" class="MM_from" title="ccc" dir="ltr"
+											name="${status.expression}" id="${status.expression}"
+											value="${status.value}" />
+									</spring:bind></td>
+
+								<td nowrap class="formReq"><abc:i18n
+										property="commons.caption.to" /> <fmt:message
+										key="commons.caption.to" /></td>
+								<td class="formBodControl"><spring:bind
+										path="loginUsersRequests.period_to">
+										<input type="text" class="MM_to" title="ccc"
+											autocomplete="off" dir="ltr" name="${status.expression}"
+											id="${status.expression}" value="${status.value}" />
+									</spring:bind></td>
+							</tr>
 							
+							
+							<tr id="leavePermission" class="hideClass">						
+					  									
 							<td nowrap class="formReq" >
 								<abc:i18n property="requestsApproval.caption.leaveEffect"/>
 								<fmt:message key="requestsApproval.caption.leaveEffect"/>
@@ -1249,33 +1270,29 @@ function calculateDiff2(){
 									
 								</tr>														
 							</c:if>
-						
-						<tr id="leavePermission" class="hideClass">						
-					  		<td nowrap class="formReq">
-								<abc:i18n property="commons.caption.from"/>
-								<fmt:message key="commons.caption.from"/>
-							</td>
-							<td  class="formBodControl" >
-								<spring:bind path="loginUsersRequests.period_from">
-									<input type="text"  dir="ltr"  class="MM_from" title="ccc"  name="${status.expression}" id="${status.expression}" value="${status.value}" />
-								</spring:bind>
-							</td>
+						<tr id="errandDuration" class="hideClass">
+								<td nowrap class="formReq"><abc:i18n
+										property="commons.caption.from" /> <fmt:message
+										key="commons.caption.from" /></td>
+								<td class="formBodControl"><spring:bind
+										path="loginUsersRequests.period_from">
+										<input type="text" class="MM_from" title="ccc" dir="ltr"
+											name="${status.expression}" id="${status.expression}"
+											value="${status.value}" />
+									</spring:bind></td>
 
-					  		<td nowrap class="formReq" >
-								<abc:i18n property="commons.caption.to"/>
-								<fmt:message key="commons.caption.to"/>
-							</td>
-							<td  class="formBodControl" >
-								<spring:bind path="loginUsersRequests.period_to">
-									<input type="text"  class="MM_to" title="ccc"  autocomplete="off" dir="ltr"  name="${status.expression}" id="${status.expression}" value="${status.value}" />
-								</spring:bind>
-							</td>
+								<td nowrap class="formReq"><abc:i18n
+										property="commons.caption.to" /> <fmt:message
+										key="commons.caption.to" /></td>
+								<td class="formBodControl"><spring:bind
+										path="loginUsersRequests.period_to">
+										<input type="text" class="MM_to" title="ccc"
+											autocomplete="off" dir="ltr" name="${status.expression}"
+											id="${status.expression}" value="${status.value}" />
+									</spring:bind></td>
+							</tr>
 							
-					  		<td nowrap class="formReq" >
-								<abc:i18n property="requestsApproval.caption.leaveType"/>
-								<fmt:message key="requestsApproval.caption.leaveType"/>
-							</td>
-							
+						<tr id="leavePermission" class="hideClass">						
 							<td nowrap class="formReq" >
 								<abc:i18n property="requestsApproval.caption.leaveEffect"/>
 								<fmt:message key="requestsApproval.caption.leaveEffect"/>
@@ -1293,28 +1310,31 @@ function calculateDiff2(){
 						</tr>				
 						
 						</c:if>
+						<c:if test="${loginUsersRequests.request_id.id==5 || loginUsersRequests.request_id.id==3}">
+						<tr id="errandDuration" class="showClass">
+								<td nowrap class="formReq"><abc:i18n
+										property="commons.caption.from" /> <fmt:message
+										key="commons.caption.from" /></td>
+								<td class="formBodControl"><spring:bind
+										path="loginUsersRequests.period_from">
+										<input type="text" class="MM_from" title="ccc" dir="ltr"
+											name="${status.expression}" id="${status.expression}"
+											value="${status.value}" />
+									</spring:bind></td>
+
+								<td nowrap class="formReq"><abc:i18n
+										property="commons.caption.to" /> <fmt:message
+										key="commons.caption.to" /></td>
+								<td class="formBodControl"><spring:bind
+										path="loginUsersRequests.period_to">
+										<input type="text" class="MM_to" title="ccc"
+											autocomplete="off" dir="ltr" name="${status.expression}"
+											id="${status.expression}" value="${status.value}" />
+									</spring:bind></td>
+							</tr>
+							</c:if>
 						<c:if test="${loginUsersRequests.request_id.id==3}">
 							<tr id="leavePermission" class="showClass">						
-						  		<td nowrap class="formReq">
-									<abc:i18n property="commons.caption.from"/>
-									<fmt:message key="commons.caption.from"/>
-								</td>
-								<td  class="formBodControl" >
-									<spring:bind path="loginUsersRequests.period_from">
-										<input type="text"  dir="ltr" name="${status.expression}" id="${status.expression}" value="${status.value}" />
-									</spring:bind>
-								</td>
-	
-						  		<td nowrap class="formReq" >
-									<abc:i18n property="commons.caption.to"/>
-									<fmt:message key="commons.caption.to"/>
-								</td>
-								<td  class="formBodControl" >
-									<spring:bind path="loginUsersRequests.period_to">
-										<input type="text"   dir="ltr"  name="${status.expression}" id="${status.expression}" value="${status.value}" />
-									</spring:bind>
-								</td>
-								
 								<td nowrap class="formReq" >
 									<abc:i18n property="requestsApproval.caption.leaveEffect"/>
 									<fmt:message key="requestsApproval.caption.leaveEffect"/>
