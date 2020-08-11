@@ -694,8 +694,9 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 			System.out.println(" reqType " + reqType.getId());
 		} else if (userRequest.getAttendanceType().equals(new Long(9))) {//Full Day errand
 //			System.out.println("5 6 reqType " + reqType.getId());
-			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(1));
-			vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class,"vacation", "999");
+//			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(1));
+//			vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class,"vacation", "999");
+			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(4));
 			System.out.println(" reqType " + reqType.getId());
 		} else {
 			System.out.println("userRequest.getAttendanceType() " + userRequest.getAttendanceType().getClass());

@@ -1085,6 +1085,16 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 					criteria.add(Restrictions.eq("request_id.id", requestType));
 				} else if (requestType.equals(new Long(12))) {
 					log.debug("requesttype is 4");
+					criteria.add(Restrictions.eq("request_id.id", new Long(4)));
+					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+				} else if (requestType.equals(new Long(13))) {
+					log.debug("requesttype is 4");
+					criteria.add(Restrictions.and(Restrictions.eq("request_id.id", new Long(1)), Restrictions.eq("vacation.vacation", "999")));
+					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+				} else if (requestType.equals(new Long(14))) {
+					log.debug("requesttype is 4");
 					criteria.add(Restrictions.or(Restrictions.eq("request_id.id", new Long(4)),
 							Restrictions.and(Restrictions.eq("request_id.id", new Long(1)), Restrictions.eq("vacation.vacation", "999"))));
 					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
@@ -1130,7 +1140,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			log.debug("empReqTypeAccs " + empReqTypeAccs);
 			if (empReqTypeAccs != null) {
 				criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
-			}
+			} 
 			if (sort.equalsIgnoreCase("desc")) {
 				criteria.addOrder(Property.forName("period_from").desc());
 			}
@@ -1213,11 +1223,21 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 					criteria.add(Restrictions.eq("request_id.id", requestType));
 				} else if (requestType.equals(new Long(12))) {
 					log.debug("requesttype is 4");
+					criteria.add(Restrictions.eq("request_id.id", new Long(4)));
+					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+				} else if (requestType.equals(new Long(13))) {
+					log.debug("requesttype is 4");
+					criteria.add(Restrictions.and(Restrictions.eq("request_id.id", new Long(1)), Restrictions.eq("vacation.vacation", "999")));
+					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+				} else if (requestType.equals(new Long(14))) {
+					log.debug("requesttype is 4");
 					criteria.add(Restrictions.or(Restrictions.eq("request_id.id", new Long(4)),
 							Restrictions.and(Restrictions.eq("request_id.id", new Long(1)), Restrictions.eq("vacation.vacation", "999"))));
 					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
 							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
-				}else {
+				} else {
 					log.debug("requesttype is else");
 					criteria.add(Restrictions.eq("request_id.id", requestType));
 					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
@@ -1934,25 +1954,42 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				log.debug("request type " + requestType);
 				if (requestType == null) {
 					log.debug("requestType " + requestType);
-				} else if (requestType != null && !requestType.equals(new Long(5))) {
+				} else if (requestType != null && !requestType.equals(new Long(5)) && !requestType.equals(new Long(12)) && !requestType.equals(new Long(13)) && !requestType.equals(new Long(14))) {
 					log.debug("request type not null  " + requestType);
 					criteria.createCriteria("req_id").add(Restrictions.eq("id", requestType));
 				} else if (requestType.equals(new Long(5))) {
 					log.debug("requestType " + requestType);
 					criteria.createCriteria("req_id").add(Restrictions.or(Restrictions.eq("id", new Long(10)), Restrictions.eq("id", new Long(11))));
-				} else {
+				} else if (requestType.equals(new Long(12))) {
+					log.debug("requestType (4) " + requestType);
+					criteria.createCriteria("req_id").add(Restrictions.eq("id", new Long(4)));
+				} else if (requestType.equals(new Long(13))) {
+					log.debug("requestType " + requestType);
+					criteria.createCriteria("req_id").add(Restrictions.eq("id", new Long(1)));
+				}else if (requestType.equals(new Long(14))) {
+					log.debug("requestType " + requestType);
+					criteria.createCriteria("req_id").add(Restrictions.or(Restrictions.eq("id", new Long(1)), Restrictions.eq("id", new Long(4))));
+				}else {
 					log.debug("requestType " + requestType);
 				}
-				log.debug("will query levels");
+				log.debug("will query levels " + accessLevels.toArray() + " - " + accessLevels.size());
 				criteria.createCriteria("group_id").add(Restrictions.in("id", accessLevels));
 				log.debug("will query levels 2");
 				criteria.addOrder(Property.forName("id").asc());
 				criteria
 				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-				List list = criteria.list();
-				log.debug("queried levels");
-				Iterator itr = list.iterator();
-				log.debug("empreqtypeacc size " + list.size());
+				List list = new ArrayList();
+				try {
+					list = criteria.list();
+					log.debug("queried levels");
+					Iterator itr = list.iterator();
+					log.debug("empreqtypeacc size " + list.size());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					log.debug(e.getMessage());
+					e.printStackTrace();
+					e.printStackTrace();
+				}
 //				while(itr.hasNext()) {
 //					EmpReqTypeAcc acc = (EmpReqTypeAcc)itr.next();
 //					log.debug("EmpReqTypeAcc " + acc.getId() + " group id " + acc.getGroup_id().getId() + " emp code " + acc.getEmp_id());

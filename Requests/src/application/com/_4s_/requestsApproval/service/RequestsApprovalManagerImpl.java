@@ -880,7 +880,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		if (requestType!= null && !requestType.isEmpty()){
 			reqType = Long.parseLong(requestType);
 		}
-			
+		log.debug("emp code " + emp_code);
 		log.debug("exactDateFrom " + exactDateFrom + " exactDateTo " + exactDateTo);
 		if (exactDateFrom != null && exactDateTo != null && !exactDateFrom.isEmpty() && !exactDateTo.isEmpty()){
 			if (!exactDateFrom.equals("") && !exactDateTo.equals("") ) {
@@ -1538,7 +1538,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 //		log.debug("will loop on levels");
 		while(itr.hasNext()) {
 			AccessLevels level = (AccessLevels)itr.next();
-//			log.debug("will loop on levels " + level.getLevel_id().getId());
+			log.debug("will loop on levels " + level.getLevel_id().getId());
 			accessLevels.add(level.getLevel_id().getId());
 		}
 		log.debug("access levels " + accessLevels.size());

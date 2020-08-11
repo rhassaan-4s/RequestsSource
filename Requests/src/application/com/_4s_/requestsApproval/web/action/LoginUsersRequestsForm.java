@@ -1003,6 +1003,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 			if (loginUsersRequests.getId() == null){
 				requestNumber=requestsApprovalManager.CreateRequestNumber();
 				loginUsersRequests.setRequestNumber(requestNumber);
+				loginUsersRequests.setRequest_date(Calendar.getInstance().getTime());
 			}
 			log.debug("loginUsersRequests.getEmpCode() entered--------"+loginUsersRequests.getEmpCode());
 			
@@ -1015,10 +1016,16 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 				reqId=loginUsersRequests.getRequest_id().getId().toString();
 				if((loginUsersRequests.getRequest_id().getId()==4 && loginUsersRequests.getRequest_id().getParentId()!=null && !loginUsersRequests.getRequest_id().getParentId().equals("")) || loginUsersRequests.getRequest_id().getId()==5){
 					log.debug("entered--2-----parent-"+loginUsersRequests.getRequest_id().getParentId());
-					loginUsersRequests.setRequest_id(loginUsersRequests.getRequest_id().getParentId());
 					Vacation vac= (Vacation)requestsApprovalManager.getObject(Vacation.class, "999");
-					loginUsersRequests.setVacation(vac);
-					loginUsersRequests.setPayed(new Long(1));
+					if(loginUsersRequests.getRequest_id().getId()==4) {
+						loginUsersRequests.setVacation(vac);
+						loginUsersRequests.setPayed(new Long(1));
+						log.debug("request type " + loginUsersRequests.getRequest_id());
+					} else if(loginUsersRequests.getRequest_id().getId()==5) {
+						loginUsersRequests.setRequest_id(loginUsersRequests.getRequest_id().getParentId());
+						loginUsersRequests.setVacation(vac);
+						loginUsersRequests.setPayed(new Long(1));
+					}
 				}
 				
 				

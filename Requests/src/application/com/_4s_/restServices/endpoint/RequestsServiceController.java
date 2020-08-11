@@ -1,5 +1,6 @@
 package com._4s_.restServices.endpoint;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -323,6 +324,7 @@ public class RequestsServiceController {
 		}
 		if (approvalQuery.getPageSize()!=0) {
 			List empReqTypeAccs = requestsService.getEmpReqTypeAcc(user.getEmployee(), approvalQuery.getRequestType());
+			System.out.println("empReqTypeAccs " + empReqTypeAccs.size());
 			response =	requestsService.getRequestsForApproval(approvalQuery,empReqTypeAccs,user.getEmployee());	
 
 			List resp = (List)response.get("results");
