@@ -3818,7 +3818,8 @@ public List getTimeAttendAll (String hostName,String serviceName,String userName
 			"LEFT JOIN LOGIN_USERS_REQUESTS r ON r.EMPCODE=q.EMP AND (r.PERIOD_FROM=TO_DATE(q.mindate,'yyyy-mm-dd HH24:MI:SS') AND r.REQUEST_TYPE=10) \n"+
 			"LEFT JOIN TIME_ATTEND tt ON tt.EMP_CODE=q.EMP AND tt.TRANS_TYPE='I' AND tt.DATE_=TO_DATE(q.mindate,'yyyy-mm-dd HH24:MI:SS')\n"+
 			"LEFT JOIN LOGIN_USERS_REQUESTS r2 ON r.EMPCODE=q.EMP AND (r2.FROM_DATE=TO_DATE(maxdate,'yyyy-mm-dd HH24:MI:SS') AND r2.REQUEST_TYPE=11)\n"+
-			"LEFT JOIN TIME_ATTEND tt2 ON tt2.EMP_CODE=q.EMP AND tt2.TRANS_TYPE='O' AND tt2.DATE_=TO_DATE(q.maxdate,'yyyy-mm-dd HH24:MI:SS')");
+			"LEFT JOIN TIME_ATTEND tt2 ON tt2.EMP_CODE=q.EMP AND tt2.TRANS_TYPE='O' AND tt2.DATE_=TO_DATE(q.maxdate,'yyyy-mm-dd HH24:MI:SS')"
+			+ " ORDER BY mindate desc");
 	
 	
 
