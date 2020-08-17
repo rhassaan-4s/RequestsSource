@@ -13,6 +13,7 @@ import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.EmployeeWrapper;
 import com._4s_.restServices.json.ImeiWrapper;
+import com._4s_.restServices.json.PasswordWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
@@ -66,4 +67,6 @@ public interface RequestsService {// extends BaseManager {
 
 	public Map getAttendanceReport(RequestsApprovalQuery requestApproval,
 			Employee employee);
+
+	public Map changePassword(PasswordWrapper passwordWrapper, User user);
 }

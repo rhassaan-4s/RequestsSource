@@ -41,6 +41,7 @@ import com._4s_.requestsApproval.web.action.TimeAttend;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.EmployeeWrapper;
 import com._4s_.restServices.json.ImeiWrapper;
+import com._4s_.restServices.json.PasswordWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
@@ -121,6 +122,25 @@ public void setQry(Queries qry) {
 	 return securityDao.login();
  }
 
+public Map changePassword(PasswordWrapper passwordWrapper, User user) {
+	Map results = new HashMap();
+	RestStatus restStatus = new RestStatus();
+	
+	if(user.getPassword().equals(passwordWrapper.getOldPassword())) {
+		user.setPassword(passwordWrapper.getNewPassword());
+		requestsApprovalManager.saveObject(user);
+		restStatus.setCode("200");
+		restStatus.setMessage("Request Success");
+		restStatus.setStatus("True");
+		results.put("Status", restStatus);
+	} else {
+		restStatus.setCode("332");
+		restStatus.setMessage("Wrong Password");
+		restStatus.setStatus("False");
+		results.put("Status", restStatus);
+	}
+	return results;
+}
 
 public Boolean checkImei(String imei, User user) {
 	// TODO Auto-generated method stub
@@ -215,96 +235,6 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 		} else {
 			return createManualAttendance(loginUsers,mCalDate,emp,userRequest);
 		}
-//		if (settings.getAutomaticSignInOut().booleanValue() == false 
-//				&& userRequest.getAttendanceType().equals(new Long(1))
-//				&& (attendanceStatus.getSignIn().booleanValue()==true && attendanceStatus.getSignOut().booleanValue()==false)) {
-//			/////////////////////check sign in in the same day//////////////////////////////////////////////
-//			restStatus.setCode("325");
-//			restStatus.setMessage("User signed In Before and didn't signed out");
-//			restStatus.setStatus("False");
-//			response.put("Status", restStatus);
-//			return response;
-//			/////////////////////////////////////////////////////////////////////////////////////
-//		} else if (settings.getAutomaticSignInOut().booleanValue() == false 
-//				&& userRequest.getAttendanceType().equals(new Long(2))
-//				&& ((attendanceStatus.getSignIn().booleanValue()==false && attendanceStatus.getSignOut().booleanValue()==false)
-//						|| (attendanceStatus.getSignIn().booleanValue()==true && attendanceStatus.getSignOut().booleanValue()==true) )) {
-//			/////////////////////check sign in in the same day//////////////////////////////////////////////
-//			restStatus.setCode("326");
-//			restStatus.setMessage("User didn't sign In yet");
-//			restStatus.setStatus("False");
-//			response.put("Status", restStatus);
-//			return response;
-//			/////////////////////////////////////////////////////////////////////////////////////
-//		}  else if (settings.getAutomaticSignInOut().booleanValue() == false 
-//				&& userRequest.getAttendanceType().equals(new Long(2))
-//				&& (attendanceStatus.getSignIn().booleanValue()==true && attendanceStatus.getSignOut().booleanValue()==false)
-//				&& mCalDate.getDate().getTime() < attendanceStatus.getSignInTime()) {
-//			/////////////////////check sign in in the same day//////////////////////////////////////////////
-//			restStatus.setCode("327");
-//			restStatus.setMessage("Sign out date is before sign in date");
-//			restStatus.setStatus("False");
-//			response.put("Status", restStatus);
-//			return response;
-//			/////////////////////////////////////////////////////////////////////////////////////
-//		} else if (requests2.size() > 0) { 
-//			System.out.println("requests size greater than 1 can't allow sign in probably");
-//
-//			Iterator itr = requests2.iterator();
-//			while (itr.hasNext()) {
-//				req = (LoginUsersRequests)itr.next();
-//				System.out.println("req " + req);
-//
-//				System.out.println("request " + req.getRequestNumber());
-//				System.out.println("userRequest.getAttendanceType().equals(new Long(1)) " + userRequest.getAttendanceType().equals(new Long(1)));
-//
-//				if (req.getVacation()!=null) {
-//					System.out.println("req.getVacation() " + req.getVacation().getVacation());
-//				}
-//
-//
-//				long diff = 0;
-//				
-//				if(req.getTo_date() != null) {
-//					diff = req.getTo_date().getTime() - req.getFrom_date().getTime() ;
-//				}
-//				 
-//				int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
-//				System.out.println("difference between days: " + diffDays);
-////				double diffhours = (double) (diff / (60 * 60 * 1000));
-////				System.out.println("difference between hours: " + diffhours);
-//				int diffmin = (int) (diff / (60 * 1000));
-//				System.out.println("difference between minutues: " + diffmin);
-//
-//				
-//				System.out.println(" diffmin>=1439 " +  (diffmin>=1439));
-//
-//				System.out.println("condition for full day errand validation:####  "+ (userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && diffmin>=1439));
-//				if (userRequest.getAttendanceType().equals(new Long(1)) && req!=null && req.getVacation()!=null && req.getVacation().getVacation().equals("999") && diffmin>=1439) {  
-//
-//					System.out.println("full day errand on this day");
-//					restStatus.setCode("329");
-//					restStatus.setMessage("Sign in on a full errand day is not allowed");
-//					restStatus.setStatus("False");
-//					response.put("Status", restStatus);
-//					return response;
-//				} else {
-//					if (req.getTo_date() == null) {
-//						System.out.println("Finish Started Request First");
-//						restStatus.setCode("330");
-//						restStatus.setMessage("Finish Started Request First ("+req.getRequestNumber()+")");
-//						restStatus.setStatus("False");
-//						response.put("Status", restStatus);
-//						return response;
-//					}
-//				}
-//			}
-//			return createManualAttendance(loginUsers,mCalDate,emp,userRequest);
-//			///////////////////////////////////////////////////////////////////////////////////
-//		} else {
-//			return createManualAttendance(loginUsers,mCalDate,emp,userRequest);
-//		}
-//		
 	} else {
 		String trans_type = null;
 		if (userRequest.getAttendanceType().equals(new Long(1))) {

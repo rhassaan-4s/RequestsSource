@@ -1,12 +1,10 @@
 package com._4s_.restServices.endpoint;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +19,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
-import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.ClientWrapper;
 import com._4s_.restServices.json.EmployeeResponse;
 import com._4s_.restServices.json.EmployeeWrapper;
 import com._4s_.restServices.json.ImeiWrapper;
+import com._4s_.restServices.json.PasswordWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestTypeWrapper;
 import com._4s_.restServices.json.RequestsApprovalQuery;
@@ -208,6 +206,23 @@ public class RequestsServiceController {
 			}
 			return null;
 		}
+	}
+	
+	@RequestMapping(value="/changePassword", method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody
+	public Map changePassword(PasswordWrapper passwordWrapper)
+	{
+		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDet = (UserDetails)token.getPrincipal();
+		User user = requestsService.getUser(userDet.getUsername());
+		try {
+			Map response = requestsService.changePassword(passwordWrapper,user);
+			return response;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	//3. Permission Start
