@@ -10,7 +10,8 @@
 	xml:lang="<fmt:message key="commons.language.code"/>"
 	lang="<fmt:message key="commons.language.code"/>">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> -->
+<meta http-equiv=“Content-Security-Policy” content=“default-src; charset=UTF-8”/> <!-- ‘self’ gap://ready file://* *; style-src ‘self’ ‘unsafe-inline’; script-src ‘self’ ‘unsafe-inline’ ‘unsafe-eval’ -->
 <title>Requests System</title>
 <link type="text/css" rel="stylesheet"
 	href="/Requests/web/common/css/all.css">
