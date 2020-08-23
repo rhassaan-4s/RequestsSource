@@ -222,7 +222,7 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		String address = "";
 		
 			if(errors.hasErrors()==false) {
-				if (accuracy!=null) {
+				if (accuracy!=null && !accuracy.isEmpty()) {
 					if (settings.getLocationAccuracy()< Integer.parseInt(accuracy)) {
 						errors.reject("requestsApproval.errors.notAccurateLocation");
 					} 

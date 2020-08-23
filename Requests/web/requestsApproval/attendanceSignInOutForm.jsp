@@ -31,10 +31,10 @@ var options = {
 		  document.getElementById("latitude").setAttribute("value", crd.latitude);
 		  document.getElementById("accuracy").setAttribute("value", crd.accuracy);
 		  
-		  console.log('Your current position is:');
-		  console.log('Latitude : ${crd.latitude}');
-		  console.log('Longitude: ${crd.longitude}');
-		  console.log('More or less ${crd.accuracy} meters.');
+		//  console.log('Your current position is:');
+		//  console.log('Latitude : ${crd.latitude}');
+		//  console.log('Longitude: ${crd.longitude}');
+		//  console.log('More or less ${crd.accuracy} meters.');
 		}
 
 		function error(err) {
