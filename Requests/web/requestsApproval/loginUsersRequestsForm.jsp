@@ -375,6 +375,32 @@ function calculateDiff2(){
 		 document.getElementById('vacCredit').value=data;
 	 }
  }
+ 
+ var options = {
+		  enableHighAccuracy: true,
+		  timeout: 5000,
+		  maximumAge: 0
+		};
+
+		function success(pos) {
+		  var crd = pos.coords;
+
+		  //alert (crd.latitude+","+crd.longitude+","+crd.accuracy);
+		  document.getElementById("longitude").setAttribute("value", crd.longitude);
+		  document.getElementById("latitude").setAttribute("value", crd.latitude);
+		  document.getElementById("accuracy").setAttribute("value", crd.accuracy);
+		  
+		  console.log('Your current position is:');
+		  console.log('Latitude : ${crd.latitude}');
+		  console.log('Longitude: ${crd.longitude}');
+		  console.log('More or less ${crd.accuracy} meters.');
+		}
+
+		function error(err) {
+		  alert('ERROR(${err.code}): ${err.message}');
+		}
+
+		navigator.geolocation.getCurrentPosition(success, error, options);
 </script>
 <%
 	Calendar cal = Calendar.getInstance();
@@ -435,7 +461,11 @@ function calculateDiff2(){
 			<form id="loginUsersRequestsForm" name="loginUsersRequestsForm"	method="POST" action="<c:url value="/requestsApproval/loginUsersRequestsForm.html"/>">
 					 <c:set var="dateNow" value="<%=nowDate%>" />
 					 
-					 <input type="hidden"  id="empRequestTypeId" name="empRequestTypeId" value="${empRequestTypeId }"/>
+					  <input type="hidden" name="longitude" id="longitude" value=""/>
+					 <input type="hidden" name="latitude" id="latitude" value=""/>
+					 <input type="hidden" name="accuracy" id="accuracy" value=""/>
+					 
+					 <input type="hidden"  id="empRequestTypeId" name="empRequestTypeId" value="${empRequestTypeId}"/>
 					 
 					 <input type="hidden" name="hostName" id="hostName" value="${settings.server}"/>
 					 <input type="hidden" name="serviceName" id="serviceName" value="${settings.service}"/>

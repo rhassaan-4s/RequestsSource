@@ -148,6 +148,11 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		
 		log.debug("=====emp.getEmpCode()==="+emp.getEmpCode());
 		
+		String longitude = (String)request.getParameter("longitude");
+		String latitude =  (String)request.getParameter("latitude");
+		String accuracy =  (String)request.getParameter("accuracy");
+		log.debug("location " + longitude + " , " + latitude + " , " + accuracy);
+		
 		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
 		
 		String empRequestTypeId=request.getParameter("empRequestTypeId");
@@ -556,7 +561,28 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		boolean fromToRequestVald = settings.getFromToRequestVald();
 		boolean automaticRequestsValidation = settings.getAutomaticRequestsValidation();
 		
-	
+		String longitude = (String)request.getParameter("longitude");
+		String latitude =  (String)request.getParameter("latitude");
+		String accuracy =  (String)request.getParameter("accuracy");
+		log.debug("location " + longitude + " , " + latitude + " , " + accuracy);
+		String address = "";
+		
+		if(loginUsersRequests.getRequest_id().getId()==4 || loginUsersRequests.getRequest_id().getId()==5){
+			if(errors.hasErrors()==false) {
+				if (accuracy!=null) {
+					if (settings.getLocationAccuracy()< Integer.parseInt(accuracy)) {
+						errors.reject("requestsApproval.errors.notAccurateLocation");
+					} 
+				} else {
+					errors.reject("requestsApproval.errors.locationIsNotSet");
+				}
+			}
+			if(errors.hasErrors()==false) {
+				if (longitude == null || latitude == null || Double.parseDouble(longitude)==0 || Double.parseDouble(latitude)==0) {
+					errors.reject("requestsApproval.errors.locationIsNotSet");
+				}
+			}
+		}
 		String withdrawDays=request.getParameter("withdrawDays");
 		log.debug("-----withdrawDays entered--------"+withdrawDays);
 		if(withdrawDays!=null && !withdrawDays.equals("")){
@@ -998,6 +1024,14 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		boolean withoutSalaryVacEnabled = settings.getWithoutSalaryVacEnabled(); 
 		boolean periodFromToEnabled = settings.getPeriodFromToEnabled();
 		
+		String longitude = (String)request.getParameter("longitude");
+		String latitude =  (String)request.getParameter("latitude");
+		String accuracy =  (String)request.getParameter("accuracy");
+		String address = "";
+		if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
+			address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
+		}
+		
 		String requestNumber="";
 			 // request number
 			if (loginUsersRequests.getId() == null){
@@ -1025,6 +1059,18 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 						loginUsersRequests.setRequest_id(loginUsersRequests.getRequest_id().getParentId());
 						loginUsersRequests.setVacation(vac);
 						loginUsersRequests.setPayed(new Long(1));
+					}
+					if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
+						loginUsersRequests.setLatitude(Double.parseDouble(latitude));
+						loginUsersRequests.setLongitude(Double.parseDouble(longitude));
+						loginUsersRequests.setLocationAddress(address);
+						
+						double distance = requestsApprovalManager.distance(new Double(latitude),new Double(longitude),new Double(settings.getCompanyLat()),new Double(settings.getCompanyLong()));
+						if (distance>settings.getDistAllowedFromCompany()) {
+							loginUsersRequests.setIsInsideCompany(false);
+						} else {
+							loginUsersRequests.setIsInsideCompany(true);
+						}
 					}
 				}
 				

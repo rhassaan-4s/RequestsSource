@@ -41,6 +41,7 @@ import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RestStatus;
 import com._4s_.auditing.validators.ValidateSearch;
 import com._4s_.common.model.Employee;
+import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
 
@@ -166,6 +167,7 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests)command;
 	
+		Settings settings = (Settings)request.getSession().getAttribute("settings");
 		
 		if(errors.getErrorCount()==0)
 		{	
@@ -213,6 +215,26 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 			
 		}
 
+		String longitude = (String)request.getParameter("longitude");
+		String latitude =  (String)request.getParameter("latitude");
+		String accuracy =  (String)request.getParameter("accuracy");
+		log.debug("location " + longitude + " , " + latitude + " , " + accuracy);
+		String address = "";
+		
+			if(errors.hasErrors()==false) {
+				if (accuracy!=null) {
+					if (settings.getLocationAccuracy()< Integer.parseInt(accuracy)) {
+						errors.reject("requestsApproval.errors.notAccurateLocation");
+					} 
+				} else {
+					errors.reject("requestsApproval.errors.locationIsNotSet");
+				}
+			}
+			if(errors.hasErrors()==false) {
+				if (longitude == null || latitude == null || Double.parseDouble(longitude)==0 || Double.parseDouble(latitude)==0) {
+					errors.reject("requestsApproval.errors.locationIsNotSet");
+				}
+			}
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
@@ -234,6 +256,23 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		log.debug("----loginUsersRequests.getId()-onsubmit-----"+loginUsersRequests.getId()+"-----loginUsersRequests---"+loginUsersRequests.getLogin_user().getEmpCode());
 		
 		Map model=new HashMap();
+		Settings settings = (Settings)request.getSession().getAttribute("settings");
+		String longitude = (String)request.getParameter("longitude");
+		String latitude =  (String)request.getParameter("latitude");
+		String accuracy =  (String)request.getParameter("accuracy");
+		String address = "";
+		if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
+			address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
+		}
+		
+		log.debug(longitude + "-" + latitude + "-" + address);
+		
+		double distance = requestsApprovalManager.distance(new Double(latitude),new Double(longitude),new Double(settings.getCompanyLat()),new Double(settings.getCompanyLong()));
+		if (distance>settings.getDistAllowedFromCompany()) {
+			loginUsersRequests.setIsInsideCompany(false);
+		} else {
+			loginUsersRequests.setIsInsideCompany(true);
+		}
 		
 		String reqId="";
 		if(loginUsersRequests.getRequest_id()!=null && !loginUsersRequests.getRequest_id().equals("")){
@@ -278,6 +317,12 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 
 //			requestsApprovalManager.saveObject(loginUsersRequests);
 			
+			
+			loginUsersRequests.setLatitude(Double.parseDouble(latitude));
+			loginUsersRequests.setLongitude(Double.parseDouble(longitude));
+			loginUsersRequests.setLocationAddress(address);
+			
+			requestsApprovalManager.saveObject(loginUsersRequests);
 			RequestApproval approvals = new RequestApproval();
 			approvals.setApprove("1");
 			approvals.setNotes("Android Sign in/out Automatic Approval");

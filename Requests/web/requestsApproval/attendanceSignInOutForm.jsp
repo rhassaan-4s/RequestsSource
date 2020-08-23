@@ -17,6 +17,32 @@
 <body>
 <script type="text/javascript">
 
+var options = {
+		  enableHighAccuracy: true,
+		  timeout: 5000,
+		  maximumAge: 0
+		};
+
+		function success(pos) {
+		  var crd = pos.coords;
+
+		  //alert (crd.latitude+","+crd.longitude+","+crd.accuracy);
+		  document.getElementById("longitude").setAttribute("value", crd.longitude);
+		  document.getElementById("latitude").setAttribute("value", crd.latitude);
+		  document.getElementById("accuracy").setAttribute("value", crd.accuracy);
+		  
+		  console.log('Your current position is:');
+		  console.log('Latitude : ${crd.latitude}');
+		  console.log('Longitude: ${crd.longitude}');
+		  console.log('More or less ${crd.accuracy} meters.');
+		}
+
+		function error(err) {
+		  alert('ERROR(${err.code}): ${err.message}');
+		}
+
+		navigator.geolocation.getCurrentPosition(success, error, options);
+		
 </script>
 <%
 	Calendar cal = Calendar.getInstance();
@@ -66,6 +92,10 @@
 		<td>
 			<form id="attendanceRequestForm" name="attendanceRequestForm"	method="POST" action="<c:url value="/requestsApproval/attendanceSignInOutForm.html"/>">
 					 <c:set var="dateNow" value="<%=nowDate%>" />
+					 
+					  <input type="hidden" name="longitude" id="longitude" value=""/>
+					 <input type="hidden" name="latitude" id="latitude" value=""/>
+					 <input type="hidden" name="accuracy" id="accuracy" value=""/>
 					 
 					 <input type="hidden"  id="empRequestTypeId" name="empRequestTypeId" value="${empRequestTypeId }"/>
 					<table border=0 cellspacing=1 cellpadding=0 id="ep" style="margin-right:40px">
