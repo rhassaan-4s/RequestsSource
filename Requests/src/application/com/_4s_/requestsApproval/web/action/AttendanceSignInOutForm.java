@@ -269,9 +269,13 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		
 		log.debug(longitude + "-" + latitude + "-" + address);
 		
-		double distance = requestsApprovalManager.distance(new Double(latitude),new Double(longitude),new Double(settings.getCompanyLat()),new Double(settings.getCompanyLong()));
-		if (distance>settings.getDistAllowedFromCompany()) {
-			loginUsersRequests.setIsInsideCompany(false);
+		if (accuracy!=null && !accuracy.isEmpty()) {
+			double distance = requestsApprovalManager.distance(new Double(latitude),new Double(longitude),new Double(settings.getCompanyLat()),new Double(settings.getCompanyLong()));
+			if (distance>settings.getDistAllowedFromCompany()) {
+				loginUsersRequests.setIsInsideCompany(false);
+			} else {
+				loginUsersRequests.setIsInsideCompany(true);
+			}
 		} else {
 			loginUsersRequests.setIsInsideCompany(true);
 		}
