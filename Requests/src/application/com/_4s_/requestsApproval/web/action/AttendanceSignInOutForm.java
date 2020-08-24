@@ -323,10 +323,11 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 
 //			requestsApprovalManager.saveObject(loginUsersRequests);
 			
-			
-			loginUsersRequests.setLatitude(Double.parseDouble(latitude));
-			loginUsersRequests.setLongitude(Double.parseDouble(longitude));
-			loginUsersRequests.setLocationAddress(address);
+			if (latitude!= null && !latitude.isEmpty()) {
+				loginUsersRequests.setLatitude(Double.parseDouble(latitude));
+				loginUsersRequests.setLongitude(Double.parseDouble(longitude));
+				loginUsersRequests.setLocationAddress(address);
+			}
 			
 			requestsApprovalManager.saveObject(loginUsersRequests);
 			RequestApproval approvals = new RequestApproval();

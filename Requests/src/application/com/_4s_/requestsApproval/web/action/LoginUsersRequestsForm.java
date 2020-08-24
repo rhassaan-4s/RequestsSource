@@ -1062,22 +1062,22 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 						loginUsersRequests.setVacation(vac);
 						loginUsersRequests.setPayed(new Long(1));
 					}
-					if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
-						loginUsersRequests.setLatitude(Double.parseDouble(latitude));
-						loginUsersRequests.setLongitude(Double.parseDouble(longitude));
-						loginUsersRequests.setLocationAddress(address);
-						
-						if (accuracy!=null && !accuracy.isEmpty()) {
+					if (accuracy!=null && !accuracy.isEmpty()) {
+						if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
+							loginUsersRequests.setLatitude(Double.parseDouble(latitude));
+							loginUsersRequests.setLongitude(Double.parseDouble(longitude));
+							loginUsersRequests.setLocationAddress(address);
+
+
 							double distance = requestsApprovalManager.distance(new Double(latitude),new Double(longitude),new Double(settings.getCompanyLat()),new Double(settings.getCompanyLong()));
 							if (distance>settings.getDistAllowedFromCompany()) {
 								loginUsersRequests.setIsInsideCompany(false);
 							} else {
 								loginUsersRequests.setIsInsideCompany(true);
 							}						
-						} else {
-							loginUsersRequests.setIsInsideCompany(true);
 						}
-
+					} else {
+						loginUsersRequests.setIsInsideCompany(true);
 					}
 				}
 				
