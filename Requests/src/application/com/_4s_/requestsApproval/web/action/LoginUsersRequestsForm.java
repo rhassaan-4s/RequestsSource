@@ -1028,8 +1028,10 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		String latitude =  (String)request.getParameter("latitude");
 		String accuracy =  (String)request.getParameter("accuracy");
 		String address = "";
-		if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
-			address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
+		if (accuracy!=null && !accuracy.isEmpty()) {
+			if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
+				address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
+			}
 		}
 		
 		String requestNumber="";

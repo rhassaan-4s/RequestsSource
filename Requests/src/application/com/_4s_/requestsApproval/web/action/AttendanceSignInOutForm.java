@@ -261,8 +261,10 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		String latitude =  (String)request.getParameter("latitude");
 		String accuracy =  (String)request.getParameter("accuracy");
 		String address = "";
-		if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
-			address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
+		if (accuracy!=null && !accuracy.isEmpty()) {
+			if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
+				address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
+			}
 		}
 		
 		log.debug(longitude + "-" + latitude + "-" + address);
