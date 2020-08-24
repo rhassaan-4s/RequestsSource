@@ -567,22 +567,22 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		log.debug("location " + longitude + " , " + latitude + " , " + accuracy);
 		String address = "";
 		
-		if(loginUsersRequests.getRequest_id().getId()==4 || loginUsersRequests.getRequest_id().getId()==5){
-			if(errors.hasErrors()==false) {
-				if (accuracy!=null && !accuracy.isEmpty()) {
-					if (settings.getLocationAccuracy()< Integer.parseInt(accuracy)) {
-						errors.reject("requestsApproval.errors.notAccurateLocation");
-					} 
-				} else {
-					errors.reject("requestsApproval.errors.locationIsNotSet");
-				}
-			}
-			if(errors.hasErrors()==false) {
-				if (longitude == null || latitude == null || Double.parseDouble(longitude)==0 || Double.parseDouble(latitude)==0) {
-					errors.reject("requestsApproval.errors.locationIsNotSet");
-				}
-			}
-		}
+//		if(loginUsersRequests.getRequest_id().getId()==4 || loginUsersRequests.getRequest_id().getId()==5){
+//			if(errors.hasErrors()==false) {
+//				if (accuracy!=null && !accuracy.isEmpty()) {
+//					if (settings.getLocationAccuracy()< Integer.parseInt(accuracy)) {
+//						errors.reject("requestsApproval.errors.notAccurateLocation");
+//					} 
+//				} else {
+//					errors.reject("requestsApproval.errors.locationIsNotSet");
+//				}
+//			}
+//			if(errors.hasErrors()==false) {
+//				if (longitude == null || latitude == null || Double.parseDouble(longitude)==0 || Double.parseDouble(latitude)==0) {
+//					errors.reject("requestsApproval.errors.locationIsNotSet");
+//				}
+//			}
+//		}
 		String withdrawDays=request.getParameter("withdrawDays");
 		log.debug("-----withdrawDays entered--------"+withdrawDays);
 		if(withdrawDays!=null && !withdrawDays.equals("")){

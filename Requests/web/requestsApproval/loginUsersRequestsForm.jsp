@@ -397,7 +397,7 @@ function calculateDiff2(){
 		}
 
 		function error(err) {
-			alert(err.code + " - " + err.message);
+			//alert(err.code + " - " + err.message);
 		}
 
 		navigator.geolocation.getCurrentPosition(success, error, options);
