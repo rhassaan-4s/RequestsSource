@@ -420,5 +420,16 @@
 <taglib-location>/WEB-INF/4s.tld</taglib-location>
 </taglib>
 </jsp-config>
+
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>Requests</web-resource-name>
+        <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <!-- auth-constraint goes here if you requre authentication -->
+    <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+</security-constraint>
 	
 </web-app>
