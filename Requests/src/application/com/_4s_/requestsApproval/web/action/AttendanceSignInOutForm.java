@@ -221,20 +221,20 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		log.debug("location " + longitude + " , " + latitude + " , " + accuracy);
 		String address = "";
 		
-//			if(errors.hasErrors()==false) {
-//				if (accuracy!=null && !accuracy.isEmpty()) {
-//					if (settings.getLocationAccuracy()< Integer.parseInt(accuracy)) {
-//						errors.reject("requestsApproval.errors.notAccurateLocation");
-//					} 
-//				} else {
-//					errors.reject("requestsApproval.errors.locationIsNotSet");
-//				}
-//			}
-//			if(errors.hasErrors()==false) {
-//				if (longitude == null || latitude == null || Double.parseDouble(longitude)==0 || Double.parseDouble(latitude)==0) {
-//					errors.reject("requestsApproval.errors.locationIsNotSet");
-//				}
-//			}
+		if(errors.hasErrors()==false) {
+			if (accuracy!=null && !accuracy.isEmpty()) {
+				if (settings.getLocationAccuracy()< Integer.parseInt(accuracy)) {
+					errors.reject("requestsApproval.errors.notAccurateLocation");
+				} 
+			} else {
+				errors.reject("requestsApproval.errors.locationIsNotSet");
+			}
+		}
+		if(errors.hasErrors()==false) {
+			if (longitude == null || latitude == null || Double.parseDouble(longitude)==0 || Double.parseDouble(latitude)==0) {
+				errors.reject("requestsApproval.errors.locationIsNotSet");
+			}
+		}
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
@@ -261,6 +261,7 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		String latitude =  (String)request.getParameter("latitude");
 		String accuracy =  (String)request.getParameter("accuracy");
 		String address = "";
+		log.debug("accuracy " + accuracy);
 		if (accuracy!=null && !accuracy.isEmpty()) {
 			if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
 				address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
