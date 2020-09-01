@@ -352,9 +352,9 @@ make_menus();
 					/* if (applicationName.equals("ASSETS")) {
 						applicationNameString = "gl.caption.applicationName";
 					 }else */
-						 if (applicationName.equals("ADMINISTRATION")) {
+						 if (applicationName!=null && applicationName.equals("ADMINISTRATION")) {
 						applicationNameString = "administration.caption.applicationName";
-					 }else if (applicationName.equals("requestsApproval")) {
+					 }else if (applicationName!=null && applicationName.equals("requestsApproval")) {
 						applicationNameString = "requestsApproval.caption.applicationName";
 					}
 					session
