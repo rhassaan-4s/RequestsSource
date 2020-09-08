@@ -372,9 +372,9 @@ make_menus();
 		<td bgcolor="#ECF5FF" valign="top"><!-- Menu Begin------------------------------------------------ -->
 		<div class="menu">
 		<%
- 	if (applicationName.equals("ADMINISTRATION")) {
+ 	if (applicationName!=null && applicationName.equals("ADMINISTRATION")) {
  %> <jsp:include page="/web/common/menu.jsp" flush="true" /> <%
- 	} if (applicationName.equals("requestsApproval")) {
+ 	} if (applicationName!=null && applicationName.equals("requestsApproval")) {
  %> <jsp:include page="/web/requestsApproval/menu.jsp" flush="true" /> <%
  	}
  %> 

@@ -421,15 +421,61 @@
 </taglib>
 </jsp-config>
 
+
 <security-constraint>
     <web-resource-collection>
         <web-resource-name>Requests</web-resource-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/requestsApproval/*</url-pattern>
     </web-resource-collection>
     <!-- auth-constraint goes here if you requre authentication -->
     <user-data-constraint>
         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
     </user-data-constraint>
 </security-constraint>
+
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>Requests</web-resource-name>
+        <url-pattern>/security/*</url-pattern>
+    </web-resource-collection>
+    <!-- auth-constraint goes here if you requre authentication -->
+    <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+</security-constraint>
+
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>Requests</web-resource-name>
+        <url-pattern>/common/*</url-pattern>
+    </web-resource-collection>
+    <!-- auth-constraint goes here if you requre authentication -->
+    <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+</security-constraint>
+
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>Requests</web-resource-name>
+        <url-pattern>/dbUpdate/*</url-pattern>
+    </web-resource-collection>
+    <!-- auth-constraint goes here if you requre authentication -->
+    <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+</security-constraint>
+
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>Requests</web-resource-name>
+        <url-pattern>/api/*</url-pattern>
+    </web-resource-collection>
+    <!-- auth-constraint goes here if you requre authentication -->
+   <!-- <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>-->
+</security-constraint>
+
 	
 </web-app>
