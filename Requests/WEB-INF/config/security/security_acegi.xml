@@ -41,15 +41,13 @@
 			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 		<intercept-url pattern="/api/workflow/submittedRequests"
 			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
-
+		<intercept-url pattern="/api/workflow/vacInfo"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 
 		<intercept-url pattern="/api/workflow/requestsForApproval"
 			access="hasRole('CAN_VIEW_page_requestsApproval')" />
 			
 		<intercept-url pattern="/api/workflow/approveRequest"
-			access="hasRole('CAN_VIEW_page_requestsApproval')" />
-			
-		<intercept-url pattern="/api/workflow/vacInfo"
 			access="hasRole('CAN_VIEW_page_requestsApproval')" />
 			
 		<intercept-url pattern="/api/workflow/vacTypes"
