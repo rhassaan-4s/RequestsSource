@@ -1727,6 +1727,7 @@ public Map editUserInfo(UserWrapper userWrapper, Employee employee) {
 	Map response = new HashMap();
 	RestStatus status = new RestStatus();
 	
+	System.out.println("profile pic string \n"+userWrapper.getProfilePic());
 	if (userWrapper.getProfilePic()!=null  && !userWrapper.getProfilePic().isEmpty()) {
 		byte[] profilePicBytes = Base64.decode(userWrapper.getProfilePic());
 		System.out.println("profile pic bytes " + profilePicBytes);
