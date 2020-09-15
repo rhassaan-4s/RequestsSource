@@ -1,6 +1,7 @@
 package com._4s_.common.model;
 
 import java.io.Serializable;
+import java.sql.Blob;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -84,6 +85,24 @@ public class Employee implements Serializable,Auditable,Searchable {
 	
 	@Column(name="CANSEEALLSTORE")
 	private Boolean canSeeAllStore = new Boolean(false);
+	
+	private byte[] profilePic;
+	
+	private String profilePicName;
+	
+
+	public byte[] getProfilePic() {
+		return profilePic;
+	}
+	public void setProfilePic(byte[] profilePic) {
+		this.profilePic = profilePic;
+	}
+	public String getProfilePicName() {
+		return profilePicName;
+	}
+	public void setProfilePicName(String profilePicName) {
+		this.profilePicName = profilePicName;
+	}
 	
 	
 	

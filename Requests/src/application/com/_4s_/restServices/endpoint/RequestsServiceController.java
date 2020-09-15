@@ -29,6 +29,7 @@ import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestTypeWrapper;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
+import com._4s_.restServices.json.UserWrapper;
 import com._4s_.restServices.service.RequestsService;
 import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
@@ -501,6 +502,18 @@ public class RequestsServiceController {
 		UserDetails userDet = (UserDetails)token.getPrincipal();
 		User user = requestsService.getUser(userDet.getUsername());
 		Map m = requestsService.getAttendanceReport(requestApproval,user.getEmployee());
+		return m;
+	}
+	
+	@RequestMapping(value="/editUserInfo" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map editUserInfo(UserWrapper userWrapper) {
+		System.out.println("editUserInfo ");
+		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDet = (UserDetails)token.getPrincipal();
+		User user = requestsService.getUser(userDet.getUsername());
+		Map m = requestsService.editUserInfo(userWrapper,user.getEmployee());
 		return m;
 	}
 	

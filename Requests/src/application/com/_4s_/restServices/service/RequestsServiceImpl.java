@@ -15,6 +15,7 @@ import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.dbunit.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,12 +40,14 @@ import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.requestsApproval.web.action.TimeAttend;
 import com._4s_.restServices.json.AttendanceRequest;
+import com._4s_.restServices.json.EmployeeResponse;
 import com._4s_.restServices.json.EmployeeWrapper;
 import com._4s_.restServices.json.ImeiWrapper;
 import com._4s_.restServices.json.PasswordWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
+import com._4s_.restServices.json.UserWrapper;
 import com._4s_.restServices.model.AttendanceStatus;
 import com._4s_.security.dao.MySecurityDAO;
 import com._4s_.security.model.Imei;
@@ -1716,6 +1719,62 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 }
 
 return results;
+}
+
+public Map editUserInfo(UserWrapper userWrapper, Employee employee) {
+	// TODO Auto-generated method stub
+	Map results = new HashMap();
+	Map response = new HashMap();
+	RestStatus status = new RestStatus();
+	
+	if (userWrapper.getProfilePic()!=null  && !userWrapper.getProfilePic().isEmpty()) {
+		byte[] profilePicBytes = Base64.decode(userWrapper.getProfilePic());
+		employee.setProfilePic(profilePicBytes);
+		employee.setProfilePicName("pic_"+employee.getEmpCode());
+	}
+	if (userWrapper.getMobileNo()!=null && !userWrapper.getMobileNo().isEmpty()) {
+		employee.setTel(userWrapper.getMobileNo());
+	}
+	if (userWrapper.getEmail()!=null && !userWrapper.getEmail().isEmpty()) {
+		employee.setEmail(userWrapper.getEmail());
+	}
+	
+	requestsApprovalManager.saveObject(employee);
+	
+	Map settingsMap = getSettings();
+	Map settings = (Map)settingsMap.get("Response");
+	Integer requiredVersion = (Integer)settings.get("requiredAndroidVersion");
+	
+	EmployeeResponse e = new EmployeeResponse();
+	e.setAddress(employee.getAddress());
+	e.setAttendanceCode(employee.getAttendanceCode());
+	e.setBranch(employee.getBranch());
+	e.setCity(employee.getCity());
+	e.setDepartment(employee.getDepartment());
+	e.setEmail(employee.getEmail());
+	e.setEmpCode(employee.getEmpCode());
+	e.setEmployeeCode(employee.getEmployeeCode());
+	e.setExt(employee.getExt());
+	e.setFirstName(employee.getFirstName());
+	e.setGender(employee.getGender());
+	e.setId(employee.getId());
+	e.setIsDepartmentManager(employee.getIsDepartmentManager());
+	e.setIsManager(employee.getIsManager());
+	e.setJobTitle(employee.getJobTitle());
+	e.setLastName(employee.getLastName());
+	e.setTel(employee.getTel());
+	e.setEmail(employee.getEmail());
+
+	e.setRequiredAndroidVersion(requiredVersion);
+
+	response.put("Response", e);
+	
+	results.put("Results", response);
+	status.setCode("200");
+	status.setMessage("Request Success");
+	status.setStatus("True");
+	results.put("Status", status);
+	return results;
 }
 
 

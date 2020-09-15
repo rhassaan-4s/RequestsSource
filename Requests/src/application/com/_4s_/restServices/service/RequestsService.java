@@ -17,6 +17,7 @@ import com._4s_.restServices.json.PasswordWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
+import com._4s_.restServices.json.UserWrapper;
 import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
 
@@ -69,4 +70,6 @@ public interface RequestsService {// extends BaseManager {
 			Employee employee);
 
 	public Map changePassword(PasswordWrapper passwordWrapper, User user);
+
+	public Map editUserInfo(UserWrapper userWrapper, Employee employee);
 }
