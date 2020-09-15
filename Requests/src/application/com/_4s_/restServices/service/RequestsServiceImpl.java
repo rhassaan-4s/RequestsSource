@@ -1729,6 +1729,7 @@ public Map editUserInfo(UserWrapper userWrapper, Employee employee) {
 	
 	if (userWrapper.getProfilePic()!=null  && !userWrapper.getProfilePic().isEmpty()) {
 		byte[] profilePicBytes = Base64.decode(userWrapper.getProfilePic());
+		System.out.println("profile pic bytes " + profilePicBytes);
 		employee.setProfilePic(profilePicBytes);
 		employee.setProfilePicName("pic_"+employee.getEmpCode());
 	}
