@@ -16153,4 +16153,5 @@ INSERT INTO i18n_message VALUES (202116449,'الموقع غير دقيق', 10146
 INSERT INTO i18n_message VALUES (202116450, 'Location not accurate', 101468, 3);&#xD;
 INSERT INTO I18N_KEY VALUES (101469, 'requestsApproval.errors.locationIsNotSet', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116451,'لم يتم تحديد الموقع', 101469, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116452, 'Location is not set', 101469, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116452, 'Location is not set', 101469, 3);</statment></query><query><sqlindex>163</sqlindex><statment>ALTER TABLE COMMON_EMPLOYEE ADD PROFILEPIC BLOB;&#xD;
+ALTER TABLE COMMON_EMPLOYEE ADD PROFILEPICNAME VARCHAR2(255);</statment></query></SQL>
