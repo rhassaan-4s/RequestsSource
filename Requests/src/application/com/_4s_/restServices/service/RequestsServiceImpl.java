@@ -1766,7 +1766,9 @@ public Map editUserInfo(UserWrapper userWrapper, Employee employee) {
 	e.setLastName(employee.getLastName());
 	e.setTel(employee.getTel());
 	e.setEmail(employee.getEmail());
-
+	String picString = Base64.encodeBytes(employee.getProfilePic());
+	e.setProfilePic(picString);
+	System.out.println("pic string " +  picString.equals(userWrapper.getProfilePic()));
 	e.setRequiredAndroidVersion(requiredVersion);
 
 	response.put("Response", e);

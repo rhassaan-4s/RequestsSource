@@ -25,10 +25,19 @@ public class EmployeeResponse {
 	private Long employeeCode;
 	private Long attendanceCode;
 	private Branch branch;
+	private String profilePic;
 	
 	
 	private Integer requiredAndroidVersion;
 	
+	
+	
+	public String getProfilePic() {
+		return profilePic;
+	}
+	public void setProfilePic(String profilePic) {
+		this.profilePic = profilePic;
+	}
 	public Integer getRequiredAndroidVersion() {
 		return requiredAndroidVersion;
 	}
