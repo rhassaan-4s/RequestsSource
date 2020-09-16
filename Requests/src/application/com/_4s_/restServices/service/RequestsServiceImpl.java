@@ -1735,10 +1735,27 @@ public Map editUserInfo(UserWrapper userWrapper, Employee employee) {
 		employee.setProfilePicName("pic_"+employee.getEmpCode());
 	}
 	if (userWrapper.getMobileNo()!=null && !userWrapper.getMobileNo().isEmpty()) {
+		String regexStr = "^[+]?[0-9] {10-13}$";
 		employee.setTel(userWrapper.getMobileNo());
+		if (userWrapper.getMobileNo().length()<11 || userWrapper.getMobileNo().matches(regexStr)==false) {
+			results.put("Results", response);
+			status.setCode("317");
+			status.setMessage("Invalid mobile no");
+			status.setStatus("False");
+			results.put("Status", status);
+		}
 	}
 	if (userWrapper.getEmail()!=null && !userWrapper.getEmail().isEmpty()) {
-		employee.setEmail(userWrapper.getEmail());
+		if (userWrapper.getEmail().indexOf('@') == -1
+				|| userWrapper.getEmail().indexOf('.') == -1) {
+			results.put("Results", response);
+			status.setCode("316");
+			status.setMessage("Invalid email format");
+			status.setStatus("False");
+			results.put("Status", status);
+		} else {
+			employee.setEmail(userWrapper.getEmail());
+		}
 	}
 	
 	requestsApprovalManager.saveObject(employee);
