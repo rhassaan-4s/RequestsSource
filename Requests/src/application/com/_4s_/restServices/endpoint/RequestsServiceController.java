@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
 
+import org.dbunit.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -101,6 +102,9 @@ public class RequestsServiceController {
 						e.setEmail(emp.getEmail());
 
 						e.setRequiredAndroidVersion(requiredVersion);
+						
+						String picString = Base64.encodeBytes(emp.getProfilePic());
+						e.setProfilePic(picString);
 
 						response.put("Response", e);
 						return response;

@@ -1735,7 +1735,7 @@ public Map editUserInfo(UserWrapper userWrapper, Employee employee) {
 		employee.setProfilePicName("pic_"+employee.getEmpCode());
 	}
 	if (userWrapper.getMobileNo()!=null && !userWrapper.getMobileNo().isEmpty()) {
-		String regexStr = "^[+]?[0-9] {10-13}$";
+		String regexStr = "^[+]?[0-9]{10,13}$";
 		employee.setTel(userWrapper.getMobileNo());
 		if (userWrapper.getMobileNo().length()<11 || userWrapper.getMobileNo().matches(regexStr)==false) {
 			results.put("Results", response);
@@ -1743,6 +1743,7 @@ public Map editUserInfo(UserWrapper userWrapper, Employee employee) {
 			status.setMessage("Invalid mobile no");
 			status.setStatus("False");
 			results.put("Status", status);
+			return results;
 		}
 	}
 	if (userWrapper.getEmail()!=null && !userWrapper.getEmail().isEmpty()) {
@@ -1753,6 +1754,7 @@ public Map editUserInfo(UserWrapper userWrapper, Employee employee) {
 			status.setMessage("Invalid email format");
 			status.setStatus("False");
 			results.put("Status", status);
+			return results;
 		} else {
 			employee.setEmail(userWrapper.getEmail());
 		}
@@ -1785,7 +1787,7 @@ public Map editUserInfo(UserWrapper userWrapper, Employee employee) {
 	e.setEmail(employee.getEmail());
 	String picString = Base64.encodeBytes(employee.getProfilePic());
 	e.setProfilePic(picString);
-	System.out.println("pic string " +  picString.equals(userWrapper.getProfilePic()));
+//	System.out.println("pic string " +  picString.equals(userWrapper.getProfilePic()));
 	e.setRequiredAndroidVersion(requiredVersion);
 
 	response.put("Response", e);
