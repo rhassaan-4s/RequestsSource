@@ -570,9 +570,9 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		if(loginUsersRequests.getRequest_id().getId()==4 || loginUsersRequests.getRequest_id().getId()==5){
 			if(errors.hasErrors()==false) {
 				if (accuracy!=null && !accuracy.isEmpty()) {
-					if (settings.getLocationAccuracy()< Integer.parseInt(accuracy)) {
-						errors.reject("requestsApproval.errors.notAccurateLocation");
-					} 
+//					if (settings.getLocationAccuracy()< Integer.parseInt(accuracy)) {
+//						errors.reject("requestsApproval.errors.notAccurateLocation");
+//					} 
 				} else {
 					errors.reject("requestsApproval.errors.locationIsNotSet");
 				}
