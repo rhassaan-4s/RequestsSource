@@ -135,7 +135,7 @@ function printSelection(node){
 								<select name="request_id" id="request_id">
 									<option value=""><fmt:message key="commons.caption.select" /></option>						
 										<c:forEach items="${requestTypeList}" var="request"> 
-											<option value="${request.id}" ${request.id == request_id ?' selected' : ''}">${request.description}</option>
+											<option value="${request.id}" ${request.id==request_id?'selected':''}>${request.description}</option>
 										</c:forEach>
 								</select>
 							</td>													

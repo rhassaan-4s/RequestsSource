@@ -135,6 +135,7 @@ public class LoginUsersRequestsView implements Controller{
 		}
 		
 		String requestType=request.getParameter("requestType");
+		log.debug("request type " + requestType);
 		
 		if(requestType!=null && !requestType.equals("")){
 			List userReqs=new ArrayList();
