@@ -1068,10 +1068,11 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 				} else if (requestType.equals(new Long(4))) {
 					log.debug("requesttype is 4");
-					criteria.add(Restrictions.or(Restrictions.or(
-							Restrictions.eq("request_id.id", new Long(1)),
-							Restrictions.eq("request_id.id", new Long(2)))
-							,Restrictions.eq("request_id.id", new Long(4))));
+//					criteria.add(Restrictions.or(Restrictions.or(
+//							Restrictions.eq("request_id.id", new Long(1)),
+//							Restrictions.eq("request_id.id", new Long(2)))
+//							,Restrictions.eq("request_id.id", new Long(4))));
+					criteria.add(Restrictions.eq("request_id.id", new Long(4)));
 					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
 							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 				} else if (requestType.equals(new Long(5))) {
@@ -1080,7 +1081,12 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 							Restrictions.eq("request_id.id", new Long(10)),
 							Restrictions.eq("request_id.id", new Long(11)))
 							);
-				} else if (requestType.equals(new Long(10)) || requestType.equals(new Long(11))) {
+				}  
+//				else if (requestType.equals(new Long(6))) {
+//					log.debug("requesttype is 6");
+//					criteria.add(Restrictions.eq("request_id.id", new Long(1)));
+//				} 
+				else if (requestType.equals(new Long(10)) || requestType.equals(new Long(11))) {
 					log.debug("requesttype is else");
 					criteria.add(Restrictions.eq("request_id.id", requestType));
 				} else if (requestType.equals(new Long(12))) {
@@ -1206,10 +1212,11 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 				} else if (requestType.equals(new Long(4))) {
 					log.debug("requesttype is 4");
-					criteria.add(Restrictions.or(Restrictions.or(
-							Restrictions.eq("request_id.id", new Long(1)),
-							Restrictions.eq("request_id.id", new Long(2)))
-							,Restrictions.eq("request_id.id", new Long(4))));
+//					criteria.add(Restrictions.or(Restrictions.or(
+//							Restrictions.eq("request_id.id", new Long(1)),
+//							Restrictions.eq("request_id.id", new Long(2)))
+//							,Restrictions.eq("request_id.id", new Long(4))));
+					criteria.add(Restrictions.eq("request_id.id", new Long(4)));
 					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
 							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 				} else if (requestType.equals(new Long(5))) {

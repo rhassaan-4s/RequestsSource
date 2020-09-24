@@ -153,7 +153,7 @@ function printSelection(node){
 								<fmt:message key="commons.caption.from"/>
 							</td>
 							<td  class="formBodControl" >
-								<input type="text"  class="calendar" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${request_date_from}" />
+								<input type="text"  class="calendar" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${dateFrom}" />
 							</td>
 		
 					  		<td nowrap class="formBodControl" >
@@ -161,7 +161,7 @@ function printSelection(node){
 								<fmt:message key="commons.caption.to"/>
 							</td>
 							<td  class="formBodControl" >
-								<input type="text"  class="calendar"  readonly="readonly" autocomplete="off" dir="ltr" name="request_date_to" id="request_date_to" value="${request_date_to}" />
+								<input type="text"  class="calendar"  readonly="readonly" autocomplete="off" dir="ltr" name="request_date_to" id="request_date_to" value="${dateTo}" />
 							</td>
 						</tr>
 						
@@ -182,6 +182,8 @@ function printSelection(node){
 			<tr>
 				<td>
 				<div id="result">
+				<abc:paging url="loginUsersRequestsView.html" 
+					parametersString="requestType=${request_id}&dateFrom=${dateFrom}&dateTo=${dateTo}"/>
 					<table rules="all" align="center" width="70%" class="sofT">
 								
 						<tr>						
@@ -231,7 +233,7 @@ function printSelection(node){
 							<td class="helpHed">
 							</td>
 						</tr>
-					<c:forEach items="${records}" var="record">
+					<c:forEach items="${results}" var="record">
 						<tr height=20 bgcolor="#F8F8F8"> 							        
 							<td  nowrap>
 						         ${record.empCode }
