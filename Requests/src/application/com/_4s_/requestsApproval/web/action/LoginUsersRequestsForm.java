@@ -454,10 +454,10 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 						RequestTypes errands= (RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, new Long(4));
 						if(loginUsersRequests.getRequest_id().getId().equals(new Long(1)) && loginUsersRequests.getVacation().getVacation().equals("999")){
 							log.debug(">>>>>>>>>test=======");
-							Vacation errand=(Vacation) requestsApprovalManager.getObject(Vacation.class, "999");
+//							Vacation errand=(Vacation) requestsApprovalManager.getObject(Vacation.class, "999");
 
 							loginUsersRequests.setRequest_id(errands);
-							loginUsersRequests.setVacation(errand);
+//							loginUsersRequests.setVacation(errand);
 						}
 					}
 				}
@@ -1044,7 +1044,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 			log.debug("loginUsersRequests.getEmpCode() entered--------"+loginUsersRequests.getEmpCode());
 			
 			String withoutSalPeriod= request.getParameter("withoutSalPeriod");	
-			log.debug("-----quar or half---"+withoutSalPeriod);
+			log.debug("-----withoutSalPeriod---"+withoutSalPeriod);
 			
 			
 			if(loginUsersRequests.getRequest_id()!=null && !loginUsersRequests.getRequest_id().equals("")){
@@ -1056,7 +1056,15 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 					if(loginUsersRequests.getRequest_id().getId()==4) {
 						loginUsersRequests.setVacation(vac);
 						loginUsersRequests.setPayed(new Long(1));
-						log.debug("request type " + loginUsersRequests.getRequest_id());
+						log.debug("request type " + loginUsersRequests.getRequest_id().getId());
+						log.debug("loginUsersRequests.getVac_period_from() " + loginUsersRequests.getVac_period_from());
+						loginUsersRequests.setPeriod_from(loginUsersRequests.getFrom_date());
+						Calendar toCalErrand = Calendar.getInstance();
+						toCalErrand.setTime(loginUsersRequests.getTo_date());
+						toCalErrand.set(Calendar.HOUR_OF_DAY, 23);
+						toCalErrand.set(Calendar.MINUTE, 59);
+						toCalErrand.set(Calendar.SECOND, 59);
+						loginUsersRequests.setPeriod_to(loginUsersRequests.getTo_date());
 					} else if(loginUsersRequests.getRequest_id().getId()==5) {
 						loginUsersRequests.setRequest_id(loginUsersRequests.getRequest_id().getParentId());
 						loginUsersRequests.setVacation(vac);

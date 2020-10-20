@@ -259,13 +259,13 @@ public class ReportsController extends BaseSimpleFormController{
 			}
 		}
 		if(requestType== null || !requestType.equals("4")) {
-			model = requestsApprovalManager.getRequestsForApproval(null,null,dateFrom,dateTo,null,null,requestType,codeFrom,codeTo,null,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
+			model = requestsApprovalManager.getRequestsForApproval(null,null,dateFrom,dateTo,null,null,requestType,codeFrom,codeTo,null,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,80);
 			Integer resultsSize = (Integer)model.get("listSize");
 			if (exportParameter!=null && exportParameter.equals("true")) {
 				model = requestsApprovalManager.getRequestsForApproval(null,null,dateFrom,dateTo,null,null,requestType,codeFrom,codeTo,null,"desc",loginUsers, empReqTypeAccs,true,null,0,resultsSize);
 			}
 		} else {
-			model = requestsApprovalManager.getRequestsForApproval(null,null,dateFrom,dateTo,null,null,"12",codeFrom,codeTo,null,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
+			model = requestsApprovalManager.getRequestsForApproval(null,null,dateFrom,dateTo,null,null,"12",codeFrom,codeTo,null,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,80);
 			Integer resultsSize = (Integer)model.get("listSize");
 			if (exportParameter!=null && exportParameter.equals("true")) {
 				model = requestsApprovalManager.getRequestsForApproval(null,null,dateFrom,dateTo,null,null,requestType,codeFrom,codeTo,null,"desc",loginUsers, empReqTypeAccs,true,null,0,resultsSize);

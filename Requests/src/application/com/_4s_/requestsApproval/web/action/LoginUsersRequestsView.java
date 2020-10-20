@@ -176,7 +176,7 @@ public class LoginUsersRequestsView implements Controller{
 		
 		log.debug("request type " + requestTypeLong);
 		
-		model = requestsApprovalManager.getRequestsForApproval(null,emp.getEmpCode(),dateFrom,dateTo,null,null,requestTypeLong,null,null,null,"desc",loginUsers, null,true,null,pageNumber,10);
+		model = requestsApprovalManager.getRequestsForApproval(null,emp.getEmpCode(),dateFrom,dateTo,null,null,requestTypeLong,null,null,null,"desc",loginUsers, null,true,null,pageNumber,80);
 //		if(requestType!=null && !requestType.equals("")){
 //			List userReqs=new ArrayList();
 //			List reqs;
