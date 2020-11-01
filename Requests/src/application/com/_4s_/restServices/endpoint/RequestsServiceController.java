@@ -103,8 +103,10 @@ public class RequestsServiceController {
 
 						e.setRequiredAndroidVersion(requiredVersion);
 						
-						String picString = Base64.encodeBytes(emp.getProfilePic());
-						e.setProfilePic(picString);
+						if (emp.getProfilePicName()!=null) {
+							String picString = Base64.encodeBytes(emp.getProfilePic());
+							e.setProfilePic(picString);
+						}
 
 						response.put("Response", e);
 						return response;
