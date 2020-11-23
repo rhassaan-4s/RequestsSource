@@ -1586,15 +1586,15 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		}
 		List empReqTypeAccs = new ArrayList();
 		Iterator it = tempAcc.iterator();
-		log.debug("will loop on empreqtypeAccs " + tempAcc.size());
+//		log.debug("will loop on empreqtypeAccs " + tempAcc.size());
 		while(it.hasNext()) {
 //			log.debug("looping empreqtypeAccs");
 			EmpReqTypeAcc acc = (EmpReqTypeAcc)it.next();
 //			log.debug("acc " + acc.getEmp_id().getId());
 			String empCode = acc.getEmp_id().getEmpCode();
-			log.debug("group id " + acc.getGroup_id() + " emp code " + empCode);
+//			log.debug("group id " + acc.getGroup_id() + " emp code " + empCode);
 			if (!empReqTypeAccs.contains(empCode)) {
-				log.debug("new emp code");
+//				log.debug("new emp code");
 				empReqTypeAccs.add(empCode);
 			}
 		}

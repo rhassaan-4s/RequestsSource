@@ -44,11 +44,30 @@ public class TimeAttendanceReport implements Controller{
 	public ModelAndView handleRequest(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
-		Employee emp =(Employee) request.getSession().getAttribute("employee");
+		Employee loggedInEmp =(Employee) request.getSession().getAttribute("employee");
+		Employee emp = loggedInEmp;
 		log.debug("---ref-emp from session---"+request.getSession().getAttribute("employee"));
 		int year, month;
+		
+		Boolean differentEmp = false;
+		
+		String empCode = request.getParameter("empCode");
+		log.debug("empCode " + empCode);
+		if(empCode!=null && !empCode.isEmpty()) {
+			if(!empCode.equals(emp.getEmpCode())) {
+				Employee searchEmp = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", empCode);
+				if (!loggedInEmp.equals(searchEmp)) {
+					differentEmp = true;
+				}
+				emp = searchEmp;
+				log.debug("emp " + emp);
+			}
+		}
 		Map model=new HashMap();
 		model.put("emp", emp);
+		model.put("empCode", empCode);
+		
+		model.put("differentEmp", differentEmp);
 
 		String dateFrom = request.getParameter("fromDate");
 		log.debug("--dateFrom--"+dateFrom);
@@ -106,6 +125,23 @@ public class TimeAttendanceReport implements Controller{
 				log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
 				mCalDate.setDateTimeString(dateTo,new Boolean(false));
 				toDate= mCalDate.getDate();
+				
+				List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAccEmpCode(emp, null);
+				String empArray = "";
+				Iterator empItr = empReqTypeAccs.iterator();
+				int count = 0;
+				while(empItr.hasNext()) {
+					String empReq = ((String)(empItr.next()));
+					//					System.out.println("empReq " + empReq);
+					if (count==0) {
+						//						empArray = empReq.getEmp_id().getEmpCode();
+						empArray =  "'" + empReq +  "'";
+					} else {
+						//						empArray += "," + empReq.getEmp_id().getEmpCode();
+						empArray += ",'" + empReq + "'";
+					}
+					count++;
+				}
 				
 				// VIP
 				List totalObjects= new ArrayList();
@@ -206,21 +242,23 @@ public class TimeAttendanceReport implements Controller{
 					log.debug("-------day---"+day);
 					log.debug("-------objects---"+ob.getDay()+"-------getTimeIn---"+ob.getTimeIn()+"-------getTimeOut---"+ob.getTimeOut());
 					
-					if (ob.getAddress1()== null && ob.getLatitude1()!=null) {
+					if (ob.getAddress1()== null && ob.getLatitude1()!=null && ob.getLatitude1()!="0") {
 						String address1 = requestsApprovalManager.getAddressByGpsCoordinates(ob.getLongitude1(), ob.getLatitude1());
 						log.debug("address 1 " + address1);
 						ob.setAddress1(address1);
 					}
-					if(ob.getAddress2()==null && ob.getLatitude2()!=null) {
+					if(ob.getAddress2()==null && ob.getLatitude2()!=null && ob.getLatitude2()!="0") {
 						String address2 = requestsApprovalManager.getAddressByGpsCoordinates(ob.getLongitude2(), ob.getLatitude2());
 						log.debug("address 2 " + address2);
 						ob.setAddress2(address2);
 					}
-					if( ob.getLatitude1()!=null && ob.getLatitude2()!=null) {
+					if( ob.getLatitude1()!=null && ob.getLatitude2()!=null  && ob.getLatitude1()!="0" && ob.getLatitude2()!="0") {
 						log.debug(requestsApprovalManager.distance(new Double(ob.getLatitude1()), new Double(ob.getLongitude1()), new Double(settings.getCompanyLat()), new Double(settings.getCompanyLong())));
 					}
 				}
 				model.put("records", objects);
+				model.put("empArray", empArray);
+				
 				// VIP
 				
 			}

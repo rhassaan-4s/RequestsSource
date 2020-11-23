@@ -99,6 +99,7 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 		log.debug("----year---"+year);
 		month=c.get(Calendar.MONTH);
 		log.debug("----month---"+month);
+		log.debug("----(Integer)request.getSession().getAttribute(salary_from_day)---"+request.getSession().getAttribute("salary_from_day"));
 		int salary_from_day = (Integer)request.getSession().getAttribute("salary_from_day");
 		if (salary_from_day == 0) {
 			c.set(year,month, 1);

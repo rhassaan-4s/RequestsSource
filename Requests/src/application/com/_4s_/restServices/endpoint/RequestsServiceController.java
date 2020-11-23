@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dbunit.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,6 +45,8 @@ import com._4s_.security.model.User;
 @Controller
 @RequestMapping("/workflow")
 public class RequestsServiceController {
+	
+	protected final Log log = LogFactory.getLog(getClass());
 
 	@Autowired
 	RequestsService requestsService;
@@ -54,22 +58,22 @@ public class RequestsServiceController {
 	public Map login(ImeiWrapper imei) {
 		Map response = new HashMap();
 		try {
-			System.out.println("trying to login");
+			log.debug("trying to login");
 			User user = requestsService.login();
-			System.out.println("after login");
+			log.debug("after login");
 			
 			Map settingsMap = requestsService.getSettings();
 			Map settings = (Map)settingsMap.get("Response");
 			Integer requiredVersion = (Integer)settings.get("requiredAndroidVersion");
-			System.out.println("settings " + settings);
-			System.out.println("version required " + requiredVersion);
+			log.debug("settings " + settings);
+			log.debug("version required " + requiredVersion);
 			
 			if (user == null) {
-				System.out.println("Not authenticated");
+				log.debug("Not authenticated");
 				return null;
 			} else {
 				if (imei!= null && imei.getImei()!= null && !imei.getImei().isEmpty()) {
-					System.out.println("Authenticated with employee id is " + user.getEmployee().getId());
+					log.debug("Authenticated with employee id is " + user.getEmployee().getId());
 					Boolean checked = requestsService.checkImei(imei.getImei(),user);
 					if(checked.equals(true)) {
 						UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
@@ -111,17 +115,17 @@ public class RequestsServiceController {
 						response.put("Response", e);
 						return response;
 					} else {
-						System.out.println("user's persisted imei doesn't match the input imei");
+						log.debug("user's persisted imei doesn't match the input imei");
 						List userImeis = requestsService.getUsersImei(user);
 						if (userImeis.isEmpty()) {
-							System.out.println("user didn't register imei yet");
+							log.debug("user didn't register imei yet");
 							User ifuserexist = requestsService.getImeiUsers(imei.getImei());
 							if(ifuserexist == null) {
 								Imei im = new Imei();
 								im.setUsers(user);
 								im.setImei(imei.getImei());
 								requestsService.saveImei(im);
-								System.out.println("new imei id " + im.getId());
+								log.debug("new imei id " + im.getId());
 
 								RestStatus status = new RestStatus();
 								status.setStatus("true");
@@ -150,6 +154,11 @@ public class RequestsServiceController {
 								e.setTel(emp.getTel());
 
 								e.setRequiredAndroidVersion(requiredVersion);
+								
+								if (emp.getProfilePicName()!=null) {
+									String picString = Base64.encodeBytes(emp.getProfilePic());
+									e.setProfilePic(picString);
+								}
 
 								response.put("Response", e);
 
@@ -205,11 +214,11 @@ public class RequestsServiceController {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Exception " + e.getClass());
-			System.out.println(e.getMessage());
+			log.debug("Exception " + e.getClass());
+			log.debug(e.getMessage());
 			StackTraceElement[] elements = e.getStackTrace();
 			for(int i = 0; i<elements.length; i++) {
-				System.out.println(elements[i]);
+				log.debug(elements[i]);
 			}
 			return null;
 		}
@@ -288,13 +297,13 @@ public class RequestsServiceController {
 	@ResponseBody
 	public Map signInOut( AttendanceRequest userRequest)
 	{
-		System.out.println("Controller sign in/out");
+		log.debug("Controller sign in/out");
 		Map response = new HashMap();
 		RestStatus restStatus = new RestStatus();
 		Settings settings = (Settings)requestsService.getRequestsApprovalManager().getObject(Settings.class, new Long(1));
 		
-		System.out.println("userRequest.getAttendanceType() "+userRequest.getAttendanceType());
-		System.out.println("userRequest.getAttendanceTime() " + userRequest.getAttendanceTime());
+		log.debug("userRequest.getAttendanceType() "+userRequest.getAttendanceType());
+		log.debug("userRequest.getAttendanceTime() " + userRequest.getAttendanceTime());
 		if (userRequest.getAttendanceType()==null || userRequest.getLatitude()==null || userRequest.getLongitude()==null){//|| userRequest.getAttendanceTime() == null || userRequest.getAttendanceTime().isEmpty()
 			restStatus.setCode("303");
 			restStatus.setMessage("Null/Empty Input Parameter");
@@ -304,13 +313,13 @@ public class RequestsServiceController {
 		} else {
 			restStatus.setStatus("true");
 			restStatus.setCode("200");
-			System.out.println("will sign in");
+			log.debug("will sign in");
 			UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
-			System.out.println("token " + token);
+			log.debug("token " + token);
 			UserDetails userDet = (UserDetails)token.getPrincipal();
-			System.out.println("userdet" + userDet);
+			log.debug("userdet" + userDet);
 			User user = requestsService.getUser(userDet.getUsername());
-			System.out.println("user " + user);
+			log.debug("user " + user);
 			response = requestsService.signInOut(userRequest,user.getEmployee().getId());
 			
 			return response;
@@ -329,14 +338,14 @@ public class RequestsServiceController {
 		Map response = new HashMap();		
 		RestStatus restStatus = new RestStatus();
 		RestStatus status = new RestStatus();
-		System.out.println(" sort " + approvalQuery.getSort());
-		System.out.println(!approvalQuery.getSort().equalsIgnoreCase("asc"));
-		System.out.println(!approvalQuery.getSort().equalsIgnoreCase("desc"));
-		System.out.println((!approvalQuery.getSort().equalsIgnoreCase("asc") && !approvalQuery.getSort().equalsIgnoreCase("desc")));
+		log.debug(" sort " + approvalQuery.getSort());
+		log.debug(!approvalQuery.getSort().equalsIgnoreCase("asc"));
+		log.debug(!approvalQuery.getSort().equalsIgnoreCase("desc"));
+		log.debug((!approvalQuery.getSort().equalsIgnoreCase("asc") && !approvalQuery.getSort().equalsIgnoreCase("desc")));
 		if (approvalQuery.getSort()==null || approvalQuery.getSort().isEmpty() 
 				|| (!approvalQuery.getSort().equalsIgnoreCase("asc") && !approvalQuery.getSort().equalsIgnoreCase("desc"))) {
-			System.out.println("sort value error");
-			System.out.println("sort value is wrong " + approvalQuery.getSort()==null || approvalQuery.getSort().isEmpty() 
+			log.debug("sort value error");
+			log.debug("sort value is wrong " + approvalQuery.getSort()==null || approvalQuery.getSort().isEmpty() 
 				|| (!approvalQuery.getSort().equalsIgnoreCase("asc") && !approvalQuery.getSort().equalsIgnoreCase("desc")));
 			status.setCode("303");
 			status.setMessage("Null/Empty/Wrong Input Parameter");
@@ -346,7 +355,7 @@ public class RequestsServiceController {
 		}
 		if (approvalQuery.getPageSize()!=0) {
 			List empReqTypeAccs = requestsService.getEmpReqTypeAcc(user.getEmployee(), approvalQuery.getRequestType());
-			System.out.println("empReqTypeAccs " + empReqTypeAccs.size());
+			log.debug("empReqTypeAccs " + empReqTypeAccs.size());
 			response =	requestsService.getRequestsForApproval(approvalQuery,empReqTypeAccs,user.getEmployee());	
 
 			List resp = (List)response.get("results");
@@ -386,14 +395,14 @@ public class RequestsServiceController {
 		approvalQuery.setCodeFrom(null);
 		approvalQuery.setCodeTo(null);
 		RestStatus status = new RestStatus();
-		System.out.println(" sort " + approvalQuery.getSort());
-		System.out.println(!approvalQuery.getSort().equalsIgnoreCase("asc"));
-		System.out.println(!approvalQuery.getSort().equalsIgnoreCase("desc"));
-		System.out.println((!approvalQuery.getSort().equalsIgnoreCase("asc") && !approvalQuery.getSort().equalsIgnoreCase("desc")));
+		log.debug(" sort " + approvalQuery.getSort());
+		log.debug(!approvalQuery.getSort().equalsIgnoreCase("asc"));
+		log.debug(!approvalQuery.getSort().equalsIgnoreCase("desc"));
+		log.debug((!approvalQuery.getSort().equalsIgnoreCase("asc") && !approvalQuery.getSort().equalsIgnoreCase("desc")));
 		if (approvalQuery.getSort()==null || approvalQuery.getSort().isEmpty() 
 				|| (!approvalQuery.getSort().equalsIgnoreCase("asc") && !approvalQuery.getSort().equalsIgnoreCase("desc"))) {
-			System.out.println("sort value error");
-			System.out.println("sort value is wrong " + approvalQuery.getSort()==null || approvalQuery.getSort().isEmpty() 
+			log.debug("sort value error");
+			log.debug("sort value is wrong " + approvalQuery.getSort()==null || approvalQuery.getSort().isEmpty() 
 				|| (!approvalQuery.getSort().equalsIgnoreCase("asc") && !approvalQuery.getSort().equalsIgnoreCase("desc")));
 			status.setCode("303");
 			status.setMessage("Null/Empty/Wrong Input Parameter");
@@ -456,7 +465,7 @@ public class RequestsServiceController {
 	@ResponseBody
 	public Map vacTypes(RequestTypeWrapper requestType) {
 		Map m =  requestsService.getVacTypes(requestType.getRequestType());
-		System.out.println("test vac types");
+		log.debug("test vac types");
 		return m;
 	}
 	
@@ -465,7 +474,7 @@ public class RequestsServiceController {
 	@ResponseBody
 	public Map getSettings() {
 		Map m =  requestsService.getSettings();
-		System.out.println("test getSettings");
+		log.debug("test getSettings");
 		return m;
 	}
 	
@@ -474,7 +483,7 @@ public class RequestsServiceController {
 	@ResponseBody
 	public Map getPortNo(ClientWrapper client) {
 		Map m =  requestsService.getPortNo(client.getClientName());
-		System.out.println("test getPortNo");
+		log.debug("test getPortNo");
 		return m;
 	}
 	
@@ -494,7 +503,7 @@ public class RequestsServiceController {
 			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody 
 	public Map getAttendanceVacationReport(RequestsApprovalQuery requestApproval) {
-		System.out.println("getAttendanceVacationReport ");
+		log.debug("getAttendanceVacationReport ");
 		Map m = requestsService.getAttendanceVacationReport(requestApproval);
 		return m;
 	}
@@ -503,7 +512,7 @@ public class RequestsServiceController {
 			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody 
 	public Map getAttendanceReport(RequestsApprovalQuery requestApproval) {
-		System.out.println("getAttendanceReport ");
+		log.debug("getAttendanceReport ");
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 		UserDetails userDet = (UserDetails)token.getPrincipal();
 		User user = requestsService.getUser(userDet.getUsername());
@@ -515,7 +524,7 @@ public class RequestsServiceController {
 			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody 
 	public Map editUserInfo(UserWrapper userWrapper) {
-		System.out.println("editUserInfo ");
+		log.debug("editUserInfo ");
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 		UserDetails userDet = (UserDetails)token.getPrincipal();
 		User user = requestsService.getUser(userDet.getUsername());

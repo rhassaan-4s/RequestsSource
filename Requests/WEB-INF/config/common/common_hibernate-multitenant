@@ -9,23 +9,12 @@
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<description>Database specific options</description>
 		<property name="location">
-			<value>/WEB-INF/classes/hibernate.properties</value>
+			<value>/WEB-INF/classes/database.properties</value>
 		</property>
 		<property name="ignoreUnresolvablePlaceholders">
 			<value>true</value>
 		</property>
 	</bean>
-	
-	<!--bean id="jndiDataSource"
-		class="org.springframework.jndi.JndiObjectFactoryBean" >
-		<property name="jndiName">
-            <value>java:/comp/env/jdbc</value>
-        </property>
-	</bean>
-	
-	<bean id="swapper" class="org.springframework.aop.target.HotSwappableTargetSource">
-   		<constructor-arg ref="jndiDataSource"/>
-	</bean-->
 
 
 	<!-- Bean Definition DBCP -->
@@ -37,12 +26,12 @@
 		<property name="url">
 			<value>${hibernate.connection.url}</value>
 		</property>
-		<property name="username">
+		<!-- <property name="username">
 			<value>${hibernate.connection.username}</value>
 		</property>
 		<property name="password">
 			<value>${hibernate.connection.password}</value>
-		</property>
+		</property> -->
 	</bean>
 
 	<!-- Hibernate SessionFactory -->
@@ -77,21 +66,29 @@
 					${hibernate.dialect}
 				</prop>
 				<!-- <prop key="hibernate.connection.release_mode">after_statement</prop>-->
-  				<prop key="hibernate.show_sql">true</prop>  
+  				<prop key="hibernate.show_sql">false</prop>  
+  				<prop key="hibernate.connection.autoReconnect">true</prop>
+  				
 <!--		    <prop key="hibernate.hbm2ddl.auto">update</prop>  -->
 <!--				<prop key="hibernate.hbm2ddl.auto">create</prop> -->
+
+				<prop key="hibernate.multiTenancy">DATABASE</prop>
+	            <prop key="hibernate.multi_tenant_connection_provider">com._4s_.common.dao.MultiTenantConnectionProviderImpl</prop>
+	            <prop key="hibernate.tenant_identifier_resolver">com._4s_.common.dao.CurrentTenantIdentifierResolverImpl</prop>
+            
 			</props>
 		</property>
 
 
 	</bean>
-
+	
 	<!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
 		</property>
+		<property name="autodetectDataSource" value="false"/>
 	</bean>
 
 

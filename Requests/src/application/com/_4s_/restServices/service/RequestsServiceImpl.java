@@ -15,6 +15,8 @@ import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dbunit.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -60,6 +62,8 @@ import com._4s_.security.model.User;
 @Service("requestsService")
 @Transactional
 public class RequestsServiceImpl implements RequestsService, UserDetailsService {
+	
+	protected final Log log = LogFactory.getLog(getClass());
  
  @Autowired
  private RequestsApprovalDAO requestsApprovalDAO;
@@ -121,7 +125,7 @@ public void setQry(Queries qry) {
  }
 
  public User login() {
-	 System.out.println("security dao " + securityDao);
+	 log.debug("security dao " + securityDao);
 	 return securityDao.login();
  }
 
@@ -148,7 +152,7 @@ public Map changePassword(PasswordWrapper passwordWrapper, User user) {
 public Boolean checkImei(String imei, User user) {
 	// TODO Auto-generated method stub
 	Imei im = securityDao.checkImei(imei,user);
-	System.out.println("imei " + im);
+	log.debug("imei " + im);
 	if (im != null) {
 		return new Boolean(true);
 	} else {
@@ -180,7 +184,7 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 	Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class, new Long(1));
 
 //	 System.setProperty("user.timezone", "Europe/Rome");
-	 System.out.println("#########################"+System.getProperty("user.timezone"));
+	 log.debug("#########################"+System.getProperty("user.timezone"));
 	    
 	DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	Date newDate = null;
@@ -195,15 +199,15 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 	
 	Calendar c= Calendar.getInstance();
 	
-	System.out.println("timezone " + c.getTimeZone());
+	log.debug("timezone " + c.getTimeZone());
 //	c.setTimeZone(TimeZone.getTimeZone("EST"));
-//	System.out.println("timezone " + c.getTimeZone());
+//	log.debug("timezone " + c.getTimeZone());
 	newDate = c.getTime();
-	System.out.println("parsed date " + newDate);
+	log.debug("parsed date " + newDate);
 	MultiCalendarDate mCalDate = new MultiCalendarDate();
 	mCalDate.setDate(newDate);
 	
-	System.out.println("SignInOunt: mcaldate " + mCalDate.getDate());
+	log.debug("SignInOunt: mcaldate " + mCalDate.getDate());
 	
 	MultiCalendarDate mCalDateOnly = new MultiCalendarDate();
 	Calendar cal = Calendar.getInstance();
@@ -220,15 +224,15 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 
 	LoginUsers loginUsers=(LoginUsers) requestsApprovalDAO.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
 	if(loginUsers!=null){
-		System.out.println("-----login.code----"+loginUsers.getEmpCode());
+		log.debug("-----login.code----"+loginUsers.getEmpCode());
 	}
 
-	System.out.println("settings.getAutomaticSignInOut().booleanValue() " + settings.getAutomaticSignInOut().booleanValue());
+	log.debug("settings.getAutomaticSignInOut().booleanValue() " + settings.getAutomaticSignInOut().booleanValue());
 	if (settings.getAutomaticSignInOut().booleanValue() == false) {
 //		List attendanceRequests = requestsApprovalManager.getAttendanceRequests(mCalDate.getDate(),loginUsers.getEmpCode());
-		System.out.println("Will sign in manually");
+		log.debug("Will sign in manually");
 		
-		System.out.println("will validate");
+		log.debug("will validate");
 		
 		restStatus = requestsApprovalManager.validateSignInOut(userRequest.getAttendanceType(), mCalDate.getDate(), emp);
 		
@@ -245,7 +249,7 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 		} else {
 			trans_type = "O";
 		}
-		System.out.println("date_" + dateOnly + " time_ " + newDate);
+		log.debug("date_" + dateOnly + " time_ " + newDate);
 		int result = requestsApprovalManager.insertTimeAttendance(settings.getServer(),settings.getService(),settings.getUsername(),settings.getPassword(),
 				emp.getEmpCode(),dateOnly, newDate,trans_type);
 		restStatus.setStatus("true");
@@ -324,7 +328,7 @@ private Map createManualAttendance(LoginUsers loginUsers, MultiCalendarDate mCal
 	
 	//10 signin 11 signout
 	RequestTypes reqType = null;
-	System.out.println("userRequest.getAttendanceType() " + userRequest.getAttendanceType());
+	log.debug("userRequest.getAttendanceType() " + userRequest.getAttendanceType());
 	if (userRequest.getAttendanceType().equals(new Long(1))) {
 		reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(10));
 	} else {
@@ -391,7 +395,7 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 		from = df.parse(userRequest.getAttendanceTime());
 	} catch (ParseException e) {
 		// TODO Auto-generated catch block
-		System.out.println(e.getMessage());
+		log.debug(e.getMessage());
 	}
 	Calendar cal = Calendar.getInstance();
 	cal.setTime(from);
@@ -406,7 +410,7 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 		to = df.parse(userRequest.getAttendanceTime2());
 	} catch (ParseException e) {
 		// TODO Auto-generated catch block
-		System.out.println(e.getMessage());
+		log.debug(e.getMessage());
 	}
 	cal.setTime(to);
 	cal.set(Calendar.HOUR_OF_DAY, 23);
@@ -421,7 +425,7 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 		return null;
 	}
 	Double daysDiff = Double.valueOf(Math.round((diff/(1000*60*60*24.0))));
-	System.out.println("daysDiff " + daysDiff);
+	log.debug("daysDiff " + daysDiff);
 	withoutSalVac.setWithdrawDays(daysDiff);
 	withoutSalVac.setEmpCode(emp.getEmpCode());
 	withoutSalVac.setLogin_user(loginUsers);
@@ -445,32 +449,32 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 	} else if (userRequest.getAttendanceType().equals(new Long(8))) {
 		request_id= (RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, new Long (2));
 	}
-	System.out.println("handlevacations request " + request_id.getId());
+	log.debug("handlevacations request " + request_id.getId());
 	if(withoutSalaryVacEnabled==true){//Lotus
 		if(userRequest.getAttendanceType().equals(new Long(7)) && userRequest.getVacation().equals("008")){
 			//tasree7 object
-			System.out.println("---without Salary vacation ---");
-//			System.out.println("---------loginUsersRequests.getPeriod_from()-------"+loginUsersRequests.getPeriod_from());
+			log.debug("---without Salary vacation ---");
+//			log.debug("---------loginUsersRequests.getPeriod_from()-------"+loginUsersRequests.getPeriod_from());
 			
 			request_id= (RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, new Long (3));
-			System.out.println("1.request " + request_id.getId());
+			log.debug("1.request " + request_id.getId());
 			
 			withoutSalVac.setRequest_id(request_id);
 			
 		} else if(userRequest.getAttendanceType().equals(new Long(7))) {
 			request_id= (RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, new Long (1));
-			System.out.println("2.request " + request_id.getId());
+			log.debug("2.request " + request_id.getId());
 			withoutSalVac.setVacation(vacation);
 		}
 	}  else if(userRequest.getAttendanceType().equals(new Long(8))) {
 		request_id= (RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, new Long (2));
-		System.out.println("request " + request_id.getId());
+		log.debug("request " + request_id.getId());
 		withoutSalVac.setVacation(vacation);
 	}
 	else {
 		withoutSalVac.setVacation(vacation);
 	}
-	System.out.println("request " + request_id.getId());
+	log.debug("request " + request_id.getId());
 	withoutSalVac.setRequest_id(request_id);
 	
 	if(periodFromToEnabled==true){//Lehaa
@@ -486,7 +490,7 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 	String requestNumber="";
 	requestNumber=requestsApprovalManager.CreateRequestNumber();
 	withoutSalVac.setRequestNumber(requestNumber);
-	System.out.println("requestNumber in handle vacation " + requestNumber);
+	log.debug("requestNumber in handle vacation " + requestNumber);
 	
 //	requestsApprovalManager.saveObject(withoutSalVac);
 	return withoutSalVac;
@@ -524,7 +528,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		}
 	} catch (ParseException e) {
 		// TODO Auto-generated catch block
-		System.out.println(e.getMessage());
+		log.debug(e.getMessage());
 		status.setCode("312");
 		status.setMessage("Date is not well formated");
 		status.setStatus("False");
@@ -544,7 +548,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				to = df.parse(userRequest.getAttendanceTime2());
 			} else {
 				to = df2.parse(userRequest.getAttendanceTime2());
-				System.out.println("to " + to);
+				log.debug("to " + to);
 			}
 			
 			cal.setTime(to);
@@ -559,7 +563,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		}
 	} catch (ParseException e) {
 		// TODO Auto-generated catch block
-		System.out.println(e.getMessage());
+		log.debug(e.getMessage());
 		status.setCode("312");
 		status.setMessage("Date is not well formated");
 		status.setStatus("False");
@@ -567,7 +571,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		return response;
 	}  catch (Exception e) {
 		// TODO Auto-generated catch block
-		System.out.println(e.getMessage());
+		log.debug(e.getMessage());
 		status.setCode("312");
 		status.setMessage("Date Exception");
 		status.setStatus("False");
@@ -581,7 +585,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 
 	LoginUsers loginUsers=(LoginUsers) requestsApprovalDAO.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
 	if(loginUsers!=null){
-		System.out.println("-----login.code----"+loginUsers.getEmpCode());
+		log.debug("-----login.code----"+loginUsers.getEmpCode());
 	}
 	LoginUsersRequests loginUsersRequests = null;
 	Vacation vac = null;
@@ -591,27 +595,27 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		//8:Periodic Vacation(2)
 	
 		RequestTypes reqType = null;
-		System.out.println("test userRequest.getAttendanceType() " + userRequest.getAttendanceType());
+		log.debug("test userRequest.getAttendanceType() " + userRequest.getAttendanceType());
 		if (userRequest.getAttendanceType().equals(new Long(0))) {
-//			System.out.println("0 reqType " + reqType.getId()); 
+//			log.debug("0 reqType " + reqType.getId()); 
 			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(1));
-			System.out.println(" reqType " + reqType.getId());
+			log.debug(" reqType " + reqType.getId());
 		}  else if (userRequest.getAttendanceType().equals(new Long(3))) {//Permission	// || userRequest.getAttendanceType().equals(new Long(4))
-//			System.out.println("3 4 reqType " + reqType.getId());
+//			log.debug("3 4 reqType " + reqType.getId());
 			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(3));
-			System.out.println(" reqType " + reqType.getId());
+			log.debug(" reqType " + reqType.getId());
 		} else if (userRequest.getAttendanceType().equals(new Long(5)) ||userRequest.getAttendanceType().equals(new Long(6))) {//errand
-//			System.out.println("5 6 reqType " + reqType.getId());
+//			log.debug("5 6 reqType " + reqType.getId());
 			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(1));
 			vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class,"vacation", "999");
-			System.out.println(" reqType " + reqType.getId());
+			log.debug(" reqType " + reqType.getId());
 		} else if (userRequest.getAttendanceType().equals(new Long(7))) { //special vacation
-//			System.out.println("7 reqType " + reqType);
+//			log.debug("7 reqType " + reqType);
 			loginUsersRequests = new LoginUsersRequests();
 			handleVacations(userRequest, empId,loginUsersRequests);
 			if (loginUsersRequests != null) {
 				reqType = loginUsersRequests.getRequest_id();
-				System.out.println(" reqType " + reqType.getId());
+				log.debug(" reqType " + reqType.getId());
 			} else {
 				status.setCode("313");
 				status.setMessage("To date is before from date.");
@@ -620,24 +624,24 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				return response;
 			}
 		} else if (userRequest.getAttendanceType().equals(new Long(8))) {//periodic vacation
-//			System.out.println("8 reqType " + reqType.getId());
+//			log.debug("8 reqType " + reqType.getId());
 			loginUsersRequests = new LoginUsersRequests();
 			handleVacations(userRequest, empId,loginUsersRequests);
 			reqType = loginUsersRequests.getRequest_id();
-			System.out.println(" reqType " + reqType.getId());
+			log.debug(" reqType " + reqType.getId());
 		} else if (userRequest.getAttendanceType().equals(new Long(9))) {//Full Day errand
-//			System.out.println("5 6 reqType " + reqType.getId());
+//			log.debug("5 6 reqType " + reqType.getId());
 //			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(1));
 //			vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class,"vacation", "999");
 			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(4));
-			System.out.println(" reqType " + reqType.getId());
+			log.debug(" reqType " + reqType.getId());
 		} else {
-			System.out.println("userRequest.getAttendanceType() " + userRequest.getAttendanceType().getClass());
+			log.debug("userRequest.getAttendanceType() " + userRequest.getAttendanceType().getClass());
 		}
 		if (userRequest.getAttendanceType().equals(new Long(3))) {
-			System.out.println("validating");
+			log.debug("validating");
 			if (userRequest.getPermissionEffect() == null) {
-				System.out.println("validating2");
+				log.debug("validating2");
 				status.setCode("305");
 				status.setMessage("One or more of Permission Parameters is null");
 				status.setStatus("False");
@@ -647,8 +651,8 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		}
 		
 		
-//		System.out.println("mCalDate " + mCalDate);
-		System.out.println("mCalDate.getDate() " + mCalDate.getDate());
+//		log.debug("mCalDate " + mCalDate);
+		log.debug("mCalDate.getDate() " + mCalDate.getDate());
 		if (userRequest.getAttendanceType().equals(new Long(6))
 				||userRequest.getAttendanceType().equals(new Long(3)) || userRequest.getAttendanceType().equals(new Long(5))) {//Permission End || //Full Day Permission End
 			//userRequest.getAttendanceType().equals(new Long(4)) || 
@@ -664,14 +668,14 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					if (userRequest.getAttendanceType().equals(new Long(6))) {//errand 
 					requestQueryending.setRequestType("2");
 				} else {
-					System.out.println("condition not handled 3 " + userRequest.getAttendanceType());
+					log.debug("condition not handled 3 " + userRequest.getAttendanceType());
 				}
 				requestQueryending.setDateFrom(userRequest.getAttendanceTime());
 				requestQueryending.setDateTo(userRequest.getAttendanceTime());
 				List requests = (List)(requestsApprovalManager.checkStartedRequests(requestQueryending, emp)).get("Response");
 				Iterator itrrequests = requests.iterator();
 				while(itrrequests.hasNext()) {
-					System.out.println("####Strarted requests "+((LoginUsersRequests)itrrequests.next()).getRequestNumber());
+					log.debug("####Strarted requests "+((LoginUsersRequests)itrrequests.next()).getRequestNumber());
 				}
 				if (requests.size() == 1) {
 					loginUsersRequests = (LoginUsersRequests)requests.get(0);
@@ -707,7 +711,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 						String requestNumber="";
 						requestNumber=requestsApprovalManager.CreateRequestNumber();
 						loginUsersRequests.setRequestNumber(requestNumber);
-						System.out.println("requestNumber in user request " + requestNumber);
+						log.debug("requestNumber in user request " + requestNumber);
 						cal.setTime(newDate);
 						cal.set(Calendar.HOUR_OF_DAY, 0);
 						cal.set(Calendar.MINUTE, 0);
@@ -719,14 +723,14 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				}
 			} else {//starting permissions and errands
 				RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
-				System.out.println("#$#$starting permissions or errands");
+				log.debug("#$#$starting permissions or errands");
 //				//1 permission 2 errands
 				if (userRequest.getAttendanceType().equals(new Long(3))) {//permission start
 					requestQuery.setRequestType("1");
 				} else if (userRequest.getAttendanceType().equals(new Long(5))) {//errand start
 					requestQuery.setRequestType("2");
 				} else {
-					System.out.println("condition not handled 2 " + userRequest.getAttendanceType());
+					log.debug("condition not handled 2 " + userRequest.getAttendanceType());
 				}
 				
 //				requestQuery.setDateFrom(userRequest.getAttendanceTime());
@@ -737,13 +741,13 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				
 				Map startedRequests = checkStartedRequests(requestQuery, emp);
 				List startedRequestsResponse = (List)startedRequests.get("Response");
-				System.out.println("#$#$starting permissions or errands ---- checked started requests ---" + startedRequestsResponse.size());
+				log.debug("#$#$starting permissions or errands ---- checked started requests ---" + startedRequestsResponse.size());
 				///////////////////////end requests automatically////////////////////////////////////////////////
 //				Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
 //				List results = (List)response.get("Response");
 				Iterator itr = startedRequestsResponse.iterator();
 				
-				System.out.println("checkStartedRequests: automatic errands end " + settings.getAutomaticErrandEnd());
+				log.debug("checkStartedRequests: automatic errands end " + settings.getAutomaticErrandEnd());
 				Calendar dayBeforeEndDate = Calendar.getInstance();
 				dayBeforeEndDate.setTime(mCalDate.getDate());
 				dayBeforeEndDate.set(Calendar.HOUR, 0);
@@ -753,29 +757,29 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				if (settings.getAutomaticErrandEnd() != null && !settings.getAutomaticErrandEnd().isEmpty()) {
 					while (itr.hasNext()) {
 						LoginUsersRequests req = (LoginUsersRequests)itr.next();
-						System.out.println("checkStartedRequests: period to " + req.getPeriod_to());
-						System.out.println("req.getRequest_id().equals(loginUsersRequests.getRequest_id() " + req.getRequest_id().equals(reqType));
+						log.debug("checkStartedRequests: period to " + req.getPeriod_to());
+						log.debug("req.getRequest_id().equals(loginUsersRequests.getRequest_id() " + req.getRequest_id().equals(reqType));
 						if (!req.getRequest_id().getId().equals(new Long(10)) && !req.getRequest_id().getId().equals(new Long(11)) &&req.getPeriod_from().before(dayBeforeEndDate.getTime()) && req.getPeriod_to() == null && req.getRequest_id().equals(reqType)) {
 							String requestEndTime = settings.getAutomaticErrandEnd();
 							String [] time =  requestEndTime.split(":");
-							System.out.println("Time hour " + time[0] + " minutes " + time[1]);
+							log.debug("Time hour " + time[0] + " minutes " + time[1]);
 							if (req.getPeriod_from() != null) {
-								System.out.println("request no " + req.getRequestNumber() + " started on " + req.getPeriod_from());
+								log.debug("request no " + req.getRequestNumber() + " started on " + req.getPeriod_from());
 								Calendar cal2 = Calendar.getInstance();
 								cal2.setTime(req.getPeriod_from());
 								cal2.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
 								cal2.set(Calendar.MINUTE, Integer.parseInt(time[1]));
 								cal2.set(Calendar.SECOND, 0);
-								System.out.println("will end request on " + cal2.getTime());
+								log.debug("will end request on " + cal2.getTime());
 								req.setPeriod_to(cal2.getTime());
 								req.setTo_date(cal2.getTime());
 								req.setNotes(req.getNotes() + " (Request ended automatically by the system)");
 								requestsApprovalManager.saveObject(req);
 							}
 						} else if ( !req.getRequest_id().getId().equals(new Long(10)) && !req.getRequest_id().getId().equals(new Long(11)) && req.getPeriod_to() == null) {
-							System.out.println("request opened in the last 24hrs is not ended");
+							log.debug("request opened in the last 24hrs is not ended");
 						} else if (req.getRequest_id().getId().equals(new Long(10)) && settings.getSignoutBeforePermissionErrand().equals(new Boolean(true))){
-							System.out.println("sign in request opened in the last 24hrs is not ended");
+							log.debug("sign in request opened in the last 24hrs is not ended");
 							status.setCode("331");
 							status.setMessage("A sign in request is already started (#" + ((LoginUsersRequests)startedRequestsResponse.get(0)).getRequestNumber() + ") that hasn't been ended yet.");
 							status.setStatus("False");
@@ -787,7 +791,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					startedRequestsResponse = (List)startedRequests.get("Response");
 				}
 				////////////////////////////////////////////////////////////////////////////////////////////////////
-				System.out.println("permission/errand start , size =" + startedRequestsResponse.size());
+				log.debug("permission/errand start , size =" + startedRequestsResponse.size());
 				if (startedRequestsResponse.size() == 1 && ((LoginUsersRequests)startedRequestsResponse.get(0)).getTo_date()==null) {
 					status.setCode("311");
 					status.setMessage("A request is already started (#" + ((LoginUsersRequests)startedRequestsResponse.get(0)).getRequestNumber() + ") that hasn't been ended yet.");
@@ -851,7 +855,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				return null;
 			}
 			Double daysDiff = Double.valueOf(Math.round((diff/(1000*60*60*24.0))));
-			System.out.println("daysDiff " + daysDiff);
+			log.debug("daysDiff " + daysDiff);
 			loginUsersRequests.setWithdrawDays(daysDiff);
 		} else if (!userRequest.getAttendanceType().equals(new Long(7))&& !userRequest.getAttendanceType().equals(new Long(8))){
 			loginUsersRequests = new LoginUsersRequests();
@@ -867,7 +871,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				loginUsersRequests.setPeriod_from(mCalDate.getDate());
 			}
 		} else {
-			System.out.println("condition not handled " + userRequest.getAttendanceType());
+			log.debug("condition not handled " + userRequest.getAttendanceType());
 		}
 
 		if (vac!=null) {
@@ -903,26 +907,26 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		////////////////////////////////////////////////////////////////////////////
 		
 		
-		System.out.println("after validation");
+		log.debug("after validation");
 		if (automaticRequestsValidation==true) {
 			if (userRequest.getAttendanceType().equals(new Long(9))) {
 				///////////////////////////Full day errand validations///////////////////////////////////////////////
 				Map att = checkAttendance(mCalDate.getDate(), emp.getEmpCode());
 				AttendanceStatus attendanceResponse = (AttendanceStatus)att.get("Response");
-				System.out.println("attendance status response " + attendanceResponse);
+				log.debug("attendance status response " + attendanceResponse);
 				RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
 				requestQuery.setDateFrom(userRequest.getAttendanceTime());
 				requestQuery.setDateTo(userRequest.getAttendanceTime2());
-				System.out.println("attendanceResponse.getSignIn() " + attendanceResponse.getSignIn());
+				log.debug("attendanceResponse.getSignIn() " + attendanceResponse.getSignIn());
 				Map checkStartedMap = checkStartedRequests(requestQuery, emp);
-				System.out.println("after checking started requests " + checkStartedMap);
+				log.debug("after checking started requests " + checkStartedMap);
 				List startedRequests = (List)checkStartedMap.get("Response");
-				System.out.println("after checking started requests 2" + startedRequests);
+				log.debug("after checking started requests 2" + startedRequests);
 
 				if (attendanceResponse!=null && attendanceResponse.getSignIn()!=null && attendanceResponse.getSignIn().equals(new Boolean(true))) {
 					// check attendance on this day//
 
-					System.out.println("attendance status response " + attendanceResponse.getSignIn());
+					log.debug("attendance status response " + attendanceResponse.getSignIn());
 
 					status.setCode("322");
 					status.setMessage("User Signed In Already on the specified date, full day errand is not allowed.");
@@ -946,7 +950,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				////////////////////////////////////////////////////////////////////
 				//					if(loginUsersRequests.getRequest_id().getId().equals(new Long(10))) {
 				Calendar temp = Calendar.getInstance();
-				System.out.println("validating non full errand requests 1 " + loginUsersRequests);
+				log.debug("validating non full errand requests 1 " + loginUsersRequests);
 				if (loginUsersRequests == null) {
 					temp.setTime(mCalDate.getDate());
 				} else if (loginUsersRequests.getPeriod_from() != null) {
@@ -966,10 +970,10 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				cal.set(Calendar.MINUTE, 59);
 				cal.set(Calendar.SECOND, 59);
 				Date t = cal.getTime();
-				System.out.println("validating non full errand requests 2");
-				System.out.println("loginUsersRequests.getPeriod_from() " + loginUsersRequests.getPeriod_from());
-				System.out.println("loginUsersRequests.getPeriod_to() " + loginUsersRequests.getPeriod_to());
-				System.out.println("from " + from + " to " + t);
+				log.debug("validating non full errand requests 2");
+				log.debug("loginUsersRequests.getPeriod_from() " + loginUsersRequests.getPeriod_from());
+				log.debug("loginUsersRequests.getPeriod_to() " + loginUsersRequests.getPeriod_to());
+				log.debug("from " + from + " to " + t);
 //				List requests = requestsApprovalManager.getRequestsByExactDatePeriodAndEmpCode(from, t, loginUsersRequests.getEmpCode());
 				
 				RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
@@ -982,7 +986,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				
 				
 				Map  attendance = requestsApprovalManager.checkAttendance(loginUsersRequests.getPeriod_from(), loginUsers.getEmpCode());
-				System.out.println("Bug check#@#@validating non full errand requests " + requests.size());
+				log.debug("Bug check#@#@validating non full errand requests " + requests.size());
 				
 //				Iterator itr = requests.iterator();
 				
@@ -991,18 +995,18 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 					Iterator reqItr = requests.iterator();
 					while (reqItr.hasNext()) {
 						LoginUsersRequests req = (LoginUsersRequests)reqItr.next();
-						System.out.println(i+". request number " + req.getRequestNumber());
-						System.out.println("req.getPeriod_to() " + req.getPeriod_to());
+						log.debug(i+". request number " + req.getRequestNumber());
+						log.debug("req.getPeriod_to() " + req.getPeriod_to());
 						if (req.getPeriod_to() == null) {
-							System.out.println("checking if overlapping requests are sign in/out " + req.getRequest_id().getId());
+							log.debug("checking if overlapping requests are sign in/out " + req.getRequest_id().getId());
 							if (req.getRequest_id().getId().equals(new Long(10)) || req.getRequest_id().getId().equals(new Long(11))) {
 								AttendanceStatus attendanceStatus = (AttendanceStatus)attendance.get("Response");
 								
-								System.out.println("attendanceStatus.getSignIn() " + attendanceStatus.getSignIn());
-								System.out.println("attendanceStatus.getSignOut() " + attendanceStatus.getSignOut());
+								log.debug("attendanceStatus.getSignIn() " + attendanceStatus.getSignIn());
+								log.debug("attendanceStatus.getSignOut() " + attendanceStatus.getSignOut());
 								
 								if (attendanceStatus.getSignIn().booleanValue() == true && attendanceStatus.getSignOut().booleanValue() == false  && settings.getSignoutBeforePermissionErrand().equals(new Boolean(true))) {
-									System.out.println("request in same interval " + req.getRequestNumber() + req.getPeriod_from());
+									log.debug("request in same interval " + req.getRequestNumber() + req.getPeriod_from());
 									status.setCode("323");
 									status.setMessage("Please sign out first before starting new request");
 									status.setStatus("False");
@@ -1018,7 +1022,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 									Date signOut = signOutCal.getTime();
 											
 									if (loginUsersRequests.getPeriod_from().after(signIn) && loginUsersRequests.getPeriod_from().before(signOut)) {
-										System.out.println("request in same interval " + req.getRequestNumber() + req.getPeriod_from());
+										log.debug("request in same interval " + req.getRequestNumber() + req.getPeriod_from());
 										status.setCode("324");
 										status.setMessage("Sign out time is after the request start time");
 										status.setStatus("False");
@@ -1027,7 +1031,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 									}
 								}
 							} else {
-								System.out.println("request in same interval " + req.getRequestNumber() + req.getFrom_date());
+								log.debug("request in same interval " + req.getRequestNumber() + req.getFrom_date());
 								status.setCode("328");
 								status.setMessage("Please finish your started requests ("+ req.getRequestNumber()+") during the same time interval specified");
 								status.setStatus("False");
@@ -1056,7 +1060,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		if(settings.getVacationRequestExcep()==false){
 			if(loginUsersRequests!=null && !loginUsersRequests.equals("")){
 				if(loginUsersRequests.getId()!=null && !loginUsersRequests.getId().equals("")){
-					System.out.println("----loginUsersRequests.getRequest_id().getId()---------"+loginUsersRequests.getRequest_id().getId());
+					log.debug("----loginUsersRequests.getRequest_id().getId()---------"+loginUsersRequests.getRequest_id().getId());
 					RequestTypes specVac= (RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, new Long(1));
 					if(loginUsersRequests.getRequest_id().getId()==new Long(999)){
 						Vacation errand=(Vacation) requestsApprovalManager.getObject(Vacation.class, "999");
@@ -1069,8 +1073,8 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 
 
 		if (!userRequest.getAttendanceType().equals(new Long(7)) && !userRequest.getAttendanceType().equals(new Long(8))) {
-			System.out.println("service implmentation ma2moreya " + loginUsersRequests);
-			System.out.println("service implmentation ma2moreya " + reqType);
+			log.debug("service implmentation ma2moreya " + loginUsersRequests);
+			log.debug("service implmentation ma2moreya " + reqType);
 			loginUsersRequests.setRequest_id(reqType);
 		}
 	//Setting Longitude & Latitude////////////////////////////////
@@ -1120,18 +1124,18 @@ public Map checkAttendance(Date today, String empCode) {
 public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 		Employee emp) {
 	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
-	System.out.println("checkStartedRequests: logged in user " + loggedInUser);
+	log.debug("checkStartedRequests: logged in user " + loggedInUser);
 	Map response = requestsApprovalManager.checkStartedRequests(requestQuery,emp);
-	System.out.println("checkStartedRequests: response " + response);
+	log.debug("checkStartedRequests: response " + response);
 	return response;
 }
 
 public Map checkStartedRequestsIncludingAttendance(RequestsApprovalQuery requestQuery,
 		Employee emp) {
 	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
-	System.out.println("checkStartedRequests: logged in user " + loggedInUser);
+	log.debug("checkStartedRequests: logged in user " + loggedInUser);
 	Map response = requestsApprovalManager.checkStartedRequestsIncludingAttendance(requestQuery, emp);
-	System.out.println("checkStartedRequests: response " + response);
+	log.debug("checkStartedRequests: response " + response);
 	return response;
 }
 
@@ -1201,7 +1205,7 @@ public Map getVacInfo(RequestApproval requestApproval) {
 			from = df.parse(requestApproval.getFromDate());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
+			log.debug(e.getMessage());
 		}
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(from);
@@ -1219,14 +1223,14 @@ public Map getVacInfo(RequestApproval requestApproval) {
 //		return response;
 		return requestsApprovalManager.getVacInfo(vac,from,requestApproval.getEmpCode());
 	} else if (obj!=null){
-		System.out.println("object " + obj);
+		log.debug("object " + obj);
 		LoginUsersRequests loginUser = (LoginUsersRequests)obj;
 		Date from_date = loginUser.getFrom_date();
 		if (from_date == null) {
 			from_date = loginUser.getPeriod_from();
 		}
-		System.out.println("vacation " + loginUser.getVacation());
-		System.out.println("requestApproval.getEmpCode() " + loginUser.getEmpCode());
+		log.debug("vacation " + loginUser.getVacation());
+		log.debug("requestApproval.getEmpCode() " + loginUser.getEmpCode());
 		return requestsApprovalManager.getVacInfo(loginUser.getVacation(),from_date, loginUser.getEmpCode());
 	} else {
 		status.setCode("303");
@@ -1238,7 +1242,7 @@ public Map getVacInfo(RequestApproval requestApproval) {
 }
 
 public Map getVacTypes(Long requestType) {
-	System.out.println("vac types");
+	log.debug("vac types");
 //	List vacations = requestsApprovalManager.getObjects(Vacation.class);
 	Map response = new HashMap();
 	List vacations = new ArrayList();
@@ -1250,7 +1254,7 @@ public Map getVacTypes(Long requestType) {
 		vacations = requestsApprovalManager.getObjectsByParameter(Vacation.class, "type", "B");
 		for (int i = 0; i < vacations.size(); i++) {
 			Vacation vac= (Vacation) vacations.get(i);
-			System.out.println("------vacation--before-==="+vac.getVacation());
+			log.debug("------vacation--before-==="+vac.getVacation());
 			if(vac.getVacation().equals("999")){
 //				model.put("errand", vac);
 				vacations.remove(vac);
@@ -1260,7 +1264,7 @@ public Map getVacTypes(Long requestType) {
 					vacations.remove(vac);
 				}
 			}
-//			System.out.println("------vacation- after--==="+vac.getVacation());
+//			log.debug("------vacation- after--==="+vac.getVacation());
 		}
 		response.put("Response", vacations);
 	} else if (requestType.equals(new Long(2))) {//periodic vacations
@@ -1269,20 +1273,20 @@ public Map getVacTypes(Long requestType) {
 	}
 	
 	response.put("Response", vacations);
-	System.out.println("vac types"+vacations.size());
+	log.debug("vac types"+vacations.size());
 	RestStatus status = new RestStatus();
 	status.setCode("200");
 	status.setMessage("Request Inserted Successfully");
 	status.setStatus("true");
 	response.put("Status", status);
-	System.out.println("vac types finished");
+	log.debug("vac types finished");
 	return response ;
 }
 
 public Map getSettings() {
 	Map response = new HashMap();
 	Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class, new Long(1));
-	System.out.println("settings " + settings);
+	log.debug("settings " + settings);
 	Map temp = new HashMap();
 	temp.put("companyName", settings.getCompany().getDescription());
 	temp.put("locationAccuracy",settings.getLocationAccuracy());
@@ -1380,11 +1384,11 @@ if (dateFrom != null && dateTo != null && empCode != null){
 	if (!dateFrom.equals("") && !dateTo.equals("")  && !empCode.isEmpty()) {
 		Date fromDate = null;
 		Date toDate = null;
-		System.out.println(">>>>>>>>>>>>>fromDateString "+ dateFrom);
+		log.debug(">>>>>>>>>>>>>fromDateString "+ dateFrom);
 		mCalDate.setDateTimeString(dateFrom,new Boolean(true));
 		fromDate = mCalDate.getDate();
-		System.out.println(">>>>>>>>>>>>>fromDate "+ fromDate);
-		System.out.println(">>>>>>>>>>>>>toDateString "+ dateTo);
+		log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
+		log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
 		mCalDate.setDateTimeString(dateTo,new Boolean(false));
 		toDate= mCalDate.getDate();
 		
@@ -1401,7 +1405,7 @@ if (dateFrom != null && dateTo != null && empCode != null){
 			
 			String totalSum=(String) totalObjects.get(1);
 			String [] totalValues=totalSum.split(",");
-			System.out.println("totalMins=== "+totalValues[0]+" && totalHrs=== "+totalValues[1]);
+			log.debug("totalMins=== "+totalValues[0]+" && totalHrs=== "+totalValues[1]);
 			String totalMins=totalValues[0];
 			String totalHrs=totalValues[1];
 			Long hrs=new Long(0), mins=new Long(0);
@@ -1412,14 +1416,14 @@ if (dateFrom != null && dateTo != null && empCode != null){
 				mins=mins%60;
 			} 
 			
-			System.out.println("sent mins=== "+mins+" && sent hrs=== "+hrs);
+			log.debug("sent mins=== "+mins+" && sent hrs=== "+hrs);
 			
 			response.put("TotalMins", mins);
 			response.put("TotalHrs", hrs);
 //		} 
 		//////////////////////////////////////////////////////////
 		
-		System.out.println("-------objects- size--"+objects.size());
+		log.debug("-------objects- size--"+objects.size());
 		for (int i = 0; i < objects.size(); i++) {
 			TimeAttend ob= (TimeAttend) objects.get(i);
 			
@@ -1429,24 +1433,24 @@ if (dateFrom != null && dateTo != null && empCode != null){
 			Date day;
 			try {
 				day = df.parse(ob.getDay());
-				System.out.println("-------day---"+day);
+				log.debug("-------day---"+day);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-			System.out.println("-------objects---"+ob.getDay()+"-------getTimeIn---"+ob.getTimeIn()+"-------getTimeOut---"+ob.getTimeOut());
+			log.debug("-------objects---"+ob.getDay()+"-------getTimeIn---"+ob.getTimeIn()+"-------getTimeOut---"+ob.getTimeOut());
 		}
 		response.put("Attendance", objects);
 		// VIP
 		
 		
 		days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate);
-		System.out.println("-----days 001 ---"+days.size());
+		log.debug("-----days 001 ---"+days.size());
 		response.put("Vacations", days);
 		
 //		days=requestsApprovalManager.getVacations(emp.getEmpCode(), new Long(2), "002", fromDate,toDate);
-//		System.out.println("-----days 002 ---"+days.size());
+//		log.debug("-----days 002 ---"+days.size());
 		//		model.put("days2", days);
 
 		results.put("Results", response);
@@ -1497,18 +1501,18 @@ List empReqTypeAccs = new ArrayList();
 if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals("")){
 		Date fromDate = null;
 		Date toDate = null;
-		System.out.println(">>>>>>>>>>>>>fromDateString "+ dateFrom);
+		log.debug(">>>>>>>>>>>>>fromDateString "+ dateFrom);
 		mCalDate.setDateTimeString(dateFrom,new Boolean(true));
 		fromDate = mCalDate.getDate();
-		System.out.println(">>>>>>>>>>>>>fromDate "+ fromDate);
-		System.out.println(">>>>>>>>>>>>>toDateString "+ dateTo);
+		log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
+		log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
 		mCalDate.setDateTimeString(dateTo,new Boolean(false));
 		toDate= mCalDate.getDate();
 		
 		// VIP
 		List totalObjects= new ArrayList();
-		System.out.println("emp code " + empCode);
-		System.out.println("codeFrom " + codeFrom + " codeTo " + codeTo);
+		log.debug("emp code " + empCode);
+		log.debug("codeFrom " + codeFrom + " codeTo " + codeTo);
 		if ((empCode== null || empCode.isEmpty()) && (codeFrom == null || codeFrom.isEmpty()) && (codeTo == null || codeTo.isEmpty())) {
 //			empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAccEmpCode(emp, null);
 			
@@ -1523,11 +1527,11 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 //			if(lev!=null) {
 ////				tempLevels = (List)requestsApprovalDAO.getAccessLevelsBetweenCodes(lev.getLevel_id(),empCode,empCode);
 //			}
-//			System.out.println("access levels size " + tempLevels.size());
+//			log.debug("access levels size " + tempLevels.size());
 
 			List objectss = requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "emp_id", loggedInUser);
 			AccessLevels lev = null;
-			System.out.println("objectss size " + objectss.size());
+			log.debug("objectss size " + objectss.size());
 //			List levs = new ArrayList();
 			List tempLevels = new ArrayList();
 			
@@ -1535,15 +1539,16 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 
 			while (itrs.hasNext()) {
 				Object obj = itrs.next();
-				System.out.println("obj " + obj);
+				
 				if (obj!= null) {
 					lev = (AccessLevels)obj;
+					log.debug("level " + lev.getLevel_id() + " emp " + lev.getEmp_id().getEmpCode());
 				}
 				
 				if(lev!=null) {
 					tempLevels.addAll(requestsApprovalDAO.getAccessLevelsBetweenCodes(lev.getLevel_id(),codeFrom,codeTo));
 				}
-				System.out.println("access levels size " + tempLevels.size());
+				log.debug("access levels size " + tempLevels.size());
 			}
 			
 			String empArray = "";
@@ -1552,7 +1557,7 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 			int count = 0;
 			while(empItr.hasNext()) {
 				EmpReqTypeAcc empReq = ((EmpReqTypeAcc)(empItr.next()));
-//				System.out.println("empReq " + empReq);
+//				log.debug("empReq " + empReq);
 				if (count==0) {
 //					empArray = empReq.getEmp_id().getEmpCode();
 					empArray =  "'" + empReq.getEmp_id().getEmpCode() +  "'";
@@ -1564,7 +1569,7 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 				}
 				count++;
 			}
-			System.out.println("emp array " + empArray);
+			log.debug("emp array " + empArray);
 //			totalObjects=requestsApprovalManager.getTimeAttend(empArray, fromDate, toDate);
 //			totalObjects=requestsApprovalManager.getTimeAttendFromView(empArray, fromDate, toDate);
 			if (empArray == null || empArray.isEmpty()) {
@@ -1579,7 +1584,7 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 			
 			List objectss = requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "emp_id", loggedInUser);
 			AccessLevels lev = null;
-			System.out.println("objectss size " + objectss.size());
+			log.debug("objectss size " + objectss.size());
 //			List levs = new ArrayList();
 			List tempLevels = new ArrayList();
 			
@@ -1587,7 +1592,7 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 
 			while (itrs.hasNext()) {
 				Object obj = itrs.next();
-				System.out.println("obj " + obj);
+				log.debug("obj " + obj);
 				if (obj!= null) {
 					lev = (AccessLevels)obj;
 				}
@@ -1595,13 +1600,13 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 				if(lev!=null) {
 					tempLevels.addAll(requestsApprovalDAO.getAccessLevelsBetweenCodes(lev.getLevel_id(),codeFrom,codeTo));
 				}
-				System.out.println("access levels size " + tempLevels.size());
+				log.debug("access levels size " + tempLevels.size());
 			}
 			Iterator empItr = tempLevels.iterator();
 			int count = 0;
 			while(empItr.hasNext()) {
 				EmpReqTypeAcc empReq = ((EmpReqTypeAcc)(empItr.next()));
-//				System.out.println("empReq " + empReq);
+//				log.debug("empReq " + empReq);
 				if (count==0) {
 //					empArray = empReq.getEmp_id().getEmpCode();
 					empArray =  "'" + empReq.getEmp_id().getEmpCode() +  "'";
@@ -1638,7 +1643,7 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 			
 			List objectss = requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "emp_id", loggedInUser);
 			AccessLevels lev = null;
-			System.out.println("objectss size " + objectss.size());
+			log.debug("objectss size " + objectss.size());
 //			List levs = new ArrayList();
 			List tempLevels = new ArrayList();
 			
@@ -1646,24 +1651,25 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 
 			while (itrs.hasNext()) {
 				Object obj = itrs.next();
-				System.out.println("obj " + obj);
+				
 				if (obj!= null) {
 					lev = (AccessLevels)obj;
+					log.debug("level " + lev.getId() + " emp " + lev.getEmp_id().getEmpCode());
 				}
 				
 				if(lev!=null) {
 					tempLevels.addAll(requestsApprovalDAO.getAccessLevelsBetweenCodes(lev.getLevel_id(),empCode,empCode));
 				}
-				System.out.println("access levels size " + tempLevels.size());
+				log.debug("access levels size " + tempLevels.size());
 			}
 			
-			System.out.println("access levels size " + tempLevels.size());
+			log.debug("access levels size " + tempLevels.size());
 			
 			Iterator empItr = tempLevels.iterator();
 			int count = 0;
 			while(empItr.hasNext()) {
 				EmpReqTypeAcc empReq = ((EmpReqTypeAcc)(empItr.next()));
-//				System.out.println("empReq " + empReq);
+//				log.debug("empReq " + empReq);
 				if (count==0) {
 //					empArray = empReq.getEmp_id().getEmpCode();
 					empArray =  "'" + empReq.getEmp_id().getEmpCode() +  "'";
@@ -1673,8 +1679,11 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 				}
 				count++;
 			}
+			log.debug("empArray " + empArray);
 			if (empArray == null || empArray.isEmpty()) {
-//				empArray = "'" + emp.getEmpCode() +  "'";
+				empArray = "'" + emp.getEmpCode() +  "'";//islam can't see his reports in getAttendanceReport service
+				log.debug("empArray " + empArray);
+				totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId);
 			} else {
 				totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId);
 			}
@@ -1683,7 +1692,7 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 			objects=(List) totalObjects.get(0);
 		}
 		
-		System.out.println("-------objects- size--"+objects.size());
+		log.debug("-------objects- size--"+objects.size());
 		for (int i = 0; i < objects.size(); i++) {
 			TimeAttend ob= (TimeAttend) objects.get(i);
 			
@@ -1693,13 +1702,13 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 			Date day;
 			try {
 				day = df.parse(ob.getDay());
-//				System.out.println("-------day---"+day);
+//				log.debug("-------day---"+day);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-//			System.out.println("-------objects---"+ob.getDay()+"-------getTimeIn---"+ob.getTimeIn()+"-------getTimeOut---"+ob.getTimeOut());
+//			log.debug("-------objects---"+ob.getDay()+"-------getTimeIn---"+ob.getTimeIn()+"-------getTimeOut---"+ob.getTimeOut());
 		}
 		response.put("Attendance", objects);
 		// VIP
@@ -1727,10 +1736,10 @@ public Map editUserInfo(UserWrapper userWrapper, Employee employee) {
 	Map response = new HashMap();
 	RestStatus status = new RestStatus();
 	
-	System.out.println("profile pic string \n"+userWrapper.getProfilePic());
+	log.debug("profile pic string \n"+userWrapper.getProfilePic());
 	if (userWrapper.getProfilePic()!=null  && !userWrapper.getProfilePic().isEmpty()) {
 		byte[] profilePicBytes = Base64.decode(userWrapper.getProfilePic());
-		System.out.println("profile pic bytes " + profilePicBytes);
+		log.debug("profile pic bytes " + profilePicBytes);
 		employee.setProfilePic(profilePicBytes);
 		employee.setProfilePicName("pic_"+employee.getEmpCode());
 	}
@@ -1789,7 +1798,7 @@ public Map editUserInfo(UserWrapper userWrapper, Employee employee) {
 		String picString = Base64.encodeBytes(employee.getProfilePic());
 		e.setProfilePic(picString);
 	}
-//	System.out.println("pic string " +  picString.equals(userWrapper.getProfilePic()));
+//	log.debug("pic string " +  picString.equals(userWrapper.getProfilePic()));
 	e.setRequiredAndroidVersion(requiredVersion);
 
 	response.put("Response", e);

@@ -69,6 +69,16 @@ function printthis(which) {
 
 $('.MM_from_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
+
+let map;
+
+function initMap(latitude,longitude) {
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: { lat: latitude, lng: longitude },
+    zoom: 8,
+  });
+}
+
 </script>
 <style type="text/css">
 	@media print {
@@ -374,6 +384,11 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										 	<fmt:message key="commons.caption.to" />
 										</td>
 										</c:if>
+										
+										<td class="helpHed" nowrap="nowrap"><abc:i18n
+											property="commons.caption.address" /> <fmt:message
+											key="commons.caption.address" /></td>
+											
 										<td class="helpHed" nowrap="nowrap">
 										<abc:i18n
 										property="requestsApproval.requestsApprovalForm.reqStatus" /> <fmt:message
@@ -394,9 +409,6 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											<abc:i18n property="commons.caption.notes"/><fmt:message key="commons.caption.notes"/>
 										</td>
 										
-										<td class="helpHed" id="btnPrint">
-											&nbsp;
-										</td>	
 										<td class="helpHed" nowrap>
 										&nbsp;
 										</td>
@@ -467,6 +479,9 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											<_4s_:timeString value="${record.period_to}"/>
 										</td>
 										</c:if>
+										<td >
+											${record.locationAddress}
+										</td>
 										<td   nowrap>		
 										<c:if test="${record.approved==1}">					
 										
@@ -500,21 +515,10 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										</td>
 										</c:if>	
 										
-										<td  nowrap>
+										<td>
 											${record.notes}
 										</td>
-									<c:choose>
-										<c:when test="${record.latitude>0.0}">
-											<td class="formBodControl"><iframe id="latlongmape"
-													style="border: 0; width: 98%" class="shadow"
-													src='https://www.google.com/maps/embed/v1/place?key=AIzaSyDkLn71hSNTgpfB228L6HYzTEqS3Zx7r_E&maptype=roadmap&q=${record.latitude},${record.longitude}'
-													allowfullscreen> </iframe>
-										</c:when>
-										<c:otherwise>
-											<td >&nbsp;</td>
-										</c:otherwise>
-									</c:choose>
-									</td>
+									
 										<c:if test="${record.approved==0}">
 										<td  id="btnPrint" nowrap><abc:i18n
 											property="commons.button.approve" /><a

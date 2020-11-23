@@ -1,0 +1,12 @@
+Error in line
+alter table LOGIN_USERS add( end_serv date, email varchar2(50))   with index : 24
+
+ 	java.sql.SQLException: ORA-01430: column being added already exists in table
+
+
+
+
+
+ the block:
+alter table LOGIN_USERS add( end_serv date, email varchar2(50));
+alter table security_users add (end_serv date,isemployee number(1));

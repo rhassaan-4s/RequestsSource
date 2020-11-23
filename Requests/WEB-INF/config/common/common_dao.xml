@@ -23,6 +23,18 @@
 		</property>
 	</bean>
 	
+	<!-- <bean id="currentTenantIdentifierResolverImpl" 
+		class="com._4s_.common.dao.CurrentTenantIdentifierResolverImpl">
+	</bean>
+
+	<bean id="multiTenantConnectionProviderImpl"
+		class="com._4s_.common.dao.MultiTenantConnectionProviderImpl">
+		<property name="dataSource" ref="dataSource" />
+		<property name="dataSourceLookup" ref="dataSourceLookup"/>
+	</bean>
 	
+	<bean id="dataSourceLookup" class="com._4s_.common.dao.MultiTenantDataSourceLookup">
+		<constructor-arg ref = "datasource"/>
+	</bean> -->
 </beans>
     

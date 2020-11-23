@@ -16,14 +16,17 @@ function exportExcel() {
 	//alert("export");
 	var fromDate = document.getElementById('fromDate').value;
 	var toDate = document.getElementById('toDate').value;
-	var link = 'timeAttendanceReport.html?export=true&fromDate='+fromDate+'&toDate='+toDate;
+	if(document.getElementById("empCode").value!=null){
+		var empCode=document.getElementById("empCode").value;
+	} 
+	var link = 'timeAttendanceReport.html?export=true&fromDate='+fromDate+'&toDate='+toDate+'&empCode='+empCode;
 	//alert(link);
 	window.open(link);
 }
 function searchForm (){
-//	if(document.getElementById("empCode").value!=null){
-//		var empCode=document.getElementById("empCode").value;
-//	} 
+	if(document.getElementById("empCode").value!=null){
+		var empCode=document.getElementById("empCode").value;
+	} 
  
 	//alert('from---'+document.getElementById("from").value);
 	if(document.getElementById("fromDate").value!=null){
@@ -35,7 +38,7 @@ function searchForm (){
 		//alert('---vacType----'+vacType);
 	}
 
-	var URL='timeAttendanceReport.html?fromDate='+fromDate+'&toDate='+toDate;
+	var URL='timeAttendanceReport.html?fromDate='+fromDate+'&toDate='+toDate+'&empCode='+empCode;
 	window.location.href=URL;
 }
 
@@ -90,6 +93,7 @@ function printthis(which) {
 		<td>
 			<form id="timeAttendanceReport" name="timeAttendanceReport"	method="POST" action="<c:url value="/requestsApproval/timeAttendanceReport.html"/>">
 					<div id="result">
+					<input type="hidden" id="differentEmp" value="${differentEmp}"/>
 						<table border=0 cellspacing=1 cellpadding=0 id="ep"
 							style="margin-right: 40px">
 							<tr id="head_1_ep">
@@ -98,22 +102,63 @@ function printthis(which) {
 									<fmt:message key="requestsApproval.header.timeAttendanceReport" /></td>
 							</tr>
 
-							<tr>
-								<td nowrap class="formBodControl"><abc:i18n
-										property="requestsApproval.caption.userCode" /> <fmt:message
-										key="requestsApproval.caption.userCode" /></td>
-								<td class="formBod"><input type="text" name="empCode"
-									id="empCode" value="${emp.empCode }" readonly="readonly" /></td>
+							<c:choose>
+								<c:when test="${empArray=='' && differentEmp==false}">
+									<tr>
+										<td nowrap class="formBodControl"><abc:i18n
+												property="requestsApproval.caption.userCode" /> <fmt:message
+												key="requestsApproval.caption.userCode" /></td>
+										<td class="formBod"><input type="text" name="empCode"
+											id="empCode" value="${emp.empCode}" readonly="readonly" /></td>
 
 
-								<td nowrap class="formBodControl"><abc:i18n
-										property="requestsApproval.caption.userName" /> <fmt:message
-										key="requestsApproval.caption.userName" /></td>
-								<td class="formBod"><input type="text" name="userName"
-									id="userName" value="${emp.firstName}" readonly="readonly" />
-								</td>
-							</tr>
+										<td nowrap class="formBodControl"><abc:i18n
+												property="requestsApproval.caption.userName" /> <fmt:message
+												key="requestsApproval.caption.userName" /></td>
+										<td class="formBod"><input type="text" name="userName"
+											id="userName" value="${emp.firstName}" readonly="readonly" />
+										</td>
+									</tr>
+								</c:when>
+								<c:when test="${differentEmp==true}">
+									<td nowrap class="formBodControl"><abc:i18n
+												property="requestsApproval.caption.userCode" /> <fmt:message
+												key="requestsApproval.caption.userCode" /></td>
+										<td class="formBod"><abc:autocomplete inputId="empCode"
+												inputName="empCode" table="login_users"
+												firstKey="commons.caption.code"
+												secondKey="commons.caption.name" firstParam="empCode"
+												secondParam="name" bindById="true"
+												valueString="${emp.empCode}" valueId="empCodeMgr"/></td>
 
+
+										<td nowrap class="formBodControl"><abc:i18n
+												property="requestsApproval.caption.userName" /> <fmt:message
+												key="requestsApproval.caption.userName" /></td>
+										<td class="formBod"><input type="text" name="userName"
+											id="userName" value="${emp.firstName}" /></td>
+								</c:when>
+								<c:otherwise>
+									<tr>
+										<td nowrap class="formBodControl"><abc:i18n
+												property="requestsApproval.caption.userCode" /><fmt:message
+												key="requestsApproval.caption.userCode" /></td>
+										<td class="formBod"><abc:autocomplete inputId="empCode"
+												inputName="empCode" table="login_users"
+												firstKey="commons.caption.code"
+												secondKey="commons.caption.name" firstParam="empCode"
+												secondParam="name" bindById="true"
+												valueString="${employeeCode}" valueId="empCodeMgr" /></td>
+
+
+										<td nowrap class="formBodControl"><abc:i18n
+												property="requestsApproval.caption.userName" /> <fmt:message
+												key="requestsApproval.caption.userName" /></td>
+										<td class="formBod"><input type="text" name="userName"
+											id="userName" value="" /></td>
+									</tr>
+								</c:otherwise>
+							</c:choose>
 
 							<tr>
 								<td nowrap class="formBodControl"><abc:i18n
@@ -169,6 +214,9 @@ function printthis(which) {
 							<tr>
 							</tr>
 						</table>
+						</div>
+						</form>
+						<div>
 						<table rules="all" align="center" width="70%" class="sofT">
 							<tr>
 								<td colspan="14" class="helpTitle"><abc:i18n
