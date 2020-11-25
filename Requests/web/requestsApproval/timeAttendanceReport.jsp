@@ -101,65 +101,24 @@ function printthis(which) {
 										property="requestsApproval.header.timeAttendanceReport" />
 									<fmt:message key="requestsApproval.header.timeAttendanceReport" /></td>
 							</tr>
-
-							<c:choose>
-								<c:when test="${empArray=='' && differentEmp==false}">
-									<tr>
-										<td nowrap class="formBodControl"><abc:i18n
-												property="requestsApproval.caption.userCode" /> <fmt:message
-												key="requestsApproval.caption.userCode" /></td>
-										<td class="formBod"><input type="text" name="empCode"
-											id="empCode" value="${emp.empCode}" readonly="readonly" /></td>
-
-
-										<td nowrap class="formBodControl"><abc:i18n
-												property="requestsApproval.caption.userName" /> <fmt:message
-												key="requestsApproval.caption.userName" /></td>
-										<td class="formBod"><input type="text" name="userName"
-											id="userName" value="${emp.firstName}" readonly="readonly" />
-										</td>
-									</tr>
-								</c:when>
-								<c:when test="${differentEmp==true}">
-									<td nowrap class="formBodControl"><abc:i18n
-												property="requestsApproval.caption.userCode" /> <fmt:message
-												key="requestsApproval.caption.userCode" /></td>
-										<td class="formBod"><abc:autocomplete inputId="empCode"
-												inputName="empCode" table="login_users"
-												firstKey="commons.caption.code"
-												secondKey="commons.caption.name" firstParam="empCode"
-												secondParam="name" bindById="true"
-												valueString="${emp.empCode}" valueId="empCodeMgr"/></td>
+							<tr>
+								<td nowrap class="formBodControl"><abc:i18n
+										property="requestsApproval.caption.userCode" /> <fmt:message
+										key="requestsApproval.caption.userCode" /></td>
+								<td class="formBod"><abc:autocomplete inputId="empCode"
+										inputName="empCode" table="login_users"
+										firstKey="commons.caption.code"
+										secondKey="commons.caption.name" firstParam="empCode"
+										secondParam="name" bindById="true"
+										valueString="${emp.empCode}" valueId="" /></td>
 
 
-										<td nowrap class="formBodControl"><abc:i18n
-												property="requestsApproval.caption.userName" /> <fmt:message
-												key="requestsApproval.caption.userName" /></td>
-										<td class="formBod"><input type="text" name="userName"
-											id="userName" value="${emp.firstName}" /></td>
-								</c:when>
-								<c:otherwise>
-									<tr>
-										<td nowrap class="formBodControl"><abc:i18n
-												property="requestsApproval.caption.userCode" /><fmt:message
-												key="requestsApproval.caption.userCode" /></td>
-										<td class="formBod"><abc:autocomplete inputId="empCode"
-												inputName="empCode" table="login_users"
-												firstKey="commons.caption.code"
-												secondKey="commons.caption.name" firstParam="empCode"
-												secondParam="name" bindById="true"
-												valueString="${employeeCode}" valueId="empCodeMgr" /></td>
-
-
-										<td nowrap class="formBodControl"><abc:i18n
-												property="requestsApproval.caption.userName" /> <fmt:message
-												key="requestsApproval.caption.userName" /></td>
-										<td class="formBod"><input type="text" name="userName"
-											id="userName" value="" /></td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
-
+								<td nowrap class="formBodControl"><abc:i18n
+										property="requestsApproval.caption.userName" /> <fmt:message
+										key="requestsApproval.caption.userName" /></td>
+								<td class="formBod"><input type="text" name="userName"
+									id="userName" value="${emp.firstName}" /></td>
+							</tr>
 							<tr>
 								<td nowrap class="formBodControl"><abc:i18n
 										property="commons.caption.fromDate" /> <fmt:message

@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
 import org.apache.commons.lang.builder.EqualsBuilder;
 
 import com._4s_.auditing.model.Auditable;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com._4s_.common.model.Employee;
 
 @Entity//(access=AccessType.FIELD)
 @Table(name="login_users_requests" ,uniqueConstraints= {@UniqueConstraint(columnNames= {"empCode","request_date","from_date","request_type"})})
@@ -71,10 +71,25 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	
 	private Boolean isInsideCompany = true;
 	
+	private Date from_date_history;
 	
-								
-    
-    public String getLocationAddress() {
+	@ManyToOne
+	@JoinColumn (name="managerModifiedDate")
+	private Employee managerModifiedDate;
+	
+    public Employee getManagerModifiedDate() {
+		return managerModifiedDate;
+	}
+	public void setManagerModifiedDate(Employee managerModifiedDate) {
+		this.managerModifiedDate = managerModifiedDate;
+	}
+	public Date getFrom_date_history() {
+		return from_date_history;
+	}
+	public void setFrom_date_history(Date from_date_history) {
+		this.from_date_history = from_date_history;
+	}
+	public String getLocationAddress() {
 		return locationAddress;
 	}
 	public void setLocationAddress(String locationAddress) {

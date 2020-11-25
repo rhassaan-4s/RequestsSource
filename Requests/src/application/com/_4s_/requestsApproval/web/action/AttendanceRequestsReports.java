@@ -71,6 +71,8 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		String emp_code = request.getParameter("empCode");
 //		log.debug("----emp_code---"+emp_code);
 		
+		Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+		model.put("settings", settings);
 		
 		String pageString = request.getParameter("page");
 		int pageNumber;
@@ -135,7 +137,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		String exactDateFrom = null;
 		String exactDateTo = null;
 		
-		String requestType = "5";//sign in and out
+		String requestType = "6";//sign in and out
 		
 		String sort = "desc";
 		
@@ -327,7 +329,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		String exactDateFrom = null;
 		String exactDateTo = null;
 		
-		String requestType = "5";//sign in and out
+		String requestType = "6";//sign in and out
 		
 		String sort = "desc";
 		

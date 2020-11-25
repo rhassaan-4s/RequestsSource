@@ -21,9 +21,9 @@ function exportExcel() {
 	window.open(link);
 }
 function searchForm (){
-//	if(document.getElementById("empCode").value!=null){
-//		var empCode=document.getElementById("empCode").value;
-//	} 
+	if(document.getElementById("empCode").value!=null){
+		var empCode=document.getElementById("empCode").value;
+	} 
  
 	//alert('from---'+document.getElementById("from").value);
 	if(document.getElementById("inDate").value!=null){
@@ -35,7 +35,7 @@ function searchForm (){
 		//alert('---vacType----'+vacType);
 	}
 
-	var URL='annualVacationBalance.html?inDate='+inDate+'&vacType='+vacType;
+	var URL='annualVacationBalance.html?inDate='+inDate+'&vacType='+vacType+'&empCode='+empCode;
 	window.location.href=URL;
 }
 
@@ -110,13 +110,15 @@ function printthis(which) {
 					</c:if>
 		
 						<tr>
-					  		<td nowrap class="formBodControl" >
-								<abc:i18n property="requestsApproval.caption.userCode"/>
-								<fmt:message key="requestsApproval.caption.userCode"/>
-							</td>						
-							<td  class="formBod"> 
-								<input type="text" name="empCode" id="empCode" value="${empCode }" readonly="readonly" />
-							</td>
+							<td nowrap class="formBodControl"><abc:i18n
+												property="requestsApproval.caption.userCode" /> <fmt:message
+												key="requestsApproval.caption.userCode" /></td>
+										<td class="formBod"><abc:autocomplete inputId="empCode"
+												inputName="empCode" table="login_users"
+												firstKey="commons.caption.code"
+												secondKey="commons.caption.name" firstParam="empCode"
+												secondParam="name" bindById="true"
+												valueString="${emp.empCode}" valueId=""/></td>
 							
 					  		<td nowrap class="formBodControl" id="btnPrint">
 								<abc:i18n property="requestsApproval.caption.vacationType"/>

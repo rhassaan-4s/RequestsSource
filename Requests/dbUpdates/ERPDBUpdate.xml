@@ -16155,4 +16155,13 @@ INSERT INTO I18N_KEY VALUES (101469, 'requestsApproval.errors.locationIsNotSet',
 INSERT INTO i18n_message VALUES (202116451,'لم يتم تحديد الموقع', 101469, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116452, 'Location is not set', 101469, 3);</statment></query><query><sqlindex>163</sqlindex><statment>ALTER TABLE COMMON_EMPLOYEE ADD PROFILEPIC BLOB;&#xD;
 ALTER TABLE COMMON_EMPLOYEE ADD PROFILEPICNAME VARCHAR2(255);</statment></query><query><sqlindex>164</sqlindex><statment>alter table time_attend add LOCATIONADDRESS varchar2(255);&#xD;
-alter table time_attend add ISINSIDECOMPANY varchar2(16);</statment></query></SQL>
+alter table time_attend add ISINSIDECOMPANY varchar2(16);</statment></query><query><sqlindex>165</sqlindex><statment>ALTER TABLE  COMMON_SETTINGS ADD MANAGERCANMODIFYATTENDANCE NUMBER;&#xD;
+</statment></query><query><sqlindex>166</sqlindex><statment>ALTER TABLE LOGIN_USERS_REQUESTS ADD FROM_DATE_HISTORY DATE;&#xD;
+ALTER TABLE LOGIN_USERS_REQUESTS ADD MANAGERMODIFIEDDATE NUMBER;</statment></query><query><sqlindex>167</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101470, 'requestsApproval.header.AttendanceRequestsApprovalEdit', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116453,'تعديل تاريخ الحضور/ الانصراف', 101470, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116454, 'Edit Sign in/out Date', 101470, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101471, 'requestsApproval.caption.historicDate', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116456,'تاريخ الحضور / الانصراف القديم', 101471, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116457, 'Historic Sign in/out date', 101471, 3);</statment></query><query><sqlindex>168</sqlindex><statment>ALTER TABLE EMP_REQ_APPROVAL MODIFY NOTE VARCHAR2(200);</statment></query><query><sqlindex>169</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101473, 'requestsApproval.header.managerCanModifyAttendance', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116460,'صلاحيه تعديل التوقيع عن طريق المدير', 101473, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116461, 'Manager can modify attendance', 101473, 3);</statment></query></SQL>

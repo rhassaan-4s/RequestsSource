@@ -76,6 +76,11 @@ public class SettingsForm extends BaseSimpleFormController{
 				settings.setSignoutBeforePermissionErrand(false);
 			}
 			
+			String managerCanModifyAttendance = request.getParameter("managerCanModifyAttendance");
+			if (managerCanModifyAttendance == null || managerCanModifyAttendance.equals("")) {
+				settings.setManagerCanModifyAttendance(false);
+			}
+			
 		}
 		return settings;
 
@@ -89,6 +94,8 @@ public class SettingsForm extends BaseSimpleFormController{
 		baseManager.saveObject(settings);
 		
 				
+		request.getSession().removeAttribute("settings");
+		request.getSession().setAttribute("settings", settings);
 		log.error(">>>> end of onSubmit() ");
 		return new ModelAndView(new RedirectView("settingsForm.html"));
 		

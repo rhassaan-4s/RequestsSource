@@ -148,6 +148,17 @@
 				<TD width="50%">&nbsp;</TD>
 			</tr>
 			<tr><td nowrap class="formBodControl" >
+					<abc:i18n property="requestsApproval.header.managerCanModifyAttendance" />
+					<fmt:message key="requestsApproval.header.managerCanModifyAttendance" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.managerCanModifyAttendance">
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} />
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
+			<tr><td nowrap class="formBodControl" >
 					<abc:i18n property="requestsApproval.header.automaticErrandEnd" />
 					<fmt:message key="requestsApproval.header.automaticErrandEnd" />
 				</td>

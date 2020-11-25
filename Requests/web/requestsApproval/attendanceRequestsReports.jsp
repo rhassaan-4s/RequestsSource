@@ -285,6 +285,8 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											<abc:i18n property="requestsApproval.caption.reply" />
 										 	<fmt:message key="requestsApproval.caption.reply" />
 										</td>
+										<td class="helpHed" id="btnPrint">
+										</td>
 										
 										<td class="helpHed" id="btnPrint">
 										</td>										
@@ -348,7 +350,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 									</c:choose>
 									</td>
 										
-										<td  nowrap>
+										<td >
 											${record.notes}
 										</td>
 										<td   nowrap>		
@@ -378,19 +380,32 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										<td  nowrap>
 											${record.reply}
 										</td>
+									
 										<c:choose>
-										<c:when test="${record.approved==0}">
-										<td  id="btnPrint" nowrap><abc:i18n
-											property="commons.button.approve" /><a
-											href="attendanceRequestsApprovalForm.html?reqId=${record.id}"><fmt:message
-											key="commons.button.approve" /></a>
-										</td>								
+										<c:when
+											test="${record.approved==0 && settings.managerCanModifyAttendance=='true'}">
+											<td id="btnPrint" nowrap><abc:i18n
+													property="commons.button.edit" /><a
+												href="attendanceRequestsApprovalEdit.html?reqId=${record.id}"><fmt:message
+														key="commons.button.edit" /></a></td>
 										</c:when>
 										<c:otherwise>
-										<td   id="btnPrint" nowrap>&nbsp;</td>
-										</c:otherwise>
+												<td id="btnPrint" nowrap>&nbsp;</td>
+											</c:otherwise>
 										</c:choose>
-									</tr>
+									<c:choose>
+										<c:when test="${record.approved==0}">
+											<td id="btnPrint" nowrap><abc:i18n
+													property="commons.button.approve" />
+													<a
+												href="attendanceRequestsApprovalForm.html?reqId=${record.id}"><fmt:message
+														key="commons.button.approve" /></a></td>
+										</c:when>
+										<c:otherwise>
+											<td id="btnPrint" nowrap>&nbsp;</td>
+										</c:otherwise>
+									</c:choose>
+								</tr>
 								</c:forEach>									
 								</table>
 								</div>

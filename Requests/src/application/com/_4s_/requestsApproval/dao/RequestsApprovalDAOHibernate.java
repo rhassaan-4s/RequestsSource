@@ -1073,10 +1073,16 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 //							Restrictions.eq("request_id.id", new Long(2)))
 //							,Restrictions.eq("request_id.id", new Long(4))));
 					criteria.add(Restrictions.eq("request_id.id", new Long(4)));
+					criteria.add(Restrictions.isNull("vacation.vacation"));
 					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
 							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 				} else if (requestType.equals(new Long(5))) {
 					log.debug("requesttype is 5");
+					criteria.add(Restrictions.eq("request_id.id", new Long(4))); //Ma2moreya
+					criteria.add(Restrictions.eq("vacation.vacation", "999"));
+					log.debug("ma2moreya");
+				}   else if (requestType.equals(new Long(6))) {//7odoor w enseraf
+					log.debug("requesttype is 6");
 					criteria.add(Restrictions.or(
 							Restrictions.eq("request_id.id", new Long(10)),
 							Restrictions.eq("request_id.id", new Long(11)))
@@ -1217,10 +1223,17 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 //							Restrictions.eq("request_id.id", new Long(2)))
 //							,Restrictions.eq("request_id.id", new Long(4))));
 					criteria.add(Restrictions.eq("request_id.id", new Long(4)));
+					criteria.add(Restrictions.isNull("vacation.vacation"));
 					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
 							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
 				} else if (requestType.equals(new Long(5))) {
 					log.debug("requesttype is 5");
+					
+					criteria.add(Restrictions.eq("request_id.id", new Long(4))); //Ma2moreya
+					criteria.add(Restrictions.eq("vacation.vacation", "999"));
+					log.debug("ma2moreya2");
+				} else if (requestType.equals(new Long(6))) {
+					log.debug("requesttype is 6");
 					criteria.add(Restrictions.or(
 							Restrictions.eq("request_id.id", new Long(10)),
 							Restrictions.eq("request_id.id", new Long(11)))
@@ -1961,10 +1974,13 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				log.debug("request type " + requestType);
 				if (requestType == null) {
 					log.debug("requestType " + requestType);
-				} else if (requestType != null && !requestType.equals(new Long(5)) && !requestType.equals(new Long(12)) && !requestType.equals(new Long(13)) && !requestType.equals(new Long(14))) {
+				} else if (requestType != null && !requestType.equals(new Long(5)) && !requestType.equals(new Long(6)) && !requestType.equals(new Long(12)) && !requestType.equals(new Long(13)) && !requestType.equals(new Long(14))) {
 					log.debug("request type not null  " + requestType);
 					criteria.createCriteria("req_id").add(Restrictions.eq("id", requestType));
 				} else if (requestType.equals(new Long(5))) {
+					log.debug("requestType " + requestType);
+					criteria.createCriteria("req_id").add(Restrictions.eq("id", new Long(4)));
+				}  else if (requestType.equals(new Long(6))) {////////////sign in & out together
 					log.debug("requestType " + requestType);
 					criteria.createCriteria("req_id").add(Restrictions.or(Restrictions.eq("id", new Long(10)), Restrictions.eq("id", new Long(11))));
 				} else if (requestType.equals(new Long(12))) {

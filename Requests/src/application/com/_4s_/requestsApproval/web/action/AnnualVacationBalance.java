@@ -57,9 +57,24 @@ public class AnnualVacationBalance implements Controller{
 		Map model=new HashMap();
 
 		Date inDate = new Date();	
-		Employee emp =(Employee) request.getSession().getAttribute("employee");
+		Employee loggedInEmp =(Employee) request.getSession().getAttribute("employee");
+		Employee emp = loggedInEmp;
 		log.debug("---ref-emp from session---"+request.getSession().getAttribute("employee"));
-		model.put("empCode", emp.getEmpCode());
+		
+		String empCode = request.getParameter("empCode");
+		log.debug("empCode " + empCode);
+		if(empCode!=null && !empCode.isEmpty()) {
+			if(!empCode.equals(emp.getEmpCode())) {
+				Employee searchEmp = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", empCode);
+				if (!loggedInEmp.equals(searchEmp)) {
+//					differentEmp = true;
+				}
+				emp = searchEmp;
+				log.debug("emp " + emp);
+			}
+		}
+		model.put("emp", emp);
+		model.put("empCode", empCode);
 		LoginUsers loginUser=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
 		model.put("empName", loginUser.getName());
 

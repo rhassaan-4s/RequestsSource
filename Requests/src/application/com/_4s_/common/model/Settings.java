@@ -78,6 +78,16 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Float locationAccuracy2;
 	
+	private Boolean managerCanModifyAttendance;
+	
+	public Boolean getManagerCanModifyAttendance() {
+		return managerCanModifyAttendance;
+	}
+
+	public void setManagerCanModifyAttendance(Boolean managerCanModifyAttendance) {
+		this.managerCanModifyAttendance = managerCanModifyAttendance;
+	}
+
 	public Float getLocationAccuracy2() {
 		return locationAccuracy2;
 	}

@@ -590,6 +590,35 @@
 		</property>
 	</bean>	
 	
+	
+	<bean id="attendanceRequestsApprovalEdit" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.requestsApproval.web.action.AttendanceRequestsApprovalEdit">
+				<property name="commandName">
+					<value>req</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.requestsApproval.model.LoginUsersRequests</value>
+				</property>
+				<property name="formView">
+					<value>attendanceRequestsApprovalEdit</value>
+				</property>
+				<property name="successView">
+					<value>attendanceRequestsReports.html</value>
+				</property>
+				<property name="requestsApprovalManager">
+					<ref bean="requestsApprovalManager" />
+				</property>
+				<property name="binders">
+					<list>
+						<ref bean="loginUsersBinder" />
+					</list>
+				</property>
+
+			</bean>
+		</property>
+	</bean>	
+	
 	<!--
 		_____________________________________________________________________
 	-->
@@ -639,7 +668,7 @@
 				<prop key="/attendanceSignInOutForm.html">attendanceSignInOutForm</prop>
 				<prop key="/attendanceRequestsReports.html">attendanceRequestsReports</prop>
 				<prop key="/attendanceRequestsApprovalForm.html">attendanceRequestsApprovalForm</prop>
-				
+				<prop key="/attendanceRequestsApprovalEdit.html">attendanceRequestsApprovalEdit</prop>
 			</props>
 		</property>
 	</bean>

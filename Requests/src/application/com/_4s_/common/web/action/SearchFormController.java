@@ -318,8 +318,13 @@ public class SearchFormController implements Controller {
 								level += ","+eCode;
 							}
 						}
-						level += ","+employee.getEmpCode();
+						if (level.equals("")) {
+							level += employee.getEmpCode();
+						} else {
+							level += ","+employee.getEmpCode();
+						}
 						log.debug("level " + level);
+						
 						map = qry.search(searchCommandId,searchCommandName,table,firstParam,secondParam,paramString,match1,match2,level,pageNumber,10,branchId);	
 					}else {
 						log.debug("Null Result  ");

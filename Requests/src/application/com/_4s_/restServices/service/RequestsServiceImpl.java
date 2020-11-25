@@ -1298,6 +1298,7 @@ public Map getSettings() {
 	temp.put("obligateNotes", settings.getObligateNotes());
 	temp.put("showVacationBalance", settings.getAnnualVacBalDaysEnabled());
 	temp.put("requiredAndroidVersion", settings.getRequiredAndroidVersion());
+	temp.put("managerCanModifyAttendance", settings.getManagerCanModifyAttendance());
 	
 	
 	response.put("Response", temp);

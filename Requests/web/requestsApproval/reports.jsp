@@ -304,23 +304,17 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 							<td  nowrap>
 						         ${record.login_user.name }
 							</td>
-							<td  nowrap>
-								${record.requestNumber}
-							</td>							  
-							<c:choose>
-							<c:when test="${record.request_id.id==1 && record.vacation.vacation=='999'}">
-							<td  nowrap>
-						         مأموريه
-							</td>
-							</c:when>
-							<c:otherwise>
-							<td  nowrap>
-						         ${record.request_id.description }
-							</td>
-							</c:otherwise>
-							</c:choose>
+									<td nowrap>${record.requestNumber}</td>
+									<c:choose>
+										<c:when test="${record.vacation==null}">
+											<td nowrap>${record.request_id.description}</td>
+										</c:when>
+										<c:otherwise>
+											<td nowrap>${record.vacation.name}</td>
+										</c:otherwise>
+									</c:choose>
 
-							<td  nowrap>
+									<td  nowrap>
 						         <_4s_:formatMiladiDate value="${record.request_date}"/> 
 							</td>
 							
