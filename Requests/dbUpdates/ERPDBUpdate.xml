@@ -16164,4 +16164,6 @@ INSERT INTO I18N_KEY VALUES (101471, 'requestsApproval.caption.historicDate', NU
 INSERT INTO i18n_message VALUES (202116456,'تاريخ الحضور / الانصراف القديم', 101471, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116457, 'Historic Sign in/out date', 101471, 3);</statment></query><query><sqlindex>168</sqlindex><statment>ALTER TABLE EMP_REQ_APPROVAL MODIFY NOTE VARCHAR2(200);</statment></query><query><sqlindex>169</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101473, 'requestsApproval.header.managerCanModifyAttendance', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116460,'صلاحيه تعديل التوقيع عن طريق المدير', 101473, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116461, 'Manager can modify attendance', 101473, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116461, 'Manager can modify attendance', 101473, 3);</statment></query><query><sqlindex>170</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101474, 'commons.errors.youCanChangeTimeOnly', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116462,'لا يمكن تعديل التاريخ، يمكنك فقط تعديل الوقت', 101474, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116463, 'You cannot change date, only time is modifiable', 101474, 3);</statment></query></SQL>

@@ -150,7 +150,6 @@ function cancelApp(){
 	
 						</tr>
 						<c:forEach items="${approvalList}" var="record">
-							
 						<tr>
 							<td width="120" class="formBodControl">${record.title}</td>
 									<c:if test="${record.status==2 && posted!=1}">

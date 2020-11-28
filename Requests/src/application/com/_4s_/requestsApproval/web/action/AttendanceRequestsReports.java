@@ -144,53 +144,11 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		String dateFrom = request.getParameter("dateFrom");
 		String dateTo = request.getParameter("dateTo");
 		
-		if (pageNumber>0) {
+		if (pageNumber>=0) {
 			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", employee.getEmpCode());
 			List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(employee, requestType);
 			log.debug("empReqTypeAccs " + empReqTypeAccs);
 			model = requestsApprovalManager.getRequestsForApproval(requestNumber, emp_code, request_date_from, request_date_to, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true,null, pageNumber, 20);
-			
-			
-
-//			///////////////////////////////////////////////////////////
-//			List results2 = (List)model.get("results");
-//			Iterator itr = results2.iterator();
-//			while(itr.hasNext()) {
-//				LoginUsersRequests s = (LoginUsersRequests)itr.next();
-//				////////////////////////////////////////////////////////////////////////////
-//				/////////////////started temp  code
-//				////////////////////////////////////////////////////////////////////////////
-//				Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
-//
-//				if (s.getLatitude()!=null && s.getLongitude()!=null && s.getLatitude()>0 && s.getLongitude()>0) {
-//					Double distance = requestsApprovalManager.distance(new Double(s.getLatitude()), new Double(s.getLongitude()), new Double(settings.getCompanyLat()), new Double(settings.getCompanyLong()));
-//					log.debug("distance " +distance);
-//					if (distance>settings.getDistAllowedFromCompany()) {
-//						s.setIsInsideCompany(false);
-//					} else {
-//						s.setIsInsideCompany(true);
-//					}
-//
-//					//////////////////////////////////////////////////////////////////////////
-//					try{
-//						String address = requestsApprovalManager.getAddressByGpsCoordinates(s.getLongitude()+"", s.getLatitude()+"");
-//						log.debug("address " + address);
-//						s.setLocationAddress(address);
-//					} catch(Exception e) {
-//						e.printStackTrace();
-//					}
-//
-//					////////////////////////////////////////////////////////////////////////////
-//				} else {
-//					s.setIsInsideCompany(true);	
-//				}
-//
-//				requestsApprovalManager.saveObject(s);
-//				////////////////////////////////////////////////////////////////////////////
-//				/////////////////ended temp  code
-//				////////////////////////////////////////////////////////////////////////////
-//			}
-//			//////////////////////////////////////////////////////
 		}
 		log.debug("status " + statusId);
 		model.put("empCode", emp_code);

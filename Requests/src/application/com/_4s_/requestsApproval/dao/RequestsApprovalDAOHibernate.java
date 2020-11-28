@@ -1334,6 +1334,8 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 					op.setLatitude(req.getLatitude());
 					op.setIsInsideCompany(req.getIsInsideCompany());
 					op.setLocationAddress(req.getLocationAddress());
+					
+					op.setFromDateHistory(req.getFrom_date_history());
 
 					if (req.getRequest_id().getId().equals(new Long(1))) {
 						op.setRequestDesc(req.getVacation().getName());

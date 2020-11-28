@@ -332,7 +332,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 								
 							</td>
 							
-							<td  nowrap>
+							<td >
 								${record.locationAddress}
 							</td>
 							<td  nowrap>
@@ -386,7 +386,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											test="${record.approved==0 && settings.managerCanModifyAttendance=='true'}">
 											<td id="btnPrint" nowrap><abc:i18n
 													property="commons.button.edit" /><a
-												href="attendanceRequestsApprovalEdit.html?reqId=${record.id}"><fmt:message
+												href="attendanceRequestsApprovalEdit.html?reqId=${record.id}&empCodeQ=${empCode}&statusId=${status}&date_from=${request_date_from}&date_to=${request_date_to}&codeFrom=${codeFrom}&codeTo=${codeTo}"><fmt:message
 														key="commons.button.edit" /></a></td>
 										</c:when>
 										<c:otherwise>

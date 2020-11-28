@@ -19,6 +19,7 @@ public class RequestOutput {
 	private Long requestType;
 //	@JsonFormat(shape=Shape.NUMBER, timezone="GMT+2")
 	private Date fromDate;
+	private Date fromDateHistory;
 //	@JsonFormat(shape=Shape.NUMBER, timezone="GMT+2")
 	private Date toDate;
 	private String status;//approved-declined
@@ -29,6 +30,13 @@ public class RequestOutput {
 	private Boolean isInsideCompany;
 	private String locationAddress;
 	
+	
+	public Date getFromDateHistory() {
+		return fromDateHistory;
+	}
+	public void setFromDateHistory(Date fromDateHistory) {
+		this.fromDateHistory = fromDateHistory;
+	}
 	public String getRequestNumber() {
 		return requestNumber;
 	}
