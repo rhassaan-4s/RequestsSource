@@ -1164,11 +1164,41 @@ public Map approveRequest(RequestApproval requestApproval,Employee emp) {
 	} else {
 		LoginUsersRequests loginUser = (LoginUsersRequests)obj;
 		if (requestApproval.getApprove().equals("0")) {
-//			loginUser.setApproved(new Long(99));
-			return requestsApprovalManager.approvalsAccessLevels(requestApproval, loginUser, emp);
+			if (requestApproval.getModifiedDate()!=null && requestApproval.getModifiedDate().isEmpty()) {
+				status.setCode("380");
+				status.setMessage("You can't modify date while rejecting request");
+				status.setStatus("false");
+				response.put("Status", status);
+				return response;
+			} else {
+				return requestsApprovalManager.approvalsAccessLevels(requestApproval, loginUser, emp);
+			}
 		} else if (requestApproval.getApprove().equals("1")) {
-//			loginUser.setApproved(new Long(1));
-			return requestsApprovalManager.approvalsAccessLevels(requestApproval, loginUser, emp);
+			Calendar modifyCal = null;
+			Calendar fromCal = Calendar.getInstance();
+			fromCal.setTime(loginUser.getFrom_date());
+			if (requestApproval.getModifiedDate()!=null && requestApproval.getModifiedDate().isEmpty()) {
+				modifyCal = Calendar.getInstance();
+				Date modify = null;
+					DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
+					try {
+						modify = df.parse(requestApproval.getModifiedDate());
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						log.debug(e.getMessage());
+					}
+				modifyCal.setTime(modify);
+			}
+			if (requestApproval.getModifiedDate()!=null && requestApproval.getModifiedDate().isEmpty()
+					&& (modifyCal.get(Calendar.DAY_OF_MONTH)!= fromCal.get(Calendar.DAY_OF_MONTH) || modifyCal.get(Calendar.MONTH)!= fromCal.get(Calendar.MONTH))) {
+				status.setCode("381");
+				status.setMessage("You can't modify attendance date, you are only allowed to modify time");
+				status.setStatus("false");
+				response.put("Status", status);
+				return response;
+			}  else {
+				return requestsApprovalManager.approvalsAccessLevels(requestApproval, loginUser, emp);
+			}
 		} else {
 			status.setCode("307");
 			status.setMessage("Invalid Request Approval Status");

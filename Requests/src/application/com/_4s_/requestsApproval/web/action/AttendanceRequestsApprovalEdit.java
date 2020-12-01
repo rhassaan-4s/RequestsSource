@@ -246,8 +246,8 @@ public class AttendanceRequestsApprovalEdit extends BaseSimpleFormController{
 		approvals.setApprove("1");
 		approvals.setNotes(loginUsersRequests.getManagerModifiedDate().getFirstName() + "had modified attendance from " + loginUsersRequests.getFrom_date_history()  + " to " + loginUsersRequests.getFrom_date());
 		approvals.setRequestId(loginUsersRequests.getId()+"");
-//		requestsApprovalManager.approvalsAccessLevels(approvals, loginUsersRequests,emp);
-		requestsApprovalManager.automaticApprovalsAccessLevels(approvals, loginUsersRequests);
+		requestsApprovalManager.approvalsAccessLevels(approvals, loginUsersRequests,emp);
+//		requestsApprovalManager.automaticApprovalsAccessLevels(approvals, loginUsersRequests);
 
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<  End onSubmit : <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 //		String url="/attendanceRequestsReports.html";

@@ -10,7 +10,14 @@ public class RequestApproval {
 	private String fromDate;
 	private String toDate;
 	
+	private String modifiedDate;
 	
+	public String getModifiedDate() {
+		return modifiedDate;
+	}
+	public void setModifiedDate(String modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
 	public String getToDate() {
 		return toDate;
 	}

@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1161,7 +1162,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 						log.debug("--------requestInfo.getApproved()------"+requestInfo.getApproved());
 						if(requestInfo.getApproved()==0 && (cancelApproval==null || cancelApproval.equals(""))){
 							log.debug("------pproved=0---");
-							requestInfo.setApproved(new Long(1));
+							requestInfo.setApproved(new Long(1));							
 						}
 						saveObject(requestInfo);
 					}
@@ -1308,22 +1309,80 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				empReqApproval.setReq_id(requestOb);
 				empReqApproval.setLevel_id(empReqTypeAcc);
 				empReqApproval.setUser_id(loginUsers);
-				empReqApproval.setNote(approval.getNotes());
+				
+				if (approval.getModifiedDate()!=null && !approval.getModifiedDate().isEmpty()) {
+					Date modify = null;
+					MultiCalendarDate mCalDateModify = new MultiCalendarDate();
+						DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+						try {
+							modify = df.parse(approval.getModifiedDate());
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							log.debug(e.getMessage());
+						}
+						
+						empReqApproval.setNote(approval.getNotes() + " - Date has been modified by " + emp.getFirstName() + " from " + requestOb.getPeriod_from() + " to " + modify);
+						log.debug("modified date " + modify);
+				} else {
+					empReqApproval.setNote(approval.getNotes());
+				}
 				empReqApproval.setApproval(new Integer(status));
 
 				saveObject(empReqApproval);
 				
-				
+				log.debug("test1");
 				if(approval.getApprove().equals("0")){
 
 					requestOb.setApproved(new Long(99));
-
+					log.debug("test2");
 					saveObject(requestOb);
 
 				}
 				else {
+					log.debug("test3");
 					if (approvalList.size() == empReqAcc.size()) {
+						log.debug("test4");
 						requestOb.setApproved(new Long(1));
+						
+						
+						if (approval.getModifiedDate()!=null && !approval.getModifiedDate().isEmpty()) {
+							Date modify = null;
+							MultiCalendarDate mCalDateModify = new MultiCalendarDate();
+								DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+								try {
+									modify = df.parse(approval.getModifiedDate());
+								} catch (ParseException e) {
+									// TODO Auto-generated catch block
+									log.debug(e.getMessage());
+								}
+								
+								requestOb.setFrom_date_history(requestOb.getFrom_date());
+								requestOb.setFrom_date(modify);
+								requestOb.setPeriod_from(modify);
+								requestOb.setManagerModifiedDate(emp);
+								requestOb.setNotes(requestOb.getNotes()+ "(Attendance had been modified by manager)");
+								log.debug("modified date " + modify);
+						}
+						saveObject(requestOb);
+					} else {
+						if (approval.getModifiedDate()!=null && !approval.getModifiedDate().isEmpty()) {
+							Date modify = null;
+							MultiCalendarDate mCalDateModify = new MultiCalendarDate();
+								DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+								try {
+									modify = df.parse(approval.getModifiedDate());
+								} catch (ParseException e) {
+									// TODO Auto-generated catch block
+									log.debug(e.getMessage());
+								}
+								
+								requestOb.setFrom_date_history(requestOb.getFrom_date());
+								requestOb.setFrom_date(modify);
+								requestOb.setPeriod_from(modify);
+								requestOb.setManagerModifiedDate(emp);
+								requestOb.setNotes(requestOb.getNotes()+ "(Attendance had been modified by manager)");
+								log.debug("modified date " + modify);
+						}
 						saveObject(requestOb);
 					}
 				}

@@ -383,7 +383,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 									
 										<c:choose>
 										<c:when
-											test="${record.approved==0 && settings.managerCanModifyAttendance=='true'}">
+											test="${record.approved==0 && settings.managerCanModifyAttendance=='true' && record.from_date_history==null}">
 											<td id="btnPrint" nowrap><abc:i18n
 													property="commons.button.edit" /><a
 												href="attendanceRequestsApprovalEdit.html?reqId=${record.id}&empCodeQ=${empCode}&statusId=${status}&date_from=${request_date_from}&date_to=${request_date_to}&codeFrom=${codeFrom}&codeTo=${codeTo}"><fmt:message
