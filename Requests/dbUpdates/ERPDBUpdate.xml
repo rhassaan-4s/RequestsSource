@@ -16166,4 +16166,6 @@ INSERT INTO i18n_message VALUES (202116457, 'Historic Sign in/out date', 101471,
 INSERT INTO i18n_message VALUES (202116460,'صلاحيه تعديل التوقيع عن طريق المدير', 101473, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116461, 'Manager can modify attendance', 101473, 3);</statment></query><query><sqlindex>170</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101474, 'commons.errors.youCanChangeTimeOnly', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116462,'لا يمكن تعديل التاريخ، يمكنك فقط تعديل الوقت', 101474, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116463, 'You cannot change date, only time is modifiable', 101474, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116463, 'You cannot change date, only time is modifiable', 101474, 3);</statment></query><query><sqlindex>171</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD ANDROIDATTAUTOMATICAPPROVAL NUMBER;</statment></query><query><sqlindex>172</sqlindex><statment>update common_settings set  androidAttAutomaticApproval=1;</statment></query><query><sqlindex>173</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101475, 'requestsApproval.header.androidAttendanceAutomaticApproval', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116464,'الموافقه على حضور/انصراف اندرويد تلقائيًا', 101475, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116465, 'ِAutomatic Approval for Android Attendance', 101475, 3);</statment></query></SQL>

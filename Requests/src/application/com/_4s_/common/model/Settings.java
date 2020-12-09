@@ -74,6 +74,8 @@ public class Settings  implements Serializable,Auditable {
 	
 	////////////////Android Settings////////////////////
 	
+	private Boolean androidAttAutomaticApproval;
+	
 	private Float locationAccuracy;
 	
 	private Float locationAccuracy2;
@@ -110,6 +112,16 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Boolean signoutBeforePermissionErrand;
 	
+	
+	public Boolean getAndroidAttAutomaticApproval() {
+		return androidAttAutomaticApproval;
+	}
+
+	public void setAndroidAttAutomaticApproval(
+			Boolean androidAttAutomaticApproval) {
+		this.androidAttAutomaticApproval = androidAttAutomaticApproval;
+	}
+
 	public Boolean getSignoutBeforePermissionErrand() {
 		return signoutBeforePermissionErrand;
 	}

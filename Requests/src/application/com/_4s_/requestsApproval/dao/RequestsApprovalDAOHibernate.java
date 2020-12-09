@@ -41,6 +41,7 @@ import com._4s_.HR.model.HRSpecialtyLevel;
 import com._4s_.HR.model.HRVacation;
 import com._4s_.common.dao.BaseDAOHibernate;
 import com._4s_.common.model.Employee;
+import com._4s_.common.model.Settings;
 import com._4s_.common.util.DBUtils;
 import com._4s_.common.util.Page;
 import com._4s_.requestsApproval.model.AccessLevels;
@@ -945,450 +946,455 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	
 	}
 
-
 	public Map getPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
 			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, String sort, List empReqTypeAccs,String requestNumber,boolean isWeb,String isInsideCompany, final int pageNumber, final int pageSize)  {
-		Calendar cFrom= Calendar.getInstance();
-		
-		Date dateFrom=null;
-		Date dateTo= null;
-		log.debug("------fromDate---"+fromDate);
-		log.debug("fromDate " + fromDate + " toDate " + toDate + " requestType " + requestType);
-		log.debug("exactFrom " + exactFrom + " exactTo " + exactTo + " requestType " + requestType);
-		if (fromDate !=null) {
-			cFrom.setTime(fromDate);
-			cFrom.set(Calendar.HOUR_OF_DAY, 0);
-			cFrom.set(Calendar.MINUTE, 0);
-			cFrom.set(Calendar.SECOND, 0);
-			dateFrom=cFrom.getTime();
-		}
-		
-		log.debug("------dateFrom---"+dateFrom);
-
-		log.debug("------toDate---"+toDate);
-		Calendar cTo= Calendar.getInstance();
-		if (toDate!=null) {
-			cTo.setTime(toDate);
-			cTo.set(Calendar.HOUR_OF_DAY, 23);
-			cTo.set(Calendar.MINUTE, 59);
-			cTo.set(Calendar.SECOND, 59);
-			dateTo=cTo.getTime();
-		}
-		
-		log.debug("------dateTo---"+dateTo);
-		
-		Date exFrom=null;
-		Date exTo= null;
-		
-		log.debug("------exactfrom---"+exactFrom);
-		if (exactFrom !=null) {
-			cFrom.setTime(exactFrom);
-			cFrom.set(Calendar.HOUR_OF_DAY, 0);
-			cFrom.set(Calendar.MINUTE, 0);
-			cFrom.set(Calendar.SECOND, 0);
-			exFrom=cFrom.getTime();
-		}
-		
-		log.debug("------exFrom---"+exFrom);
-
-		if (exactTo!=null) {
-			cTo.setTime(exactTo);
-			cTo.set(Calendar.HOUR_OF_DAY, 23);
-			cTo.set(Calendar.MINUTE, 59);
-			cTo.set(Calendar.SECOND, 59);
-			exTo=cTo.getTime();
-		}
-		log.debug("------exTo---"+exTo);
-		
-		Date pFrom=null;
-		Date pTo= null;
-		
-		if (pFrom !=null) {
-			cFrom.setTime(periodFrom);
-			cFrom.set(Calendar.HOUR_OF_DAY, 0);
-			cFrom.set(Calendar.MINUTE, 0);
-			cFrom.set(Calendar.SECOND, 0);
-			pFrom=cFrom.getTime();
-		}
-		
-		log.debug("------pfrom---"+pFrom);
-
-		if (pTo!=null) {
-			cTo.setTime(periodTo);
-			cTo.set(Calendar.HOUR_OF_DAY, 23);
-			cTo.set(Calendar.MINUTE, 59);
-			cTo.set(Calendar.SECOND, 59);
-			pTo=cTo.getTime();
-		}
-		log.debug("------Pto---"+pTo);
-		DateFormat format =	new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		
-		Map map = new HashMap();
-		List list =new ArrayList();
-		try {
-
-			Criteria criteria = getCurrentSession()
-					.createCriteria(LoginUsersRequests.class);
-			
-			///////////////////////////////////////////////////////////////////////
-			if (fromDate!=null && toDate!=null){
-				final Date startDate =(Date) format.parse(format.format(dateFrom));
-				final Date endDate = (Date)format.parse(format.format(dateTo));
-				criteria.add(Expression.ge("request_date", startDate));
-				criteria.add(Expression.le("request_date", endDate));
-			}
-			if (pFrom!=null && pTo!=null){
-				final Date startDate =(Date) format.parse(format.format(pFrom));
-				final Date endDate = (Date)format.parse(format.format(pTo));
-				criteria.add(Expression.ge("period_from", startDate));
-				criteria.add(Expression.le("period_from", endDate));
-			}
-			if (exactFrom!=null && exactTo!=null){
-				final Date startDate =(Date) format.parse(format.format(exFrom));
-				final Date endDate = (Date)format.parse(format.format(exTo));
-				criteria.add(Expression.ge("from_date", startDate));
-				criteria.add(Expression.le("from_date", endDate));
-			}
-			
-			/////////////////////////////////////////////////////////////////////////////////
-			log.debug("requestNumber " + requestNumber);
-			if(requestNumber!=null && !requestNumber.isEmpty()) {
-				criteria.add(Restrictions.eq("requestNumber", requestNumber));
-			}
-			log.debug("requesttype " + requestType);
-			if(requestType!=null) {
-				log.debug("1.requesttype " + requestType);
-				if (requestType.equals(new Long(1))){
-					log.debug("requesttype is 1");
-					criteria.add(Restrictions.or(
-							Restrictions.eq("request_id.id", requestType),
-							Restrictions.eq("request_id.id", new Long(4)))
-							);
-					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
-				} else if (requestType.equals(new Long(4))) {
-					log.debug("requesttype is 4");
-//					criteria.add(Restrictions.or(Restrictions.or(
-//							Restrictions.eq("request_id.id", new Long(1)),
-//							Restrictions.eq("request_id.id", new Long(2)))
-//							,Restrictions.eq("request_id.id", new Long(4))));
-					criteria.add(Restrictions.eq("request_id.id", new Long(4)));
-					criteria.add(Restrictions.isNull("vacation.vacation"));
-					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
-				} else if (requestType.equals(new Long(5))) {
-					log.debug("requesttype is 5");
-					criteria.add(Restrictions.eq("request_id.id", new Long(4))); //Ma2moreya
-					criteria.add(Restrictions.eq("vacation.vacation", "999"));
-					log.debug("ma2moreya");
-				}   else if (requestType.equals(new Long(6))) {//7odoor w enseraf
-					log.debug("requesttype is 6");
-					criteria.add(Restrictions.or(
-							Restrictions.eq("request_id.id", new Long(10)),
-							Restrictions.eq("request_id.id", new Long(11)))
-							);
-				}  
-//				else if (requestType.equals(new Long(6))) {
-//					log.debug("requesttype is 6");
-//					criteria.add(Restrictions.eq("request_id.id", new Long(1)));
-//				} 
-				else if (requestType.equals(new Long(10)) || requestType.equals(new Long(11))) {
-					log.debug("requesttype is else");
-					criteria.add(Restrictions.eq("request_id.id", requestType));
-				} else if (requestType.equals(new Long(12))) {
-					log.debug("requesttype is 4");
-					criteria.add(Restrictions.eq("request_id.id", new Long(4)));
-					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
-				} else if (requestType.equals(new Long(13))) {
-					log.debug("requesttype is 4");
-					criteria.add(Restrictions.and(Restrictions.eq("request_id.id", new Long(1)), Restrictions.eq("vacation.vacation", "999")));
-					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
-				} else if (requestType.equals(new Long(14))) {
-					log.debug("requesttype is 4");
-					criteria.add(Restrictions.or(Restrictions.eq("request_id.id", new Long(4)),
-							Restrictions.and(Restrictions.eq("request_id.id", new Long(1)), Restrictions.eq("vacation.vacation", "999"))));
-					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
-				}  else {
-					log.debug("requesttype is else");
-					criteria.add(Restrictions.eq("request_id.id", requestType));
-					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
-				}
-			} else {
-				log.debug("2. requesttype " + requestType);
-				criteria.add(Restrictions.or(
-											Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-															Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))),
-											Restrictions.or(Restrictions.eq("request_id.id", new Long(10)),Restrictions.eq("request_id.id", new Long(11)))
-								)
-							);
-			}
-			/////////////////////////////////////////////////////////////////////////////////
-			if (empCode!=null && !empCode.isEmpty()) {
-				criteria.add(Restrictions.eq("empCode", empCode));
-			}
-			////////////////////////////////////////////////////////////////////////////////
-			if (codeFrom!=null && !codeFrom.isEmpty() && codeTo!=null && !codeTo.isEmpty()) {
-				criteria.add(Restrictions.between("empCode", codeFrom, codeTo));
-			}
-			///////////////////////////////////////////////////////////////////////////////
-			if (statusId!=null) {
-				criteria.add(Restrictions.eq("approved", statusId));
-			}
-			///////////////////////////////////////////////////////////////////////////////
-			///////////////////////////////////////////////////////////////////////////////
-			if (isInsideCompany!=null) {
-				if (isInsideCompany.equals("0")) {
-					criteria.add(Restrictions.eq("isInsideCompany", false));
-				} else if (isInsideCompany.equals("1")) {
-					criteria.add(Restrictions.eq("isInsideCompany", true));
-				}
-			}
-			///////////////////////////////////////////////////////////////////////////////
-
-			log.debug("empReqTypeAccs " + empReqTypeAccs);
-			if (empReqTypeAccs != null) {
-				criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
-			} 
-			if (sort.equalsIgnoreCase("desc")) {
-				criteria.addOrder(Property.forName("period_from").desc());
-			}
-			if (sort.equalsIgnoreCase("asc")) {
-				criteria.addOrder(Property.forName("period_from").asc());
-			}
-			criteria
-			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-			criteria.setProjection(Projections.projectionList().add(Projections.rowCount()));
-			list = (List)criteria.list();
-			map.put("listSize", Integer.valueOf(criteria.list().iterator().next()+""));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			log.debug("exception " + e.getMessage());
-			Page page = new Page();
-			map.put("listSize", new Integer(0));
-			return page.getPage(map,pageNumber,pageSize);
-		}
-		
-		
-		try {
-
-			Criteria criteria = getCurrentSession()
-					.createCriteria(LoginUsersRequests.class);
-			
-			///////////////////////////////////////////////////////////////////////
-			if (fromDate!=null && toDate!=null){
-				final Date startDate =(Date) format.parse(format.format(dateFrom));
-				final Date endDate = (Date)format.parse(format.format(dateTo));
-				criteria.add(Expression.ge("request_date", startDate));
-				criteria.add(Expression.le("request_date", endDate));
-			}
-			if (pFrom!=null && pTo!=null){
-				final Date startDate =(Date) format.parse(format.format(pFrom));
-				final Date endDate = (Date)format.parse(format.format(pTo));
-				criteria.add(Expression.ge("period_from", startDate));
-				criteria.add(Expression.le("period_from", endDate));
-			}
-			if (exactFrom!=null && exactTo!=null){
-				final Date startDate =(Date) format.parse(format.format(exFrom));
-				final Date endDate = (Date)format.parse(format.format(exTo));
-				criteria.add(Expression.ge("from_date", startDate));
-				criteria.add(Expression.le("from_date", endDate));
-			}
-//			criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-//					Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
-			/////////////////////////////////////////////////////////////////////////////////
-			log.debug("requestNumber " + requestNumber);
-			if(requestNumber!=null && !requestNumber.isEmpty()) {
-				criteria.add(Restrictions.eq("requestNumber", requestNumber));
-			}
-			if(requestType!=null) {
-				log.debug("requesttype " + requestType);
-				if (requestType.equals(new Long(1))){
-					log.debug("requesttype is 1");
-					criteria.add(Restrictions.or(
-							Restrictions.eq("request_id.id", requestType),
-							Restrictions.eq("request_id.id", new Long(4)))
-							);
-					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
-				} else if (requestType.equals(new Long(4))) {
-					log.debug("requesttype is 4");
-//					criteria.add(Restrictions.or(Restrictions.or(
-//							Restrictions.eq("request_id.id", new Long(1)),
-//							Restrictions.eq("request_id.id", new Long(2)))
-//							,Restrictions.eq("request_id.id", new Long(4))));
-					criteria.add(Restrictions.eq("request_id.id", new Long(4)));
-					criteria.add(Restrictions.isNull("vacation.vacation"));
-					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
-				} else if (requestType.equals(new Long(5))) {
-					log.debug("requesttype is 5");
-					
-					criteria.add(Restrictions.eq("request_id.id", new Long(4))); //Ma2moreya
-					criteria.add(Restrictions.eq("vacation.vacation", "999"));
-					log.debug("ma2moreya2");
-				} else if (requestType.equals(new Long(6))) {
-					log.debug("requesttype is 6");
-					criteria.add(Restrictions.or(
-							Restrictions.eq("request_id.id", new Long(10)),
-							Restrictions.eq("request_id.id", new Long(11)))
-							);
-				} else if (requestType.equals(new Long(10)) || requestType.equals(new Long(11))) {
-					log.debug("requesttype is else");
-					criteria.add(Restrictions.eq("request_id.id", requestType));
-				} else if (requestType.equals(new Long(12))) {
-					log.debug("requesttype is 4");
-					criteria.add(Restrictions.eq("request_id.id", new Long(4)));
-					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
-				} else if (requestType.equals(new Long(13))) {
-					log.debug("requesttype is 4");
-					criteria.add(Restrictions.and(Restrictions.eq("request_id.id", new Long(1)), Restrictions.eq("vacation.vacation", "999")));
-					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
-				} else if (requestType.equals(new Long(14))) {
-					log.debug("requesttype is 4");
-					criteria.add(Restrictions.or(Restrictions.eq("request_id.id", new Long(4)),
-							Restrictions.and(Restrictions.eq("request_id.id", new Long(1)), Restrictions.eq("vacation.vacation", "999"))));
-					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
-				} else {
-					log.debug("requesttype is else");
-					criteria.add(Restrictions.eq("request_id.id", requestType));
-					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
-				}
-			} else {
-				log.debug("2. requesttype " + requestType);
-				criteria.add(Restrictions.or(
-											Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
-															Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))),
-											Restrictions.or(Restrictions.eq("request_id.id", new Long(10)),Restrictions.eq("request_id.id", new Long(11)))
-								)
-							);
-			}
-			/////////////////////////////////////////////////////////////////////////////////
-			if (empCode!=null && !empCode.isEmpty()) {
-				criteria.add(Restrictions.eq("empCode", empCode));
-			}
-			////////////////////////////////////////////////////////////////////////////////
-			if (codeFrom!=null && !codeFrom.isEmpty() && codeTo!=null && !codeTo.isEmpty()) {
-				criteria.add(Restrictions.between("empCode", codeFrom, codeTo));
-			}
-			///////////////////////////////////////////////////////////////////////////////
-			if (statusId!=null) {
-				criteria.add(Restrictions.eq("approved", statusId));
-			}
-			///////////////////////////////////////////////////////////////////////////////
-
-			///////////////////////////////////////////////////////////////////////////////
-			if (isInsideCompany!=null) {
-				if (isInsideCompany.equals("0")) {
-					criteria.add(Restrictions.eq("isInsideCompany", false));
-				} else if (isInsideCompany.equals("1")) {
-					criteria.add(Restrictions.eq("isInsideCompany", true));
-				}
-			}
-			///////////////////////////////////////////////////////////////////////////////
-
-			log.debug("empReqTypeAccs " + empReqTypeAccs);
-			if (empReqTypeAccs != null) {
-				criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
-			}
-			if (sort.equalsIgnoreCase("desc")) {
-				criteria.addOrder(Property.forName("period_from").desc());
-			}
-			if (sort.equalsIgnoreCase("asc")) {
-				criteria.addOrder(Property.forName("period_from").asc());
-			}
-			criteria
-			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		
-			log.debug("first result " + (pageNumber*pageSize));
-			log.debug("max results " + pageSize);
-			criteria.setFirstResult(pageNumber * pageSize);
-			criteria.setMaxResults(pageSize);
-			
-			List results = criteria.list();
-			if (isWeb) {
-				map.put("results", results);
-			}  else {
-				log.debug("results " + results.size());
-				List output = new ArrayList();
-				Iterator itr = results.iterator();
-				while (itr.hasNext()) {
-					LoginUsersRequests req = (LoginUsersRequests)itr.next();
-					RequestOutput op = new RequestOutput();
-					op.setId(req.getId());
-					op.setEmpCode(req.getEmpCode());
-					op.setEmpName(req.getLogin_user().getName());
-					op.setRequestDate(req.getRequest_date());
-					op.setRequestNumber(req.getRequestNumber());
-					op.setNotes(req.getNotes());
-					op.setLongitude(req.getLongitude());
-					op.setLatitude(req.getLatitude());
-					op.setIsInsideCompany(req.getIsInsideCompany());
-					op.setLocationAddress(req.getLocationAddress());
-					
-					op.setFromDateHistory(req.getFrom_date_history());
-
-					if (req.getRequest_id().getId().equals(new Long(1))) {
-						op.setRequestDesc(req.getVacation().getName());
-					} else {
-						op.setRequestDesc(req.getRequest_id().getDescription());
-					}
-
-					if (req.getRequest_id().getId().equals(new Long(1)) || req.getRequest_id().getId().equals(new Long(2))) {
-						op.setVacDuration(req.getWithdrawDays());
-					}
-					if (req.getRequest_id().getId().equals(new Long(10))) {
-						op.setRequestType(new Long(5));
-					} else if (req.getRequest_id().getId().equals(new Long(11))) {
-						op.setRequestType(new Long(6));
-					} else {
-						op.setRequestType(req.getRequest_id().getId());
-					} 
-
-
-					if (req.getApproved()==null || req.getApproved().equals(new Long(0))) {
-						op.setStatus("Waiting Approval");
-					} else if (req.getApproved().equals(new Long(99))) {
-						op.setStatus("Declined");
-					} else if (req.getApproved().equals(new Long(1))) {
-						op.setStatus("Approved");
-					} 
-
-					System.out.println("req.getFrom_date() " + req.getFrom_date());
-					if (req.getFrom_date() != null) {
-						op.setFromDate(req.getFrom_date());
-						op.setToDate(req.getTo_date());
-					} else {
-						op.setFromDate(req.getPeriod_from());
-						op.setToDate(req.getPeriod_to());
-					}
-
-					output.add(op);
-				}
-				map.put("results", output);
-			}
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			log.debug("exception " + e.getMessage());
-			Page page = new Page();
-			return page.getPage(map,pageNumber,pageSize);
-		}
-		Page page = new Page();
-		log.debug("paging");
-		return page.getPage(map,pageNumber,pageSize);
-//		return map;
+		Settings settings = (Settings)getObject(Settings.class, new Long(1));
+		return externalQueries.getPagedRequests(settings.getServer(),settings.getService(),settings.getUsername(),settings.getPassword(),fromDate,toDate,requestType,exactFrom,exactTo,periodFrom,periodTo,empCode,codeFrom,codeTo,statusId,sort,empReqTypeAccs,requestNumber,isWeb,isInsideCompany,pageNumber,pageSize);
 	}
+
+//	public Map getPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
+//			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, String sort, List empReqTypeAccs,String requestNumber,boolean isWeb,String isInsideCompany, final int pageNumber, final int pageSize)  {
+//		Calendar cFrom= Calendar.getInstance();
+//		
+//		Date dateFrom=null;
+//		Date dateTo= null;
+//		log.debug("------fromDate---"+fromDate);
+//		log.debug("fromDate " + fromDate + " toDate " + toDate + " requestType " + requestType);
+//		log.debug("exactFrom " + exactFrom + " exactTo " + exactTo + " requestType " + requestType);
+//		if (fromDate !=null) {
+//			cFrom.setTime(fromDate);
+//			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+//			cFrom.set(Calendar.MINUTE, 0);
+//			cFrom.set(Calendar.SECOND, 0);
+//			dateFrom=cFrom.getTime();
+//		}
+//		
+//		log.debug("------dateFrom---"+dateFrom);
+//
+//		log.debug("------toDate---"+toDate);
+//		Calendar cTo= Calendar.getInstance();
+//		if (toDate!=null) {
+//			cTo.setTime(toDate);
+//			cTo.set(Calendar.HOUR_OF_DAY, 23);
+//			cTo.set(Calendar.MINUTE, 59);
+//			cTo.set(Calendar.SECOND, 59);
+//			dateTo=cTo.getTime();
+//		}
+//		
+//		log.debug("------dateTo---"+dateTo);
+//		
+//		Date exFrom=null;
+//		Date exTo= null;
+//		
+//		log.debug("------exactfrom---"+exactFrom);
+//		if (exactFrom !=null) {
+//			cFrom.setTime(exactFrom);
+//			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+//			cFrom.set(Calendar.MINUTE, 0);
+//			cFrom.set(Calendar.SECOND, 0);
+//			exFrom=cFrom.getTime();
+//		}
+//		
+//		log.debug("------exFrom---"+exFrom);
+//
+//		if (exactTo!=null) {
+//			cTo.setTime(exactTo);
+//			cTo.set(Calendar.HOUR_OF_DAY, 23);
+//			cTo.set(Calendar.MINUTE, 59);
+//			cTo.set(Calendar.SECOND, 59);
+//			exTo=cTo.getTime();
+//		}
+//		log.debug("------exTo---"+exTo);
+//		
+//		Date pFrom=null;
+//		Date pTo= null;
+//		
+//		if (pFrom !=null) {
+//			cFrom.setTime(periodFrom);
+//			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+//			cFrom.set(Calendar.MINUTE, 0);
+//			cFrom.set(Calendar.SECOND, 0);
+//			pFrom=cFrom.getTime();
+//		}
+//		
+//		log.debug("------pfrom---"+pFrom);
+//
+//		if (pTo!=null) {
+//			cTo.setTime(periodTo);
+//			cTo.set(Calendar.HOUR_OF_DAY, 23);
+//			cTo.set(Calendar.MINUTE, 59);
+//			cTo.set(Calendar.SECOND, 59);
+//			pTo=cTo.getTime();
+//		}
+//		log.debug("------Pto---"+pTo);
+//		DateFormat format =	new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+//		
+//		Map map = new HashMap();
+//		List list =new ArrayList();
+//		try {
+//
+//			Criteria criteria = getCurrentSession()
+//					.createCriteria(LoginUsersRequests.class);
+//			
+//			///////////////////////////////////////////////////////////////////////
+//			if (fromDate!=null && toDate!=null){
+//				final Date startDate =(Date) format.parse(format.format(dateFrom));
+//				final Date endDate = (Date)format.parse(format.format(dateTo));
+//				criteria.add(Expression.ge("request_date", startDate));
+//				criteria.add(Expression.le("request_date", endDate));
+//			}
+//			if (pFrom!=null && pTo!=null){
+//				final Date startDate =(Date) format.parse(format.format(pFrom));
+//				final Date endDate = (Date)format.parse(format.format(pTo));
+//				criteria.add(Expression.ge("period_from", startDate));
+//				criteria.add(Expression.le("period_from", endDate));
+//			}
+//			if (exactFrom!=null && exactTo!=null){
+//				final Date startDate =(Date) format.parse(format.format(exFrom));
+//				final Date endDate = (Date)format.parse(format.format(exTo));
+//				criteria.add(Expression.ge("from_date", startDate));
+//				criteria.add(Expression.le("from_date", endDate));
+//			}
+//			
+//			/////////////////////////////////////////////////////////////////////////////////
+//			log.debug("requestNumber " + requestNumber);
+//			if(requestNumber!=null && !requestNumber.isEmpty()) {
+//				criteria.add(Restrictions.eq("requestNumber", requestNumber));
+//			}
+//			log.debug("requesttype " + requestType);
+//			if(requestType!=null) {
+//				log.debug("1.requesttype " + requestType);
+//				if (requestType.equals(new Long(1))){
+//					log.debug("requesttype is 1");
+//					criteria.add(Restrictions.or(
+//							Restrictions.eq("request_id.id", requestType),
+//							Restrictions.eq("request_id.id", new Long(4)))
+//							);
+//					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+//				} else if (requestType.equals(new Long(4))) {
+//					log.debug("requesttype is 4");
+////					criteria.add(Restrictions.or(Restrictions.or(
+////							Restrictions.eq("request_id.id", new Long(1)),
+////							Restrictions.eq("request_id.id", new Long(2)))
+////							,Restrictions.eq("request_id.id", new Long(4))));
+//					criteria.add(Restrictions.eq("request_id.id", new Long(4)));
+//					criteria.add(Restrictions.isNull("vacation.vacation"));
+//					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+//				} else if (requestType.equals(new Long(5))) {
+//					log.debug("requesttype is 5");
+//					criteria.add(Restrictions.eq("request_id.id", new Long(4))); //Ma2moreya
+//					criteria.add(Restrictions.eq("vacation.vacation", "999"));
+//					log.debug("ma2moreya");
+//				}   else if (requestType.equals(new Long(6))) {//7odoor w enseraf
+//					log.debug("requesttype is 6");
+//					criteria.add(Restrictions.or(
+//							Restrictions.eq("request_id.id", new Long(10)),
+//							Restrictions.eq("request_id.id", new Long(11)))
+//							);
+//				}  
+////				else if (requestType.equals(new Long(6))) {
+////					log.debug("requesttype is 6");
+////					criteria.add(Restrictions.eq("request_id.id", new Long(1)));
+////				} 
+//				else if (requestType.equals(new Long(10)) || requestType.equals(new Long(11))) {
+//					log.debug("requesttype is else");
+//					criteria.add(Restrictions.eq("request_id.id", requestType));
+//				} else if (requestType.equals(new Long(12))) {
+//					log.debug("requesttype is 4");
+//					criteria.add(Restrictions.eq("request_id.id", new Long(4)));
+//					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+//				} else if (requestType.equals(new Long(13))) {
+//					log.debug("requesttype is 4");
+//					criteria.add(Restrictions.and(Restrictions.eq("request_id.id", new Long(1)), Restrictions.eq("vacation.vacation", "999")));
+//					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+//				} else if (requestType.equals(new Long(14))) {
+//					log.debug("requesttype is 4");
+//					criteria.add(Restrictions.or(Restrictions.eq("request_id.id", new Long(4)),
+//							Restrictions.and(Restrictions.eq("request_id.id", new Long(1)), Restrictions.eq("vacation.vacation", "999"))));
+//					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+//				}  else {
+//					log.debug("requesttype is else");
+//					criteria.add(Restrictions.eq("request_id.id", requestType));
+//					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+//				}
+//			} else {
+//				log.debug("2. requesttype " + requestType);
+//				criteria.add(Restrictions.or(
+//											Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//															Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))),
+//											Restrictions.or(Restrictions.eq("request_id.id", new Long(10)),Restrictions.eq("request_id.id", new Long(11)))
+//								)
+//							);
+//			}
+//			/////////////////////////////////////////////////////////////////////////////////
+//			if (empCode!=null && !empCode.isEmpty()) {
+//				criteria.add(Restrictions.eq("empCode", empCode));
+//			}
+//			////////////////////////////////////////////////////////////////////////////////
+//			if (codeFrom!=null && !codeFrom.isEmpty() && codeTo!=null && !codeTo.isEmpty()) {
+//				criteria.add(Restrictions.between("empCode", codeFrom, codeTo));
+//			}
+//			///////////////////////////////////////////////////////////////////////////////
+//			if (statusId!=null) {
+//				criteria.add(Restrictions.eq("approved", statusId));
+//			}
+//			///////////////////////////////////////////////////////////////////////////////
+//			///////////////////////////////////////////////////////////////////////////////
+//			if (isInsideCompany!=null) {
+//				if (isInsideCompany.equals("0")) {
+//					criteria.add(Restrictions.eq("isInsideCompany", false));
+//				} else if (isInsideCompany.equals("1")) {
+//					criteria.add(Restrictions.eq("isInsideCompany", true));
+//				}
+//			}
+//			///////////////////////////////////////////////////////////////////////////////
+//
+//			log.debug("empReqTypeAccs " + empReqTypeAccs);
+//			if (empReqTypeAccs != null) {
+//				criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
+//			} 
+//			if (sort.equalsIgnoreCase("desc")) {
+//				criteria.addOrder(Property.forName("period_from").desc());
+//			}
+//			if (sort.equalsIgnoreCase("asc")) {
+//				criteria.addOrder(Property.forName("period_from").asc());
+//			}
+//			criteria
+//			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//			criteria.setProjection(Projections.projectionList().add(Projections.rowCount()));
+//			list = (List)criteria.list();
+//			map.put("listSize", Integer.valueOf(criteria.list().iterator().next()+""));
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (Exception e) {
+//			log.debug("exception " + e.getMessage());
+//			Page page = new Page();
+//			map.put("listSize", new Integer(0));
+//			return page.getPage(map,pageNumber,pageSize);
+//		}
+//		
+//		
+//		try {
+//
+//			Criteria criteria = getCurrentSession()
+//					.createCriteria(LoginUsersRequests.class);
+//			
+//			///////////////////////////////////////////////////////////////////////
+//			if (fromDate!=null && toDate!=null){
+//				final Date startDate =(Date) format.parse(format.format(dateFrom));
+//				final Date endDate = (Date)format.parse(format.format(dateTo));
+//				criteria.add(Expression.ge("request_date", startDate));
+//				criteria.add(Expression.le("request_date", endDate));
+//			}
+//			if (pFrom!=null && pTo!=null){
+//				final Date startDate =(Date) format.parse(format.format(pFrom));
+//				final Date endDate = (Date)format.parse(format.format(pTo));
+//				criteria.add(Expression.ge("period_from", startDate));
+//				criteria.add(Expression.le("period_from", endDate));
+//			}
+//			if (exactFrom!=null && exactTo!=null){
+//				final Date startDate =(Date) format.parse(format.format(exFrom));
+//				final Date endDate = (Date)format.parse(format.format(exTo));
+//				criteria.add(Expression.ge("from_date", startDate));
+//				criteria.add(Expression.le("from_date", endDate));
+//			}
+////			criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+////					Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+//			/////////////////////////////////////////////////////////////////////////////////
+//			log.debug("requestNumber " + requestNumber);
+//			if(requestNumber!=null && !requestNumber.isEmpty()) {
+//				criteria.add(Restrictions.eq("requestNumber", requestNumber));
+//			}
+//			if(requestType!=null) {
+//				log.debug("requesttype " + requestType);
+//				if (requestType.equals(new Long(1))){
+//					log.debug("requesttype is 1");
+//					criteria.add(Restrictions.or(
+//							Restrictions.eq("request_id.id", requestType),
+//							Restrictions.eq("request_id.id", new Long(4)))
+//							);
+//					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+//				} else if (requestType.equals(new Long(4))) {
+//					log.debug("requesttype is 4");
+////					criteria.add(Restrictions.or(Restrictions.or(
+////							Restrictions.eq("request_id.id", new Long(1)),
+////							Restrictions.eq("request_id.id", new Long(2)))
+////							,Restrictions.eq("request_id.id", new Long(4))));
+//					criteria.add(Restrictions.eq("request_id.id", new Long(4)));
+//					criteria.add(Restrictions.isNull("vacation.vacation"));
+//					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+//				} else if (requestType.equals(new Long(5))) {
+//					log.debug("requesttype is 5");
+//					
+//					criteria.add(Restrictions.eq("request_id.id", new Long(4))); //Ma2moreya
+//					criteria.add(Restrictions.eq("vacation.vacation", "999"));
+//					log.debug("ma2moreya2");
+//				} else if (requestType.equals(new Long(6))) {
+//					log.debug("requesttype is 6");
+//					criteria.add(Restrictions.or(
+//							Restrictions.eq("request_id.id", new Long(10)),
+//							Restrictions.eq("request_id.id", new Long(11)))
+//							);
+//				} else if (requestType.equals(new Long(10)) || requestType.equals(new Long(11))) {
+//					log.debug("requesttype is else");
+//					criteria.add(Restrictions.eq("request_id.id", requestType));
+//				} else if (requestType.equals(new Long(12))) {
+//					log.debug("requesttype is 4");
+//					criteria.add(Restrictions.eq("request_id.id", new Long(4)));
+//					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+//				} else if (requestType.equals(new Long(13))) {
+//					log.debug("requesttype is 4");
+//					criteria.add(Restrictions.and(Restrictions.eq("request_id.id", new Long(1)), Restrictions.eq("vacation.vacation", "999")));
+//					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+//				} else if (requestType.equals(new Long(14))) {
+//					log.debug("requesttype is 4");
+//					criteria.add(Restrictions.or(Restrictions.eq("request_id.id", new Long(4)),
+//							Restrictions.and(Restrictions.eq("request_id.id", new Long(1)), Restrictions.eq("vacation.vacation", "999"))));
+//					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+//				} else {
+//					log.debug("requesttype is else");
+//					criteria.add(Restrictions.eq("request_id.id", requestType));
+//					criteria.add(Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//							Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))));
+//				}
+//			} else {
+//				log.debug("2. requesttype " + requestType);
+//				criteria.add(Restrictions.or(
+//											Restrictions.or(Restrictions.and(Restrictions.isNotNull("from_date"),Restrictions.isNotNull("to_date")),
+//															Restrictions.and(Restrictions.isNotNull("period_from"),Restrictions.isNotNull("period_to"))),
+//											Restrictions.or(Restrictions.eq("request_id.id", new Long(10)),Restrictions.eq("request_id.id", new Long(11)))
+//								)
+//							);
+//			}
+//			/////////////////////////////////////////////////////////////////////////////////
+//			if (empCode!=null && !empCode.isEmpty()) {
+//				criteria.add(Restrictions.eq("empCode", empCode));
+//			}
+//			////////////////////////////////////////////////////////////////////////////////
+//			if (codeFrom!=null && !codeFrom.isEmpty() && codeTo!=null && !codeTo.isEmpty()) {
+//				criteria.add(Restrictions.between("empCode", codeFrom, codeTo));
+//			}
+//			///////////////////////////////////////////////////////////////////////////////
+//			if (statusId!=null) {
+//				criteria.add(Restrictions.eq("approved", statusId));
+//			}
+//			///////////////////////////////////////////////////////////////////////////////
+//
+//			///////////////////////////////////////////////////////////////////////////////
+//			if (isInsideCompany!=null) {
+//				if (isInsideCompany.equals("0")) {
+//					criteria.add(Restrictions.eq("isInsideCompany", false));
+//				} else if (isInsideCompany.equals("1")) {
+//					criteria.add(Restrictions.eq("isInsideCompany", true));
+//				}
+//			}
+//			///////////////////////////////////////////////////////////////////////////////
+//
+//			log.debug("empReqTypeAccs " + empReqTypeAccs);
+//			if (empReqTypeAccs != null) {
+//				criteria.createCriteria("login_user").add(Restrictions.in("id", empReqTypeAccs));
+//			}
+//			if (sort.equalsIgnoreCase("desc")) {
+//				criteria.addOrder(Property.forName("period_from").desc());
+//			}
+//			if (sort.equalsIgnoreCase("asc")) {
+//				criteria.addOrder(Property.forName("period_from").asc());
+//			}
+//			criteria
+//			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//		
+//			log.debug("first result " + (pageNumber*pageSize));
+//			log.debug("max results " + pageSize);
+//			criteria.setFirstResult(pageNumber * pageSize);
+//			criteria.setMaxResults(pageSize);
+//			
+//			List results = criteria.list();
+//			if (isWeb) {
+//				map.put("results", results);
+//			}  else {
+//				log.debug("results " + results.size());
+//				List output = new ArrayList();
+//				Iterator itr = results.iterator();
+//				while (itr.hasNext()) {
+//					LoginUsersRequests req = (LoginUsersRequests)itr.next();
+//					RequestOutput op = new RequestOutput();
+//					op.setId(req.getId());
+//					op.setEmpCode(req.getEmpCode());
+//					op.setEmpName(req.getLogin_user().getName());
+//					op.setRequestDate(req.getRequest_date());
+//					op.setRequestNumber(req.getRequestNumber());
+//					op.setNotes(req.getNotes());
+//					op.setLongitude(req.getLongitude());
+//					op.setLatitude(req.getLatitude());
+//					op.setIsInsideCompany(req.getIsInsideCompany());
+//					op.setLocationAddress(req.getLocationAddress());
+//					
+//					op.setFromDateHistory(req.getFrom_date_history());
+//
+//					if (req.getRequest_id().getId().equals(new Long(1))) {
+//						op.setRequestDesc(req.getVacation().getName());
+//					} else {
+//						op.setRequestDesc(req.getRequest_id().getDescription());
+//					}
+//
+//					if (req.getRequest_id().getId().equals(new Long(1)) || req.getRequest_id().getId().equals(new Long(2))) {
+//						op.setVacDuration(req.getWithdrawDays());
+//					}
+//					if (req.getRequest_id().getId().equals(new Long(10))) {
+//						op.setRequestType(new Long(5));
+//					} else if (req.getRequest_id().getId().equals(new Long(11))) {
+//						op.setRequestType(new Long(6));
+//					} else {
+//						op.setRequestType(req.getRequest_id().getId());
+//					} 
+//
+//
+//					if (req.getApproved()==null || req.getApproved().equals(new Long(0))) {
+//						op.setStatus("Waiting Approval");
+//					} else if (req.getApproved().equals(new Long(99))) {
+//						op.setStatus("Declined");
+//					} else if (req.getApproved().equals(new Long(1))) {
+//						op.setStatus("Approved");
+//					} 
+//
+//					System.out.println("req.getFrom_date() " + req.getFrom_date());
+//					if (req.getFrom_date() != null) {
+//						op.setFromDate(req.getFrom_date());
+//						op.setToDate(req.getTo_date());
+//					} else {
+//						op.setFromDate(req.getPeriod_from());
+//						op.setToDate(req.getPeriod_to());
+//					}
+//
+//					output.add(op);
+//				}
+//				map.put("results", output);
+//			}
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (Exception e) {
+//			log.debug("exception " + e.getMessage());
+//			Page page = new Page();
+//			return page.getPage(map,pageNumber,pageSize);
+//		}
+//		Page page = new Page();
+//		log.debug("paging");
+//		return page.getPage(map,pageNumber,pageSize);
+////		return map;
+//	}
 
 
 

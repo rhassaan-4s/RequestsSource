@@ -319,6 +319,17 @@
 					<fmt:message key="commons.caption.androidSettings" />
 				</td>
 			</tr>
+			<tr><td nowrap class="formBodControl" >
+					<abc:i18n property="requestsApproval.header.androidAttendanceAutomaticApproval" />
+					<fmt:message key="requestsApproval.header.androidAttendanceAutomaticApproval" />
+				</td>
+				<td  class="formBod"> 
+					<spring:bind path="settings.androidAttAutomaticApproval">
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} />
+					</spring:bind> 
+				</td>
+				<TD width="50%">&nbsp;</TD>
+			</tr>
 			<c:if test="${settings.company.description=='4s'}">
 				<tr>
 					<td nowrap class="formBodControl" >

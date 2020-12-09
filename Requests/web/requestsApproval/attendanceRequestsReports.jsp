@@ -291,7 +291,8 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										<td class="helpHed" id="btnPrint">
 										</td>										
 									</tr>
-									
+									listSize: ${listSize}
+									${results[0]}
 								<c:forEach varStatus="loop" var="record" items="${results}">
 									<tr height=20 bgcolor="#F8F8F8">
 										<td  nowrap>

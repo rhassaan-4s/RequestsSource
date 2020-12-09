@@ -342,6 +342,7 @@ public class AttendanceRequestsApprovalForm extends BaseSimpleFormController {
 		empReqApproval.setApproval(new Integer(status));
 
 		requestsApprovalManager.saveObject(empReqApproval);
+		log.debug("status " + status);
 		if(status.equals("0")){
 			
 			requestOb.setApproved(new Long(99));

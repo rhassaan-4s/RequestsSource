@@ -1,15 +1,16 @@
 package com._4s_.requestsApproval.dao;
 
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.dbcp.BasicDataSource;
@@ -4071,33 +4072,6 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 		}
 
         
-//        MultiCalendarDate mCalDate = new MultiCalendarDate();
-//		if(from_dateString!=null){
-//			log.debug("-----date entered---"+from_dateString);
-//			mCalDate.setDateTimeString(from_dateString,new Boolean(true));
-//		}
-//		from_date = mCalDate.getDate();
-//		log.debug("----fromdate- after formatting--"+from_date);
-//		Calendar c = Calendar.getInstance();
-//        c.setTime(from_date);
-//        int year=c.get(Calendar.YEAR);
-//        log.debug("----year---"+year);
-//        Date dd1=null;
-//		c.set(year, 00, 01);
-//		dd1=c.getTime();
-//		log.debug("----dd1---"+dd1);
-//		
-//		String dd1String=df.format(dd1);
-//        log.debug("----dd1String- after formatting--"+dd1String);
-//
-//		if(dd1String!=null){
-//			log.debug("-----dd1 -string -"+dd1String);
-//			mCalDate.setDateString(dd1String);
-//		}
-//		dd1 = mCalDate.getDate();
-//		log.debug("----dd1- after formatting--"+dd1);
-        
-        
         String to_dateString=df.format(to_date);
         log.debug("----to_dateString- after formatting--"+to_dateString);
         
@@ -4147,6 +4121,381 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 			log.debug("day " + day);
 		}
 		return day;
+	}
+
+
+	public Map getPagedRequests(String hostName,String serviceName,String userName,String password,
+			Date fromDate, Date toDate, Long requestType,
+			Date exactFrom, Date exactTo, Date periodFrom, Date periodTo,
+			String empCode, String codeFrom, String codeTo, Long statusId,
+			String sort, List empReqTypeAccs, String requestNumber,
+			boolean isWeb, String isInsideCompany, int pageNumber, int pageSize) {
+
+		Calendar cFrom= Calendar.getInstance();
+		
+		Date dateFrom=null;
+		Date dateTo= null;
+		log.debug("------fromDate---"+fromDate);
+		log.debug("fromDate " + fromDate + " toDate " + toDate + " requestType " + requestType);
+		log.debug("exactFrom " + exactFrom + " exactTo " + exactTo + " requestType " + requestType);
+		if (fromDate !=null) {
+			cFrom.setTime(fromDate);
+			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+			cFrom.set(Calendar.MINUTE, 0);
+			cFrom.set(Calendar.SECOND, 0);
+			dateFrom=cFrom.getTime();
+		}
+		
+		log.debug("------dateFrom---"+dateFrom);
+
+		log.debug("------toDate---"+toDate);
+		Calendar cTo= Calendar.getInstance();
+		if (toDate!=null) {
+			cTo.setTime(toDate);
+			cTo.set(Calendar.HOUR_OF_DAY, 23);
+			cTo.set(Calendar.MINUTE, 59);
+			cTo.set(Calendar.SECOND, 59);
+			dateTo=cTo.getTime();
+		}
+		
+		log.debug("------dateTo---"+dateTo);
+		
+		Date exFrom=null;
+		Date exTo= null;
+		
+		log.debug("------exactfrom---"+exactFrom);
+		if (exactFrom !=null) {
+			cFrom.setTime(exactFrom);
+			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+			cFrom.set(Calendar.MINUTE, 0);
+			cFrom.set(Calendar.SECOND, 0);
+			exFrom=cFrom.getTime();
+		}
+		
+		log.debug("------exFrom---"+exFrom);
+
+		if (exactTo!=null) {
+			cTo.setTime(exactTo);
+			cTo.set(Calendar.HOUR_OF_DAY, 23);
+			cTo.set(Calendar.MINUTE, 59);
+			cTo.set(Calendar.SECOND, 59);
+			exTo=cTo.getTime();
+		}
+		log.debug("------exTo---"+exTo);
+		
+		Date pFrom=null;
+		Date pTo= null;
+		
+		if (pFrom !=null) {
+			cFrom.setTime(periodFrom);
+			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+			cFrom.set(Calendar.MINUTE, 0);
+			cFrom.set(Calendar.SECOND, 0);
+			pFrom=cFrom.getTime();
+		}
+		
+		log.debug("------pfrom---"+pFrom);
+
+		if (pTo!=null) {
+			cTo.setTime(periodTo);
+			cTo.set(Calendar.HOUR_OF_DAY, 23);
+			cTo.set(Calendar.MINUTE, 59);
+			cTo.set(Calendar.SECOND, 59);
+			pTo=cTo.getTime();
+		}
+		log.debug("------Pto---"+pTo);
+		DateFormat format =	new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		 
+		//////////////////////////////////////////////////////////////////
+		//////////////Date Strings Definition/////////////////////////////
+		//////////////////////////////////////////////////////////////////
+		String from_dateString=null;
+		String to_dateString=null;
+		String periodf_dateString=null;
+		String periodt_dateString=null;
+		String exactf_dateString=null;
+		String exactt_dateString=null;
+		//////////////////////////////////////////////////////////////////
+		///////////////End of date strings definition
+		/////////////////////////////////////////////////////////////////
+	    log.debug("----from_dateString- after formatting--"+from_dateString);
+	    
+		Map map = new HashMap();
+		
+		jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
+		String query = "";
+		String select = "select * from login_users_requests loginUsersReq  ";
+		String where = null;
+		String orderBy = "";
+		
+		////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////Date Filters////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////////////////
+		if (fromDate!= null && toDate!=null) {
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			from_dateString=df.format(fromDate);
+			to_dateString=df.format(toDate);
+			where += " (loginUsersReq.request_date >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') and "
+					+ "loginUsersReq.request_date <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')) ";
+		}
+		
+		if (periodFrom!= null && periodTo!=null) {
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			periodf_dateString=df.format(periodFrom);
+			periodt_dateString=df.format(periodTo);
+			where += " (loginUsersReq.period_from >= TO_DATE('"+periodf_dateString+"','DD/MM/YYYY') and "
+					+ "loginUsersReq.period_from <= TO_DATE('"+periodt_dateString+"','DD/MM/YYYY')) ";
+		}
+		
+		if (exactFrom!= null && exactTo!=null) {
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			exactf_dateString=df.format(exactFrom);
+			exactt_dateString=df.format(exactTo);
+			where += " (loginUsersReq.from_date >= TO_DATE('"+exactf_dateString+"','DD/MM/YYYY') and "
+					+ "loginUsersReq.from_date <= TO_DATE('"+exactt_dateString+"','DD/MM/YYYY')) ";
+		}
+		////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////End of Date Filters///////////////////////////////////
+		///////////////////////////////////////////////////////////////////////////////////
+		
+		
+		if (requestNumber!=null && !requestNumber.isEmpty()) {
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.requestNumber="+requestNumber+" ";
+		}
+		
+		
+		////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////Request type filters///////////////////////////////
+		///////////////////////////////////////////////////////////////////////////////
+		
+		if(requestType!=null) {
+		log.debug("1.requesttype " + requestType);
+		if (requestType.equals(new Long(1))){
+			log.debug("requesttype is 1");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.request_type="+requestType+" or loginUsersReq.request_type=4  ";
+			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+		} else if (requestType.equals(new Long(4))) {
+			log.debug("requesttype is 4");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.request_type=4  ";
+			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+			where += " and loginUsersReq.vacation is null ";
+		} else if (requestType.equals(new Long(5))) {
+			log.debug("requesttype is 5");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.request_type=4  ";
+			where += " and loginUsersReq.vacation=999 ";
+			log.debug("ma2moreya");
+		}   else if (requestType.equals(new Long(6))) {//7odoor w enseraf
+			log.debug("requesttype is 6");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.request_type=10 or loginUsersReq.request_type=11  ";
+		}  
+		else if (requestType.equals(new Long(10)) || requestType.equals(new Long(11))) {
+			log.debug("requesttype is else");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.request_type="+requestType+"  ";
+		} else if (requestType.equals(new Long(12))) {
+			log.debug("requesttype is 4");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.request_type=4  ";
+			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+		} else if (requestType.equals(new Long(13))) {
+			log.debug("requesttype is 4");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.request_type=1  ";
+			where += " and loginUsersReq.vacation=999 ";
+			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+		} else if (requestType.equals(new Long(14))) {
+			log.debug("requesttype is 4");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.request_type=4  ";
+			where += " or (loginUsersReq.request_type=1 and loginUsersReq.vacation=999) ";
+			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+		}  else {
+			log.debug("requesttype is else");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.request_type=  " + requestType +  " ";
+			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+		}
+	} else {
+		log.debug("2. requesttype " + requestType);
+		
+		if(where == null) {
+			where = " where ";
+		} else {
+			where += " and ";
+		}
+		where += "( ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null)) "
+				+ " or (loginUsersReq.request_id=10 or loginUsersReq.request_id=11) ) ";
+	}
+		
+		////////////////////////////////////////////////////////////////////////////////
+		//////////////////////End of Request type filters///////////////////////////////
+		///////////////////////////////////////////////////////////////////////////////
+		if (empCode!= null && !empCode.isEmpty()) {
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.empCode="+empCode+" ";
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		if (codeFrom!= null && !codeFrom.isEmpty() && 
+				codeTo!= null && !codeTo.isEmpty()) {
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.empCode between "+codeFrom+" and " + codeTo + " ";
+		}
+		///////////////////////////////////////////////////////////////////////////////
+		if (statusId!=null) {
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.approved = "+statusId;
+		}
+		
+		/////////////////////////////////////////////////////////////////////
+		if(isInsideCompany!=null) {
+			if(isInsideCompany.equals("0")) {
+				if(where == null) {
+					where = " where ";
+				} else {
+					where += " and ";
+				}
+				where += " loginUsersReq.isInsideCompany = false ";
+			} else if (isInsideCompany.equals("1")) {
+				if(where == null) {
+					where = " where ";
+				} else {
+					where += " and ";
+				}
+				where += " loginUsersReq.isInsideCompany = true ";
+			}
+		}
+		////////////////////////////////////////////////////////////////////
+		
+		
+		if (empReqTypeAccs !=null) {
+			log.debug("empReqTypeAccs " +  empReqTypeAccs.toString().replace("[", "").replace("]", ""));
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.login_user in (  " + empReqTypeAccs.toString().replace("[", "").replace("]", "") + " ) ";
+		}
+		
+		///////////////////////////////////////////////////////////////////
+		
+		if (sort.equalsIgnoreCase("desc")) {
+			orderBy = " order by period_from desc ";
+		} else if (sort.equalsIgnoreCase("asc")) {
+			orderBy = " order by period_from asc ";
+		}
+		/////////////////////////////////////////////////////////////////
+		
+		
+		
+		query = "select * from (select rownum rnum, q.* from (" +select + where + orderBy+") q where rownum<="+pageSize+") where rnum>"+(pageNumber*pageSize);
+		log.debug("query " + query);
+		StringBuilder sql = new StringBuilder(query);
+		
+		log.debug("host name " + hostName);
+		log.debug("service name " + serviceName);
+		log.debug("username " + userName);
+		log.debug("password " + password);
+		log.debug("----sql 1---"+sql);
+
+		
+		List in=(List) jdbcTemplate.queryForList(sql.toString());
+		
+		String listSizeQuery = "select count (*) from ("+select+where+orderBy+")";
+		log.debug("listSizeQuery " + listSizeQuery);
+		StringBuilder sqlListSize = new StringBuilder(listSizeQuery);
+		List in2=(List) jdbcTemplate.queryForList(sqlListSize.toString());
+		
+		//////class in list results is LinkedCaseInsensitiveMap 
+		
+		int i=0;
+		
+		
+		DateFormat d= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.US);
+		log.debug("size "+in.size());
+		
+//		while(i<in.size()){
+//			
+//			i++;
+//		}
+		log.debug(in2.size());
+		map.put("results", in);
+		if (in2.size()>0) {
+			map.put("listSize", ((LinkedCaseInsensitiveMap)in2.get(0)).get("count(*)"));
+		} else {
+			map.put("listSize", new Long(0));
+		}
+		return map;
 	}
 		
 	

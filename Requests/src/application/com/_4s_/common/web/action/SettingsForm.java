@@ -81,6 +81,11 @@ public class SettingsForm extends BaseSimpleFormController{
 				settings.setManagerCanModifyAttendance(false);
 			}
 			
+			String androidAttAutomaticApproval = request.getParameter("androidAttAutomaticApproval");
+			if (androidAttAutomaticApproval == null || androidAttAutomaticApproval.equals("")) {
+				settings.setAndroidAttAutomaticApproval(false);
+			}
+			
 		}
 		return settings;
 

@@ -317,6 +317,7 @@ private Map createManualAttendance(LoginUsers loginUsers, MultiCalendarDate mCal
 		loginUsersRequests.setIsInsideCompany(true);
 	}
 	//////////////////////////////////////////////////////////////////////////
+	log.debug("will get address using coordinates");
 	try{
 		String address = requestsApprovalManager.getAddressByGpsCoordinates(userRequest.getLongitude()+"", userRequest.getLatitude()+"");
 		loginUsersRequests.setLocationAddress(address);
@@ -339,12 +340,13 @@ private Map createManualAttendance(LoginUsers loginUsers, MultiCalendarDate mCal
 	loginUsersRequests.setLatitude(userRequest.getLatitude());
 	loginUsersRequests.setLongitude(userRequest.getLongitude());
 
-	RequestApproval approvals = new RequestApproval();
-	approvals.setApprove("1");
-	approvals.setNotes("Android Sign in/out Automatic Approval");
-	approvals.setRequestId(loginUsersRequests.getId()+"");
-	requestsApprovalManager.automaticApprovalsAccessLevels(approvals, loginUsersRequests);
-	
+	if(settings.getAndroidAttAutomaticApproval().equals(true)) {
+		RequestApproval approvals = new RequestApproval();
+		approvals.setApprove("1");
+		approvals.setNotes("Android Sign in/out Automatic Approval");
+		approvals.setRequestId(loginUsersRequests.getId()+"");
+		requestsApprovalManager.automaticApprovalsAccessLevels(approvals, loginUsersRequests);
+	}
 	requestsApprovalManager.saveObject(loginUsersRequests);
 
 //	return loginUsersRequests;
@@ -1084,6 +1086,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 //	if(userRequest.getPermissionType()!=null){
 //		loginUsersRequests.setLeave_type(userRequest.getPermissionType());
 //	}
+	
 	if(userRequest.getPermissionEffect()!=null){
 		loginUsersRequests.setLeave_effect(userRequest.getPermissionEffect());
 	}
@@ -1103,6 +1106,14 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		loginUsersRequests.setTo_date(loginUsersRequests.getPeriod_to());
 	}
 	
+	
+	
+	///////////////////////////////////////////////////////
+	loginUsersRequests.setApproved(new Long(0));
+	loginUsersRequests.setPosted(new Long(0));
+	loginUsersRequests.setApplicable(new Long(0));
+	
+	/////////////////////////////////////////////////////
 	requestsApprovalManager.saveObject(loginUsersRequests);
 	Map output = new HashMap();
 	output.put("request_number", loginUsersRequests.getRequestNumber());

@@ -428,9 +428,9 @@
         <url-pattern>/requestsApproval/*</url-pattern>
     </web-resource-collection>
     <!-- auth-constraint goes here if you requre authentication -->
-   <!--  <user-data-constraint>
+    <user-data-constraint>
         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-    </user-data-constraint>-->
+    </user-data-constraint>
 </security-constraint>
 
 <security-constraint>
@@ -439,9 +439,9 @@
         <url-pattern>/security/*</url-pattern>
     </web-resource-collection>
     <!-- auth-constraint goes here if you requre authentication -->
-   <!--  <user-data-constraint>
+     <user-data-constraint>
         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-    </user-data-constraint>-->
+    </user-data-constraint>
 </security-constraint>
 
 <security-constraint>
@@ -450,9 +450,9 @@
         <url-pattern>/common/*</url-pattern>
     </web-resource-collection>
     <!-- auth-constraint goes here if you requre authentication -->
-  <!--  <user-data-constraint>
+   <user-data-constraint>
         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-    </user-data-constraint>-->
+    </user-data-constraint>
 </security-constraint>
 
 <security-constraint>
@@ -461,10 +461,13 @@
         <url-pattern>/dbUpdate/*</url-pattern>
     </web-resource-collection>
     <!-- auth-constraint goes here if you requre authentication -->
-   <!--  <user-data-constraint>
+    <user-data-constraint>
         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-    </user-data-constraint>-->
+    </user-data-constraint>
 </security-constraint>
+
+
+
 <security-constraint>
     <web-resource-collection>
         <web-resource-name>Requests</web-resource-name>
