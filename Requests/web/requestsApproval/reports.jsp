@@ -302,7 +302,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 							</td>
 							  
 							<td  nowrap>
-						         ${record.login_user.name }
+						         ${record.name }
 							</td>
 									<td nowrap>${record.requestNumber}</td>
 									<c:choose>

@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.util.LinkedCaseInsensitiveMap;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,7 +32,7 @@ import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
-import com.lowagie.text.PageSize;
+import java.math.BigDecimal;
 
 
 public class AttendanceRequestsReports extends BaseSimpleFormController{
@@ -123,6 +124,15 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		}
 		log.debug("---request_date_to--"+request_date_to);
 		
+		if (request_date_from==null || request_date_from.isEmpty()) {
+			request_date_from=formattedDate;
+		}
+		if (request_date_to==null || request_date_to.isEmpty()) {
+			request_date_to=formatedToday;
+		}
+		
+		log.debug("---request_date_from--"+request_date_from);
+		log.debug("---request_date_to--"+request_date_to);
 
 		String statusId=request.getParameter("statusId");
 		if (statusId!=null && statusId.isEmpty()) {
@@ -144,8 +154,10 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		String dateFrom = request.getParameter("dateFrom");
 		String dateTo = request.getParameter("dateTo");
 		
+		log.debug("employee " + employee.getId());
 		if (pageNumber>=0) {
 			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", employee.getEmpCode());
+			log.debug("logged in user " + loggedInUser.getId());
 			List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(employee, requestType);
 			log.debug("empReqTypeAccs " + empReqTypeAccs);
 			model = requestsApprovalManager.getRequestsForApproval(requestNumber, emp_code, request_date_from, request_date_to, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true,null, pageNumber, 20);
@@ -198,6 +210,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		int year, month;
 		
 		Employee employee = (Employee)request.getSession().getAttribute("employee");
+		log.debug("employee " + employee);
 		
 		
 		Map model=new HashMap();
@@ -301,8 +314,13 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		}
 		
 		LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", employee.getEmpCode());
+		log.debug("logged in user " + loggedInUser);
 		List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(employee, requestType);
 		log.debug("empReqTypeAccs " + empReqTypeAccs);
+		log.debug("datefrom " + dateFrom);
+		log.debug("dateTo " + dateTo);
+		log.debug("exactDateFrom " + exactDateFrom);
+		log.debug("exactDateTo " + exactDateTo);
 		model = requestsApprovalManager.getRequestsForApproval(requestNumber, emp_code, dateFrom, dateTo, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true,null, pageNumber, 20);
 		
 		
@@ -460,7 +478,8 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 					
 					for(int i=0;i<results.size();i++) {
 						log.debug("**********************inside for *********************");
-						LoginUsersRequests loginUserRequest= (LoginUsersRequests)results.get(i);
+						LinkedCaseInsensitiveMap  map= (LinkedCaseInsensitiveMap)results.get(i);
+						LoginUsersRequests loginUserRequest = (LoginUsersRequests)requestsApprovalManager.getObject(LoginUsersRequests.class, ((BigDecimal)map.get("id")).longValue()); 
 						String approve=request.getParameter("approve"+i);
 						log.debug("approve>>>>>>>>>>"+approve);
 						if(approve!=null && !approve.equals(""))
@@ -473,6 +492,19 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 							approvals.setRequestId(loginUserRequest.getId()+"");
 							requestsApprovalManager.approvalsAccessLevels(approvals, loginUserRequest, employee);
 						}
+//						LoginUsersRequests loginUserRequest= (LoginUsersRequests)results.get(i);
+//						String approve=request.getParameter("approve"+i);
+//						log.debug("approve>>>>>>>>>>"+approve);
+//						if(approve!=null && !approve.equals(""))
+//						{
+//							approveCounter ++;
+//							log.debug("approveCounter"+approveCounter);
+//							
+//							RequestApproval approvals = new RequestApproval();
+//							approvals.setApprove("1");
+//							approvals.setRequestId(loginUserRequest.getId()+"");
+//							requestsApprovalManager.approvalsAccessLevels(approvals, loginUserRequest, employee);
+//						}
 						
 							
 					}

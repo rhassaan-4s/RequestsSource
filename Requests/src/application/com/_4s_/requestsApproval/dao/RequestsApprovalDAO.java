@@ -67,7 +67,10 @@ public interface RequestsApprovalDAO extends BaseDAO {
 			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId);
 	public Map getPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
 			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, String sort, List empReqTypeAccs,String requestNumber
-			, boolean isWeb, String isInsideCompany, final int pageNumber, final int pageSize);
+			, Long mgrId, boolean isWeb, String isInsideCompany, final int pageNumber, final int pageSize);
+	public Map getRequestsStatus(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, String sort, List empReqTypeAccs,String requestNumber
+			, Long mgrId, boolean isWeb, String isInsideCompany, final int pageNumber, final int pageSize);
 	public List getRequestsByExactDatePeriodAndRequestType(Date fromDate, Date toDate, Long requestType);
 	public List getRequestsByDatePeriod(final Date fromDate, final Date toDate);
 	public List getRequestsByExactDatePeriod(final Date fromDate, final Date toDate);

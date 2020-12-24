@@ -311,6 +311,9 @@ private Map createManualAttendance(LoginUsers loginUsers, MultiCalendarDate mCal
 	Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class, new Long(1));
 	
 	Double distance = requestsApprovalManager.distance(new Double(userRequest.getLatitude()), new Double(userRequest.getLongitude()), new Double(settings.getCompanyLat()), new Double(settings.getCompanyLong()));
+	log.debug("lat " + new Double(userRequest.getLatitude()) + " - long " +  new Double(userRequest.getLongitude()));
+	log.debug("company lat " +  new Double(settings.getCompanyLat()) + " - long " +  new Double(settings.getCompanyLong()));
+	log.debug("distance " + distance + " - allowed distance " + settings.getDistAllowedFromCompany());
 	if (distance>settings.getDistAllowedFromCompany()) {
 		loginUsersRequests.setIsInsideCompany(false);
 	} else {
@@ -320,6 +323,7 @@ private Map createManualAttendance(LoginUsers loginUsers, MultiCalendarDate mCal
 	log.debug("will get address using coordinates");
 	try{
 		String address = requestsApprovalManager.getAddressByGpsCoordinates(userRequest.getLongitude()+"", userRequest.getLatitude()+"");
+		log.debug("address " + address);
 		loginUsersRequests.setLocationAddress(address);
 	} catch(Exception e) {
 		e.printStackTrace();

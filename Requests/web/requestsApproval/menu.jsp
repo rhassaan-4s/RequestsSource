@@ -164,6 +164,13 @@
 				<%
 					}
 				%>
+				
+				<li>
+		        	<abc:i18n property="requestsApproval.header.requestStatusReports" />
+		        	<a href="/Requests/requestsApproval/requestStatusReports.html"> &nbsp;&nbsp;
+		        	<fmt:message key="requestsApproval.header.requestStatusReports" />
+		        	</a>
+				</li>
 			</ul>	
 		
 	</li>

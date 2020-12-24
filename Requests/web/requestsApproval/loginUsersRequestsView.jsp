@@ -240,7 +240,7 @@ function printSelection(node){
 							</td>
 							  
 							<td  nowrap>
-						         ${record.login_user.name }
+						         ${record.name }
 							</td>
 							<td  nowrap>
 								${record.requestNumber}

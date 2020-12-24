@@ -163,7 +163,7 @@ public class DefaultPage extends BaseController {
 		log.debug("username " + settings.getUsername() + "password " + settings.getPassword());
 //		int salary_from_day =  requestsApprovalManager.getSalaryFromDay();
 		int salary_from_day = settings.getSalaryFromDay();
-		log.debug("salary_from_day " + salary_from_day);
+		log.fatal("salary_from_day " + salary_from_day);
 		int requestsDeadline = settings.getRequestsDeadline();
 //		glManager.setEmployee(employee);
 		request.getSession().setAttribute("employee",employee);

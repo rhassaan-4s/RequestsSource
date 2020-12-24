@@ -150,42 +150,28 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 								<fmt:message key="requestsApproval.caption.requestDate"/>
 							</td>
 						</tr>
-						<tr id="btnPrint">
-					  		<td nowrap class="formBodControl" >
-								<abc:i18n property="commons.caption.from"/>
-								<fmt:message key="commons.caption.from"/>
-							</td>
-							<c:choose>
-								<c:when  test="${request_date_from ==null || request_date_from==''}">
-									<td  class="formBodControl" >
-										<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${firstDay}" />
-									</td>
-								</c:when>
-								<c:when test="${request_date_from !=null || request_date_from!=''}">
-									<td  class="formBodControl" >
-										<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${request_date_from}" />
-									</td>
-								</c:when>
-							</c:choose>
-					  		<td nowrap class="formBodControl" >
-								<abc:i18n property="commons.caption.to"/>
-								<fmt:message key="commons.caption.to"/>
-							</td>
-							<c:choose>
-								<c:when  test="${request_date_to ==null || request_date_to==''}">
-								<td  class="formBodControl" >
-									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_to" id="request_date_to" value="${today}" />
-								</td>
-								</c:when>
-								<c:when test="${request_date_to !=null || request_date_to!=''}">
-								<td  class="formBodControl">
-									<input type="text"  class="calendar" title="ccc" class="MM_to_d" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_to" id="request_date_to" value="${request_date_to}"/>
-								</td>
-								</c:when>
-							</c:choose>
+							<tr id="btnPrint">
+								<td nowrap class="formBodControl"><abc:i18n
+										property="commons.caption.from" /> <fmt:message
+										key="commons.caption.from" /></td>
+								<td class="formBodControl"><input type="text"
+									class="calendar" class="MM_from_d" title="ccc"
+									readonly="readonly" autocomplete="off" dir="ltr"
+									name="request_date_from" id="request_date_from"
+									value="${request_date_from}" /></td>
+								<td nowrap class="formBodControl"><abc:i18n
+										property="commons.caption.to" /> <fmt:message
+										key="commons.caption.to" /></td>
 
-						</tr>
-						<tr id="btnPrint">
+								<td class="formBodControl"><input type="text"
+									class="calendar" title="ccc" class="MM_to_d"
+									readonly="readonly" autocomplete="off" dir="ltr"
+									name="request_date_to" id="request_date_to"
+									value="${request_date_to}" /></td>
+
+
+							</tr>
+							<tr id="btnPrint">
 					  		<td nowrap class="formBodControl">
 								<abc:i18n property="requestsApproval.caption.codeFrom"/>
 								<fmt:message key="requestsApproval.caption.codeFrom"/>
@@ -291,15 +277,14 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										<td class="helpHed" id="btnPrint">
 										</td>										
 									</tr>
-									listSize: ${listSize}
-									${results[0]}
+									
 								<c:forEach varStatus="loop" var="record" items="${results}">
 									<tr height=20 bgcolor="#F8F8F8">
 										<td  nowrap>
 											${record.empCode}
 										</td>
 										<td  nowrap>
-											${record.login_user.name}
+											${record.name}
 										</td>
 										<td  nowrap>
 										<c:if test="${record.approved!=0}">
@@ -354,30 +339,32 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										<td >
 											${record.notes}
 										</td>
-										<td   nowrap>		
-										<c:if test="${record.approved==1}">					
-										
-										<abc:i18n
-											property="requestsApproval.requestsApprovalForm.reqApproval" />
-										<fmt:message
-											key="requestsApproval.requestsApprovalForm.reqApproval" />
-										</c:if>
-										<c:if test="${record.approved==99}">					
-										
-										<abc:i18n
-											property="requestsApproval.requestsApprovalForm.reqRejected" />
-										<fmt:message
-											key="requestsApproval.requestsApprovalForm.reqRejected" />
-										</c:if>
-										<c:if test="${record.approved==0}">
+										<td   nowrap>	
+										<c:choose>
+											<c:when test="${record.approval==1 || record.approval==2}">
+
+												<abc:i18n
+													property="requestsApproval.requestsApprovalForm.reqApproval" />
+												<fmt:message
+													key="requestsApproval.requestsApprovalForm.reqApproval" />
+											</c:when>
+											<c:when test="${record.approval==0}">
+
+												<abc:i18n
+													property="requestsApproval.requestsApprovalForm.reqRejected" />
+												<fmt:message
+													key="requestsApproval.requestsApprovalForm.reqRejected" />
+											</c:when>
+											<c:otherwise>
 										
 									    	لم تكتمل
 									    	<br>
-									    	<input type="checkbox"
-											name="approve${loop.index}" id="approve${loop.index}" />
-										
-										</c:if>
-										</td>										
+												<input type="checkbox" name="approve${loop.index}"
+													id="approve${loop.index}" />
+
+											</c:otherwise>
+										</c:choose>
+									</td>										
 										<td  nowrap>
 											${record.reply}
 										</td>
@@ -395,7 +382,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											</c:otherwise>
 										</c:choose>
 									<c:choose>
-										<c:when test="${record.approved==0}">
+										<c:when test="${record.approval==0 || record.approval==null}">
 											<td id="btnPrint" nowrap><abc:i18n
 													property="commons.button.approve" />
 													<a

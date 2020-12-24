@@ -124,7 +124,19 @@
 									<input type="text"  class="MM_from" autocomplete="off" dir="ltr"  name="${status.expression}" id="${status.expression}" value="${status.value}" />
 								</spring:bind>
 							</td>
-						</tr>								
+						</tr>		
+						
+						<tr>
+					  		<td nowrap class="formReq" >
+								<abc:i18n property="commons.caption.notes"/>
+								<fmt:message key="commons.caption.notes"/>
+							</td>
+							<td  class="formBodControl" >
+								<spring:bind path="req.notes">
+									<input type="text"  name="${status.expression}" id="${status.expression}" value="${status.value}" />
+								</spring:bind>
+							</td>
+						</tr>						
 						
 						<tr id="btn">
 							<td colspan=4>

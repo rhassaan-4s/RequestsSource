@@ -27,8 +27,8 @@ public class Page{
 		if (listSize % pageSize != 0){
 			numberOfPages = numberOfPages +1;
 		}
-		System.out.println("listSize "+ listSize);
-		System.out.println("numberOfPages "+ numberOfPages);
+		System.out.println("Paging: listSize "+ listSize);
+		System.out.println("Paging: numberOfPages "+ numberOfPages);
 		
 		map.put("numberOfPages",numberOfPages);
 		map.put("page",page);

@@ -619,6 +619,40 @@
 		</property>
 	</bean>	
 	
+	
+	
+	<bean id="requestStatusReports" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.requestsApproval.web.action.RequestStatusReports">
+				<property name="commandName">
+					<value>loginUsersRequests</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.requestsApproval.model.LoginUsersRequests</value>
+				</property>
+				<property name="formView">
+					<value>requestStatusReports</value>
+				</property>
+				<property name="successView">
+					<value>requestStatusReports.html</value>
+				</property>
+				<property name="requestsApprovalManager">
+					<ref bean="requestsApprovalManager" />
+				</property>
+				
+				<property name="binders">
+					<list>		
+						<ref bean="requestTypesBinder"/>
+						<ref bean="loginUsersBinder"/>
+						<ref bean="dateBinder"/>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>	
+	
+	
+	
 	<!--
 		_____________________________________________________________________
 	-->
@@ -669,6 +703,7 @@
 				<prop key="/attendanceRequestsReports.html">attendanceRequestsReports</prop>
 				<prop key="/attendanceRequestsApprovalForm.html">attendanceRequestsApprovalForm</prop>
 				<prop key="/attendanceRequestsApprovalEdit.html">attendanceRequestsApprovalEdit</prop>
+				<prop key="/requestStatusReports.html">requestStatusReports</prop>
 			</props>
 		</property>
 	</bean>
