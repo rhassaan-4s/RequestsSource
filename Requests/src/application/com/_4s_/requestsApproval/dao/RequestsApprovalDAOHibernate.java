@@ -954,6 +954,14 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		return page.getPage(externalQueries.getPagedRequests(settings.getServer(),settings.getService(),settings.getUsername(),settings.getPassword(),fromDate,toDate,requestType,exactFrom,exactTo,periodFrom,periodTo,empCode,codeFrom,codeTo,statusId,sort,empReqTypeAccs,requestNumber, mgrId,isWeb,isInsideCompany,pageNumber,pageSize),pageNumber,pageSize);
 	}
 	
+	public Map getSubmittedPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, String sort, List empReqTypeAccs,String requestNumber,Long mgrId, boolean isWeb,String isInsideCompany, final int pageNumber, final int pageSize)  {
+		Settings settings = (Settings)getObject(Settings.class, new Long(1));
+		log.debug("manager ID " + mgrId);
+		Page page = new Page();
+		return page.getPage(externalQueries.getSubmittedPagedRequests(settings.getServer(),settings.getService(),settings.getUsername(),settings.getPassword(),fromDate,toDate,requestType,exactFrom,exactTo,periodFrom,periodTo,empCode,codeFrom,codeTo,statusId,sort,empReqTypeAccs,requestNumber, mgrId,isWeb,isInsideCompany,pageNumber,pageSize),pageNumber,pageSize);
+	}
+	
 	public Map getRequestsStatus(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
 			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, String sort, List empReqTypeAccs,String requestNumber,Long mgrId, boolean isWeb,String isInsideCompany, final int pageNumber, final int pageSize)  {
 		Settings settings = (Settings)getObject(Settings.class, new Long(1));

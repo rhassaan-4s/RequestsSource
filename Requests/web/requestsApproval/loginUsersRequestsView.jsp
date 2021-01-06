@@ -246,14 +246,14 @@ function printSelection(node){
 								${record.requestNumber}
 							</td>
 							<c:choose>
-							<c:when test="${record.request_id.id==1 && record.vacation.vacation=='999'}">
+							<c:when test="${record.request_id.id==1 && record.vacation=='999'}">
 							<td  nowrap>
 						         مأموريه
 							</td>
 							</c:when>
 							<c:otherwise>
 							<td  nowrap>
-						         ${record.request_id.description }
+						         ${record.description }
 							</td>
 							</c:otherwise>
 							</c:choose>							  

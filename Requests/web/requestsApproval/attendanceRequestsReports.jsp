@@ -287,7 +287,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											${record.name}
 										</td>
 										<td  nowrap>
-										<c:if test="${record.approved!=0}">
+										<c:if test="${record.approval!=0}">
 											<a href="attendanceRequestsApprovalForm.html?reqId=${record.id}">${record.requestNumber}</a>
 										</c:if>
 										<c:if test="${record.approved==0}">

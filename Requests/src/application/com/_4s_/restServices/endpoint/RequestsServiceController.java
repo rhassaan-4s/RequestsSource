@@ -411,7 +411,7 @@ public class RequestsServiceController {
 			return response;
 		}
 		if (approvalQuery.getPageSize()!=0) {
-			response =	requestsService.getRequestsForApproval(approvalQuery,null,user.getEmployee());
+			response =	requestsService.getSubmittedRequestsForApproval(approvalQuery,null,user.getEmployee());
 			List resp = (List)response.get("results");
 			if (resp == null || resp.size()==0) {
 				restStatus.setStatus("true");

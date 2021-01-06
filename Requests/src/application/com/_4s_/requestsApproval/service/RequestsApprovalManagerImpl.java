@@ -433,6 +433,12 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		
 	}
 	
+	public Map getSubmittedPagedRequests(final Date fromDate, final Date toDate, final Long requestType, final Date exactFrom, final Date exactTo, 
+			final Date periodFrom, final Date periodTo, String empCode, String codeFrom, String codeTo, Long statusId, String sort, List empReqTypeAccs,String requestNumber, Long mgrId, boolean isWeb,String isInsideCompany, final int pageNumber, final int pageSize){
+		return  requestsApprovalDAO.getSubmittedPagedRequests(fromDate, toDate,requestType,exactFrom,exactTo, periodFrom, periodTo, empCode, codeFrom, codeTo, statusId, sort, empReqTypeAccs, requestNumber,mgrId, isWeb, isInsideCompany, pageNumber, pageSize);
+		
+	}
+	
 	
 	public Map getRequestsStatus (String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
 			String requestType, String codeFrom, String codeTo, String statusId, String sort,LoginUsers loggedInUser, List empReqTypeAccs, boolean isWeb, String isInsideCompany, int pageNumber, int pageSize) {
@@ -1014,7 +1020,96 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		//model.put("loginUserReqs", loginUserReqs);
 		return loginUserReqs;
 	}
+
 	
+	public Map getSubmittedRequestsForApproval(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
+			String requestType, String codeFrom, String codeTo, String statusId, String sort,LoginUsers loggedInUser, List empReqTypeAccs, boolean isWeb, String isInsideCompany, int pageNumber, int pageSize) {
+		MultiCalendarDate mCalDate = new MultiCalendarDate();
+		log.debug("dateFrom " + dateFrom + " dateTo " + dateTo + " requestType " + requestType);
+		
+		Date fromDate = null;
+		Date toDate = null;
+		Date fromExact = null;
+		Date toExact = null;
+		Long status = null;
+		Long reqType = null;
+		if (dateFrom != null && dateTo != null && !dateFrom.isEmpty() && !dateTo.isEmpty()){
+			log.debug("dateFrom " + dateFrom + " dateTo " + dateTo + " requestType " + requestType);
+			if (!dateFrom.equals("") && !dateTo.equals("") ) {
+				log.debug("dateFrom " + dateFrom + " dateTo " + dateTo + " requestType " + requestType);
+				
+				log.debug(">>>>>>>>>>>>> if ");
+				log.debug(">>>>>>>>>>>Valid date format");
+				log.debug(">>>>>>>>>>>>>fromDateString "+ dateFrom);
+				//fromDateStr = fromDateString +" 00:00";
+				mCalDate.setDateTimeString(dateFrom,new Boolean(true));
+				fromDate = mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>fromDate "+ fromDate);
+				log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
+				//toDateStr = toDateString+ " 23:59";
+				mCalDate.setDateTimeString(dateTo,new Boolean(false));
+				toDate= mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>toDate "+ toDate);
+			}
+		}
+		Map loginUserReqs = new HashMap();
+		if (requestType!= null && !requestType.isEmpty()){
+			reqType = Long.parseLong(requestType);
+		}
+		log.debug("emp code " + emp_code);
+		log.debug("exactDateFrom " + exactDateFrom + " exactDateTo " + exactDateTo);
+		if (exactDateFrom != null && exactDateTo != null && !exactDateFrom.isEmpty() && !exactDateTo.isEmpty()){
+			if (!exactDateFrom.equals("") && !exactDateTo.equals("") ) {
+				
+				log.debug(">>>>>>>>>>>>> if ");
+				log.debug(">>>>>>>>>>>Valid date format");
+				log.debug(">>>>>>>>>>>>>fromDateString "+ exactDateFrom);
+				//fromDateStr = fromDateString +" 00:00";
+				mCalDate.setDateTimeString(exactDateFrom,new Boolean(true));
+				fromExact = mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>fromDate "+ fromExact);
+				log.debug(">>>>>>>>>>>>>toDateString "+ exactDateTo);
+				//toDateStr = toDateString+ " 23:59";
+				mCalDate.setDateTimeString(exactDateTo,new Boolean(false));
+				toExact= mCalDate.getDate();
+				log.debug(">>>>>>>>>>>>>exactDateTo "+ toExact);
+				
+			}
+		}
+		
+		if (emp_code!=null && emp_code.isEmpty()) {
+			emp_code = null;
+		}
+		
+		if (codeFrom!=null && codeFrom.isEmpty()) {
+			codeFrom = null;
+		}
+		
+		if (codeTo!=null && codeTo.isEmpty()) {
+			codeTo = null;
+		}
+		
+		//Lotus //////////////////////////////////
+		List list=new ArrayList();
+		list.add("empCode");
+		/////////////////////////////////////////
+		
+		if(statusId!=null && !statusId.equals("")){
+			status = new Long(statusId);
+		}
+		
+		log.debug("logged in user " + loggedInUser.getEmpCode());
+		Long mgrId = null;
+		if (empReqTypeAccs!=null && empReqTypeAccs.size() > 0) {
+			mgrId = ((Employee)getObjectByParameter(Employee.class,"empCode",loggedInUser.getEmpCode())).getId();
+		}
+		log.debug("mgr id " + mgrId);
+		loginUserReqs= getSubmittedPagedRequests(fromDate, toDate,reqType,fromExact,toExact,null,null,emp_code,codeFrom,codeTo,status,sort,empReqTypeAccs,requestNumber,mgrId,isWeb,isInsideCompany,pageNumber,pageSize);
+		log.debug("--dateList.size--"+loginUserReqs.get("listSize"));
+		//model.put("loginUserReqs", loginUserReqs);
+		return loginUserReqs;
+	}
+
 
 	public List getEmpReqTypeAccs(List accessLevels,Long requestType) {
 		// TODO Auto-generated method stub

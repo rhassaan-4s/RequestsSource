@@ -421,13 +421,13 @@ function initMap(latitude,longitude) {
 											${record.empCode}
 										</td>
 										<td  nowrap>
-											${record.login_user.name}
+											${record.name}
 										</td>
 										<td  nowrap>
-										<c:if test="${record.approved!=0}">
+										<c:if test="${record.approval==null}">
 											<a href="requestsApprovalForm.html?reqId=${record.id}&requestType=${requestType}&errand=${errand}">${record.requestNumber}</a>
 										</c:if>
-										<c:if test="${record.approved==0}">
+										<c:if test="${record.approva!=null}">
 											${record.requestNumber}
 										</c:if>										
 										</td>										
@@ -441,10 +441,10 @@ function initMap(latitude,longitude) {
 											<td  nowrap>
 												<c:choose>
 													<c:when test="${record.vacation==null}">
-														${record.request_id.description}
+														${record.description}
 													</c:when>
 													<c:otherwise>
-														${record.vacation.name}
+														${record.vacName}
 													</c:otherwise>
 												</c:choose>
 											</td>

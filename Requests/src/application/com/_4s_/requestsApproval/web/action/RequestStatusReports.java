@@ -32,6 +32,7 @@ import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
+
 import java.math.BigDecimal;
 
 
@@ -147,8 +148,29 @@ public class RequestStatusReports extends BaseSimpleFormController{
 		String exactDateFrom = null;
 		String exactDateTo = null;
 		
-		String requestType = "6";//sign in and out
+//		String req = null;//sign in and out
+		String requestType = request.getParameter("requestType");
+		if (requestType==null || requestType.isEmpty()) {
+			requestType = null;
+		}
 		
+		
+		List requests = requestsApprovalManager.getObjects(RequestTypes.class);
+//		List reList = new ArrayList();
+		
+//		boolean empRequestTypeException = settings.getEmpRequestTypeException();
+//		if (empRequestTypeException == true){
+//			for (int i = 0; i < requests.size(); i++) {
+//				RequestTypes requestTypes = (RequestTypes) requests.get(i);
+//				if(!requestTypes.getId().equals(new Long(10)) && !requestTypes.getId().equals(new Long(11))){
+//					reList.add(requestTypes);
+//				}
+//			}
+//			model.put("requestTypeList",reList);
+//		} else {
+//			model.put("requestTypeList",requests);
+//		}
+
 		String sort = "desc";
 		
 		String dateFrom = request.getParameter("dateFrom");
@@ -170,6 +192,8 @@ public class RequestStatusReports extends BaseSimpleFormController{
 		model.put("request_date_from", request_date_from);
 		model.put("request_date_to", request_date_to);
 		model.put("pageNumber", pageNumber);
+		model.put("requestTypeList",requests);
+		model.put("requestType", requestType);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		return model;
 	}
@@ -300,7 +324,12 @@ public class RequestStatusReports extends BaseSimpleFormController{
 		String exactDateFrom = null;
 		String exactDateTo = null;
 		
-		String requestType = "6";//sign in and out
+//		String requestType = "6";//sign in and out
+		
+		String requestType = request.getParameter("requestType");
+		if (requestType==null || requestType.isEmpty()) {
+			requestType = null;
+		}
 		
 		String sort = "desc";
 		
@@ -321,10 +350,11 @@ public class RequestStatusReports extends BaseSimpleFormController{
 		log.debug("dateTo " + dateTo);
 		log.debug("exactDateFrom " + exactDateFrom);
 		log.debug("exactDateTo " + exactDateTo);
-		model = requestsApprovalManager.getRequestsForApproval(requestNumber, emp_code, dateFrom, dateTo, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true,null, pageNumber, 20);
+		model = requestsApprovalManager.getRequestsStatus(requestNumber, emp_code, dateFrom, dateTo, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true,null, pageNumber, 20);
 		
 		
 		model.put("pageNumber", pageNumber);
+		model.put("requestType", requestType);
 		
 //		///////////////////////////////////////////////////////////
 //		List results2 = (List)model.get("results");
@@ -518,6 +548,8 @@ public class RequestStatusReports extends BaseSimpleFormController{
 			
 			////////////////////////////////////////////
 				
+				List requests = requestsApprovalManager.getObjects(RequestTypes.class);
+				
 				model.put("firstDay", formattedDate);
 				model.put("empCode", emp_code);
 				model.put("status", statusId);
@@ -528,8 +560,10 @@ public class RequestStatusReports extends BaseSimpleFormController{
 				model.put("request_date_to", request_date_to);
 //				model.put("dateFrom", dateFrom);
 //				model.put("dateTo", dateTo);
+				
+				model.put("requestTypeList",requests);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView("attendanceRequestsReports",model);
+		return new ModelAndView("requestStatusReports",model);
 	}
 	
 	public static boolean isOnlyNumbers(String str){

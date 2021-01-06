@@ -1165,6 +1165,13 @@ public Map getRequestsForApproval(RequestsApprovalQuery approvalQuery, List empR
 			approvalQuery.getCodeFrom(), approvalQuery.getCodeTo(), approvalQuery.getStatusId(),approvalQuery.getSort(),loggedInUser,empReqTypeAccs,false,approvalQuery.getIsInsideCompany(), approvalQuery.getPageNumber(), approvalQuery.getPageSize());	
 }
 
+public Map getSubmittedRequestsForApproval(RequestsApprovalQuery approvalQuery, List empReqTypeAccs,Employee emp) {
+	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+	return requestsApprovalManager.getSubmittedRequestsForApproval(approvalQuery.getRequestNumber(), approvalQuery.getEmp_code(), 
+			approvalQuery.getDateFrom(), approvalQuery.getDateTo(), approvalQuery.getExactDateFrom(), approvalQuery.getExactDateTo(), approvalQuery.getRequestType(),
+			approvalQuery.getCodeFrom(), approvalQuery.getCodeTo(), approvalQuery.getStatusId(),approvalQuery.getSort(),loggedInUser,empReqTypeAccs,false,approvalQuery.getIsInsideCompany(), approvalQuery.getPageNumber(), approvalQuery.getPageSize());	
+}
+
 public Map approveRequest(RequestApproval requestApproval,Employee emp) {
 	// TODO Auto-generated method stub
 	RestStatus status = new RestStatus();

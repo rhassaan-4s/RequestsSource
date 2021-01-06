@@ -44,7 +44,7 @@ function searchForm (){
 		var codeTo=document.getElementById("codeTo").value;
 	}
 	
-	var URL='attendanceRequestsReports.html?empCode='+empCode+'&dateFrom='+dateFrom+'&dateTo='+dateTo+'&codeFrom='+codeFrom+'&codeTo='+codeTo+'&statusId='+statusId;
+	var URL='requestStatusReports.html?empCode='+empCode+'&dateFrom='+dateFrom+'&dateTo='+dateTo+'&codeFrom='+codeFrom+'&codeTo='+codeTo+'&statusId='+statusId;
 	window.location.href=URL;
 }
 
@@ -222,8 +222,8 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 						<tr>
 						</tr>										
 					</table>
-					<abc:paging url="attendanceRequestsReports.html" 
-					parametersString="empCode=${empCode}&statusId=${status}&date_from=${request_date_from}&date_to=${request_date_to}&codeFrom=${codeFrom}&codeTo=${codeTo}"/>
+					<abc:paging url="requestStatusReports.html" 
+					parametersString="empCode=${empCode}&statusId=${status}&requestType=${requestType}&date_from=${request_date_from}&date_to=${request_date_to}&codeFrom=${codeFrom}&codeTo=${codeTo}"/>
 					<table rules="all" align="center" class="sofT">
 									<tr>
 										<td colspan="14" class="helpTitle">
@@ -363,9 +363,9 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											</c:otherwise>
 											</c:choose>
 											
-										(${record.mgrName })	
+										(${record.mgrName})	
 										</td>
-										<td nowrap>${record.reply}</td>
+										<td nowrap>${record.approvalNote}</td>
 								</tr>
 								</c:forEach>									
 								</table>

@@ -4229,7 +4229,9 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 		String outerSelectStart = "SELECT a.*, emp.ID empId,emp.EMPCODE employeeCode, emp.FIRSTNAME name, acc1.GROUP_ID,lev.ID levId, lev.EMP_ID mgrId"
 				+ ",APPROVALS.APPROVAL, APPROVALS.APPROVAL_DATE , APPROVALS.USER_ID , APPROVALS.NOTE "
 				+ "FROM ";
-		String select = "select loginUsersReq.*, reqType.DESCRIPTION from login_users_requests loginUsersReq, REQUEST_TYPES reqType  ";
+		String select = "select loginUsersReq.*, reqType.DESCRIPTION, vac.name vacName "
+				+ " FROM login_users_requests loginUsersReq  JOIN REQUEST_TYPES reqType ON reqType.id=loginUsersReq.REQUEST_TYPE "
+				+ " LEFT OUTER JOIN vacation vac ON  VAC.VACATION=loginUsersReq.VACATION   ";
 		String where = null;
 		String orderBy = "";
 
@@ -4314,7 +4316,7 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 			} else {
 				where += " and ";
 			}
-			where += " (loginUsersReq.request_type="+requestType+" or loginUsersReq.request_type=4) ";
+			where += " (loginUsersReq.request_type="+requestType+" ) ";//or loginUsersReq.request_type=4
 			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
 		} else if (requestType.equals(new Long(4))) {
 			log.debug("requesttype is 4");
@@ -4466,7 +4468,409 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 			where += " loginUsersReq.login_user in (  " + empReqTypeAccs.toString().replace("[", "").replace("]", "") + " ) ";
 		}
 		
-		where += " AND reqType.id=loginUsersReq.REQUEST_TYPE  "; 
+//		where += " AND reqType.id=loginUsersReq.REQUEST_TYPE AND VAC.VACATION=loginUsersReq.VACATION  "; 
+		///////////////////////////////////////////////////////////////////
+		
+		if (sort.equalsIgnoreCase("desc")) {
+			orderBy = " order by period_from desc ";
+		} else if (sort.equalsIgnoreCase("asc")) {
+			orderBy = " order by period_from asc ";
+		}
+		/////////////////////////////////////////////////////////////////
+		
+		
+		
+		query = "select * from (select rownum rnum, q.* from (" + outerSelectStart + " ("
+				+select + where+orderBy+
+				outerSelectEnd + outerSelectWhere +orderBy+") q where rownum<="+((pageNumber*pageSize)+pageSize-1)+") where rnum>"+(pageSize*pageNumber)  + orderBy;
+		log.debug("query " + query);
+		StringBuilder sql = new StringBuilder(query);
+		
+		log.debug("host name " + hostName);
+		log.debug("service name " + serviceName);
+		log.debug("username " + userName);
+		log.debug("password " + password);
+		log.debug("----sql 1---"+sql);
+
+		
+		List in=(List) jdbcTemplate.queryForList(sql.toString());
+		
+		String listSizeQuery = "select count (*) from ("+outerSelectStart+ " ("+select+where+orderBy
+				+outerSelectEnd + outerSelectWhere+orderBy+")"+orderBy;
+		log.debug("listSizeQuery " + listSizeQuery);
+		StringBuilder sqlListSize = new StringBuilder(listSizeQuery);
+		List in2=(List) jdbcTemplate.queryForList(sqlListSize.toString());
+		
+		//////class in list results is LinkedCaseInsensitiveMap 
+		
+		int i=0;
+		
+		
+		DateFormat d= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.US);
+		log.debug("size "+in.size());
+		
+//		while(i<in.size()){
+//			
+//			i++;
+//		}
+		log.debug(in2.size());
+		map.put("results", in);
+		if (in2.size()>0) {
+			log.debug("listSize " + ((LinkedCaseInsensitiveMap)in2.get(0)).get("count(*)"));
+			map.put("listSize", ((BigDecimal)((LinkedCaseInsensitiveMap)in2.get(0)).get("count(*)")).intValue());
+		} else {
+			map.put("listSize", new Long(0));
+		}
+		return map;
+	}
+	
+	public Map getSubmittedPagedRequests(String hostName,String serviceName,String userName,String password,
+			Date fromDate, Date toDate, Long requestType,
+			Date exactFrom, Date exactTo, Date periodFrom, Date periodTo,
+			String empCode, String codeFrom, String codeTo, Long statusId,
+			String sort, List empReqTypeAccs, String requestNumber, Long mgrId,
+			boolean isWeb, String isInsideCompany, int pageNumber, int pageSize) {
+
+		log.debug("manager id " + mgrId);
+		Calendar cFrom= Calendar.getInstance();
+		
+		Date dateFrom=null;
+		Date dateTo= null;
+		log.debug("------fromDate---"+fromDate);
+		log.debug("fromDate " + fromDate + " toDate " + toDate + " requestType " + requestType);
+		log.debug("exactFrom " + exactFrom + " exactTo " + exactTo + " requestType " + requestType);
+		if (fromDate !=null) {
+			cFrom.setTime(fromDate);
+			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+			cFrom.set(Calendar.MINUTE, 0);
+			cFrom.set(Calendar.SECOND, 0);
+			dateFrom=cFrom.getTime();
+		}
+		
+		log.debug("------dateFrom---"+dateFrom);
+
+		log.debug("------toDate---"+toDate);
+		Calendar cTo= Calendar.getInstance();
+		if (toDate!=null) {
+			cTo.setTime(toDate);
+			cTo.set(Calendar.HOUR_OF_DAY, 23);
+			cTo.set(Calendar.MINUTE, 59);
+			cTo.set(Calendar.SECOND, 59);
+			dateTo=cTo.getTime();
+		}
+		
+		log.debug("------dateTo---"+dateTo);
+		
+		Date exFrom=null;
+		Date exTo= null;
+		
+		log.debug("------exactfrom---"+exactFrom);
+		if (exactFrom !=null) {
+			cFrom.setTime(exactFrom);
+			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+			cFrom.set(Calendar.MINUTE, 0);
+			cFrom.set(Calendar.SECOND, 0);
+			exFrom=cFrom.getTime();
+		}
+		
+		log.debug("------exFrom---"+exFrom);
+
+		if (exactTo!=null) {
+			cTo.setTime(exactTo);
+			cTo.set(Calendar.HOUR_OF_DAY, 23);
+			cTo.set(Calendar.MINUTE, 59);
+			cTo.set(Calendar.SECOND, 59);
+			exTo=cTo.getTime();
+		}
+		log.debug("------exTo---"+exTo);
+		
+		Date pFrom=null;
+		Date pTo= null;
+		
+		if (pFrom !=null) {
+			cFrom.setTime(periodFrom);
+			cFrom.set(Calendar.HOUR_OF_DAY, 0);
+			cFrom.set(Calendar.MINUTE, 0);
+			cFrom.set(Calendar.SECOND, 0);
+			pFrom=cFrom.getTime();
+		}
+		
+		log.debug("------pfrom---"+pFrom);
+
+		if (pTo!=null) {
+			cTo.setTime(periodTo);
+			cTo.set(Calendar.HOUR_OF_DAY, 23);
+			cTo.set(Calendar.MINUTE, 59);
+			cTo.set(Calendar.SECOND, 59);
+			pTo=cTo.getTime();
+		}
+		log.debug("------Pto---"+pTo);
+		DateFormat format =	new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		 
+		//////////////////////////////////////////////////////////////////
+		//////////////Date Strings Definition/////////////////////////////
+		//////////////////////////////////////////////////////////////////
+		String from_dateString=null;
+		String to_dateString=null;
+		String periodf_dateString=null;
+		String periodt_dateString=null;
+		String exactf_dateString=null;
+		String exactt_dateString=null;
+		//////////////////////////////////////////////////////////////////
+		///////////////End of date strings definition
+		/////////////////////////////////////////////////////////////////
+	    log.debug("----from_dateString- after formatting--"+from_dateString);
+	    
+		Map map = new HashMap();
+		
+		jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
+		String query = "";
+		String outerSelectStart = "SELECT a.*, emp.ID empId,emp.EMPCODE employeeCode, emp.FIRSTNAME name "
+//				+ ", acc1.GROUP_ID,lev.ID levId, lev.EMP_ID mgrId"
+//				+ ",APPROVALS.APPROVAL, APPROVALS.APPROVAL_DATE , APPROVALS.USER_ID , APPROVALS.NOTE "
+				+ "FROM ";
+		String select = "select loginUsersReq.*, reqType.DESCRIPTION, vac.name vacName "
+				+ " FROM login_users_requests loginUsersReq  JOIN REQUEST_TYPES reqType ON reqType.id=loginUsersReq.REQUEST_TYPE "
+				+ " LEFT OUTER JOIN vacation vac ON  VAC.VACATION=loginUsersReq.VACATION   ";
+		String where = null;
+		String orderBy = "";
+
+		
+		
+		String outerSelectEnd = ") a "
+				+ "JOIN COMMON_EMPLOYEE emp ON a.empcode=emp.EMPCODE "
+//				+ "LEFT OUTER JOIN EMP_REQTYPE_ACC acc1 ON (acc1.REQ_ID=a.request_type AND acc1.EMP_ID=a.login_user) "
+//				+ "LEFT OUTER JOIN ACCESS_LEVELS lev ON acc1.GROUP_ID=lev.LEVEL_ID "
+//				+ "LEFT OUTER JOIN COMMON_EMPLOYEE mgr ON lev.EMP_ID = mgr.ID "
+//				+ "LEFT OUTER JOIN EMP_REQ_APPROVAL approvals ON approvals.LEVEL_ID=acc1.ID  AND APPROVALS.REQ_ID=a.id AND APPROVALS.USER_ID=lev.EMP_ID "
+				;
+		
+		String outerSelectWhere = "";
+		
+		if (mgrId != null) {
+			outerSelectWhere = " where mgr.id= " + mgrId;
+		}
+		////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////Date Filters////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////////////////
+		log.debug("from date " + fromDate + "to date " + toDate);
+		if (fromDate!= null && toDate!=null) {
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			from_dateString=df.format(fromDate);
+			to_dateString=df.format(toDate);
+			where += " ((trunc(loginUsersReq.request_date) >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') and "
+					+ "trunc(loginUsersReq.request_date)  <= TO_DATE('"+to_dateString+"','DD/MM/YYYY'))) ";
+		}
+		
+		if (periodFrom!= null && periodTo!=null) {
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			periodf_dateString=df.format(periodFrom);
+			periodt_dateString=df.format(periodTo);
+			where += " ((trunc(loginUsersReq.period_from)  >= TO_DATE('"+periodf_dateString+"','DD/MM/YYYY') and "
+					+ "trunc(loginUsersReq.period_from) <= TO_DATE('"+periodt_dateString+"','DD/MM/YYYY'))) ";
+		}
+		
+		if (exactFrom!= null && exactTo!=null) {
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			exactf_dateString=df.format(exactFrom);
+			exactt_dateString=df.format(exactTo);
+			where += " ((trunc(loginUsersReq.from_date) >= TO_DATE('"+exactf_dateString+"','DD/MM/YYYY') and "
+					+ "trunc(loginUsersReq.from_date) <= TO_DATE('"+exactt_dateString+"','DD/MM/YYYY'))) ";
+		}
+		////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////End of Date Filters///////////////////////////////////
+		///////////////////////////////////////////////////////////////////////////////////
+		
+		
+		if (requestNumber!=null && !requestNumber.isEmpty()) {
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.requestNumber="+requestNumber+" ";
+		}
+		
+		
+		////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////Request type filters///////////////////////////////
+		///////////////////////////////////////////////////////////////////////////////
+		
+		if(requestType!=null) {
+		log.debug("1.requesttype " + requestType);
+		if (requestType.equals(new Long(1))){
+			log.debug("requesttype is 1");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " (loginUsersReq.request_type="+requestType+" ) ";//or loginUsersReq.request_type=4
+			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+		} else if (requestType.equals(new Long(4))) {
+			log.debug("requesttype is 4");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.request_type=4  ";
+			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+			where += " and loginUsersReq.vacation is null ";
+		} else if (requestType.equals(new Long(5))) {
+			log.debug("requesttype is 5");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.request_type=4  ";
+			where += " and loginUsersReq.vacation=999 ";
+			log.debug("ma2moreya");
+		}   else if (requestType.equals(new Long(6))) {//7odoor w enseraf
+			log.debug("requesttype is 6");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " (loginUsersReq.request_type=10 or loginUsersReq.request_type=11)  ";
+		}  
+		else if (requestType.equals(new Long(10)) || requestType.equals(new Long(11))) {
+			log.debug("requesttype is else");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.request_type="+requestType+"  ";
+		} else if (requestType.equals(new Long(12))) {
+			log.debug("requesttype is 4");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.request_type=4  ";
+			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+		} else if (requestType.equals(new Long(13))) {
+			log.debug("requesttype is 4");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.request_type=1  ";
+			where += " and loginUsersReq.vacation=999 ";
+			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+		} else if (requestType.equals(new Long(14))) {
+			log.debug("requesttype is 4");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " (loginUsersReq.request_type=4  ";
+			where += " or (loginUsersReq.request_type=1 and loginUsersReq.vacation=999)) ";
+			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+		}  else {
+			log.debug("requesttype is else");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.request_type=  " + requestType +  " ";
+			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+		}
+	} else {
+		log.debug("2. requesttype " + requestType);
+		
+		if(where == null) {
+			where = " where ";
+		} else {
+			where += " and ";
+		}
+		where += "((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null) "
+				+ " or (loginUsersReq.request_type=10 or loginUsersReq.request_type=11) ) ";
+	}
+		
+		////////////////////////////////////////////////////////////////////////////////
+		//////////////////////End of Request type filters///////////////////////////////
+		///////////////////////////////////////////////////////////////////////////////
+		if (empCode!= null && !empCode.isEmpty()) {
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.empCode="+empCode+" ";
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		if (codeFrom!= null && !codeFrom.isEmpty() && 
+				codeTo!= null && !codeTo.isEmpty()) {
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.empCode between "+codeFrom+" and " + codeTo + " ";
+		}
+		///////////////////////////////////////////////////////////////////////////////
+		if (statusId!=null) {
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.approved = "+statusId;
+		}
+		
+		/////////////////////////////////////////////////////////////////////
+		if(isInsideCompany!=null) {
+			if(isInsideCompany.equals("0")) {
+				if(where == null) {
+					where = " where ";
+				} else {
+					where += " and ";
+				}
+				where += " loginUsersReq.isInsideCompany = false ";
+			} else if (isInsideCompany.equals("1")) {
+				if(where == null) {
+					where = " where ";
+				} else {
+					where += " and ";
+				}
+				where += " loginUsersReq.isInsideCompany = true ";
+			}
+		}
+		////////////////////////////////////////////////////////////////////
+		
+		
+		if (empReqTypeAccs !=null && !empReqTypeAccs.isEmpty()) {
+			log.debug("empReqTypeAccs " +  empReqTypeAccs.toString().replace("[", "").replace("]", ""));
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " loginUsersReq.login_user in (  " + empReqTypeAccs.toString().replace("[", "").replace("]", "") + " ) ";
+		}
+		
+//		where += " AND reqType.id=loginUsersReq.REQUEST_TYPE AND VAC.VACATION=loginUsersReq.VACATION  "; 
 		///////////////////////////////////////////////////////////////////
 		
 		if (sort.equalsIgnoreCase("desc")) {
@@ -4627,9 +5031,11 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 		jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
 		String query = "";
 		String outerSelectStart = "SELECT a.*,mgr.FIRSTNAME mgrName, emp.ID empId,emp.EMPCODE employeeCode, emp.FIRSTNAME name, acc1.GROUP_ID,lev.ID levId, lev.EMP_ID mgrId"
-				+ ",APPROVALS.APPROVAL, APPROVALS.APPROVAL_DATE , APPROVALS.USER_ID , APPROVALS.NOTE "
+				+ ",APPROVALS.APPROVAL, APPROVALS.APPROVAL_DATE , APPROVALS.USER_ID , APPROVALS.NOTE approvalNote "
 				+ "FROM ";
-		String select = "select loginUsersReq.*, reqType.DESCRIPTION from login_users_requests loginUsersReq, REQUEST_TYPES reqType  ";
+		String select = "select loginUsersReq.*, reqType.DESCRIPTION, vac.name vacName FROM login_users_requests loginUsersReq  "
+				+ "  JOIN REQUEST_TYPES reqType ON reqType.id=loginUsersReq.REQUEST_TYPE "
+						+ " LEFT OUTER JOIN vacation vac ON  VAC.VACATION=loginUsersReq.VACATION   ";
 		String where = null;
 		String orderBy = "";
 
@@ -4714,7 +5120,7 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 			} else {
 				where += " and ";
 			}
-			where += " (loginUsersReq.request_type="+requestType+" or loginUsersReq.request_type=4) ";
+			where += " (loginUsersReq.request_type="+requestType+" ) ";//or loginUsersReq.request_type=4
 			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
 		} else if (requestType.equals(new Long(4))) {
 			log.debug("requesttype is 4");
@@ -4866,7 +5272,7 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 			where += " loginUsersReq.login_user in (  " + empReqTypeAccs.toString().replace("[", "").replace("]", "") + " ) ";
 		}
 		
-		where += " AND reqType.id=loginUsersReq.REQUEST_TYPE  "; 
+//		where += " AND reqType.id=loginUsersReq.REQUEST_TYPE AND VAC.VACATION=loginUsersReq.VACATION  "; 
 		///////////////////////////////////////////////////////////////////
 		
 		if (sort.equalsIgnoreCase("desc")) {
