@@ -16170,4 +16170,9 @@ INSERT INTO i18n_message VALUES (202116463, 'You cannot change date, only time i
 INSERT INTO i18n_message VALUES (202116464,'الموافقه على حضور/انصراف اندرويد تلقائيًا', 101475, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116465, 'ِAutomatic Approval for Android Attendance', 101475, 3);</statment></query><query><sqlindex>174</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101476, 'requestsApproval.header.requestStatusReports', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116466,'تقرير حالة الطلبات', 101476, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116467, 'Requests Status Reports', 101476, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116467, 'Requests Status Reports', 101476, 3);</statment></query><query><sqlindex>175</sqlindex><statment>ALTER TABLE REQUEST_TYPES ADD HIDDEN NUMBER;</statment></query><query><sqlindex>176</sqlindex><statment>update request_types set hidden=0;</statment></query><query><sqlindex>177</sqlindex><statment>INSERT INTO REQUEST_TYPES (ID, DESCRIPTION, PARENTID, HIDDEN) VALUES(6, 'انهاء مأموريه', null, 2);&#xD;
+INSERT INTO REQUEST_TYPES (ID, DESCRIPTION, PARENTID, HIDDEN) VALUES(7, 'مأموريات', null, 1);&#xD;
+INSERT INTO REQUEST_TYPES (ID, DESCRIPTION, PARENTID, HIDDEN) VALUES(8, 'حضور و انصراف', null, 1);&#xD;
+&#xD;
+</statment></query><query><sqlindex>178</sqlindex><statment>update request_types set parentid = null;</statment></query><query><sqlindex>179</sqlindex><statment>INSERT INTO emp_reqtype_acc (id,emp_id,REQ_ID,GROUP_ID,PRIORITY)&#xD;
+ SELECT (select max(ID)+acc.id from emp_reqtype_acc),acc.emp_id,5,acc.GROUP_ID,acc.PRIORITY  FROM emp_reqtype_acc acc WHERE REQ_ID=4 </statment></query></SQL>

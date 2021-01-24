@@ -670,4 +670,22 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 	        return object;
 	    }
 	 
+	 public List getObjectsByTwoObjects(final Class clazz, final String parameter1, final Object value1,final String parameter2, final Object value2) {
+	        if (log.isDebugEnabled()) {
+	            log.debug("Getting object of class :"+ clazz +", with "+parameter1+" :"+ value1);
+	            log.debug("Getting object of class :"+ clazz +", with "+parameter2+" :"+ value2);
+	        }
+			List list = getCurrentSession().createCriteria(clazz)
+					.add(Expression.eq(parameter1,value1))
+					.add(Expression.eq(parameter2,value2)).list();
+				
+	        if ((list == null)&&(log.isDebugEnabled())) {
+	            log.debug("No list found");
+	        }
+	        else if (log.isDebugEnabled()) {
+	            log.debug("Got list :"+ list.size());
+	        }
+	        return list;
+	    }
+	 
 }

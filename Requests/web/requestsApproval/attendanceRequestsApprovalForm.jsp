@@ -135,7 +135,7 @@ function cancelApp(){
 							<fmt:message
 								key="requestsApproval.requestsApprovalForm.reqResTitle" /></td>
 
-							<td colspan="2" class="formReq"><abc:i18n
+							<td class="formReq"><abc:i18n
 								property="requestsApproval.requestsApprovalForm.reqStatus" /> <fmt:message
 								key="requestsApproval.requestsApprovalForm.reqStatus" /></td>
 							<td class="formReq"><abc:i18n
@@ -156,20 +156,15 @@ function cancelApp(){
 										<td width="130"><abc:i18n
 											property="requestsApproval.requestsApprovalForm.reqApproval" />
 										<fmt:message
-											key="requestsApproval.requestsApprovalForm.reqApproval" /> <input
-											type="radio" checked="checked" name="status" value="1" /><input type="hidden"
+											key="requestsApproval.requestsApprovalForm.reqApproval" /> <input type="hidden"
 											name="accId" value="${record.id}"></td>
-										<td width="140"><abc:i18n
-											property="requestsApproval.requestsApprovalForm.reqRejected" />
-										<fmt:message
-											key="requestsApproval.requestsApprovalForm.reqRejected" /> <input
-											type="radio" name="status" value="0" /></td>
-										<td class="formBod" colspan="2">${record.user}</td>
+										
+										<td class="formBod" >${record.user}</td>
 									</c:if>
 									
 									<c:choose>
 										<c:when test="${record.status==0 && record.user==emp && done!='true' && posted!=1 && approvedBy==operator && approvedBy!='' &&operator!='' && approvedBy!=null &&operator!=null}">
-											<td colspan="2"><abc:i18n
+											<td ><abc:i18n
 												property="requestsApproval.requestsApprovalForm.reqRejected" />
 											<fmt:message
 												key="requestsApproval.requestsApprovalForm.reqRejected" /></td>
@@ -185,7 +180,7 @@ function cancelApp(){
 										<c:when test="${record.status==0  && posted!=1 }">
 											<c:if test="${approvedBy!=null && operator!=null}">
 												<c:if test="${approvedBy!=operator}">
-													<td colspan="2"><abc:i18n
+													<td ><abc:i18n
 														property="requestsApproval.requestsApprovalForm.reqRejected" />
 													<fmt:message
 														key="requestsApproval.requestsApprovalForm.reqRejected" /></td>
@@ -202,7 +197,7 @@ function cancelApp(){
 									
 									<c:choose>			
 										<c:when test="${record.status==1 && lastOne=='true'&& record.user==emp && done!='true' && posted!=1 && approvedBy==operator && approvedBy!='' &&operator!='' && approvedBy!=null &&operator!=null}">
-											<td colspan="2"><abc:i18n
+											<td><abc:i18n
 												property="requestsApproval.requestsApprovalForm.reqApproval" />
 											<fmt:message
 												key="requestsApproval.requestsApprovalForm.reqApproval" />
@@ -218,7 +213,7 @@ function cancelApp(){
 										</c:when>
 																																	
 										<c:when test="${record.status==1}" >
-											<td colspan="2"><abc:i18n
+											<td ><abc:i18n
 												property="requestsApproval.requestsApprovalForm.reqApproval" />
 											<fmt:message
 												key="requestsApproval.requestsApprovalForm.reqApproval" />
@@ -234,7 +229,7 @@ function cancelApp(){
 										<c:when test="${record.status==3 && done!='true' && posted!=1 && record.user==emp && approvedBy==operator && approvedBy!='' &&operator!='' && approvedBy!=null &&operator!=null}">
 											<td colspan="2"></td><td></td><td></td><td></td>
 										<tr>
-											<td colspan="2"></td>
+											<td ></td>
 											<td ><abc:i18n
 													property="requestsApproval.requestsApprovalForm.reqApproval" />
 												<fmt:message
@@ -257,7 +252,7 @@ function cancelApp(){
 										<tr><td></td>
 											<c:if test="${approvedBy!=null && operator!=null}">
 												<c:if test="${approvedBy!=operator}">
-													<td colspan="2"><abc:i18n
+													<td ><abc:i18n
 														property="requestsApproval.requestsApprovalForm.Approvaldenied" />
 													<fmt:message
 														key="requestsApproval.requestsApprovalForm.Approvaldenied" />
@@ -268,7 +263,7 @@ function cancelApp(){
 											</c:if>
 											
 											<c:if test="${approvedBy==null && operator==null}">
-												<td colspan="2"><abc:i18n
+												<td ><abc:i18n
 													property="requestsApproval.requestsApprovalForm.Approvaldenied" />
 												<fmt:message
 													key="requestsApproval.requestsApprovalForm.Approvaldenied" />

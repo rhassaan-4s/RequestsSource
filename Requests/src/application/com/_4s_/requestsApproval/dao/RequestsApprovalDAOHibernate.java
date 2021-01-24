@@ -2000,30 +2000,21 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 				log.debug("request type " + requestType);
 				if (requestType == null) {
 					log.debug("requestType " + requestType);
-				} else if (requestType != null && !requestType.equals(new Long(5)) && !requestType.equals(new Long(6)) && !requestType.equals(new Long(12)) && !requestType.equals(new Long(13)) && !requestType.equals(new Long(14))) {
+				} else if (requestType != null && !requestType.equals(new Long(6)) && !requestType.equals(new Long(7)) && !requestType.equals(new Long(8))) {
 					log.debug("request type not null  " + requestType);
 					criteria.createCriteria("req_id").add(Restrictions.eq("id", requestType));
-				} else if (requestType.equals(new Long(5))) {
-					log.debug("requestType " + requestType);
-					criteria.createCriteria("req_id").add(Restrictions.eq("id", new Long(4)));
-				}  else if (requestType.equals(new Long(6))) {////////////sign in & out together
+				 }else if (requestType.equals(new Long(8))) {////////////sign in & out together
 					log.debug("requestType " + requestType);
 					criteria.createCriteria("req_id").add(Restrictions.or(Restrictions.eq("id", new Long(10)), Restrictions.eq("id", new Long(11))));
-				} else if (requestType.equals(new Long(12))) {
-					log.debug("requestType (4) " + requestType);
-					criteria.createCriteria("req_id").add(Restrictions.eq("id", new Long(4)));
-				} else if (requestType.equals(new Long(13))) {
-					log.debug("requestType " + requestType);
-					criteria.createCriteria("req_id").add(Restrictions.eq("id", new Long(1)));
-				}else if (requestType.equals(new Long(14))) {
-					log.debug("requestType " + requestType);
-					criteria.createCriteria("req_id").add(Restrictions.or(Restrictions.eq("id", new Long(1)), Restrictions.eq("id", new Long(4))));
-				}else {
+				} else if (requestType.equals(new Long(7))) {
+					log.debug("requestType (7) " + requestType);
+					criteria.createCriteria("req_id").add(Restrictions.or(Restrictions.eq("id", new Long(4)), Restrictions.eq("id", new Long(5))));
+				} else {
 					log.debug("requestType " + requestType);
 				}
 				log.debug("will query levels " + accessLevels.toArray() + " - " + accessLevels.size());
 				criteria.createCriteria("group_id").add(Restrictions.in("id", accessLevels));
-				log.debug("will query levels 2");
+				log.debug("will query levels ");
 				criteria.addOrder(Property.forName("id").asc());
 				criteria
 				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -2032,6 +2023,10 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 					list = criteria.list();
 					log.debug("queried levels");
 					Iterator itr = list.iterator();
+					while(itr.hasNext()) {
+						EmpReqTypeAcc acc = (EmpReqTypeAcc)itr.next();
+//						log.debug(acc.getId());
+					}
 					log.debug("empreqtypeacc size " + list.size());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -2079,9 +2074,11 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		Date newDate1 = null;
 		log.debug(requestQuery.getDateFrom());
 		if (requestQuery.getDateFrom()!=null && !requestQuery.getDateFrom().isEmpty()) {
+			log.debug("not from date null");
 			try {
 				newDate1 = df.parse(requestQuery.getDateFrom());
 			} catch(Exception e){
+				log.debug(e);
 				e.printStackTrace();
 				status.setCode("312");
 				status.setMessage("Date is not well formated");
@@ -2184,10 +2181,10 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		} else if (requestType.equals(new Long(2))){
 			log.debug("request type " + requestType);
 			
-			criteria.add(Expression.isNull("period_to"));
+			criteria.add(Restrictions.and(Restrictions.isNull("period_to"), Restrictions.eq("request_id.id", new Long(5))));
+//			criteria.add(Expression.isNull("period_to"));
 			
-			criteria.add(Restrictions.eq("request_id.id", new Long(1)));
-			criteria.createCriteria("vacation").add(Restrictions.eq("vacation", "999"));
+//			criteria.add(Restrictions.or(Restrictions.eq("request_id.id", new Long(4)),));
 			criteria.add(Restrictions.and(Restrictions.ne("request_id.id", new Long(10)), Restrictions.ne("request_id.id", new Long(11))));
 			
 			if (sDate !=null) {
@@ -2403,6 +2400,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		
 		list = criteria.list();
+		log.debug("list size " + list.size());
 		
 		if (list.size()>0) {
 			LoginUsersRequests req = (LoginUsersRequests)list.get(0);

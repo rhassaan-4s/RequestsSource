@@ -244,7 +244,7 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 		}
 	} else {
 		String trans_type = null;
-		if (userRequest.getAttendanceType().equals(new Long(1))) {
+		if (userRequest.getAttendanceType().equals(new Long(10))) {
 			trans_type = "I";
 		} else {
 			trans_type = "O";
@@ -334,7 +334,7 @@ private Map createManualAttendance(LoginUsers loginUsers, MultiCalendarDate mCal
 	//10 signin 11 signout
 	RequestTypes reqType = null;
 	log.debug("userRequest.getAttendanceType() " + userRequest.getAttendanceType());
-	if (userRequest.getAttendanceType().equals(new Long(1))) {
+	if (userRequest.getAttendanceType().equals(new Long(10))) {
 		reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(10));
 	} else {
 		reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(11));
@@ -393,9 +393,7 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 	Employee emp = (Employee)requestsApprovalDAO.getObject(Employee.class, empId);
 	LoginUsers loginUsers=(LoginUsers) requestsApprovalDAO.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
 	
-//	LoginUsersRequests withoutSalVac= new LoginUsersRequests();
-	
-	DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	DateFormat df=new SimpleDateFormat("dd/MM/yyyy");// HH:mm:ss
 	Date from = null;
 	try {
 		from = df.parse(userRequest.getAttendanceTime());
@@ -426,17 +424,26 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 	mCalDateTo.setDate(cal.getTime());
 	
 	Long diff = mCalDateTo.getDate().getTime()-mCalDateFrom.getDate().getTime();
-	
+	log.debug("difference in vacation days " + diff);
 	if (diff < 0) {
 		return null;
 	}
 	Double daysDiff = Double.valueOf(Math.round((diff/(1000*60*60*24.0))));
 	log.debug("daysDiff " + daysDiff);
+	log.debug(withoutSalVac);
 	withoutSalVac.setWithdrawDays(daysDiff);
+	log.debug("emp " + emp);
+	
+	Long vacCredit = requestsApprovalManager.getVacationCredit(emp.getEmpCode(), userRequest.getAttendanceType(), userRequest.getVacation(), mCalDateFrom.getDate(), settings.getServer(), settings.getService(), settings.getUsername(), settings.getPassword());
+	log.debug("vaccredit " + vacCredit);
+	if (vacCredit!=null) {
+		withoutSalVac.setVacCredit(vacCredit);
+	}
 	withoutSalVac.setEmpCode(emp.getEmpCode());
+	log.debug("login user " + loginUsers);
 	withoutSalVac.setLogin_user(loginUsers);
 	withoutSalVac.setRequest_date(Calendar.getInstance().getTime());
-//	withoutSalVac.setNotes(userRequest.getNotes());
+	log.debug("userRequest notes " + userRequest.getNotes());
 	withoutSalVac.setApproved(new Long(0));
 	withoutSalVac.setApplicable(new Long(1));
 	withoutSalVac.setPosted(new Long(0));
@@ -446,18 +453,16 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 	
 	Vacation vacation = null;
 
+	log.debug("vacation parameter " + userRequest.getVacation());
 	if (userRequest.getVacation()!= null && !userRequest.getVacation().isEmpty()){
 		vacation = (Vacation)requestsApprovalManager.getObject(Vacation.class, userRequest.getVacation());
 	}
+	log.debug("vacation " + vacation);
+	request_id= (RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, userRequest.getAttendanceType());
 	
-	if (userRequest.getAttendanceType().equals(new Long(7))) {
-		request_id= (RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, new Long (1));
-	} else if (userRequest.getAttendanceType().equals(new Long(8))) {
-		request_id= (RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, new Long (2));
-	}
 	log.debug("handlevacations request " + request_id.getId());
 	if(withoutSalaryVacEnabled==true){//Lotus
-		if(userRequest.getAttendanceType().equals(new Long(7)) && userRequest.getVacation().equals("008")){
+		if(userRequest.getAttendanceType().equals(new Long(1)) && userRequest.getVacation().equals("008")){
 			//tasree7 object
 			log.debug("---without Salary vacation ---");
 //			log.debug("---------loginUsersRequests.getPeriod_from()-------"+loginUsersRequests.getPeriod_from());
@@ -467,12 +472,12 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 			
 			withoutSalVac.setRequest_id(request_id);
 			
-		} else if(userRequest.getAttendanceType().equals(new Long(7))) {
+		} else if(userRequest.getAttendanceType().equals(new Long(1))) {
 			request_id= (RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, new Long (1));
 			log.debug("2.request " + request_id.getId());
 			withoutSalVac.setVacation(vacation);
 		}
-	}  else if(userRequest.getAttendanceType().equals(new Long(8))) {
+	}  else if(userRequest.getAttendanceType().equals(new Long(2))) {
 		request_id= (RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, new Long (2));
 		log.debug("request " + request_id.getId());
 		withoutSalVac.setVacation(vacation);
@@ -483,15 +488,16 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 	log.debug("request " + request_id.getId());
 	withoutSalVac.setRequest_id(request_id);
 	
-	if(periodFromToEnabled==true){//Lehaa
+	log.debug("mCalDateFrom.getDate() " + mCalDateFrom.getDate() + " - mCalDateTo.getDate() " + mCalDateTo.getDate());
+//	if(periodFromToEnabled==true){//Lehaa
 			withoutSalVac.setFrom_date(mCalDateFrom.getDate());
 			withoutSalVac.setTo_date(mCalDateTo.getDate());
 			withoutSalVac.setPeriod_from(mCalDateFrom.getDate());
 			withoutSalVac.setPeriod_to(mCalDateTo.getDate());
-	}else {//Lotus
-			withoutSalVac.setFrom_date(mCalDateFrom.getDate());
-			withoutSalVac.setTo_date(mCalDateTo.getDate());
-	}
+//	}else {//Lotus
+//			withoutSalVac.setFrom_date(mCalDateFrom.getDate());
+//			withoutSalVac.setTo_date(mCalDateTo.getDate());
+//	}
 	
 	String requestNumber="";
 	requestNumber=requestsApprovalManager.CreateRequestNumber();
@@ -513,8 +519,10 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	 boolean automaticRequestsValidation = settings.getAutomaticRequestsValidation();
 	 
 	if (userRequest.getAttendanceType()==null || userRequest.getAttendanceTime() == null 
-			||(userRequest.getAttendanceType().equals(new Long(9)) && (userRequest.getAttendanceTime2() == null ||userRequest.getAttendanceTime2() == null))
-			||(userRequest.getAttendanceType().equals(new Long(3)) && (userRequest.getAttendanceTime2() == null ||userRequest.getAttendanceTime2() == null))
+			||(userRequest.getAttendanceType().equals(new Long(1)) && (userRequest.getAttendanceTime2().isEmpty() ||userRequest.getAttendanceTime2() == null))
+			||(userRequest.getAttendanceType().equals(new Long(2)) && (userRequest.getAttendanceTime2().isEmpty() ||userRequest.getAttendanceTime2() == null))
+			||(userRequest.getAttendanceType().equals(new Long(3)) && (userRequest.getAttendanceTime2().isEmpty() ||userRequest.getAttendanceTime2() == null))
+			||(userRequest.getAttendanceType().equals(new Long(4)) && (userRequest.getAttendanceTime2().isEmpty() ||userRequest.getAttendanceTime2() == null))
 			|| userRequest.getAttendanceTime().isEmpty()|| userRequest.getLatitude()==null || userRequest.getLongitude()==null){
 		status.setCode("303");
 		status.setMessage("Null/Empty Input Parameter");
@@ -527,7 +535,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	DateFormat df2=new SimpleDateFormat("dd/MM/yyyy");
 	Date newDate = null;
 	try {
-		if (!userRequest.getAttendanceType().equals(new Long(9))) {
+		if (!userRequest.getAttendanceType().equals(new Long(4)) && !userRequest.getAttendanceType().equals(new Long(1)) && !userRequest.getAttendanceType().equals(new Long(2))) {
 			newDate = df.parse(userRequest.getAttendanceTime());
 		} else {
 			newDate = df2.parse(userRequest.getAttendanceTime());
@@ -550,8 +558,9 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	Calendar cal = Calendar.getInstance();
 	try {
 		if (userRequest.getAttendanceTime2()!=null && !userRequest.getAttendanceTime2().isEmpty()) {
-			if (!userRequest.getAttendanceType().equals(new Long(9))) {
+			if (!userRequest.getAttendanceType().equals(new Long(1)) && !userRequest.getAttendanceType().equals(new Long(2)) && !userRequest.getAttendanceType().equals(new Long(4))) {
 				to = df.parse(userRequest.getAttendanceTime2());
+				log.debug("to " + to);
 			} else {
 				to = df2.parse(userRequest.getAttendanceTime2());
 				log.debug("to " + to);
@@ -595,32 +604,20 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	}
 	LoginUsersRequests loginUsersRequests = null;
 	Vacation vac = null;
-	//1 agaza khasa 2 agaza dawreya 3 tasree7 4 ma2moreya yom kamel
-	
+	//1 agaza khasa 2 agaza dawreya 3 tasree7 
+	//4 ma2moreya yom kamel
+	//5 errand
 	//7:Special Vacation-e3teyadi(1-001) Special Vacation-3arda(1-002) Special Vacation-marady(1-003) Special Vacation-ra7et wardeya(1-888) 
 		//8:Periodic Vacation(2)
 	
 		RequestTypes reqType = null;
 		log.debug("test userRequest.getAttendanceType() " + userRequest.getAttendanceType());
-		if (userRequest.getAttendanceType().equals(new Long(0))) {
-//			log.debug("0 reqType " + reqType.getId()); 
-			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(1));
-			log.debug(" reqType " + reqType.getId());
-		}  else if (userRequest.getAttendanceType().equals(new Long(3))) {//Permission	// || userRequest.getAttendanceType().equals(new Long(4))
-//			log.debug("3 4 reqType " + reqType.getId());
-			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(3));
-			log.debug(" reqType " + reqType.getId());
-		} else if (userRequest.getAttendanceType().equals(new Long(5)) ||userRequest.getAttendanceType().equals(new Long(6))) {//errand
-//			log.debug("5 6 reqType " + reqType.getId());
-			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(1));
-			vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class,"vacation", "999");
-			log.debug(" reqType " + reqType.getId());
-		} else if (userRequest.getAttendanceType().equals(new Long(7))) { //special vacation
-//			log.debug("7 reqType " + reqType);
+		if (userRequest.getAttendanceType().equals(new Long(1))) { //special vacation
+//			log.debug("1 reqType " + reqType);
 			loginUsersRequests = new LoginUsersRequests();
-			handleVacations(userRequest, empId,loginUsersRequests);
+			loginUsersRequests = handleVacations(userRequest, empId,loginUsersRequests);
 			if (loginUsersRequests != null) {
-				reqType = loginUsersRequests.getRequest_id();
+				reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, userRequest.getAttendanceType());
 				log.debug(" reqType " + reqType.getId());
 			} else {
 				status.setCode("313");
@@ -629,22 +626,27 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				response.put("Status", status);
 				return response;
 			}
-		} else if (userRequest.getAttendanceType().equals(new Long(8))) {//periodic vacation
-//			log.debug("8 reqType " + reqType.getId());
+		} else if (userRequest.getAttendanceType().equals(new Long(2))) {//periodic vacation
+//			log.debug("2 reqType " + reqType.getId());
 			loginUsersRequests = new LoginUsersRequests();
-			handleVacations(userRequest, empId,loginUsersRequests);
-			reqType = loginUsersRequests.getRequest_id();
+			loginUsersRequests = handleVacations(userRequest, empId,loginUsersRequests);
+			log.debug("approved " + loginUsersRequests.getApproved());
+			log.debug("vacation " + loginUsersRequests.getVacation());
+			if (loginUsersRequests != null) {
+				reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, userRequest.getAttendanceType());
+				log.debug(" reqType " + reqType.getId());
+			} else {
+				status.setCode("313");
+				status.setMessage("To date is before from date.");
+				status.setStatus("False");
+				response.put("Status", status);
+				return response;
+			}
+		}  else if (userRequest.getAttendanceType().equals(new Long(3))) {//Permission	// || userRequest.getAttendanceType().equals(new Long(4))
+//			log.debug("3 4 reqType " + reqType.getId());
+			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(3));
 			log.debug(" reqType " + reqType.getId());
-		} else if (userRequest.getAttendanceType().equals(new Long(9))) {//Full Day errand
-//			log.debug("5 6 reqType " + reqType.getId());
-//			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(1));
-//			vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class,"vacation", "999");
-			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(4));
-			log.debug(" reqType " + reqType.getId());
-		} else {
-			log.debug("userRequest.getAttendanceType() " + userRequest.getAttendanceType().getClass());
-		}
-		if (userRequest.getAttendanceType().equals(new Long(3))) {
+			
 			log.debug("validating");
 			if (userRequest.getPermissionEffect() == null) {
 				log.debug("validating2");
@@ -654,24 +656,31 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 				response.put("Status", status);
 				return response;
 			}
+		} else if (userRequest.getAttendanceType().equals(new Long(4))) {//errand
+//			log.debug("5 6 reqType " + reqType.getId());
+			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(4));
+			log.debug("request type " + reqType);
+			log.debug(" reqType " + reqType.getId());
+		}else if (userRequest.getAttendanceType().equals(new Long(5)) ||userRequest.getAttendanceType().equals(new Long(6))) {//errand
+//			log.debug("5 6 reqType " + reqType.getId());
+			reqType = (RequestTypes)requestsApprovalDAO.getObject(RequestTypes.class, new Long(5));
+			log.debug("request type " + reqType);
+			log.debug(" reqType " + reqType.getId());
+		} else {
+			log.debug("userRequest.getAttendanceType() " + userRequest.getAttendanceType().getClass());
 		}
 		
 		
-//		log.debug("mCalDate " + mCalDate);
 		log.debug("mCalDate.getDate() " + mCalDate.getDate());
 		if (userRequest.getAttendanceType().equals(new Long(6))
 				||userRequest.getAttendanceType().equals(new Long(3)) || userRequest.getAttendanceType().equals(new Long(5))) {//Permission End || //Full Day Permission End
-			//userRequest.getAttendanceType().equals(new Long(4)) || 
 			
 			
 			if (userRequest.getAttendanceType().equals(new Long(6))) {//userRequest.getAttendanceType().equals(new Long(4)) ||permission start and end depricated with only one request
 				RequestsApprovalQuery requestQueryending = new RequestsApprovalQuery();
 				
-				//1 permission 2 errands
-//				if (userRequest.getAttendanceType().equals(new Long(4))) {//permission 
-//					requestQueryending.setRequestType("1");
-//				} else
-					if (userRequest.getAttendanceType().equals(new Long(6))) {//errand 
+				
+				if (userRequest.getAttendanceType().equals(new Long(6))) {//errand 
 					requestQueryending.setRequestType("2");
 				} else {
 					log.debug("condition not handled 3 " + userRequest.getAttendanceType());
@@ -725,6 +734,10 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 						mCalDate.setDate(cal.getTime());
 						loginUsersRequests.setPeriod_from(mCalDate.getDate());
 						loginUsersRequests.setPeriod_to(mCalDateTo.getDate());
+
+						loginUsersRequests.setLeave_type("0");
+						loginUsersRequests.setLeave_effect("0");
+						loginUsersRequests.setPayed(new Long(1));
 					}
 				}
 			} else {//starting permissions and errands
@@ -828,13 +841,13 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 						requestNumber=requestsApprovalManager.CreateRequestNumber();
 						loginUsersRequests.setRequestNumber(requestNumber);
 						loginUsersRequests.setPeriod_from(mCalDate.getDate());
-						if (userRequest.getAttendanceType().equals(new Long(3))) {
+						if (userRequest.getAttendanceType().equals(new Long(3)) || userRequest.getAttendanceType().equals(new Long(1)) || userRequest.getAttendanceType().equals(new Long(2))) {
 							loginUsersRequests.setPeriod_to(mCalDateToPermission.getDate());
 						}
 					}
 				}
 			}
-		}else if (userRequest.getAttendanceType().equals(new Long(9))) {
+		}else if (userRequest.getAttendanceType().equals(new Long(4))) {//full day errand
 			loginUsersRequests = new LoginUsersRequests();
 			loginUsersRequests.setLogin_user(loginUsers);
 			loginUsersRequests.setEmpCode(loginUsers.getEmpCode());
@@ -863,7 +876,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 			Double daysDiff = Double.valueOf(Math.round((diff/(1000*60*60*24.0))));
 			log.debug("daysDiff " + daysDiff);
 			loginUsersRequests.setWithdrawDays(daysDiff);
-		} else if (!userRequest.getAttendanceType().equals(new Long(7))&& !userRequest.getAttendanceType().equals(new Long(8))){
+		} else if (!userRequest.getAttendanceType().equals(new Long(1))&& !userRequest.getAttendanceType().equals(new Long(2))){
 			loginUsersRequests = new LoginUsersRequests();
 			loginUsersRequests.setLogin_user(loginUsers);
 			loginUsersRequests.setEmpCode(loginUsers.getEmpCode());
@@ -887,7 +900,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 //			loginUsersRequests.setRequest_date(mCalDate.getDate());
 //		}
 
-
+		loginUsersRequests.setRequest_date(Calendar.getInstance().getTime());
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		
@@ -915,7 +928,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		
 		log.debug("after validation");
 		if (automaticRequestsValidation==true) {
-			if (userRequest.getAttendanceType().equals(new Long(9))) {
+			if (userRequest.getAttendanceType().equals(new Long(4))) {
 				///////////////////////////Full day errand validations///////////////////////////////////////////////
 				Map att = checkAttendance(mCalDate.getDate(), emp.getEmpCode());
 				AttendanceStatus attendanceResponse = (AttendanceStatus)att.get("Response");
@@ -1045,7 +1058,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 								return response;
 							}
 						} else {
-							if (req.getPeriod_to().compareTo(loginUsersRequests.getPeriod_from()) > 0 && req.getPeriod_from().compareTo(loginUsersRequests.getPeriod_from())<0) {
+							if (req.getPeriod_to().compareTo(loginUsersRequests.getPeriod_from()) >= 0 && req.getPeriod_from().compareTo(loginUsersRequests.getPeriod_from())<=0) {
 								if (!userRequest.getAttendanceType().equals(new Long(6)) && !userRequest.getAttendanceType().equals(new Long(4))) {
 									status.setCode("321");
 									status.setMessage("The specified time interval is overlapping with one of your requests with request number "  + req.getRequestNumber());
@@ -1110,19 +1123,25 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		loginUsersRequests.setTo_date(loginUsersRequests.getPeriod_to());
 	}
 	
-	
+	log.debug("*****");
 	
 	///////////////////////////////////////////////////////
 	loginUsersRequests.setApproved(new Long(0));
 	loginUsersRequests.setPosted(new Long(0));
 	loginUsersRequests.setApplicable(new Long(0));
-	
+
+	log.debug("*****");
 	/////////////////////////////////////////////////////
+	if (loginUsersRequests.getVacation()!=null) {
+		log.debug("vacation " + loginUsersRequests.getVacation().getId());
+	}
+	log.debug("to date " + loginUsersRequests.getTo_date());
 	requestsApprovalManager.saveObject(loginUsersRequests);
 	Map output = new HashMap();
 	output.put("request_number", loginUsersRequests.getRequestNumber());
 	response.put("Response", output);
-	
+
+	log.debug("*****");
 	status.setCode("200");
 	status.setMessage("Request Inserted Successfully");
 	status.setStatus("true");
@@ -1186,7 +1205,8 @@ public Map approveRequest(RequestApproval requestApproval,Employee emp) {
 	} else {
 		LoginUsersRequests loginUser = (LoginUsersRequests)obj;
 		if (requestApproval.getApprove().equals("0")) {
-			if (requestApproval.getModifiedDate()!=null && requestApproval.getModifiedDate().isEmpty()) {
+			log.debug("requestApproval.getModifiedDate() " + requestApproval.getModifiedDate());
+			if (requestApproval.getModifiedDate()!=null && !requestApproval.getModifiedDate().isEmpty()) {
 				status.setCode("380");
 				status.setMessage("You can't modify date while rejecting request");
 				status.setStatus("false");
@@ -1199,19 +1219,21 @@ public Map approveRequest(RequestApproval requestApproval,Employee emp) {
 			Calendar modifyCal = null;
 			Calendar fromCal = Calendar.getInstance();
 			fromCal.setTime(loginUser.getFrom_date());
-			if (requestApproval.getModifiedDate()!=null && requestApproval.getModifiedDate().isEmpty()) {
-				modifyCal = Calendar.getInstance();
+			if (requestApproval.getModifiedDate()!=null && !requestApproval.getModifiedDate().isEmpty()) {
 				Date modify = null;
 					DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
 					try {
 						modify = df.parse(requestApproval.getModifiedDate());
+						modifyCal = Calendar.getInstance();
+						modifyCal.setTime(modify);
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						log.debug(e.getMessage());
 					}
-				modifyCal.setTime(modify);
+					
+				
 			}
-			if (requestApproval.getModifiedDate()!=null && requestApproval.getModifiedDate().isEmpty()
+			if (requestApproval.getModifiedDate()!=null && !requestApproval.getModifiedDate().isEmpty() 
 					&& (modifyCal.get(Calendar.DAY_OF_MONTH)!= fromCal.get(Calendar.DAY_OF_MONTH) || modifyCal.get(Calendar.MONTH)!= fromCal.get(Calendar.MONTH))) {
 				status.setCode("381");
 				status.setMessage("You can't modify attendance date, you are only allowed to modify time");
@@ -1861,6 +1883,24 @@ public Map editUserInfo(UserWrapper userWrapper, Employee employee) {
 	status.setMessage("Request Success");
 	status.setStatus("True");
 	results.put("Status", status);
+	return results;
+}
+
+public Map getRequestTypes() {
+	List requestTypes = requestsApprovalManager.getObjectsOrderedByField(RequestTypes.class,"id");
+	log.debug("request types list " + requestTypes.size());
+	Map results = new HashMap();
+	RestStatus status = new RestStatus();
+	results.put("Results", requestTypes);
+	log.debug("1");
+	status.setCode("200");
+	log.debug("2");
+	status.setMessage("Request Success");
+	log.debug("3");
+	status.setStatus("True");
+	log.debug("4");
+	results.put("Status", status);
+	log.debug("5");
 	return results;
 }
 

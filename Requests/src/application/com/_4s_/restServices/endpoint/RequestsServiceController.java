@@ -257,6 +257,7 @@ public class RequestsServiceController {
 			Map response = requestsService.userRequest(userRequest,user.getEmployee().getId());
 			return response;
 		} catch (Exception e) {
+			log.debug(e);
 			e.printStackTrace();
 		}
 		return null;
@@ -529,6 +530,16 @@ public class RequestsServiceController {
 		UserDetails userDet = (UserDetails)token.getPrincipal();
 		User user = requestsService.getUser(userDet.getUsername());
 		Map m = requestsService.editUserInfo(userWrapper,user.getEmployee());
+		return m;
+	}
+	
+	@RequestMapping(value="/getRequestTypes" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map getRequestTypes() {
+		log.debug("getRequestTypes ");
+		Map m = requestsService.getRequestTypes();
+		log.debug("after requesting request type");
 		return m;
 	}
 	

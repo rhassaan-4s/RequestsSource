@@ -69,4 +69,6 @@ public interface BaseManager {
 				final String parameter3, final Object value3,
 				final List<String> fieldList);
 	 public Object getObjectByTwoObjects(final Class clazz, final String parameter1, final Object value1,final String parameter2, final Object value2);
+	 
+	 public List getObjectsByTwoObjects(final Class clazz, final String parameter1, final Object value1,final String parameter2, final Object value2);
 }

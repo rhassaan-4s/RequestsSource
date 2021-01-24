@@ -174,10 +174,10 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 							<tr id="btnPrint">
 					  		<td nowrap class="formBodControl">
 								<abc:i18n property="requestsApproval.caption.codeFrom"/>
-								<fmt:message key="requestsApproval.caption.codeFrom"/>
+								<fmt:message key="requestsApproval.caption.codeFrom" />
 							</td>
 							<td  class="formBodControl" >
-								<input type="text"  name="codeFrom" id="codeFrom"/>
+								<input type="text"  name="codeFrom" id="codeFrom" value="${codeFrom}"/>
 							</td>
 		
 					  		<td nowrap class="formBodControl" >
@@ -185,7 +185,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 								<fmt:message key="requestsApproval.caption.codeTo"/>
 							</td>
 							<td  class="formBodControl" >
-								<input type="text"  name="codeTo" id="codeTo"/>
+								<input type="text"  name="codeTo" id="codeTo" value="${codeTo}"/>
 							</td>
 						</tr>
 												
@@ -287,15 +287,15 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											${record.name}
 										</td>
 										<td  nowrap>
-										<c:if test="${record.approval!=0}">
+										<c:if test="${record.approval==null}">
 											<a href="attendanceRequestsApprovalForm.html?reqId=${record.id}">${record.requestNumber}</a>
 										</c:if>
-										<c:if test="${record.approved==0}">
+										<c:if test="${record.approval!=null}">
 											${record.requestNumber}
 										</c:if>										
 										</td>										
 										<td  nowrap>
-											${record.request_id.description}
+											${record.description}
 										</td>
 										<td  nowrap>
 											 <_4s_:formatMiladiDate value="${record.request_date}"/>
@@ -308,7 +308,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										
 										<td  nowrap>
 							<c:choose>
-								<c:when test="${record.isInsideCompany==true}">
+								<c:when test="${record.isInsideCompany==1}">
 									<fmt:message key="requestsApproval.caption.insideCompany" />
 								</c:when>
 								<c:otherwise>

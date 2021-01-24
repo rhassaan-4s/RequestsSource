@@ -1,5 +1,6 @@
 package com._4s_.requestsApproval.web.action;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.util.LinkedCaseInsensitiveMap;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,6 +28,7 @@ import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.restServices.json.RequestApproval;
+import com._4s_.restServices.json.RestStatus;
 import com._4s_.common.model.Employee;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
@@ -165,17 +168,20 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 //			model.put("loginUserReqs", allRequests);
 //		}	
 
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(emp, requestType);
 		
 		if (pageNumber>0) {
 
-			LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+			
 			if (!((dateFrom==null || dateFrom.isEmpty()) && (dateTo==null || dateTo.isEmpty()) 
 					&& (exactDateFrom==null || exactDateFrom.isEmpty()) && (exactDateTo==null || exactDateTo.isEmpty()))) {
 				//			tempneededRequestTypes = requestsApprovalManager.getRequestsForApprovalList(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId);
-				List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(emp, requestType);
+				
 				model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
 			}
 		}
+		model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
 		model.put("dateTo", dateTo);
 		model.put("status", statusId);
 		model.put("firstDay", formattedDate);
@@ -316,10 +322,10 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 		String codeFrom=request.getParameter("codeFrom");
 		String codeTo=request.getParameter("codeTo");
 		
+		List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(emp, requestType);
+		
 		if (!((dateFrom==null || dateFrom.isEmpty()) && (dateTo==null || dateTo.isEmpty()) 
 				&& (exactDateFrom==null || exactDateFrom.isEmpty()) && (exactDateTo==null || exactDateTo.isEmpty()))) {
-//			tempneededRequestTypes = requestsApprovalManager.getRequestsForApprovalList(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId);
-			List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(emp, requestType);
 			model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
 		}
 		
@@ -330,29 +336,64 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 			
 			List results = (List)model.get("results");
 			
+			int notApprovedCounter = 0; 
+			
 			if(check !=null && !check.equals(""))
 			{
 				log.debug("**********************if for second*********************");
 				
+				List errorsList = new ArrayList();
+				
 				for(int i=0;i<results.size();i++) {
 					log.debug("**********************inside for *********************");
-					LoginUsersRequests loginUserRequest= (LoginUsersRequests)results.get(i);
-					String approve=request.getParameter("approve"+i);
-					log.debug("approve>>>>>>>>>>"+approve);
-					log.debug("request number " + loginUserRequest.getRequestNumber());
-					log.debug("request id " + loginUserRequest.getId());
+//					LoginUsersRequests loginUserRequest= (LoginUsersRequests)results.get(i);
+//					String approve=request.getParameter("approve"+i);
+//					log.debug("approve>>>>>>>>>>"+approve);
+//					log.debug("request number " + loginUserRequest.getRequestNumber());
+//					log.debug("request id " + loginUserRequest.getId());
+//					if(approve!=null && !approve.equals(""))
+//					{
+//						approveCounter ++;
+//						log.debug("approveCounter"+approveCounter);
+//						RequestApproval approval = new RequestApproval();
+//						approval.setApprove("1");
+//						approval.setRequestId(loginUserRequest.getId()+"");
+//						requestsApprovalManager.approvalsAccessLevels(approval, loginUserRequest, emp);
+//					}
+					///////////////////////////////////////////////////////////////////
+					
+					LinkedCaseInsensitiveMap requestMap = (LinkedCaseInsensitiveMap)results.get(i);
+					String approve = request.getParameter("approve"+i);
+					
 					if(approve!=null && !approve.equals(""))
 					{
 						approveCounter ++;
 						log.debug("approveCounter"+approveCounter);
 						RequestApproval approval = new RequestApproval();
 						approval.setApprove("1");
-						approval.setRequestId(loginUserRequest.getId()+"");
-						requestsApprovalManager.approvalsAccessLevels(approval, loginUserRequest, emp);
+						BigDecimal requestId = (BigDecimal)requestMap.get("id");
+						LoginUsersRequests loginUserRequest = (LoginUsersRequests)requestsApprovalManager.getObject(LoginUsersRequests.class, new Long(requestId.longValue()));
+						log.debug("approve>>>>>>>>>>"+approve);
+						log.debug("request number " + loginUserRequest.getRequestNumber());
+						log.debug("request id " + loginUserRequest.getId());
+						approval.setRequestId(requestId+"");
+						Map approvalResult = requestsApprovalManager.approvalsAccessLevels(approval, loginUserRequest, emp);
+						log.debug("approval results " + approvalResult);
+						RestStatus status = (RestStatus)approvalResult.get("Status");
+						log.debug("status " + status);
+						log.debug("status " + status.getStatus());
+						if(status.getStatus().equals("false")) {
+							log.debug("false");
+							notApprovedCounter++;
+							errorsList.add(status.getMessage());
+						}
 					}
 					
 						
 				}
+				model = null;
+				model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
+				model.put("errors", errorsList);
 			}
 			else
 			{
@@ -361,7 +402,6 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 				
 			}
 			
-
 			model.put("requestNumber", requestNumber);
 			model.put("employeeCode", emp_code);
 			model.put("firstDay", formattedDate);
@@ -378,6 +418,8 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 			model.put("request_date_to", request_date_to);
 			model.put("dateTo", dateTo);
 			model.put("status",statusId);
+			model.put("codeFrom", codeFrom);
+			model.put("codeTo", codeTo);
 			
 		return new ModelAndView("empRequestsReportsForm",model);
 	}

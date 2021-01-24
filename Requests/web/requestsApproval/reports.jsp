@@ -307,10 +307,10 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 									<td nowrap>${record.requestNumber}</td>
 									<c:choose>
 										<c:when test="${record.vacation==null}">
-											<td nowrap>${record.request_id.description}</td>
+											<td nowrap>${record.description}</td>
 										</c:when>
 										<c:otherwise>
-											<td nowrap>${record.vacation.name}</td>
+											<td nowrap>${record.vacName}</td>
 										</c:otherwise>
 									</c:choose>
 

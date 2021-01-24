@@ -165,15 +165,7 @@ public class LoginUsersRequestsView implements Controller{
 		
 		String requestTypeLong = null;
 		if (requestType!=null && !requestType.isEmpty()) {
-			
-			if(requestType.equals("5")) {
-				requestTypeLong = "13";
-			} else {
-				requestTypeLong = requestType;
-			}
-//			if (requestType.equals(4)) {
-//				
-//			}
+			requestTypeLong = requestType;
 		}
 		
 		log.debug("request type " + requestTypeLong);
@@ -183,7 +175,10 @@ public class LoginUsersRequestsView implements Controller{
 		model.put("request_id", requestType);
 		model.put("dateFrom", dateFrom);
 		model.put("dateTo", dateTo);
-		List requests = requestsApprovalManager.getObjects(RequestTypes.class);
+		
+		List orderBy = new ArrayList();
+		orderBy.add("id");
+		List requests=requestsApprovalManager.getObjectsByParameterOrderedByFieldList(RequestTypes.class,"hidden" , new Integer(0), orderBy);
 		List reList = new ArrayList();
 		
 		Settings settings = (Settings)request.getSession().getAttribute("settings");

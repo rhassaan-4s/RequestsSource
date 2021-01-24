@@ -196,5 +196,9 @@ public class BaseManagerImpl implements BaseManager {
 	 public Object getObjectByTwoObjects(final Class clazz, final String parameter1, final Object value1,final String parameter2, final Object value2){
 		 return baseDAO.getObjectByTwoObjects(clazz, parameter1, value1, parameter2, value2);
 	 }
+	 
+	 public List getObjectsByTwoObjects(final Class clazz, final String parameter1, final Object value1,final String parameter2, final Object value2){
+		 return baseDAO.getObjectsByTwoObjects(clazz, parameter1, value1, parameter2, value2);
+	 }
 }
 

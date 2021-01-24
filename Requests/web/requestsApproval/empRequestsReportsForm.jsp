@@ -117,10 +117,21 @@ function initMap(latitude,longitude) {
 		</td>
 	</tr>
 	<tr>
+		<td colspan="2">
+				<c:if test="${not empty errors}">
+					<div><c:forEach var="error" items="${errors}">
+						<font color="red"> <c:out value="${error}" escapeXml="false" /><br />
+						</font>
+					</c:forEach></div>
+				</c:if>
+		</td>
+	</tr>
+	<tr>
 		<td>
 			<form id="empRequestsReportsForm" name="empRequestsReportsForm"	method="POST" action="<c:url value="/requestsApproval/empRequestsReportsForm.html"/>">
 				    <input type="hidden"  id="requestType" name="requestType" value="${requestType}"/>
 				    <input type="hidden"  id="errand" name="errand" value="${errand}"/>
+				   
 					<div id="result">
 					<table border=0 cellspacing=1 cellpadding=0 id="ep" style="margin-right:40px">
 						<tr id="head_1_ep">
@@ -271,7 +282,7 @@ function initMap(latitude,longitude) {
 								<fmt:message key="requestsApproval.caption.codeFrom"/>
 							</td>
 							<td  class="formBodControl" >
-								<input type="text" value="${requestNumber}" name="codeFrom" id="codeFrom"/>
+								<input type="text" value="${codeFrom}" name="codeFrom" id="codeFrom"/>
 							</td>
 		
 					  		<td nowrap class="formBodControl" >
@@ -279,7 +290,7 @@ function initMap(latitude,longitude) {
 								<fmt:message key="requestsApproval.caption.codeTo"/>
 							</td>
 							<td  class="formBodControl" >
-								<input type="text" value="${requestNumber}" name="codeTo" id="codeTo"/>
+								<input type="text" value="${codeTo}" name="codeTo" id="codeTo"/>
 							</td>
 						</tr>
 												
@@ -427,7 +438,7 @@ function initMap(latitude,longitude) {
 										<c:if test="${record.approval==null}">
 											<a href="requestsApprovalForm.html?reqId=${record.id}&requestType=${requestType}&errand=${errand}">${record.requestNumber}</a>
 										</c:if>
-										<c:if test="${record.approva!=null}">
+										<c:if test="${record.approval!=null}">
 											${record.requestNumber}
 										</c:if>										
 										</td>										
@@ -483,21 +494,21 @@ function initMap(latitude,longitude) {
 											${record.locationAddress}
 										</td>
 										<td   nowrap>		
-										<c:if test="${record.approved==1}">					
+										<c:if test="${record.approval==1 || record.approval==2 || record.approved==1}">					
 										
 										<abc:i18n
 											property="requestsApproval.requestsApprovalForm.reqApproval" />
 										<fmt:message
 											key="requestsApproval.requestsApprovalForm.reqApproval" />
 										</c:if>
-										<c:if test="${record.approved==99}">					
+										<c:if test="${record.approval==0}">					
 										
 										<abc:i18n
 											property="requestsApproval.requestsApprovalForm.reqRejected" />
 										<fmt:message
 											key="requestsApproval.requestsApprovalForm.reqRejected" />
 										</c:if>
-										<c:if test="${record.approved==0}">
+										<c:if test="${record.approval==null && record.approved!=1}">
 									    	لم تكتمل
 									    	<br>
 									    	<input type="checkbox"
@@ -519,14 +530,14 @@ function initMap(latitude,longitude) {
 											${record.notes}
 										</td>
 									
-										<c:if test="${record.approved==0}">
+										<c:if test="${record.approval==0}">
 										<td  id="btnPrint" nowrap><abc:i18n
 											property="commons.button.approve" /><a
 											href="requestsApprovalForm.html?reqId=${record.id}&requestType=${requestType}"><fmt:message
 											key="commons.button.approve" /></a>
 										</td>								
 										</c:if>		
-										<c:if test="${record.approved!=0}">
+										<c:if test="${record.approval!=0}">
 											<td  nowrap>
 												&nbsp;
 											</td>

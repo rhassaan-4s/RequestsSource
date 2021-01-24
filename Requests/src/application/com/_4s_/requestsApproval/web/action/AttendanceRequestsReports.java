@@ -300,7 +300,7 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		String exactDateFrom = null;
 		String exactDateTo = null;
 		
-		String requestType = "6";//sign in and out
+		String requestType = "8";//sign in and out
 		
 		String sort = "desc";
 		

@@ -155,22 +155,12 @@ public class RequestStatusReports extends BaseSimpleFormController{
 		}
 		
 		
-		List requests = requestsApprovalManager.getObjects(RequestTypes.class);
-//		List reList = new ArrayList();
+		List orderBy = new ArrayList();
+		orderBy.add("id");
+		List requests=requestsApprovalManager.getObjectsByParameterOrderedByFieldList(RequestTypes.class,"hidden" , new Integer(0), orderBy);
+		requests.addAll(requestsApprovalManager.getObjectsByParameterOrderedByFieldList(RequestTypes.class,"hidden" , new Integer(1), orderBy));
 		
-//		boolean empRequestTypeException = settings.getEmpRequestTypeException();
-//		if (empRequestTypeException == true){
-//			for (int i = 0; i < requests.size(); i++) {
-//				RequestTypes requestTypes = (RequestTypes) requests.get(i);
-//				if(!requestTypes.getId().equals(new Long(10)) && !requestTypes.getId().equals(new Long(11))){
-//					reList.add(requestTypes);
-//				}
-//			}
-//			model.put("requestTypeList",reList);
-//		} else {
-//			model.put("requestTypeList",requests);
-//		}
-
+		
 		String sort = "desc";
 		
 		String dateFrom = request.getParameter("dateFrom");
@@ -324,7 +314,7 @@ public class RequestStatusReports extends BaseSimpleFormController{
 		String exactDateFrom = null;
 		String exactDateTo = null;
 		
-//		String requestType = "6";//sign in and out
+//		String requestType = "7";//sign in and out
 		
 		String requestType = request.getParameter("requestType");
 		if (requestType==null || requestType.isEmpty()) {
@@ -548,7 +538,10 @@ public class RequestStatusReports extends BaseSimpleFormController{
 			
 			////////////////////////////////////////////
 				
-				List requests = requestsApprovalManager.getObjects(RequestTypes.class);
+				List orderBy = new ArrayList();
+				orderBy.add("id");
+				List requests=requestsApprovalManager.getObjectsByParameterOrderedByFieldList(RequestTypes.class,"hidden" , new Integer(0), orderBy);
+				requests.addAll(requestsApprovalManager.getObjectsByParameterOrderedByFieldList(RequestTypes.class,"hidden" , new Integer(1), orderBy));
 				
 				model.put("firstDay", formattedDate);
 				model.put("empCode", emp_code);

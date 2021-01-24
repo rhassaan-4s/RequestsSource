@@ -6,7 +6,7 @@
 
 
 
-<%@ taglib uri="http://acegisecurity.org/authz" prefix="authz" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="authz" %>
 <div id="smoothmenu1" class="ddsmoothmenu" >
 <ul>
 	<li><a href="#"><fmt:message key="requestsApproval.menu.basicScreens" /></a>
@@ -31,13 +31,14 @@
 			</a>
 		</li>
 		
+		<authz:authorize access="hasRole('CAN_VIEW_page_requestsApproval')" >
 		<li>
 			<abc:i18n property="requestsApproval.menu.allReports" />
 			<a href="/Requests/requestsApproval/reports.html"> &nbsp;&nbsp;
 				<fmt:message key="requestsApproval.menu.allReports" />
 			</a>
 		</li>
-		
+		</authz:authorize>
 		<!-- 
 		<li><a href="#"><fmt:message key="requestsApproval.menu.allReports" /></a>
 				<ul>
@@ -85,6 +86,7 @@
 		</ul>
 	</li>
 	
+	<authz:authorize access="hasRole('CAN_VIEW_page_requestsApproval')" >
 	<li><a href="#"><fmt:message key="requestsApproval.menu.reports" /></a>
 		<ul>
 	        <li>
@@ -110,7 +112,7 @@
 			
 	         <li>
 	        	<abc:i18n property="requestsApproval.header.empErrandsReportsForm" />
-	        	<a href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=1&errand=true"> &nbsp;&nbsp;
+	        	<a href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=7"> &nbsp;&nbsp;
 	        	<fmt:message key="requestsApproval.header.empErrandsReportsForm" />
 	        	</a>
 			</li>
@@ -129,7 +131,7 @@
 			
 		</ul>		
 	</li>
-	
+	</authz:authorize>
 	
 	<li><a href="#"><fmt:message key="commons.menu.reports" /></a>
 			<ul>

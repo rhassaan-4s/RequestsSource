@@ -29,6 +29,18 @@ public class RequestTypes implements Auditable,Serializable {
 	@ManyToOne
 	@JoinColumn(name="parentId")
 	private RequestTypes parentId;
+	
+	private Integer hidden;//0: Don't ever hide
+							//1: not hidden in reports filters
+							//2: shown in android only
+	public Integer getHidden() {
+		return hidden;
+	}
+
+	public void setHidden(Integer hidden) {
+		this.hidden = hidden;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -47,7 +59,7 @@ public class RequestTypes implements Auditable,Serializable {
 
 	public String getEntityDisplayName() {
 		// TODO Auto-generated method stub
-		return "RequestTypes Addition";
+		return "Request Types " + description;
 	}
 	
 	@Override

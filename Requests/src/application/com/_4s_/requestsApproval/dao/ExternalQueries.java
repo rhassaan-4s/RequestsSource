@@ -4308,103 +4308,82 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 		///////////////////////////////////////////////////////////////////////////////
 		
 		if(requestType!=null) {
-		log.debug("1.requesttype " + requestType);
-		if (requestType.equals(new Long(1))){
-			log.debug("requesttype is 1");
-			if(where == null) {
-				where = " where ";
+			log.debug("1.requesttype " + requestType);
+			if (requestType.equals(new Long(1))){
+				log.debug("requesttype is 1");
+				if(where == null) {
+					where = " where ";
+				} else {
+					where += " and ";
+				}
+				where += " (loginUsersReq.request_type="+requestType+" ) ";
+				where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+			} else if (requestType.equals(new Long(4))) {
+				log.debug("requesttype is 4");
+				if(where == null) {
+					where = " where ";
+				} else {
+					where += " and ";
+				}
+				where += " loginUsersReq.request_type=4  ";
+				where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+			} else if (requestType.equals(new Long(5))) {
+				log.debug("requesttype is 5");
+				if(where == null) {
+					where = " where ";
+				} else {
+					where += " and ";
+				}
+				where += " loginUsersReq.request_type=5  ";
+				log.debug("ma2moreya");
+			}   else if (requestType.equals(new Long(7))) {// all errands
+				log.debug("requesttype is 4");
+				if(where == null) {
+					where = " where ";
+				} else {
+					where += " and ";
+				}
+				where += " (loginUsersReq.request_type=4  ";
+				where += " or (loginUsersReq.request_type=5  and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))))";
+			}else if (requestType.equals(new Long(8))) {//7odoor w enseraf
+				log.debug("requesttype is 8");
+				if(where == null) {
+					where = " where ";
+				} else {
+					where += " and ";
+				}
+				where += " (loginUsersReq.request_type=10 or loginUsersReq.request_type=11)  ";
+			}  
+			else if (requestType.equals(new Long(10)) || requestType.equals(new Long(11))) {
+				log.debug("requesttype is else");
+				if(where == null) {
+					where = " where ";
+				} else {
+					where += " and ";
+				}
+				where += " loginUsersReq.request_type="+requestType+"  ";
 			} else {
-				where += " and ";
+				log.debug("requesttype is else");
+				if(where == null) {
+					where = " where ";
+				} else {
+					where += " and ";
+				}
+				where += " loginUsersReq.request_type=  " + requestType +  " ";
+				where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
 			}
-			where += " (loginUsersReq.request_type="+requestType+" ) ";//or loginUsersReq.request_type=4
-			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
-		} else if (requestType.equals(new Long(4))) {
-			log.debug("requesttype is 4");
-			if(where == null) {
-				where = " where ";
-			} else {
-				where += " and ";
-			}
-			where += " loginUsersReq.request_type=4  ";
-			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
-			where += " and loginUsersReq.vacation is null ";
-		} else if (requestType.equals(new Long(5))) {
-			log.debug("requesttype is 5");
-			if(where == null) {
-				where = " where ";
-			} else {
-				where += " and ";
-			}
-			where += " loginUsersReq.request_type=4  ";
-			where += " and loginUsersReq.vacation=999 ";
-			log.debug("ma2moreya");
-		}   else if (requestType.equals(new Long(6))) {//7odoor w enseraf
-			log.debug("requesttype is 6");
-			if(where == null) {
-				where = " where ";
-			} else {
-				where += " and ";
-			}
-			where += " (loginUsersReq.request_type=10 or loginUsersReq.request_type=11)  ";
-		}  
-		else if (requestType.equals(new Long(10)) || requestType.equals(new Long(11))) {
-			log.debug("requesttype is else");
-			if(where == null) {
-				where = " where ";
-			} else {
-				where += " and ";
-			}
-			where += " loginUsersReq.request_type="+requestType+"  ";
-		} else if (requestType.equals(new Long(12))) {
-			log.debug("requesttype is 4");
-			if(where == null) {
-				where = " where ";
-			} else {
-				where += " and ";
-			}
-			where += " loginUsersReq.request_type=4  ";
-			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
-		} else if (requestType.equals(new Long(13))) {
-			log.debug("requesttype is 4");
-			if(where == null) {
-				where = " where ";
-			} else {
-				where += " and ";
-			}
-			where += " loginUsersReq.request_type=1  ";
-			where += " and loginUsersReq.vacation=999 ";
-			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
-		} else if (requestType.equals(new Long(14))) {
-			log.debug("requesttype is 4");
-			if(where == null) {
-				where = " where ";
-			} else {
-				where += " and ";
-			}
-			where += " (loginUsersReq.request_type=4  ";
-			where += " or (loginUsersReq.request_type=1 and loginUsersReq.vacation=999)) ";
-			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
-		}  else {
-			log.debug("requesttype is else");
-			if(where == null) {
-				where = " where ";
-			} else {
-				where += " and ";
-			}
-			where += " loginUsersReq.request_type=  " + requestType +  " ";
-			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
-		}
-	} else {
-		log.debug("2. requesttype " + requestType);
-		
-		if(where == null) {
-			where = " where ";
 		} else {
-			where += " and ";
+			log.debug("2. requesttype " + requestType);
+			
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += "((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null) "
+					+ " or (loginUsersReq.request_type=10 or loginUsersReq.request_type=11) ) ";
 		}
-		where += "((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null) "
-				+ " or (loginUsersReq.request_type=10 or loginUsersReq.request_type=11) ) ";
-	}
+		
 		
 		////////////////////////////////////////////////////////////////////////////////
 		//////////////////////End of Request type filters///////////////////////////////
@@ -4445,14 +4424,14 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 				} else {
 					where += " and ";
 				}
-				where += " loginUsersReq.isInsideCompany = false ";
+				where += " loginUsersReq.isInsideCompany = 0 ";
 			} else if (isInsideCompany.equals("1")) {
 				if(where == null) {
 					where = " where ";
 				} else {
 					where += " and ";
 				}
-				where += " loginUsersReq.isInsideCompany = true ";
+				where += " loginUsersReq.isInsideCompany = 1 ";
 			}
 		}
 		////////////////////////////////////////////////////////////////////
@@ -4718,9 +4697,9 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 			} else {
 				where += " and ";
 			}
-			where += " (loginUsersReq.request_type="+requestType+" ) ";//or loginUsersReq.request_type=4
+			where += " (loginUsersReq.request_type="+requestType+" ) ";
 			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
-		} else if (requestType.equals(new Long(4))) {
+		} else if (requestType.equals(new Long(4))) {/////full day errand
 			log.debug("requesttype is 4");
 			if(where == null) {
 				where = " where ";
@@ -4728,19 +4707,27 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 				where += " and ";
 			}
 			where += " loginUsersReq.request_type=4  ";
-			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
-			where += " and loginUsersReq.vacation is null ";
-		} else if (requestType.equals(new Long(5))) {
+//			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+			//where += " and loginUsersReq.vacation is null ";
+		} else if (requestType.equals(new Long(5))) {//////errand
 			log.debug("requesttype is 5");
 			if(where == null) {
 				where = " where ";
 			} else {
 				where += " and ";
 			}
-			where += " loginUsersReq.request_type=4  ";
-			where += " and loginUsersReq.vacation=999 ";
+			where += " loginUsersReq.request_type=5  ";
 			log.debug("ma2moreya");
-		}   else if (requestType.equals(new Long(6))) {//7odoor w enseraf
+		}   else if (requestType.equals(new Long(7))) {// all errands
+			log.debug("requesttype is 7");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " (loginUsersReq.request_type=4 or loginUsersReq.request_type=5) ";
+//			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
+		} else if (requestType.equals(new Long(8))) {//7odoor w enseraf
 			log.debug("requesttype is 6");
 			if(where == null) {
 				where = " where ";
@@ -4757,35 +4744,6 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 				where += " and ";
 			}
 			where += " loginUsersReq.request_type="+requestType+"  ";
-		} else if (requestType.equals(new Long(12))) {
-			log.debug("requesttype is 4");
-			if(where == null) {
-				where = " where ";
-			} else {
-				where += " and ";
-			}
-			where += " loginUsersReq.request_type=4  ";
-			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
-		} else if (requestType.equals(new Long(13))) {
-			log.debug("requesttype is 4");
-			if(where == null) {
-				where = " where ";
-			} else {
-				where += " and ";
-			}
-			where += " loginUsersReq.request_type=1  ";
-			where += " and loginUsersReq.vacation=999 ";
-			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
-		} else if (requestType.equals(new Long(14))) {
-			log.debug("requesttype is 4");
-			if(where == null) {
-				where = " where ";
-			} else {
-				where += " and ";
-			}
-			where += " (loginUsersReq.request_type=4  ";
-			where += " or (loginUsersReq.request_type=1 and loginUsersReq.vacation=999)) ";
-			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
 		}  else {
 			log.debug("requesttype is else");
 			if(where == null) {
@@ -4847,14 +4805,14 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 				} else {
 					where += " and ";
 				}
-				where += " loginUsersReq.isInsideCompany = false ";
+				where += " loginUsersReq.isInsideCompany = 0 ";
 			} else if (isInsideCompany.equals("1")) {
 				if(where == null) {
 					where = " where ";
 				} else {
 					where += " and ";
 				}
-				where += " loginUsersReq.isInsideCompany = true ";
+				where += " loginUsersReq.isInsideCompany = 1 ";
 			}
 		}
 		////////////////////////////////////////////////////////////////////
@@ -5120,7 +5078,7 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 			} else {
 				where += " and ";
 			}
-			where += " (loginUsersReq.request_type="+requestType+" ) ";//or loginUsersReq.request_type=4
+			where += " (loginUsersReq.request_type="+requestType+" ) ";
 			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
 		} else if (requestType.equals(new Long(4))) {
 			log.debug("requesttype is 4");
@@ -5131,7 +5089,6 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 			}
 			where += " loginUsersReq.request_type=4  ";
 			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
-			where += " and loginUsersReq.vacation is null ";
 		} else if (requestType.equals(new Long(5))) {
 			log.debug("requesttype is 5");
 			if(where == null) {
@@ -5139,11 +5096,19 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 			} else {
 				where += " and ";
 			}
-			where += " loginUsersReq.request_type=4  ";
-			where += " and loginUsersReq.vacation=999 ";
+			where += " loginUsersReq.request_type=5  ";
 			log.debug("ma2moreya");
-		}   else if (requestType.equals(new Long(6))) {//7odoor w enseraf
-			log.debug("requesttype is 6");
+		}   else if (requestType.equals(new Long(7))) {// all errands
+			log.debug("requesttype is 4");
+			if(where == null) {
+				where = " where ";
+			} else {
+				where += " and ";
+			}
+			where += " (loginUsersReq.request_type=4  ";
+			where += " or (loginUsersReq.request_type=5  and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))))";
+		}else if (requestType.equals(new Long(8))) {//7odoor w enseraf
+			log.debug("requesttype is 8");
 			if(where == null) {
 				where = " where ";
 			} else {
@@ -5159,36 +5124,7 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 				where += " and ";
 			}
 			where += " loginUsersReq.request_type="+requestType+"  ";
-		} else if (requestType.equals(new Long(12))) {
-			log.debug("requesttype is 4");
-			if(where == null) {
-				where = " where ";
-			} else {
-				where += " and ";
-			}
-			where += " loginUsersReq.request_type=4  ";
-			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
-		} else if (requestType.equals(new Long(13))) {
-			log.debug("requesttype is 4");
-			if(where == null) {
-				where = " where ";
-			} else {
-				where += " and ";
-			}
-			where += " loginUsersReq.request_type=1  ";
-			where += " and loginUsersReq.vacation=999 ";
-			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
-		} else if (requestType.equals(new Long(14))) {
-			log.debug("requesttype is 4");
-			if(where == null) {
-				where = " where ";
-			} else {
-				where += " and ";
-			}
-			where += " (loginUsersReq.request_type=4  ";
-			where += " or (loginUsersReq.request_type=1 and loginUsersReq.vacation=999)) ";
-			where += " and ((loginUsersReq.from_date is not null and loginUsersReq.to_date is not null) or (loginUsersReq.period_from is not null and loginUsersReq.period_to is not null))";
-		}  else {
+		} else {
 			log.debug("requesttype is else");
 			if(where == null) {
 				where = " where ";
@@ -5249,14 +5185,14 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 				} else {
 					where += " and ";
 				}
-				where += " loginUsersReq.isInsideCompany = false ";
+				where += " loginUsersReq.isInsideCompany = 0 ";
 			} else if (isInsideCompany.equals("1")) {
 				if(where == null) {
 					where = " where ";
 				} else {
 					where += " and ";
 				}
-				where += " loginUsersReq.isInsideCompany = true ";
+				where += " loginUsersReq.isInsideCompany = 1 ";
 			}
 		}
 		////////////////////////////////////////////////////////////////////

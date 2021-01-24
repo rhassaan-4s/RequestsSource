@@ -174,8 +174,9 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 //		String request_date=request.getParameter("request_date");
 //		log.debug("request_date------"+request_date);
 //		model.put("request_date",request_date);
-		
-		List requestTypeList=requestsApprovalManager.getObjects(RequestTypes.class);
+		List orderBy = new ArrayList();
+		orderBy.add("id");
+		List requestTypeList=requestsApprovalManager.getObjectsByParameterOrderedByFieldList(RequestTypes.class,"hidden" , new Integer(0), orderBy);
 		List requestTypes= new ArrayList();
 		for (int i = 0; i < requestTypeList.size(); i++) {
 			RequestTypes types = (RequestTypes) requestTypeList.get(i);
@@ -566,20 +567,24 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		String accuracy =  (String)request.getParameter("accuracy");
 		log.debug("location " + longitude + " , " + latitude + " , " + accuracy);
 		String address = "";
-		
-		if(loginUsersRequests.getRequest_id().getId()==4 || loginUsersRequests.getRequest_id().getId()==5){
-			if(errors.hasErrors()==false) {
-				if (accuracy!=null && !accuracy.isEmpty()) {
-//					if (settings.getLocationAccuracy()< Integer.parseInt(accuracy)) {
-//						errors.reject("requestsApproval.errors.notAccurateLocation");
-//					} 
-				} else {
-					errors.reject("requestsApproval.errors.locationIsNotSet");
+		if (loginUsersRequests.getRequest_id()==null) {
+			errors.reject("commons.errors.requiredFields");
+		}
+		if (errors.hasErrors()==false) {
+			if(loginUsersRequests.getRequest_id().getId()==4 || loginUsersRequests.getRequest_id().getId()==5){
+				if(errors.hasErrors()==false) {
+					if (accuracy!=null && !accuracy.isEmpty()) {
+						//					if (settings.getLocationAccuracy()< Integer.parseInt(accuracy)) {
+						//						errors.reject("requestsApproval.errors.notAccurateLocation");
+						//					} 
+					} else {
+						errors.reject("requestsApproval.errors.locationIsNotSet");
+					}
 				}
-			}
-			if(errors.hasErrors()==false) {
-				if (longitude == null || latitude == null || Double.parseDouble(longitude)==0 || Double.parseDouble(latitude)==0) {
-					errors.reject("requestsApproval.errors.locationIsNotSet");
+				if(errors.hasErrors()==false) {
+					if (longitude == null || latitude == null || Double.parseDouble(longitude)==0 || Double.parseDouble(latitude)==0) {
+						errors.reject("requestsApproval.errors.locationIsNotSet");
+					}
 				}
 			}
 		}
@@ -630,8 +635,8 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		String annVacation = request.getParameter("annualVacation");
 		log.debug("-----annVacation entered--------"+annVacation);
 		
-		RequestTypes reqType = (RequestTypes)requestsApprovalManager.getObject(RequestTypes.class, new Long(1));
-		Vacation vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class,"vacation", "999");
+//		RequestTypes reqType = (RequestTypes)requestsApprovalManager.getObject(RequestTypes.class, new Long(1));
+//		Vacation vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class,"vacation", "999");
 		
 		if (annVacation != null && !annVacation.isEmpty()) {
 			if (loginUsersRequests.getVacCredit()!=null && loginUsersRequests.getVacCredit() == 0) {
@@ -732,6 +737,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 							}
 							
 							int requestsDeadline = (Integer)request.getSession().getAttribute("requestsDeadline");
+							log.debug("requestsDeadline " + requestsDeadline);
 							Calendar c = Calendar.getInstance();
 							c.add(Calendar.HOUR_OF_DAY, (-1)*requestsDeadline);
 							log.debug("deadline time " + c.getTime());
@@ -749,7 +755,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 							}
 							
 							// to check rules of annual vacation
-						
+						log.debug("testing");
 						//log.debug("--diff betn reqdate & fromdate---"+calculateDifference(loginUsersRequests.getFrom_date(), loginUsersRequests.getRequest_date()));
 						//if(loginUsersRequests!=null){
 							log.debug("loginUsersRequests.getRequest_id()---"+loginUsersRequests.getRequest_id());
@@ -942,14 +948,19 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 
 				if (automaticRequestsValidation==true) {
 					log.debug("loginUsersRequests.getRequest_id() " + loginUsersRequests.getRequest_id().getId());
-					if (loginUsersRequests.getRequest_id().getId().equals(new Long(4))) {
+					if (loginUsersRequests.getRequest_id().getId().equals(new Long(5))) {
 
 						//check if full day errand
 
 
-						String perFrom=loginUsersRequests.getPeriod_from()+"";
-						String perTo=loginUsersRequests.getPeriod_to()+"";
+						DateFormat df=new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+//						String perFrom=loginUsersRequests.getPeriod_from()+"";
+						String perFrom = df.format(loginUsersRequests.getPeriod_from());
+//						String perTo=loginUsersRequests.getPeriod_to()+"";
+						String perTo = df.format(loginUsersRequests.getPeriod_to());
 
+						log.debug("perFrom " + perFrom);
+						log.debug("perTo " + perTo);
 						Map att = requestsApprovalManager.checkAttendance(loginUsersRequests.getPeriod_from(), loginUsersRequests.getEmpCode());
 						AttendanceStatus attendanceResponse = (AttendanceStatus)att.get("Response");
 						System.out.println("attendance status response " + attendanceResponse);
@@ -985,12 +996,15 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 						temp.setTime(loginUsersRequests.getPeriod_from());
 
 						List requests = requestsApprovalManager.getRequestsByExactDatePeriodAndEmpCode(loginUsersRequests.getPeriod_from(), loginUsersRequests.getPeriod_to(), loginUsersRequests.getEmpCode());
+						log.debug("requests on exact date size " + requests.size());
 						if (requests.size() >0) {
 							Iterator reqItr = requests.iterator();
 							while (reqItr.hasNext()) {
 								LoginUsersRequests req = (LoginUsersRequests)reqItr.next();
 								if (req.getPeriod_to() == null) {
-									errors.rejectValue("request_id","requestsApproval.errors.endStartedRequestsInDateIntervalSpecified");
+									String[] args = {req.getRequestNumber()};
+									log.debug("req.getRequestNumber() " + req.getRequestNumber());
+									errors.rejectValue("request_id","requestsApproval.errors.endStartedRequestsInDateIntervalSpecified",args,"");
 								} else {
 									if (req.getPeriod_to().compareTo(loginUsersRequests.getPeriod_from()) > 0) {
 										errors.rejectValue("request_id","requestsApproval.errors.overlappingRequests");
@@ -1016,6 +1030,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 //		request.getSession().setAttribute("loginUsersRequests", loginUsersRequests);
 		log.debug("----loginUsersRequests.getId()-onsubmit-----"+loginUsersRequests.getId()+"-----loginUsersRequests---"+loginUsersRequests.getLogin_user().getEmpCode());
 		log.debug("------date from command---"+loginUsersRequests.getFrom_date());
+		log.debug("------period from command---"+loginUsersRequests.getPeriod_from());
 		Map model=new HashMap();
 		
 		String reqId="";
@@ -1033,7 +1048,10 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 				address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
 			}
 		}
+		loginUsersRequests.setPeriod_from(loginUsersRequests.getFrom_date());
+		loginUsersRequests.setPeriod_to(loginUsersRequests.getTo_date());
 		
+		log.debug("loginUsersRequests.getPeriod_to() " + loginUsersRequests.getPeriod_to());
 		String requestNumber="";
 			 // request number
 			if (loginUsersRequests.getId() == null){
@@ -1046,15 +1064,15 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 			String withoutSalPeriod= request.getParameter("withoutSalPeriod");	
 			log.debug("-----withoutSalPeriod---"+withoutSalPeriod);
 			
-			
+			log.debug("loginUsersRequests.getPeriod_to() " + loginUsersRequests.getPeriod_to());
 			if(loginUsersRequests.getRequest_id()!=null && !loginUsersRequests.getRequest_id().equals("")){
 				log.debug("entered--1-----reqid=-"+loginUsersRequests.getRequest_id().getId());
 				reqId=loginUsersRequests.getRequest_id().getId().toString();
 				if((loginUsersRequests.getRequest_id().getId()==4 && loginUsersRequests.getRequest_id().getParentId()!=null && !loginUsersRequests.getRequest_id().getParentId().equals("")) || loginUsersRequests.getRequest_id().getId()==5){
 					log.debug("entered--2-----parent-"+loginUsersRequests.getRequest_id().getParentId());
-					Vacation vac= (Vacation)requestsApprovalManager.getObject(Vacation.class, "999");
+//					Vacation vac= (Vacation)requestsApprovalManager.getObject(Vacation.class, "999");
 					if(loginUsersRequests.getRequest_id().getId()==4) {
-						loginUsersRequests.setVacation(vac);
+//						loginUsersRequests.setVacation(vac);
 						loginUsersRequests.setPayed(new Long(1));
 						log.debug("request type " + loginUsersRequests.getRequest_id().getId());
 						log.debug("loginUsersRequests.getVac_period_from() " + loginUsersRequests.getVac_period_from());
@@ -1064,10 +1082,10 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 						toCalErrand.set(Calendar.HOUR_OF_DAY, 23);
 						toCalErrand.set(Calendar.MINUTE, 59);
 						toCalErrand.set(Calendar.SECOND, 59);
-						loginUsersRequests.setPeriod_to(loginUsersRequests.getTo_date());
+						loginUsersRequests.setPeriod_to(toCalErrand.getTime());
 					} else if(loginUsersRequests.getRequest_id().getId()==5) {
-						loginUsersRequests.setRequest_id(loginUsersRequests.getRequest_id().getParentId());
-						loginUsersRequests.setVacation(vac);
+//						loginUsersRequests.setRequest_id(loginUsersRequests.getRequest_id().getParentId());
+//						loginUsersRequests.setVacation(vac);
 						loginUsersRequests.setPayed(new Long(1));
 					}
 					if (accuracy!=null && !accuracy.isEmpty()) {
@@ -1089,7 +1107,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 					}
 				}
 				
-				
+				log.debug("loginUsersRequests.getPeriod_to() " + loginUsersRequests.getPeriod_to());
 				if(withoutSalaryVacEnabled==true){//Lotus
 					if(loginUsersRequests.getRequest_id().getId()==1 && loginUsersRequests.getVacation().getVacation().equals("008")){
 						//tasree7 object
@@ -1099,6 +1117,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 						LoginUsersRequests withoutSalVac= new LoginUsersRequests();
 						RequestTypes request_id= (RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, new Long (3));
 						
+						log.debug(" loginUsersRequests.getPeriod_to() " + loginUsersRequests.getPeriod_to());
 						withoutSalVac.setEmpCode(loginUsersRequests.getEmpCode());
 						withoutSalVac.setLogin_user(loginUsersRequests.getLogin_user());
 						withoutSalVac.setRequest_date(loginUsersRequests.getRequest_date());
@@ -1129,6 +1148,8 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 				
 			}
 			
+			log.debug("loginUsersRequests.getPeriod_to() " + loginUsersRequests.getPeriod_to());
+			
 			if(loginUsersRequests.getApproved()==null || loginUsersRequests.getApproved().equals("")){
 				loginUsersRequests.setApproved(new Long(0));	
 			}
@@ -1147,7 +1168,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 			if(loginUsersRequests.getLeave_type()==null||loginUsersRequests.getLeave_type().equals("")){
 				loginUsersRequests.setLeave_type("0");
 			}
-			
+			log.debug("loginUsersRequests.getPeriod_to() " + loginUsersRequests.getPeriod_to());
 			if(periodFromToEnabled==true){//Lehaa
 				if(loginUsersRequests.getFrom_date()==null|| loginUsersRequests.getFrom_date().equals("")){
 					loginUsersRequests.setFrom_date(loginUsersRequests.getPeriod_from());
@@ -1157,10 +1178,10 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 				}
 			}else {//Lotus
 				if(loginUsersRequests.getFrom_date()==null|| loginUsersRequests.getFrom_date().equals("")){
-					loginUsersRequests.setFrom_date(loginUsersRequests.getRequest_date());
+					loginUsersRequests.setFrom_date(loginUsersRequests.getPeriod_from());
 				}
 				if(loginUsersRequests.getTo_date()==null|| loginUsersRequests.getTo_date().equals("")){
-					loginUsersRequests.setTo_date(loginUsersRequests.getRequest_date());
+					loginUsersRequests.setTo_date(loginUsersRequests.getPeriod_to());
 				}
 			}
 			log.debug("---requestType from jsp---"+request.getParameter("requestType"));

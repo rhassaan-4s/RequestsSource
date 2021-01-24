@@ -144,7 +144,11 @@ public class ReportsController extends BaseSimpleFormController{
 		log.debug("request date from " + dateFrom);
 		log.debug("request date to " + dateTo);
 		
-		List requests = requestsApprovalManager.getObjects(RequestTypes.class);
+//		List requests = requestsApprovalManager.getObjects(RequestTypes.class);
+		List orderBy = new ArrayList();
+		orderBy.add("id");
+		List requests=requestsApprovalManager.getObjectsByParameterOrderedByFieldList(RequestTypes.class,"hidden" , new Integer(0), orderBy);
+		
 		List reList = new ArrayList();
 		
 		Settings settings = (Settings)request.getSession().getAttribute("settings");

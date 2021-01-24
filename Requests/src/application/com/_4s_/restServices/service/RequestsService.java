@@ -74,4 +74,6 @@ public interface RequestsService {// extends BaseManager {
 	public Map changePassword(PasswordWrapper passwordWrapper, User user);
 
 	public Map editUserInfo(UserWrapper userWrapper, Employee employee);
+
+	public Map getRequestTypes();
 }
