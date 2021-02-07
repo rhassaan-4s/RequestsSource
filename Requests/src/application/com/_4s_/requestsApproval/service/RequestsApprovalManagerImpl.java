@@ -2189,7 +2189,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	            if (rsp.containsKey("results")) {
 	                JSONArray matches = (JSONArray) rsp.get("results");
 	                String error = (String)rsp.get("error_message");
-	                log.debug("error " + error);
+	                log.debug("error string  " + error);
 	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
 	                formattedAddress = (String) data.get("formatted_address");
 	                log.debug("formatted address " + formattedAddress);

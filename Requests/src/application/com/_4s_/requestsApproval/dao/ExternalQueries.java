@@ -3511,7 +3511,7 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 	log.debug("password " + password);
 	log.debug("----sql 1---"+sql);
 
-	
+	log.debug("sql statement " + sql.toString());
 	List in=(List) jdbcTemplate.queryForList(sql.toString());
 	
 		
@@ -3593,7 +3593,7 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 			}
 		}
 		
-		log.debug("i " + i);
+		log.debug("i " + i + " attendanceType " + attendanceType +  " inDate " + inDate);
 		if(in.size()>(i+1)) {
 			inMap2 = (LinkedCaseInsensitiveMap)in.get(i+1);
 
@@ -3617,7 +3617,11 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 					i++;
 				}
 				log.debug("i " + i);
+			} else {
+				latitude2 = null;
+				longitude2 = null;
 			}
+			log.debug("longitude " + longitude2 + " latitude " + latitude2);
 		}
 		timeAttend.setTimeIn(attendanceTime.substring(10));
 		
@@ -3681,16 +3685,30 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 					
 					
 					timeAttend.setTimeOut(attendanceTime2.substring(10));
+					
+					
 										
 				} else {
 					timeAttend.setTimeOut(null);
+					longitude2=null;
+					latitude2=null;
+					timeAttend.setLongitude2(longitude2);
+					timeAttend.setLatitude2(latitude2);
 				}
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				log.debug("parsing exception of attendanceTime2");
 				e.printStackTrace();
 			}
+		} else {
+			timeAttend.setTimeOut(null);
+			longitude2=null;
+			latitude2=null;
+			timeAttend.setLongitude2(longitude2);
+			timeAttend.setLatitude2(latitude2);
 		}
+		
+		log.debug("lat2 " + timeAttend.getLatitude2() + " long2 " + timeAttend.getLongitude2());
 		i++;
 		
 	}
