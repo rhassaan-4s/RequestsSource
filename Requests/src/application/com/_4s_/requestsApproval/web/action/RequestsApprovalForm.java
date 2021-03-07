@@ -62,6 +62,9 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 		if (reqId != null) {
 			LoginUsersRequests requestInfo = (LoginUsersRequests) requestsApprovalManager
 					.getObject(LoginUsersRequests.class, new Long(reqId));
+			log.debug("request info " + requestInfo);
+			log.debug("model " + model);
+			log.debug(requestInfo.getPosted());
 			model.put("posted",requestInfo.getPosted());
 			List<String> orderfieldList = new ArrayList();
 			orderfieldList.add(new String("order"));
@@ -111,111 +114,118 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 					log.debug("-----temp id---"+temp.getId());
 					log.debug("-----temp group--"+temp.getGroup_id().getId());
 					
-					empReqApproval = (EmpReqApproval) requestsApprovalManager.getObjectByTwoObjects(EmpReqApproval.class,"level_id", temp, "req_id", requestInfo);
-					log.debug("------empreqapp-----"+empReqApproval.getId());
+					List<String> orderfieldListApproval = new ArrayList();
+					orderfieldListApproval.add(new String("level_id"));
+					List apps = requestsApprovalManager.getObjectsByThreeParametersThirdNotNullOrderedByFieldList(EmpReqApproval.class,"level_id", temp, "req_id", requestInfo,"approval_date",orderfieldListApproval);
 					
-					log.debug("------id ele wafe2-----"+empReqApproval.getUser_id().getId());
-					
-					log.debug("------code ele wafe2-----"+empReqApproval.getUser_id().getEmpCode());
-					model.put("approvedBy", empReqApproval.getUser_id().getEmpCode());
-					log.debug("------code ele da5el-----"+emp.getEmpCode());
-					model.put("operator", emp.getEmpCode());
-					log.debug("---- i t7t---"+i);
-					log.debug("---i==empReqAcc.size()-1-------"+(i==empReqAcc.size()-1));
-					if((i+1)<empReqAcc.size() || (i==empReqAcc.size()-1)){
-						try{
-							model.put("lastOne", "false");
-							EmpReqTypeAcc nextTemp=(EmpReqTypeAcc)empReqAcc.get(i+1);
-							log.debug("-----nextTemp id---"+nextTemp.getId());
-							log.debug("-----nextTemp group--"+nextTemp.getGroup_id().getId());
-							EmpReqApproval empReqApprovalNext= new EmpReqApproval();
-							empReqApprovalNext = (EmpReqApproval) requestsApprovalManager.getObjectByTwoObjects(EmpReqApproval.class,"level_id", nextTemp, "req_id", requestInfo);
-							log.debug("------empReqApprovalNext.getId()!null nor ''----");
-							log.debug("------empReqApprovalNext-----"+empReqApprovalNext.getId());
-							model.put("lastOne", "false");
-						}
-						catch (Exception e) {
-							model.put("lastOne", "false");
-							if(empReqApproval.getUser_id().getEmpCode().equals(emp.getEmpCode())){
-								log.debug("---empReqApproval.getReq_id().getPosted()---"+empReqApproval.getReq_id().getPosted());
-								if(empReqApproval.getReq_id().getPosted()==0){
-									idToBeCanceled=empReqApproval.getId();
-									log.debug("------idToBeCanceled-----"+idToBeCanceled);
-									approvalRequest.put("idToBeCanceled", idToBeCanceled);
-									log.debug("----catch----no empReqApprovalNext-----");
-									
-									log.debug("--------cancelApproval-before---"+cancelApproval);
-									if(cancelApproval!=null && !cancelApproval.equals("")){
-										log.debug("--------cancelApproval----"+cancelApproval);
-										requestsApprovalManager.removeObject(EmpReqApproval.class, idToBeCanceled);
-										log.debug("----true---");
-										requestInfo.setApproved(new Long(0));
-										log.debug("--requestInfo.getApproved()---"+requestInfo.getApproved());
-										log.debug("----true---after--");
-										String done=request.getParameter("done");
-										if(done!=null){
-											model.put("done", done);
-										}
-									}
-								}
-								else{
-									model.put("lastOne", "false");
-								}
-							}else{
+					if (apps.size()>0) {
+						empReqApproval = (EmpReqApproval)apps.get(0);
+
+						log.debug("------empreqapp-----"+empReqApproval.getId());
+
+						log.debug("------id ele wafe2-----"+empReqApproval.getUser_id().getId());
+
+						log.debug("------code ele wafe2-----"+empReqApproval.getUser_id().getEmpCode());
+						model.put("approvedBy", empReqApproval.getUser_id().getEmpCode());
+						log.debug("------code ele da5el-----"+emp.getEmpCode());
+						model.put("operator", emp.getEmpCode());
+						log.debug("---- i t7t---"+i);
+						log.debug("---i==empReqAcc.size()-1-------"+(i==empReqAcc.size()-1));
+						if((i+1)<empReqAcc.size() || (i==empReqAcc.size()-1)){
+							try{
+								model.put("lastOne", "false");
+								EmpReqTypeAcc nextTemp=(EmpReqTypeAcc)empReqAcc.get(i+1);
+								log.debug("-----nextTemp id---"+nextTemp.getId());
+								log.debug("-----nextTemp group--"+nextTemp.getGroup_id().getId());
+								EmpReqApproval empReqApprovalNext= new EmpReqApproval();
+								empReqApprovalNext = (EmpReqApproval) requestsApprovalManager.getObjectByTwoObjects(EmpReqApproval.class,"level_id", nextTemp, "req_id", requestInfo);
+								log.debug("------empReqApprovalNext.getId()!null nor ''----");
+								log.debug("------empReqApprovalNext-----"+empReqApprovalNext.getId());
 								model.put("lastOne", "false");
 							}
+							catch (Exception e) {
+								model.put("lastOne", "false");
+								if(empReqApproval.getUser_id().getEmpCode().equals(emp.getEmpCode())){
+									log.debug("---empReqApproval.getReq_id().getPosted()---"+empReqApproval.getReq_id().getPosted());
+									if(empReqApproval.getReq_id().getPosted()==0){
+										idToBeCanceled=empReqApproval.getId();
+										log.debug("------idToBeCanceled-----"+idToBeCanceled);
+										approvalRequest.put("idToBeCanceled", idToBeCanceled);
+										log.debug("----catch----no empReqApprovalNext-----");
+
+										log.debug("--------cancelApproval-before---"+cancelApproval);
+										if(cancelApproval!=null && !cancelApproval.equals("")){
+											log.debug("--------cancelApproval----"+cancelApproval);
+											requestsApprovalManager.removeObject(EmpReqApproval.class, idToBeCanceled);
+											log.debug("----true---");
+											requestInfo.setApproved(new Long(0));
+											log.debug("--requestInfo.getApproved()---"+requestInfo.getApproved());
+											log.debug("----true---after--");
+											String done=request.getParameter("done");
+											if(done!=null){
+												model.put("done", done);
+											}
+										}
+									}
+									else{
+										model.put("lastOne", "false");
+									}
+								}else{
+									model.put("lastOne", "false");
+								}
+							}
+
+						}
+						else{
+							model.put("lastOne", "false");
 						}
 
-					}
-					else{
-						model.put("lastOne", "false");
-					}
-					
-					approvalRequest = new HashMap();
+						approvalRequest = new HashMap();
 
-					approvalRequest.put("title", temp.getGroup_id().getTitle());
-					log.debug("-----title of group-----"+temp.getGroup_id().getTitle());
-					approvalRequest.put("id", temp.getId());
-					approvalRequest.put("status", empReqApproval.getApproval());
-					log.debug("-----status-empReqApproval.getApproval()--"+empReqApproval.getApproval());
-					approvalRequest.put("user", empReqApproval.getUser_id().getName());
-					log.debug("-----user-----"+empReqApproval.getUser_id().getName());
-					approvalRequest.put("note", empReqApproval.getNote());
-					approvalList.add(approvalRequest);
+						approvalRequest.put("title", temp.getGroup_id().getTitle());
+						log.debug("-----title of group-----"+temp.getGroup_id().getTitle());
+						approvalRequest.put("id", temp.getId());
+						approvalRequest.put("status", empReqApproval.getApproval());
+						log.debug("-----status-empReqApproval.getApproval()--"+empReqApproval.getApproval());
+						approvalRequest.put("user", empReqApproval.getUser_id().getName());
+						log.debug("-----user-----"+empReqApproval.getUser_id().getName());
+						approvalRequest.put("note", empReqApproval.getNote());
+						approvalList.add(approvalRequest);
 
-					/**
-					 * Detect if access level is finished to hide submit button
-					 ***/
-					if ((i == (empReqAcc.size() - 1))){
-						log.debug("-------last one---- & not posted");
-						model.put("lastOne", "true");
-						showbSubmit = "0";
-					}else{
-						model.put("lastOne", "false");
-					}
-					/**
-					 * Detect if last access level is rejected to hide submit
-					 * button
-					 **/
-					if (empReqApproval.getApproval() == 0) {
-						log.debug("---empReqApproval.getApproval() == 0----cancelApproval---"+cancelApproval);
-						if(requestInfo.getApproved()==0 && (cancelApproval==null || cancelApproval.equals(""))){
-							log.debug("------pproved=0-ddd--");
-							requestInfo.setApproved(new Long(99));
+						/**
+						 * Detect if access level is finished to hide submit button
+						 ***/
+						if ((i == (empReqAcc.size() - 1))){
+							log.debug("-------last one---- & not posted");
+							model.put("lastOne", "true");
+							showbSubmit = "0";
+						}else{
+							model.put("lastOne", "false");
 						}
-						requestsApprovalManager.saveObject(requestInfo);
-						//showbSubmit = "0";
-						break;
+						/**
+						 * Detect if last access level is rejected to hide submit
+						 * button
+						 **/
+						if (empReqApproval.getApproval() == 0) {
+							log.debug("---empReqApproval.getApproval() == 0----cancelApproval---"+cancelApproval);
+							if(requestInfo.getApproved()==0 && (cancelApproval==null || cancelApproval.equals(""))){
+								log.debug("------pproved=0-ddd--");
+								requestInfo.setApproved(new Long(99));
+							}
+							requestsApprovalManager.saveObject(requestInfo);
+							//showbSubmit = "0";
+							break;
 
-					}else if(i == (empReqAcc.size() - 1)){
-						log.debug("---last one ---cancelApproval-"+cancelApproval);
-						log.debug("--------requestInfo.getApproved()------"+requestInfo.getApproved());
-						if(requestInfo.getApproved()==0 && (cancelApproval==null || cancelApproval.equals(""))){
-							log.debug("------pproved=0---");
-							requestInfo.setApproved(new Long(1));
+						}else if(i == (empReqAcc.size() - 1)){
+							log.debug("---last one ---cancelApproval-"+cancelApproval);
+							log.debug("--------requestInfo.getApproved()------"+requestInfo.getApproved());
+							if(requestInfo.getApproved()==0 && (cancelApproval==null || cancelApproval.equals(""))){
+								log.debug("------pproved=0---");
+								requestInfo.setApproved(new Long(1));
+							}
+							requestsApprovalManager.saveObject(requestInfo);
+
 						}
-						requestsApprovalManager.saveObject(requestInfo);
-						
 					}
 				} catch (Exception e) {
 					log.debug("execption " + e);

@@ -16,7 +16,31 @@
 </head>
 <body>
 <script type="text/javascript">
+	var options = {
+		  enableHighAccuracy: true,
+		  timeout: 10000,
+		  maximumAge: 0
+		};
 
+		function success(pos) {
+		  var crd = pos.coords;
+
+		  //alert (crd.latitude+","+crd.longitude+","+crd.accuracy);
+		  document.getElementById("longitude").setAttribute("value", crd.longitude);
+		  document.getElementById("latitude").setAttribute("value", crd.latitude);
+		  document.getElementById("accuracy").setAttribute("value", crd.accuracy);
+		  
+		//  console.log('Your current position is:');
+		//  console.log('Latitude : ${crd.latitude}');
+		//  console.log('Longitude: ${crd.longitude}');
+		//  console.log('More or less ${crd.accuracy} meters.');
+		}
+
+		function error(err) {
+		  alert(err.code + " - " + err.message);
+		}
+
+		navigator.geolocation.getCurrentPosition(success, error, options);
 </script>
 <%
 	Calendar cal = Calendar.getInstance();
@@ -68,6 +92,10 @@
 					 <c:set var="dateNow" value="<%=nowDate%>" />
 					 
 					 <input type="hidden"  id="empRequestTypeId" name="empRequestTypeId" value="${empRequestTypeId }"/>
+					   <input type="hidden" name="longitude" id="longitude" value=""/>
+					 <input type="hidden" name="latitude" id="latitude" value=""/>
+					 <input type="hidden" name="accuracy" id="accuracy" value=""/>
+					 
 					<table border=0 cellspacing=1 cellpadding=0 id="ep" style="margin-right:40px">
 						<tr id="head_1_ep">
 							<td class="bodyBold" colspan=4 nowrap>

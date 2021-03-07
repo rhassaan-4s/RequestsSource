@@ -63,9 +63,13 @@ import com._4s_.requestsApproval.dao.RequestsApprovalDAO;
 import com._4s_.requestsApproval.model.AccessLevels;
 import com._4s_.requestsApproval.model.EmpReqApproval;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
+import com._4s_.requestsApproval.model.GroupAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.Vacation;
+import com._4s_.requestsApproval.web.exceptions.ApprovalFirstPriorityNullException;
+import com._4s_.requestsApproval.web.exceptions.ApprovedBeforeException;
+import com._4s_.requestsApproval.web.exceptions.RequestAlreadyRejectedException;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
@@ -1005,8 +1009,10 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		list.add("empCode");
 		/////////////////////////////////////////
 		
-		if(statusId!=null && !statusId.equals("")){
+		if(statusId!=null && !statusId.equals("") && !statusId.equals("null")){
 			status = new Long(statusId);
+		} else {
+			status = null;
 		}
 		
 		log.debug("logged in user " + loggedInUser.getEmpCode());
@@ -1159,6 +1165,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		}
 		
 		List empReqAcc = new ArrayList();
+		List loggedInEmpGroupAccessLevels = new ArrayList();
 		if (requestInfo != null) {
 			List<String> orderfieldList = new ArrayList();
 			orderfieldList.add(new String("order"));
@@ -1168,9 +1175,37 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 							EmpReqTypeAcc.class, "req_id", requestInfo
 									.getRequest_id(), "emp_id", requestInfo
 									.getLogin_user(), orderfieldList);
+			
+			
 			EmpReqApproval empReqApproval = null;
 
 			loginUsers=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+			
+			List loggedInLevels = getObjectsByParameter(AccessLevels.class, "emp_id", loginUsers);
+			
+			 
+			AccessLevels loggedInAccessLevel = null;
+			levelFind: for (int j=0;j<loggedInLevels.size();j++) {
+				AccessLevels tempLoggedInAccessLevel = (AccessLevels)loggedInLevels.get(j);
+				for(int k = 0; k<empReqAcc.size(); k++) {
+					EmpReqTypeAcc tempAcc =(EmpReqTypeAcc)empReqAcc.get(k); 
+					if (tempAcc.getGroup_id().equals(tempLoggedInAccessLevel.getLevel_id())) {
+						loggedInAccessLevel = tempLoggedInAccessLevel;
+						log.debug("breaking");
+						break levelFind;
+					}
+				}
+			}
+			
+			log.debug("loggedInAccessLevel.getLevel_id() " + loggedInAccessLevel.getLevel_id().getId());
+			log.debug("req_id " + requestInfo.getRequest_id().getId());
+			log.debug("emp_id " + requestInfo.getLogin_user().getId());
+			List loggedInEmpReqAcc = getObjectsByThreeParametersOrderedByFieldList(
+					EmpReqTypeAcc.class, "req_id", requestInfo.getRequest_id(), 
+					"emp_id", requestInfo.getLogin_user(),
+							"group_id",loggedInAccessLevel.getLevel_id(), orderfieldList);
+			
+			log.debug("loggedInEmpReqAcc " + loggedInEmpReqAcc.size());
 			Map approvalRequest = new HashMap();
 			List<String> ordered1= new ArrayList();
 			ordered1.add("emp_id");
@@ -1186,6 +1221,23 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			
 			if(empReqAcc.size()>0){
 				log.debug("---- size of list---"+empReqAcc.size());
+				
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				///////////////////////////////////will get the group access level of the logged in employee to approve for all group members///////////////////////
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				EmpReqTypeAcc loggedInAcc = null;
+				GroupAcc loggedInGroupAcc = null;
+				if (loggedInEmpReqAcc.size()>0) {
+					loggedInAcc=(EmpReqTypeAcc)loggedInEmpReqAcc.get(0);
+					loggedInGroupAcc = loggedInAcc.getGroup_id();
+					log.debug("loggedInGroupAcc " + loggedInGroupAcc.getId());
+					loggedInEmpGroupAccessLevels = loggedInGroupAcc.getAccessLevel();
+				}
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			
 			for (int i = 0; i < empReqAcc.size(); i++) {
 				log.debug("---- i equals ---"+i);
 				try {
@@ -1208,7 +1260,22 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					log.debug("-----temp group--"+temp.getGroup_id().getId());
 					
 					log.debug("will get emp req approval with level_id " + temp.getId() + " req_id " + requestInfo.getId());
-					empReqApproval = (EmpReqApproval) getObjectByTwoObjects(EmpReqApproval.class,"level_id", temp, "req_id", requestInfo);
+					List<String> orderfieldListApproval = new ArrayList();
+					orderfieldListApproval.add(new String("level_id"));
+					List approvals = getObjectsByThreeParametersThirdNotNullOrderedByFieldList(EmpReqApproval.class, "level_id", temp, "req_id", requestInfo, "approval_date",orderfieldListApproval );
+					log.debug("approval list size " + approvals.size());
+					if (approvals.size()>0) {
+						empReqApproval = (EmpReqApproval)approvals.get(0);
+					} else {
+						if (i==0 && !loggedInGroupAcc.equals(temp.getGroup_id())) {
+							//first priority didn't approve - and first priority isn't the one approving now
+							log.debug("first priority didn't approve - and first priority isn't the one approving now");
+							throw new ApprovalFirstPriorityNullException("1st Priority Manager should approve first (The logged in employee isn't privileged to approve request "+requestInfo.getRequestNumber()+")");
+						} else {
+							log.debug("no approvals saved yet will go to exception catch for level " + temp +" and req id " + requestInfo.getId());
+							throw new Exception();
+						}
+					}
 					log.debug("empReqApproval " + empReqApproval);
 					if (empReqApproval != null) {
 						approvedCount++;
@@ -1217,6 +1284,11 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 						log.debug("------id ele wafe2-----"+empReqApproval.getUser_id().getId());
 
 						log.debug("------code ele wafe2-----"+empReqApproval.getUser_id().getEmpCode());
+						
+						if (emp.getEmpCode().equals(empReqApproval.getUser_id().getEmpCode())) {
+							//////// user approved before - abort
+							throw new ApprovedBeforeException("User approved request before");
+						}
 					} else {
 						log.debug("no approvals saved yet will go to exception catch for level " + temp +" and req id " + requestInfo.getId());
 						throw new Exception();
@@ -1226,7 +1298,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 //					model.put("operator", emp.getEmpCode());
 					log.debug("---- i t7t---"+i);
 					log.debug("---i==empReqAcc.size()-------"+(empReqAcc.size()));
-					if((i+1)<empReqAcc.size() || (i==empReqAcc.size()-1)){
+					if((i+1)<empReqAcc.size()){
 						try{
 							log.debug("trying to get next access group");
 //							model.put("lastOne", "false");
@@ -1240,6 +1312,11 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 							log.debug("------empReqApprovalNext-----"+empReqApprovalNext);
 //							model.put("lastOne", "false");
 							lastOne = false;
+							
+							if (empReqApprovalNext==null) {
+								log.debug("no approvals saved yet will go to exception catch for level " + temp +" and req id " + requestInfo.getId());
+								throw new Exception();
+							}
 						}
 						catch (Exception e) {
 //							model.put("lastOne", "false");
@@ -1316,21 +1393,23 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					 ***/
 					log.debug("empReqAcc.size() " + empReqAcc.size());
 					log.debug(" i " + i);
-					if ((i == (empReqAcc.size() - 1))){
-						log.debug("-------last one---- & not posted");
-//						model.put("lastOne", "true");
-						lastOne = true;
-						showbSubmit = "0";
-						
-						restStatus.setStatus("false");
-						restStatus.setCode("309");
-						restStatus.setMessage("Request approvals had been finished");
-						response.put("Status", restStatus);
-						return response;
-					}else{
-//						model.put("lastOne", "false");
-						lastOne = false;
-					}
+					////////////////commented for test purpose the last priority access level isn't able to approve///////////////////////////////
+					
+//					if ((i == (empReqAcc.size() - 1))){
+//						log.debug("-------last one---- & not posted");
+////						model.put("lastOne", "true");
+//						lastOne = true;
+//						showbSubmit = "0";
+//						
+//						restStatus.setStatus("false");
+//						restStatus.setCode("309");
+//						restStatus.setMessage("Request approvals had been finished");
+//						response.put("Status", restStatus);
+//						return response;
+//					}else{
+////						model.put("lastOne", "false");
+//						lastOne = false;
+//					}
 					/**
 					 * Detect if last access level is rejected to hide submit
 					 * button
@@ -1343,12 +1422,8 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 						}
 						saveObject(requestInfo);
 						showbSubmit = "0";
-						restStatus.setStatus("false");
-						restStatus.setCode("310");
-						restStatus.setMessage("Request had already been rejected");
-						response.put("Status", restStatus);
-						return response;
-//						break;
+						
+						throw new RequestAlreadyRejectedException("Request had already been rejected");
 
 					}else if(i == (empReqAcc.size() - 1)){
 						log.debug("---last one ---cancelApproval-"+cancelApproval);
@@ -1359,8 +1434,31 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 						}
 						saveObject(requestInfo);
 					}
-				} catch (Exception e) {
+				} catch (ApprovalFirstPriorityNullException appEx) {
+					restStatus.setStatus("false");
+					restStatus.setCode("308");
+					log.debug("priority approvals 1st");
+					restStatus.setMessage(appEx.getMessage());
+					response.put("Status", restStatus);
+					return response;
+				} catch (ApprovedBeforeException appBefEx) {
+					restStatus.setStatus("false");
+					restStatus.setCode("309");
+					restStatus.setMessage(appBefEx.getMessage());
+					response.put("Status", restStatus);
+					return response;
+				}catch(RequestAlreadyRejectedException rejectedEx) {
+					restStatus.setStatus("false");
+					restStatus.setCode("310");
+					restStatus.setMessage(rejectedEx.getMessage());
+					response.put("Status", restStatus);
+					return response;
+				}catch (Exception e) {
 					log.debug("approval not present and should be created - execption " + e);
+					StackTraceElement[] stack = e.getStackTrace();
+					for(i=0;i<stack.length;i++) {
+						log.debug(stack[i]);
+					}
 					e.printStackTrace();
 //					StackTraceElement[] trace =  e.getStackTrace();
 //					for(int j=0; j<trace.length; j++) {
@@ -1375,7 +1473,8 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					lastOne = false;
 					EmpReqTypeAcc temp = new EmpReqTypeAcc();
 
-					temp = (EmpReqTypeAcc) empReqAcc.get(i);
+//					temp = (EmpReqTypeAcc) empReqAcc.get(i);
+					temp = loggedInAcc;
 					log.debug("------catch temp ---"+temp.getGroup_id().getId());
 					log.debug("------catch title---"+temp.getGroup_id().getTitle());
 					
@@ -1494,20 +1593,36 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				log.debug("requestOb " + requestOb);
 				requestOb = requestInfo;
 				log.debug("requestOb 2 " + requestOb);
-//				List empReqAcc
+				//				List empReqAcc
 				empReqTypeAcc = (EmpReqTypeAcc) getObject(
 						EmpReqTypeAcc.class, new Long(accId));
 
-						EmpReqApproval empReqApproval = new EmpReqApproval();
 
-				empReqApproval.setApproval(new Integer(status));
-				empReqApproval.setReq_id(requestOb);
-				empReqApproval.setLevel_id(empReqTypeAcc);
-				empReqApproval.setUser_id(loginUsers);
+				///////////////////////////////////////////////////////////////////////////////
+				//////////////////////will add group access approvals here////////////////////
+				/////////////////////////////////////////////////////////////////////////////
 				
-				if (approval.getModifiedDate()!=null && !approval.getModifiedDate().isEmpty()) {
-					Date modify = null;
-					MultiCalendarDate mCalDateModify = new MultiCalendarDate();
+				Iterator groupLevelsItr = loggedInEmpGroupAccessLevels.iterator();
+				while (groupLevelsItr.hasNext()) {
+					AccessLevels levelLoggedInGroup = (AccessLevels)groupLevelsItr.next();
+
+					LoginUsers accessLevelLoggedInUser = (LoginUsers)getObject(LoginUsers.class, levelLoggedInGroup.getEmp_id().getId());
+
+					EmpReqApproval empReqApproval = new EmpReqApproval();
+
+					empReqApproval.setApproval(new Integer(status));
+					empReqApproval.setReq_id(requestOb);
+					empReqApproval.setLevel_id(empReqTypeAcc);
+					empReqApproval.setUser_id(accessLevelLoggedInUser);//loginUsers
+					if (loginUsers.equals(accessLevelLoggedInUser)) {
+						//the actual user to approve 
+						log.debug("this is the actual user to approve " + loginUsers.getEmpCode());
+						empReqApproval.setApproval_date(Calendar.getInstance().getTime());
+					}
+
+					if (approval.getModifiedDate()!=null && !approval.getModifiedDate().isEmpty()) {
+						Date modify = null;
+						MultiCalendarDate mCalDateModify = new MultiCalendarDate();
 						DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 						try {
 							modify = df.parse(approval.getModifiedDate());
@@ -1515,15 +1630,18 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 							// TODO Auto-generated catch block
 							log.debug(e.getMessage());
 						}
-						
+
 						empReqApproval.setNote(approval.getNotes() );//+ " - Date has been modified by " + emp.getFirstName() + " from " + requestOb.getPeriod_from() + " to " + modify
 						log.debug("modified date " + modify);
-				} else {
-					empReqApproval.setNote(approval.getNotes());
-				}
-				empReqApproval.setApproval(new Integer(status));
+					} else {
+						empReqApproval.setNote(approval.getNotes());
+					}
+					empReqApproval.setApproval(new Integer(status));
 
-				saveObject(empReqApproval);
+					saveObject(empReqApproval);
+					flush();
+				}
+				////////////////////////////////////////////////////////////////////////////
 				approvedCount++;
 				log.debug("test1");
 				if(approval.getApprove().equals("0")){
@@ -1535,57 +1653,57 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				}
 				else {
 					log.debug("test3");
-//					if (approvalList.size() == empReqAcc.size()) {
+					//					if (approvalList.size() == empReqAcc.size()) {
 					log.debug("approvedCount " + approvedCount);
 					log.debug("empReqAcc.size() " + empReqAcc.size());
 					if(approvedCount==empReqAcc.size()) {
 						log.debug("test4");
 						requestOb.setApproved(new Long(1));
 						log.debug("approval.getModifiedDate() " + approval.getModifiedDate());
-						
+
 						if (approval.getModifiedDate()!=null && !approval.getModifiedDate().isEmpty()) {
 							Date modify = null;
 							MultiCalendarDate mCalDateModify = new MultiCalendarDate();
-								DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-								try {
-									modify = df.parse(approval.getModifiedDate());
-								} catch (ParseException e) {
-									// TODO Auto-generated catch block
-									log.debug(e.getMessage());
-								}
-								
-								requestOb.setFrom_date_history(requestOb.getFrom_date());
-								requestOb.setFrom_date(modify);
-								requestOb.setPeriod_from(modify);
-								requestOb.setManagerModifiedDate(emp);
-								requestOb.setNotes(requestOb.getNotes()+ "(Attendance had been modified by manager)");
-								log.debug("modified date " + modify);
+							DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+							try {
+								modify = df.parse(approval.getModifiedDate());
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								log.debug(e.getMessage());
+							}
+
+							requestOb.setFrom_date_history(requestOb.getFrom_date());
+							requestOb.setFrom_date(modify);
+							requestOb.setPeriod_from(modify);
+							requestOb.setManagerModifiedDate(emp);
+							requestOb.setNotes(requestOb.getNotes()+ "(Attendance had been modified by manager)");
+							log.debug("modified date " + modify);
 						}
 						saveObject(requestOb);
 					} else {
 						if (approval.getModifiedDate()!=null && !approval.getModifiedDate().isEmpty()) {
 							Date modify = null;
 							MultiCalendarDate mCalDateModify = new MultiCalendarDate();
-								DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-								try {
-									modify = df.parse(approval.getModifiedDate());
-								} catch (ParseException e) {
-									// TODO Auto-generated catch block
-									log.debug(e.getMessage());
-								}
-								
-								requestOb.setFrom_date_history(requestOb.getFrom_date());
-								requestOb.setFrom_date(modify);
-								requestOb.setPeriod_from(modify);
-								requestOb.setManagerModifiedDate(emp);
-								requestOb.setNotes(requestOb.getNotes()+ "(Attendance had been modified by manager)");
-								log.debug("modified date " + modify);
+							DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+							try {
+								modify = df.parse(approval.getModifiedDate());
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								log.debug(e.getMessage());
+							}
+
+							requestOb.setFrom_date_history(requestOb.getFrom_date());
+							requestOb.setFrom_date(modify);
+							requestOb.setPeriod_from(modify);
+							requestOb.setManagerModifiedDate(emp);
+							requestOb.setNotes(requestOb.getNotes()+ "(Attendance had been modified by manager)");
+							log.debug("modified date " + modify);
 						}
 						saveObject(requestOb);
 					}
 				}
-				
-				
+
+
 				restStatus.setStatus("true");
 				restStatus.setCode("200");
 				restStatus.setMessage("Successful Transaction");
@@ -2039,8 +2157,8 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		Map attendanceToday = checkAttendance(date, emp.getEmpCode());
 		AttendanceStatus attendanceStatus = (AttendanceStatus)attendanceToday.get("Response"); 
 		
-		log.debug("attendanceStatus.getSignIn() " + attendanceStatus.getSignIn());
-		log.debug("attendanceStatus.getSignOut() " + attendanceStatus.getSignOut());
+		log.debug("attendanceStatus.getSignIn() " + attendanceStatus.getSignIn() + " time " + attendanceStatus.signInTime);
+		log.debug("attendanceStatus.getSignOut() " + attendanceStatus.getSignOut() + " time " + attendanceStatus.signOutTime);
 		
 		SimpleDateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		
@@ -2070,11 +2188,13 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		log.debug("attendanceType " + attendanceType);
 		
 //		log.debug("date.getTime() < attendanceStatus.getSignInTime() " + (date.getTime() < attendanceStatus.getSignInTime()));
-		
+		log.debug("attendanceStatus.getSignIn().booleanValue() " + attendanceStatus.getSignIn().booleanValue() 
+				+ " attendanceStatus.getSignOut().booleanValue() " + attendanceStatus.getSignOut().booleanValue());
 		RestStatus restStatus = new RestStatus();
 		if (attendanceType.equals(new Long(10))
 				&& (attendanceStatus.getSignIn().booleanValue()==true && attendanceStatus.getSignOut().booleanValue()==false)) {
 			/////////////////////check sign in in the same day//////////////////////////////////////////////
+			log.debug("signed in before");
 			restStatus.setCode("325");
 			restStatus.setMessage("User signed In Before and didn't signed out");
 			restStatus.setStatus("False");
@@ -2084,6 +2204,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				&& ((attendanceStatus.getSignIn().booleanValue()==false && attendanceStatus.getSignOut().booleanValue()==false)
 						|| (attendanceStatus.getSignIn().booleanValue()==true && attendanceStatus.getSignOut().booleanValue()==true) )) {
 			/////////////////////check sign in in the same day//////////////////////////////////////////////
+			log.debug("User didn't sign In yet");
 			restStatus.setCode("326");
 			restStatus.setMessage("User didn't sign In yet");
 			restStatus.setStatus("False");
@@ -2093,6 +2214,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				&& (attendanceStatus.getSignIn().booleanValue()==true && attendanceStatus.getSignOut().booleanValue()==false)
 				&& date.getTime() < attendanceStatus.getSignInTime()) {
 			/////////////////////check sign in in the same day//////////////////////////////////////////////
+			log.debug("Sign out date is before sign in date");
 			restStatus.setCode("327");
 			restStatus.setMessage("Sign out date is before sign in date");
 			restStatus.setStatus("False");

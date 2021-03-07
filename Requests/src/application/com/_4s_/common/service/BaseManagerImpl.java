@@ -193,6 +193,14 @@ public class BaseManagerImpl implements BaseManager {
 		 return baseDAO.getObjectsByThreeParametersOrderedByFieldList(clazz, parameter1, value1, parameter2, value2, parameter3, value3, fieldList);
 	 }
 	 
+	 public List getObjectsByThreeParametersThirdNotNullOrderedByFieldList(final Class clazz,
+				final String parameter1, final Object value1,
+				final String parameter2, final Object value2,
+				final String parameter3, 
+				final List<String> fieldList){
+		 return baseDAO.getObjectsByThreeParametersThirdNotNullOrderedByFieldList(clazz, parameter1, value1, parameter2, value2, parameter3, fieldList);
+	 }
+	 
 	 public Object getObjectByTwoObjects(final Class clazz, final String parameter1, final Object value1,final String parameter2, final Object value2){
 		 return baseDAO.getObjectByTwoObjects(clazz, parameter1, value1, parameter2, value2);
 	 }

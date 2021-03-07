@@ -184,11 +184,13 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 				} else {
 					Long attendanceType = null;
 					Employee emp = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", loginUsersRequests.getEmpCode());
-					if (loginUsersRequests.getRequest_id().getId().equals(new Long(10))) {
-						attendanceType  = new Long(1);
-					} else if (loginUsersRequests.getRequest_id().getId().equals(new Long(11))) {
-						attendanceType  = new Long(2);
-					}
+//					if (loginUsersRequests.getRequest_id().getId().equals(new Long(10))) {
+//						attendanceType  = new Long(1);
+//					} else if (loginUsersRequests.getRequest_id().getId().equals(new Long(11))) {
+//						attendanceType  = new Long(2);
+//					}
+					attendanceType = loginUsersRequests.getRequest_id().getId();
+					
 					RestStatus status = requestsApprovalManager.validateSignInOut(attendanceType, now, emp);
 					if (status.getStatus().equals("False")) {
 						String statusMsg = status.getMessage();
@@ -265,6 +267,8 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		if (accuracy!=null && !accuracy.isEmpty()) {
 			if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
 				address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
+			} else {
+				address = "Address is not accurate to be saved";
 			}
 		}
 		
@@ -333,7 +337,7 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 			requestsApprovalManager.saveObject(loginUsersRequests);
 			RequestApproval approvals = new RequestApproval();
 			approvals.setApprove("1");
-			approvals.setNotes("Android Sign in/out Automatic Approval");
+			approvals.setNotes("Web Sign in/out Automatic Approval");
 			approvals.setRequestId(loginUsersRequests.getId()+"");
 			requestsApprovalManager.automaticApprovalsAccessLevels(approvals, loginUsersRequests);
 			String url="attendanceSignInOutForm.html?done=true&requestId="+reqId;

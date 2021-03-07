@@ -651,6 +651,24 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 		 return list;
 		}
 	 
+	 public List getObjectsByThreeParametersThirdNotNullOrderedByFieldList(final Class clazz,
+				final String parameter1, final Object value1,
+				final String parameter2, final Object value2,
+				final String parameter3, 
+				final List<String> fieldList) {
+
+		 Criteria criteria = getCurrentSession().createCriteria(clazz).add(
+				 Expression.eq(parameter1, value1));
+		 criteria.add (Expression.eq(parameter2, value2));
+		 criteria.add (Expression.isNotNull(parameter3));
+		 criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		 for (int i = 0; i < fieldList.size(); i++) {
+			 criteria.addOrder(Property.forName(fieldList.get(i)).asc());
+		 }
+		 List list = (List) criteria.list();
+		 return list;
+		}
+	 
 	 public Object getObjectByTwoObjects(final Class clazz, final String parameter1, final Object value1,final String parameter2, final Object value2) {
 	        if (log.isDebugEnabled()) {
 	            log.debug("Getting object of class :"+ clazz +", with "+parameter1+" :"+ value1);

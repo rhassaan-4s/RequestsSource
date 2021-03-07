@@ -338,7 +338,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 
 
 									<c:choose>
-										<c:when test="${record.isInsideCompany==true}">
+										<c:when test="${record.isInsideCompany==1}">
 											<td nowrap title="${record.locationAddress}"><fmt:message
 													key="requestsApproval.caption.insideCompany" /></td>
 										</c:when>

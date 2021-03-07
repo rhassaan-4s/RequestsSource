@@ -4425,13 +4425,20 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 			where += " loginUsersReq.empCode between "+codeFrom+" and " + codeTo + " ";
 		}
 		///////////////////////////////////////////////////////////////////////////////
+		log.debug("status id " + statusId);
 		if (statusId!=null) {
-			if(where == null) {
-				where = " where ";
-			} else {
-				where += " and ";
+			String statusStr = "";
+			if (statusId.equals(new Long(0))) {
+				statusStr = " approvals.approval is null ";
+			} else if (statusId.equals(new Long(1))) {
+				statusStr = " (approvals.approval =1 or approvals.approval=2) ";
 			}
-			where += " loginUsersReq.approved = "+statusId;
+			if(outerSelectWhere == null) {
+				outerSelectWhere = " where ";
+			} else {
+				outerSelectWhere += " and ";
+			}
+			outerSelectWhere += statusStr;
 		}
 		
 		/////////////////////////////////////////////////////////////////////

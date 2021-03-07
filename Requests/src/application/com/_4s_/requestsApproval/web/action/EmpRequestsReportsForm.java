@@ -154,8 +154,12 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 		log.debug("--exactDateTo--"+exactDateTo);
 		
 		String statusId=request.getParameter("statusId");
-		if (statusId!= null && statusId.isEmpty()) {
-			statusId=null;
+		String status=request.getParameter("status");
+		Long statusIdLong = null;
+		log.debug("statusId " + statusId);
+		log.debug("status " + status);
+		if (statusId!=null && !statusId.isEmpty()) {
+			statusIdLong=Long.parseLong(statusId);
 		}
 		String codeFrom=request.getParameter("codeFrom");
 		String codeTo=request.getParameter("codeTo");
@@ -176,14 +180,18 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 			
 			if (!((dateFrom==null || dateFrom.isEmpty()) && (dateTo==null || dateTo.isEmpty()) 
 					&& (exactDateFrom==null || exactDateFrom.isEmpty()) && (exactDateTo==null || exactDateTo.isEmpty()))) {
-				//			tempneededRequestTypes = requestsApprovalManager.getRequestsForApprovalList(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId);
-				
+				model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
+				log.debug("status id 1 " + statusId);
+			}
+		} else {
+			if (!((dateFrom==null || dateFrom.isEmpty()) && (dateTo==null || dateTo.isEmpty()) 
+					&& (exactDateFrom==null || exactDateFrom.isEmpty()) && (exactDateTo==null || exactDateTo.isEmpty()))) {
 				model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
 			}
+			log.debug("status id 2 " + statusId);
 		}
-		model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
 		model.put("dateTo", dateTo);
-		model.put("status", statusId);
+		model.put("status", statusIdLong);
 		model.put("firstDay", formattedDate);
 		model.put("today", formatedToday);
 		model.put("requestType", requestType);
@@ -316,8 +324,12 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 		log.debug("--exactDateTo--"+exactDateTo);
 		
 		String statusId=request.getParameter("statusId");
-		if (statusId.isEmpty()) {
-			statusId=null;
+		String status=request.getParameter("status");
+		Long statusIdLong = null;
+		log.debug("statusId " + statusId);
+		log.debug("status " + status);
+		if (statusId!=null && !statusId.isEmpty()) {
+			statusIdLong=Long.parseLong(statusId);
 		}
 		String codeFrom=request.getParameter("codeFrom");
 		String codeTo=request.getParameter("codeTo");
@@ -337,12 +349,11 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 			List results = (List)model.get("results");
 			
 			int notApprovedCounter = 0; 
-			
-			if(check !=null && !check.equals(""))
-			{
+			List errorsList = new ArrayList();
+			if(check !=null && !check.equals("")) {
 				log.debug("**********************if for second*********************");
 				
-				List errorsList = new ArrayList();
+				
 				
 				for(int i=0;i<results.size();i++) {
 					log.debug("**********************inside for *********************");
@@ -379,13 +390,14 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 						approval.setRequestId(requestId+"");
 						Map approvalResult = requestsApprovalManager.approvalsAccessLevels(approval, loginUserRequest, emp);
 						log.debug("approval results " + approvalResult);
-						RestStatus status = (RestStatus)approvalResult.get("Status");
-						log.debug("status " + status);
-						log.debug("status " + status.getStatus());
-						if(status.getStatus().equals("false")) {
+						RestStatus status1 = (RestStatus)approvalResult.get("Status");
+						log.debug("status " + status1);
+//						log.debug("status " + status.getStatus());
+						if(status1!=null && status1.getStatus().equals("false")) {
 							log.debug("false");
+							log.debug(status1.getMessage());
 							notApprovedCounter++;
-							errorsList.add(status.getMessage());
+							errorsList.add(status1.getMessage());
 						}
 					}
 					
@@ -417,11 +429,16 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 			model.put("request_date_from", request_date_from);
 			model.put("request_date_to", request_date_to);
 			model.put("dateTo", dateTo);
-			model.put("status",statusId);
+			model.put("status",statusIdLong);
 			model.put("codeFrom", codeFrom);
 			model.put("codeTo", codeTo);
 			
-		return new ModelAndView("empRequestsReportsForm",model);
+			if(check !=null && !check.equals("") && errorsList.isEmpty()) {
+				String url="empRequestsReportsForm.html?requestType="+requestType+"&request_date_from="+request_date_from+"&request_date_to="+request_date_to+"&employeeCode="+emp_code+"&statusId="+statusId;
+				return new ModelAndView(new RedirectView(url),model);
+			} else {
+				return new ModelAndView("empRequestsReportsForm",model);	
+			}
 	}
 	
 	public static boolean isOnlyNumbers(String str){

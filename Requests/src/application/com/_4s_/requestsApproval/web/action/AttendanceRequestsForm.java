@@ -38,6 +38,7 @@ import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.restServices.json.RestStatus;
 import com._4s_.common.model.Employee;
+import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
 
@@ -157,76 +158,6 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 		if(done!=null && reqId!=null){
 			model.put("done", done);
 		}
-//		if(done!=null && reqId!=null){
-//			model.put("done", done);
-//			
-//			MimeMessage msg=mailSender.createMimeMessage();	
-//			MimeMessageHelper helper = new MimeMessageHelper(msg,"UTF-8");
-//			
-//			List toMgrs=new ArrayList();
-//			log.debug("---empId---"+emp.getId());
-//			LoginUsers employee= (LoginUsers) requestsApprovalManager.getObject(LoginUsers.class, emp.getId());
-//			log.debug("---employee---"+employee.getId());
-//			List fields=new ArrayList();
-//			fields.add("id");
-//			RequestTypes req=(RequestTypes) requestsApprovalManager.getObject(RequestTypes.class, Long.parseLong(reqId));
-//			List empAcc= (List)requestsApprovalManager.getObjectsByTwoParametersOrderedByFieldList(EmpReqTypeAcc.class, "emp_id", employee,"req_id",req,fields);
-//			for (int j = 0; j < empAcc.size(); j++) {
-//				EmpReqTypeAcc empacc= (EmpReqTypeAcc) empAcc.get(j);
-//				log.debug("---empreqacc---"+empacc.getId());
-//				log.debug("---group---"+empacc.getGroup_id().getId());
-//				List mgrs=new ArrayList();
-//				mgrs= (List) requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "level_id", empacc.getGroup_id());
-//				//toMgrs.addAll(toMgrs);
-//				log.debug("---mgrs list size---"+mgrs.size());
-//				for (int i = 0; i < mgrs.size(); i++) {
-//					AccessLevels mgr= (AccessLevels) mgrs.get(i);
-//					//toMgrs.add(mgr);
-//					log.debug("---mgr ---"+mgr.getEmp_id().getId());
-//					String mm="<html dir=\"rtl\" lang=\"ar\">";
-//					mm+="<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head>";
-//					mm+="<body>";
-//					
-//					mm+="<br>√” «–/ "+mgr.getEmp_id().getName();
-//					mm+="<br>·œÌﬂ ÿ·»«  ··„Ê«›ﬁÂ ⁄·ÌÂ« »—Ã«¡ «·«ÿ·«⁄ ⁄·ÌÂ« „‰: http://10.8.2.203:8080/Requests/security/login.html";
-//					mm+="<br>„⁄ Œ«·’ «·‘ﬂ—";
-//					
-//					try
-//					{	Properties props = new Properties();
-//						props.put("mail.smtp.starttls.enable","true");
-//						props.put( "mail.smtp.auth", "true" );
-//						props.put("mail.smtp.starttls.required", "true");
-//						props.put("mail.smtp.port", "25");
-//						//props.put("mail.smtp.host", getServletContext().getInitParameter("host"));
-//						
-//						mailSender.setJavaMailProperties(props);
-//						helper.setFrom("att@4s-systems.com");
-//						helper.setTo(mgr.getEmp_id().getEmail());
-//						//helper.setTo("wesamsobhy89@gmail.com");
-//						//mailSender.setHost(getServletContext().getInitParameter("host"));
-//				      // helper.setFrom(getServletContext().getInitParameter("username"));
-//						//helper.setTo(getServletContext().getInitParameter("to"));
-//						helper.setSubject("Requests to be approved");
-//						helper.setText(mm,true);
-//						helper.setSentDate(new Date());
-//						
-//						mailSender.send(msg);
-//						log.debug("mail sent to emp");
-//					}
-//					catch(MessagingException ex)
-//					{
-//						log.debug(ex.getMessage());
-//						log.debug(ex.getStackTrace());
-//					}
-//					catch(MailSendException me) {
-//						log.debug("can't send email");
-//					} finally {
-//						log.debug(">>>>>>>>>>>>>>>>>>>>>>> finally block >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-//					}
-//					
-//				}
-//			}
-//		}
 	
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>"+ Calendar.getInstance().getTime());
 		return model;
@@ -236,16 +167,6 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests)command;
-//		String req_type= request.getParameter("request_id");
-//		RequestTypes requestTypes = new RequestTypes();
-//		if(req_type.equals("10")){
-//			requestTypes.setId(new Long(10));
-//			requestTypes.setDescription("In");
-//		}else if(req_type.equals("11")){
-//			requestTypes.setId(new Long(11));
-//			requestTypes.setDescription("Out");
-//		}
-//		loginUsersRequests.setRequest_id(requestTypes);
 		log.debug("-------period from---"+loginUsersRequests.getPeriod_from());
 		String emp_code = request.getParameter("empCode");
 		log.debug("code entered--------"+emp_code);
@@ -328,6 +249,23 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 		
 		Map model=new HashMap();
 		
+		Settings settings = (Settings)request.getSession().getAttribute("settings");
+		String longitude = (String)request.getParameter("longitude");
+		String latitude =  (String)request.getParameter("latitude");
+		String accuracy =  (String)request.getParameter("accuracy");
+		String address = "";
+		log.debug("accuracy " + accuracy);
+		if (accuracy!=null && !accuracy.isEmpty()) {
+			if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
+				address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
+			} else {
+				address = "Address is not accurate to be saved";
+			}
+		}
+		
+		log.debug(longitude + "-" + latitude + "-" + address);
+		
+		
 		String reqId="";
 		if(loginUsersRequests.getRequest_id()!=null && !loginUsersRequests.getRequest_id().equals("")){
 			log.debug("entered--1-----reqid=-"+loginUsersRequests.getRequest_id().getId());
@@ -368,6 +306,22 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 			log.debug("---requestType from jsp---"+request.getParameter("requestType"));
 	//		loginUsersRequests.setApproved();
 			
+			if (latitude!= null && !latitude.isEmpty()) {
+				loginUsersRequests.setLatitude(Double.parseDouble(latitude));
+				loginUsersRequests.setLongitude(Double.parseDouble(longitude));
+				loginUsersRequests.setLocationAddress(address);
+			}
+
+			if (accuracy!=null && !accuracy.isEmpty()) {
+				double distance = requestsApprovalManager.distance(new Double(latitude),new Double(longitude),new Double(settings.getCompanyLat()),new Double(settings.getCompanyLong()));
+				if (distance>settings.getDistAllowedFromCompany()) {
+					loginUsersRequests.setIsInsideCompany(false);
+				} else {
+					loginUsersRequests.setIsInsideCompany(true);
+				}
+			} else {
+				loginUsersRequests.setIsInsideCompany(true);
+			}
 
 			requestsApprovalManager.saveObject(loginUsersRequests);
 				

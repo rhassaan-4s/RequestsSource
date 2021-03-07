@@ -96,6 +96,13 @@ public interface BaseDAO {
 				final String parameter2, final Object value2,
 				final String parameter3, final Object value3,
 				final List<String> fieldList);
+	 
+	 public List getObjectsByThreeParametersThirdNotNullOrderedByFieldList(final Class clazz,
+				final String parameter1, final Object value1,
+				final String parameter2, final Object value2,
+				final String parameter3,
+				final List<String> fieldList);
+				
 	 public Object getObjectByTwoObjects(final Class clazz, final String parameter1, final Object value1,final String parameter2, final Object value2);
 	public abstract List getObjectsByTwoObjects(Class clazz, String parameter1,
 			Object value1, String parameter2, Object value2);

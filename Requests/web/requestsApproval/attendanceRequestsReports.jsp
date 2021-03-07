@@ -93,7 +93,12 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 	</tr>
 	<tr>
 		<td colspan="2">
-			
+				<c:if test="${not empty errors}">
+					<div><c:forEach var="error" items="${errors}">
+						<font color="red"> <c:out value="${error}" escapeXml="false" /><br />
+						</font>
+					</c:forEach></div>
+				</c:if>
 		</td>
 	</tr>
 	<tr>
