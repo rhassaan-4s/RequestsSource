@@ -1,0 +1,3028 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+  	<bean id="jobsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.JobsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="jobForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.JobForm">
+				<property name="commandName">
+					<value>job</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRJob</value>
+				</property>
+				<property name="formView">
+					<value>jobForm</value>
+				</property>
+				<property name="successView">
+					<value>jobsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+		
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="degreesView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.DegreesView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="degreeForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.DegreeForm">
+				<property name="commandName">
+					<value>degree</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.Degree</value>
+				</property>
+				<property name="formView">
+					<value>degreeForm</value>
+				</property>
+				<property name="successView">
+					<value>degreesView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="titlesView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.TitlesView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="titleForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.TitleForm">
+				<property name="commandName">
+					<value>hrTitle</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRTitle</value>
+				</property>
+				<property name="formView">
+					<value>titleForm</value>
+				</property>
+				<property name="successView">
+					<value>titlesView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="functionalGroupsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.FunctionalGroupsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="functionalGroupForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.FunctionalGroupForm">
+				<property name="commandName">
+					<value>hrFunctionalGroup</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRFunctionalGroup</value>
+				</property>
+				<property name="formView">
+					<value>functionalGroupForm</value>
+				</property>
+				<property name="successView">
+					<value>functionalGroupsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	
+		<bean id="documentsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.DocumentsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="documentsForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.DocumentsForm">
+				<property name="commandName">
+					<value>hrDocuments</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRDocuments</value>
+				</property>
+				<property name="formView">
+					<value>documentsForm</value>
+				</property>
+				<property name="successView">
+					<value>documentsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="gradesView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.GradesView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="gradeForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.GradeForm">
+		     <property name="commandName">
+					<value>grade</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.Grade</value>
+				</property>
+				<property name="formView">
+					<value>gradeForm</value>
+				</property>
+				<property name="successView">
+					<value>gradesView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="salaryRaiseView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.SalaryRaiseView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="salaryRaiseForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.SalaryRaiseForm">
+				<property name="commandName">
+					<value>salaryRaise</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.SalaryRaise</value>
+				</property>
+				<property name="formView">
+					<value>salaryRaiseForm</value>
+				</property>
+				<property name="successView">
+					<value>salaryRaiseView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="punishmentsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.PunishmentsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="punishmentForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.PunishmentForm">
+				<property name="commandName">
+					<value>punishment</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.Punishment</value>
+				</property>
+				<property name="formView">
+					<value>punishmentForm</value>
+				</property>
+				<property name="successView">
+					<value>punishmentsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="endServiceReasonsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EndServiceReasonsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="endServiceReasonsForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EndServiceReasonsForm">
+				<property name="commandName">
+					<value>endServiceReasons</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.EndServiceReasons</value>
+				</property>
+				<property name="formView">
+					<value>endServiceReasonsForm</value>
+				</property>
+				<property name="successView">
+					<value>endServiceReasonsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="citiesView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.CitiesView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="cityForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.CityForm">
+				<property name="commandName">
+					<value>hrCity</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRCity</value>
+				</property>
+				<property name="formView">
+					<value>cityForm</value>
+				</property>
+				<property name="successView">
+					<value>citiesView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+			  <property name="binders">
+					<list>		
+						<ref bean="countryBinder"/>
+					</list>
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="centersView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.CentersView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="centerForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.CenterForm">
+				<property name="commandName">
+					<value>center</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.Center</value>
+				</property>
+				<property name="formView">
+					<value>centerForm</value>
+				</property>
+				<property name="successView">
+					<value>centersView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="sectorsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.SectorsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="sectorForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.SectorForm">
+				<property name="commandName">
+					<value>sector</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.Sector</value>
+				</property>
+				<property name="formView">
+					<value>sectorForm</value>
+				</property>
+				<property name="successView">
+					<value>sectorsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="regionsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.RegionsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="regionForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.RegionForm">
+				<property name="commandName">
+					<value>hrRegion</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRRegion</value>
+				</property>
+				<property name="formView">
+					<value>regionForm</value>
+				</property>
+				<property name="successView">
+					<value>regionsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="locationsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.LocationsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="locationForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.LocationForm">
+				<property name="commandName">
+					<value>location</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRLocation</value>
+				</property>
+				<property name="formView">
+					<value>locationForm</value>
+				</property>
+				<property name="successView">
+					<value>locationsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="countriesView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.CountriesView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="countryForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.CountryForm">
+				<property name="commandName">
+					<value>country</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRCountry</value>
+				</property>
+				<property name="formView">
+					<value>countryForm</value>
+				</property>
+				<property name="successView">
+					<value>countriesView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="universitiesView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.UniversitiesView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="universityForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.UniversityForm">
+				<property name="commandName">
+					<value>university</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRUniversity</value>
+				</property>
+				<property name="formView">
+					<value>universityForm</value>
+				</property>
+				<property name="successView">
+					<value>universitiesView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="institutesView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.InstitutesView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="instituteForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.InstituteForm">
+				<property name="commandName">
+					<value>institute</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRInstitute</value>
+				</property>
+				<property name="formView">
+					<value>instituteForm</value>
+				</property>
+				<property name="successView">
+					<value>institutesView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="qualificationsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.QualificationsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="qualificationForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.QualificationForm">
+				<property name="commandName">
+					<value>qualification</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRQualification</value>
+				</property>
+				<property name="formView">
+					<value>qualificationForm</value>
+				</property>
+				<property name="successView">
+					<value>qualificationsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="schoolsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.SchoolsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="schoolForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.SchoolForm">
+				<property name="commandName">
+					<value>school</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRSchool</value>
+				</property>
+				<property name="formView">
+					<value>schoolForm</value>
+				</property>
+				<property name="successView">
+					<value>schoolsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="coursesView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.CoursesView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="courseForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.CourseForm">
+				<property name="commandName">
+					<value>course</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRCourse</value>
+				</property>
+				<property name="formView">
+					<value>courseForm</value>
+				</property>
+				<property name="successView">
+					<value>coursesView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="courseSpecialtiesView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.CourseSpecialtiesView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="courseSpecialtyForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.CourseSpecialtyForm">
+				<property name="commandName">
+					<value>courseSpecialty</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRCourseSpecialty</value>
+				</property>
+				<property name="formView">
+					<value>courseSpecialtyForm</value>
+				</property>
+				<property name="successView">
+					<value>courseSpecialtiesView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="courseOrganizationsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.CourseOrganizationsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="courseOrganizationForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.CourseOrganizationForm">
+				<property name="commandName">
+					<value>courseOrganization</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRCourseOrganization</value>
+				</property>
+				<property name="formView">
+					<value>courseOrganizationForm</value>
+				</property>
+				<property name="successView">
+					<value>courseOrganizationsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="courseResultsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.CourseResultsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="courseResultForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.CourseResultForm">
+				<property name="commandName">
+					<value>courseResult</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRCourseResult</value>
+				</property>
+				<property name="formView">
+					<value>courseResultForm</value>
+				</property>
+				<property name="successView">
+					<value>courseResultsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="religionsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.ReligionsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="religionForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.ReligionForm">
+				<property name="commandName">
+					<value>religion</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRReligion</value>
+				</property>
+				<property name="formView">
+					<value>religionForm</value>
+				</property>
+				<property name="successView">
+					<value>religionsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="sponsorView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.SponsorView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="sponsorForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.SponsorForm">
+				<property name="commandName">
+					<value>sponsor</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRSponsor</value>
+				</property>
+				<property name="formView">
+					<value>sponsorForm</value>
+				</property>
+				<property name="successView">
+					<value>sponsorView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="nationalitiesView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.NationalitiesView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="nationalityForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.NationalityForm">
+				<property name="commandName">
+					<value>nationality</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRNationality</value>
+				</property>
+				<property name="formView">
+					<value>nationalityForm</value>
+				</property>
+				<property name="successView">
+					<value>nationalitiesView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="vacationsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.VacationsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="vacationForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.VacationForm">
+				<property name="commandName">
+					<value>vacation</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRVacation</value>
+				</property>
+				<property name="formView">
+					<value>vacationForm</value>
+				</property>
+				<property name="successView">
+					<value>vacationsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+				<property name="binders">
+					<list>
+	     				<ref bean="vacationTypeBinder" />	
+<!--	     				<ref bean="vacationBinder"/>-->
+					</list>
+				</property>
+			
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="violationsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.ViolationsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="violationForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.ViolationForm">
+				<property name="commandName">
+					<value>violation</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRViolation</value>
+				</property>
+				<property name="formView">
+					<value>violationForm</value>
+				</property>
+				<property name="successView">
+					<value>violationsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+				<property name="binders">
+					<list>
+	     				<ref bean="calculationMethodBinder" />	
+	     				<ref bean="violationReasonBinder"/>	
+					</list>
+				</property>
+			
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="violationResultsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.ViolationResultsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="violationResultForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.ViolationResultForm">
+				<property name="commandName">
+					<value>hrViolationResult</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRViolationResult</value>
+				</property>
+				<property name="formView">
+					<value>violationResultForm</value>
+				</property>
+				<property name="successView">
+					<value>violationResultsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="violationRulesForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.ViolationRulesForm">
+				<property name="commandName">
+					<value>violationRulesCommand</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.web.command.ViolationRulesCommand</value>
+				</property>
+				<property name="formView">
+					<value>violationRulesForm</value>
+				</property>
+				<property name="successView">
+					<value>violationRulesForm.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="hrViolationBinder" />
+						<ref bean="violationResultBinder" />
+						<ref bean="periodTypeBinder" />
+						<ref bean="calculationMethodBinder" />			
+					</list>
+				</property>
+				
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="internalDivisionsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.InternalDivisionsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="internalDivisionForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.InternalDivisionForm">
+				<property name="commandName">
+					<value>result</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRInternalDivision</value>
+				</property>
+				<property name="formView">
+					<value>internalDivisionForm</value>
+				</property>
+				<property name="successView">
+					<value>internalDivisionTree.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				<property name="binders">
+					<list>
+	     				<ref bean="internalDivisionBinder" />
+	     				<ref bean="internalLevelBinder"/>		
+					</list>
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="qualificationDivisionForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.QualificationDivisionForm">
+				<property name="commandName">
+					<value>result</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRQualificationDivision</value>
+				</property>
+				<property name="formView">
+					<value>internalDivisionForm</value>
+				</property>
+				<property name="successView">
+					<value>qualificationDivisionTree.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				<property name="binders">
+					<list>
+	     				<ref bean="qualificationDivisionBinder" />	
+	     				<ref bean="qualificationLevelBinder"/>	
+					</list>
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="geographicalDivisionForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.GeographicalDivisionForm">
+				<property name="commandName">
+					<value>result</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRGeographicalDivision</value>
+				</property>
+				<property name="formView">
+					<value>internalDivisionForm</value>
+				</property>
+				<property name="successView">
+					<value>geographicalDivisionTree.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+				<property name="binders">
+					<list>
+	     				<ref bean="geographicalDivisionBinder" />	
+	     				<ref bean="geographicalLevelBinder"/>	
+					</list>
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="specialtyDivisionForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.SpecialtyDivisionForm">
+				<property name="commandName">
+					<value>result</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRSpecialtyDivision</value>
+				</property>
+				<property name="formView">
+					<value>internalDivisionForm</value>
+				</property>
+				<property name="successView">
+					<value>specialtyDivisionTree.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				<property name="binders">
+					<list>
+	     				<ref bean="specialtyDivisionBinder" />	
+	     				<ref bean="specialtyLevelBinder"/>	
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+		<bean id="internalDivisionBranchesView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.InternalDivisionBranchesView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="internalDivisionBranchForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.InternalDivisionBranchForm">
+				<property name="commandName">
+					<value>internalDivisionBranch</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRInternalDivisionBranch</value>
+				</property>
+				<property name="formView">
+					<value>internalDivisionBranchForm</value>
+				</property>
+				<property name="successView">
+					<value>internalDivisionBranchesView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="internalLevelForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.InternalLevelForm">
+				<property name="commandName">
+					<value>levelsCommand</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.web.command.LevelsCommand</value>
+				</property>
+				<property name="formView">
+					<value>internalLevelForm</value>
+				</property>
+				<property name="successView">
+					<value>internalLevelForm.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="geographicalLevelForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.GeographicalLevelForm">
+				<property name="commandName">
+					<value>levelsCommand</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.web.command.LevelsCommand</value>
+				</property>
+				<property name="formView">
+					<value>internalLevelForm</value>
+				</property>
+				<property name="successView">
+					<value>internalLevelForm.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="qualificationLevelForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.QualificationLevelForm">
+				<property name="commandName">
+					<value>levelsCommand</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.web.command.LevelsCommand</value>
+				</property>
+				<property name="formView">
+					<value>internalLevelForm</value>
+				</property>
+				<property name="successView">
+					<value>internalLevelForm.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="specialtyLevelForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.SpecialtyLevelForm">
+				<property name="commandName">
+					<value>levelsCommand</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.web.command.LevelsCommand</value>
+				</property>
+				<property name="formView">
+					<value>internalLevelForm</value>
+				</property>
+				<property name="successView">
+					<value>internalLevelForm.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="internalDivisionTree" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.InternalDivisionTree">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="qualificationDivisionTree" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.QualificationDivisionTree">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="geographicalDivisionTree" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.GeographicalDivisionTree">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	<bean id="specialtyDivisionTree" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.SpecialtyDivisionTree">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="divisionOrderController" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.DivisionOrderController">
+				<property name="commandName">
+					<value>orderCommand</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.web.command.ChildrenOrderCommand</value>
+				</property>
+				<property name="formView">
+					<value>divisionOrder</value>
+				</property>
+				<property name="successView">
+					<value>internalDivisionTree.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="copyController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.CopyController">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="employeeForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EmployeeForm">
+				<property name="commandName">
+					<value>hrEmployee</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployee</value>
+				</property>
+				<property name="formView">
+					<value>employeeForm</value>
+				</property>
+				<property name="successView">
+					<value>employeesView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="dateBinder" />
+						<ref bean="religionBinder" />
+						<ref bean="employeeQualificationBinder" />
+						<ref bean="employeeJobBinder" />
+						<ref bean="employeeCostCenterBinder" />
+						<ref bean="employeeAddressBinder" />
+						<ref bean="qualificationDivisionBinder" />
+						<ref bean="geographicalDivisionBinder" />
+						<ref bean="internalDivisionBinder" />
+						<ref bean="maritalStatusBinder" />
+						<ref bean="militaryServiceBinder" />
+						<ref bean="titleBinder" />
+						<ref bean="sectorBinder" />
+						<ref bean="locationBinder" />
+						<ref bean="degreeBinder" />
+						<ref bean="syndicateBinder" />
+						<ref bean="bankBinder" />
+						<ref bean="regionBinder" />
+						<ref bean="taxBinder" />
+							
+					</list>
+				</property>
+				
+				<property name="validator">
+						<ref bean="employeeFormValidator" />	
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="employeesView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmployeesView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="copyFormController" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.CopyFormController">
+				<property name="commandName">
+					<value>copyCommand</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.web.command.CopyObjectsCommand</value>
+				</property>
+				<property name="formView">
+					<value>copyFormController</value>
+				</property>
+				<property name="successView">
+					<value>internalDivisionTree.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="qualificationsTransactionForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.QualificationsTransactionForm">
+				<property name="commandName">
+					<value>hrEmployeeQualification</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployeeQualification</value>
+				</property>
+				<property name="formView">
+					<value>qualificationsTransactionForm</value>
+				</property>
+				<property name="successView">
+					<value>qualificationsTransactionView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />
+						<ref bean="qualificationDivisionBinder" />
+						<ref bean="specialtyDivisionBinder" />
+							
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="qualificationsTransactionView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.QualificationsTransactionView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="employeeAllocationForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EmployeeAllocationForm">
+				<property name="commandName">
+					<value>hrEmployeeJob</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployeeJob</value>
+				</property>
+				<property name="formView">
+					<value>employeeAllocationForm</value>
+				</property>
+				<property name="successView">
+					<value>employeeAllocationView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />
+						<ref bean="dateBinder" />
+						<ref bean="internalDivisionBinder" />
+							
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="employeeAllocationView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmployeeAllocationView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="employeePenaltyForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EmployeePenaltyForm">
+				<property name="commandName">
+					<value>hrEmployeePenalty</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployeePenalty</value>
+				</property>
+				<property name="formView">
+					<value>employeePenaltyForm</value>
+				</property>
+				<property name="successView">
+					<value>employeePenaltyView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />
+						<ref bean="dateBinder" />
+						<ref bean="punishmentBinder" />
+							
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="employeePenaltyView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmployeePenaltyView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="employeeAccusationForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EmployeeAccusationForm">
+				<property name="commandName">
+					<value>hrEmployeeAccusation</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployeeAccusation</value>
+				</property>
+				<property name="formView">
+					<value>employeeAccusationForm</value>
+				</property>
+				<property name="successView">
+					<value>employeeAccusationView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />
+						<ref bean="dateBinder" />
+						<ref bean="accusationActionBinder" />
+							
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="employeeAccusationView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmployeeAccusationView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+		<bean id="employeeMaritalStatusForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EmployeeMaritalStatusForm">
+				<property name="commandName">
+					<value>hrEmployeeMaritalStatus</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployeeMaritalStatus</value>
+				</property>
+				<property name="formView">
+					<value>employeeMaritalStatusForm</value>
+				</property>
+				<property name="successView">
+					<value>employeeMaritalStatusView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />
+						<ref bean="dateBinder" />
+						<ref bean="maritalStatusBinder" />
+							
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="employeeMaritalStatusView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmployeeMaritalStatusView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="employeeKinshipsDataForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EmployeeKinshipsDataForm">
+				<property name="commandName">
+					<value>hrEmployeeRelative</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployeeRelative</value>
+				</property>
+				<property name="formView">
+					<value>employeeKinshipsDataForm</value>
+				</property>
+				<property name="successView">
+					<value>employeeKinshipsDataView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />
+						<ref bean="dateBinder" />
+						<ref bean="kinshipBinder" />
+							
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="employeeKinshipsDataView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmployeeKinshipsDataView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="employeeStatusForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EmployeeStatusForm">
+				<property name="commandName">
+					<value>hrEmployeeStatus</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployeeEmployeeStatus</value>
+				</property>
+				<property name="formView">
+					<value>employeeStatusForm</value>
+				</property>
+				<property name="successView">
+					<value>employeeStatusView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />
+						<ref bean="dateBinder" />
+						<ref bean="employeeStatusBinder" />
+							
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="employeeStatusView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmployeeStatusView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="employeeDocumentsForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EmployeeDocumentsForm">
+				<property name="commandName">
+					<value>hrEmployeeDocuments</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployeeDocuments</value>
+				</property>
+				<property name="formView">
+					<value>employeeDocumentsForm</value>
+				</property>
+				<property name="successView">
+					<value>employeeDocumentsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />
+						<ref bean="dateBinder" />
+						<ref bean="documentsBinder" />
+						<ref bean="employeeRelativeBinder" />
+						
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="employeeDocumentsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmployeeDocumentsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="employeeSponsorForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EmployeeSponsorForm">
+				<property name="commandName">
+					<value>hrEmployeeSponsor</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployeeSponsor</value>
+				</property>
+				<property name="formView">
+					<value>employeeSponsorForm</value>
+				</property>
+				<property name="successView">
+					<value>employeeSponsorsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />
+						<ref bean="dateBinder" />
+						<ref bean="sponsorBinder" />
+						
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="yearAllowVacationTransferForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.YearAllowVacationTransferForm">
+				<property name="commandName">
+					<value>yearCommand</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.web.command.YearCommand</value>
+				</property>
+				<property name="formView">
+					<value>yearAllowVacationTransferForm</value>
+				</property>
+				<property name="successView">
+					<value>yearAllowVacationTransferForm.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+			</bean>
+		</property>
+	</bean>
+	
+	
+		<bean id="vacationRulesForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.VacationRulesForm">
+				<property name="commandName">
+					<value>vacationRulesCommand</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.web.command.VacationRulesCommand</value>
+				</property>
+				<property name="formView">
+					<value>vacationRulesForm</value>
+				</property>
+				<property name="successView">
+					<value>vacationRulesForm.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="vacationBinder" />
+								
+					</list>
+				</property>
+				
+			</bean>
+		</property>
+	</bean>
+	
+	
+	
+	
+	<bean id="employeeVacationAtInstallationForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EmployeeVacationAtInstallationForm">
+				<property name="commandName">
+					<value>hrEmployee</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployee</value>
+				</property>
+				<property name="formView">
+					<value>employeeVacationAtInstallationForm</value>
+				</property>
+				<property name="successView">
+					<value>employeeVacationAtInstallationForm.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+				
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="serviceLengthCalculationForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.ServiceLengthCalculationForm">
+				<property name="commandName">
+					<value>hrEmployee</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployee</value>
+				</property>
+				<property name="formView">
+					<value>serviceLengthCalculationForm</value>
+				</property>
+				<property name="successView">
+					<value>serviceLengthCalculationForm.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+				
+			</bean>
+		</property>
+	</bean>
+	
+	
+	
+	
+	<bean id="employeeSponsorsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmployeeSponsorsView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+		<bean id="employeeVacationForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EmployeeVacationForm">
+				<property name="commandName">
+					<value>hrEmployeeVacation</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployeeVacation</value>
+				</property>
+				<property name="formView">
+					<value>employeeVacationForm</value>
+				</property>
+				<property name="successView">
+					<value>employeeVacationView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />
+						<ref bean="dateBinder" />
+						<ref bean="vacationBinder" />
+							
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+
+	
+	
+	
+	<bean id="employeeVacationDecreaseForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EmployeeVacationDecreaseForm">
+				<property name="commandName">
+					<value>hrEmployeeVacationDecrease</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployeeVacationDecrease</value>
+				</property>
+				<property name="formView">
+					<value>employeeVacationDecreaseForm</value>
+				</property>
+				<property name="successView">
+					<value>employeeVacationDecreaseView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />
+						<ref bean="dateBinder" />
+						<ref bean="vacationBinder" />
+							
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="employeeVacationIncreaseForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EmployeeVacationIncreaseForm">
+				<property name="commandName">
+					<value>hrEmployeeVacationIncrease</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployeeVacationIncrease</value>
+				</property>
+				<property name="formView">
+					<value>employeeVacationIncreaseForm</value>
+				</property>
+				<property name="successView">
+					<value>employeeVacationIncreaseView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />
+						<ref bean="dateBinder" />
+						<ref bean="vacationBinder" />
+							
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="employeeVacationView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmployeeVacationView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="employeeVacationDecreaseView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmployeeVacationDecreaseView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="employeeVacationIncreaseView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmployeeVacationIncreaseView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="employeeErrandForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EmployeeErrandForm">
+				<property name="commandName">
+					<value>hrEmployeeErrand</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployeeErrand</value>
+				</property>
+				<property name="formView">
+					<value>employeeErrandForm</value>
+				</property>
+				<property name="successView">
+					<value>employeeErrandView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />
+						<ref bean="dateBinder" />
+							
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="employeeErrandView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmployeeErrandView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="employeeSpecialVacationForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.EmployeeSpecialVacationForm">
+				<property name="commandName">
+					<value>hrEmployeeSpecialVacation</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREmployeeSpecialVacation</value>
+				</property>
+				<property name="formView">
+					<value>employeeSpecialVacationForm</value>
+				</property>
+				<property name="successView">
+					<value>employeeSpecialVacationView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />
+						<ref bean="dateBinder" />
+						<ref bean="vacationBinder" />	
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="employeeSpecialVacationView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmployeeSpecialVacationView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="viewEmployeePhoto" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.ViewEmployeePhoto">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="viewDocumentPhoto" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.ViewDocumentPhoto">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="vacationDaysTransactionView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.VacationDaysTransactionView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="vacationDaysTransactionForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.VacationDaysTransactionForm">
+				<property name="commandName">
+					<value>hrEmployeeSpecialVacation</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.web.command.HREmployeeVacationDays</value>
+				</property>
+				<property name="formView">
+					<value>vacationDaysTransactionForm</value>
+				</property>
+				<property name="successView">
+					<value>vacationDaysTransactionView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+					<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />
+						<ref bean="dateBinder" />
+						<ref bean="vacationBinder" />	
+					</list>
+				</property>
+				
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="testForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.TestForm">
+				<property name="commandName">
+					<value>test</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.Test</value>
+				</property>
+				<property name="formView">
+					<value>testForm</value>
+				</property>
+				<property name="successView">
+					<value>test.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="testCalculation" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.TestCalculationForm">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="syndicateForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.SyndicateFormController">
+				<property name="commandName">
+					<value>syndicate</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRSyndicate</value>
+				</property>
+				<property name="formView">
+					<value>syndicateForm</value>
+				</property>
+				<property name="successView">
+					<value>syndicateView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			</bean>
+			</property> 
+	</bean>
+	
+	<bean id="syndicateView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.SyndicateViewController">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="additionalForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.AdditionalFormController">
+				<property name="commandName">
+					<value>additional</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRAdditional</value>
+				</property>
+				<property name="formView">
+					<value>additionalForm</value>
+				</property>
+				<property name="successView">
+					<value>additionalForm.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+		
+		  <property name="binders">
+					<list>
+						<ref bean="additionalCalcWayBinder" />
+					</list>
+				</property>
+			</bean>
+		
+			
+		</property>
+	</bean>
+	
+	<bean id="bankForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.BankFormController">
+				<property name="commandName">
+					<value>bank</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRBank</value>
+				</property>
+				<property name="formView">
+					<value>bankForm</value>
+				</property>
+				<property name="successView">
+					<value>bankView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			</bean>
+			</property> 
+	</bean>
+	
+	<bean id="bankView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.BankViewController">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="insuranceForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.InsuranceFormController">
+				<property name="commandName">
+					<value>insurance</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRInsurance</value>
+				</property>
+				<property name="formView">
+					<value>insuranceForm</value>
+				</property>
+				<property name="successView">
+					<value>insuranceView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			</bean>
+			</property> 
+	</bean>
+	
+	<bean id="insuranceView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.InsuranceViewController">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="organizationForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.OrganizationFormController">
+				<property name="commandName">
+					<value>organization</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HROrganization</value>
+				</property>
+				<property name="formView">
+					<value>organizationForm</value>
+				</property>
+				<property name="successView">
+					<value>organizationView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			</bean>
+			</property> 
+	</bean>
+	
+	<bean id="organizationView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.OrganizationViewController">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="PreferencesForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.PreferencesFormController">
+				<property name="commandName">
+					<value>preferences</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.web.command.PreferencesCommand</value>
+				</property>
+				<property name="formView">
+					<value>preferencesForm</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			</bean>
+			</property> 
+	</bean>
+	<bean id="changeEmployeeCodes" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.ChangeEmployeeCodesViewController">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="empPrevIllnessView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmpPrevIllnessViewController">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="spAnualRaiseView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.SpAnualRaiseViewController">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="aInsuranceCalaForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.AInsuranceCalaFormController">
+				<property name="commandName">
+					<value>aic</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.AInsuranceCala</value>
+				</property>
+				<property name="formView">
+					<value>aInsuranceCalaForm</value>
+				</property>
+				<property name="successView">
+					<value>aInsuranceCalaForm.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>	
+				<property name="binders">
+					<list>
+						<ref bean="employeeBinder" />	
+	     				<ref bean="monthBinder" />	
+	     				<ref bean="yearBinder"/>	
+	     				<ref bean="insuranceBinder"/>
+	     			</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="empInstExperYearsForm" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EmpInstExperYearsFormController">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="closeMonthForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.CloseMonthFormController">
+				<property name="commandName">
+					<value>closeMonth</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRClosedMonthes</value>
+				</property>
+				<property name="formView">
+					<value>closeMonthForm</value>
+				</property>
+				<property name="successView">
+					<value>closeMonthForm.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+				<property name="binders">
+					<list>
+	     				<ref bean="monthBinder" />	
+	     				<ref bean="yearBinder"/>	
+<!--	     				<ref bean="closedMonthesBinder"/>-->
+	     			</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="discDaysForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.DiscDaysForm">
+				<property name="commandName">
+					<value>discDays</value>
+				</property>
+				
+				<property name="commandClass">
+					<value>com._4s_.HR.model.DiscDays</value>
+				</property>
+				
+				<property name="formView">
+					<value>discDaysForm</value>
+				</property>
+				
+				<property name="successView">
+					<value>discDaysView.html</value>
+				</property>
+				
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+				<property name="binders">
+					<list>
+						<ref bean="monthBinder" />	
+	     				<ref bean="yearBinder"/>	
+	     				<ref bean="discDaysBinder"/>
+					</list>
+				</property>
+			</bean>
+		</property> 
+	</bean>
+	
+	<bean id="discDaysView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.DiscDaysView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="taxForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.TaxFormController">
+				<property name="commandName">
+					<value>tax</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRTax</value>
+				</property>
+				<property name="formView">
+					<value>taxForm</value>
+				</property>
+				<property name="successView">
+					<value>taxView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			</bean>
+			</property> 
+	</bean>
+	
+	<bean id="taxView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.TaxViewController">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+		<bean id="hallmarkForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.HallmarkFormController">
+				<property name="commandName">
+					<value>hallmark</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRHallmark</value>
+				</property>
+				<property name="formView">
+					<value>hallmarkForm</value>
+				</property>
+				<property name="successView">
+					<value>hallmarkView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				  <property name="binders">
+					<list>
+						<ref bean="insuranceRuleBinder" />
+					</list>
+				</property>
+			</bean>
+			   
+			</property> 
+	</bean>
+	
+	<bean id="hallmarkView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.HallmarkViewController">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="illnessLevelsForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.IllnessLevelsFormController">
+				<property name="commandName">
+					<value>illnessLevels</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRIllnessLevels</value>
+				</property>
+				<property name="formView">
+					<value>illnessLevelsForm</value>
+				</property>
+				<property name="successView">
+					<value>illnessLevelsForm.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			</bean>
+			</property> 
+	</bean>
+	
+	
+	<bean id="salaryPartsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.SalaryPartsViewController">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="salaryPartsForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.SalaryPartsFormController">
+				<property name="commandName">
+					<value>effect</value>
+				</property>
+				
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HREffect</value>
+				</property>
+				
+				<property name="formView">
+					<value>salaryPartsForm</value>
+				</property>
+				
+				<property name="successView">
+					<value>salaryPartsView.html</value>
+				</property>
+				
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+				<property name="binders">
+					<list>
+						<ref bean="hreffectBinder"/>
+						<ref bean="effectNatureBinder" />
+						<ref bean="effectRoundTypeBinder" />
+						<ref bean="effectApplyTypeBinder" />
+						<ref bean="effectDiscDaysBinder" />
+						<ref bean="effectRuleBinder" />
+					</list>
+				</property>
+			</bean>
+		</property> 
+	</bean>
+	
+	
+	
+	<bean id="specialSalaryPartsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.SpecialSalaryPartsViewController">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="specialSalaryPartsForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.SpecialSalaryPartsFormController">
+				<property name="commandName">
+					<value>sEffect</value>
+				</property>
+				
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRSpecialEffect</value>
+				</property>
+				
+				<property name="formView">
+					<value>specialSalaryPartsForm</value>
+				</property>
+				
+				<property name="successView">
+					<value>specialSalaryPartsView.html</value>
+				</property>
+				
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+				
+				<property name="binders">
+					<list>
+						<ref bean="hrspecialEffectBinder"/>
+						<ref bean="effectNatureBinder" />
+						<ref bean="effectRoundTypeBinder" />
+						<ref bean="effectExemptionLimitBinder" />
+						<ref bean="effectDiscDaysBinder" />
+						<ref bean="effectRuleBinder" />
+					</list>
+				</property>
+			</bean>
+		</property> 
+	</bean>
+
+	<bean id="effectEquation" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.EffectEquationFormController">
+				<property name="commandName">
+					<value>preferences</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.web.command.PreferencesCommand</value>
+				</property>
+				<property name="formView">
+					<value>effectEquation</value>
+				</property>
+				<property name="successView">
+					<value>effectEquation.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			</bean>
+		</property> 
+	</bean>
+
+	<bean id="installForm" parent="txProxyTemplate">
+		<property name="target">
+		<bean class="com._4s_.HR.web.action.InstallForm">
+				<property name="commandName">
+					<value>install</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.HR.model.HRInstall</value>
+				</property>
+				<property name="formView">
+					<value>installForm</value>
+				</property>
+				<property name="successView">
+					<value>installsView.html</value>
+				</property>
+				<property name="hrManager">
+					<ref bean="hrManager" />
+				</property>
+			</bean>
+			</property> 
+	</bean>
+	
+	<bean id="installsView" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.HR.web.action.InstallView">
+				<property name="hrManager">
+					<ref bean="hrManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="multipartResolver"
+	    class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		   	<property name="maxUploadSize"><value>100000000</value></property>
+	</bean>
+	
+	
+	
+	
+	<!--      _____________________________________________________________________     -->
+<!--      _________________________________ url Mapping _______________________     -->
+<!--      _____________________________________________________________________     -->
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="openSessionInViewInterceptor" />
+			</list>
+		</property>
+		<property name="mappings">
+			<props>
+				<prop key="/jobForm.html">jobForm</prop>
+				<prop key="/jobsView.html">jobsView</prop>
+				<prop key="/degreeForm.html">degreeForm</prop>
+				<prop key="/degreesView.html">degreesView</prop>
+	            <prop key="/gradeForm.html">gradeForm</prop>
+				<prop key="/gradesView.html">gradesView</prop>
+	            <prop key="/salaryRaiseForm.html">salaryRaiseForm</prop>
+				<prop key="/salaryRaiseView.html">salaryRaiseView</prop>
+				<prop key="/punishmentForm.html">punishmentForm</prop>
+				<prop key="/punishmentsView.html">punishmentsView</prop>
+				<prop key="/endServiceReasonsForm.html">endServiceReasonsForm</prop>
+				<prop key="/endServiceReasonsView.html">endServiceReasonsView</prop>
+	            <prop key="/cityForm.html">cityForm</prop>
+				<prop key="/citiesView.html">citiesView</prop>
+	            <prop key="/centerForm.html">centerForm</prop>
+				<prop key="/centersView.html">centersView</prop>
+				<prop key="/sectorForm.html">sectorForm</prop>
+				<prop key="/sectorsView.html">sectorsView</prop>
+			    <prop key="/regionForm.html">regionForm</prop>
+				<prop key="/regionsView.html">regionsView</prop>
+				<prop key="/locationForm.html">locationForm</prop>
+				<prop key="/locationsView.html">locationsView</prop>
+				<prop key="/countryForm.html">countryForm</prop>
+				<prop key="/countriesView.html">countriesView</prop>
+				<prop key="/schoolForm.html">schoolForm</prop>
+				<prop key="/schoolsView.html">schoolsView</prop>
+				<prop key="/qualificationForm.html">qualificationForm</prop>
+				<prop key="/qualificationsView.html">qualificationsView</prop>
+				<prop key="/instituteForm.html">instituteForm</prop>
+				<prop key="/institutesView.html">institutesView</prop>
+				<prop key="/universityForm.html">universityForm</prop>
+				<prop key="/universitiesView.html">universitiesView</prop>
+				
+				<prop key="/courseResultForm.html">courseResultForm</prop>
+				<prop key="/courseResultsView.html">courseResultsView</prop>
+	            <prop key="/courseForm.html">courseForm</prop>
+				<prop key="/coursesView.html">coursesView</prop>
+	            <prop key="/courseOrganizationForm.html">courseOrganizationForm</prop>
+				<prop key="/courseOrganizationsView.html">courseOrganizationsView</prop>
+				<prop key="/courseSpecialtyForm.html">courseSpecialtyForm</prop>
+				<prop key="/courseSpecialtiesView.html">courseSpecialtiesView</prop>
+	            <prop key="/nationalityForm.html">nationalityForm</prop>
+				<prop key="/nationalitiesView.html">nationalitiesView</prop>
+				<prop key="/religionForm.html">religionForm</prop>
+				<prop key="/religionsView.html">religionsView</prop>
+				<prop key="/internalDivisionsView.html">internalDivisionsView</prop>
+				<prop key="/internalDivisionBranchForm.html">internalDivisionBranchForm</prop>
+				<prop key="/internalDivisionBranchesView.html">internalDivisionBranchesView</prop>
+				<prop key="/internalLevelForm.html">internalLevelForm</prop>
+				<prop key="/internalDivisionTree.html">internalDivisionTree</prop>
+				<prop key="/internalDivisionForm.html">internalDivisionForm</prop>
+				<prop key="/qualificationDivisionTree.html">qualificationDivisionTree</prop>
+				<prop key="/qualificationDivisionForm.html">qualificationDivisionForm</prop>
+				<prop key="/geographicalDivisionTree.html">geographicalDivisionTree</prop>
+				<prop key="/geographicalDivisionForm.html">geographicalDivisionForm</prop>
+				<prop key="/qualificationLevelForm.html">qualificationLevelForm</prop>
+				<prop key="/geographicalLevelForm.html">geographicalLevelForm</prop>
+				<prop key="/employeeForm.html">employeeForm</prop>
+				<prop key="/employeesView.html">employeesView</prop>
+				<prop key="/specialtyLevelForm.html">specialtyLevelForm</prop>
+				<prop key="/specialtyDivisionTree.html">specialtyDivisionTree</prop>
+				<prop key="/specialtyDivisionForm.html">specialtyDivisionForm</prop>
+				<prop key="/titleForm.html">titleForm</prop>
+				<prop key="/titlesView.html">titlesView</prop>
+				<prop key="/documentsForm.html">documentsForm</prop>
+				<prop key="/documentsView.html">documentsView</prop>
+				<prop key="/viewEmployeePhoto.html">viewEmployeePhoto</prop>
+				<prop key="/divisionOrder.html">divisionOrderController</prop>
+				<prop key="/copyController.html">copyController</prop>
+				<prop key="/copyFormController.html">copyFormController</prop>
+				<prop key="/qualificationsTransactionForm.html">qualificationsTransactionForm</prop>
+				<prop key="/qualificationsTransactionView.html">qualificationsTransactionView</prop>
+				<prop key="/employeeAllocationView.html">employeeAllocationView</prop>
+				<prop key="/employeeAllocationForm.html">employeeAllocationForm</prop>
+				<prop key="/functionalGroupsView.html">functionalGroupsView</prop>
+				<prop key="/functionalGroupForm.html">functionalGroupForm</prop>
+				<prop key="/employeeMaritalStatusView.html">employeeMaritalStatusView</prop>
+				<prop key="/employeeMaritalStatusForm.html">employeeMaritalStatusForm</prop>
+				<prop key="/employeeKinshipsDataView.html">employeeKinshipsDataView</prop>
+				<prop key="/employeeKinshipsDataForm.html">employeeKinshipsDataForm</prop>
+	            <prop key="/employeeStatusView.html">employeeStatusView</prop>
+				<prop key="/employeeStatusForm.html">employeeStatusForm</prop>
+	            <prop key="/employeeDocumentsView.html">employeeDocumentsView</prop>
+				<prop key="/employeeDocumentsForm.html">employeeDocumentsForm</prop>
+				<prop key="/viewDocumentPhoto.html">viewDocumentPhoto</prop>
+				<prop key="/sponsorForm.html">sponsorForm</prop>
+				<prop key="/sponsorView.html">sponsorView</prop>
+				<prop key="/employeeSponsorsView.html">employeeSponsorsView</prop>
+				<prop key="/employeeSponsorForm.html">employeeSponsorForm</prop>
+				<prop key="/vacationsView.html">vacationsView</prop>
+				<prop key="/vacationForm.html">vacationForm</prop>
+				<prop key="/violationsView.html">violationsView</prop>
+				<prop key="/violationForm.html">violationForm</prop>
+				<prop key="/violationResultsView.html">violationResultsView</prop>
+				<prop key="/violationResultForm.html">violationResultForm</prop>
+				<prop key="/violationRulesForm.html">violationRulesForm</prop>
+				<prop key="/yearAllowVacationTransferForm.html">yearAllowVacationTransferForm</prop>
+	            <prop key="/vacationRulesForm.html">vacationRulesForm</prop>
+	            <prop key="/employeeVacationAtInstallationForm.html">employeeVacationAtInstallationForm</prop>
+	            <prop key="/serviceLengthCalculationForm.html">serviceLengthCalculationForm</prop>
+	            <prop key="/employeePenaltyView.html">employeePenaltyView</prop>
+				<prop key="/employeePenaltyForm.html">employeePenaltyForm</prop>
+                <prop key="/employeeAccusationView.html">employeeAccusationView</prop>
+				<prop key="/employeeAccusationForm.html">employeeAccusationForm</prop>
+	            <prop key="/employeeVacationForm.html">employeeVacationForm</prop>
+	            <prop key="/employeeVacationView.html">employeeVacationView</prop>
+	            <prop key="/employeeVacationIncreaseView.html">employeeVacationIncreaseView</prop>
+	            <prop key="/employeeVacationDecreaseView.html">employeeVacationDecreaseView</prop>
+	            <prop key="/employeeVacationDecreaseForm.html">employeeVacationDecreaseForm</prop>
+	            <prop key="/employeeVacationIncreaseForm.html">employeeVacationIncreaseForm</prop>
+	            <prop key="/employeeSpecialVacationForm.html">employeeSpecialVacationForm</prop>
+	            <prop key="/employeeSpecialVacationView.html">employeeSpecialVacationView</prop>
+	            <prop key="/employeeErrandForm.html">employeeErrandForm</prop>
+	            <prop key="/employeeErrandView.html">employeeErrandView</prop>
+	            <prop key="/vacationDaysTransactionForm.html">vacationDaysTransactionForm</prop>
+	            <prop key="/vacationDaysTransactionView.html">vacationDaysTransactionView</prop>
+	            <prop key="/test.html">testForm</prop>
+	            <prop key="/testCalculationForm.html">testCalculation</prop>
+	            <prop key="/syndicateView.html">syndicateView</prop>
+	            <prop key="/syndicateForm.html">syndicateForm</prop>
+	            <prop key="/additionalForm.html">additionalForm</prop>
+	            <prop key="/bankView.html">bankView</prop>
+	            <prop key="/bankForm.html">bankForm</prop>
+	            <prop key="/insuranceView.html">insuranceView</prop>
+	            <prop key="/insuranceForm.html">insuranceForm</prop>
+	            <prop key="/organizationView.html">organizationView</prop>
+	            <prop key="/organizationForm.html">organizationForm</prop>
+	            <prop key="/preferencesForm.html">PreferencesForm</prop>
+	            <prop key="/changeEmployeeCodes.html">changeEmployeeCodes</prop>
+	            <prop key="/taxView.html">taxView</prop>
+	            <prop key="/taxForm.html">taxForm</prop>
+	            <prop key="/hallmarkView.html">hallmarkView</prop>
+	            <prop key="/hallmarkForm.html">hallmarkForm</prop>
+	            <prop key="/empPrevIllnessView.html">empPrevIllnessView</prop>
+	             
+	            <prop key="/empInstExperYearsForm.html">empInstExperYearsForm</prop>
+	            <prop key="/spAnualRaiseView.html">spAnualRaiseView</prop>
+	            <prop key="/closeMonthForm.html">closeMonthForm</prop>
+	            <prop key="/discDaysForm.html">discDaysForm</prop> 
+	            <prop key="/discDaysView.html">discDaysView</prop>
+	            <prop key="/specialSalaryPartsView.html">specialSalaryPartsView</prop>
+	            <prop key="/specialSalaryPartsForm.html">specialSalaryPartsForm</prop>
+	            <prop key="/aInsuranceCalaForm.html">aInsuranceCalaForm</prop>
+	            
+	            <prop key="/illnessLevelsForm.html">illnessLevelsForm</prop>
+	            <prop key="/salaryPartsView.html">salaryPartsView</prop>
+	            <prop key="/salaryPartsForm.html">salaryPartsForm</prop>
+	            <prop key="/effectEquation.html">effectEquation</prop>
+	            <prop key="/installsView.html">installsView</prop>
+	            <prop key="/installForm.html">installForm</prop>
+	            
+	            
+	            
+		</props>
+		</property>
+	</bean>
+	
+	
+	<!--      _____________________________________________________________________     -->
+<!--      ______________________________ view Resolver ________________________     -->
+<!--      _____________________________________________________________________     -->
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="requestContextAttribute">
+			<value>rc</value>
+		</property>
+		<property name="viewClass">
+			<value>org.springframework.web.servlet.view.JstlView</value>
+		</property>
+		<property name="prefix">
+			<value>/web/hr/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+	
+</beans>
+	
+			

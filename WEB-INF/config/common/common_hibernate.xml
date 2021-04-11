@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd" >
+
+<beans>
+
+	<!--Configurer that replaces ${...} placeholders with values from properties files-->
+	<bean id="myDatabase"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<description>Database specific options</description>
+		<property name="location">
+			<value>/WEB-INF/classes/hibernate.properties</value>
+		</property>
+		<property name="ignoreUnresolvablePlaceholders">
+			<value>true</value>
+		</property>
+	</bean>
+	
+	<!--bean id="jndiDataSource"
+		class="org.springframework.jndi.JndiObjectFactoryBean" >
+		<property name="jndiName">
+            <value>java:/comp/env/jdbc</value>
+        </property>
+	</bean>
+	
+	<bean id="swapper" class="org.springframework.aop.target.HotSwappableTargetSource">
+   		<constructor-arg ref="jndiDataSource"/>
+	</bean-->
+
+
+	<!-- Bean Definition DBCP -->
+	<bean id="dataSource"
+		class="org.apache.tomcat.jdbc.pool.DataSource">
+		<property name="driverClassName">
+			<value>${hibernate.connection.driver_class}</value>
+		</property>
+		<property name="url">
+			<value>${hibernate.connection.url}</value>
+		</property>
+		<property name="username">
+			<value>${hibernate.connection.username}</value>
+		</property>
+		<property name="password">
+			<value>${hibernate.connection.password}</value>
+		</property>
+	</bean>
+
+	<!-- Hibernate SessionFactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"> 
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+
+		<property name="packagesToScan">
+		<list>
+		<value>com._4s_.HR.model</value>
+		<value>com._4s_.auditing.model</value>
+		<value>com._4s_.common.model</value>
+		<value>com._4s_.dbUpdate.model</value>
+		<value>com._4s_.security.model</value>
+		<value>com._4s_.i18n.model</value>
+		<value>com._4s_.requestsApproval.model</value>
+		</list>
+		</property>
+		<property name="mappingDirectoryLocations">
+			<list>
+
+		</list>
+		</property>
+
+		
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					${hibernate.dialect}
+				</prop>
+				<!-- <prop key="hibernate.connection.release_mode">after_statement</prop>-->
+  				<prop key="hibernate.show_sql">true</prop>  
+<!--		    <prop key="hibernate.hbm2ddl.auto">update</prop>  -->
+<!--				<prop key="hibernate.hbm2ddl.auto">create</prop> -->
+			</props>
+		</property>
+
+
+	</bean>
+
+	<!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+
+
+	<!-- Transaction template for Managers, from:
+		http://blog.exis.com/colin/archives/2004/07/31/concise-transaction-definitions-spring-11/ -->
+
+	<bean id="txProxyTemplate" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="handleRequest">PROPAGATION_REQUIRED,ISOLATION_READ_COMMITTED</prop>
+				<!--                <prop key="onSubmit">PROPAGATION_REQUIRED</prop>  ,-org.springframework.validation.BindException -->
+				<!--                <prop key="formBackingObject">PROPAGATION_REQUIRED,readOnly</prop>-->
+				<!--                 <prop key="*">PROPAGATION_REQUIRED</prop>-->
+			</props>
+		</property>
+	</bean>
+	
+	
+
+	
+	<bean id="txProxyTemplate2" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="getExamsCities">PROPAGATION_REQUIRED</prop>	
+				<!--                <prop key="onSubmit">PROPAGATION_REQUIRED</prop>  ,-org.springframework.validation.BindException -->
+				<!--                <prop key="formBackingObject">PROPAGATION_REQUIRED,readOnly</prop>-->
+				<!--                 <prop key="*">PROPAGATION_REQUIRED</prop>-->
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="txProxyTemplate3" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="getTransactionsNetValue">PROPAGATION_REQUIRED</prop>
+				<prop key="searchTransactionsForGettingDetails">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="txProxyTemplate4" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="getDoctorsOfSPBetween">PROPAGATION_REQUIRED</prop>
+				<!--                <prop key="onSubmit">PROPAGATION_REQUIRED</prop>  ,-org.springframework.validation.BindException -->
+				<!--                <prop key="formBackingObject">PROPAGATION_REQUIRED,readOnly</prop>-->
+				<!--                 <prop key="*">PROPAGATION_REQUIRED</prop>-->
+			</props>
+		</property>
+	</bean>
+
+	<!-- Open Session in View Interceptor -->
+
+	<bean id="openSessionInViewInterceptor"
+		class="org.springframework.orm.hibernate4.support.OpenSessionInViewInterceptor">
+		
+		 <property name="sessionFactory">
+	        <ref bean="sessionFactory" />
+	    </property>
+		<!-- ><property name="singleSession">
+			<value>true</value>
+		</property>
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+		<property name="flushModeName">
+			<value>FLUSH_AUTO</value>
+		</property>-->
+	</bean>
+
+</beans>

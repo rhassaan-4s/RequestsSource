@@ -1,0 +1,124 @@
+@charset "utf-8";
+/* CSS Document */
+td.helpTitle
+{ border-bottom: 2px solid #6699CC;
+border-left: 1px solid #6699CC;
+background-color: #BEC8D1;
+text-align: right;
+text-indent: 5px;
+font-family: Verdana;
+font-weight: bold;
+font-size: 15px;
+color: #404040;
+border-collapse :separate; }
+
+td.helpHed
+{ border-bottom: 2px solid #6699CC;
+border-left: 1px solid #6699CC;
+background-color: #BEC8D1;
+text-align: center;
+text-indent: 5px;
+font-family: Verdana;
+font-weight: bold;
+font-size: 13px;
+color: #404040;
+border-collapse :separate; }
+
+td.helpBod
+{ border-bottom: 1px #9CF  solid;
+border-top: 1px;
+border-left: 1px  #9CF ;
+border-right: 1px;
+border-collapse: collapse;
+border-spacing: 1px;
+text-align: center;
+text-indent: 10px;
+font-family: Verdana, sans-serif, Arial;
+font-weight: bold;
+font-size: 13px;
+color: #404040;
+background-color: #fafafa; }
+
+td.formReq
+{ border-bottom: 1px #9CF  solid;
+border-top: 1px;
+border-left: 1px  #9CF ;
+border-right: 1px;
+border-collapse: collapse;
+border-spacing: 1px;
+text-align: right;
+text-indent: 10px;
+font-family: Verdana, sans-serif, Arial;
+font-weight: bold;
+font-size: 15px;
+color: #990000;
+background-color: #E1E6EA; }
+
+td.formBod
+{ border-bottom: 1px #9CF  solid;
+border-top: 1px;
+border-left: 1px  #9CF ;
+border-right: 1px;
+border-collapse: collapse;
+border-spacing: 1px;
+text-align: right;
+text-indent: 10px;
+font-family: Verdana, sans-serif, Arial;
+font-weight: bold;
+font-size: 15px;
+color: #404040;
+background-color: #E1E6EA; }
+
+td.formBodControl
+{ border-bottom: 1px #9CF  solid;
+border-top: 1px;
+border-left: 1px  #9CF ;
+border-right: 1px;
+border-collapse: collapse;
+border-spacing: 1px;
+text-align: right;
+text-indent: 10px;
+font-family: Verdana, sans-serif, Arial;
+font-weight: bold;
+font-size: 15px;
+color: #404040;
+background-color: #F3F5F8; }
+
+table.sofT
+{
+	text-align: center;
+	font-family: Verdana;
+	font-weight: normal;
+	font-size: 13px;
+	color: #404040;
+	background-color: #EEEEEE;
+	border-bottom: 2px solid #6699CC;
+    border-left: 1px solid #6699CC;
+	border-spacing: 1px;
+	font-style: normal;
+	border: 2px solid #6699CC;
+    border-width: 3px 1px 3px 1px;
+	background-color: white;
+	padding: 1px 1px 1px 1px;	
+	border-style: inset inset inset inset;
+	background-color: white;
+	border-collapse: collapse;
+}
+ 
+table.listTable {
+	margin: 0px;
+	page-break-after: always;
+	border-style: none;
+	border-width: 0px;
+}
+
+td.page
+{ border-bottom: 2px solid #6699CC;
+border-left: 1px solid #6699CC;
+background-color: #BEC8D1;
+text-align: center;
+font-family: Verdana;
+font-weight: bold;
+font-size: 10px;
+color: #404040;
+border-collapse :separate; }

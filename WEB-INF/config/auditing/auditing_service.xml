@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd" >
+
+<beans >
+	<bean id="auditManager" parent="baseManager" class="com._4s_.auditing.service.AuditLogManagerImpl" >
+		<property name="auditDAO"><ref bean="auditLogDAO"/></property>
+	</bean>
+
+	<bean id="auditLogInterceptor"
+			class="com._4s_.auditing.service.AuditLogInterceptor">
+			<property name="auditLogDAO">
+				<ref bean="auditLogDAO" />
+			</property>
+		</bean>
+		
+</beans>

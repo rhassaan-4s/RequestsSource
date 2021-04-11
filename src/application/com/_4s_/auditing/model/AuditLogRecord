@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping
+>
+    <class
+        name="com._4s_.auditing.model.AuditLogRecord"
+        table="auditing_auditLog"
+        mutable="false"
+    >
+
+        <id
+            name="id"
+            column="id"
+            type="java.lang.Long"
+            unsaved-value="null"
+        >
+            <generator class="native">
+              <!--  
+                  To add non XDoclet generator parameters, create a file named 
+                  hibernate-generator-params-AuditLogRecord.xml 
+                  containing the additional parameters and place it in your merge dir. 
+              --> 
+            </generator>
+        </id>
+
+        <property
+            name="entityDisplayName"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+            column="entityDisplayName"
+            not-null="false"
+        />
+
+        <set
+            name="auditLogDetails"
+            table="auditing_auditLogDetail"
+            lazy="false"
+            inverse="true"
+            cascade="save-update"
+            sort="unsorted"
+        >
+
+            <key
+                column="auditLogRecord"
+            >
+            </key>
+
+            <one-to-many
+                  class="com._4s_.auditing.model.AuditLogDetail"
+            />
+
+        </set>
+
+        <property
+            name="created"
+            type="java.util.Date"
+            update="true"
+            insert="true"
+            column="created"
+            not-null="true"
+        />
+
+        <property
+            name="entityClass"
+            type="java.lang.Class"
+            update="true"
+            insert="true"
+            column="entityClass"
+            not-null="true"
+        />
+
+        <property
+            name="entityId"
+            type="java.lang.Long"
+            update="true"
+            insert="true"
+            column="entityId"
+            not-null="true"
+        />
+
+        <property
+            name="message"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+            column="message"
+            not-null="true"
+        />
+
+        <property
+            name="userId"
+            type="java.lang.Long"
+            update="true"
+            insert="true"
+            column="userId"
+            not-null="true"
+        />
+
+        <!--
+            To add non XDoclet property mappings, create a file named
+                hibernate-properties-AuditLogRecord.xml
+            containing the additional properties and place it in your merge dir.
+        -->
+
+    </class>
+
+</hibernate-mapping>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+    <!-- Transaction declarations for business services.  To apply a generic transaction proxy to
+         all managers, you might look into using the BeanNameAutoProxyCreator -->
+
+    
+	<bean id="restService" class="com._4s_.restServices.service.RequestsServiceImpl" >
+		 <property name="requestsApprovalDAO"><ref bean="requestsApprovalDAO"/></property>
+		 <property name="requestsApprovalManager"><ref bean="requestsApprovalManager"/></property>
+		<property name="securityDao"><ref bean="securityDAO"/></property>
+	</bean>
+	 
+	 
+</beans>

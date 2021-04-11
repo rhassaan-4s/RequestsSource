@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean id="defaultPageController" parent="txProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.security.web.action.DefaultPage">
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+				<property name="defaultOne">
+					<ref bean="defaultLocale" />
+				</property>
+				<property name="localeSource">
+					<ref bean="defaultLocale"/>
+				</property>
+				<property name="userMap">
+					<ref bean="users"/>
+				</property>
+				<property name="commonManager">
+					<ref bean="commonManager"/>
+				</property>
+
+				<property name="securityManager">
+					<ref bean="securityManager"/>
+				</property>
+				<property name="requestsApprovalManager">
+					<ref bean="requestsApprovalManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="LoginController" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.security.web.action.LoginController">
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="forgetPasswordController" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.security.web.action.ForgetPasswordController">
+				<property name="commandName">
+					<value>user</value>
+				</property>
+				<property name="securityManager">
+					<ref bean="securityManager"/>
+				</property>
+				<property name="formView">
+					<value>forgetPassword</value>
+				</property>
+				<property name="validator">
+					<ref bean="validateForgetPassword"/>
+				</property>
+				<property name="mailSender"><ref bean="mailSender"/></property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="LogoutController" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.security.web.action.LogoutController">
+				<!-- <property name="sessionRegistry">
+					<ref bean="sessionRegistry"/>
+				</property> -->
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="editSecurityFormController"
+		parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.security.web.action.EditSecurity">
+				<property name="commandName">
+					<value>field</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.security.model.Fields</value>
+				</property>
+				<property name="formView">
+					<value>editSecurity</value>
+				</property>
+				<property name="successView">
+					<value>editSecurity.html</value>
+				</property>
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+				<property name="mgr">
+					<ref bean="securityManager"/>
+				</property>
+				<property name="binders">
+					<list>
+						<ref bean="permissionBinder"/>
+						<ref bean="roleBinder"/>
+					</list>
+				</property>
+	
+				<property name="rollbackMode">
+					<value>ROLLBACK_ON_ERROR</value>
+				</property>
+			</bean>
+		</property>
+</bean>
+
+<bean id="roleController" parent="txProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.security.web.action.RoleController">
+				<property name="mgr">
+					<ref bean="securityManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="updateRoleFormController" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.security.web.action.UpdateRole">
+				<property name="commandName">
+					<value>role</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.security.model.Roles</value>
+				</property>
+				<property name="formView">
+					<value>updateRole</value>
+				</property>
+				
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+				<property name="validator">
+					<ref bean="validateRole"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="userController" parent="txProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.security.web.action.UserController">
+				<property name="mgr">
+					<ref bean="securityManager"/>
+				</property>
+				<property name="commonManager">
+					<ref bean="commonManager"/>
+				</property>
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>	
+	
+	
+	<bean id="imeiController" parent="txProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.security.web.action.ImeiController">
+				<property name="mgr">
+					<ref bean="securityManager"/>
+				</property>
+				<property name="commonManager">
+					<ref bean="commonManager"/>
+				</property>
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>				
+	
+	
+<bean id="AddUserToRole" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.security.web.action.AddUserToRole">
+				<property name="commandName">
+					<value>user</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.security.model.User</value>
+				</property>
+				<property name="formView">
+					<value>addUserToRole</value>
+				</property>
+				<property name="successView">
+					<value>addUserToRole.html</value>
+				</property>
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+				<property name="mgr">
+					<ref bean="messageManager"/>
+				</property>
+				<!--property name="communicationManager">
+					<ref bean="communicationManager"/>
+				</property-->
+				<property name="commonManager">
+					<ref bean="commonManager"/>
+				</property>
+				<property name="binders">
+					<list>
+						<ref bean="roleBinder"/>
+						<ref bean="branchBinder"/>
+						<ref bean="departmentBinder"/>
+						<ref bean="cityBinder"/>
+						<ref bean="securityApplicationBinder"/>
+					</list>
+				</property>
+				<property name="validator">
+					<ref bean="validateUser"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="NewRole" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.security.web.action.AddNewRole">
+				<property name="commandName">
+					<value>role</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.security.model.Roles</value>
+				</property>
+				<property name="formView">
+					<value>addNewRole</value>
+				</property>	
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+				<property name="binders">
+					<list>
+						<ref bean="securityApplicationBinder"/>
+						<ref bean="roleBinder"/>
+					</list>
+				</property>
+				<property name="validator">
+					<ref bean="validateRole"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="changeUserApplicationFormController"
+		parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.security.web.action.ChangeUserApplication">
+				<property name="commandName">
+					<value>user</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.security.model.User</value>
+				</property>
+				<property name="formView">
+					<value>changeUserApplication</value>
+				</property>
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+				<property name="mgr">
+					<ref bean="securityManager"/>
+				</property>
+				<property name="rollbackMode">
+					<value>ROLLBACK_ON_ERROR</value>
+				</property>
+				<property name="binders">
+					<list>
+						<ref bean="securityApplicationBinder"/>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="changeUserPasswordFormController"
+		parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.security.web.action.ChangeUserPasswordFormController">
+				<property name="commandName">
+					<value>changePasswordCommand</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.security.web.command.ChangePasswordCommand</value>
+				</property>
+				<property name="formView">
+					<value>changeUserPassword</value>
+				</property>
+				<property name="successView">
+					<value>changeUserPassword.html</value>
+				</property>
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+				<property name="rollbackMode">
+					<value>ROLLBACK_ON_ERROR</value>
+				</property>
+				
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="AddAuthority" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.security.web.action.AddAuthority">
+				<property name="commandName">
+					<value>userPrivilege</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.security.model.UserPrivilege</value>
+				</property>
+				<property name="formView">
+					<value>addAuthority</value>
+				</property>
+				<property name="successView">
+					<value>addAuthority.html</value>
+				</property>
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+				<property name="mgr">
+					<ref bean="messageManager"/>
+				</property>
+				<property name="commonManager">
+					<ref bean="commonManager"/>
+				</property>
+				<property name="binders">
+					<list>
+						<ref bean="userBinder"/>
+					</list>
+				</property>
+				
+				
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="allFieldsController" parent="txProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.security.web.action.AllFields">
+				<property name="mgr">
+					<ref bean="securityManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>			
+
+	<bean id="errorCode403Controller" parent="txProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.security.web.action.ErrorCode403Controller">
+			</bean>
+		</property>
+	</bean>			
+
+	<bean id="errorCode404Controller" parent="txProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.security.web.action.ErrorCode404Controller">
+			</bean>
+		</property>
+	</bean>			
+	
+	
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="openSessionInViewInterceptor" />
+			</list>
+		</property>
+		<property name="mappings">
+			<props>
+				<prop key="/editSecurity.html">editSecurityFormController</prop>
+				<prop key="/login.html">LoginController</prop>
+				<prop key="/logout.html">LogoutController</prop>
+				<prop key="/changeUserApplication.html">changeUserApplicationFormController</prop>
+				<prop key="/addNewRole.html">NewRole</prop>
+				<prop key="/addUserToRole.html">AddUserToRole</prop>
+				<prop key="/defaultPage.html">defaultPageController</prop>
+				<prop key="/userDetails.html">userController</prop>
+				<prop key="/imeiView.html">imeiController</prop>
+				<prop key="/roleDetails.html">roleController</prop>
+				<prop key="/updateRole.html">updateRoleFormController</prop>
+				<prop key="/changeUserPassword.html">changeUserPasswordFormController</prop>
+				<prop key="/allFields.html">allFieldsController</prop>
+				<prop key="/forgetPassword.html">forgetPasswordController</prop>
+				<prop key="/errorCode403.html">errorCode403Controller</prop>
+				<prop key="/errorCode404.html">errorCode404Controller</prop>
+				<prop key="/addAuthority.html">AddAuthority</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="requestContextAttribute">
+			<value>rc</value>
+		</property>
+		<property name="viewClass">
+			<value>org.springframework.web.servlet.view.JstlView</value>
+		</property>
+		<property name="prefix">
+			<value>/web/security/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+	
+</beans>

@@ -1,0 +1,140 @@
+<property name="annotatedClasses">
+			<list>
+						<!-- HR Start -->
+				<value>com._4s_.HR.model.HRJob</value>
+				<value>com._4s_.HR.model.Degree</value>
+				<value>com._4s_.HR.model.Grade</value>
+				<value>com._4s_.HR.model.SalaryRaise</value>
+				<value>com._4s_.HR.model.Punishment</value>
+				<value>com._4s_.HR.model.EndServiceReasons</value>
+				<value>com._4s_.HR.model.HRCity</value>
+				<value>com._4s_.HR.model.Center</value>
+				<value>com._4s_.HR.model.Sector</value>
+				<value>com._4s_.HR.model.HRRegion</value>
+				<value>com._4s_.HR.model.HRLocation</value>
+				<value>com._4s_.HR.model.HRCountry</value>
+				<value>com._4s_.HR.model.HRSchool</value>
+				<value>com._4s_.HR.model.HRQualification</value>
+				<value>com._4s_.HR.model.HRUniversity</value>
+				<value>com._4s_.HR.model.HRInstitute</value>
+				<value>com._4s_.HR.model.HRCourse</value>
+				<value>com._4s_.HR.model.HRCourseOrganization</value>
+				<value>com._4s_.HR.model.HRCourseSpecialty</value>
+				<value>com._4s_.HR.model.HRCourseResult</value>
+				<value>com._4s_.HR.model.HRNationality</value>
+				<value>com._4s_.HR.model.HRReligion</value>
+				<value>com._4s_.HR.model.HRInternalDivisionBranch</value>
+				<value>com._4s_.HR.model.HRInternalDivision</value>
+				<value>com._4s_.HR.model.HRInternalLevel</value>
+				<value>com._4s_.HR.model.HRQualificationLevel</value>
+				<value>com._4s_.HR.model.HRGeographicalLevel</value>
+				<value>com._4s_.HR.model.HRSpecialtyLevel</value>
+				<value>com._4s_.HR.model.HRQualificationDivision</value>
+				<value>com._4s_.HR.model.HRGeographicalDivision</value>
+				<value>com._4s_.HR.model.HRSpecialtyDivision</value>
+				<value>com._4s_.HR.model.HRDocuments</value>
+				<value>com._4s_.HR.model.HRTitle</value>
+				<value>com._4s_.HR.model.HREmployee</value>
+				<value>com._4s_.HR.model.HREmployeeAddress</value>
+				<value>com._4s_.HR.model.HREmployeeJob</value>
+				<value>com._4s_.HR.model.HREmployeeQualification</value>
+				<value>com._4s_.HR.model.HRMaritalStatus</value>
+				<value>com._4s_.HR.model.HRMilitaryService</value> 
+				<value>com._4s_.HR.model.HREmployeeCourse</value>
+				<value>com._4s_.HR.model.HREmployeeRelative</value>
+				<value>com._4s_.HR.model.HREmployeeStatus</value>
+				<value>com._4s_.HR.model.HRKinship</value>
+				<value>com._4s_.HR.model.HRFunctionalGroup</value>
+				<value>com._4s_.HR.model.HREmployeeMaritalStatus</value>
+				<value>com._4s_.HR.model.HREmployeeEmployeeStatus</value>
+				<value>com._4s_.HR.model.HREmployeeDocuments</value>
+				<value>com._4s_.HR.model.HRSponsor</value>
+				<value>com._4s_.HR.model.HREmployeeSponsor</value>
+				<value>com._4s_.HR.model.HRVacationType</value>
+				<value>com._4s_.HR.model.HRVacation</value>
+				<value>com._4s_.HR.model.HRViolation</value>
+				<value>com._4s_.HR.model.HRViolationResult</value>
+				<value>com._4s_.HR.model.HRViolationReason</value>
+				<value>com._4s_.HR.model.HRViolationRules</value>
+				<value>com._4s_.HR.model.HRCalculationMethod</value>
+				<value>com._4s_.HR.model.HRYearAllowVacationTransfer</value>
+				<value>com._4s_.HR.model.HRVacationRules</value>
+				<value>com._4s_.HR.model.HREmployeeVacationInstall</value>
+				<value>com._4s_.HR.model.HRServiceLengthCalculation</value>
+				<value>com._4s_.HR.model.HRPeriodType</value>
+				<value>com._4s_.HR.model.HREmployeePenalty</value>
+				<value>com._4s_.HR.model.HREmployeeAccusation</value>
+				<value>com._4s_.HR.model.HRAccusationAction</value>
+				<value>com._4s_.HR.model.HREmployeeVacation</value>
+				<value>com._4s_.HR.model.HREmployeeVacationIncrease</value>
+				<value>com._4s_.HR.model.HREmployeeVacationDecrease</value>
+				<value>com._4s_.HR.model.HREmployeeSpecialVacation</value>
+				<value>com._4s_.HR.model.HREmployeeErrand</value>
+				<value>com._4s_.HR.model.AInsuranceCala</value>
+				<value>com._4s_.HR.model.HRBank</value>
+				<value>com._4s_.HR.model.HRTax</value>
+				<value>com._4s_.HR.model.HREmployeeCostCenter</value>
+				<value>com._4s_.HR.model.HRSyndicate</value>
+				
+				
+				
+				
+				<!-- HR End -->
+						
+				<!-- Common -->
+				<value>com._4s_.common.model.City</value>
+				<value>com._4s_.common.model.Country</value>
+				<value>com._4s_.common.model.Department</value>
+				<value>com._4s_.common.model.Employee</value>
+				<value>com._4s_.common.model.LastSequence</value>
+				<value>com._4s_.common.model.Branch</value>
+				<value>com._4s_.common.model.Company</value>
+				<value>com._4s_.common.model.TypesData</value>
+				<value>com._4s_.common.model.Types</value>
+				<value>com._4s_.common.model.HijriDateAdjustment</value>
+				<value>com._4s_.common.model.Region</value>
+				<value>com._4s_.common.model.Flag</value>
+				
+				
+				<!-- Auditing -->
+				<value>com._4s_.auditing.model.AuditLogDetail</value>
+				<value>com._4s_.auditing.model.AuditLogRecord</value>
+				<value>com._4s_.auditing.model.ClassName</value>
+
+				<!-- I18n -->
+				<value>com._4s_.i18n.model.Key</value>
+				<value>com._4s_.i18n.model.MyLocale</value>
+				<value>com._4s_.i18n.model.MyMessage</value>
+
+				<!-- Security -->
+				<value>com._4s_.security.model.Fields</value>
+				<value>com._4s_.security.model.Permissions</value>
+				<value>com._4s_.security.model.Roles</value>
+				<value>com._4s_.security.model.UserPrivilege</value>
+				<value>com._4s_.security.model.UserBranch</value>
+				<value>
+					com._4s_.security.model.SecurityApplication
+				</value>
+				<value>com._4s_.security.model.User</value>
+
+				<!-- dbUpdate -->
+				<value>com._4s_.dbUpdate.model.SQL</value>
+				
+		
+				
+				<!-- requestsApproval -->
+				<value>com._4s_.requestsApproval.model.LoginUsers</value>
+				<value>com._4s_.requestsApproval.model.RequestTypes</value>
+				<value>com._4s_.requestsApproval.model.Requests</value>
+				<value>com._4s_.requestsApproval.model.AccessLevels</value>
+                <value>com._4s_.requestsApproval.model.GroupAcc</value>
+                <value>com._4s_.requestsApproval.model.LoginUsersRequests</value>
+                <value>com._4s_.requestsApproval.model.EmpReqTypeAcc</value>
+                <value>com._4s_.requestsApproval.model.EmpReqApproval</value>
+				<value>com._4s_.requestsApproval.model.Vacation</value>
+				<value>com._4s_.requestsApproval.model.CompanyDetails</value>
+				<value>com._4s_.requestsApproval.model.AnnualVacLimit</value>
+				
+				<!-- ////////////////// -->
+			</list>
+		</property>

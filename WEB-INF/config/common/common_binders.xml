@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans >
+
+	<bean id="typesDataBinder" parent="domainObjectBinder" >
+		<property name="bindedClass">
+			<value>com._4s_.common.model.TypesData</value>
+		</property>
+		<property name="allowCreateNew">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="cityBinder" parent="domainObjectBinder" >
+		<property name="bindedClass">
+			<value>com._4s_.common.model.City</value>
+		</property>
+		<property name="allowCreateNew">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="countryBinder" parent="domainObjectBinder" >
+		<property name="bindedClass">
+			<value>com._4s_.common.model.Country</value>
+		</property>
+		<property name="allowCreateNew">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="regionBinder" parent="domainObjectBinder" >
+		<property name="bindedClass">
+			<value>com._4s_.common.model.Region</value>
+		</property>
+		<property name="allowCreateNew">
+			<value>false</value>
+		</property>
+	</bean>
+
+<!-- *************************** Department *************************** -->	
+	
+
+	<bean id="departmentBinder" parent="domainObjectBinder" >
+		<property name="bindedClass">
+			<value>com._4s_.common.model.Department</value>
+		</property>
+		<property name="allowCreateNew">
+			<value>false</value>
+		</property>
+	</bean>
+
+<!-- *************************** Employee *************************** -->	
+	<bean id="employeesController" parent="txProxyTemplate" >
+		<property name="target">
+			<bean class="com._4s_.common.web.action.EmployeesController">
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	
+	<bean id="employeeBinder" parent="domainObjectBinder" >
+		<property name="bindedClass">
+			<value>com._4s_.common.model.Employee</value>
+		</property>
+		<property name="allowCreateNew">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="companyBinder" parent="domainObjectBinder" >
+		<property name="bindedClass">
+			<value>com._4s_.common.model.Company</value>
+		</property>
+		<property name="allowCreateNew">
+			<value>false</value>
+		</property>
+	</bean>
+	
+	<bean id="branchBinder" parent="mainBinder" >
+		<property name="bindedClass">
+			<value>com._4s_.common.model.Branch</value>
+		</property>
+		<property name="allowCreateNew">
+			<value>false</value>
+		</property>
+	</bean>
+	
+</beans>
