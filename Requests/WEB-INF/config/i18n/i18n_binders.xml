@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE beans PUBLIC
+    "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="no" default-lazy-init="false"
+	default-dependency-check="none">
+
+	<bean id="localeBinder" parent="domainObjectBinder">
+		<property name="bindedClass">
+			<value>com._4s_.i18n.model.MyLocale</value>
+		</property>
+		<property name="allowCreateNew">
+			<value>false</value>
+		</property>
+	</bean>
+</beans>	

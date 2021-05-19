@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans >
+
+	<bean id="messageSource"
+		class="com._4s_.i18n.service.ResourceMapMessageSource">
+		<property name="messageDAO">
+			<ref bean="messageDAO" />
+		</property>
+		<property name="localeSource">
+			<ref bean="defaultLocale" />
+		</property>
+		<property name="defaultLocaleSource">
+			<ref bean="defaultLocale" />
+		</property>
+		<property name="userMap">
+					<ref bean="users"/>
+		</property>
+	</bean>
+	
+	<bean id="users" class="com._4s_.security.service.UsersMap">
+		
+	</bean>
+	
+	<bean id="defaultLocale" class="com._4s_.i18n.service.DefaultLocale"
+		init-method="init">
+		<property name="messageDAO">
+			<ref bean="messageDAO" />
+		</property>
+	</bean>
+	
+	 <bean id="messageManager" parent="baseManager" class="com._4s_.i18n.service.MessageManagerImpl" >
+		    	<property name="messageDAO"><ref bean="messageDAO"/></property>
+	 </bean>
+	 
+	  
+</beans>

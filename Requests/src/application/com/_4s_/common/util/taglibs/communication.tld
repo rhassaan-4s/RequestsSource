@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN" "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+  
+<taglib>
+
+	<tlib-version>1.1.1</tlib-version>
+
+	<jsp-version>1.2</jsp-version>
+
+	<short-name>common</short-name>
+	
+	<uri>http://www.4s-systems.com/tags/common</uri>
+
+	<description>Communication tags</description>
+
+	<tag>
+
+		<name>username</name>
+		<tag-class>com._4s_.common.util.taglibs.Username</tag-class>
+		<body-content>empty</body-content>
+
+		<description>
+			This gets the username from the context holder
+		</description>
+	</tag>
+	
+	<tag>
+
+		<name>loginDate</name>
+		<tag-class>com._4s_.common.util.taglibs.LoginDate</tag-class>
+		<body-content>empty</body-content>
+
+		<description>
+			This gets the username from the context holder
+		</description>
+	</tag>
+	
+	<tag>
+
+		<name>id</name>
+		<tag-class>com._4s_.common.util.taglibs.Id</tag-class>
+		<body-content>empty</body-content>
+
+		<description>
+			This gets the idfrom the context holder
+		</description>
+	</tag>
+	
+	<tag>
+
+		<name>dateSubtractor</name>
+		<tag-class>com._4s_.common.util.taglibs.DateSubtractor</tag-class>
+		<body-content>empty</body-content>
+
+		<description>
+			This gets the difference between todays date and another date
+		</description>
+		
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+
+		<name>getCities</name>
+		<tag-class>com._4s_.common.util.taglibs.GetCities</tag-class>
+		<body-content>empty</body-content>
+
+		<description>
+			This gets a list of cities of a certain country
+		</description>
+		
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+</taglib>

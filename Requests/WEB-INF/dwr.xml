@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE dwr PUBLIC
+  "-//GetAhead Limited//DTD Direct Web Remoting 1.0//EN"
+  "http://www.getahead.ltd.uk/dwr/dwr10.dtd">
+
+<dwr>
+	<allow>
+		<convert converter="bean" match="com._4s_.*" />
+		
+		<create creator="spring" javascript="requestsDwr">
+			<param name="beanName" value="requestsApprovalManager" />
+		</create>
+		
+		<create creator="spring" javascript="commonManager">
+			<param name="beanName" value="commonManager" />
+		</create>
+		
+		<create creator="spring" javascript="qry">
+			<param name="beanName" value="queries" />
+		</create>
+
+		<create creator="spring" javascript="multiCalendarDate">
+			<param name="beanName" value="multiCalendarDate" />
+		</create>
+		
+		<create creator="spring" javascript="securityManager">
+			<param name="beanName" value="securityManager" />
+		</create>
+
+		
+		<create creator="spring" javascript="reportParametersQuery">
+			<param name="beanName" value="reportParametersQuery" />
+		</create>
+		
+	</allow>
+</dwr>

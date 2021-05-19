@@ -1,0 +1,25 @@
+#ng_bitflux_org, body {
+background-color: #ffffff;
+font-size: xx-small;
+font-family:  Arial,Verdana, SunSans-Regular, Sans-Serif;
+color:#222;
+padding:0px;
+margin: 0px;
+}
+
+
+h2 {
+	font-size: x-small;
+}
+.ad, .post_tags, .post_related_entries, #banner, #right {
+	display: none;
+}
+
+#mobile ul {
+padding: 0px;
+margin: 0px;
+}
+
+#mobile ul li  {
+list-style-image: url(/themes/bitflux/images/mobile.gif);
+}

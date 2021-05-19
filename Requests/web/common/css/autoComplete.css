@@ -1,0 +1,65 @@
+#LSResult {    
+     position: absolute;
+     background-color: #aaa; 
+     min-width: 180px; 
+     margin-left: 2px;
+     margin-top: 7px;
+}
+  
+#LSShadow {
+     position: relative;
+     right: 1px;
+     bottom: 6px;
+     background-color: #666; /*shadow color*/
+     color: inherit;
+}
+ 
+#LSResult ul {
+     margin-bottom: -5px;
+     margin-top: 0px;
+     padding-top: 0px;  
+}
+ 
+#LSResult .LSRes {
+     position: relative;
+     bottom: 1px;
+     right: 1px;
+     background-color: white;
+     border:  1px solid #AAA;
+}
+  
+#LSResult li:before {
+     
+}
+
+#LSResult li {
+    margin: 0px;
+    line-height: 1.3em;
+    padding-top: 0px;
+    padding-bottom: 3px;
+    text-indent: -1em;
+    padding-left: 1em;
+    padding-right: 1em;
+    border: 0px;
+}
+
+#LSResult ul  {
+        list-style-type: none;
+        margin-left: 0px;
+        padding-left: 0px;
+        margin-top: 5px;
+    }
+
+#LSResult .searchHighlight {
+    background-color: #ffff00;
+}
+
+#LSResult #LSHighlight {
+     background-color: rgb(160,160,220);
+}
+
+#LSResult #livesearch {
+    width: 140px;
+    display: block;
+}
+    

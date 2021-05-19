@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping
+>
+    <class
+        name="com._4s_.security.model.User"
+        table="security_users"
+    >
+
+        <id
+            name="id"
+            column="id"
+            type="java.lang.Long"
+        >
+            <generator class="native">
+              <!--  
+                  To add non XDoclet generator parameters, create a file named 
+                  hibernate-generator-params-User.xml 
+                  containing the additional parameters and place it in your merge dir. 
+              --> 
+            </generator>
+        </id>
+
+        <many-to-one
+            name="language"
+            class="com._4s_.i18n.model.MyLocale"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="defaultLocale"
+        />
+
+        <many-to-one
+            name="defaultApplication"
+            class="com._4s_.security.model.SecurityApplication"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="defaultApplication"
+        />
+
+        <property
+            name="username"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+            column="userName"
+        />
+
+        <property
+            name="password"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+            column="password"
+        />
+
+        <set
+            name="roles"
+            table="security_user_roles"
+            lazy="false"
+            cascade="none"
+            sort="unsorted"
+        >
+
+            <key
+                column="users"
+            >
+            </key>
+
+            <many-to-many
+                class="com._4s_.security.model.Roles"
+                column="roles"
+                outer-join="auto"
+             />
+
+        </set>
+
+        <many-to-one
+            name="employee"
+            class="com._4s_.common.model.Employee"
+            cascade="all"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="employee"
+        />
+	<one-to-one
+            name="userPrivilege"
+            class="com._4s_.security.model.UserPrivilege"
+            cascade="none"
+            inner-join="auto"
+            update="false"
+            insert="false"
+            column="id"
+            referencedColumn="user_id"
+        />
+        <!--
+            To add non XDoclet property mappings, create a file named
+                hibernate-properties-User.xml
+            containing the additional properties and place it in your merge dir.
+        -->
+
+    </class>
+
+</hibernate-mapping>

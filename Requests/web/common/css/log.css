@@ -1,0 +1,24 @@
+#logInfo {
+	position: absolute;
+	left: 40%;
+	top: 0px;
+	right: 0px;
+	
+	margin: 0cm;
+	padding: 5mm;
+	
+	height: 12cm;
+	overflow: auto;
+	border-width: 1px;
+	border-style: dotted;
+	border-color: rgb(150,150,210);
+	
+	font-family: courier, arial;
+	font-size: 10pt;
+	color: red
+}
+#focusInfo {
+	border-color: red;
+	border-width: 1px;
+	border-style: solid;
+}
