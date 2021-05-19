@@ -129,6 +129,19 @@ public class AccessLevelsForm extends BaseSimpleFormController{
 			}
 			
 		}
+
+		String groupAdd=request.getParameter("groupAdd");
+		String[] employee=request.getParameterValues("employee");
+		
+		if (errors.getErrorCount()==0) {
+			if(groupAdd!=null&&!groupAdd.equals("")){
+
+				log.debug("emp " + employee);
+				if (employee==null || employee.equals("")) {
+					errors.reject("requestsApproval.errors.selectEmployeeFirst");
+				}
+			}
+		}
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
@@ -173,36 +186,40 @@ public class AccessLevelsForm extends BaseSimpleFormController{
 		
 		}
 		
-		if(employee!=null&&!employee.equals("")&&groupAdd!=null&&!groupAdd.equals("")){
-		
-			
-			
-			GroupAcc groupacc=(GroupAcc)requestsApprovalManager.getObject(GroupAcc.class,new Long(groupAdd));
-		  		 
-	
-	
-		for(int i=0;i<employee.length;i++){	
-			
-			LoginUsers loginuser=(LoginUsers)requestsApprovalManager.getObject(LoginUsers.class, new Long(employee[i]));
-			
-			AccessLevels accessLeve=(AccessLevels)requestsApprovalManager.getObjectByTwoObjects(AccessLevels.class, "level_id", groupacc, "emp_id", loginuser);
-			
-			if(accessLeve==null){
-			accessLevel=new AccessLevels();
-			
-			accessLevel.setLevel_id(groupacc);
-			
-		     
-		    accessLevel.setEmp_id(loginuser);
-		
-		    requestsApprovalManager.saveObject(accessLevel);
-		    
+		if(groupAdd!=null&&!groupAdd.equals("")){
+
+			log.debug("emp " + employee);
+			if (employee!=null&&!employee.equals("")) {
+
+				GroupAcc groupacc=(GroupAcc)requestsApprovalManager.getObject(GroupAcc.class,new Long(groupAdd));
+
+
+
+				for(int i=0;i<employee.length;i++){	
+
+					LoginUsers loginuser=(LoginUsers)requestsApprovalManager.getObject(LoginUsers.class, new Long(employee[i]));
+
+					AccessLevels accessLeve=(AccessLevels)requestsApprovalManager.getObjectByTwoObjects(AccessLevels.class, "level_id", groupacc, "emp_id", loginuser);
+
+					if(accessLeve==null){
+						accessLevel=new AccessLevels();
+
+						accessLevel.setLevel_id(groupacc);
+
+
+						accessLevel.setEmp_id(loginuser);
+
+						requestsApprovalManager.saveObject(accessLevel);
+
+					}
+
+				}
+			} else {
+				log.debug("select emp first " );
+				errors.reject("requestsApproval.errors.selectEmployeeFirst");
 			}
-		
-		  }
-		
 		}
-		
+
 		
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 		return new ModelAndView(new RedirectView(getSuccessView()));
