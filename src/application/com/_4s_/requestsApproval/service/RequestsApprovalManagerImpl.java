@@ -1227,9 +1227,14 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				EmpReqTypeAcc loggedInAcc = null;
 				GroupAcc loggedInGroupAcc = null;
+				log.debug("loggedInGroupAcc " + loggedInGroupAcc);
+				log.debug("loggedInEmpReqAcc.size()" + loggedInEmpReqAcc.size());
 				if (loggedInEmpReqAcc.size()>0) {
+					log.debug("if condition " );
 					loggedInAcc=(EmpReqTypeAcc)loggedInEmpReqAcc.get(0);
+					log.debug("loggedInAcc " +loggedInAcc);
 					loggedInGroupAcc = loggedInAcc.getGroup_id();
+					log.debug("loggedInGroupAcc " + loggedInGroupAcc);
 					log.debug("loggedInGroupAcc " + loggedInGroupAcc.getId());
 					loggedInEmpGroupAccessLevels = loggedInGroupAcc.getAccessLevel();
 				}
@@ -1267,6 +1272,9 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					if (approvals.size()>0) {
 						empReqApproval = (EmpReqApproval)approvals.get(0);
 					} else {
+						log.debug(" loggedInGroupAcc " + loggedInGroupAcc);
+						log.debug("temp " + temp);
+						log.debug("temp.groupId " + temp.getGroup_id());
 						if (i==0 && !loggedInGroupAcc.equals(temp.getGroup_id())) {
 							//first priority didn't approve - and first priority isn't the one approving now
 							log.debug("first priority didn't approve - and first priority isn't the one approving now");

@@ -252,6 +252,7 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		Calendar c = Calendar.getInstance();
 //		c.setTimeZone(TimeZone.getTimeZone("EST"));
 		Date now = c.getTime();
+		log.debug("Time now " + now);
 		loginUsersRequests.setPeriod_from(now);
 		loginUsersRequests.setRequest_date(now);
 
