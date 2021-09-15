@@ -266,7 +266,8 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		String address = "";
 		log.debug("accuracy " + accuracy);
 		if (accuracy!=null && !accuracy.isEmpty()) {
-			if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
+			Long acc = Math.round(Double.parseDouble(accuracy));
+			if (settings.getLocationAccuracy()>= acc.intValue()) {
 				address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
 			} else {
 				address = "Address is not accurate to be saved";

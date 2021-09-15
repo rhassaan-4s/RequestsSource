@@ -1044,7 +1044,8 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		String accuracy =  (String)request.getParameter("accuracy");
 		String address = "";
 		if (accuracy!=null && !accuracy.isEmpty()) {
-			if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
+			Long acc = Math.round(Double.parseDouble(accuracy));
+			if (settings.getLocationAccuracy()>= acc.intValue()) {
 				address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
 			}
 		}
