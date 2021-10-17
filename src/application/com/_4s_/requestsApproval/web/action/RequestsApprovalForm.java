@@ -3,6 +3,7 @@ package com._4s_.requestsApproval.web.action;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -78,6 +79,7 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 
 			Employee emp =(Employee) request.getSession().getAttribute("employee");
 			LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
+			List accLevels = requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "emp_id", loginUsers);
 			model.put("emp", loginUsers.getName());
 			Map approvalRequest = new HashMap();
 			List<String> ordered1= new ArrayList();
@@ -225,6 +227,36 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 							}
 							requestsApprovalManager.saveObject(requestInfo);
 
+						}
+					} else {
+						// no one approved till now
+						//should check the logged in user if he is the one 
+						//supposed to approve a radio button should be displayed
+						
+						EmpReqTypeAcc empAcc = null;
+						List accLev = null;
+						log.debug("empReqAcc for the requestor size " + empReqAcc.size());
+						if(empReqAcc.size()>0) {
+							empAcc =  (EmpReqTypeAcc)empReqAcc.get(i);
+							log.debug("empAcc " + empAcc.getId());
+							accLev = empAcc.getGroup_id().getAccessLevel();//levels of the current employee request to be approved
+							log.debug("requestor group id " + empAcc.getGroup_id().getId());
+						}
+						Iterator iter = accLevels.iterator();//manager levels
+						while(iter.hasNext()) {
+							AccessLevels managerAccLev = (AccessLevels)iter.next();
+							log.debug("manager acc lev " + managerAccLev.getId());
+							if (accLev!=null && accLev.contains(managerAccLev)) {
+								approvalRequest.put("title", managerAccLev.getLevel_id().getTitle());
+								log.debug("-----title of group-----"+managerAccLev.getLevel_id().getTitle());
+								approvalRequest.put("id", empAcc.getId());
+//								approvalRequest.put("status", empReqApproval.getApproval());
+//								log.debug("-----status-empReqApproval.getApproval()--"+empReqApproval.getApproval());
+								approvalRequest.put("user", loginUsers.getName());
+								log.debug("-----user-----"+loginUsers.getName());
+//								approvalRequest.put("note", empReqApproval.getNote());
+								approvalList.add(approvalRequest);
+							}
 						}
 					}
 				} catch (Exception e) {
