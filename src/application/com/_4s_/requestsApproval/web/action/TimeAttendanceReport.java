@@ -24,6 +24,10 @@ import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.i18n.model.MyMessage;
+import com._4s_.requestsApproval.model.AccessLevels;
+import com._4s_.requestsApproval.model.EmpReqTypeAcc;
+import com._4s_.requestsApproval.model.GroupAcc;
+import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
@@ -51,23 +55,118 @@ public class TimeAttendanceReport implements Controller{
 		
 		Boolean differentEmp = false;
 		
-		String empCode = request.getParameter("empCode");
-		log.debug("empCode " + empCode);
-		if(empCode!=null && !empCode.isEmpty()) {
-			if(!empCode.equals(emp.getEmpCode())) {
-				Employee searchEmp = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", empCode);
-				if (!loggedInEmp.equals(searchEmp)) {
-					differentEmp = true;
-				}
-				emp = searchEmp;
-				log.debug("emp " + emp);
-			}
-		}
+//		String empCode = request.getParameter("empCode");
+//		log.debug("empCode " + empCode);
+//		if(empCode!=null && !empCode.isEmpty()) {
+//			if(!empCode.equals(emp.getEmpCode())) {
+//				Employee searchEmp = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", empCode);
+//				if (!loggedInEmp.equals(searchEmp)) {
+//					differentEmp = true;
+//				}
+//				emp = searchEmp;
+//				log.debug("emp " + emp);
+//			}
+//		}
 		Map model=new HashMap();
 		model.put("emp", emp);
-		model.put("empCode", empCode);
+//		model.put("empCode", empCode);
 		
 		model.put("differentEmp", differentEmp);
+		
+		String empCode = "";
+		LoginUsers loginUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", loggedInEmp);
+		List groups = requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "emp_id", loginUser);//(GroupAcc.class);
+		List<LoginUsers> employees = new ArrayList();
+		model.put("groups", groups);
+		String groupId = request.getParameter("groupId");
+		log.debug("groupID " + groupId);
+		model.put("groupId", groupId);
+		String logUser = request.getParameter("empCode");
+		log.debug("loginUser " + logUser);
+		if(groupId!=null && !groupId.isEmpty()) {
+//			GroupAcc groupAcc = (GroupAcc)requestsApprovalManager.getObject(GroupAcc.class, new Long(groupId));
+			employees = requestsApprovalManager.getEmployeesByGroup(new Long(groupId));
+			model.put("employees", employees);			
+		} 
+//		if (logUser!=null && !logUser.isEmpty()) {
+//			empCode = logUser;
+//		} else {
+//			String luser = request.getParameter("logUser");
+//			log.debug("luser" + luser);
+//			empCode=luser;
+//		}
+//		model.put("logUser", logUser);
+		if (groups.size() > 0) {
+			if (groupId != null && !groupId.isEmpty()) {// ///////////////////all
+														// group
+														// employees
+				if (logUser != null && !logUser.isEmpty()) {
+					empCode = logUser;
+				} else {
+					// String luser = request.getParameter("logUser");
+					// log.debug("luser" + luser);
+					// empCode=luser;
+					// }
+					// model.put("logUser", logUser)
+					Iterator<LoginUsers> itr = employees.iterator();
+					int i = 0;
+					while (itr.hasNext()) {
+						if (i < employees.size() - 1) {
+							empCode += itr.next().getEmpCode().getEmpCode()
+									+ ",";
+						} else {
+							empCode += itr.next().getEmpCode().getEmpCode();
+						}
+						i++;
+					}
+				}
+			} else if (groupId == null || groupId.isEmpty()) {// /////////////all
+																	// employees
+																	// from all
+																	// groups
+					Iterator it = groups.iterator();
+					while (it.hasNext()) {
+						AccessLevels lev = (AccessLevels) it.next();
+						employees
+								.addAll(requestsApprovalManager
+										.getEmployeesByGroup(lev.getLevel_id()
+												.getId()));
+					}
+					Iterator<LoginUsers> itr = employees.iterator();
+					int i = 0;
+					while (itr.hasNext()) {
+						if (i < employees.size() - 1) {
+							empCode += itr.next().getEmpCode().getEmpCode()
+									+ ",";
+						} else {
+							empCode += itr.next().getEmpCode().getEmpCode();
+						}
+						i++;
+					}
+				}
+			} else {
+				empCode = emp.getEmpCode();
+			}
+		log.debug("empCode " + empCode);
+		
+		
+		
+		if (logUser!=null && !logUser.isEmpty()) {
+			empCode = logUser;
+		} else {
+			String luser = request.getParameter("logUser");
+			log.debug("luser" + luser);
+			if (luser!= null && !luser.isEmpty()) {
+				empCode=luser;
+			} else {
+				log.debug("testing");
+			}
+		}
+		if (empCode!= null && !empCode.isEmpty()) {
+			String [] empCodes = empCode.split(",");
+			log.debug("emp codes " + empCodes);
+			model.put("empCodes", empCodes);
+		}
 
 		String dateFrom = request.getParameter("fromDate");
 		log.debug("--dateFrom--"+dateFrom);
@@ -152,7 +251,7 @@ public class TimeAttendanceReport implements Controller{
 //					totalObjects=requestsApprovalManager.getTimeAttendAndroid(emp.getEmpCode(), fromDate, toDate);
 //				}
 				log.debug("getting attendance from view");
-				totalObjects = requestsApprovalManager.getTimeAttendFromView(emp.getEmpCode(), fromDate, toDate);
+				totalObjects = requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
 				objects=(List) totalObjects.get(0);
 
 				
@@ -204,7 +303,7 @@ public class TimeAttendanceReport implements Controller{
 					
 					if (ob.getAddress1()== null && ob.getLatitude1()!=null && !ob.getLatitude1().isEmpty() && ob.getLatitude1()!="0" 
 							&& ob.getLongitude1()!=null && !ob.getLongitude1().isEmpty() && ob.getLongitude1()!="0") {
-						String address1 = requestsApprovalManager.getAddressByGpsCoordinates(ob.getLongitude1(), ob.getLatitude1());
+						String address1 = requestsApprovalManager.getShortAddressByGpsCoordinates(ob.getLongitude1(), ob.getLatitude1());
 						log.debug("address 1 " + address1);
 						ob.setAddress1(address1);
 					} else {
@@ -212,7 +311,7 @@ public class TimeAttendanceReport implements Controller{
 					}
 					if(ob.getAddress2()==null && ob.getLatitude2()!=null && !ob.getLatitude2().isEmpty()  && ob.getLatitude2()!="0"  
 							&& ob.getLongitude2()!=null && !ob.getLongitude2().isEmpty()  &&  ob.getLongitude2()!="0") {
-						String address2 = requestsApprovalManager.getAddressByGpsCoordinates(ob.getLongitude2(), ob.getLatitude2());
+						String address2 = requestsApprovalManager.getShortAddressByGpsCoordinates(ob.getLongitude2(), ob.getLatitude2());
 						log.debug("address 2 " + address2);
 						ob.setAddress2(address2);
 					}  else {
@@ -239,6 +338,9 @@ public class TimeAttendanceReport implements Controller{
 		if (exportParameter!=null && exportParameter.equals("true")) {
 			List tableTitle = new ArrayList();
 			
+			if (!groups.isEmpty()) {
+				tableTitle.add("requestsApproval.caption.userName");
+			}
 			tableTitle.add("requestsApproval.caption.date");
 			tableTitle.add("commons.caption.date");
 			tableTitle.add("requestsApproval.caption.in");
@@ -252,6 +354,13 @@ public class TimeAttendanceReport implements Controller{
 				TimeAttend req = (TimeAttend)itr.next();
 				log.debug("looping attendance");
 				List temp = new ArrayList();
+				if (!groups.isEmpty()) {
+					if (req.getEmpName()!=null) {
+						temp.add(req.getEmpName());
+					} else {
+						temp.add("");
+					}
+				}
 				if (req.getDayString()!= null) {
 					temp.add(req.getDayString());
 				} else {
@@ -272,7 +381,7 @@ public class TimeAttendanceReport implements Controller{
 				} else {
 					temp.add("");
 				}
-				if (!req.getDiffMins().equals("0") && !req.getDiffHrs().equals("0")) {
+				if (req.getDiffMins()!=null && !req.getDiffMins().equals("0") && !req.getDiffHrs().equals("0")) {
 					temp.add("0"+req.getDiffHrs()+":"+req.getDiffMins());
 				} else {
 					temp.add("");

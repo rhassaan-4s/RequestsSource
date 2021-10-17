@@ -81,7 +81,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
 		log.debug("----emp from session---"+request.getSession().getAttribute("employee"));
 		
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		if(loginUsers!=null){
 			log.debug("-----login.code----"+loginUsers.getEmpCode());
 		}
@@ -153,7 +153,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		String accuracy =  (String)request.getParameter("accuracy");
 		log.debug("location " + longitude + " , " + latitude + " , " + accuracy);
 		
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		
 		String empRequestTypeId=request.getParameter("empRequestTypeId");
 		log.debug("empRequestTypeId------"+empRequestTypeId);
@@ -665,7 +665,8 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 					if(!isOnlyNumbers(loginUsersRequests.getEmpCode())){
 						errors.rejectValue("empCode", "requestsApproval.errors.invalidEmpCode");
 					}
-					LoginUsers login_user=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", loginUsersRequests.getEmpCode());
+					Employee emp = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", loginUsersRequests.getEmpCode());
+					LoginUsers login_user=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 					if(login_user==null || login_user.equals("")){
 						log.debug("----login_user==null-----");
 						errors.rejectValue("empCode", "requestsApproval.errors.empCodeNotExistance");

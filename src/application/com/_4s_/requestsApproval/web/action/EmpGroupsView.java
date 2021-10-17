@@ -118,7 +118,7 @@ public class EmpGroupsView implements Controller{
 			}
 		}
 
-		LoginUsers loginUsers = (LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", empCode)	;	
+		LoginUsers loginUsers = (LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode.empCode", empCode)	;	
 		if(loginUsers!=null && !loginUsers.equals("")){
 			log.debug("----mmname---"+loginUsers.getName());
 			model.put("mm_name", loginUsers.getName());

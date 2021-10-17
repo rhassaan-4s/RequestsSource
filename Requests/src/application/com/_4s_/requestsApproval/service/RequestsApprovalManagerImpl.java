@@ -739,7 +739,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
 	public List getRequestsForApprovalList(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
 			String requestType, String codeFrom, String codeTo, String statusId) {
-
+		Employee emp = getObjectByParameter(Employee.class,"empCode",emp_code);
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
 		List loginUserReqs = new ArrayList();
 		if (requestType!= null && !requestType.isEmpty() && requestNumber!=null && !requestNumber.isEmpty()){
@@ -800,8 +800,9 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		
 		if(emp_code!=null && !emp_code.equals("")){
 			log.debug("---xxxxxxxCodeName--");
-			if(isOnlyNumbers(emp_code) && (getObjectByParameter(LoginUsers.class, "empCode", emp_code)!=null && !getObjectByParameter(LoginUsers.class, "empCode", emp_code).equals(""))){
-				LoginUsers loginUser=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp_code);
+			Object loginU = getObjectByParameter(LoginUsers.class, "empCode", emp);
+			if(isOnlyNumbers(emp_code) && (loginU!=null && !loginU.equals(""))){
+				LoginUsers loginUser=(LoginUsers)loginU;
 				log.debug("--loginUser.getName()--"+loginUser.getName());
 
 				List<String>list=new ArrayList<String>();
@@ -1179,7 +1180,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			
 			EmpReqApproval empReqApproval = null;
 
-			loginUsers=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+			loginUsers=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp);
 			
 			List loggedInLevels = getObjectsByParameter(AccessLevels.class, "emp_id", loginUsers);
 			
@@ -1762,7 +1763,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 									.getLogin_user(), orderfieldList);
 //			EmpReqApproval empReqApproval = null;
 
-//			loginUsers=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+//			loginUsers=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp);
 			Map approvalRequest = new HashMap();
 			List<String> ordered1= new ArrayList();
 			ordered1.add("emp_id");
@@ -1904,7 +1905,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	}
 	
 	public List getEmpReqTypeAcc(Employee emp,String requestType) {
-		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp);
 		List tempLevels = (List)getObjectsByParameter(AccessLevels.class, "emp_id", loggedInUser);
 		log.debug("access levels size " + tempLevels.size());
 		
@@ -1944,7 +1945,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	}
 	
 	public List getEmpReqTypeAccEmpCode(Employee emp,String requestType) {
-		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp);
 		List tempLevels = (List)getObjectsByParameter(AccessLevels.class, "emp_id", loggedInUser);
 		log.debug("access levels size " + tempLevels.size());
 		
@@ -1986,7 +1987,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	
 
 	public List getEmpReqTypeAccEmpCodeBetweenCodes(Employee emp,String requestType, String codeFrom, String codeTo) {
-		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp);
 		Object obj = getObjectByParameter(AccessLevels.class, "emp_id", loggedInUser);
 		AccessLevels lev = null;
 		if (obj!= null) {

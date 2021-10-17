@@ -4432,8 +4432,10 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 				statusStr = " approvals.approval is null ";
 			} else if (statusId.equals(new Long(1))) {
 				statusStr = " (approvals.approval =1 or approvals.approval=2) ";
+			} else if (statusId.equals(new Long(99))) {
+				statusStr = " (approvals.approval = 0) ";
 			}
-			if(outerSelectWhere == null) {
+			if(outerSelectWhere == null || outerSelectWhere.isEmpty()) {
 				outerSelectWhere = " where ";
 			} else {
 				outerSelectWhere += " and ";

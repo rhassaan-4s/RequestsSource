@@ -186,7 +186,7 @@ public class MasterDetailsReport extends BaseSimpleFormController{
 		
 		List actualRequest= new ArrayList();
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		List<String> ordered= new ArrayList();
 		ordered.add("order");
 		List<String> ordered1= new ArrayList();

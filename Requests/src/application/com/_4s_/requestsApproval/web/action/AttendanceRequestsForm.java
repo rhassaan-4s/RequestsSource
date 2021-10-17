@@ -77,7 +77,7 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
 		log.debug("----emp from session---"+request.getSession().getAttribute("employee"));
 		
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		if(loginUsers!=null){
 			log.debug("-----login.code----"+loginUsers.getEmpCode());
 		}
@@ -119,7 +119,7 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 		
 		log.debug("=====emp.getEmpCode()==="+emp.getEmpCode());
 		
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		
 		String empRequestTypeId=request.getParameter("empRequestTypeId");
 		log.debug("empRequestTypeId------"+empRequestTypeId);

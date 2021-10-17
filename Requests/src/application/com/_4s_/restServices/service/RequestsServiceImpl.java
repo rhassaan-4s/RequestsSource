@@ -222,7 +222,7 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 	
 	Employee emp = (Employee)requestsApprovalDAO.getObject(Employee.class, empId);
 
-	LoginUsers loginUsers=(LoginUsers) requestsApprovalDAO.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+	LoginUsers loginUsers=(LoginUsers) requestsApprovalDAO.getObjectByParameter(LoginUsers.class, "empCode", emp);
 	if(loginUsers!=null){
 		log.debug("-----login.code----"+loginUsers.getEmpCode());
 	}
@@ -391,7 +391,7 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 	Boolean periodFromToEnabled = settings.getPeriodFromToEnabled();
 	
 	Employee emp = (Employee)requestsApprovalDAO.getObject(Employee.class, empId);
-	LoginUsers loginUsers=(LoginUsers) requestsApprovalDAO.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+	LoginUsers loginUsers=(LoginUsers) requestsApprovalDAO.getObjectByParameter(LoginUsers.class, "empCode", emp);
 	
 	DateFormat df=new SimpleDateFormat("dd/MM/yyyy");// HH:mm:ss
 	Date from = null;
@@ -598,7 +598,7 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 	
 	Employee emp = (Employee)requestsApprovalDAO.getObject(Employee.class, empId);
 
-	LoginUsers loginUsers=(LoginUsers) requestsApprovalDAO.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+	LoginUsers loginUsers=(LoginUsers) requestsApprovalDAO.getObjectByParameter(LoginUsers.class, "empCode", emp);
 	if(loginUsers!=null){
 		log.debug("-----login.code----"+loginUsers.getEmpCode());
 	}
@@ -1157,7 +1157,7 @@ public Map checkAttendance(Date today, String empCode) {
 
 public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 		Employee emp) {
-	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 	log.debug("checkStartedRequests: logged in user " + loggedInUser);
 	Map response = requestsApprovalManager.checkStartedRequests(requestQuery,emp);
 	log.debug("checkStartedRequests: response " + response);
@@ -1166,7 +1166,7 @@ public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 
 public Map checkStartedRequestsIncludingAttendance(RequestsApprovalQuery requestQuery,
 		Employee emp) {
-	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 	log.debug("checkStartedRequests: logged in user " + loggedInUser);
 	Map response = requestsApprovalManager.checkStartedRequestsIncludingAttendance(requestQuery, emp);
 	log.debug("checkStartedRequests: response " + response);
@@ -1178,14 +1178,14 @@ public List getEmpReqTypeAcc(Employee emp,String requestType) {
 }
 
 public Map getRequestsForApproval(RequestsApprovalQuery approvalQuery, List empReqTypeAccs,Employee emp) {
-	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 	return requestsApprovalManager.getRequestsForApproval(approvalQuery.getRequestNumber(), approvalQuery.getEmp_code(), 
 			approvalQuery.getDateFrom(), approvalQuery.getDateTo(), approvalQuery.getExactDateFrom(), approvalQuery.getExactDateTo(), approvalQuery.getRequestType(),
 			approvalQuery.getCodeFrom(), approvalQuery.getCodeTo(), approvalQuery.getStatusId(),approvalQuery.getSort(),loggedInUser,empReqTypeAccs,false,approvalQuery.getIsInsideCompany(), approvalQuery.getPageNumber(), approvalQuery.getPageSize());	
 }
 
 public Map getSubmittedRequestsForApproval(RequestsApprovalQuery approvalQuery, List empReqTypeAccs,Employee emp) {
-	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+	LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 	return requestsApprovalManager.getSubmittedRequestsForApproval(approvalQuery.getRequestNumber(), approvalQuery.getEmp_code(), 
 			approvalQuery.getDateFrom(), approvalQuery.getDateTo(), approvalQuery.getExactDateFrom(), approvalQuery.getExactDateTo(), approvalQuery.getRequestType(),
 			approvalQuery.getCodeFrom(), approvalQuery.getCodeTo(), approvalQuery.getStatusId(),approvalQuery.getSort(),loggedInUser,empReqTypeAccs,false,approvalQuery.getIsInsideCompany(), approvalQuery.getPageNumber(), approvalQuery.getPageSize());	
@@ -1591,7 +1591,7 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 		if ((empCode== null || empCode.isEmpty()) && (codeFrom == null || codeFrom.isEmpty()) && (codeTo == null || codeTo.isEmpty())) {
 //			empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAccEmpCode(emp, null);
 			
-			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 //			Object obj = requestsApprovalManager.getObjectByParameter(AccessLevels.class, "emp_id", loggedInUser);
 //			
 //			AccessLevels lev = null;
@@ -1654,7 +1654,7 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 			
 		} else if (codeFrom!= null && !codeFrom.isEmpty() && codeTo!= null && !codeTo.isEmpty()) {
 			String empArray = "";
-			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 //			List tempLevels = (List)requestsApprovalDAO.getAccessLevelsBetweenCodes(loggedInUser,codeFrom,codeTo);
 			
 			List objectss = requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "emp_id", loggedInUser);
@@ -1703,7 +1703,7 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 //			totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
 //			totalObjects=requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
 			String empArray = "";
-			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 //			List tempLevels = (List)requestsApprovalDAO.getAccessLevelsBetweenCodes(loggedInUser,codeFrom,codeTo);
 			
 //			Object obj = requestsApprovalManager.getObjectByParameter(AccessLevels.class, "emp_id", loggedInUser);

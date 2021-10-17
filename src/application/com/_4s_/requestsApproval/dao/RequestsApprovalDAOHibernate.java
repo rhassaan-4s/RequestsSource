@@ -2496,9 +2496,23 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
+
+
+	public List<LoginUsers > getEmployeesByGroup(Long groupId) {
+		log.debug("DAO: groupid " + groupId);
+		Criteria criteria = getCurrentSession().createCriteria(EmpReqTypeAcc.class);
+		criteria.createCriteria("emp_id").add(Restrictions.isNull("endServ"));
+		criteria.setProjection(Projections.projectionList()
+                .add(Projections.groupProperty("emp_id")));
+		criteria.createCriteria("group_id")
+		.add(Restrictions.eq("id", groupId));
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
 	
 	
 
+	
 
 //	public List getAttendanceRequests(Date date, String empCode,RequestTypes reqType) {
 //		try{

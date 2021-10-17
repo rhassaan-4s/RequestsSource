@@ -80,7 +80,7 @@ public class DeleteLoginUsersRequestsForm extends BaseSimpleFormController{
 		}
 		if(emp.getEmpCode()!=null && !emp.getEmpCode().equals("")){
 			log.debug("---xxxxxxxCodeName--");
-			LoginUsers loginUser=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+			LoginUsers loginUser=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 
 			log.debug("--loginUser.getName()--"+loginUser.getName());
 			List loginUserReqs=(List) requestsApprovalManager.getObjectsByParameter(LoginUsersRequests.class, "login_user", loginUser);

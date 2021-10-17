@@ -17,6 +17,7 @@ import com._4s_.HR.model.HRSpecialtyLevel;
 import com._4s_.HR.model.HRVacation;
 import com._4s_.common.dao.BaseDAO;
 import com._4s_.common.model.Employee;
+import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.GroupAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.restServices.json.AttendanceRequest;
@@ -107,4 +108,5 @@ public interface RequestsApprovalDAO extends BaseDAO {
 //	public List getAttendanceRequests(Date date, String empCode);
 	public List getAccessLevelsBetweenCodes(GroupAcc groupId,
 			String codeFrom, String codeTo);
+	public List<LoginUsers> getEmployeesByGroup(Long groupId);
 }

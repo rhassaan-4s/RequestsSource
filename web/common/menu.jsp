@@ -50,6 +50,32 @@
 			property="dbUpdate.header.updateTriggersScript" /> <fmt:message
 			key="dbUpdate.header.updateTriggersScript" /></a></li>
 			
+			
+		<li><a href="#"><fmt:message key="requestsApproval.menu.requestsApprovalPriorities" /></a>
+				<ul>
+					<li>
+						<abc:i18n property="requestsApproval.header.accessLevelsForm" />
+						<a href="/Requests/requestsApproval/accessLevelsForm.html"> &nbsp;&nbsp;
+							<fmt:message key="requestsApproval.header.accessLevelsForm" />
+						</a>
+					</li>				
+
+					<li>
+						<abc:i18n property="requestsApproval.header.empReqTypeGroupForm" />
+						<a href="/Requests/requestsApproval/empReqTypeGroupForm.html"> &nbsp;&nbsp;
+							<fmt:message key="requestsApproval.header.empReqTypeGroupForm" />
+						</a>
+					</li>
+					
+					<li>
+						<abc:i18n property="requestsApproval.header.empGroupsView" />
+						<a href="/Requests/requestsApproval/empGroupsView.html"> &nbsp;&nbsp;
+							<fmt:message key="requestsApproval.header.empGroupsView" />
+						</a>
+					</li>									
+				</ul>
+			</li>
+			
 	</ul>
 	</li>
 	<li><a href="/Requests/security/logout.html"><fmt:message

@@ -245,6 +245,7 @@ function cancelApp(){
 		
 		
 							</tr>
+							${approvalList}
 							<c:forEach items="${approvalList}" var="record">
 								
 							<tr>
@@ -264,7 +265,11 @@ function cancelApp(){
 											<td class="formBod" >${record.user}</td>
 											<td class="formBod" >${record.notes}</td>
 										</c:if>
-										
+								1-${record.status}
+										2-${record.user}
+										3-${emp}
+										4-${done}
+										5-${posted}										
 										<c:choose>
 											<c:when test="${record.status==0 && record.user==emp && done!='true' && posted!=1 && approvedBy==operator && approvedBy!='' &&operator!='' && approvedBy!=null &&operator!=null}">
 												<td colspan="2"><abc:i18n

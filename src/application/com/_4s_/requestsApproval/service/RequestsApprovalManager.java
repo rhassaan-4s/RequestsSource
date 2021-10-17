@@ -28,6 +28,7 @@ import com._4s_.common.model.Employee;
 import com._4s_.common.service.BaseManager;
 import com._4s_.requestsApproval.model.AccessLevels;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
+import com._4s_.requestsApproval.model.GroupAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.Vacation;
@@ -159,7 +160,7 @@ public interface RequestsApprovalManager extends BaseManager {
 	public RestStatus validateSignInOut(Long attendanceType, Date date, Employee emp);
 	
 	public String getAddressByGpsCoordinates(String lng, String lat) throws MalformedURLException, IOException, org.json.simple.parser.ParseException ;
-	
+	 public String getShortAddressByGpsCoordinates(String lng, String lat) throws MalformedURLException, IOException, org.json.simple.parser.ParseException;
 	public double distance(double lat1, double lon1, double lat2, double lon2);
 	
 	public List getLoginUsersByCodes(final String codeFrom,final String codeTo);
@@ -168,5 +169,6 @@ public interface RequestsApprovalManager extends BaseManager {
 	
 	public Map getRequestsStatus(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
 			String requestType, String codeFrom, String codeTo, String statusId, String sort,LoginUsers loggedInUser, List empReqTypeAccs, boolean isWeb, String isInsideCompany, int pageNumber, int pageSize);
+	public List<LoginUsers> getEmployeesByGroup(Long groupId);
 }
 

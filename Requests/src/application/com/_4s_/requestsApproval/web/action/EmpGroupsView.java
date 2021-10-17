@@ -1,7 +1,6 @@
 package com._4s_.requestsApproval.web.action;
 
 import java.util.HashMap;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -20,9 +19,10 @@ import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.view.RedirectView;
 
 
+
 import com._4s_.requestsApproval.model.*;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
-
+import com._4s_.common.model.Employee;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
 
@@ -118,7 +118,8 @@ public class EmpGroupsView implements Controller{
 			}
 		}
 
-		LoginUsers loginUsers = (LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", empCode)	;	
+		Employee emp = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", empCode);
+		LoginUsers loginUsers = (LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp)	;	
 		if(loginUsers!=null && !loginUsers.equals("")){
 			log.debug("----mmname---"+loginUsers.getName());
 			model.put("mm_name", loginUsers.getName());

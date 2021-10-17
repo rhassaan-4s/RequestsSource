@@ -76,7 +76,7 @@ public class AttendanceRequestsApprovalForm extends BaseSimpleFormController {
 			EmpReqApproval empReqApproval = null;
 
 			Employee emp =(Employee) request.getSession().getAttribute("employee");
-			LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+			LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 			model.put("emp", loginUsers.getName());
 			Map approvalRequest = new HashMap();
 			List<String> ordered1= new ArrayList();
@@ -312,7 +312,7 @@ public class AttendanceRequestsApprovalForm extends BaseSimpleFormController {
 			throws Exception {
 
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		
 		String reqId = request.getParameter("reqId");
 		String status = request.getParameter("status");
