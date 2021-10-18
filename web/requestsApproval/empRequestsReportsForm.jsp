@@ -435,12 +435,14 @@ function initMap(latitude,longitude) {
 											${record.name}
 										</td>
 										<td  nowrap>
-										<c:if test="${record.approval==null}">
+										<c:choose>
+										<c:when test="${(record.approval==null || record.approval=='')  && (record.approved==1 || record.approved==0)}">
 											<a href="requestsApprovalForm.html?reqId=${record.id}&requestType=${requestType}&errand=${errand}">${record.requestNumber}</a>
-										</c:if>
-										<c:if test="${record.approval!=null}">
+										</c:when>
+										<c:otherwise>
 											${record.requestNumber}
-										</c:if>										
+										</c:otherwise>
+										</c:choose>									
 										</td>										
 										<c:choose>
 											<c:when test="${errand=='true'}">
@@ -494,28 +496,29 @@ function initMap(latitude,longitude) {
 											${record.locationAddress}
 										</td>
 										<td   nowrap>
+										<!--  record.approval:${record.approval}-record.approved:${record.approved}-->
 										<c:choose>
 											<c:when
-												test="${record.approval!=null || record.approved==99}">
+												test="${record.approval==0 || record.approved==99}">
 												<abc:i18n
 													property="requestsApproval.requestsApprovalForm.reqRejected" />
 												<fmt:message
 													key="requestsApproval.requestsApprovalForm.reqRejected" />
 											</c:when>
-											<c:when test="${record.approval==null && record.approved!=1}">
+											<c:when test="${(record.approval==null || record.approval=='')  && (record.approved==1 || record.approved==0)}">
 									    	لم تكتمل
 									    	<br>
 												<input type="checkbox" name="approve${loop.index}"
 													id="approve${loop.index}" />
 
 											</c:when>
-											<c:otherwise>
+											<c:when test="${record.approval==1 && record.approved==1}">
 
 												<abc:i18n
 													property="requestsApproval.requestsApprovalForm.reqApproval" />
 												<fmt:message
 													key="requestsApproval.requestsApprovalForm.reqApproval" />
-											</c:otherwise>
+											</c:when>
 										</c:choose>
 									</td>										
 										<td  nowrap>

@@ -102,8 +102,11 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 					/**
 					 * Detect if access level is the last order
 					 **/
+					EmpReqTypeAcc temp = null;
+					temp = (EmpReqTypeAcc) empReqAcc.get(i);
 					
 					if (i == (empReqAcc.size() - 1)){
+//						if (temp.getGroup_id())
 						last = "1";
 					}
 					else{
@@ -111,8 +114,7 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 					}
 					/*************************************/
 
-					EmpReqTypeAcc temp = new EmpReqTypeAcc();
-					temp = (EmpReqTypeAcc) empReqAcc.get(i);
+					
 					log.debug("-----temp id---"+temp.getId());
 					log.debug("-----temp group--"+temp.getGroup_id().getId());
 					
@@ -256,6 +258,14 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 								log.debug("-----user-----"+loginUsers.getName());
 //								approvalRequest.put("note", empReqApproval.getNote());
 								approvalList.add(approvalRequest);
+								
+								if (i == (empReqAcc.size() - 1)){
+									last = "1";
+								}
+								else{
+									last="0";
+								}
+								log.debug("last " + last);
 							}
 						}
 					}
@@ -444,7 +454,7 @@ log.debug("requestOb " + requestOb);
 			requestsApprovalManager.saveObject(requestOb);
 			
 		}else if(last.equals("1")){
-			
+			log.debug("last approval priority");
 			requestOb.setApproved(new Long(1));
 			requestsApprovalManager.saveObject(requestOb);
 		}
