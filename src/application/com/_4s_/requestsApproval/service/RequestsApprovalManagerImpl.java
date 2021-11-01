@@ -2391,7 +2391,11 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
 		public List<LoginUsers> getEmployeesByGroup(Long groupId) {
 			log.debug("group id " + groupId);
-			return requestsApprovalDAO.getEmployeesByGroup(groupId);
+			
+			List<LoginUsers> mgrs = requestsApprovalDAO.getMgrsByGroup(groupId);
+			List<LoginUsers> emps = requestsApprovalDAO.getEmployeesByGroup(groupId);
+			mgrs.addAll(emps);
+			return mgrs;
 		}
 	    
 	    

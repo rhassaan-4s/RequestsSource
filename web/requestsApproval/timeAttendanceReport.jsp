@@ -202,7 +202,7 @@
 											<c:forEach items="${employees}" var="loginUser">
 												<c:set var="isSelected" value="" />
 												<c:forEach items="${empCodes}" var="code">
-
+	
 													<c:if test="${code == loginUser.id}">
 														<c:set var="isSelected" value="selected" />
 													</c:if>

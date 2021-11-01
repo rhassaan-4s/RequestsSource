@@ -175,7 +175,7 @@ public class RequestsServiceController {
 							RestStatus status = new RestStatus();
 							status.setStatus("False");
 							status.setCode("340");
-							status.setMessage("Successful Authorization with wrong IMEI");
+							status.setMessage("User is already registered with another device");
 							response.put("Status", status);
 							return response;
 						}

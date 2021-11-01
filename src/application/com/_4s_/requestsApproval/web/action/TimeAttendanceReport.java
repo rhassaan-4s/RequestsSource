@@ -85,7 +85,8 @@ public class TimeAttendanceReport implements Controller{
 		log.debug("loginUser " + logUser);
 		if(groupId!=null && !groupId.isEmpty()) {
 //			GroupAcc groupAcc = (GroupAcc)requestsApprovalManager.getObject(GroupAcc.class, new Long(groupId));
-			employees = requestsApprovalManager.getEmployeesByGroup(new Long(groupId));
+			employees = new ArrayList();
+			employees.addAll(requestsApprovalManager.getEmployeesByGroup(new Long(groupId)));
 			model.put("employees", employees);			
 		} 
 //		if (logUser!=null && !logUser.isEmpty()) {

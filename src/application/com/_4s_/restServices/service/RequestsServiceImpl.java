@@ -1617,7 +1617,7 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 				
 				if (obj!= null) {
 					lev = (AccessLevels)obj;
-					log.debug("level " + lev.getLevel_id() + " emp " + lev.getEmp_id().getEmpCode());
+					log.debug("level " + lev.getLevel_id() + " emp " + lev.getEmp_id().getEmpCode().getEmpCode());
 				}
 				
 				if(lev!=null) {
@@ -1635,11 +1635,11 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 //				log.debug("empReq " + empReq);
 				if (count==0) {
 //					empArray = empReq.getEmp_id().getEmpCode();
-					empArray =  "'" + empReq.getEmp_id().getEmpCode() +  "'";
+					empArray =  "'" + empReq.getEmp_id().getEmpCode().getEmpCode() +  "'";
 				} else {
 //					empArray += "," + empReq.getEmp_id().getEmpCode();
-					if (!empArray.contains("'"+empReq.getEmp_id().getEmpCode()+"'")) {
-						empArray += ",'" + empReq.getEmp_id().getEmpCode() + "'";
+					if (!empArray.contains("'"+empReq.getEmp_id().getEmpCode().getEmpCode()+"'")) {
+						empArray += ",'" + empReq.getEmp_id().getEmpCode().getEmpCode() + "'";
 					}
 				}
 				count++;

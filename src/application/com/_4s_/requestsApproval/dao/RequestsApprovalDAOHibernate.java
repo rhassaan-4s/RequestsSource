@@ -2510,6 +2510,18 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		return criteria.list();
 	}
 	
+	public List<LoginUsers > getMgrsByGroup(Long groupId) {
+		log.debug("DAO: groupid " + groupId);
+		Criteria criteria = getCurrentSession().createCriteria(AccessLevels.class);
+		criteria.createCriteria("level_id").add(Restrictions.eq("id", groupId));
+		criteria.setProjection(Projections.projectionList()
+                .add(Projections.groupProperty("emp_id")));
+//		criteria.createCriteria("group_id")
+//		.add(Restrictions.eq("id", groupId));
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
+	
 	
 
 	

@@ -109,4 +109,5 @@ public interface RequestsApprovalDAO extends BaseDAO {
 	public List getAccessLevelsBetweenCodes(GroupAcc groupId,
 			String codeFrom, String codeTo);
 	public List<LoginUsers> getEmployeesByGroup(Long groupId);
+	public List<LoginUsers> getMgrsByGroup(Long groupId);
 }
