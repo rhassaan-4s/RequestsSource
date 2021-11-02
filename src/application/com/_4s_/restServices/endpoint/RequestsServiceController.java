@@ -26,6 +26,7 @@ import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.ClientWrapper;
 import com._4s_.restServices.json.EmployeeResponse;
 import com._4s_.restServices.json.EmployeeWrapper;
+import com._4s_.restServices.json.GroupWrapper;
 import com._4s_.restServices.json.ImeiWrapper;
 import com._4s_.restServices.json.PasswordWrapper;
 import com._4s_.restServices.json.RequestApproval;
@@ -542,5 +543,28 @@ public class RequestsServiceController {
 		log.debug("after requesting request type");
 		return m;
 	}
+	
+	@RequestMapping(value="/getEmployeesByGroup" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map getEmployeesByGroup(GroupWrapper group) {
+		log.debug("getEmployeesByGroup ");
+		Map m = requestsService.getEmployeesByGroup(group.getGroupId());
+		log.debug("after requesting getEmployeesByGroup");
+		return m;
+	}
+	
+	@RequestMapping(value="/getUserGroups" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map getUserGroups() {
+		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDet = (UserDetails)token.getPrincipal();
+		User user = requestsService.getUser(userDet.getUsername());
+		Map m = requestsService.getUserGroups(user.getEmployee());
+		return m;
+	}
+	
+	
 	
 }

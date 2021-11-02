@@ -63,6 +63,12 @@
 
 		<intercept-url pattern="/api/workflow/getRequestTypes"
 			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			
+			<intercept-url pattern="/api/workflow/getEmployeesByGroup"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			
+			<intercept-url pattern="/api/workflow/getUserGroups"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 						
 		<!--  <intercept-url pattern="/api/workflow/getPortNo" access="IS_AUTHENTICATED_ANONYMOUSLY"/> --> 
 			

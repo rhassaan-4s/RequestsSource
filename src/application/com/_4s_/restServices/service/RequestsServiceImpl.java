@@ -44,7 +44,9 @@ import com._4s_.requestsApproval.web.action.TimeAttend;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.EmployeeResponse;
 import com._4s_.restServices.json.EmployeeWrapper;
+import com._4s_.restServices.json.GroupWrapper;
 import com._4s_.restServices.json.ImeiWrapper;
+import com._4s_.restServices.json.LoginUserWrapper;
 import com._4s_.restServices.json.PasswordWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
@@ -1903,6 +1905,52 @@ public Map getRequestTypes() {
 	log.debug("5");
 	return results;
 }
+
+public Map getEmployeesByGroup(Long groupId) {
+	List loginUsers = requestsApprovalManager.getEmployeesByGroup(groupId);
+	Iterator itr = loginUsers.iterator();
+	List loginUsersWrapper = new ArrayList();
+	while(itr.hasNext()) {
+		LoginUsers login = (LoginUsers)itr.next();
+		LoginUserWrapper wrap = new LoginUserWrapper();
+		wrap.setId(login.getId());
+		wrap.setEmpCode(login.getEmpCode().getEmpCode());
+		wrap.setName(login.getName());
+		loginUsersWrapper.add(wrap);
+	}
+	Map results = new HashMap();
+	RestStatus status = new RestStatus();
+	results.put("Results", loginUsersWrapper);
+	status.setCode("200");
+	status.setMessage("Request Success");
+	status.setStatus("True");
+	results.put("Status", status);
+	return results;
+}
+
+public Map getUserGroups(Employee employee) {
+	LoginUsers loginUser=(LoginUsers) requestsApprovalDAO.getObjectByParameter(LoginUsers.class, "empCode", employee);
+	List groups = requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "emp_id", loginUser);
+	List groupWrapper = new ArrayList();
+	Iterator itr = groups.iterator();
+	while(itr.hasNext()) {
+		AccessLevels lev = (AccessLevels)itr.next();
+		GroupWrapper wrap = new GroupWrapper();
+		wrap.setGroupId(lev.getId());
+		wrap.setGroupName(lev.getLevel_id().getTitle());
+		groupWrapper.add(wrap);
+	}
+	Map results = new HashMap();
+	RestStatus status = new RestStatus();
+	results.put("Results", groupWrapper);
+	status.setCode("200");
+	status.setMessage("Request Success");
+	status.setStatus("True");
+	results.put("Status", status);
+	return results;
+}
+
+
 
 
 
