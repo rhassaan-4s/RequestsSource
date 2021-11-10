@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <configuration status="TRACE" monitorInterval="10" xmlns:log4j="http://jakarta.apache.org/log4j/"> -->
+<Configuration status="TRACE">
+     <Appenders>
+        <Console name="LogToConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="com._4s_" level="TRACE" additivity="false">
+            <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <Logger name="org.springframework" level="TRACE" additivity="false">
+        	 <AppenderRef ref="LogToConsole"/>
+        </Logger>
+         <Logger name="org.hibernate" level="DEBUG" additivity="false">
+        	 <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <!-- <Logger name="org.hibernate.cfg.AnnotationBinder" level="ERROR" additivity="false">
+        	<AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <logger name="org.hibernate.mapping.PrimaryKey" level="ERROR" additivity="false">
+        	<AppenderRef ref="LogToConsole"/>
+        </logger>
+        <logger name="org.hibernate.persister.entity.AbstractPropertyMapping" level="ERROR" additivity="false">
+        	<AppenderRef ref="LogToConsole"/>
+        </logger>
+        <logger name="org.springframework.security" level="TRACE" additivity="false">
+        	<AppenderRef ref="LogToConsole"/>
+        </logger>
+       
+        <Logger name="com._4s_.common" level="TRACE" additivity="false">
+        	 <AppenderRef ref="LogToConsole"/>
+        </Logger> -->
+        <Root level="Trace">
+            <AppenderRef ref="LogToConsole"/>
+        </Root>
+    </Loggers>
+
+</Configuration>
+
