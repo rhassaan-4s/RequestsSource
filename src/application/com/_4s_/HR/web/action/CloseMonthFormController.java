@@ -120,6 +120,6 @@ public class CloseMonthFormController extends  BaseSimpleFormController{
 		hrManager.saveObject(closeMonth);
 		
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("closeMonthForm.html"));
 	}
 }

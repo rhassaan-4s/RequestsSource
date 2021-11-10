@@ -1,6 +1,5 @@
 package com._4s_.common.dao;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,7 +23,6 @@ import com._4s_.common.util.Page;
 //import com._4s_.stores.model.Destination;
 //import com._4s_.stores.model.StoreTransactionM;
 //import com._4s_.stores.model.StoreTrnsDepBranch;
-import com.sun.org.apache.bcel.internal.generic.DADD;
     
 public class Queries {
 	protected final Log log = LogFactory.getLog(getClass());
@@ -407,7 +405,7 @@ public class Queries {
 		}
 		//sql2=sql2+" and END_SERV IS NULL";
 		log.debug(">>>>>>>>>>>>>>sql2 "+sql2);
-		int count = jt.queryForInt(sql2);
+		int count = jt.queryForObject(sql2,Integer.class);
 		log.debug(">>>>>>>>>>>>>>>>>>>>count "+count);
 		Map map = new HashMap();
 		if(table != null && !table.equals("") && (table.equals("store_c_trns_m") || table.equals("view_store_dep_trans"))){
@@ -1376,7 +1374,7 @@ public class Queries {
 		log.debug(">>>>>>>>>>>>>>sql2 "+sql2);
 		int count = 0;
 		if (splitParamString[0].length()>0){
-		 count = jt.queryForInt(sql2);
+		 count = jt.queryForObject(sql2,Integer.class);
 		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>count "+count);
 		Map map = new HashMap();
@@ -1815,7 +1813,7 @@ public class Queries {
 		log.debug(">>>>>>>>>>>>>>sql2 "+sql2);
 		int count = 0;
 		if (splitParamString[0].length()>0){
-		 count = jt.queryForInt(sql2);
+		 count = jt.queryForObject(sql2,Integer.class);
 		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>count "+count);
 		Map map = new HashMap();
@@ -2145,7 +2143,7 @@ public class Queries {
 		log.debug(">>>>>>>>>>>>>>sql2 "+sql2);
 		int count=0;
 		
-		 count = exjt.queryForInt(sql2);
+		 count = exjt.queryForObject(sql2,Integer.class);
 		
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>count "+count);
@@ -2408,7 +2406,7 @@ public class Queries {
 		
 		int count=0;
 		
-		count = exjt.queryForInt(sql2);
+		count = exjt.queryForObject(sql2,Integer.class);
 		
 		Map map = new HashMap();
 		map.put("results",records);
@@ -2740,7 +2738,7 @@ public class Queries {
 			}
 		}
 		log.debug(">>>>>>>>>>>>>>sql2 "+sql2);
-		int count = jt.queryForInt(sql2);
+		int count = jt.queryForObject(sql2,Integer.class);
 		log.debug(">>>>>>>>>>>>>>>>>>>>count "+count);
 		Map map = new HashMap();
 		if(table != null && !table.equals("") && table.equals("store_c_trns_m")){

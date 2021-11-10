@@ -172,7 +172,7 @@ public class EndServiceReasonsForm extends  BaseSimpleFormController{
 			log.debug("EndServiceReasons.getId()__________>>>>>>>>>>>>>>>"+endServiceReasons.getId());
 			hrManager.saveObject(endServiceReasons);
 			log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-			return new ModelAndView(new RedirectView(getSuccessView()));
+			return new ModelAndView(new RedirectView("endServiceReasonsView.html"));
 		}
 		
 

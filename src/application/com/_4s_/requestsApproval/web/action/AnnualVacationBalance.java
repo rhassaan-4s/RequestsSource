@@ -4,36 +4,26 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
-import org.springframework.web.servlet.view.RedirectView;
 
-import com._4s_.requestsApproval.model.EmpReqTypeAcc;
-import com._4s_.requestsApproval.model.LoginUsers;
-import com._4s_.requestsApproval.model.LoginUsersRequests;
-import com._4s_.requestsApproval.model.RequestTypes;
-import com._4s_.requestsApproval.model.Vacation;
-import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
-import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.requestsApproval.model.LoginUsers;
+import com._4s_.requestsApproval.model.Vacation;
+import com._4s_.requestsApproval.service.RequestsApprovalManager;
 
 
 public class AnnualVacationBalance implements Controller{

@@ -1,30 +1,23 @@
 package com._4s_.requestsApproval.web.action;
 
-import java.util.HashMap;
-
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.view.RedirectView;
 
-
-import com._4s_.requestsApproval.model.*;
+import com._4s_.requestsApproval.model.EmpReqTypeAcc;
+import com._4s_.requestsApproval.model.LoginUsers;
+import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
-
-import com._4s_.common.util.MultiCalendarDate;
-import com._4s_.common.web.action.BaseSimpleFormController;
 
 public class EmpGroupsView implements Controller{
 

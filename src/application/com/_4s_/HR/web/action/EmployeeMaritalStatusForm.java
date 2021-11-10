@@ -18,7 +18,6 @@ import com._4s_.HR.model.HREmployeeMaritalStatus;
 import com._4s_.HR.model.HRMaritalStatus;
 import com._4s_.HR.service.HRManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
-import com.jenkov.prizetags.tree.itf.ITree;
 
 public class EmployeeMaritalStatusForm extends BaseSimpleFormController {
 	 protected HRManager hrManager = null;

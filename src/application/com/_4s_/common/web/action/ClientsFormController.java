@@ -12,9 +12,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com._4s_.common.model.Branch;
 import com._4s_.common.model.Clients;
-import com._4s_.common.model.Company;
 import com._4s_.common.service.BaseManager;
 
 public class ClientsFormController extends BaseSimpleFormController {

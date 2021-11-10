@@ -11,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.requestsApproval.model.CompanyDetails;
-
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 
 public class WelcomePage implements Controller{

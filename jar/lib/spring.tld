@@ -307,28 +307,5 @@
 		</attribute>
 
 	</tag>
-	
-	<!-- <tag>
-    <name>authorize</name>
-    <tag-class>org.springframework.security.taglibs.authz.JspAuthorizeTag</tag-class>
-    <description>
-        A tag which outputs the body of the tag if the configured access expression
-        evaluates to true for the currently authenticated principal.
-    </description>
-    	
-    	<attribute>
-			<name>var</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-
-		<attribute>
-			<name>scope</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-    </tag>
-     -->
-    
 
 </taglib>

@@ -233,7 +233,7 @@ public class VacationForm extends  BaseSimpleFormController{
 		
 		hrManager.saveObject(vacation);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("vacationsView.html"));
 	}
 	
 

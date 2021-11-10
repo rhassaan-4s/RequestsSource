@@ -6,18 +6,14 @@
  */
 package com._4s_.auditing.dao;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.orm.hibernate3.HibernateCallback;
 
 import com._4s_.auditing.model.AuditLogRecord;
 import com._4s_.common.dao.BaseDAOHibernate;

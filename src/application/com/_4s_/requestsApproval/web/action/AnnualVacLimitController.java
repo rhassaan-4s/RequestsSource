@@ -13,7 +13,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-
 import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.requestsApproval.model.AnnualVacLimit;
 import com._4s_.requestsApproval.model.Vacation;

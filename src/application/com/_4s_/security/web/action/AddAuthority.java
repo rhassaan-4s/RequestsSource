@@ -2,30 +2,21 @@ package com._4s_.security.web.action;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.model.Branch;
-import com._4s_.common.model.Department;
-import com._4s_.common.model.Employee;
 import com._4s_.common.service.CommonManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
-import com._4s_.i18n.model.MyLocale;
 import com._4s_.i18n.service.MessageManager;
-import com._4s_.security.model.Roles;
-import com._4s_.security.model.SecurityApplication;
 import com._4s_.security.model.User;
 import com._4s_.security.model.UserBranch;
 import com._4s_.security.model.UserPrivilege;

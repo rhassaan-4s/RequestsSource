@@ -9,14 +9,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com._4s_.requestsApproval.model.GroupAcc;
-
 @Entity
 @Table (name = "security_imei")
 public class Imei {
 	private static final long serialVersionUID = 1L;
 	@Id
-	@SequenceGenerator(name = "imeiID", sequenceName = "IMEI_ID")
+	@SequenceGenerator(name = "imeiID", sequenceName = "IMEI_ID", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "imeiID")
 	private Long id;
 	

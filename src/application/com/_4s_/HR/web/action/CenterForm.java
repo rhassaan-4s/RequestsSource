@@ -157,7 +157,7 @@ public class CenterForm extends  BaseSimpleFormController{
 				
 				hrManager.saveObject(center);
 				log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-				return new ModelAndView(new RedirectView(getSuccessView()));
+				return new ModelAndView(new RedirectView("centersView.html"));
 			}
 			
 

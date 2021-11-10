@@ -1,49 +1,35 @@
 package com._4s_.requestsApproval.web.action;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TimeZone;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import sun.util.logging.resources.logging;
-
-import com._4s_.requestsApproval.model.AccessLevels;
-import com._4s_.requestsApproval.model.AnnualVacLimit;
-import com._4s_.requestsApproval.model.EmpReqTypeAcc;
-import com._4s_.requestsApproval.model.LoginUsers;
-import com._4s_.requestsApproval.model.LoginUsersRequests;
-import com._4s_.requestsApproval.model.RequestTypes;
-import com._4s_.requestsApproval.model.Requests;
-import com._4s_.requestsApproval.model.Vacation;
-import com._4s_.requestsApproval.service.RequestsApprovalManager;
-import com._4s_.restServices.json.RequestApproval;
-import com._4s_.restServices.json.RestStatus;
-import com._4s_.auditing.validators.ValidateSearch;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.requestsApproval.model.LoginUsers;
+import com._4s_.requestsApproval.model.LoginUsersRequests;
+import com._4s_.requestsApproval.model.RequestTypes;
+import com._4s_.requestsApproval.service.RequestsApprovalManager;
+import com._4s_.restServices.json.RequestApproval;
+import com._4s_.restServices.json.RestStatus;
 
 public class AttendanceSignInOutForm extends BaseSimpleFormController{
 

@@ -1,33 +1,23 @@
 package com._4s_.requestsApproval.web.action;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.antcontrib.logic.ForEach;
-
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com._4s_.requestsApproval.model.AccessLevels;
-import com._4s_.requestsApproval.model.GroupAcc;
-import com._4s_.requestsApproval.model.LoginUsers;
-import com._4s_.requestsApproval.model.LoginUsersRequests;
-import com._4s_.requestsApproval.model.RequestTypes;
-import com._4s_.requestsApproval.model.Requests;
-import com._4s_.requestsApproval.service.RequestsApprovalManager;
-import com._4s_.security.model.User;
 import com._4s_.common.model.Employee;
 import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.requestsApproval.model.AccessLevels;
+import com._4s_.requestsApproval.service.RequestsApprovalManager;
+import com._4s_.security.model.User;
 
 public class ChangeProfileForm extends BaseSimpleFormController{
 	RequestsApprovalManager requestsApprovalManager;

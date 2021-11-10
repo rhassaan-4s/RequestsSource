@@ -157,7 +157,7 @@ public class RegionForm extends  BaseSimpleFormController{
 				
 				hrManager.saveObject(hrRegion);
 				log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-				return new ModelAndView(new RedirectView(getSuccessView()));
+				return new ModelAndView(new RedirectView("regionsView.html"));
 			}
 			
 

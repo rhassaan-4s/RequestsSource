@@ -18,7 +18,6 @@ import com._4s_.HR.model.HRVacation;
 import com._4s_.common.dao.BaseDAO;
 import com._4s_.common.model.Employee;
 import com._4s_.requestsApproval.model.GroupAcc;
-import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 

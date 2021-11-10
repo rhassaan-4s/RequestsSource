@@ -7,7 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.Hibernate;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,12 +17,9 @@ import org.springframework.web.servlet.view.RedirectView;
 import com._4s_.HR.model.HRDocuments;
 import com._4s_.HR.model.HREmployee;
 import com._4s_.HR.model.HREmployeeDocuments;
-import com._4s_.HR.model.HREmployeeJob;
 import com._4s_.HR.model.HREmployeeRelative;
-import com._4s_.HR.model.HRInternalDivision;
 import com._4s_.HR.service.HRManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
-import com.jenkov.prizetags.tree.itf.ITree;
 
 public class EmployeeDocumentsForm extends BaseSimpleFormController {
 	 protected HRManager hrManager = null;

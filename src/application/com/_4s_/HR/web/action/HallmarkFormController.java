@@ -33,7 +33,7 @@ public class HallmarkFormController  extends  BaseSimpleFormController{
 	
 	
 	//**************************************** formBackingObject ***********************************************\\
-	@Override
+	
 	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -71,7 +71,7 @@ public class HallmarkFormController  extends  BaseSimpleFormController{
 	   return hallmark;
 	}
 //**************************************** referenceData ***********************************************\\
-	@Override
+	
 	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -86,7 +86,7 @@ public class HallmarkFormController  extends  BaseSimpleFormController{
 	}
 	
 	//**************************************** onBind ***********************************************\\	
-	@Override
+	
 	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -96,7 +96,7 @@ public class HallmarkFormController  extends  BaseSimpleFormController{
 	}
 	
 //**************************************** onBindAndValidate ***********************************************\\		
-	@Override
+	
 	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -150,7 +150,7 @@ public class HallmarkFormController  extends  BaseSimpleFormController{
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-	@Override
+	
 	public ModelAndView onSubmit(HttpServletRequest request,
 			HttpServletResponse response, Object command, BindException errors)throws Exception 
 	{
@@ -160,7 +160,7 @@ public class HallmarkFormController  extends  BaseSimpleFormController{
 		
 		hrManager.saveObject(hallmark);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("hallmarkView.html"));
 	}
 	
 

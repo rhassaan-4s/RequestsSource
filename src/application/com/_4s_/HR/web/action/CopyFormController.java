@@ -25,7 +25,6 @@ import com._4s_.HR.model.HRSpecialtyLevel;
 import com._4s_.HR.service.HRManager;
 import com._4s_.HR.web.command.CopyObjectsCommand;
 import com._4s_.common.web.action.BaseSimpleFormController;
-import com.jenkov.prizetags.tree.itf.ITree;
 
 public class CopyFormController extends BaseSimpleFormController{
 	

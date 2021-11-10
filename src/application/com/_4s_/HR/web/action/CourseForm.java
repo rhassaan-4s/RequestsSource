@@ -157,7 +157,7 @@ public class CourseForm extends  BaseSimpleFormController{
 		
 		hrManager.saveObject(course);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("coursesView.html"));
 	}
 	
 

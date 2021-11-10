@@ -17,7 +17,6 @@ import com._4s_.HR.model.HREmployee;
 import com._4s_.HR.model.HREmployeeVacationIncrease;
 import com._4s_.HR.model.HRVacation;
 import com._4s_.HR.model.HRVacationType;
-
 import com._4s_.HR.service.HRManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
 

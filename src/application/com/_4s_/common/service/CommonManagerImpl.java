@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.hibernate.criterion.MatchMode;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com._4s_.common.dao.CommonDAO;
 import com._4s_.common.model.Employee;

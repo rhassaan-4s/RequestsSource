@@ -9,8 +9,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -19,6 +21,8 @@ import com._4s_.common.model.Country;
 import com._4s_.common.model.Region;
 import com._4s_.common.service.CommonManager;
 
+@Controller
+@RequestMapping("/commonAdminEditRegion.html")
 public class EditRegionFormController extends BaseSimpleFormController
 {
 	CommonManager commonManager=null;
@@ -139,7 +143,7 @@ public class EditRegionFormController extends BaseSimpleFormController
 		baseManager.saveObject(region);
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> End of onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("commonAdminRegions.html"));
 	}
 
 

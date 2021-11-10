@@ -1,30 +1,24 @@
 package com._4s_.HR.web.action;
 
-	import java.math.BigDecimal;
-import java.math.BigInteger;
+	import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-	import java.util.List;
-	import java.util.Map;
+import java.util.List;
+import java.util.Map;
 
-	import javax.servlet.ServletException;
-	import javax.servlet.http.HttpServletRequest;
-	import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-	import org.springframework.validation.BindException;
-	import org.springframework.validation.Errors;
-	import org.springframework.web.servlet.ModelAndView;
-	import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
-
-import com._4s_.HR.model.HRInternalDivision;
-import com._4s_.HR.model.HRInternalLevel;
-	import com._4s_.HR.model.HRSpecialtyDivision;
+import com._4s_.HR.model.HRSpecialtyDivision;
 import com._4s_.HR.model.HRSpecialtyLevel;
-import com._4s_.HR.service.HRManager;
-
 import com.jenkov.prizetags.tree.itf.ITree;
 
 
@@ -590,7 +584,7 @@ public class SpecialtyDivisionForm  extends  TreeFormController {
 					log.debug("result.getEndesc()>>>>>>>>>>"+result.getEndesc());
 			
 					log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End child onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-					return new ModelAndView(new RedirectView(getSuccessView()));
+					return new ModelAndView(new RedirectView("specialtyDivisionTree.html"));
 				}
 				
 }

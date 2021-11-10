@@ -1,7 +1,6 @@
 package com._4s_.common.model;
 
 import java.io.Serializable;
-import java.sql.Blob;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties({"users"})
 public class Employee implements Serializable,Auditable,Searchable {
 	@Id
-	@SequenceGenerator(name = "userID", sequenceName = "USER_ID")
+	@SequenceGenerator(name = "userID", sequenceName = "USER_ID", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userID")
 	private Long id;
 	private String firstName;

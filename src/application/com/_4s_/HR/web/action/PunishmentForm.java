@@ -176,7 +176,7 @@ public class PunishmentForm extends  BaseSimpleFormController{
 					
 					hrManager.saveObject(punishment);
 					log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-					return new ModelAndView(new RedirectView(getSuccessView()));
+					return new ModelAndView(new RedirectView("punishmentsView.html"));
 				}
 				
 

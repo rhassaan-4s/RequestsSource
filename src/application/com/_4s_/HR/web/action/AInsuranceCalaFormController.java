@@ -18,12 +18,10 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.HR.model.AInsuranceCala;
 import com._4s_.HR.model.HREmployee;
-
 import com._4s_.HR.model.HREmployeeGroupBy;
 import com._4s_.HR.model.HRInsurance;
 import com._4s_.HR.model.HRMonth;
 import com._4s_.HR.model.HRYear;
-
 import com._4s_.HR.service.HRManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
 
@@ -274,7 +272,7 @@ public class AInsuranceCalaFormController extends BaseSimpleFormController{
 		
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 
-		return new ModelAndView(new RedirectView(getSuccessView()),model);
+		return new ModelAndView(new RedirectView("aInsuranceCalaForm.html"),model);
 	}
 	
 	//**************************************** copyFromPreMonth ***********************************************\\

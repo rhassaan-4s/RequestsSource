@@ -21,13 +21,13 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Property;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.orm.hibernate5.HibernateCallback;
 
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.CommonManager;
 import com._4s_.common.service.CommonManagerImpl;
 import com._4s_.common.util.DBUtils;
-import com.mysql.jdbc.ResultSet;
+//import com.mysql.jdbc.ResultSet;
 import com.sun.corba.se.spi.logging.LogWrapperBase;
 
 import sun.util.logging.resources.logging;

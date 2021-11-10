@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
-import org.springframework.stereotype.Component;
 
 import com._4s_.restServices.json.RestStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,9 +32,10 @@ extends BasicAuthenticationEntryPoint {
 		this.jsonConverter = jsonConverter;
 	}
 
+	
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authEx)
-			throws IOException, ServletException {
+			throws IOException {
 		//		System.out.println("commence");
 		//        response.addHeader("WWW-Authenticate", "Basic realm=" +getRealmName());
 		//        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -61,7 +60,7 @@ extends BasicAuthenticationEntryPoint {
 	}
 
 	@Override
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		//		System.out.println("After properties set");
 		setRealmName("DeveloperStack");
 		super.afterPropertiesSet();

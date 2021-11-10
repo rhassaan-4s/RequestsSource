@@ -12,10 +12,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
-
-
 //import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,13 +22,7 @@ import com._4s_.common.dao.Queries;
 import com._4s_.common.model.Branch;
 import com._4s_.common.model.Employee;
 import com._4s_.common.service.CommonManager;
-import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
-import com._4s_.requestsApproval.service.RequestsApprovalManagerImpl;
-
-
-
-
 //import com._4s_.stores.model.DBConnection;
 //import com._4s_.stores.model.Destination;
 //import com._4s_.stores.model.Groupf;
@@ -45,7 +35,6 @@ import com._4s_.requestsApproval.service.RequestsApprovalManagerImpl;
 //import com._4s_.stores.model.Stores;
 //import com._4s_.stores.service.StoresManager;
 //import com._4s_.stores.web.action.ExternalTypeAndCode;
-import java.util.Date;
 
 public class SearchFormController implements Controller {
 	CommonManager mgr;

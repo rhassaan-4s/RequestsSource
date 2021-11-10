@@ -6,6 +6,9 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import com._4s_.common.dao.BaseDAO;
 
@@ -15,22 +18,16 @@ import com._4s_.common.dao.BaseDAO;
  * 
  * <p><a href="BaseManager.java.html"><i>View Source</i></a></p>
  *
- * @author <a href="mailto:matt@raibledesigns.com">Matt Raible</a>
  */
 public class BaseManagerImpl implements BaseManager {
     protected final Log log = LogFactory.getLog(getClass());
-    protected BaseDAO baseDAO = null;
+    protected BaseDAO baseDAO;
     
-    /* (non-Javadoc)
-	 * @see com._4s_.commons.service.BaseManager2#setDAO(com._4s_.commons.dao.BaseDAO)
-	 */
     public void setBaseDAO(BaseDAO baseDAO) {
         this.baseDAO = baseDAO;
     }
+
     
-    /* (non-Javadoc)
-	 * @see com._4s_.commons.service.BaseManager2#getObject(java.lang.Class, java.io.Serializable)
-	 */
     public Object getObject(Class clazz, Serializable id) {
         return baseDAO.getObject(clazz, id);
     }

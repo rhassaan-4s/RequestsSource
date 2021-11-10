@@ -8,18 +8,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import com._4s_.auditing.model.Auditable;
 import com._4s_.common.model.Branch;
-import com._4s_.common.util.LocaleUtil;
 //import com._4s_.stores.model.StoreTrnsDef;
 
 @Entity
@@ -28,7 +24,7 @@ public class UserBranch implements Serializable,Auditable {
 	
 
 	@Id
-	@SequenceGenerator(name = "userBranchSeq", sequenceName = "security_user_branch_seq")
+	@SequenceGenerator(name = "userBranchSeq", sequenceName = "security_user_branch_seq", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userBranchSeq")
 	private Long id;
 

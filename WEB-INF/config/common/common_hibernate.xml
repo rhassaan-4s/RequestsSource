@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-    "http://www.springframework.org/dtd/spring-beans.dtd" >
+    "http://www.springframework.org/dtd/spring-beans2.dtd" >
 
 <beans>
 
@@ -47,10 +47,8 @@
 
 	<!-- Hibernate SessionFactory -->
 	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"> 
-		<property name="dataSource">
-			<ref bean="dataSource" />
-		</property>
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"> 
+		<property name="dataSource" ref="dataSource" />
 
 		<property name="packagesToScan">
 		<list>
@@ -68,9 +66,6 @@
 
 		</list>
 		</property>
-
-		
-
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">
@@ -88,16 +83,13 @@
 
 	<!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
 	<bean id="transactionManager"
-		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-		<property name="sessionFactory">
-			<ref local="sessionFactory" />
-		</property>
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory"  ref="sessionFactory" />
 	</bean>
-
 
 	<!-- Transaction template for Managers, from:
 		http://blog.exis.com/colin/archives/2004/07/31/concise-transaction-definitions-spring-11/ -->
-
+<!-- 
 	<bean id="txProxyTemplate" abstract="true"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager">
@@ -106,16 +98,9 @@
 		<property name="transactionAttributes">
 			<props>
 				<prop key="handleRequest">PROPAGATION_REQUIRED,ISOLATION_READ_COMMITTED</prop>
-				<!--                <prop key="onSubmit">PROPAGATION_REQUIRED</prop>  ,-org.springframework.validation.BindException -->
-				<!--                <prop key="formBackingObject">PROPAGATION_REQUIRED,readOnly</prop>-->
-				<!--                 <prop key="*">PROPAGATION_REQUIRED</prop>-->
 			</props>
 		</property>
 	</bean>
-	
-	
-
-	
 	<bean id="txProxyTemplate2" abstract="true"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager">
@@ -124,9 +109,6 @@
 		<property name="transactionAttributes">
 			<props>
 				<prop key="getExamsCities">PROPAGATION_REQUIRED</prop>	
-				<!--                <prop key="onSubmit">PROPAGATION_REQUIRED</prop>  ,-org.springframework.validation.BindException -->
-				<!--                <prop key="formBackingObject">PROPAGATION_REQUIRED,readOnly</prop>-->
-				<!--                 <prop key="*">PROPAGATION_REQUIRED</prop>-->
 			</props>
 		</property>
 	</bean>
@@ -152,21 +134,16 @@
 		<property name="transactionAttributes">
 			<props>
 				<prop key="getDoctorsOfSPBetween">PROPAGATION_REQUIRED</prop>
-				<!--                <prop key="onSubmit">PROPAGATION_REQUIRED</prop>  ,-org.springframework.validation.BindException -->
-				<!--                <prop key="formBackingObject">PROPAGATION_REQUIRED,readOnly</prop>-->
-				<!--                 <prop key="*">PROPAGATION_REQUIRED</prop>-->
 			</props>
 		</property>
 	</bean>
-
+ -->
 	<!-- Open Session in View Interceptor -->
 
 	<bean id="openSessionInViewInterceptor"
-		class="org.springframework.orm.hibernate4.support.OpenSessionInViewInterceptor">
+		class="org.springframework.orm.hibernate5.support.OpenSessionInViewInterceptor">
 		
-		 <property name="sessionFactory">
-	        <ref bean="sessionFactory" />
-	    </property>
+		 <property name="sessionFactory" ref="sessionFactory" />
 		<!-- ><property name="singleSession">
 			<value>true</value>
 		</property>

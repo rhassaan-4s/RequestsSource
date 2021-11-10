@@ -173,7 +173,7 @@ public class DocumentsForm extends  BaseSimpleFormController{
 		
 		hrManager.saveObject(hrDocuments);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("documentsView.html"));
 	}
 	
 

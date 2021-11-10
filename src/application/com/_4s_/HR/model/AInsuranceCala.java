@@ -6,8 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -23,7 +21,7 @@ import com._4s_.auditing.model.Auditable;
 public class AInsuranceCala implements Auditable,Serializable {
 
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="a_insurance_cala_seq")
-	@SequenceGenerator(name="a_insurance_cala_seq",sequenceName="a_insurance_cala_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="a_insurance_cala_seq",sequenceName="a_insurance_cala_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	
 	private String emp_code;

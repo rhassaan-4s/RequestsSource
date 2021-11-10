@@ -4,11 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.stereotype.Component;
 
 import com._4s_.common.model.Branch;
 import com._4s_.common.model.City;
@@ -20,7 +19,7 @@ import com._4s_.common.model.LastSequence;
 import com._4s_.common.model.Types;
 import com._4s_.common.model.TypesData;
 
-
+@Component(value="commonDAO")
 public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 	/*public Employee getEmployeeByAccount(Account account) {
 		return (Employee) getObjectByParameter(Employee.class, "account",

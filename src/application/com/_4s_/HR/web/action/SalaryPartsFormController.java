@@ -21,7 +21,6 @@ import com._4s_.HR.model.HREffectDiscDays;
 import com._4s_.HR.model.HREffectNature;
 import com._4s_.HR.model.HREffectRoundType;
 import com._4s_.HR.model.HREffectRule;
-import com._4s_.HR.model.HRSpecialEffect;
 import com._4s_.HR.service.HRManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
 
@@ -38,7 +37,7 @@ public class SalaryPartsFormController extends  BaseSimpleFormController{
 	}
 	
 	//**************************************** formBackingObject ***********************************************\\
-	@Override
+	
 	protected Object formBackingObject(HttpServletRequest request) throws ServletException{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
@@ -74,7 +73,7 @@ public class SalaryPartsFormController extends  BaseSimpleFormController{
 	}
 	
 	//**************************************** referenceData ***********************************************\\
-	@Override
+	
 	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
@@ -124,7 +123,7 @@ public class SalaryPartsFormController extends  BaseSimpleFormController{
 	}
 	
 	//**************************************** onBind ***********************************************\\	
-	@Override
+	
 	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
@@ -133,7 +132,7 @@ public class SalaryPartsFormController extends  BaseSimpleFormController{
 	}
 	
 	//**************************************** onBindAndValidate ***********************************************\\		
-	@Override
+	
 	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
@@ -162,7 +161,7 @@ public class SalaryPartsFormController extends  BaseSimpleFormController{
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-	@Override
+	
 	public ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command, BindException errors)throws Exception {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
@@ -171,7 +170,7 @@ public class SalaryPartsFormController extends  BaseSimpleFormController{
 		hrManager.saveObject(effect);
 		
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("salaryPartsView.html"));
 	}
 	
 

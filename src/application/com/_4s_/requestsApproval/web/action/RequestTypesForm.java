@@ -16,10 +16,10 @@ import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.model.Requests;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
-import com._4s_.common.web.action.BaseSimpleFormController;
 
 public class RequestTypesForm extends BaseSimpleFormController{
 	RequestsApprovalManager requestsApprovalManager;
@@ -141,6 +141,6 @@ public class RequestTypesForm extends BaseSimpleFormController{
 		
 		requestsApprovalManager.saveObject(requestType);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("requestTypesView.html"));
 	}
 }

@@ -1,12 +1,12 @@
 package com._4s_.requestsApproval.web.action;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -20,21 +20,15 @@ import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com._4s_.requestsApproval.model.EmpReqTypeAcc;
-import com._4s_.requestsApproval.model.AccessLevels;
-import com._4s_.requestsApproval.model.EmpReqApproval;
-import com._4s_.requestsApproval.model.LoginUsers;
-import com._4s_.requestsApproval.model.LoginUsersRequests;
-import com._4s_.requestsApproval.model.RequestTypes;
-import com._4s_.requestsApproval.service.RequestsApprovalManager;
-import com._4s_.restServices.json.RequestApproval;
-import com._4s_.restServices.json.RestStatus;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
-
-import java.math.BigDecimal;
+import com._4s_.requestsApproval.model.LoginUsers;
+import com._4s_.requestsApproval.model.LoginUsersRequests;
+import com._4s_.requestsApproval.service.RequestsApprovalManager;
+import com._4s_.restServices.json.RequestApproval;
+import com._4s_.restServices.json.RestStatus;
 
 
 public class AttendanceRequestsReports extends BaseSimpleFormController{

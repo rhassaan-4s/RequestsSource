@@ -32,7 +32,7 @@ public class SyndicateFormController extends  BaseSimpleFormController{
 	
 	
 	//**************************************** formBackingObject ***********************************************\\
-	@Override
+	
 	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -70,7 +70,7 @@ public class SyndicateFormController extends  BaseSimpleFormController{
 	   return syndicate;
 	}
 //**************************************** referenceData ***********************************************\\
-	@Override
+	
 	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -85,7 +85,7 @@ public class SyndicateFormController extends  BaseSimpleFormController{
 	}
 	
 	//**************************************** onBind ***********************************************\\	
-	@Override
+	
 	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -95,7 +95,7 @@ public class SyndicateFormController extends  BaseSimpleFormController{
 	}
 	
 //**************************************** onBindAndValidate ***********************************************\\		
-	@Override
+	
 	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -179,7 +179,7 @@ public class SyndicateFormController extends  BaseSimpleFormController{
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-	@Override
+	
 	public ModelAndView onSubmit(HttpServletRequest request,
 			HttpServletResponse response, Object command, BindException errors)throws Exception 
 	{
@@ -189,7 +189,7 @@ public class SyndicateFormController extends  BaseSimpleFormController{
 		
 		hrManager.saveObject(syndicate);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("syndicateView.html"));
 	}
 	
 

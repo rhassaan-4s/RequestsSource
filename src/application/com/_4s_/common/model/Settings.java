@@ -2,7 +2,6 @@ package com._4s_.common.model;
 
 import java.io.Serializable;
 import java.sql.Blob;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

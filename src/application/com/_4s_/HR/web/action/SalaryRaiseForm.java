@@ -163,7 +163,7 @@ public class SalaryRaiseForm  extends  BaseSimpleFormController{
 			
 			hrManager.saveObject(salaryRaise);
 			log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-			return new ModelAndView(new RedirectView(getSuccessView()));
+			return new ModelAndView(new RedirectView("salaryRaiseView.html"));
 		}
 		
 

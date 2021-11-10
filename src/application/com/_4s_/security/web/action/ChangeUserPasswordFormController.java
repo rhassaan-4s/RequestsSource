@@ -30,7 +30,7 @@ import com._4s_.security.web.command.ChangePasswordCommand;
 			log.debug(">>>>>>>>>>>>>>>>>>> user.getPassword "+user.getPassword());
 			log.debug(">>>>>>>>>>>>>>>>>>> end onSubmit");
 			String message = "true";
-			return new ModelAndView(new RedirectView(getSuccessView()),"message",message);
+			return new ModelAndView(new RedirectView("changeUserPassword.html"),"message",message);
 		}
 
 	

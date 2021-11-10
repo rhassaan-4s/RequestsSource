@@ -4,7 +4,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com._4s_.common.model.Country;
 import com._4s_.common.model.TypesData;
 
 public class TypesDataValidator implements Validator{

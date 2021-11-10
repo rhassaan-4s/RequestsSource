@@ -11,7 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -21,7 +20,7 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="request_types")
 public class RequestTypes implements Auditable,Serializable {
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="request_types_seq")
-	@SequenceGenerator(name="request_types_seq",sequenceName="request_types_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="request_types_seq",sequenceName="request_types_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	
 	private String description;

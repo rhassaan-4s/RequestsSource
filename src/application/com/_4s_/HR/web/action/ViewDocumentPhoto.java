@@ -13,7 +13,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
-import com._4s_.HR.model.HREmployee;
 import com._4s_.HR.model.HREmployeeDocuments;
 import com._4s_.HR.service.HRManager;
 

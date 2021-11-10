@@ -1,6 +1,5 @@
 package com._4s_.i18n.dao;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,13 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.stereotype.Component;
 
 import com._4s_.common.dao.BaseDAOHibernate;
 import com._4s_.i18n.model.Key;
@@ -35,14 +30,14 @@ public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO
 
 		MyLocale myLocaleFromDB = null;
 
-		List myLocales;
+		List myLocales = null;
 		List cl = new ArrayList();
 		cl.add(Expression.eq("language", myLocale.getLanguage()));
 //		cl.add(Expression.eq("country", myLocale.getCountry()));
 //		cl.add(Expression.eq("variant", myLocale.getVariant()));
 
 		//getObjectsByCriteria returns all the objects of a class in a list
-		myLocales = getObjectsByCriteria(MyLocale.class, cl);
+//		myLocales = getObjectsByCriteria(MyLocale.class, cl);
 
 		//if it is only one, return it
 		if ((myLocales != null) && (myLocales.size() == 1)) {

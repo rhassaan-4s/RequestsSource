@@ -10,9 +10,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+
 import com._4s_.auditing.model.Auditable;
 
 
@@ -21,7 +23,7 @@ import com._4s_.auditing.model.Auditable;
 public class LoginUsers  implements Auditable,Serializable {
 		
 		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="login_users_seq")
-		@SequenceGenerator(name="login_users_seq",sequenceName="login_users_seq")//(generate=GeneratorType.IDENTITY)
+		@SequenceGenerator(name="login_users_seq",sequenceName="login_users_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 		private Long id;
 		
 		private String empCode;

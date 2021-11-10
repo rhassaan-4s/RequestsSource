@@ -8,7 +8,7 @@ import com._4s_.common.dao.BaseDAO;
 
 public interface BaseManager {
 
-	public abstract void setBaseDAO(BaseDAO baseDAO);
+//	public abstract void setBaseDAO(BaseDAO baseDAO);
 
 	public abstract Object getObject(Class clazz, Serializable id);
 

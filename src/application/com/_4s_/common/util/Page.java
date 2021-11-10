@@ -1,17 +1,9 @@
 package com._4s_.common.util;
 
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.springframework.orm.hibernate3.HibernateCallback;
-
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-
-import com._4s_.common.dao.BaseDAOHibernate;
 
 public class Page{
 	private static Log log = LogFactory.getLog(DateUtil.class); 

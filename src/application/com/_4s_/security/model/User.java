@@ -16,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -43,7 +42,7 @@ public class User implements  Serializable,Auditable,UserDetails {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "userID", sequenceName = "USER_ID")
+	@SequenceGenerator(name = "userID", sequenceName = "USER_ID", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userID")
 	private Long id;
 

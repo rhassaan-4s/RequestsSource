@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
-
 //import org.acegisecurity.context.SecurityContext;
 //import org.acegisecurity.context.SecurityContextHolder;
 import org.apache.commons.logging.Log;
@@ -387,7 +385,7 @@ public class AuditLogInterceptor implements Interceptor {
 		while (itr.hasNext()) {
 			auditLog = (AuditLogRecord) itr.next();
 			if (auditLog.getEntityId() == null) {
-				auditLog.setEntityId(auditLog.getEntity().getId());
+				auditLog.setEntityId((Long)auditLog.getEntity().getId());
 			}
 			auditLogDAO.saveLogEvent(auditLog);
 		}

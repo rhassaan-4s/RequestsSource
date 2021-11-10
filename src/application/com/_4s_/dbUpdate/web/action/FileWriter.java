@@ -48,7 +48,7 @@ public class FileWriter extends BaseSimpleFormController {
 				.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 
 		out.close();
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("fileWriterForm.html"));
 
 	}
 

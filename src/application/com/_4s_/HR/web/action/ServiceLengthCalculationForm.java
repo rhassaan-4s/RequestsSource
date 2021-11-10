@@ -256,7 +256,7 @@ public class ServiceLengthCalculationForm extends BaseSimpleFormController{
 			
 							
 			log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-			return new ModelAndView(new RedirectView(getSuccessView()));
+			return new ModelAndView(new RedirectView("serviceLengthCalculationForm.html"));
 		}
 	
 

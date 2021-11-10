@@ -177,7 +177,7 @@ public class TitleForm extends  BaseSimpleFormController{
 		
 		hrManager.saveObject(hrTitle);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("titlesView.html"));
 	}
 	
 

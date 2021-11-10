@@ -15,7 +15,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com._4s_.HR.model.Punishment;
 import com._4s_.HR.model.HRJob;
 import com._4s_.HR.service.HRManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
@@ -178,7 +177,7 @@ public class JobForm extends  BaseSimpleFormController{
 		
 		hrManager.saveObject(job);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("jobsView.html"));
 	}
 	
 

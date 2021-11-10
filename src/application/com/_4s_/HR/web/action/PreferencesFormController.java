@@ -31,7 +31,7 @@ public class PreferencesFormController extends BaseSimpleFormController {
 		this.hrManager = hrManager;
 	}
 	
-	@Override
+	
 	protected Object formBackingObject(HttpServletRequest request) throws Exception {
 		
 		String stringCounter=request.getParameter("counter");
@@ -113,7 +113,7 @@ public class PreferencesFormController extends BaseSimpleFormController {
 		return preferences;
 	}
 	
-	@Override
+	
 	protected Map referenceData(HttpServletRequest request, Object command,Errors errors) throws Exception {
 		
 		Map model = new HashMap();
@@ -145,7 +145,7 @@ public class PreferencesFormController extends BaseSimpleFormController {
 	    return model;
 	}
 	
-	@Override
+	
 	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception {
 
 		PreferencesCommand preferencesCommand = (PreferencesCommand) command;
@@ -181,7 +181,7 @@ public class PreferencesFormController extends BaseSimpleFormController {
 		}
 	}
 	
-	@Override
+	
 	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command, BindException errors) throws Exception {
 		
 		PreferencesCommand result = (PreferencesCommand) command;

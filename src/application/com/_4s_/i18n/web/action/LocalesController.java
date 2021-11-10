@@ -12,8 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com._4s_.common.web.action.BaseController;
 import com._4s_.i18n.model.MyLocale;
-import com._4s_.security.model.User;
-import com._4s_.security.web.action.UserController;
 
 public class LocalesController extends BaseController implements Comparator {
 

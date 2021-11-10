@@ -245,7 +245,7 @@ public class ViolationForm extends  BaseSimpleFormController{
 		
 		hrManager.saveObject(violation);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("violationsView.html"));
 	}
 	
 

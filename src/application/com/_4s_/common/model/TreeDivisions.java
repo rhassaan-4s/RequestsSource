@@ -1,25 +1,12 @@
 package com._4s_.common.model;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import com._4s_.HR.model.HRInternalDivision;
-import com._4s_.HR.model.HRInternalLevel;
 import com._4s_.auditing.model.Auditable;
 import com._4s_.common.util.LocaleUtil;
 

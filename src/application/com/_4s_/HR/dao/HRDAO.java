@@ -6,13 +6,11 @@ import com._4s_.HR.model.HREmployee;
 import com._4s_.HR.model.HRGeographicalLevel;
 import com._4s_.HR.model.HRInternalDivision;
 import com._4s_.HR.model.HRInternalLevel;
-import com._4s_.HR.model.HRMonth;
 import com._4s_.HR.model.HRQualificationDivision;
 import com._4s_.HR.model.HRQualificationLevel;
 import com._4s_.HR.model.HRSpecialtyDivision;
 import com._4s_.HR.model.HRSpecialtyLevel;
 import com._4s_.HR.model.HRVacation;
-import com._4s_.HR.model.HRYear;
 import com._4s_.common.dao.BaseDAO;
 
 public interface HRDAO extends BaseDAO {

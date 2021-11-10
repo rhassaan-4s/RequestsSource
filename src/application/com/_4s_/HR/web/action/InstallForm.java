@@ -136,7 +136,7 @@ public class InstallForm  extends  BaseSimpleFormController{
 		
 		hrManager.saveObject(install);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("installsView.html"));
 	}
 	
 

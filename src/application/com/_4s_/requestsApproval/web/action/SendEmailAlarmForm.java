@@ -1,7 +1,5 @@
 package com._4s_.requestsApproval.web.action;
 
-import java.sql.SQLException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,8 +7,6 @@ import java.util.Properties;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,6 +16,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+
 import com._4s_.common.model.Employee;
 import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
@@ -84,22 +81,22 @@ public class SendEmailAlarmForm extends BaseSimpleFormController{
 		mm+="<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head>";
 		mm+="<body>";
 		
-		mm+="<br>السيد: "+emp.getFirstName()+" "+emp.getLastName();
-		mm+="<br>نود ابلاغ سيادتكم بانه قد تم ";
+		mm+="<br>Ø§Ù„Ø³ÙŠØ¯: "+emp.getFirstName()+" "+emp.getLastName();
+		mm+="<br>Ù†ÙˆØ¯ Ø§Ø¨Ù„Ø§Øº Ø³ÙŠØ§Ø¯ØªÙƒÙ… Ø¨Ø§Ù†Ù‡ Ù‚Ø¯ ØªÙ… ";
 //		if(span.getStartDate()!=null)
 //		{
-//			mm+="الموافقة علي ";
+//			mm+="Ø§Ù„Ù…ÙˆØ§Ù�Ù‚Ø© Ø¹Ù„ÙŠ ";
 //		}
 //		else
 //		{
-//			mm+="رفض ";
+//			mm+="Ø±Ù�Ø¶ ";
 //		}	
-//		mm+="<br>طلب الحضور المقدم من سيادتكم لإثبات الحضور في يوم: "+startDate.get(Calendar.DAY_OF_MONTH)+"-"+(startDate.get(Calendar.MONTH)+1)+"-"+startDate.get(Calendar.YEAR);
-//		mm+="<br>من: "+startDate.get(Calendar.HOUR_OF_DAY)+":"+startDate.get(Calendar.MINUTE);
-//		mm+=" إلي: "+endDate.get(Calendar.HOUR_OF_DAY)+":"+endDate.get(Calendar.MINUTE);
+//		mm+="<br>Ø·Ù„Ø¨ Ø§Ù„Ø­Ø¶ÙˆØ± Ø§Ù„Ù…Ù‚Ø¯Ù… Ù…Ù† Ø³ÙŠØ§Ø¯ØªÙƒÙ… Ù„Ø¥Ø«Ø¨Ø§Øª Ø§Ù„Ø­Ø¶ÙˆØ± Ù�ÙŠ ÙŠÙˆÙ…: "+startDate.get(Calendar.DAY_OF_MONTH)+"-"+(startDate.get(Calendar.MONTH)+1)+"-"+startDate.get(Calendar.YEAR);
+//		mm+="<br>Ù…Ù†: "+startDate.get(Calendar.HOUR_OF_DAY)+":"+startDate.get(Calendar.MINUTE);
+//		mm+=" Ø¥Ù„ÙŠ: "+endDate.get(Calendar.HOUR_OF_DAY)+":"+endDate.get(Calendar.MINUTE);
 
-		mm+="<br>مع خالص الشكر";
-		mm+="<br>الهيئة السعودية للتخصصات الطبية";							
+		mm+="<br>Ù…Ø¹ Ø®Ø§Ù„Øµ Ø§Ù„Ø´ÙƒØ±";
+		mm+="<br>Ø§Ù„Ù‡ÙŠØ¦Ø© Ø§Ù„Ø³Ø¹ÙˆØ¯ÙŠØ© Ù„Ù„ØªØ®ØµØµØ§Øª Ø§Ù„Ø·Ø¨ÙŠØ©";							
 		mm+="</body></html>";
 		
 		try
@@ -138,31 +135,31 @@ public class SendEmailAlarmForm extends BaseSimpleFormController{
 //		mm+="<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head>";
 //		mm+="<body>";
 //		
-//		mm+="<br>السيد: "+sessionEmp.getFirstName()+" "+sessionEmp.getLastName();
-//		mm+="<br>نود ابلاغ سيادتكم بانه قد تم ";
+//		mm+="<br>Ø§Ù„Ø³ÙŠØ¯: "+sessionEmp.getFirstName()+" "+sessionEmp.getLastName();
+//		mm+="<br>Ù†ÙˆØ¯ Ø§Ø¨Ù„Ø§Øº Ø³ÙŠØ§Ø¯ØªÙƒÙ… Ø¨Ø§Ù†Ù‡ Ù‚Ø¯ ØªÙ… ";
 //		if(span.getStartDate()!=null)
 //		{
-//			mm+="الموافقة علي ";
+//			mm+="Ø§Ù„Ù…ÙˆØ§Ù�Ù‚Ø© Ø¹Ù„ÙŠ ";
 //		}
 //		else
 //		{
-//			mm+="رفض ";
+//			mm+="Ø±Ù�Ø¶ ";
 //		}
-//		mm+="<br>الطلب المقدم من السيد: "+emp.getFirstName()+" "+emp.getLastName();
-//		mm+="<br>لإثبات الحضورفي يوم: "+startDate.get(Calendar.DAY_OF_MONTH)+"-"+(startDate.get(Calendar.MONTH)+1)+"-"+startDate.get(Calendar.YEAR);
-//		mm+="<br>من: "+startDate.get(Calendar.HOUR_OF_DAY)+":"+startDate.get(Calendar.MINUTE);
-//		mm+=" إلي: "+endDate.get(Calendar.HOUR_OF_DAY)+":"+endDate.get(Calendar.MINUTE);
+//		mm+="<br>Ø§Ù„Ø·Ù„Ø¨ Ø§Ù„Ù…Ù‚Ø¯Ù… Ù…Ù† Ø§Ù„Ø³ÙŠØ¯: "+emp.getFirstName()+" "+emp.getLastName();
+//		mm+="<br>Ù„Ø¥Ø«Ø¨Ø§Øª Ø§Ù„Ø­Ø¶ÙˆØ±Ù�ÙŠ ÙŠÙˆÙ…: "+startDate.get(Calendar.DAY_OF_MONTH)+"-"+(startDate.get(Calendar.MONTH)+1)+"-"+startDate.get(Calendar.YEAR);
+//		mm+="<br>Ù…Ù†: "+startDate.get(Calendar.HOUR_OF_DAY)+":"+startDate.get(Calendar.MINUTE);
+//		mm+=" Ø¥Ù„ÙŠ: "+endDate.get(Calendar.HOUR_OF_DAY)+":"+endDate.get(Calendar.MINUTE);
 //		mm+="<br>";
 //		
-//		mm+="<br>مع خالص الشكر";
-//		mm+="<br>الهيئة السعودية للتخصصات الطبية";							
+//		mm+="<br>Ù…Ø¹ Ø®Ø§Ù„Øµ Ø§Ù„Ø´ÙƒØ±";
+//		mm+="<br>Ø§Ù„Ù‡ÙŠØ¦Ø© Ø§Ù„Ø³Ø¹ÙˆØ¯ÙŠØ© Ù„Ù„ØªØ®ØµØµØ§Øª Ø§Ù„Ø·Ø¨ÙŠØ©";							
 //		mm+="</body></html>";
 //		
 //		try
 //		{				
 //			helper1.setFrom("schfs@schfs.com");
 //			helper1.setTo(sessionEmp.getEmail());
-//			helper1.setSubject("حالة الطلب");
+//			helper1.setSubject("Ø­Ø§Ù„Ø© Ø§Ù„Ø·Ù„Ø¨");
 //			helper1.setText(mm,true);
 //			helper1.setSentDate(new Date());
 //			
@@ -176,7 +173,7 @@ public class SendEmailAlarmForm extends BaseSimpleFormController{
 //		}
 		
 		
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("sendEmailAlarm.html"));
 	}
 
 	protected void onBindAndValidate(HttpServletRequest request, Object command,

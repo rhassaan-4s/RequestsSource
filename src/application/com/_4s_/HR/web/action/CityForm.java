@@ -159,7 +159,7 @@ public class CityForm extends  BaseSimpleFormController{
 			log.debug("hrCity.getId()__________>>>>>>>>>>>>>>>"+hrCity.getId());
 			hrManager.saveObject(hrCity);
 			log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-			return new ModelAndView(new RedirectView(getSuccessView()));
+			return new ModelAndView(new RedirectView("citiesView.html"));
 		}
 		
 

@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import com._4s_.common.model.Branch;
 import com._4s_.common.model.Clients;
 import com._4s_.common.service.CommonManager;
 

@@ -1,11 +1,7 @@
 package com._4s_.HR.web.action;
 
 import java.math.BigInteger;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -15,7 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.Hibernate;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,18 +32,15 @@ import com._4s_.HR.model.HRInternalDivision;
 import com._4s_.HR.model.HRLocation;
 import com._4s_.HR.model.HRMaritalStatus;
 import com._4s_.HR.model.HRMilitaryService;
-import com._4s_.HR.model.HRMonth;
 import com._4s_.HR.model.HRQualificationDivision;
 import com._4s_.HR.model.HRRegion;
 import com._4s_.HR.model.HRReligion;
 import com._4s_.HR.model.HRSyndicate;
 import com._4s_.HR.model.HRTax;
 import com._4s_.HR.model.HRTitle;
-import com._4s_.HR.model.HRYear;
 import com._4s_.HR.model.Sector;
 import com._4s_.HR.service.HRManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
-import com.crystaldecisions.enterprise.ocaframework.idl.OCA.OCAcdz.WICDZServer.Blob;
 //import com._4s_.gl.model.Account;
 //import com._4s_.gl.model.AnalysisLeafAccount;
 import com.jenkov.prizetags.tree.itf.ITree;
@@ -65,7 +57,7 @@ public class EmployeeForm extends BaseSimpleFormController {
 		this.hrManager = hrManager;
 	}
 	
-	@Override
+	
 	protected Object formBackingObject(HttpServletRequest request) throws ServletException {
 	 
 		String employeeId=request.getParameter("employeeId");
@@ -162,7 +154,7 @@ public class EmployeeForm extends BaseSimpleFormController {
 		return hrEmployee;
 	}
 	
-	@Override
+	
 	protected Map referenceData(HttpServletRequest request, Object command, Errors errors) throws Exception {
 	
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>referenceData start>>>>>>>>>>>>>>>>>>>>>>>>>>");	
@@ -336,7 +328,7 @@ public class EmployeeForm extends BaseSimpleFormController {
 		return map;
 	}
 	
-	@Override
+	
 	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception {
 		
 //		HREmployee hrEmployee = (HREmployee) command;
@@ -364,7 +356,7 @@ public class EmployeeForm extends BaseSimpleFormController {
 //		}
 	}
 	
-	@Override
+	
 	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception{
 		HREmployee hrEmployee = (HREmployee) command;
 		
@@ -493,7 +485,7 @@ public class EmployeeForm extends BaseSimpleFormController {
 
 	}
 	
-	@Override
+	
 	public ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command, BindException errors) throws Exception {
 		HREmployee hrEmployee = (HREmployee) command;
 		

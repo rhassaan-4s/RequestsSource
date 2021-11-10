@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-    "http://www.springframework.org/dtd/spring-beans.dtd" >
+    "http://www.springframework.org/dtd/spring-beans2.dtd" >
 
 <beans>
 
@@ -22,7 +22,7 @@
 
 
 	<bean id="auditTransactionManager"
-		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
 		<property name="sessionFactory">
 			<ref local="auditSessionFactory" />
 		</property>
@@ -48,7 +48,7 @@
 	<!---->
 	<!--     Hibernate SessionFactory -->
 	<bean id="auditSessionFactory"
-		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"><!-- org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean -->
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"><!-- org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean -->
 		<property name="dataSource">
 			<ref bean="auditingDataSource" />
 		</property>

@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.Servlet;
-import javax.servlet.GenericServlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +17,6 @@ import org.jdom.output.XMLOutputter;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.web.util.WebUtils;
 
 import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.dbUpdate.service.SQLManager;
@@ -101,7 +98,7 @@ public class AddNewQueryForm extends BaseSimpleFormController {
 		log
 				.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("newQueryForm.html"));
 
 	}
 

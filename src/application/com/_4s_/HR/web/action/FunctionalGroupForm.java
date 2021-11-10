@@ -185,7 +185,7 @@ public class FunctionalGroupForm extends  BaseSimpleFormController{
 		
 		hrManager.saveObject(hrFunctionalGroup);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("functionalGroupsView.html"));
 	}
 	
 

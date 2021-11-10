@@ -158,7 +158,7 @@ public class SectorForm extends  BaseSimpleFormController{
 					
 					hrManager.saveObject(sector);
 					log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-					return new ModelAndView(new RedirectView(getSuccessView()));
+					return new ModelAndView(new RedirectView("sectorsView.html"));
 				}
 				
 

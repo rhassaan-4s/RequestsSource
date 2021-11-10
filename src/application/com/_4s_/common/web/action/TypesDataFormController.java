@@ -12,11 +12,9 @@ import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-
 import com._4s_.common.model.Types;
 import com._4s_.common.model.TypesData;
 import com._4s_.common.service.BaseManager;
-import com._4s_.common.web.action.BaseSimpleFormController;
 
 public class TypesDataFormController extends BaseSimpleFormController {
 	private BaseManager baseManager = null;

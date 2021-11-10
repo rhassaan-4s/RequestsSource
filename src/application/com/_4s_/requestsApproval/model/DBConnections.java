@@ -9,10 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 import com._4s_.auditing.model.Auditable;
 
 
@@ -23,7 +19,7 @@ public class DBConnections implements Auditable,Serializable {
 	
 	
 			@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="dbconnections_seq")
-			@SequenceGenerator(name="dbconnections_seq",sequenceName="dbconnections_seq")//(generate=GeneratorType.IDENTITY)
+			@SequenceGenerator(name="dbconnections_seq",sequenceName="dbconnections_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 			private Long id;
 		    private String description;
 			private String host_name;

@@ -13,13 +13,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.HR.model.HREmployee;
-import com._4s_.HR.model.HREmployeeJob;
 import com._4s_.HR.model.HREmployeeRelative;
-import com._4s_.HR.model.HRInternalDivision;
 import com._4s_.HR.model.HRKinship;
 import com._4s_.HR.service.HRManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
-import com.jenkov.prizetags.tree.itf.ITree;
 
 public class EmployeeKinshipsDataForm extends BaseSimpleFormController {
 	 protected HRManager hrManager = null;

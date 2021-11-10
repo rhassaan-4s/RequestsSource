@@ -10,10 +10,6 @@ import java.util.Set;
 //import org.acegisecurity.context.SecurityContext;
 //import org.acegisecurity.context.SecurityContextHolder;
 
-
-
-
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;

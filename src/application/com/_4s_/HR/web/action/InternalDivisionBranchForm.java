@@ -1,21 +1,21 @@
 package com._4s_.HR.web.action;
 
 		import java.util.HashMap;
-		import java.util.List;
-		import java.util.Map;
+import java.util.List;
+import java.util.Map;
 
-		import javax.servlet.ServletException;
-		import javax.servlet.http.HttpServletRequest;
-		import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-		import org.springframework.validation.BindException;
-		import org.springframework.validation.Errors;
-		import org.springframework.web.servlet.ModelAndView;
-		import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.HR.model.HRInternalDivision;
-		import com._4s_.HR.model.HRInternalDivisionBranch;
-		import com._4s_.HR.service.HRManager;
+import com._4s_.HR.model.HRInternalDivisionBranch;
+import com._4s_.HR.service.HRManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.i18n.model.MyLocale;
 import com._4s_.security.model.User;

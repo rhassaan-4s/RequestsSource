@@ -8,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -21,7 +20,7 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="requests")
 public class Requests implements Auditable,Serializable {
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="requests_seq")
-	@SequenceGenerator(name="requests_seq",sequenceName="requests_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="requests_seq",sequenceName="requests_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	
 	private String code;

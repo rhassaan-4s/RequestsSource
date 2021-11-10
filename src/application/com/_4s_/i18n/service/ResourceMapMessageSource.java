@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.AbstractMessageSource;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -27,7 +27,6 @@ public class MultiTenantDataSourceLookup extends MapDataSourceLookup {
 	private String tenantRegex = "database.*.properties";
 	private String DEFAULT_TENANTID = "4s";
 
-	@Autowired
 	public MultiTenantDataSourceLookup(BoneCPDataSource defaultDataSource) {
 		super();
 		System.out.println("##########################MultiTenantDataSourceLookup#################################");

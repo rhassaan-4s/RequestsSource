@@ -176,7 +176,7 @@ public class GradeForm extends  BaseSimpleFormController{
 				
 				hrManager.saveObject(grade);
 				log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-				return new ModelAndView(new RedirectView(getSuccessView()));
+				return new ModelAndView(new RedirectView("gradesView.html"));
 			}
 			
 

@@ -19,7 +19,7 @@ import com._4s_.common.service.BaseManager;
  */
 public class BaseController implements Controller {
 	protected final Log log = LogFactory.getLog(getClass());
-	protected BaseManager baseManager = null;
+	protected BaseManager baseManager;
 	protected Class commandClass;
 	protected String listViewName;
 	

@@ -3,11 +3,8 @@ package com._4s_.security.model;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,15 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.hibernate.annotations.Sort;
-import org.hibernate.annotations.SortType;
 
 import com._4s_.auditing.model.Auditable;
 
@@ -35,7 +29,7 @@ import com._4s_.auditing.model.Auditable;
 @Table (name = "security_roles")
 public class Roles implements Serializable,Auditable {
 	@Id
-	@SequenceGenerator(name = "userID", sequenceName = "USER_ID")
+	@SequenceGenerator(name = "userID", sequenceName = "USER_ID", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userID")
 	private Long id;
 

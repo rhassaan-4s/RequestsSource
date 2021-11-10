@@ -1,9 +1,6 @@
 package com._4s_.HR.web.action;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -239,6 +236,6 @@ public class EmployeeVacationAtInstallationForm extends BaseSimpleFormController
 		}
 						
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("employeeVacationAtInstallationForm.html"));
 	}
 }

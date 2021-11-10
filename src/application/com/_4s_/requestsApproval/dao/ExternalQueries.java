@@ -2734,7 +2734,7 @@ public class ExternalQueries {
 		
 		log.debug("----sql1---"+sql);
 		try{
-			cc1=jdbcTemplate.queryForLong(sql.toString());
+			cc1=jdbcTemplate.queryForObject(sql.toString(),Long.class);
 			log.debug("----cc1---"+cc1);
 		}catch (Exception e) {
 			cc1=new Long(0);
@@ -2794,7 +2794,7 @@ public class ExternalQueries {
 		
 		log.debug("----sql1---"+sql);
 		try{
-			cc1=jdbcTemplate.queryForLong(sql.toString());
+			cc1=jdbcTemplate.queryForObject(sql.toString(),Long.class);
 			log.debug("----cc1---"+cc1);
 		}catch (Exception e) {
 			cc1=new Long(0);
@@ -2862,7 +2862,7 @@ public class ExternalQueries {
 		
 		log.debug("----sql---"+sql);
 		try{
-			cc2=jdbcTemplate.queryForLong(sql.toString());
+			cc2=jdbcTemplate.queryForObject(sql.toString(),Long.class);
 		}catch (Exception e) {
 			cc2=new Long(0);
 		}
@@ -2935,7 +2935,7 @@ public class ExternalQueries {
 		
 		log.debug("----sql---"+sql);
 		try{
-			cc2=jdbcTemplate.queryForLong(sql.toString());
+			cc2=jdbcTemplate.queryForObject(sql.toString(),Long.class);
 		}catch (Exception e) {
 			cc2=new Long(0);
 		}
@@ -2998,7 +2998,7 @@ public class ExternalQueries {
 		
 		log.debug("getVacationCredit----sql1---"+sql);
 		try{
-			cc1=jdbcTemplate.queryForLong(sql.toString());
+			cc1=jdbcTemplate.queryForObject(sql.toString(),Long.class);
 			log.debug("----cc1---"+cc1);
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -3027,7 +3027,7 @@ public class ExternalQueries {
 		
 		log.debug("----sql2---"+sql);
 		try{
-			cc2=jdbcTemplate.queryForLong(sql.toString());
+			cc2=jdbcTemplate.queryForObject(sql.toString(),Long.class);
 		}catch (Exception e) {
 			cc2=new Long(0);
 		}

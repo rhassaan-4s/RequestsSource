@@ -222,6 +222,6 @@ public class AccessLevelsForm extends BaseSimpleFormController{
 
 		
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("accessLevelsForm.html"));
 	}
 }

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Transient;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,11 +13,8 @@ import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com._4s_.HR.model.Degree;
 import com._4s_.HR.model.DiscDays;
-import com._4s_.HR.model.HRCity;
 import com._4s_.HR.model.HRClosedMonthes;
-import com._4s_.HR.model.HREffect;
 import com._4s_.HR.model.HREmployee;
 import com._4s_.HR.model.HRMonth;
 import com._4s_.HR.model.HRYear;
@@ -183,6 +179,6 @@ public class DiscDaysForm extends BaseSimpleFormController{
 		hrManager.saveObject(discDays);
 
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()),model);
+		return new ModelAndView(new RedirectView("discDaysView.html"),model);
 	}
 }

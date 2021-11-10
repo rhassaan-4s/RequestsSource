@@ -2,7 +2,6 @@ package com._4s_.requestsApproval.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,8 +12,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.hibernate.annotations.ManyToAny;
 
 import com._4s_.auditing.model.Auditable;
 
@@ -22,7 +19,7 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="access_levels")
 public class AccessLevels implements Auditable,Serializable {
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="access_levels_seq")
-	@SequenceGenerator(name="access_levels_seq",sequenceName="access_levels_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="access_levels_seq",sequenceName="access_levels_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	
 	@ManyToOne

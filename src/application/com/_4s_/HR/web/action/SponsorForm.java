@@ -183,7 +183,7 @@ public class SponsorForm  extends  BaseSimpleFormController{
 		
 		hrManager.saveObject(sponsor);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("employeeSponsorsView.html"));
 	}
 	
 

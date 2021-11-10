@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,18 +21,18 @@ import com._4s_.common.web.action.BaseSimpleFormController;
 
 public class AdditionalFormController extends  BaseSimpleFormController{
 	
+	@Autowired
 	private HRManager hrManager;
 	
-	public HRManager getHrManager() {
-		return hrManager;
-	}
-	public void setHrManager(HRManager hrManager) {
-		this.hrManager = hrManager;
-	}
+//	public HRManager getHrManager() {
+//		return hrManager;
+//	}
+//	public void setHrManager(HRManager hrManager) {
+//		this.hrManager = hrManager;
+//	}
 	
 	
 	//**************************************** formBackingObject ***********************************************\\
-	@Override
 	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -53,7 +54,7 @@ public class AdditionalFormController extends  BaseSimpleFormController{
 	   return additional;
 	}
 //**************************************** referenceData ***********************************************\\
-	@Override
+	
 	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -74,7 +75,7 @@ public class AdditionalFormController extends  BaseSimpleFormController{
 	}
 	
 	//**************************************** onBind ***********************************************\\	
-	@Override
+	
 	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -113,7 +114,7 @@ public class AdditionalFormController extends  BaseSimpleFormController{
 	}
 	
 //**************************************** onBindAndValidate ***********************************************\\		
-	@Override
+	
 	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -157,7 +158,7 @@ public class AdditionalFormController extends  BaseSimpleFormController{
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-	@Override
+	
 	public ModelAndView onSubmit(HttpServletRequest request,
 			HttpServletResponse response, Object command, BindException errors)throws Exception 
 	{
@@ -167,7 +168,7 @@ public class AdditionalFormController extends  BaseSimpleFormController{
 		
 		hrManager.saveObject(additional);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("additionalForm.html"));
 	}
 	
 

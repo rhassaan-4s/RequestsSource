@@ -3,7 +3,8 @@ package com._4s_.common.service;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com._4s_.common.dao.CommonDAO;
 import com._4s_.common.model.LastSequence;

@@ -2,12 +2,12 @@ package com._4s_.security.service;
 
 import javax.servlet.http.HttpSessionEvent;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 public class MyHttpSessionEventPublisher extends HttpSessionEventPublisher {
-    private static final Log log = LogFactory.getLog(MyHttpSessionEventPublisher.class);
+    private static final Logger log = LoggerFactory.getLogger(MyHttpSessionEventPublisher.class);
 
     public void sessionDestroyed(HttpSessionEvent event) {
         log.debug("*************unpublishing session******************");

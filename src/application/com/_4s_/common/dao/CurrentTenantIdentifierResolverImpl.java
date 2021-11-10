@@ -1,8 +1,5 @@
 package com._4s_.common.dao;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;

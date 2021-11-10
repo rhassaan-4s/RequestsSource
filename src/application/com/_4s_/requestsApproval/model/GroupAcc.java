@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -17,15 +16,13 @@ import javax.persistence.Table;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import com._4s_.HR.model.HREmployeeRelative;
-
 import com._4s_.auditing.model.Auditable;
 
 @Entity//(access=AccessType.FIELD)
 @Table(name="group_acc")
 public class GroupAcc implements Auditable,Serializable {
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="group_acc_seq")
-	@SequenceGenerator(name="group_acc_seq",sequenceName="group_acc_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="group_acc_seq",sequenceName="group_acc_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	
 	private String title;

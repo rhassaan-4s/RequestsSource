@@ -3,6 +3,10 @@ package com._4s_.requestsApproval.model;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+//import javax.persistence.GeneratedValue;
+//import javax.persistence.GenerationType;
+import javax.persistence.Id;
+//import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -10,13 +14,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import com._4s_.auditing.model.Auditable;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.GenerationType;
-import javax.persistence.Id;
-//import javax.persistence.SequenceGenerator;
 
 
 

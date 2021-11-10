@@ -11,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.HR.model.HREmployee;
-import com._4s_.HR.model.Punishment;
 import com._4s_.HR.service.HRManager;
 
 public class EmployeesView implements Controller{

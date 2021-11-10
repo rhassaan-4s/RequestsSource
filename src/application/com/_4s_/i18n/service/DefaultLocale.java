@@ -1,6 +1,6 @@
 package com._4s_.i18n.service;
 
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com._4s_.i18n.dao.MessageDAO;
 import com._4s_.i18n.model.MyLocale;
@@ -18,6 +18,7 @@ public class DefaultLocale implements LocaleSource {
 	}
 
 	public void setMessageDAO(MessageDAO messageDAO) {
+		System.out.println("messageDAO " + messageDAO);
 		this.messageDAO = messageDAO;
 	}
 

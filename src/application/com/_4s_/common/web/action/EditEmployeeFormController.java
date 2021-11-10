@@ -13,7 +13,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -28,6 +30,8 @@ import com._4s_.common.service.AddRemoveEmployeeHandler;
  * @author mragab
  * 
  */
+@Controller
+@RequestMapping("/commonAdminEditEmployee.html")
 public class EditEmployeeFormController extends BaseSimpleFormController {
 
 	/**
@@ -75,7 +79,7 @@ public class EditEmployeeFormController extends BaseSimpleFormController {
 		
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit");
 
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("commonAdminEmployees.html"));
 
 	}
 

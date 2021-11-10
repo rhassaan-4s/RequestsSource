@@ -3,14 +3,12 @@ package com._4s_.common.util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.logging.Log;
@@ -20,7 +18,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.validation.BindException;
 
 import com._4s_.common.service.BaseManagerImpl;
-import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.util.IslamicCalendar;
 public class MultiCalendarDate implements ApplicationContextAware{
 	private final Log log = LogFactory.getLog(getClass());

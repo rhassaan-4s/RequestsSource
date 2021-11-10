@@ -16,7 +16,7 @@ import com._4s_.auditing.model.Auditable;
 public class Clients implements Serializable,Auditable {
 
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="CLIENT_SEQ")
-	@SequenceGenerator(name="CLIENT_SEQ",sequenceName="CLIENT_SEQ")
+	@SequenceGenerator(name="CLIENT_SEQ",sequenceName="CLIENT_SEQ", allocationSize = 1)
 	private Long id;
 	
 	private String clientName;
