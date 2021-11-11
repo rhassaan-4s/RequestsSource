@@ -8,7 +8,6 @@
 	<build>
 		<sourceDirectory>src/application</sourceDirectory>
 		<testSourceDirectory>src/test</testSourceDirectory>
-		<directory>WEB-INF/classes</directory>
 		<resources>
 			<resource>
 				<directory>src/application</directory>
