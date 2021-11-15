@@ -42,7 +42,7 @@
 ********************************************************************* -->
 	<!-- Binders of Domain Model Objects -->
 	
-	<bean id="domainObjectBinder" class="com._4s_.common.web.binders.DomainObjectBinder" singleton="false" >
+	<bean id="domainObjectBinder" class="com._4s_.common.web.binders.DomainObjectBinder">
 	    <property name="baseManager">
 			<ref bean="baseManager"/>
 	    </property>
@@ -53,19 +53,19 @@
 		<!-- Hijri / Miladi Date Binder -->
     <bean id="dateBinder"
     	class="com._4s_.common.web.binders.BiCalendarDateBinder"
-     	singleton="false" ></bean>
+     	></bean>
      	
      <!-- Time Binder -->
     <bean id="timeBinder"
     	class="com._4s_.common.web.binders.BiCalendarTimeBinder"
-     	singleton="false" >
+     	>
      </bean>
      	
    	<bean id="dateTimeBinder"
     	class="com._4s_.common.web.binders.DateTimeBinder"
-     	singleton="false" ></bean>
+     	></bean>
      	
-    <bean id="mainBinder" class="com._4s_.common.web.binders.MainBinder" singleton="false" >
+    <bean id="mainBinder" class="com._4s_.common.web.binders.MainBinder" >
 	    <property name="baseManager">
 			<ref bean="baseManager"/>
 	    </property>

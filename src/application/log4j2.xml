@@ -16,7 +16,7 @@
          <Logger name="org.hibernate" level="DEBUG" additivity="false">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger>
-        <!-- <Logger name="org.hibernate.cfg.AnnotationBinder" level="ERROR" additivity="false">
+         <Logger name="org.hibernate.cfg.AnnotationBinder" level="ERROR" additivity="false">
         	<AppenderRef ref="LogToConsole"/>
         </Logger>
         <logger name="org.hibernate.mapping.PrimaryKey" level="ERROR" additivity="false">
@@ -31,7 +31,7 @@
        
         <Logger name="com._4s_.common" level="TRACE" additivity="false">
         	 <AppenderRef ref="LogToConsole"/>
-        </Logger> -->
+        </Logger> 
         <Root level="Trace">
             <AppenderRef ref="LogToConsole"/>
         </Root>

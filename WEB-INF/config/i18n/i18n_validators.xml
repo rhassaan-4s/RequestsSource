@@ -7,7 +7,7 @@
 <beans
   default-autowire="no"
   default-lazy-init="false"
-  default-dependency-check="none">
+   >
 
 <bean id="validateMessage" class="com._4s_.i18n.web.validators.EditMessageValidator" > 
 </bean>

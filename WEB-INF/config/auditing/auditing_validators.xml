@@ -7,7 +7,7 @@
 <beans
   default-autowire="no"
   default-lazy-init="false"
-  default-dependency-check="none">
+   >
 
 <bean id="validateSearch" class="com._4s_.auditing.validators.ValidateSearch" > 
 </bean>

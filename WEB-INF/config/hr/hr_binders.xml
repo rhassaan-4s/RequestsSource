@@ -5,7 +5,7 @@
     "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans default-autowire="no" default-lazy-init="false"
-	default-dependency-check="none">
+	 >
 	
   <bean id="countryBinder" parent="domainObjectBinder" >
 		<property name="bindedClass">

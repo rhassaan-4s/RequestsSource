@@ -7,7 +7,7 @@
 <beans
   default-autowire="no"
   default-lazy-init="false"
-  default-dependency-check="none">
+   >
 
 <bean id="validateUser" class="com._4s_.security.web.validators.ValidateUser" > 
 <property name="mgr">
