@@ -10,14 +10,12 @@
 <!--		</bean> -->
 
 	<bean id="SQLDAO" class="com._4s_.dbUpdate.dao.SQLDAOHibernate">
-		<property name="sessionFactory">
-			<ref bean="sessionFactory" />
-		</property>
+		<property name="sessionFactory"  ref ="sessionFactory" />
 	</bean>
 	
 	
 	<bean id="reportParametersQuery"
-		class="com._4s_.dbUpdate.dao.ReportParametersQuery">
+		class="com._4s_.dbUpdate.dao.ReportParametersQuery" scope="prototype">
 		<!--<property name="sessionFactory">
 			<ref bean="sessionFactory" />
 		</property>-->

@@ -16,12 +16,12 @@ import javax.annotation.PreDestroy;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dbunit.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.common.dao.Queries;
@@ -56,7 +56,7 @@ import com._4s_.security.model.User;
 
 
 @Service("requestsService")
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class RequestsServiceImpl implements RequestsService, UserDetailsService {
 	
 	protected final Log log = LogFactory.getLog(getClass());

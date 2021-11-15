@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.HR.model.HREmployee;
@@ -30,7 +31,7 @@ import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public interface RequestsApprovalManager extends BaseManager {
 	
 	public List getRoot(final String className);

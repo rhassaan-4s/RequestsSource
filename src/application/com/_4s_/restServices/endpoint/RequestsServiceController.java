@@ -5,16 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.MediaType;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dbunit.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -292,7 +290,7 @@ public class RequestsServiceController {
 		return response;
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	@RequestMapping(value="/signInOut", method=RequestMethod.POST, 
 	consumes=MediaType.APPLICATION_FORM_URLENCODED,produces=MediaType.APPLICATION_JSON)
 	@ResponseBody

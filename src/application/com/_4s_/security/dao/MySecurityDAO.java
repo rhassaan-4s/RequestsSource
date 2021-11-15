@@ -2,13 +2,14 @@ package com._4s_.security.dao;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.common.dao.BaseDAO;
 import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
 
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public interface MySecurityDAO extends BaseDAO{
 public List getUsers();
 public List getListOfRoles();

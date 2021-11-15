@@ -4134,7 +4134,7 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 		int day = 0;
 		List result=(List) jdbcTemplate.queryForList(sql.toString());
 		if (result.size()>0) {
-			ListOrderedMap m = (ListOrderedMap )result.get(0);
+			ListOrderedMap m = (ListOrderedMap)result.get(0);
 			day = ((BigDecimal)m.getValue(0)).intValue();
 			log.debug("day " + day);
 		}

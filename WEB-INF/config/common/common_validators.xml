@@ -7,7 +7,6 @@
 <beans
   default-autowire="no"
   default-lazy-init="false"
-   
 >
 
 

@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.common.dao.BaseDAOHibernate;
@@ -27,7 +28,7 @@ import com._4s_.security.model.Roles;
 import com._4s_.security.model.SecurityApplication;
 import com._4s_.security.model.User;
 
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 @Repository
 public class MySecurityDAOHibernate extends BaseDAOHibernate implements
 MySecurityDAO {

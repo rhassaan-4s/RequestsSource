@@ -34,9 +34,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import sun.net.www.protocol.https.HttpsURLConnectionImpl;
 
 import com._4s_.HR.model.HREmployee;
 import com._4s_.HR.model.HRGeographicalDivision;
@@ -78,8 +77,10 @@ import com.ibm.icu.util.Calendar;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
 
+import sun.net.www.protocol.https.HttpsURLConnectionImpl;
+
 @Service
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class RequestsApprovalManagerImpl extends BaseManagerImpl implements RequestsApprovalManager{
 
 

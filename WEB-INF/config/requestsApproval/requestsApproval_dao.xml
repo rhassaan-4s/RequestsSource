@@ -4,17 +4,11 @@
 
 <beans >
 	<bean id="requestsApprovalDAO" class="com._4s_.requestsApproval.dao.RequestsApprovalDAOHibernate" >
-		<property name="sessionFactory">
-		      <ref bean="sessionFactory"/>
-		</property>
-		<property name="externalQueries">
-			<ref bean="requestsApprovalExternalQueries" />
-		</property>
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="externalQueries" ref="requestsApprovalExternalQueries" />
 	</bean>
 	
-	<bean id="requestsApprovalExternalQueries" class="com._4s_.requestsApproval.dao.ExternalQueries">
-		<property name="platformTransactionManager">
-			<ref bean="transactionManager" />
-		</property>
+	<bean id="requestsApprovalExternalQueries" class="com._4s_.requestsApproval.dao.ExternalQueries" scope="prototype">
+		<property name="platformTransactionManager" ref ="transactionManager" />
 	</bean>
 </beans>

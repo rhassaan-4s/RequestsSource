@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.HR.model.HREmployee;
@@ -21,7 +22,7 @@ import com._4s_.requestsApproval.model.GroupAcc;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public interface RequestsApprovalDAO extends BaseDAO {
 	
 	public List getRoot(final String className);

@@ -21,6 +21,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.HR.model.AInsuranceCala;
@@ -55,7 +56,7 @@ import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
 import com._4s_.restServices.model.AttendanceStatus;
 
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 @Repository
 public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements RequestsApprovalDAO {
 	
@@ -2074,7 +2075,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			try {
 				newDate1 = df.parse(requestQuery.getDateFrom());
 			} catch(Exception e){
-				log.debug(e);
+				log.debug(e.getMessage());
 				e.printStackTrace();
 				status.setCode("312");
 				status.setMessage("Date is not well formated");

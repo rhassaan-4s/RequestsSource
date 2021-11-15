@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.common.model.Employee;
@@ -18,7 +19,7 @@ import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
 
 
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public interface RequestsService {// extends BaseManager {
 
 	public User login();
