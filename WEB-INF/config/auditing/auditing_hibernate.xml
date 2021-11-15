@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-    "http://www.springframework.org/dtd/spring-beans2.dtd" >
+    "http://www.springframework.org/dtd/spring-beans-2.0.dtd" >
 
 <beans>
 
@@ -23,9 +23,7 @@
 
 	<bean id="auditTransactionManager"
 		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
-		<property name="sessionFactory">
-			<ref local="auditSessionFactory" />
-		</property>
+		<property name="sessionFactory" ref ="auditSessionFactory" />
 	</bean>
 	<!---->
 	<!---->

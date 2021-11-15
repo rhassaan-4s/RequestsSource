@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-    "http://www.springframework.org/dtd/spring-beans2.dtd" >
+    "http://www.springframework.org/dtd/spring-beans-2.0.dtd" >
 
 <beans>
 
@@ -89,7 +89,7 @@
 
 	<!-- Transaction template for Managers, from:
 		http://blog.exis.com/colin/archives/2004/07/31/concise-transaction-definitions-spring-11/ -->
-<!-- 
+ 
 	<bean id="txProxyTemplate" abstract="true"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager">
@@ -101,7 +101,7 @@
 			</props>
 		</property>
 	</bean>
-	<bean id="txProxyTemplate2" abstract="true"
+	<!--<bean id="txProxyTemplate2" abstract="true"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager">
 			<ref bean="transactionManager" />

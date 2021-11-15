@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-    "http://www.springframework.org/dtd/spring-beans.dtd">
+    "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 
 <beans >
 	<bean id="requestsApprovalDAO" class="com._4s_.requestsApproval.dao.RequestsApprovalDAOHibernate" >
@@ -12,8 +12,7 @@
 		</property>
 	</bean>
 	
-	<bean id="requestsApprovalExternalQueries" class="com._4s_.requestsApproval.dao.ExternalQueries"
-		singleton="false">
+	<bean id="requestsApprovalExternalQueries" class="com._4s_.requestsApproval.dao.ExternalQueries">
 		<property name="platformTransactionManager">
 			<ref bean="transactionManager" />
 		</property>

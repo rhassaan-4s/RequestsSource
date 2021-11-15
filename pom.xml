@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>Requests</groupId>
+	<groupId>Fours</groupId>
 	<artifactId>Requests</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<build>
@@ -47,6 +46,7 @@
 					</configuration>
 				</plugin>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
 					<executions>
 						<execution>
@@ -75,6 +75,21 @@
 		<jsp.version>2.3.1</jsp.version>
 		<hsqldb.version>1.8.0.10</hsqldb.version>
 	</properties>
+	<repositories>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
+    <repository>
+      <id>custom-repo</id>
+      <name>custom repo</name>
+      <url>https://52north.org/maven/repo/releases/</url>
+    </repository>
+  </repositories>
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-orm -->
 		<dependency>
@@ -121,6 +136,16 @@
 			<artifactId>spring-security-core</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+	<dependency>
+		<groupId>org.springframework.security</groupId>
+		<artifactId>spring-security-config</artifactId>
+		<version>${spring.version}</version>
+	</dependency>
+	<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-context-support</artifactId>
+	<version>${spring.version}</version>
+</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
@@ -260,6 +285,18 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-contrib</artifactId>
 			<version>3.6</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.jenkov/prizetags -->
+		<dependency>
+		    <groupId>com.jenkov</groupId>
+		    <artifactId>prizetags</artifactId>
+		    <version>3.4.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+		<dependency>
+		    <groupId>javax.xml.bind</groupId>
+		    <artifactId>jaxb-api</artifactId>
+		    <version>2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.ibm.icu</groupId>
