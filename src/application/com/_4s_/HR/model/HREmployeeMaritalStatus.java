@@ -23,6 +23,9 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="hr_employee_marital_status")
 public class HREmployeeMaritalStatus implements Auditable,Serializable {
 	
+	public HREmployeeMaritalStatus() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_employee_marital_seq")
 	@SequenceGenerator(name="hr_employee_marital_seq",sequenceName="hr_employee_marital_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;

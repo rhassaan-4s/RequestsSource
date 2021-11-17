@@ -26,6 +26,12 @@ public class EmpInstExperYears implements Auditable,Serializable {
 	private Long years;
 	private Integer monthes;
 	private Integer days;
+	
+	
+	public EmpInstExperYears() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Transient
 	private String empName;
 	

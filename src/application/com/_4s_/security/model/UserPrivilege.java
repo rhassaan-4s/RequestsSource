@@ -29,6 +29,9 @@ import com._4s_.auditing.model.Auditable;
 @Entity
 @Table (name = "security_user_privilege")
 public class UserPrivilege implements Serializable,Auditable{
+	public UserPrivilege() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="security_user_privilege_seq")
 	@SequenceGenerator(name="security_user_privilege_seq",sequenceName="security_user_privilege_seq", allocationSize = 1)
 	private Long id;

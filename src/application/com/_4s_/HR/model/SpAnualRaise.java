@@ -20,6 +20,10 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="sp_anual_raise")
 public class SpAnualRaise implements Auditable,Serializable {
 	
+	public SpAnualRaise() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="sp_anual_raise_seq")
 	@SequenceGenerator(name="sp_anual_raise_seq",sequenceName="sp_anual_raise_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;

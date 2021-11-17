@@ -21,6 +21,9 @@ import com._4s_.common.model.TreeDivisions;
 @Table(name="hr_geographical_division")
 public class HRGeographicalDivision extends TreeDivisions {
 			
+			public HRGeographicalDivision() {
+		// TODO Auto-generated constructor stub
+	}
 			@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_geog_division_seq")
 			@SequenceGenerator(name="hr_geog_division_seq",sequenceName="hr_geog_division_seq")//(generate=GeneratorType.IDENTITY)
 			private Long id;

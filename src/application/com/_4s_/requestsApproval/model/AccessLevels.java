@@ -18,6 +18,10 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="access_levels")
 public class AccessLevels implements Auditable,Serializable {
+	public AccessLevels() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="access_levels_seq")
 	@SequenceGenerator(name="access_levels_seq",sequenceName="access_levels_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;

@@ -24,6 +24,10 @@ public class Company  implements Serializable,Auditable {
 	
 	
 	
+	public Company() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getDescription() {
 		return description;
 	}

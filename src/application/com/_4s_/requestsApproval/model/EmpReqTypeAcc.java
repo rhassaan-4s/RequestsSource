@@ -20,6 +20,11 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="emp_reqtype_acc")
 public class EmpReqTypeAcc  implements Auditable,Serializable {
 		
+		public EmpReqTypeAcc() {
+		// TODO Auto-generated constructor stub
+	}
+
+
 		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="emp_reqtype_acc_seq")
 		@SequenceGenerator(name="emp_reqtype_acc_seq",sequenceName="emp_reqtype_acc_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 		private Long id;

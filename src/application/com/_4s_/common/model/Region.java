@@ -30,6 +30,10 @@ public class Region implements Serializable,Auditable
 	
 	private String code;
 	
+	public Region() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@ManyToOne
 	@JoinColumn (name="country")
 	private Country country;

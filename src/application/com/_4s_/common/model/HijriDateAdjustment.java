@@ -23,6 +23,9 @@ public class HijriDateAdjustment implements Serializable,Auditable{
 	private Date hijriDate;
 	private Date miladiDate;
 	
+	public HijriDateAdjustment() {
+		// TODO Auto-generated constructor stub
+	}
 	public Long getId() {
 		return id;
 	}

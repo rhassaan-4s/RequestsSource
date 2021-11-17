@@ -12,6 +12,9 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="co_profile")
 public class CompanyDetails implements Auditable,Serializable {
 	
+	public CompanyDetails() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id 
 	private String co_name;
 	

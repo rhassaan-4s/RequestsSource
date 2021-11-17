@@ -20,4 +20,9 @@ public class ExternalClass {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public ExternalClass() {
+		// TODO Auto-generated constructor stub
+	}
+	
 }

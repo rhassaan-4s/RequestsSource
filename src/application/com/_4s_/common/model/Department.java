@@ -36,6 +36,9 @@ public class Department implements Serializable,Auditable {
 //	@OrderBy("creationDate desc")
 //	private List<CommunicationThread>watchedThreads = new ArrayList<CommunicationThread>();
 	
+	public Department() {
+		// TODO Auto-generated constructor stub
+	}
 	public Long getId() {
 		return id;
 	}

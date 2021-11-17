@@ -90,6 +90,9 @@ public class Employee implements Serializable,Auditable,Searchable {
 	private String profilePicName;
 	
 
+	public Employee() {
+		// TODO Auto-generated constructor stub
+	}
 	public byte[] getProfilePic() {
 		return profilePic;
 	}

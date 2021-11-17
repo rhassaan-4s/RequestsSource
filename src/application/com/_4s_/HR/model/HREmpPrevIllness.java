@@ -19,6 +19,11 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="emp_prev_illness")
 public class HREmpPrevIllness implements Auditable,Serializable {
 
+	public HREmpPrevIllness() {
+		// TODO Auto-generated constructor stub
+	}
+
+
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="HR_SEQ_PREV_ILLNESS")
 	@SequenceGenerator(name="HR_SEQ_PREV_ILLNESS",sequenceName="HR_SEQ_PREV_ILLNESS")//(generate=GeneratorType.IDENTITY)
    private  Long id ;

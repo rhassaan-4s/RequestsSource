@@ -11,6 +11,10 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 @Entity
 @Table(name = "DEFINE_PREFERENCES")
 public class HRDefinedPreferences implements Serializable {
+	public HRDefinedPreferences() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@EmbeddedId
 	private final HRDefinedPreferencesID id = new HRDefinedPreferencesID();
 	//private String property;

@@ -21,6 +21,9 @@ import com._4s_.common.util.LocaleUtil;
 @Table(name="hr_effect_round_type")
 public class HREffectRoundType implements Auditable,Serializable {
 	
+	public HREffectRoundType() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="HR_ADDITIONAL_SEQ")
 	@SequenceGenerator(name="HR_ADDITIONAL_SEQ",sequenceName="HR_ADDITIONAL_SEQ")//(generate=GeneratorType.IDENTITY)
 	private Long id;

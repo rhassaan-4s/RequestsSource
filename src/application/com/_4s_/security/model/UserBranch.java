@@ -23,6 +23,10 @@ import com._4s_.common.model.Branch;
 public class UserBranch implements Serializable,Auditable {
 	
 
+	public UserBranch() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id
 	@SequenceGenerator(name = "userBranchSeq", sequenceName = "security_user_branch_seq", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userBranchSeq")

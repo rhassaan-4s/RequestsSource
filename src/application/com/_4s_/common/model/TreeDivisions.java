@@ -33,6 +33,10 @@ public class TreeDivisions   implements Auditable,Serializable {
 	
 
 		
+		public TreeDivisions() {
+			// TODO Auto-generated constructor stub
+		}
+
 		@Transient
 		public String getName(){
 			LocaleUtil localeUtil = LocaleUtil.getInstance();

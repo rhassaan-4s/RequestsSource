@@ -22,6 +22,9 @@ import com._4s_.common.model.Employee;
 @Entity//(access=AccessType.FIELD)
 @Table(name="login_users_requests" ,uniqueConstraints= {@UniqueConstraint(columnNames= {"empCode","request_date","from_date","request_type"})})
 public class LoginUsersRequests implements Auditable,Serializable  {
+	public LoginUsersRequests() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="loginUsersRequests_seq")
 	@SequenceGenerator(name="loginUsersRequests_seq",sequenceName="loginUsersRequests_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;

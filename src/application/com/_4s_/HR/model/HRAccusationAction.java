@@ -26,6 +26,9 @@ public class HRAccusationAction implements Auditable,Serializable {
 	private String name;
 	private String ename;
 	
+	public HRAccusationAction() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getEntityDisplayName() {
 		return "accusationAction Addition";
 	}

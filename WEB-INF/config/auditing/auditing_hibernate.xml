@@ -23,12 +23,9 @@
 
 	<bean id="auditTransactionManager"
 		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
-		<property name="sessionFactory" ref ="auditSessionFactory" />
+		<property name="sessionFactory" ref="auditSessionFactory" />
 	</bean>
-	<!---->
-	<!---->
-	<!--		 Transaction template for Managers, from:-->
-	<!--		 http://blog.exis.com/colin/archives/2004/07/31/concise-transaction-definitions-spring-11/ -->
+
 	<bean id="auditTxProxyTemplate" abstract="true"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager">
@@ -43,41 +40,25 @@
 		</property>
 	</bean>
 
-	<!---->
-	<!--     Hibernate SessionFactory -->
-	<bean id="auditSessionFactory"
-		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"><!-- org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean -->
-		<property name="dataSource">
-			<ref bean="auditingDataSource" />
-		</property>
-		<!-- <property name="configurationClass">
-			<value>org.hibernate.cfg.AnnotationConfiguration</value>
-		</property> -->
-		<!--<property name="mappingDirectoryLocations">
-			<list>
-				<value>classpath:/com/_4s_/banks/model</value>
-			</list>
-		</property>-->
-
+	<!-- Hibernate SessionFactory -->
+	<bean id="auditSessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="auditingDataSource" />
 		<property name="packagesToScan">
-		<list>
-		<value>com._4s_.HR.model</value>
-		<value>com._4s_.auditing.model</value>
-		<value>com._4s_.common.model</value>
-		<value>com._4s_.dbUpdate.model</value>
-		<value>com._4s_.security.model</value>
-		<value>com._4s_.i18n.model</value>
-		<value>com._4s_.requestsApproval.model</value>
-		</list>
+			<list>
+				<value>com._4s_.HR.model</value>
+				<value>com._4s_.auditing.model</value>
+				<value>com._4s_.common.model</value>
+				<value>com._4s_.dbUpdate.model</value>
+				<value>com._4s_.security.model</value>
+				<value>com._4s_.i18n.model</value>
+				<value>com._4s_.requestsApproval.model</value>
+			</list>
 		</property>
-		
+
 		<property name="hibernateProperties">
 			<props>
-				<prop key="hibernate.dialect">
-					${hibernate.dialect}
-				</prop>
-				<prop key="hibernate.show_sql">false</prop>
-<!--				<prop key="hibernate.hbm2ddl.auto">update</prop>-->
+			<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+  			<prop key="hibernate.show_sql">true</prop>  
 			</props>
 		</property>
 	</bean>

@@ -21,6 +21,9 @@ import com._4s_.common.model.TreeDivisions;
 @Table(name="hr_internal_division")
 public class HRInternalDivision extends TreeDivisions {
 		
+		public HRInternalDivision() {
+		// TODO Auto-generated constructor stub
+	}
 		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_internal_division_seq")
 		@SequenceGenerator(name="hr_internal_division_seq",sequenceName="hr_internal_division_seq")//(generate=GeneratorType.IDENTITY)
 		private Long id;

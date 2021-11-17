@@ -23,6 +23,10 @@ import com._4s_.auditing.model.Auditable;
 @Table(name = "HR_EMPLOYEE_COSTCENTER")
 public class HREmployeeCostCenter implements Auditable, Serializable {
 
+	public HREmployeeCostCenter() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "hr_empCostCenter_seq")
 	@SequenceGenerator(name = "hr_empCostCenter_seq", sequenceName = "hr_empCostCenter_seq")

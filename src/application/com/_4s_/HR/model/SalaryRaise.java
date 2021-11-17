@@ -18,6 +18,9 @@ import com._4s_.common.util.LocaleUtil;
 @Table(name="hr_salraise")
 public class SalaryRaise {
 
+	public SalaryRaise() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_salraise_seq")
 	@SequenceGenerator(name="hr_salraise_seq",sequenceName="hr_salraise_seq")//(generate=GeneratorType.IDENTITY)
 	private  Long id ;

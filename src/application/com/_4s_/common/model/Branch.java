@@ -104,6 +104,7 @@ public class Branch implements Serializable, Auditable {
 	public void setDescr(String descr) {
 		this.descr = descr;
 	}
+	
 
 //	public String getWarehouse() {
 //		return warehouse;
@@ -200,6 +201,10 @@ public class Branch implements Serializable, Auditable {
 //	public void setReceiveToDate(Date receiveToDate) {
 //		this.receiveToDate = receiveToDate;
 //	}
+
+	public Branch() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public String getName_en() {
 		return name_en;

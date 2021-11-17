@@ -22,6 +22,9 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="login_users")
 public class LoginUsers  implements Auditable,Serializable {
 		
+		public LoginUsers() {
+		// TODO Auto-generated constructor stub
+	}
 		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="login_users_seq")
 		@SequenceGenerator(name="login_users_seq",sequenceName="login_users_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 		private Long id;

@@ -21,6 +21,9 @@ public class Sector implements Auditable,Serializable {
 	
 	
 	
+	public Sector() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_sector_seq")
 	@SequenceGenerator(name="hr_sector_seq",sequenceName="hr_sector_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;

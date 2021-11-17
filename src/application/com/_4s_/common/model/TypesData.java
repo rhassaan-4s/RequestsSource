@@ -35,6 +35,10 @@ public class TypesData implements Serializable, Auditable {
 
 	
 
+	public TypesData() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Types getType() {
 		return type;
 	}

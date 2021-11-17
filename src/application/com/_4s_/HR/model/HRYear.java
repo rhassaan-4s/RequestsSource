@@ -15,6 +15,10 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="hr_year")
 public class HRYear implements Auditable,Serializable {
+		public HRYear() {
+		// TODO Auto-generated constructor stub
+	}
+
 		@Id
 		private Long id;
 		private Integer year; 

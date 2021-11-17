@@ -21,6 +21,9 @@ public class Test implements Auditable,Serializable {
 	
 	
 	
+	public Test() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="test_seq")
 	@SequenceGenerator(name="test_seq",sequenceName="test_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;

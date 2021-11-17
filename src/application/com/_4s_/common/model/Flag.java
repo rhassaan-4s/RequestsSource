@@ -26,6 +26,9 @@ public class Flag implements Serializable, Auditable{
 	private String comments;
 	private Boolean flag = new Boolean(false);
 
+	public Flag() {
+		// TODO Auto-generated constructor stub
+	}
 	public Boolean getFlag() {
 		return flag;
 	}

@@ -23,6 +23,10 @@ import com._4s_.auditing.model.Auditable;
 
 public class HREmployeeQualification implements Auditable,Serializable {
 		
+	
+		public HREmployeeQualification() {
+		// TODO Auto-generated constructor stub
+	}
 		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_employee_qual_seq")
 		@SequenceGenerator(name="hr_employee_qual_seq",sequenceName="hr_employee_qual_seq")//(generate=GeneratorType.IDENTITY)
        

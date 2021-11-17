@@ -38,6 +38,11 @@ public class Country implements Serializable,Auditable {
 	@OneToMany (mappedBy ="country",cascade=CascadeType.ALL)
 	private List<City>cities = new ArrayList<City>();
 	private Boolean isDefault = new Boolean(false);
+	
+	
+	public Country() {
+		// TODO Auto-generated constructor stub
+	}
 	/**
 	 * @return Returns the id.
 	 * @hibernate.id generator-class = "native"

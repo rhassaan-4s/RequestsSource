@@ -28,6 +28,9 @@ public class HREmployeeJob  implements Auditable,Serializable {
    
 	private Long id;
 	
+	public HREmployeeJob() {
+		// TODO Auto-generated constructor stub
+	}
 	@ManyToOne 
 	@JoinColumn (name="employee")
 	private HREmployee employee;

@@ -21,9 +21,11 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="hr_effect_equation")
 public class HREffectEquation implements Auditable,Serializable {
 	
+	public HREffectEquation() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="HR_EFFECT_EQUATION_SEQ")
 	@SequenceGenerator(name="HR_EFFECT_EQUATION_SEQ",sequenceName="HR_EFFECT_EQUATION_SEQ")//(generate=GeneratorType.IDENTITY)
-
 	private Long id ;
 	
 	@ManyToOne

@@ -42,6 +42,9 @@ public class City implements Serializable,Auditable {
 	@Transient
 	private final Log log = LogFactory.getLog(getClass());
 	private Boolean isDefault = new Boolean (false);
+	public City() {
+		// TODO Auto-generated constructor stub
+	}
 	/**
 	 * @return Returns the id.
 	 * @hibernate.id generator-class = "native"

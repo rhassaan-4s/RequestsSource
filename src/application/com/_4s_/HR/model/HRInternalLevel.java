@@ -16,6 +16,9 @@ import com._4s_.common.model.TreeDivisionLevels;
 @Table(name="hr_internal_level")
 public class HRInternalLevel extends TreeDivisionLevels {
 	
+	public HRInternalLevel() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_internal_level_seq")
 	@SequenceGenerator(name="hr_internal_level_seq",sequenceName="hr_internal_level_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;

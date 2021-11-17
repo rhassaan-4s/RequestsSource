@@ -27,6 +27,12 @@ public class Types implements Serializable, Auditable{
 
 	private String description;
 	private String arDesc;
+	
+	
+public Types() {
+		// TODO Auto-generated constructor stub
+	}
+
 public String getArDesc() {
 		return arDesc;
 	}

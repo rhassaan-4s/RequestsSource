@@ -25,6 +25,9 @@ public class HRAdditional implements Auditable,Serializable {
 	@SequenceGenerator(name="HR_ADDITIONAL_SEQ",sequenceName="HR_ADDITIONAL_SEQ")//(generate=GeneratorType.IDENTITY)
      private Long id;
 	
+	public HRAdditional() {
+		// TODO Auto-generated constructor stub
+	}
 	private Boolean nightApply;
 	private   Double nightHour=new Double(00.00);
 	private Double nightDay =new Double(00.00);  

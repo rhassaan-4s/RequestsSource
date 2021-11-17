@@ -14,6 +14,10 @@ public class HijriDates {
 	private Long id;
 	private Date miladi;
 	private String hijri;
+	
+	public HijriDates() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getHijri() {
 		return hijri;
 	}

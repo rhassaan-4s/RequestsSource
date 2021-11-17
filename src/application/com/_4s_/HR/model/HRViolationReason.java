@@ -18,6 +18,9 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="hr_violation_reason")
 public class HRViolationReason implements Auditable,Serializable {
 	
+	public HRViolationReason() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	

@@ -18,6 +18,9 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="hr_period_type")
 public class HRPeriodType implements Auditable,Serializable {
 	
+	public HRPeriodType() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	

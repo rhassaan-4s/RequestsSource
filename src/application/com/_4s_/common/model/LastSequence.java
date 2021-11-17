@@ -27,6 +27,10 @@ public class LastSequence implements Serializable,Auditable{
 	private String className;
 	private Long classSequence;
 	
+	
+	public LastSequence() {
+		// TODO Auto-generated constructor stub
+	}
 	/**
 	 * @return
 	 * @hibernate.id generator-class = "native"

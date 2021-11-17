@@ -58,6 +58,8 @@ public class AuditLogRecord {
 	 * @return
 	 * @hibernate.property column = "entityDisplayName"  not-null="false"
 	 */
+	
+	
 	public String getEntityDisplayName() {
 		return entityDisplayName;
 	}

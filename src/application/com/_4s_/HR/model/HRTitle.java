@@ -22,6 +22,9 @@ import com._4s_.common.util.LocaleUtil;
 @Table(name="hr_title")
 public class HRTitle implements Auditable,Serializable {
 	
+	public HRTitle() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_title_seq")
 	@SequenceGenerator(name="hr_title_seq",sequenceName="hr_title_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;

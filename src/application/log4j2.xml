@@ -25,10 +25,29 @@
         <logger name="org.hibernate.persister.entity.AbstractPropertyMapping" level="ERROR" additivity="false">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.springframework.security" level="TRACE" additivity="false">
+        <logger name="org.springframework.security" level="FATAL" additivity="false">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-       
+        <logger name="org.springframework.beans.CachedIntrospectionResults" level="FATAL" additivity="false">
+        	<AppenderRef ref="LogToConsole"/>
+        </logger>
+       <logger name="org.hibernate.type.BasicTypeRegistry" level="FATAL" additivity="false">
+        	<AppenderRef ref="LogToConsole"/>
+        </logger>
+        <logger name="org.hibernate.boot" level="FATAL" additivity="false">
+        	<AppenderRef ref="LogToConsole"/>
+        </logger>
+        
+       <logger name="org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory" level="FATAL" additivity="false">
+        	<AppenderRef ref="LogToConsole"/>
+        </logger>
+        <logger name="org.springframework.core.io.support" level="FATAL" additivity="false">
+        	<AppenderRef ref="LogToConsole"/>
+        </logger>
+        <logger name="org.hibernate.cfg.Ejb3Column" level="FATAL" additivity="false">
+        	<AppenderRef ref="LogToConsole"/>
+        </logger>
+        
         <Logger name="com._4s_.common" level="TRACE" additivity="false">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 

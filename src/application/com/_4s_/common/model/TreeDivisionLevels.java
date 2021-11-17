@@ -25,6 +25,10 @@ public class TreeDivisionLevels implements Auditable,Serializable {
 	protected String name;
 	protected String ename;
 	
+	
+	public TreeDivisionLevels() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getEntityDisplayName() {
 		return this.getName();
 	}

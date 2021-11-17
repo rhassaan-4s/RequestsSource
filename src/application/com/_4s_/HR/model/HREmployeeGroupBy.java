@@ -18,6 +18,10 @@ public class HREmployeeGroupBy implements Auditable,Serializable {
 		@Id
 		private Long id;
 		
+		public HREmployeeGroupBy() {
+			// TODO Auto-generated constructor stub
+		}
+
 		private String name; 
 		private String eName;
 		

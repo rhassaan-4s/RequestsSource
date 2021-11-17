@@ -19,6 +19,10 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="requests")
 public class Requests implements Auditable,Serializable {
+	public Requests() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="requests_seq")
 	@SequenceGenerator(name="requests_seq",sequenceName="requests_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;

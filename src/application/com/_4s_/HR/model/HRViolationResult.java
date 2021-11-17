@@ -20,6 +20,9 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="hr_violation_result")
 public class HRViolationResult implements Auditable,Serializable {
 	
+	public HRViolationResult() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_violation_result_seq")
 	@SequenceGenerator(name="hr_violation_result_seq",sequenceName="hr_violation_result_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;

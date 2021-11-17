@@ -22,6 +22,9 @@ import com._4s_.common.util.LocaleUtil;
 @Table(name="hr_marital_status")
 public class HRMaritalStatus implements Auditable,Serializable {
 	
+	public HRMaritalStatus() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_marital_seq")
 	@SequenceGenerator(name="hr_marital_seq",sequenceName="hr_marital_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;

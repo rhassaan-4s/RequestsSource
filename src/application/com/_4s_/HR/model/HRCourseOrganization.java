@@ -27,6 +27,9 @@ public class HRCourseOrganization implements Auditable,Serializable {
 	private String ename;
 
 	
+	public HRCourseOrganization() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getEntityDisplayName() {
 		return "courseOrganization  Addition";
 	}

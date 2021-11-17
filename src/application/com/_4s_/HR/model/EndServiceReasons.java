@@ -34,6 +34,11 @@ public class EndServiceReasons  implements Auditable,Serializable {
 		
 		
 
+		public EndServiceReasons() {
+			// TODO Auto-generated constructor stub
+		}
+
+
 		public String getEntityDisplayName() {
 			return "EndService Addition";
 		}

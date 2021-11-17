@@ -21,6 +21,9 @@ public class EmpBasic  implements Serializable,Auditable {
 	public String getEmpCode() {
 		return empCode;
 	}
+	public EmpBasic() {
+		// TODO Auto-generated constructor stub
+	}
 	public void setEmpCode(String empCode) {
 		this.empCode = empCode;
 	}

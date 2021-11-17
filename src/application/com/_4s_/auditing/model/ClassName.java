@@ -33,6 +33,10 @@ public class ClassName {
 		return entityClass;
 	}
 
+	public ClassName() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void setEntityClass(String entityClass) {
 		this.entityClass = entityClass;
 	}

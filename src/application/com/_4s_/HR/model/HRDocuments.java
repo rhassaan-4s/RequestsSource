@@ -30,6 +30,9 @@ public class HRDocuments implements Auditable,Serializable {
 	private Boolean hasExpiryDate;
 	private String dateType;
 	
+	public HRDocuments() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getEntityDisplayName() {
 		return "documents Addition";
 	}

@@ -81,6 +81,12 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Boolean managerCanModifyAttendance;
 	
+	
+	
+	public Settings() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Boolean getManagerCanModifyAttendance() {
 		return managerCanModifyAttendance;
 	}

@@ -23,6 +23,11 @@ public class Clients implements Serializable,Auditable {
 	
 	private String portNo;
 
+	
+	public Clients() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Long getId() {
 		return id;
 	}

@@ -25,6 +25,10 @@ public class HRClosedMonthes implements Auditable,Serializable {
 	@SequenceGenerator(name="hr_closed_monthes_seq",sequenceName="hr_closed_monthes_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	
+	public HRClosedMonthes() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@ManyToOne
 	@JoinColumn(name="month_id")
 	private HRMonth month_id;

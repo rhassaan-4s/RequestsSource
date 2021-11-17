@@ -36,6 +36,10 @@ import com._4s_.i18n.model.MyLocale;
 @Entity
 @Table (name = "security_users")
 public class User implements  Serializable,Auditable,UserDetails {
+	public User() {
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * 
 	 */

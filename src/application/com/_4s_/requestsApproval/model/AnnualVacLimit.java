@@ -15,6 +15,10 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="annual_vac_limit")
 public class AnnualVacLimit implements Auditable,Serializable{
 	
+	public AnnualVacLimit() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="annual_vac_limit_seq")
 	@SequenceGenerator(name="annual_vac_limit_seq",sequenceName="annual_vac_limit_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;

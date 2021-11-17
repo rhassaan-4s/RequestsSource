@@ -22,6 +22,10 @@ import com._4s_.auditing.model.Auditable;
 @Entity
 @Table (name = "security_applications")
 public class SecurityApplication implements Serializable ,Auditable{
+	public SecurityApplication() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id
 	private Long id;
 

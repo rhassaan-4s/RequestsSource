@@ -19,6 +19,11 @@ public class AuditSearchCommand {
 
 	private String classDetail;
 
+	
+	public AuditSearchCommand() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getAction() {
 		return action;
 	}

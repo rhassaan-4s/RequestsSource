@@ -20,12 +20,13 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="hr_effect")
 public class HREffect implements Auditable,Serializable {
-	
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="HR_EFFECT_SEQ")
-	@SequenceGenerator(name="HR_EFFECT_SEQ",sequenceName="HR_EFFECT_SEQ")//(generate=GeneratorType.IDENTITY)
 
 	
-	
+	public HREffect() {
+		// TODO Auto-generated constructor stub
+	}
+	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="HR_EFFECT_SEQ")
+	@SequenceGenerator(name="HR_EFFECT_SEQ",sequenceName="HR_EFFECT_SEQ")//(generate=GeneratorType.IDENTITY)
 	private Long id ;
 	private String effcode  ;
 	private String effname ;

@@ -25,6 +25,9 @@ public class Vacation implements Auditable,Serializable  {
 //	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="vacation_seq")
 //	@SequenceGenerator(name="vacation_seq",sequenceName="vacation_seq")//(generate=GeneratorType.IDENTITY)
 	
+	public Vacation() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id
 	private String vacation;
 	private String name;

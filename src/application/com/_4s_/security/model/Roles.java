@@ -28,6 +28,10 @@ import com._4s_.auditing.model.Auditable;
 @Entity
 @Table (name = "security_roles")
 public class Roles implements Serializable,Auditable {
+	public Roles() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id
 	@SequenceGenerator(name = "userID", sequenceName = "USER_ID", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userID")
