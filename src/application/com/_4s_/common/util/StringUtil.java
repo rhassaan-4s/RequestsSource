@@ -5,8 +5,6 @@ import java.security.MessageDigest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-
 /**
  * String Utility Class This is used to encode passwords programmatically
  *
@@ -82,7 +80,7 @@ public class StringUtil {
      * @return String
      */
     public static String encodeString(String str)  {
-        sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
+    	sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
         return encoder.encodeBuffer(str.getBytes()).trim();
     }
 
@@ -93,7 +91,7 @@ public class StringUtil {
      * @return String
      */
     public static String decodeString(String str) {
-        sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
+    	sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
         try {
             return new String(dec.decodeBuffer(str));
         } catch (IOException io) {

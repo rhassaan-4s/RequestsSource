@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.dbunit.util.Base64;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

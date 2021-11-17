@@ -63,6 +63,11 @@ extends BasicAuthenticationEntryPoint {
 	public void afterPropertiesSet() {
 		//		System.out.println("After properties set");
 		setRealmName("DeveloperStack");
-		super.afterPropertiesSet();
+		try {
+			super.afterPropertiesSet();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
