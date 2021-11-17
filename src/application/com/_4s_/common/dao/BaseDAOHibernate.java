@@ -186,7 +186,8 @@ public class BaseDAOHibernate  implements BaseDAO {//extends HibernateDaoSupport
     	Root<Object> root = queryCriteria.from(clazz);
     	Predicate restrictions = builder.equal(root.get(parameter), value);
     	queryCriteria.select(root).where(restrictions).distinct(true);
-    	TypedQuery<Object> query = getCurrentSession().createQuery(queryCriteria);
+    	
+		TypedQuery<Object> query = getCurrentSession().createQuery(queryCriteria);
     	Object object = query.getSingleResult();
         if ((object == null)&&(log.isDebugEnabled())) {
             log.debug("No object found");
