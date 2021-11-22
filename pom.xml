@@ -69,7 +69,7 @@
 		<hibernate.version>5.3.5.Final</hibernate.version>
 		<hibernate.validator>5.4.1.Final</hibernate.validator>
 		<c3p0.version>0.9.5.2</c3p0.version>
-		<jstl.version>1.2.1</jstl.version>
+		<jstl.version>1.2</jstl.version>
 		<tld.version>1.1.2</tld.version>
 		<servlets.version>3.1.0</servlets.version>
 		<jsp.version>2.3.1</jsp.version>
@@ -186,6 +186,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
@@ -249,8 +254,8 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
 		<dependency>
-			<groupId>javax.servlet.jsp.jstl</groupId>
-			<artifactId>javax.servlet.jsp.jstl-api</artifactId>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
 			<version>${jstl.version}</version>
 		</dependency>
 		<dependency>
