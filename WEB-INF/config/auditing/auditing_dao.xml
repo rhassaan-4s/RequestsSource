@@ -5,7 +5,7 @@
 <beans  default-autowire="no" default-lazy-init="true">
 	<bean id="auditLogDAO" parent="auditTxProxyTemplate">
 		<property name="target">
-			<bean class="com._4s_.auditing.dao.AuditLogDAOHibernate" lazy-init="true">
+			<bean class="com._4s_.auditing.dao.AuditLogDAOHibernate"  init-method="init" lazy-init="true">
 				<property name="sessionFactory" ref="auditSessionFactory" />
 			</bean>
 		</property>

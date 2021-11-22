@@ -46,8 +46,9 @@ public class DefaultLocale implements LocaleSource {
 		// get the default locale from database and
 		// create MyLocale object and assign it
 		// to the defaultMyLocale attribute
+		System.out.println("###############initializing default locale#######################");
 		myLocale = messageDAO.getDefault();
-		//System.out.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>" + myLocale.getLanguage());
+		System.out.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>" + myLocale.getLanguage());
 		defaultMyLocale = myLocale;
 	}
 

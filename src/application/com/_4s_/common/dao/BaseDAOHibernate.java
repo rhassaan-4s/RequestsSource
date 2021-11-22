@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -58,14 +59,20 @@ public class BaseDAOHibernate  implements BaseDAO {//extends HibernateDaoSupport
 
 	private CriteriaBuilder builder;
 
-    @Transactional
+	@Transactional
 	public Session getCurrentSession(){
+		Session session = null;
     	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
     	log.debug("session factory " + sessionFactory);
-    	Session currectSession = sessionFactory.getCurrentSession();
-	      return currectSession;
+    	try {
+    	    session = sessionFactory.getCurrentSession();
+    	} catch (HibernateException e) {
+    	    session = sessionFactory.openSession();
+    	}
+	      return session;
 	}
     
+	@Transactional
     public void init() {
     	log.debug("###########################initiallizing#####################");
     	builder = getCurrentSession().getCriteriaBuilder();

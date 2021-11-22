@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
@@ -23,6 +25,7 @@ import com._4s_.i18n.model.MyMessage;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
+@Transactional
 @Repository
 public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO 
 {

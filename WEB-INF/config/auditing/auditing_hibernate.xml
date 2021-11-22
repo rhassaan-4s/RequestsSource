@@ -5,7 +5,7 @@
 <beans>
 
 	<bean id="auditingDataSource"
-		class="org.apache.commons.dbcp.BasicDataSource">
+		class="org.apache.tomcat.jdbc.pool.DataSource">
 		<property name="driverClassName">
 			<value>${hibernate.connection.driver_class}</value>
 		</property>

@@ -3,7 +3,7 @@
     "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 
 <beans >
-	<bean id="hrDAO" class="com._4s_.HR.dao.HRDAOHibernate" >
+	<bean id="hrDAO" class="com._4s_.HR.dao.HRDAOHibernate"  init-method="init">
 		<property name="sessionFactory" ref ="sessionFactory"/>
 	</bean>
 

@@ -398,8 +398,8 @@
 
 	<beans:bean id="authenticationFilter"
 		class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
-		<beans:property name="authenticationManager" ref="authenticationManager" />
-		<beans:property name="authenticationEntryPoint" ref="restAuthenticationEntryPoint" />
+		<beans:constructor-arg ref="authenticationManager" />
+		<beans:constructor-arg ref="restAuthenticationEntryPoint" />
 		<beans:property name="rememberMeServices" ref="rememberMeServices" />
 		<!-- <beans:property name="authenticationSuccessHandler" ref="mySuccessHandler" 
 			/> -->
@@ -463,11 +463,11 @@
 	</beans:bean>
 	<beans:bean id="myAccessDecisionManager"
 		class="org.springframework.security.access.vote.AffirmativeBased">
-		<beans:property name="decisionVoters">
+		<beans:constructor-arg name="decisionVoters">
 			<beans:list>
 				<beans:ref bean="myVoter" />
 			</beans:list>
-		</beans:property>
+		</beans:constructor-arg>
 		<beans:property name="allowIfAllAbstainDecisions">
 			<beans:value>true</beans:value>
 		</beans:property>

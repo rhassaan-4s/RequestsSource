@@ -4,7 +4,7 @@
 
 <beans>
 
-	<bean id="SQLDAO" class="com._4s_.dbUpdate.dao.SQLDAOHibernate">
+	<bean id="SQLDAO" class="com._4s_.dbUpdate.dao.SQLDAOHibernate"  init-method="init">
 		<property name="sessionFactory"  ref ="sessionFactory" />
 	</bean>
 	
