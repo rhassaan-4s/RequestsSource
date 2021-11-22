@@ -2,15 +2,15 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
     "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 
-<beans >
+<beans  default-autowire="no" default-lazy-init="false">
 
 <!-- *********************************************************************
 									DAOs 
 ********************************************************************* -->
 
   <!-- Generic DAO - can be used when doing standard CRUD -->
-  <bean id="baseDAO" class="com._4s_.common.dao.BaseDAOHibernate" >
-      <property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  <bean id="baseDAO" class="com._4s_.common.dao.BaseDAOHibernate" init-method="init" lazy-init="true">
+  	<property name="sessionFactory"  ref="sessionFactory"/>
   </bean>
 
 
@@ -19,9 +19,7 @@
 ********************************************************************* -->
 
     <bean id="baseManager" class="com._4s_.common.service.BaseManagerImpl" >
-  		<property name="baseDAO">
-	    	<ref bean="baseDAO"/>
-	    </property>
+  		<property name="baseDAO" ref ="baseDAO"/>
 	</bean>
         
 <!-- *********************************************************************
@@ -30,9 +28,7 @@
    	<bean id="baseController" parent="txProxyTemplate" >
 		<property name="target">
 			<bean class="com._4s_.common.web.action.BaseController">
-				<property name="baseManager">
-					<ref bean="baseManager"/>
-				</property>
+				<property name="baseManager" ref="baseManager"/>
 			</bean>
 		</property>
 	</bean>
@@ -43,9 +39,7 @@
 	<!-- Binders of Domain Model Objects -->
 	
 	<bean id="domainObjectBinder" class="com._4s_.common.web.binders.DomainObjectBinder" scope="prototype">
-	    <property name="baseManager">
-			<ref bean="baseManager"/>
-	    </property>
+	    <property name="baseManager" ref="baseManager"/>
 	</bean>
 	
 	<!-- Other binders -->
@@ -66,9 +60,7 @@
      	scope="prototype"></bean>
      	
     <bean id="mainBinder" class="com._4s_.common.web.binders.MainBinder" scope="prototype">
-	    <property name="baseManager">
-			<ref bean="baseManager"/>
-	    </property>
+	    <property name="baseManager" ref ="baseManager"/>
 	</bean>
 	
 	

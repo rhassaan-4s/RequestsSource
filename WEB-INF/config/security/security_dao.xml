@@ -4,9 +4,7 @@
 <beans >
 
 	<bean id="securityDAO" class="com._4s_.security.dao.MySecurityDAOHibernate" >
-			<property name="sessionFactory">
-			      <ref bean="sessionFactory"/>
-			</property>
+			<property name="sessionFactory" ref ="sessionFactory"/>
 	</bean>
 
 </beans>

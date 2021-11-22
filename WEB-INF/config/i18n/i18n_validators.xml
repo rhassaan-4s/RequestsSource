@@ -13,9 +13,7 @@
 </bean>
 
 <bean id="validateLocale" class="com._4s_.i18n.web.validators.ValidateLocale" > 
-<property name="baseManager">
-		<ref bean="baseManager"/>
-	</property>
+<property name="baseManager" ref ="baseManager"/>
 </bean>
 
 

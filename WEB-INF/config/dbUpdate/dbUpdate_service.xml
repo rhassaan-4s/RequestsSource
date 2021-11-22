@@ -8,9 +8,7 @@
 
 	<bean id="SQLManager" parent="baseManager"
 		class="com._4s_.dbUpdate.service.SQLManagerImpl">
-		<property name="sqldao">
-			<ref bean="SQLDAO" />
-		</property>
+		<property name="sqldao" ref ="SQLDAO" />
 	</bean>
 	
 </beans>

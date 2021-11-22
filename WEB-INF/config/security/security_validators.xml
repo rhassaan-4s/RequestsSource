@@ -10,20 +10,13 @@
    >
 
 <bean id="validateUser" class="com._4s_.security.web.validators.ValidateUser" > 
-<property name="mgr">
-		<ref bean="securityManager"/>
-	</property>
+	<property name="mgr" ref ="securityManager"/>
 </bean>
 
 <bean id="validateForgetPassword" class="com._4s_.security.web.validators.ValidateForgetPassword" > 
-	<property name="mgr">
-		<ref bean="securityManager"/>
-	</property>
+	<property name="mgr" ref="securityManager"/>
 </bean>
 
-<bean id="validateRole" class="com._4s_.security.web.validators.ValidateRole" > 
-	
-</bean>
-
+<bean id="validateRole" class="com._4s_.security.web.validators.ValidateRole"/> 
 
 </beans>

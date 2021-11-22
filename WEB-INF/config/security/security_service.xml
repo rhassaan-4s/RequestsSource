@@ -5,10 +5,8 @@
 <beans >
 
 	 <bean id="securityManager" parent="baseManager" class="com._4s_.security.service.MySecurityManagerImpl" >
-		    	<property name="securityDAO"><ref bean="securityDAO"/></property>
-		    	<property name="baseManager">
-					<ref bean="baseManager"/>
-				</property>
+		    	<property name="securityDAO" ref ="securityDAO"/>
+		    	<property name="baseManager" ref ="baseManager"/>
 	 </bean>
 	
 </beans> 

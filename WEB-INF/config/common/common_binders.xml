@@ -56,9 +56,7 @@
 	<bean id="employeesController" parent="txProxyTemplate" >
 		<property name="target">
 			<bean class="com._4s_.common.web.action.EmployeesController">
-				<property name="baseManager">
-					<ref bean="baseManager"/>
-				</property>
+				<property name="baseManager" ref ="baseManager"/>
 			</bean>
 		</property>
 	</bean>

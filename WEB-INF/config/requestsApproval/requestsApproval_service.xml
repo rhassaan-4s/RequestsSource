@@ -9,13 +9,10 @@
 
     
 	<bean id="requestsApprovalManager" parent="baseManager" class="com._4s_.requestsApproval.service.RequestsApprovalManagerImpl" >
-		<property name="requestsApprovalDAO"><ref bean="requestsApprovalDAO"/></property>
-		<property name="sequenceManager"><ref bean="sequenceManager"/></property>
-		<property name="externalQueries">
-			<ref bean="requestsApprovalExternalQueries" />
-		</property>
-		<property name="messageManager"><ref bean="messageManager"/></property>
-		
+		<property name="requestsApprovalDAO" ref ="requestsApprovalDAO"/>
+		<property name="sequenceManager" ref ="sequenceManager"/>
+		<property name="externalQueries" ref ="requestsApprovalExternalQueries" />
+		<property name="messageManager" ref ="messageManager"/>
 	</bean>
 	 
 	 

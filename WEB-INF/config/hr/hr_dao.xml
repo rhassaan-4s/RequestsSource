@@ -4,9 +4,7 @@
 
 <beans >
 	<bean id="hrDAO" class="com._4s_.HR.dao.HRDAOHibernate" >
-		<property name="sessionFactory">
-		      <ref bean="sessionFactory"/>
-		</property>
+		<property name="sessionFactory" ref ="sessionFactory"/>
 	</bean>
 
 

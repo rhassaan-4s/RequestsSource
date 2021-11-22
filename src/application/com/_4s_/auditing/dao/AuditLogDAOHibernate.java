@@ -11,9 +11,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 
 import com._4s_.auditing.model.AuditLogRecord;
 import com._4s_.common.dao.BaseDAOHibernate;
@@ -25,6 +28,7 @@ import com._4s_.security.model.User;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
+@Repository
 public class AuditLogDAOHibernate extends BaseDAOHibernate implements
 AuditLogDAO {
 

@@ -10,6 +10,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com._4s_.common.dao.BaseDAOHibernate;
 import com._4s_.i18n.model.Key;
@@ -22,6 +23,7 @@ import com._4s_.i18n.model.MyMessage;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
+@Repository
 public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO 
 {
 
@@ -114,8 +116,9 @@ public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO
 	public MyLocale getDefault() 
 	{
 		// TODO Auto-generated method stub
-		Criteria criteria = getCurrentSession().createCriteria(MyLocale.class).add(Restrictions.eq("isDefault",	new Boolean(true)));
-		MyLocale myLocale = (MyLocale)criteria.uniqueResult();
+//		Criteria criteria = getCurrentSession().createCriteria(MyLocale.class).add(Restrictions.eq("isDefault",	new Boolean(true)));
+//		MyLocale myLocale = (MyLocale)criteria.uniqueResult();
+		MyLocale myLocale = (MyLocale)getObjectByParameter(MyLocale.class, "isDefault", new Boolean(true));
 		System.out.println("locale " + myLocale.getLanguage());
 		return myLocale;
 	}

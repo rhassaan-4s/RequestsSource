@@ -9,7 +9,7 @@
 
     
 	<bean id="hrManager" parent="baseManager" class="com._4s_.HR.service.HRManagerImpl" >
-	  	<property name="hrDAO"><ref bean="hrDAO"/></property>    	
+	  	<property name="hrDAO" ref ="hrDAO"/>  	
 	</bean>
 	 
 	 

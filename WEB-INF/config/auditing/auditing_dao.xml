@@ -2,13 +2,11 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
     "http://www.springframework.org/dtd/spring-beans-2.0.dtd" >
 
-<beans >
+<beans  default-autowire="no" default-lazy-init="true">
 	<bean id="auditLogDAO" parent="auditTxProxyTemplate">
 		<property name="target">
-			<bean class="com._4s_.auditing.dao.AuditLogDAOHibernate">
-				<property name="sessionFactory">
-					<ref bean="auditSessionFactory" />
-				</property>
+			<bean class="com._4s_.auditing.dao.AuditLogDAOHibernate" lazy-init="true">
+				<property name="sessionFactory" ref="auditSessionFactory" />
 			</bean>
 		</property>
 		<property name="transactionAttributes">

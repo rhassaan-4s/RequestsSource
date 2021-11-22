@@ -8,6 +8,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com._4s_.common.model.Branch;
 import com._4s_.common.model.City;
@@ -19,7 +20,7 @@ import com._4s_.common.model.LastSequence;
 import com._4s_.common.model.Types;
 import com._4s_.common.model.TypesData;
 
-@Component(value="commonDAO")
+@Repository
 public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 	/*public Employee getEmployeeByAccount(Account account) {
 		return (Employee) getObjectByParameter(Employee.class, "account",

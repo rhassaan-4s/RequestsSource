@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-    "http://www.springframework.org/dtd/spring-beans-2.0.dtd" >
-
-<beans>
-
+ <beans default-autowire="no"
+ default-lazy-init="true" 
+  xmlns="http://www.springframework.org/schema/beans"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:context="http://www.springframework.org/schema/context"
+           xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+           xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+       
 	<!--Configurer that replaces ${...} placeholders with values from properties files-->
 	<bean id="myDatabase"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -83,7 +86,7 @@
 
 	<!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
 	<bean id="transactionManager"
-		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager" lazy-init="true">
 		<property name="sessionFactory"  ref="sessionFactory" />
 	</bean>
 
@@ -92,9 +95,7 @@
  
 	<bean id="txProxyTemplate" abstract="true"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager">
-			<ref bean="transactionManager" />
-		</property>
+		<property name="transactionManager" ref ="transactionManager" />
 		<property name="transactionAttributes">
 			<props>
 				<prop key="handleRequest">PROPAGATION_REQUIRED,ISOLATION_READ_COMMITTED</prop>

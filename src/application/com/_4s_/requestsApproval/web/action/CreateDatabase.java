@@ -110,7 +110,7 @@ public class CreateDatabase extends HttpServlet implements
 		String start = servletContext.getInitParameter("start");
 		contextpath = servletContext.getRealPath("/");
 		
-		CommonManager commonManager = new CommonManagerImpl();
+//		CommonManager commonManager = new CommonManagerImpl();
 //		Settings settings = (Settings)commonManager.getObjectsOrderedByField(Settings.class,"id").get(0);
 		Settings settings = getSettings();
 		if (settings != null && settings.getAddNewData()!=null){

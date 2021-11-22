@@ -9,9 +9,9 @@
 
     
 	<bean id="restService" class="com._4s_.restServices.service.RequestsServiceImpl" >
-		 <property name="requestsApprovalDAO"><ref bean="requestsApprovalDAO"/></property>
-		 <property name="requestsApprovalManager"><ref bean="requestsApprovalManager"/></property>
-		<property name="securityDao"><ref bean="securityDAO"/></property>
+		 <property name="requestsApprovalDAO" ref ="requestsApprovalDAO"/>
+		 <property name="requestsApprovalManager" ref ="requestsApprovalManager"/>
+		<property name="securityDao" ref ="securityDAO"/>
 	</bean>
 	 
 	 

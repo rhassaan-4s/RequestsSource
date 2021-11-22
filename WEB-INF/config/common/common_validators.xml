@@ -4,28 +4,28 @@
     "-//SPRING//DTD BEAN//EN"
     "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 
-<beans
-  default-autowire="no"
-  default-lazy-init="false"
->
+<beans default-autowire="no" default-lazy-init="false">
+	<bean id="editDepartmentValidator"
+		class="com._4s_.common.web.validators.EditDepartmentValidator">
+	</bean>
 
+	<bean id="editCountryValidator"
+		class="com._4s_.common.web.validators.EditCountryValidator">
+	</bean>
 
+	<bean id="editCityValidator"
+		class="com._4s_.common.web.validators.EditCityValidator">
+	</bean>
 
-<bean id="editDepartmentValidator" class="com._4s_.common.web.validators.EditDepartmentValidator" > 
-</bean>
+	<bean id="changePasswordValidator"
+		class="com._4s_.common.web.validators.ChangePasswordValidator">
+	</bean>
 
-<bean id="editCountryValidator" class="com._4s_.common.web.validators.EditCountryValidator" > 
-</bean>
+	<bean id="dateConverterValidator"
+		class="com._4s_.common.web.validators.DateConverterValidator">
+	</bean>
 
-<bean id="editCityValidator" class="com._4s_.common.web.validators.EditCityValidator" > 
-</bean>
-
-<bean id="changePasswordValidator" class="com._4s_.common.web.validators.ChangePasswordValidator" > 
-</bean>
-
-<bean id="dateConverterValidator" class="com._4s_.common.web.validators.DateConverterValidator" > 
-</bean>
-
-<bean id="typesDataValidator" class="com._4s_.common.web.validators.TypesDataValidator" > 
-</bean>
+	<bean id="typesDataValidator"
+		class="com._4s_.common.web.validators.TypesDataValidator">
+	</bean>
 </beans>

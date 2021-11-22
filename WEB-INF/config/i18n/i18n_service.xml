@@ -2,38 +2,24 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
     "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 
-<beans >
+<beans default-autowire="no" default-lazy-init="true">
 
 	<bean id="messageSource"
 		class="com._4s_.i18n.service.ResourceMapMessageSource">
-		<property name="messageDAO">
-			<ref bean="messageDAO" />
-		</property>
-		<property name="localeSource">
-			<ref bean="defaultLocale" />
-		</property>
-		<property name="defaultLocaleSource">
-			<ref bean="defaultLocale" />
-		</property>
-		<property name="userMap">
-					<ref bean="users"/>
-		</property>
+		<property name="messageDAO" ref ="messageDAO" />
+		<property name="localeSource" ref ="defaultLocale" />
+		<property name="defaultLocaleSource" ref ="defaultLocale" />
+		<property name="userMap" ref ="users"/>
 	</bean>
 	
-	<bean id="users" class="com._4s_.security.service.UsersMap">
-		
-	</bean>
+	<bean id="users" class="com._4s_.security.service.UsersMap"/>
 	
 	<bean id="defaultLocale" class="com._4s_.i18n.service.DefaultLocale"
 		init-method="init">
-		<property name="messageDAO">
-			<ref bean="messageDAO" />
-		</property>
+		<property name="messageDAO" ref ="messageDAO" />
 	</bean>
 	
 	 <bean id="messageManager" parent="baseManager" class="com._4s_.i18n.service.MessageManagerImpl" >
-		    	<property name="messageDAO"><ref bean="messageDAO"/></property>
+		    	<property name="messageDAO" ref="messageDAO"/>
 	 </bean>
-	 
-	  
 </beans>

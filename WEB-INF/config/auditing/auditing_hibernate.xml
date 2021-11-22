@@ -22,15 +22,13 @@
 
 
 	<bean id="auditTransactionManager"
-		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager"  lazy-init="true">
 		<property name="sessionFactory" ref="auditSessionFactory" />
 	</bean>
 
 	<bean id="auditTxProxyTemplate" abstract="true"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager">
-			<ref bean="auditTransactionManager" />
-		</property>
+		<property name="transactionManager" ref ="auditTransactionManager" />
 		<property name="transactionAttributes">
 			<props>
 				<prop key="save*">PROPAGATION_REQUIRED,ISOLATION_SERIALIZABLE</prop>

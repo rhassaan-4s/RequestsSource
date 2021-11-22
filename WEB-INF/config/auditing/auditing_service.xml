@@ -4,14 +4,12 @@
 
 <beans >
 	<bean id="auditManager" parent="baseManager" class="com._4s_.auditing.service.AuditLogManagerImpl" >
-		<property name="auditDAO"><ref bean="auditLogDAO"/></property>
+		<property name="auditDAO"  ref ="auditLogDAO"/>
 	</bean>
 
 	<bean id="auditLogInterceptor"
 			class="com._4s_.auditing.service.AuditLogInterceptor">
-			<property name="auditLogDAO">
-				<ref bean="auditLogDAO" />
-			</property>
+			<property name="auditLogDAO" ref ="auditLogDAO" />
 		</bean>
 		
 </beans>

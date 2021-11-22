@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
@@ -26,6 +27,7 @@ import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com._4s_.common.util.Page;
 //import org.springframework.orm.ObjectRetrievalFailureException;
@@ -40,6 +42,8 @@ import com._4s_.common.util.Page;
  *
  * @spring.property name="sessionFactory" ref="sessionFactory"
 **/
+@Transactional
+@Repository
 public class BaseDAOHibernate  implements BaseDAO {//extends HibernateDaoSupport
 //    protected final Log log = LogFactory.getLog(getClass());
 
@@ -48,50 +52,53 @@ public class BaseDAOHibernate  implements BaseDAO {//extends HibernateDaoSupport
 	@Autowired
 	private SessionFactory sessionFactory;
     
-    public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-
 	public void setSessionFactory(SessionFactory sessionFactory) {
-		log.debug("$$$$$$$$$$$$$$$Setting session factory " + sessionFactory);
-		System.out.println("1.BaseDAOHibernate");
 		this.sessionFactory = sessionFactory;
 	}
 
 	private CriteriaBuilder builder;
 
-//    @Transactional
-//	public Session getCurrentSession(){
-//	      return sessionFactory.getCurrentSession();
-//	}
-    
-//	    
-    public BaseDAOHibernate() {
-    	System.out.println("sess. fact. " + sessionFactory);
-    	log.debug("rana");
-    	builder = getCurrentSession().getCriteriaBuilder();
+    @Transactional
+	public Session getCurrentSession(){
+    	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
+    	log.debug("session factory " + sessionFactory);
+    	Session currectSession = sessionFactory.getCurrentSession();
+	      return currectSession;
 	}
-
-	protected final Session getCurrentSession(){
-		System.out.println("#####session factory " + sessionFactory);
-//		if (sessionFactory == null) {
-//			try {
-//				// A SessionFactory is set up once for an application!
-//				String hibernatePropsFilePath = "C:\\Program Files\\Apache Software Foundation\\Tomcat 8.5_Tomcat8_branch\\webapps\\Requests\\WEB-INF\\hibernate.cfg.xml";
-//				 File hibernatePropsFile = new File(hibernatePropsFilePath);
-//				final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-//				.configure(hibernatePropsFile) // configures settings from hibernate.cfg.xml
-//				.build();
-//				sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-//				System.out.println("***session factory***"+sessionFactory);
-//			} catch (Exception e) {
-//				System.out.println(e.getMessage());
-//				e.printStackTrace();
-//			}
-//		}
-		return sessionFactory.getCurrentSession();
+    
+    public void init() {
+    	log.debug("###########################initiallizing#####################");
+    	builder = getCurrentSession().getCriteriaBuilder();
+    	log.debug("builder " + builder);
     }
     
+//	    
+//    public BaseDAOHibernate() {
+//    	log.debug("sess. fact. " + sessionFactory);
+//    	log.debug("rana");
+//    	builder = getCurrentSession().getCriteriaBuilder();
+//	}
+
+//	protected final Session getCurrentSession(){
+//		System.out.println("#####session factory " + sessionFactory);
+////		if (sessionFactory == null) {
+////			try {
+////				// A SessionFactory is set up once for an application!
+////				String hibernatePropsFilePath = "C:\\Program Files\\Apache Software Foundation\\Tomcat 8.5_Tomcat8_branch\\webapps\\Requests\\WEB-INF\\hibernate.cfg.xml";
+////				 File hibernatePropsFile = new File(hibernatePropsFilePath);
+////				final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+////				.configure(hibernatePropsFile) // configures settings from hibernate.cfg.xml
+////				.build();
+////				sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+////				System.out.println("***session factory***"+sessionFactory);
+////			} catch (Exception e) {
+////				System.out.println(e.getMessage());
+////				e.printStackTrace();
+////			}
+////		}
+//		return sessionFactory.getCurrentSession();
+//    }
+//    
     Integer maxResults = null;
     MatchMode matchMode = MatchMode.START;
     

@@ -4,13 +4,13 @@
 
 <beans >
 	<bean id="commonManager" parent="baseManager" class="com._4s_.common.service.CommonManagerImpl" >
-		    	<property name="commonDAO"><ref bean="commonDAO"/></property>		    	
+		    	<property name="commonDAO" ref ="commonDAO"/>		    	
 	 </bean>
 	 
 	<bean id="sequenceManager" parent="txProxyTemplate">
 		<property name="target">
 			<bean class="com._4s_.common.service.SequenceManagerImpl" >
-		    	<property name="commonDAO"><ref bean="commonDAO"/></property>
+		    	<property name="commonDAO" ref ="commonDAO"/>
 		    </bean>
 		</property> 
 <!--		 <property name="transactionAttributes">-->

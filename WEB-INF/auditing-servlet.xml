@@ -20,9 +20,7 @@
 				<property name="successView">
 					<value>searchForm.html</value>
 				</property>
-				<property name="mgr">
-					<ref bean="auditManager"/>
-				</property>
+				<property name="mgr" ref="auditManager"/>
 				<property name="binders">
 					<list>
 						<ref bean="dateBinder"/>
@@ -31,12 +29,8 @@
 
 					</list>
 				</property>
-				<property name="baseManager">
-					<ref bean="baseManager"/>
-				</property>
-				<property name="validator">
-					<ref bean="validateSearch"/>
-				</property>
+				<property name="baseManager" ref ="baseManager"/>
+				<property name="validator" ref="validateSearch"/>
 				
 			</bean>
 		</property>

@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
     "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
-<beans >
 
+<beans default-autowire="no" default-lazy-init="true">
 	<bean id="messageDAO" parent="txProxyTemplate">
 		<property name="target">
-			<bean class="com._4s_.i18n.dao.MessageDAOHibernate">
-				<property name="sessionFactory">
-					<ref bean="sessionFactory" />
-				</property>
+			<bean class="com._4s_.i18n.dao.MessageDAOHibernate"  init-method="init">
+				<property name="sessionFactory" ref="auditSessionFactory" />
 			</bean>
 		</property>
 		<property name="transactionAttributes">
