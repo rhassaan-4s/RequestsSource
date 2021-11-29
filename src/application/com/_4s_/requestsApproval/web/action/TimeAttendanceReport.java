@@ -44,7 +44,7 @@ public class TimeAttendanceReport implements Controller{
 			RequestsApprovalManager requestsApprovalManager) {
 		this.requestsApprovalManager = requestsApprovalManager;
 	}
-	
+
 	public ModelAndView handleRequest(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
@@ -52,27 +52,27 @@ public class TimeAttendanceReport implements Controller{
 		Employee emp = loggedInEmp;
 		log.debug("---ref-emp from session---"+request.getSession().getAttribute("employee"));
 		int year, month;
-		
+
 		Boolean differentEmp = false;
-		
-//		String empCode = request.getParameter("empCode");
-//		log.debug("empCode " + empCode);
-//		if(empCode!=null && !empCode.isEmpty()) {
-//			if(!empCode.equals(emp.getEmpCode())) {
-//				Employee searchEmp = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", empCode);
-//				if (!loggedInEmp.equals(searchEmp)) {
-//					differentEmp = true;
-//				}
-//				emp = searchEmp;
-//				log.debug("emp " + emp);
-//			}
-//		}
+
+		//		String empCode = request.getParameter("empCode");
+		//		log.debug("empCode " + empCode);
+		//		if(empCode!=null && !empCode.isEmpty()) {
+		//			if(!empCode.equals(emp.getEmpCode())) {
+		//				Employee searchEmp = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", empCode);
+		//				if (!loggedInEmp.equals(searchEmp)) {
+		//					differentEmp = true;
+		//				}
+		//				emp = searchEmp;
+		//				log.debug("emp " + emp);
+		//			}
+		//		}
 		Map model=new HashMap();
 		model.put("emp", emp);
-//		model.put("empCode", empCode);
-		
+		//		model.put("empCode", empCode);
+
 		model.put("differentEmp", differentEmp);
-		
+
 		String empCode = "";
 		LoginUsers loginUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", loggedInEmp);
 		List groups = requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "emp_id", loginUser);//(GroupAcc.class);
@@ -84,23 +84,23 @@ public class TimeAttendanceReport implements Controller{
 		String logUser = request.getParameter("empCode");
 		log.debug("loginUser " + logUser);
 		if(groupId!=null && !groupId.isEmpty()) {
-//			GroupAcc groupAcc = (GroupAcc)requestsApprovalManager.getObject(GroupAcc.class, new Long(groupId));
+			//			GroupAcc groupAcc = (GroupAcc)requestsApprovalManager.getObject(GroupAcc.class, new Long(groupId));
 			employees = new ArrayList();
 			employees.addAll(requestsApprovalManager.getEmployeesByGroup(new Long(groupId)));
 			model.put("employees", employees);			
 		} 
-//		if (logUser!=null && !logUser.isEmpty()) {
-//			empCode = logUser;
-//		} else {
-//			String luser = request.getParameter("logUser");
-//			log.debug("luser" + luser);
-//			empCode=luser;
-//		}
-//		model.put("logUser", logUser);
+		//		if (logUser!=null && !logUser.isEmpty()) {
+		//			empCode = logUser;
+		//		} else {
+		//			String luser = request.getParameter("logUser");
+		//			log.debug("luser" + luser);
+		//			empCode=luser;
+		//		}
+		//		model.put("logUser", logUser);
 		if (groups.size() > 0) {
 			if (groupId != null && !groupId.isEmpty()) {// ///////////////////all
-														// group
-														// employees
+				// group
+				// employees
 				if (logUser != null && !logUser.isEmpty()) {
 					empCode = logUser;
 				} else {
@@ -122,36 +122,38 @@ public class TimeAttendanceReport implements Controller{
 					}
 				}
 			} else if (groupId == null || groupId.isEmpty()) {// /////////////all
-																	// employees
-																	// from all
-																	// groups
-					Iterator it = groups.iterator();
-					while (it.hasNext()) {
-						AccessLevels lev = (AccessLevels) it.next();
-						employees
-								.addAll(requestsApprovalManager
-										.getEmployeesByGroup(lev.getLevel_id()
-												.getId()));
-					}
-					Iterator<LoginUsers> itr = employees.iterator();
-					int i = 0;
-					while (itr.hasNext()) {
-						if (i < employees.size() - 1) {
-							empCode += itr.next().getEmpCode().getEmpCode()
-									+ ",";
-						} else {
-							empCode += itr.next().getEmpCode().getEmpCode();
-						}
-						i++;
-					}
+				// employees
+				// from all
+				// groups
+				Iterator it = groups.iterator();
+				while (it.hasNext()) {
+					AccessLevels lev = (AccessLevels) it.next();
+					employees
+					.addAll(requestsApprovalManager
+							.getEmployeesByGroup(lev.getLevel_id()
+									.getId()));
 				}
-			} else {
+				Iterator<LoginUsers> itr = employees.iterator();
+				int i = 0;
+				while (itr.hasNext()) {
+					if (i < employees.size() - 1) {
+						empCode += itr.next().getEmpCode().getEmpCode()
+								+ ",";
+					} else {
+						empCode += itr.next().getEmpCode().getEmpCode();
+					}
+					i++;
+				}
+			}
+		} else {
+			if (emp!=null) {
 				empCode = emp.getEmpCode();
 			}
+		}
 		log.debug("empCode " + empCode);
-		
-		
-		
+
+
+
 		if (logUser!=null && !logUser.isEmpty()) {
 			empCode = logUser;
 		} else {
@@ -176,7 +178,7 @@ public class TimeAttendanceReport implements Controller{
 		log.debug("--dateTo--"+dateTo);
 		model.put("toDate", dateTo);
 		log.debug("---xxxxxxxDatePeriod--");		
-		
+
 		Calendar c = Calendar.getInstance();
 		log.debug("----c---"+c.getTime());
 		c.setTime(new Date());
@@ -195,23 +197,23 @@ public class TimeAttendanceReport implements Controller{
 		DateFormat d=new SimpleDateFormat("dd/MM/yyyy");
 		String formattedDate=d.format(firstDay);
 		log.debug("----formattedDate---"+formattedDate);
-		
+
 		model.put("firstDay", formattedDate);
 		Date today=new Date();
 		String formatedToday=d.format(today);
 		log.debug("----formatedToday---"+formatedToday);
 		model.put("today", formatedToday);
-		
+
 		Settings settings = (Settings)request.getSession().getAttribute("settings");
-		
+
 		boolean tAttRepWithHrsMin = settings.getTAttRepWithHrsMin();
 		String server = settings.getServer();
 		String service = settings.getService();
 		String username = settings.getUsername();
 		String password = settings.getPassword();
-		
+
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
-		
+
 		List objects= new ArrayList();
 
 		if (dateFrom != null && dateTo != null){
@@ -225,7 +227,7 @@ public class TimeAttendanceReport implements Controller{
 				log.debug(">>>>>>>>>>>>>toDateString "+ dateTo);
 				mCalDate.setDateTimeString(dateTo,new Boolean(false));
 				toDate= mCalDate.getDate();
-				
+
 				List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAccEmpCode(emp, null);
 				String empArray = "";
 				Iterator empItr = empReqTypeAccs.iterator();
@@ -242,27 +244,27 @@ public class TimeAttendanceReport implements Controller{
 					}
 					count++;
 				}
-				
+
 				// VIP
 				List totalObjects= new ArrayList();
-//				totalObjects=requestsApprovalManager.getTimeAttend(emp.getEmpCode(), fromDate, toDate);
-//				if (totalObjects!=null) {
-//					totalObjects.addAll(requestsApprovalManager.getTimeAttendAndroid(emp.getEmpCode(), fromDate, toDate));
-//				} else {
-//					totalObjects=requestsApprovalManager.getTimeAttendAndroid(emp.getEmpCode(), fromDate, toDate);
-//				}
+				//				totalObjects=requestsApprovalManager.getTimeAttend(emp.getEmpCode(), fromDate, toDate);
+				//				if (totalObjects!=null) {
+				//					totalObjects.addAll(requestsApprovalManager.getTimeAttendAndroid(emp.getEmpCode(), fromDate, toDate));
+				//				} else {
+				//					totalObjects=requestsApprovalManager.getTimeAttendAndroid(emp.getEmpCode(), fromDate, toDate);
+				//				}
 				log.debug("getting attendance from view");
 				totalObjects = requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
 				objects=(List) totalObjects.get(0);
 
-				
+
 				String totalSum=(String) totalObjects.get(1);
 				String [] totalValues=totalSum.split(",");
 				log.debug("totalMins=== "+totalValues[0]+" && totalHrs=== "+totalValues[1]);
 				String totalMins=totalValues[0];
 				String totalHrs=totalValues[1];
 				Long hrs=new Long(0), mins=new Long(0);
-//				Long hrs2=new Long(0), mins2=new Long(0);
+				//				Long hrs2=new Long(0), mins2=new Long(0);
 
 				hrs= Long.parseLong(totalHrs);
 				mins=Long.parseLong(totalMins);
@@ -274,12 +276,12 @@ public class TimeAttendanceReport implements Controller{
 					String totalMins2=totalValues2[0];
 					String totalHrs2=totalValues2[1];
 
-//					hrs2= Long.parseLong(totalHrs2);
-//					mins2=Long.parseLong(totalMins2);
+					//					hrs2= Long.parseLong(totalHrs2);
+					//					mins2=Long.parseLong(totalMins2);
 				}
 
-//				hrs += hrs2;
-//				mins += mins2;
+				//				hrs += hrs2;
+				//				mins += mins2;
 
 				if(mins>60){
 					hrs+=mins/60;
@@ -294,14 +296,14 @@ public class TimeAttendanceReport implements Controller{
 				log.debug("-------objects- size--"+objects.size());
 				for (int i = 0; i < objects.size(); i++) {
 					TimeAttend ob= (TimeAttend) objects.get(i);
-					
+
 					// mCalDate.setDateString(ob.getDay());
 					DateFormat df=new SimpleDateFormat("dd/mm/yyyy");
-					
+
 					Date day=df.parse(ob.getDay());
 					log.debug("-------day---"+day);
 					log.debug("-------objects---"+ob.getDay()+"-------getTimeIn---"+ob.getTimeIn()+"-------getTimeOut---"+ob.getTimeOut());
-					
+
 					if (ob.getAddress1()== null && ob.getLatitude1()!=null && !ob.getLatitude1().isEmpty() && ob.getLatitude1()!="0" 
 							&& ob.getLongitude1()!=null && !ob.getLongitude1().isEmpty() && ob.getLongitude1()!="0") {
 						String address1 = requestsApprovalManager.getShortAddressByGpsCoordinates(ob.getLongitude1(), ob.getLatitude1());
@@ -329,16 +331,16 @@ public class TimeAttendanceReport implements Controller{
 				}
 				model.put("records", objects);
 				model.put("empArray", empArray);
-				
+
 				// VIP
-				
+
 			}
 		}
-		
+
 		String exportParameter = (String)request.getParameter("export");
 		if (exportParameter!=null && exportParameter.equals("true")) {
 			List tableTitle = new ArrayList();
-			
+
 			if (!groups.isEmpty()) {
 				tableTitle.add("requestsApproval.caption.userName");
 			}
@@ -347,7 +349,7 @@ public class TimeAttendanceReport implements Controller{
 			tableTitle.add("requestsApproval.caption.in");
 			tableTitle.add("requestsApproval.caption.out");
 			tableTitle.add("requestsApproval.caption.netTime");
-			
+
 			List results = new ArrayList();
 			Iterator itr = objects.iterator();
 			log.debug("records size again " + objects.size());
@@ -387,34 +389,34 @@ public class TimeAttendanceReport implements Controller{
 				} else {
 					temp.add("");
 				}
-				
+
 				log.debug("adding to results");
 				results.add(temp);
 			}
 			log.debug("results size " + results.size());
 			Map result = requestsApprovalManager.exportToExcelSheet("requestsApproval.header.timeAttendanceReport", tableTitle, results);
-//			String title = (String)result.get("title");
+			//			String title = (String)result.get("title");
 			String title = "TimeAttendanceReport";
 			HSSFWorkbook workBook = (HSSFWorkbook)result.get("workbook");
 			try {
-		    	   response.setHeader("Content-Disposition",
-		    			   "attachment; filename=\""+title+".xls\"");
-		    	   log.debug(workBook);
-		    	   workBook.write(response.getOutputStream());
-		    	   log.debug(response);
-		    	   response.getOutputStream().flush();
-		    	   response.getOutputStream().close();
-		    	   log.debug("Response written");
-		       } catch (Exception e) {
-		    	   // TODO: handle exception
-		    	   log.debug("exception " + e);
-		    	   e.printStackTrace();
-		       }
-				log.debug("after export to excel");
-//			return new ModelAndView(new RedirectView("timeAttendanceReport.html"));
+				response.setHeader("Content-Disposition",
+						"attachment; filename=\""+title+".xls\"");
+				log.debug(workBook);
+				workBook.write(response.getOutputStream());
+				log.debug(response);
+				response.getOutputStream().flush();
+				response.getOutputStream().close();
+				log.debug("Response written");
+			} catch (Exception e) {
+				// TODO: handle exception
+				log.debug("exception " + e);
+				e.printStackTrace();
+			}
+			log.debug("after export to excel");
+			//			return new ModelAndView(new RedirectView("timeAttendanceReport.html"));
 			return new ModelAndView("timeAttendanceReport",model);
 		}
 		return new ModelAndView("timeAttendanceReport",model);
 	}
-	
+
 }

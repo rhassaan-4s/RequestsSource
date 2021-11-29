@@ -1448,11 +1448,12 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					return response;
 				}catch (Exception e) {
 					log.debug("approval not present and should be created - execption " + e);
-					StackTraceElement[] stack = e.getStackTrace();
-					for(i=0;i<stack.length;i++) {
-						log.debug(stack[i]);
-					}
-					e.printStackTrace();
+//					StackTraceElement[] stack = e.getStackTrace();
+//					for(i=0;i<stack.length;i++) {
+//						log.debug(stack[i]);
+//					}
+//					e.printStackTrace();
+					
 //					StackTraceElement[] trace =  e.getStackTrace();
 //					for(int j=0; j<trace.length; j++) {
 //						log.debug(trace[j]);
@@ -1468,20 +1469,26 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
 //					temp = (EmpReqTypeAcc) empReqAcc.get(i);
 					temp = loggedInAcc;
-					log.debug("------catch temp ---"+temp.getGroup_id().getId());
-					log.debug("------catch title---"+temp.getGroup_id().getTitle());
-					
-					log.debug("level id " + temp.getGroup_id().getId() + " emp id " + loginUsers.getId());
-					List accessLevels= getObjectsByTwoParametersOrderedByFieldList(AccessLevels.class, "level_id",temp.getGroup_id() , "emp_id", loginUsers, ordered1);
-					log.debug("access levels size " + accessLevels.size());
-//					if(accessLevels.size()>0){
+					log.debug("temp " + temp);
+//					log.debug("temp id " + temp.getId());
+//					log.debug("------catch temp ---"+temp.getGroup_id().getId());
+//					log.debug("------catch title---"+temp.getGroup_id().getTitle());
+//					
+//					log.debug("level id " + temp.getGroup_id().getId() + " emp id " + loginUsers.getId());
+					List accessLevels= null;
+					if (temp!=null) {
+						accessLevels = getObjectsByTwoParametersOrderedByFieldList(AccessLevels.class, "level_id",temp.getGroup_id() , "emp_id", loginUsers, ordered1);
+
+						log.debug("access levels size " + accessLevels.size());
+						//					if(accessLevels.size()>0){
 						approvalRequest = new HashMap();
 
 						approvalRequest.put("title", temp.getGroup_id().getTitle());
-						
+
 						approvalRequest.put("id", temp.getId());
 						log.debug("------catch temp id (level id to be created )---"+temp.getId() + " for group id " + temp.getGroup_id().getId());
-//					}
+						//					}
+					}
 					if(accessLevels.size()>0){
 						approvalRequest.put("user", loginUsers.getName());
 						log.debug("------catch if user---"+loginUsers.getName());

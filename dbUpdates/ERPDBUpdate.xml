@@ -16179,4 +16179,8 @@ INSERT INTO REQUEST_TYPES (ID, DESCRIPTION, PARENTID, HIDDEN) VALUES(8, 'حضو�
 INSERT INTO i18n_message VALUES (202116468,'حذف IMEI لكل المستخدمين', 101477, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116469, 'Remove All Users IMEI', 101477, 3);</statment></query><query><sqlindex>181</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101478, 'requestsApproval.errors.selectEmployeeFirst', NULL);&#xD;
  INSERT INTO i18n_message VALUES (202116470,'برجاء اختيار موظف قبل الضغط على زر اضافة مسؤول', 101478, 1);&#xD;
- INSERT INTO i18n_message VALUES (202116471, 'Select an employee first before clicking the add button', 101478, 3);</statment></query><query><sqlindex>182</sqlindex><statment>ALTER TABLE SECURITY_IMEI MODIFY IMEI VARCHAR2(30);</statment></query><query><sqlindex>183</sqlindex><statment>ALTER TABLE FOURS_PAYROLL.SECURITY_IMEI MODIFY IMEI VARCHAR2(40);</statment></query></SQL>
+ INSERT INTO i18n_message VALUES (202116471, 'Select an employee first before clicking the add button', 101478, 3);</statment></query><query><sqlindex>182</sqlindex><statment>ALTER TABLE SECURITY_IMEI MODIFY IMEI VARCHAR2(30);</statment></query><query><sqlindex>183</sqlindex><statment>ALTER TABLE FOURS_PAYROLL.SECURITY_IMEI MODIFY IMEI VARCHAR2(40);</statment></query><query><sqlindex>184</sqlindex><statment>CREATE TABLE SECURITY_IP_ADDRESS (&#xD;
+	ID NUMBER,&#xD;
+	IP VARCHAR2(60),&#xD;
+	USERS NUMBER&#xD;
+);</statment></query><query><sqlindex>185</sqlindex><statment>CREATE SEQUENCE ipAddressID INCREMENT BY 1 MINVALUE 1 MAXVALUE 9999999999999999999999999999 NOCYCLE CACHE 20 NOORDER ;</statment></query></SQL>

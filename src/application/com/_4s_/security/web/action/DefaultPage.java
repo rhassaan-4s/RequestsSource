@@ -15,6 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.CommonManager;
+import com._4s_.common.util.HttpReqRespUtils;
 import com._4s_.common.web.action.BaseController;
 //import com._4s_.gl.model.GLSettings;
 //import com._4s_.gl.service.GlManagerImpl;
@@ -22,6 +23,7 @@ import com._4s_.i18n.model.MyLocale;
 import com._4s_.i18n.service.DefaultLocale;
 import com._4s_.i18n.service.LocaleSource;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
+import com._4s_.security.model.IPAddress;
 //import com._4s_.portal.model.Reports;
 import com._4s_.security.model.Roles;
 import com._4s_.security.model.SecurityApplication;
@@ -38,11 +40,11 @@ public class DefaultPage extends BaseController {
 	private UsersMap userMap = null;
 
 	private CommonManager commonManager;
-	
 
-	
+
+
 	private MySecurityManager securityManager;
-	
+
 	RequestsApprovalManager requestsApprovalManager;
 
 	public RequestsApprovalManager getRequestsApprovalManager() {
@@ -53,8 +55,8 @@ public class DefaultPage extends BaseController {
 			RequestsApprovalManager requestsApprovalManager) {
 		this.requestsApprovalManager = requestsApprovalManager;
 	}
-	
-	
+
+
 	public CommonManager getCommonManager() {
 		return commonManager;
 	}
@@ -97,136 +99,158 @@ public class DefaultPage extends BaseController {
 		log.fatal("ussssssssssssser ---------------------------- >>>>>>>>>>>>>> " + username);
 		User user = (User) baseManager.getObjectByParameter(User.class,
 				"username", username);
-		
+
 		String defaultPage = null;
 		log.debug("----user.getIsEmployee()-----"+user.getIsEmployee());
-		
+
 		String reqId = (String)request.getSession().getAttribute("requestId");
 		String requestNumber = (String)request.getSession().getAttribute("requestNumber");
-		
+
 		log.debug("reqId " + reqId + " requestNumber " + requestNumber);
-		
-		if (reqId != null && !reqId.equals("")) {
-			log.debug("will go to reports");
-			defaultPage = "requestsApprovalForm.html?requestType="+reqId+"&reqId="+requestNumber;
-			defaultPage = "/Requests/requestsApproval/" + defaultPage;
-		} else if(user.getIsEmployee()!=true){
-			defaultPage="";
-		}
-		
-		if (user.getDefaultApplication() != null && (defaultPage == null || defaultPage.isEmpty())) {
-			log.debug("-----default not null-----");
-			//defaultPage = user.getDefaultApplication().getDefaultPage();
-			List userRoles = user.getRoles();
-			List defaultApplicationRoles = user.getDefaultApplication().getRoles();
-			Iterator itr = defaultApplicationRoles.iterator();
-			while(itr.hasNext()){
-				Roles role = (Roles)itr.next();
-				if(userRoles.contains(role)){
-					defaultPage = role.getDefaultPage();
-					if(defaultPage != null && !defaultPage.equals("")){
-						break;
+
+		String currentIP = HttpReqRespUtils.getClientIpAddressIfServletRequestExist(request);
+		log.debug("ip address " +currentIP);
+
+		if (currentIP!= null && !currentIP.isEmpty()) {
+			IPAddress ipAdd = null;
+			if (!currentIP.equals("0:0:0:0:0:0:0:1")) {
+				ipAdd = securityManager.checkIP(currentIP, user);
+			}
+			if (ipAdd==null || (ipAdd!=null && ipAdd.getIP().equals(currentIP)) || currentIP.equals("0:0:0:0:0:0:0:1")) {
+				if (ipAdd==null ) {//&& !currentIP.equals("0:0:0:0:0:0:0:1")
+					log.debug("will save the current IP");
+					IPAddress ip = new IPAddress();
+					ip.setIp(currentIP);
+					ip.setUsers(user);
+					securityManager.saveObject(ip);
+				}
+				if (reqId != null && !reqId.equals("")) {
+					log.debug("will go to reports");
+					defaultPage = "requestsApprovalForm.html?requestType="+reqId+"&reqId="+requestNumber;
+					defaultPage = "/Requests/requestsApproval/" + defaultPage;
+				} else if(user.getIsEmployee()!=true){
+					defaultPage="";
+				}
+
+				if (user.getDefaultApplication() != null && (defaultPage == null || defaultPage.isEmpty())) {
+					log.debug("-----default not null-----");
+					//defaultPage = user.getDefaultApplication().getDefaultPage();
+					List userRoles = user.getRoles();
+					List defaultApplicationRoles = user.getDefaultApplication().getRoles();
+					Iterator itr = defaultApplicationRoles.iterator();
+					while(itr.hasNext()){
+						Roles role = (Roles)itr.next();
+						if(userRoles.contains(role)){
+							defaultPage = role.getDefaultPage();
+							if(defaultPage != null && !defaultPage.equals("")){
+								break;
+							}
+						}
 					}
 				}
-			}
-		}
-		
 
-		MyLocale myLocale = user.getLanguage();
-		myLocale.getCountry();
-		log.debug("locale " + myLocale.getLanguage());
-		if (myLocale != null) {
-			userMap.getUsers().put(username,myLocale);
-		}
-//		defaultPage.replaceAll("4s", "Requests");
-		
-		if (defaultPage == null || defaultPage.equals("")) {
-			defaultPage = "userDetails.html";
-			defaultPage = "/Requests/" + defaultPage.substring(10);
-		} else {
-			defaultPage = "/Requests/" + defaultPage.substring(10);
-		}
-		log.debug("----default----"+defaultPage);
-		
-		request.getSession().removeAttribute("requestId");
-		request.getSession().removeAttribute("requestNumber");
-		
-		log.debug("-----"+defaultPage);
-		// important properties that should be present in the session
-		request.getSession().setAttribute("loginDate",new Date());
-		request.getSession().setAttribute("user",user);
-		Employee employee = commonManager.getEmployeeByUser(user.getId());
-		
-		
-		
-		Settings settings = (Settings)commonManager.getObjectsOrderedByField(Settings.class,"id").get(0);
-		log.debug("username " + settings.getUsername() + "password " + settings.getPassword());
-//		int salary_from_day =  requestsApprovalManager.getSalaryFromDay();
-		int salary_from_day = settings.getSalaryFromDay();
-		log.fatal("salary_from_day " + salary_from_day);
-		int requestsDeadline = settings.getRequestsDeadline();
-//		glManager.setEmployee(employee);
-		request.getSession().setAttribute("employee",employee);
-		request.getSession().setAttribute("appName",user.getDefaultApplication().getName());
-		request.getSession().setAttribute("currentApplication", user.getDefaultApplication());
-		request.getSession().setAttribute("locale", user.getLanguage().getCode());
-		request.getSession().setAttribute("activeApplications", securityManager.getApplicationsByUser(user));
-		
-		System.out.println("settings - default page controller "+settings);
-		request.getSession().setAttribute("settings",settings);
-		request.getSession().setAttribute("salary_from_day", salary_from_day);
-		request.getSession().setAttribute("requestsDeadline", requestsDeadline);
-		
-//		
-//		if (user.getDefaultApplication().getName().equals("GL")) {
-//			//Throwing gl settings in session/////////////////////////////////////////////
-//			List settings = commonManager.getObjects(GLSettings.class);
-//			request.getSession().setAttribute("settings", ((GLSettings)(settings.get(0))));
-//			/////////////////////////////////////////////////////////////////////////////
-//		}
-		
-		if (user.getDefaultApplication() != null) {
-			//// Reports Portal ////////////////////////////////////////
-			Roles role = null;
 
-			Iterator itr = user.getRoles().iterator();
-			while (itr.hasNext()) {
-				Roles itr_role = (Roles) itr.next();
-				if (itr_role.getApplication().getId().equals(
-						user.getDefaultApplication().getId())) {
-					role = itr_role;
+				MyLocale myLocale = user.getLanguage();
+				myLocale.getCountry();
+				log.debug("locale " + myLocale.getLanguage());
+				if (myLocale != null) {
+					userMap.getUsers().put(username,myLocale);
 				}
+				//		defaultPage.replaceAll("4s", "Requests");
+
+				if (defaultPage == null || defaultPage.equals("")) {
+					defaultPage = "userDetails.html";
+					defaultPage = "/Requests/" + defaultPage.substring(10);
+				} else {
+					defaultPage = "/Requests/" + defaultPage.substring(10);
+				}
+				log.debug("----default----"+defaultPage);
+
+				request.getSession().removeAttribute("requestId");
+				request.getSession().removeAttribute("requestNumber");
+
+				log.debug("-----"+defaultPage);
+				// important properties that should be present in the session
+				request.getSession().setAttribute("loginDate",new Date());
+				request.getSession().setAttribute("user",user);
+				Employee employee = commonManager.getEmployeeByUser(user.getId());
+
+
+
+				Settings settings = (Settings)commonManager.getObjectsOrderedByField(Settings.class,"id").get(0);
+				log.debug("username " + settings.getUsername() + "password " + settings.getPassword());
+				//		int salary_from_day =  requestsApprovalManager.getSalaryFromDay();
+				int salary_from_day = settings.getSalaryFromDay();
+				log.fatal("salary_from_day " + salary_from_day);
+				int requestsDeadline = settings.getRequestsDeadline();
+				//		glManager.setEmployee(employee);
+				request.getSession().setAttribute("employee",employee);
+				request.getSession().setAttribute("appName",user.getDefaultApplication().getName());
+				request.getSession().setAttribute("currentApplication", user.getDefaultApplication());
+				request.getSession().setAttribute("locale", user.getLanguage().getCode());
+				request.getSession().setAttribute("activeApplications", securityManager.getApplicationsByUser(user));
+
+				System.out.println("settings - default page controller "+settings);
+				request.getSession().setAttribute("settings",settings);
+				request.getSession().setAttribute("salary_from_day", salary_from_day);
+				request.getSession().setAttribute("requestsDeadline", requestsDeadline);
+
+				//		
+				//		if (user.getDefaultApplication().getName().equals("GL")) {
+				//			//Throwing gl settings in session/////////////////////////////////////////////
+				//			List settings = commonManager.getObjects(GLSettings.class);
+				//			request.getSession().setAttribute("settings", ((GLSettings)(settings.get(0))));
+				//			/////////////////////////////////////////////////////////////////////////////
+				//		}
+
+				if (user.getDefaultApplication() != null) {
+					//// Reports Portal ////////////////////////////////////////
+					Roles role = null;
+
+					Iterator itr = user.getRoles().iterator();
+					while (itr.hasNext()) {
+						Roles itr_role = (Roles) itr.next();
+						if (itr_role.getApplication().getId().equals(
+								user.getDefaultApplication().getId())) {
+							role = itr_role;
+						}
+					}
+					Object o = request.getSession().getAttribute("reports");
+					if (o != null) {
+						request.getSession().removeAttribute("reports");
+					}
+					//			request.getSession().setAttribute("reports",
+					//					commonManager.getObjectsByParameter(Reports.class, "role", role));
+					//////////////////////////////////////////////////////////
+				}
+				//Putting applications in session
+				Object purchasing = null;
+				try {
+					purchasing = securityManager.getObject(SecurityApplication.class, new Long(6));
+				} catch (Exception e) {
+					purchasing = null;
+				}
+
+				if(purchasing != null) {
+					request.getSession().setAttribute("purchasing", (SecurityApplication)purchasing);
+				}
+				log.debug(">>>>>>>>>>>>>>>>>>>>> appName "+user.getDefaultApplication().getName());
+				return new ModelAndView(new RedirectView(defaultPage));
+			} else {
+				return new ModelAndView(new RedirectView("/Requests/security/login.html?error='WrongIP'"));
 			}
-			Object o = request.getSession().getAttribute("reports");
-			if (o != null) {
-				request.getSession().removeAttribute("reports");
-			}
-//			request.getSession().setAttribute("reports",
-//					commonManager.getObjectsByParameter(Reports.class, "role", role));
-			//////////////////////////////////////////////////////////
+		} else {
+			return new ModelAndView(new RedirectView("/Requests/security/login.html?error='NoIPFound'"));
 		}
-		//Putting applications in session
-		Object purchasing = null;
-		try {
-			purchasing = securityManager.getObject(SecurityApplication.class, new Long(6));
-		} catch (Exception e) {
-			purchasing = null;
-		}
-		
-		if(purchasing != null) {
-			request.getSession().setAttribute("purchasing", (SecurityApplication)purchasing);
-		}
-		log.debug(">>>>>>>>>>>>>>>>>>>>> appName "+user.getDefaultApplication().getName());
-		return new ModelAndView(new RedirectView(defaultPage));
 	}
 
-//	public GlManagerImpl getGlManager() {
-//		return glManager;
-//	}
-//
-//	public void setGlManager(GlManagerImpl glManager) {
-//		this.glManager = glManager;
-//	}
+	//	public GlManagerImpl getGlManager() {
+	//		return glManager;
+	//	}
+	//
+	//	public void setGlManager(GlManagerImpl glManager) {
+	//		this.glManager = glManager;
+	//	}
 
 	public MySecurityManager getSecurityManager() {
 		return securityManager;

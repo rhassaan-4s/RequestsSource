@@ -42,6 +42,7 @@ import com._4s_.restServices.json.RestStatus;
 import com._4s_.auditing.validators.ValidateSearch;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
+import com._4s_.common.util.HttpReqRespUtils;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
 
@@ -256,6 +257,8 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		loginUsersRequests.setPeriod_from(now);
 		loginUsersRequests.setRequest_date(now);
 
+		
+		
 		log.debug("----loginUsersRequests.getId()-onsubmit-----"+loginUsersRequests.getId()+"-----loginUsersRequests---"+loginUsersRequests.getLogin_user().getEmpCode());
 		
 		Map model=new HashMap();

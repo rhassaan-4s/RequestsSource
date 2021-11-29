@@ -24,6 +24,7 @@ import com._4s_.common.model.Branch;
 import com._4s_.common.model.Department;
 import com._4s_.common.model.Employee;
 import com._4s_.security.model.Fields;
+import com._4s_.security.model.IPAddress;
 import com._4s_.security.model.Imei;
 import com._4s_.security.model.Roles;
 import com._4s_.security.model.SecurityApplication;
@@ -237,7 +238,18 @@ MySecurityDAO {
 			return null;
 		}
 	}
-	
+	public IPAddress checkIP(String currentIP, User user){
+		Criteria criteria = getCurrentSession().createCriteria(IPAddress.class);
+		criteria.add(Restrictions.eq("users", user));
+		criteria.add(Restrictions.eq("ip", currentIP));
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		List list = criteria.list();
+		if (list.size() > 0) {
+			return (IPAddress)list.get(0);
+		} else {
+			return null;
+		}
+	}
 	
 	
 
