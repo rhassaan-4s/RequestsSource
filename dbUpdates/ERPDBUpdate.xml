@@ -16188,4 +16188,6 @@ INSERT INTO i18n_message VALUES (202116469, 'Remove All Users IMEI', 101477, 3);
  INSERT INTO i18n_message VALUES (202116475, 'The user had logged in from another computer before', 101480, 3);&#xD;
 INSERT INTO I18N_KEY VALUES (101481, 'commons.caption.NoIPAddFound', NULL);&#xD;
  INSERT INTO i18n_message VALUES (202116476,'لا يوجد IP Address للجهاز المستخدم', 101481, 1);&#xD;
- INSERT INTO i18n_message VALUES (202116477, 'No IP Address found for the logged in Computer', 101481, 3);</statment></query><query><sqlindex>187</sqlindex><statment>ALTER TABLE  COMMON_SETTINGS ADD IPADDRESSENABLED NUMBER;</statment></query><query><sqlindex>188</sqlindex><statment>update common_settings set IPADDRESSENABLED=1;</statment></query></SQL>
+ INSERT INTO i18n_message VALUES (202116477, 'No IP Address found for the logged in Computer', 101481, 3);</statment></query><query><sqlindex>187</sqlindex><statment>ALTER TABLE  COMMON_SETTINGS ADD IPADDRESSENABLED NUMBER;</statment></query><query><sqlindex>188</sqlindex><statment>update common_settings set IPADDRESSENABLED=1;</statment></query><query><sqlindex>189</sqlindex><statment>INSERT INTO I18N_KEY VALUES (1014782, 'requestsApproval.header.uniqueIPAddress', NULL);&#xD;
+ INSERT INTO i18n_message VALUES (202116478,'لا يسمح للمستخدم باستخدام اكثر من جهاز لتسجيل الدخول', 101482, 1);&#xD;
+ INSERT INTO i18n_message VALUES (202116479, 'User is not allowed to use more than one device to login', 101482, 3);</statment></query></SQL>

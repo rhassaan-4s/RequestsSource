@@ -30,6 +30,11 @@ public class SettingsForm extends BaseSimpleFormController{
 		
 		if(request.getMethod().equals("POST")){
 		
+			String ipAddressEnabled = request.getParameter("ipAddressEnabled");
+			if(ipAddressEnabled == null || ipAddressEnabled.equals("")){
+				settings.setIpAddressEnabled(false);
+			}
+			
 			String annualVacBalDaysEnabled = request.getParameter("annualVacBalDaysEnabled");
 			if(annualVacBalDaysEnabled == null || annualVacBalDaysEnabled.equals("")){
 				settings.setAnnualVacBalDaysEnabled(false);
