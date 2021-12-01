@@ -39,9 +39,9 @@ public class HttpReqRespUtils {
         System.out.println("request.getRemoteAddr() " + request.getRemoteAddr());
         String ipList = "";
         for (String header: IP_HEADER_CANDIDATES) {
-        	System.out.println("header " + header);
+//        	System.out.println("header " + header);
             ipList = request.getHeader(header);
-            System.out.println("iplist " + ipList);
+//            System.out.println("iplist " + ipList);
             if (ipList != null && ipList.length() != 0 && !"unknown".equalsIgnoreCase(ipList)) {
                 String ip = ipList.split(",")[0];
                 return ip;

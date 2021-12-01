@@ -14,6 +14,7 @@ import java.util.Set;
 
 
 
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +23,7 @@ import com._4s_.common.service.BaseManager;
 import com._4s_.common.service.BaseManagerImpl;
 import com._4s_.security.dao.MySecurityDAO;
 import com._4s_.security.model.Fields;
+import com._4s_.security.model.IPAddress;
 import com._4s_.security.model.Permissions;
 import com._4s_.security.model.Roles;
 import com._4s_.security.model.SecurityApplication;
@@ -318,6 +320,11 @@ public class MySecurityManagerImpl extends BaseManagerImpl implements
 			}
 		}
 		return app;
+	}
+
+	public IPAddress checkIP(String currentIP, User user) {
+		// TODO Auto-generated method stub
+		return securityDAO.checkIP(currentIP, user);
 	}
 
 	

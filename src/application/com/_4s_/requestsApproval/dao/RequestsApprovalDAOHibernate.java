@@ -2489,7 +2489,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		Criteria criteria = getCurrentSession()
 				.createCriteria(EmpReqTypeAcc.class);
 		if (codeFrom!= null && !codeFrom.isEmpty() && codeTo!= null && !codeTo.isEmpty() ) {
-			criteria.createCriteria("emp_id").add(Restrictions.between("empCode", codeFrom, codeTo));
+			criteria.createCriteria("emp_id").createCriteria("empCode").add(Restrictions.between("empCode", codeFrom, codeTo));
 		}
 		criteria.add(Restrictions.eq("group_id", groupId));
 		criteria

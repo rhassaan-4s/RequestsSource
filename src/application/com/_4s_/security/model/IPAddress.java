@@ -16,8 +16,8 @@ import com._4s_.requestsApproval.model.GroupAcc;
 public class IPAddress {
 	private static final long serialVersionUID = 1L;
 	@Id
-	@SequenceGenerator(name = "ipAddressID", sequenceName = "IMEI_ID")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "imeiID")
+	@SequenceGenerator(name = "ipAddressID", sequenceName = "IPADDRESSID")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ipAddressID")
 	private Long id;
 	
 	private String ip;

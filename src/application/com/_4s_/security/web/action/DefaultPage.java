@@ -1,8 +1,10 @@
 package com._4s_.security.web.action;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -111,12 +113,20 @@ public class DefaultPage extends BaseController {
 		String currentIP = HttpReqRespUtils.getClientIpAddressIfServletRequestExist(request);
 		log.debug("ip address " +currentIP);
 
+		Map model = new HashMap();
 		if (currentIP!= null && !currentIP.isEmpty()) {
 			IPAddress ipAdd = null;
+			IPAddress ipAddForUser = (IPAddress)securityManager.getObjectByParameter(IPAddress.class, "users", user);
+			if (ipAddForUser!=null) {
+				log.debug("ipAddForUser " + ipAddForUser.getIP());
+			}
 			if (!currentIP.equals("0:0:0:0:0:0:0:1")) {
 				ipAdd = securityManager.checkIP(currentIP, user);
+				if (ipAdd!=null) {
+					log.debug("ipAdd " + ipAdd.getIP());
+				}
 			}
-			if (ipAdd==null || (ipAdd!=null && ipAdd.getIP().equals(currentIP)) || currentIP.equals("0:0:0:0:0:0:0:1")) {
+			if ((ipAdd==null && ipAddForUser==null) || (ipAdd!=null && ipAddForUser!=null && ipAdd.equals(ipAddForUser)) || (ipAddForUser!=null && ipAddForUser.getIP().equals(currentIP)) || (currentIP.equals("0:0:0:0:0:0:0:1") && ipAddForUser==null)) {
 				if (ipAdd==null ) {//&& !currentIP.equals("0:0:0:0:0:0:0:1")
 					log.debug("will save the current IP");
 					IPAddress ip = new IPAddress();
@@ -237,10 +247,13 @@ public class DefaultPage extends BaseController {
 				log.debug(">>>>>>>>>>>>>>>>>>>>> appName "+user.getDefaultApplication().getName());
 				return new ModelAndView(new RedirectView(defaultPage));
 			} else {
-				return new ModelAndView(new RedirectView("/Requests/security/login.html?error='WrongIP'"));
+				model.put("error", "wrongIPAdd");
+				log.debug("model " + model);
+				return new ModelAndView(new RedirectView("/Requests/security/login.html"),model);
 			}
 		} else {
-			return new ModelAndView(new RedirectView("/Requests/security/login.html?error='NoIPFound'"));
+			model.put("error", "NoIPAddFound");
+			return new ModelAndView(new RedirectView("/Requests/security/login.html"),model);
 		}
 	}
 

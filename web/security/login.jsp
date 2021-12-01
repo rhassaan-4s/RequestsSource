@@ -20,7 +20,32 @@
 		<link href="/Requests/web/common/css/vertical_menu_ar.css" rel="stylesheet" type="text/css" />
 	</head>
 
-	<body>
+	<body onload="getError();">
+	
+	<script type="text/javascript">
+	function getError(){
+		urlp=[];
+		urlp=location.toString().split('?');
+		params = urlp[1];
+		var error = params.split('=');
+		//alert(error[1]);
+		
+		var er = error[1];
+		//alert(er);
+		document.getElementById("errorMsg").value= error[1];
+		if ( error[1]=='wrongIpAdd') {
+			//alert("1"+er);
+			document.getElementById("display").innerHTML="<fmt:message key='commons.caption.wrongIpAdd'/>";
+		} else if ( error[1]=='NoIPAddFound') {
+			//alert("2"+er);
+			document.getElementById("display").innerHTML="<fmt:message key='commons.caption.NoIPAddFound'/>";	
+		} else if ( error[1]=='') {
+			
+		}else {
+			document.getElementById("display").innerHTML="<fmt:message key='commons.caption.wrongIpAdd'/>";
+		}
+	}
+	</script>
 		<table width="100%"  border="0" cellspacing="0" cellpadding="0" >
 	  		<tr>
 				<td height="80" colspan="7" valign="top" align="center"><img
@@ -35,13 +60,13 @@
 		<BR>
 		<BR>
 		<BR>
-
 		<form 	id="login"
 				name="login"
 				method="POST" 
 				action="<c:url value="/j_spring_security_check"></c:url>">
 
 				<input type="hidden" name="activeLink" value="linkOne"/>
+				<input type="hidden" name="errorMsg" id="errorMsg" value=""/>
 
 				<table rules="all" align="center" width="400" class="sofT" >
 					<!--tr>
@@ -62,6 +87,17 @@
 										<font style="color: #000066;">
 											<abc:i18n property="commons.caption.pleaseEnterUsernameAndPassword"/>
 											<fmt:message key="commons.caption.pleaseEnterUsernameAndPassword"/>
+										</font><br>
+										<font style="color: #FF0000;">
+										<div id="display"> </div>
+										<c:choose>
+											<c:when test="${errorMsg=='wrongIPAdd'}">
+											    Wrong IP Address
+											</c:when>
+											<c:when test="${errorMsg=='NoIPAddFound'}">
+												NoIPAddFound
+											</c:when>
+										</c:choose>
 										</font>
 										</div>
 									</td>
