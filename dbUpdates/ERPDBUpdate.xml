@@ -16183,4 +16183,9 @@ INSERT INTO i18n_message VALUES (202116469, 'Remove All Users IMEI', 101477, 3);
 	ID NUMBER,&#xD;
 	IP VARCHAR2(60),&#xD;
 	USERS NUMBER&#xD;
-);</statment></query><query><sqlindex>185</sqlindex><statment>CREATE SEQUENCE ipAddressID INCREMENT BY 1 MINVALUE 1 MAXVALUE 9999999999999999999999999999 NOCYCLE CACHE 20 NOORDER ;</statment></query></SQL>
+);</statment></query><query><sqlindex>185</sqlindex><statment>CREATE SEQUENCE ipAddressID INCREMENT BY 1 MINVALUE 1 MAXVALUE 9999999999999999999999999999 NOCYCLE CACHE 20 NOORDER ;</statment></query><query><sqlindex>186</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101480, 'commons.caption.wrongIpAdd', NULL);&#xD;
+ INSERT INTO i18n_message VALUES (202116474,'تم الدخول بهذا المستخدم من جهاز آخر في وقت سابق', 101480, 1);&#xD;
+ INSERT INTO i18n_message VALUES (202116475, 'The user had logged in from another computer before', 101480, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101481, 'commons.caption.NoIPAddFound', NULL);&#xD;
+ INSERT INTO i18n_message VALUES (202116476,'لا يوجد IP Address للجهاز المستخدم', 101481, 1);&#xD;
+ INSERT INTO i18n_message VALUES (202116477, 'No IP Address found for the logged in Computer', 101481, 3);</statment></query></SQL>
