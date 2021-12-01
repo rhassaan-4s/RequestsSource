@@ -112,7 +112,16 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Boolean signoutBeforePermissionErrand;
 	
+	private Boolean ipAddressEnabled;
 	
+	public Boolean getIpAddressEnabled() {
+		return ipAddressEnabled;
+	}
+
+	public void setIpAddressEnabled(Boolean ipAddressEnabled) {
+		this.ipAddressEnabled = ipAddressEnabled;
+	}
+
 	public Boolean getAndroidAttAutomaticApproval() {
 		return androidAttAutomaticApproval;
 	}
