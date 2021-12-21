@@ -80,7 +80,7 @@
 		</property>
 	</bean>
 	
-	<bean id="branchBinder" parent="mainBinder" >
+	<bean id="branchBinder" parent="domainObjectBinder" >
 		<property name="bindedClass">
 			<value>com._4s_.common.model.Branch</value>
 		</property>

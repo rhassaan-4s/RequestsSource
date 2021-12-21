@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -38,7 +39,10 @@ public class BaseSimpleFormController {
 	/**
 	 * Base Manager
 	 */
+	@Autowired
 	protected BaseManager baseManager = null;
+	
+	
 	public BaseManager getBaseManager() {
 		return baseManager;
 	}
@@ -46,6 +50,7 @@ public class BaseSimpleFormController {
 		this.baseManager = baseManager;
 	}
 
+	
 	/**
 	 * Rolback Mode 
 	 */
@@ -89,28 +94,28 @@ public class BaseSimpleFormController {
 //	}
 
 	
-	 @RequestMapping(method = RequestMethod.POST)
-	    public String processSubmit(
-	        @ModelAttribute("command") Object command,
-	        BindingResult result, SessionStatus status) {
-	        
-	        if(rollbackMode.equals(ROLLBACK_ON_ERROR)){
-	        	if (result.hasErrors()) {
-	        		//if validator failed
-	        		TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-					log.debug("Binding or validation errors found: Transaction will rollback" + result.getAllErrors());
-					return "error";
-	        	} else {
-	        		status.setComplete();
-	        		//form success
-	        		return "";
-	        	}
-	        } else {
-	        	status.setComplete();
-        		//form success
-        		return "";
-	        }
-	    }
+//	 @RequestMapping(method = RequestMethod.POST)
+//	    public String processSubmit(
+//	        @ModelAttribute("command") Object command,
+//	        BindingResult result, SessionStatus status) {
+//	        
+//	        if(rollbackMode.equals(ROLLBACK_ON_ERROR)){
+//	        	if (result.hasErrors()) {
+//	        		//if validator failed
+//	        		TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//					log.debug("Binding or validation errors found: Transaction will rollback" + result.getAllErrors());
+//					return "error";
+//	        	} else {
+//	        		status.setComplete();
+//	        		//form success
+//	        		return "";
+//	        	}
+//	        } else {
+//	        	status.setComplete();
+//        		//form success
+//        		return "";
+//	        }
+//	    }
 	/**
 	 * initBinder: Bind custom editors for Long, Integer, and provided list of custom editors
 	 */

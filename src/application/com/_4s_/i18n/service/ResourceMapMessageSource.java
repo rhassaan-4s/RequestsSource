@@ -371,9 +371,10 @@ public class ResourceMapMessageSource extends AbstractMessageSource
 				+ resourceMap.get(key));
 		try 
 		{
-
+			String k = (String) resourceMap.get(key);
+			logger.warn("key " + k);
 			// return the msg of that key "code"
-			return (String) resourceMap.get(key);
+			return k;
 
 		}
 		catch (MissingResourceException ex) 
@@ -381,6 +382,7 @@ public class ResourceMapMessageSource extends AbstractMessageSource
 			// assume key not found
 			// -> do NOT throw the exception to allow for checking parent
 			// message source
+			logger.warn("key not found");
 			return null;
 		}
 	}

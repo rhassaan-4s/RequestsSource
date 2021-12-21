@@ -44,18 +44,18 @@
 	<bean id="forgetPasswordController" parent="txProxyTemplate">
 		<property name="target">
 			<bean class="com._4s_.security.web.action.ForgetPasswordController">
-				<property name="commandName">
+				<!-- <property name="commandName">
 					<value>user</value>
-				</property>
+				</property> -->
 				<property name="securityManager">
 					<ref bean="securityManager"/>
 				</property>
-				<property name="formView">
+				<!-- <property name="formView">
 					<value>forgetPassword</value>
-				</property>
-				<property name="validator">
+				</property> -->
+				<!-- <property name="validator">
 					<ref bean="validateForgetPassword"/>
-				</property>
+				</property> -->
 				<property name="mailSender"><ref bean="mailSender"/></property>
 			</bean>
 		</property>
@@ -75,7 +75,7 @@
 		parent="txProxyTemplate">
 		<property name="target">
 			<bean class="com._4s_.security.web.action.EditSecurity">
-				<property name="commandName">
+				<!-- <property name="commandName">
 					<value>field</value>
 				</property>
 				<property name="commandClass">
@@ -86,7 +86,7 @@
 				</property>
 				<property name="successView">
 					<value>editSecurity.html</value>
-				</property>
+				</property>-->
 				<property name="baseManager">
 					<ref bean="baseManager"/>
 				</property>
@@ -121,7 +121,7 @@
 	<bean id="updateRoleFormController" parent="txProxyTemplate">
 		<property name="target">
 			<bean class="com._4s_.security.web.action.UpdateRole">
-				<property name="commandName">
+				<!-- <property name="commandName">
 					<value>role</value>
 				</property>
 				<property name="commandClass">
@@ -129,14 +129,14 @@
 				</property>
 				<property name="formView">
 					<value>updateRole</value>
-				</property>
+				</property>-->
 				
 				<property name="baseManager">
 					<ref bean="baseManager"/>
 				</property>
-				<property name="validator">
+				<!-- <property name="validator">
 					<ref bean="validateRole"/>
-				</property>
+				</property>-->
 			</bean>
 		</property>
 	</bean>
@@ -177,10 +177,10 @@
 	</bean>				
 	
 	
-<bean id="AddUserToRole" parent="txProxyTemplate">
+<!--<bean id="AddUserToRole" parent="txProxyTemplate">
 		<property name="target">
 			<bean class="com._4s_.security.web.action.AddUserToRole">
-				<property name="commandName">
+				 <property name="commandName">
 					<value>user</value>
 				</property>
 				<property name="commandClass">
@@ -191,16 +191,13 @@
 				</property>
 				<property name="successView">
 					<value>addUserToRole.html</value>
-				</property>
+				</property> 
 				<property name="baseManager">
 					<ref bean="baseManager"/>
 				</property>
 				<property name="mgr">
 					<ref bean="messageManager"/>
 				</property>
-				<!--property name="communicationManager">
-					<ref bean="communicationManager"/>
-				</property-->
 				<property name="commonManager">
 					<ref bean="commonManager"/>
 				</property>
@@ -213,13 +210,13 @@
 						<ref bean="securityApplicationBinder"/>
 					</list>
 				</property>
-				<property name="validator">
+				 <property name="validator">
 					<ref bean="validateUser"/>
-				</property>
+				</property> 
 			</bean>
 		</property>
-	</bean>
-	
+	</bean>-->
+	<!-- 
 	<bean id="NewRole" parent="txProxyTemplate">
 		<property name="target">
 			<bean class="com._4s_.security.web.action.AddNewRole">
@@ -231,7 +228,7 @@
 				</property>
 				<property name="formView">
 					<value>addNewRole</value>
-				</property>	
+				</property> 
 				<property name="baseManager">
 					<ref bean="baseManager"/>
 				</property>
@@ -241,18 +238,18 @@
 						<ref bean="roleBinder"/>
 					</list>
 				</property>
-				<property name="validator">
+				 <property name="validator">
 					<ref bean="validateRole"/>
 				</property>
 			</bean>
 		</property>
-	</bean>
+	</bean>-->	
 	
 	<bean id="changeUserApplicationFormController"
 		parent="txProxyTemplate">
 		<property name="target">
 			<bean class="com._4s_.security.web.action.ChangeUserApplication">
-				<property name="commandName">
+				<!-- <property name="commandName">
 					<value>user</value>
 				</property>
 				<property name="commandClass">
@@ -260,7 +257,7 @@
 				</property>
 				<property name="formView">
 					<value>changeUserApplication</value>
-				</property>
+				</property> -->
 				<property name="baseManager">
 					<ref bean="baseManager"/>
 				</property>
@@ -307,7 +304,7 @@
 	</bean>
 	
 	
-	<bean id="AddAuthority" parent="txProxyTemplate">
+	<!-- <bean id="AddAuthority" parent="txProxyTemplate">
 		<property name="target">
 			<bean class="com._4s_.security.web.action.AddAuthority">
 				<property name="commandName">
@@ -340,7 +337,7 @@
 				
 			</bean>
 		</property>
-	</bean>
+	</bean> -->
 	
 	<bean id="allFieldsController" parent="txProxyTemplate">
 		<property name="target">
@@ -377,13 +374,13 @@
 				<ref bean="openSessionInViewInterceptor" />
 			</list>
 		</property>
-		<property name="mappings">
+		<!-- <property name="mappings">
 			<props>
 				<prop key="/editSecurity.html">editSecurityFormController</prop>
 				<prop key="/login.html">LoginController</prop>
 				<prop key="/logout.html">LogoutController</prop>
 				<prop key="/changeUserApplication.html">changeUserApplicationFormController</prop>
-				<prop key="/addNewRole.html">NewRole</prop>
+				<prop key="/addNewRole.html">NewRole</prop> 
 				<prop key="/addUserToRole.html">AddUserToRole</prop>
 				<prop key="/defaultPage.html">defaultPageController</prop>
 				<prop key="/userDetails.html">userController</prop>
@@ -397,7 +394,7 @@
 				<prop key="/errorCode404.html">errorCode404Controller</prop>
 				<prop key="/addAuthority.html">AddAuthority</prop>
 			</props>
-		</property>
+		</property>-->
 	</bean>
 	
 	<bean id="viewResolver"

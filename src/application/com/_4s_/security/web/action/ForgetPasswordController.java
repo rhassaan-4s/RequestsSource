@@ -14,7 +14,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com._4s_.common.model.Employee;
@@ -22,19 +26,21 @@ import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.security.model.User;
 import com._4s_.security.service.MySecurityManager;
 
-public class ForgetPasswordController extends BaseSimpleFormController {
+@Controller
+public class ForgetPasswordController {//extends BaseSimpleFormController
 	private final Log log = LogFactory.getLog(getClass());
 
 	private MySecurityManager securityManager;
 
 	private JavaMailSenderImpl mailSender;
 
+	@RequestMapping(value = "/forgetPassword.html", method = RequestMethod.POST)
 	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException error)
+			HttpServletResponse response, @ModelAttribute("user") final User commandUser, BindException error)
 			throws Exception {
 
 		Map model = new HashMap();
-		User commandUser = (User) command;
+//		User commandUser = (User) command;
 		List users = securityManager.getUserByEmail(commandUser.getEmployee()
 				.getEmail());
 		if (users.size() > 0) {
@@ -69,6 +75,7 @@ public class ForgetPasswordController extends BaseSimpleFormController {
 		return new ModelAndView("login", model);
 	}
 
+//	@RequestMapping(value = "/forgetPassword.html", method = RequestMethod.POST)
 	protected Object formBackingObject(HttpServletRequest request)
 			throws Exception {
 		User user = new User();

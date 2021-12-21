@@ -3,17 +3,17 @@
 <Configuration status="TRACE">
      <Appenders>
         <Console name="LogToConsole" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} (%F:%L) - %msg%n"/>
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="com._4s_" level="TRACE" additivity="false">
+        <Logger name="com._4s_" level="ERROR" additivity="false">
             <AppenderRef ref="LogToConsole"/>
         </Logger>
-        <Logger name="org.springframework" level="TRACE" additivity="false">
+        <Logger name="org.springframework" level="ERROR" additivity="false">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger>
-         <Logger name="org.hibernate" level="DEBUG" additivity="false">
+         <Logger name="org.hibernate" level="ERROR" additivity="false">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger>
          <Logger name="org.hibernate.cfg.AnnotationBinder" level="ERROR" additivity="false">
@@ -76,10 +76,13 @@
         </logger>
         
         
-        <Logger name="com._4s_.common" level="TRACE" additivity="false">
+        <Logger name="com._4s_.common" level="DEBUG" additivity="false">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
-        <Root level="Trace">
+        <Logger name="com._4s_.i18n" level="DEBUG" additivity="false">
+        	 <AppenderRef ref="LogToConsole"/>
+        </Logger> 
+        <Root level="DEBUG">
             <AppenderRef ref="LogToConsole"/>
         </Root>
     </Loggers>

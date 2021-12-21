@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -34,7 +35,7 @@ public class Key implements Serializable,Auditable {
 	private String name;
 
 	private String description;
-	@OneToMany (mappedBy ="key",cascade=CascadeType.ALL)
+	@OneToMany (fetch = FetchType.LAZY, mappedBy ="key",cascade=CascadeType.ALL)
 	private List<MyMessage> messages = new ArrayList<MyMessage>();
 
 	public Key() {

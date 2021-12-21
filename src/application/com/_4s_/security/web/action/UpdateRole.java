@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com._4s_.common.web.action.BaseSimpleFormController;
@@ -21,10 +24,12 @@ import com._4s_.security.model.Fields;
 import com._4s_.security.model.Permissions;
 import com._4s_.security.model.Roles;
 import com._4s_.security.model.SecurityApplication;
+import com._4s_.security.model.User;
 public class UpdateRole extends BaseSimpleFormController {
 
+	@RequestMapping(value = "/updateRole.html", method = RequestMethod.POST)
 	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException arg3)
+			HttpServletResponse response,@ModelAttribute("role") final Roles command, BindException arg3)
 			throws Exception {
 		// TODO Auto-generated method stub
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>Update Role Start onSubmit()");
@@ -34,7 +39,7 @@ public class UpdateRole extends BaseSimpleFormController {
 		if (request.getParameterValues("permissions")!= null) {
 			String[] permissionsList = request.getParameterValues("permissions");
 
-			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>lenght "
+			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>length "
 					+ permissionsList.length);
 			for (int i = 0; i < permissionsList.length; i++) {
 				Permissions p  = (Permissions) baseManager.getObject(Permissions.class,
@@ -86,6 +91,7 @@ public class UpdateRole extends BaseSimpleFormController {
 		return model;
 	}
 
+	@RequestMapping(value = "/updateRole.html", method = RequestMethod.GET)
 	protected Object formBackingObject(HttpServletRequest request)
 			throws Exception {
 		// TODO Auto-generated method stub

@@ -25,6 +25,13 @@
          user-service-ref="restService" token-repository-ref="tokenRepository" />
          -->
         
+   		<form-login login-page="/security/login.html" 
+			username-parameter="username" password-parameter="password" 
+			authentication-success-handler-ref="mySuccessHandler"
+			authentication-failure-handler-ref="myFailureHandler" />
+		<!-- authentication-success-handler-ref="mySuccessHandler" authentication-failure-handler-ref="myFailureHandler" -->
+		<logout logout-url="/security/logout.html" invalidate-session="true"
+			delete-cookies="JSESSIONID,SPRING_SECURITY_REMEMBER_ME_COOKIE" success-handler-ref="myLogoutHandler" />
    		
 		<form-login login-page="/api/workflow/login*" 
 			username-parameter="username" password-parameter="password" 

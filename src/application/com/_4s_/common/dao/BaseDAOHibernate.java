@@ -59,6 +59,10 @@ public class BaseDAOHibernate  implements BaseDAO {//extends HibernateDaoSupport
 
 	private CriteriaBuilder builder;
 
+	public CriteriaBuilder getBuilder() {
+		return builder;
+	}
+
 	@Transactional
 	public Session getCurrentSession(){
 		Session session = null;

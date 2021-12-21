@@ -11,6 +11,7 @@ public class DefaultLocale implements LocaleSource {
 
 	private MyLocale myLocale = null;
 
+	@Autowired
 	private MessageDAO messageDAO;
 
 	public MessageDAO getMessageDAO() {
@@ -18,7 +19,7 @@ public class DefaultLocale implements LocaleSource {
 	}
 
 	public void setMessageDAO(MessageDAO messageDAO) {
-		System.out.println("messageDAO " + messageDAO);
+		System.out.println("###############messageDAO " + messageDAO);
 		this.messageDAO = messageDAO;
 	}
 

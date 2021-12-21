@@ -1,7 +1,6 @@
 <%@ include file="/web/common/includes/taglibs.jsp"%>
-<%@ page import="org.acegisecurity.ui.AbstractProcessingFilter" %>
-<%@ page import="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter" %>
-<%@ page import="org.acegisecurity.AuthenticationException" %>
+<%@ page import="org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter" %>
+<%@ page import="org.springframework.security.core.AuthenticationException" %>
 
 
 
@@ -39,7 +38,7 @@
 		<form 	id="login"
 				name="login"
 				method="POST" 
-				action="<c:url value="/j_spring_security_check"></c:url>">
+				action="login">
 
 				<input type="hidden" name="activeLink" value="linkOne"/>
 

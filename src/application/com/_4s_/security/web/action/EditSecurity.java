@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -18,6 +21,7 @@ import com._4s_.security.model.Fields;
 import com._4s_.security.model.Permissions;
 import com._4s_.security.model.Roles;
 import com._4s_.security.model.SecurityApplication;
+import com._4s_.security.model.User;
 import com._4s_.security.service.MySecurityManager;
 
 public class EditSecurity extends BaseSimpleFormController {
@@ -80,8 +84,9 @@ public class EditSecurity extends BaseSimpleFormController {
 		log.debug(">>>>>>>>>>>>>>>> end bind");
 	}
 
+	@RequestMapping(value = "/editSecurity.html", method = RequestMethod.POST)
 	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException arg3)
+			HttpServletResponse response, @ModelAttribute("field") final Fields command, BindException arg3)
 			throws Exception {
 		// TODO Auto-generated method stub
 		Roles selectedRole;
@@ -158,6 +163,7 @@ public class EditSecurity extends BaseSimpleFormController {
 		return model;
 	}
 
+	@RequestMapping(value = "/editSecurity.html", method = RequestMethod.GET)
 	protected Object formBackingObject(HttpServletRequest request)
 			throws Exception {
 		// TODO Auto-generated method stub

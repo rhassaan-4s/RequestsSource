@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -55,7 +56,10 @@ public class UserPrivilege implements Serializable,Auditable{
 	private boolean editTransNumber = false;
 	@Column(name="view_menu_specs")
 	private boolean viewMenuSpecs = false;
+	
+	
 	@Column(name="edit_branch")
+	@NotNull(message = "commons.errors.requiredFields")
 	private boolean editBranch = false;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

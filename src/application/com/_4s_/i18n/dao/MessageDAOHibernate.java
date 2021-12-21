@@ -6,6 +6,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
@@ -30,22 +36,19 @@ import com._4s_.i18n.model.MyMessage;
 public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO 
 {
 
+	private MyLocale myLocaleFromDB = null;
+	
 	private MyLocale getMyLocale(MyLocale myLocale) 
 	{
+		CriteriaQuery queryCriteria = getBuilder().createQuery(MyLocale.class);
+    	Root<Object> root = queryCriteria.from(MyLocale.class);
+    	Predicate restrictions = getBuilder().equal(root.get("language"), myLocale.getLanguage());
+    	queryCriteria.select(root).where(restrictions).distinct(true);
+    	TypedQuery<Object> query = getCurrentSession().createQuery(queryCriteria);
+        List myLocales =  query.getResultList();
+		
 
-		MyLocale myLocaleFromDB = null;
-
-		List myLocales = null;
-		List cl = new ArrayList();
-		cl.add(Expression.eq("language", myLocale.getLanguage()));
-//		cl.add(Expression.eq("country", myLocale.getCountry()));
-//		cl.add(Expression.eq("variant", myLocale.getVariant()));
-
-		//getObjectsByCriteria returns all the objects of a class in a list
-//		myLocales = getObjectsByCriteria(MyLocale.class, cl);
-
-		//if it is only one, return it
-		if ((myLocales != null) && (myLocales.size() == 1)) {
+        if (myLocaleFromDB== null && (myLocales != null) && (myLocales.size() == 1)) {
 			myLocaleFromDB = (MyLocale) myLocales.iterator().next();
 		}
 		log.info(">>>>>>>>>>>>>>>.myLocale.getVariant() "
@@ -53,39 +56,98 @@ public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO
 		log.info(">>>>>>>>>>>>>>>>>>>>>>myLocaleFromDB " + myLocaleFromDB);
 		//else return null
 		return myLocaleFromDB;
+		
+//		
+//		List myLocales = null;
+//		List cl = new ArrayList();
+//		cl.add(Expression.eq("language", myLocale.getLanguage()));
+////		cl.add(Expression.eq("country", myLocale.getCountry()));
+////		cl.add(Expression.eq("variant", myLocale.getVariant()));
+//
+//		//getObjectsByCriteria returns all the objects of a class in a list
+////		myLocales = getObjectsByCriteria(MyLocale.class, cl);
+//
+//		//if it is only one, return it
+//		if ((myLocales != null) && (myLocales.size() == 1)) {
+//			myLocaleFromDB = (MyLocale) myLocales.iterator().next();
+//		}
+//		log.info(">>>>>>>>>>>>>>>.myLocale.getVariant() "
+//				+ myLocale.getVariant());
+//		log.info(">>>>>>>>>>>>>>>>>>>>>>myLocaleFromDB " + myLocaleFromDB);
+//		//else return null
+//		return myLocaleFromDB;
 	}
 
 	// get Resource map( key & message ) using locale 
 	public Map getResourceMap(final MyLocale myLocale) 
 	{
 
-		log.info("Starting getResourceMap... locale:" + myLocale.getLanguage()
+		log.info("Starting getResourceMap DAO... locale:" + myLocale.getLanguage()
 				+ "," + myLocale.getCountry() + "," + myLocale.getVariant());
+		
 		Map resourceMap = new HashMap();
-		log.info(">>>>>>>>>>>> new resourceMAp created ");
-		List list = (List)  getCurrentSession().createCriteria(MyMessage.class).add(Expression.eq("myLocale", getMyLocale(myLocale))).list();
-		log.info(">>>>>>>>>>>>>>>>>>> exited doInHibernate()");
-		MyMessage myMessage;
-		Key myKey;
-		log.info("Preparing resource map for locale :["
-				+ myLocale.getLanguage() + "," + myLocale.getCountry() + ","
-				+ myLocale.getVariant() + "]");
-		log
-				.info("-------------------------------------------------------------------------");
-
-		Iterator resourceIterator = list.iterator();
-		while (resourceIterator.hasNext()) {
-			myMessage = (MyMessage) resourceIterator.next();
-			myKey = myMessage.getKey();
-			log.debug("Adding to map [" + myKey.getName() + ","
-					+ myMessage.getMessage() + "]");
-			resourceMap.put(myKey.getName(), myMessage.getMessage());
-		}
-
-		log.info("Ending getResourceMap... resourceMap:"
-				+ ((resourceMap == null) ? "Not found" : "Found"));
-
-		return resourceMap;
+		log.info("#### new resourceMap created");
+		 CriteriaQuery queryCriteria = getBuilder().createQuery(MyMessage.class);
+	    	Root<MyMessage> root = queryCriteria.from(MyMessage.class);
+	    	root.join("key", JoinType.INNER);
+	    	Predicate restrictions = getBuilder().equal(root.get("myLocale"), getMyLocale(myLocale));
+	    	queryCriteria.select(root).where(restrictions).distinct(true);
+	    	TypedQuery<Object> query = getCurrentSession().createQuery(queryCriteria);
+	    	log.debug("query created");
+	        List list =  query.getResultList();
+	        log.debug("msgs for arabic locale list size " + list.size());
+	        if ((list.size() == 0)&&(log.isDebugEnabled())) {
+	            log.debug("******************No objects found");
+	        }
+	        else if (log.isDebugEnabled()) {
+	            log.debug("*****************Got "+list.size()+" objects");
+	        }
+	        MyMessage myMessage;
+			Key myKey;
+			log.info("**************************Preparing resource map for locale :["
+					+ myLocale.getLanguage() + "," + myLocale.getCountry() + ","
+					+ myLocale.getVariant() + "]");
+			log
+					.info("-------------------------------------------------------------------------");
+	
+			Iterator resourceIterator = list.iterator();
+			while (resourceIterator.hasNext()) {
+				myMessage = (MyMessage) resourceIterator.next();
+				myKey = myMessage.getKey();
+				log.debug("Adding to map [" + myKey.getName() + ","
+						+ myMessage.getMessage() + "]");
+				resourceMap.put(myKey.getName(), myMessage.getMessage());
+			}
+	
+			log.info("Ending getResourceMap... resourceMap:"
+					+ ((resourceMap == null) ? "Not found" : "Found"));
+	
+			return resourceMap;
+//		Map resourceMap = new HashMap();
+//		log.info(">>>>>>>>>>>> new resourceMAp created ");
+//		List list = (List)  getCurrentSession().createCriteria(MyMessage.class).add(Expression.eq("myLocale", getMyLocale(myLocale))).list();
+//		log.info(">>>>>>>>>>>>>>>>>>> exited doInHibernate()");
+//		MyMessage myMessage;
+//		Key myKey;
+//		log.info("Preparing resource map for locale :["
+//				+ myLocale.getLanguage() + "," + myLocale.getCountry() + ","
+//				+ myLocale.getVariant() + "]");
+//		log
+//				.info("-------------------------------------------------------------------------");
+//
+//		Iterator resourceIterator = list.iterator();
+//		while (resourceIterator.hasNext()) {
+//			myMessage = (MyMessage) resourceIterator.next();
+//			myKey = myMessage.getKey();
+//			log.debug("Adding to map [" + myKey.getName() + ","
+//					+ myMessage.getMessage() + "]");
+//			resourceMap.put(myKey.getName(), myMessage.getMessage());
+//		}
+//
+//		log.info("Ending getResourceMap... resourceMap:"
+//				+ ((resourceMap == null) ? "Not found" : "Found"));
+//
+//		return resourceMap;
 	}
 
 	/*
