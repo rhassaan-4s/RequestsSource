@@ -82,6 +82,16 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Boolean managerCanModifyAttendance;
 	
+	private Boolean isTimesheetEnabled;
+	
+	public Boolean getIsTimesheetEnabled() {
+		return isTimesheetEnabled;
+	}
+
+	public void setIsTimesheetEnabled(Boolean isTimesheetEnabled) {
+		this.isTimesheetEnabled = isTimesheetEnabled;
+	}
+
 	public Boolean getManagerCanModifyAttendance() {
 		return managerCanModifyAttendance;
 	}

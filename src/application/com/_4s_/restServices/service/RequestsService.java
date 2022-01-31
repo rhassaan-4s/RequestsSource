@@ -13,6 +13,13 @@ import com._4s_.restServices.json.EmployeeWrapper;
 import com._4s_.restServices.json.PasswordWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
+import com._4s_.restServices.json.TimesheetActivityWrapper;
+import com._4s_.restServices.json.TimesheetCostcenterWrapper;
+import com._4s_.restServices.json.TimesheetPartWrapper;
+import com._4s_.restServices.json.TimesheetSpecsWrapper;
+import com._4s_.restServices.json.TimesheetTransDefaultWrapper;
+import com._4s_.restServices.json.TimesheetTransWrapper;
+import com._4s_.restServices.json.TimesheetTransactionFilters;
 import com._4s_.restServices.json.UserWrapper;
 import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
@@ -76,4 +83,25 @@ public interface RequestsService {// extends BaseManager {
 	public Map getEmployeesByGroup(Long groupId);
 
 	public Map getUserGroups(Employee employee);
+
+	public Map insertTimesheetActivity(TimesheetActivityWrapper activity);
+
+	public Map insertTimesheetPart(TimesheetPartWrapper part);
+
+	public Map insertTimesheetSpecs(TimesheetSpecsWrapper specs);
+
+	public Map insertTimesheetTransDefaults(
+			TimesheetTransDefaultWrapper defaults);
+
+	public Map insertTimesheetTransaction(TimesheetTransWrapper trans);
+
+	public Map getActivities();
+
+	public Map getCostcenters();
+
+	public Map getParts(Short partNo);
+
+	public Map getTimesheetSpecs();
+
+	public Map getTimesheetTransactions(TimesheetTransactionFilters search);
 }

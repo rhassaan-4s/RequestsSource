@@ -38,6 +38,11 @@ import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
+import com._4s_.requestsApproval.model.TimesheetActivity;
+import com._4s_.requestsApproval.model.TimesheetCostCenter;
+import com._4s_.requestsApproval.model.TimesheetSpecs;
+import com._4s_.requestsApproval.model.TimesheetTransaction;
+import com._4s_.requestsApproval.model.TimesheetTransactionParts;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.requestsApproval.web.action.TimeAttend;
@@ -51,6 +56,13 @@ import com._4s_.restServices.json.PasswordWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
+import com._4s_.restServices.json.TimesheetActivityWrapper;
+import com._4s_.restServices.json.TimesheetCostcenterWrapper;
+import com._4s_.restServices.json.TimesheetPartWrapper;
+import com._4s_.restServices.json.TimesheetSpecsWrapper;
+import com._4s_.restServices.json.TimesheetTransDefaultWrapper;
+import com._4s_.restServices.json.TimesheetTransWrapper;
+import com._4s_.restServices.json.TimesheetTransactionFilters;
 import com._4s_.restServices.json.UserWrapper;
 import com._4s_.restServices.model.AttendanceStatus;
 import com._4s_.security.dao.MySecurityDAO;
@@ -1375,7 +1387,7 @@ public Map getSettings() {
 	temp.put("showVacationBalance", settings.getAnnualVacBalDaysEnabled());
 	temp.put("requiredAndroidVersion", settings.getRequiredAndroidVersion());
 	temp.put("managerCanModifyAttendance", settings.getManagerCanModifyAttendance());
-	
+	temp.put("isTimesheetEnabled", settings.getIsTimesheetEnabled());
 	
 	response.put("Response", temp);
 	RestStatus status = new RestStatus();
@@ -1950,14 +1962,480 @@ public Map getUserGroups(Employee employee) {
 	return results;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////Timesheet requests///////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+public Map insertTimesheetActivity(TimesheetActivityWrapper activity) {
+	// TODO Auto-generated method stub
+	Map results = new HashMap();
+	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
+		RestStatus status = new RestStatus();
+		status.setCode("352");
+		status.setMessage("This request is not enabled for the current application client");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	if (activity.getArName()== null || activity.getArName().isEmpty()) {
+		RestStatus status = new RestStatus();
+		status.setCode("332");
+		status.setMessage("Arabic Name is Mandatory");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	} else {
+		results = requestsApprovalManager.insertTimesheetActivity(activity.getArName(),activity.getEnName());
+		RestStatus status = new RestStatus();
+		status.setCode("200");
+		status.setMessage("Request Success");
+		status.setStatus("True");
+		results.put("Status", status);
+		return results;
+	}
+}
+
+public Map insertTimesheetPart(TimesheetPartWrapper part) {
+	System.out.println("part.getPartNo() " + part.getPartNo());
+	Map results = new HashMap();
+	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
+		RestStatus status = new RestStatus();
+		status.setCode("352");
+		status.setMessage("This request is not enabled for the current application client");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	if (part.getArName()== null || part.getArName().isEmpty()) {
+		RestStatus status = new RestStatus();
+		status.setCode("332");
+		status.setMessage("Arabic Name is Mandatory");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	} else if (part.getEnName()== null || part.getEnName().isEmpty()) {
+		RestStatus status = new RestStatus();
+		status.setCode("333");
+		status.setMessage("English Name is Mandatory");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	} else if (part.getPartNo()== null || part.getPartNo()<=0) {
+		RestStatus status = new RestStatus();
+		status.setCode("334");
+		status.setMessage("Part No must have a value greater than zero");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	} else if (part.getPartNo()!= null && part.getPartNo()>3) {
+		RestStatus status = new RestStatus();
+		status.setCode("348");
+		status.setMessage("Part No must have a value of 1,2 or 3");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}else {
+		results = requestsApprovalManager.insertTimesheetPart(part.getArName(),part.getEnName(),part.getPartNo());
+		RestStatus status = new RestStatus();
+		status.setCode("200");
+		status.setMessage("Request Success");
+		status.setStatus("True");
+		results.put("Status", status);
+		return results;
+	}
+}
+
+public Map insertTimesheetSpecs(TimesheetSpecsWrapper specs) {
+	Map results = new HashMap();
+	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
+		RestStatus status = new RestStatus();
+		status.setCode("352");
+		status.setMessage("This request is not enabled for the current application client");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	if (specs.getIsUsed1()==null || specs.getIsUsed1().isEmpty()) {
+		RestStatus status = new RestStatus();
+		status.setCode("336");
+		status.setMessage("isUsed1 is mandatory");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	} else if (specs.getIsUsed2()==null||specs.getIsUsed2().isEmpty()) {
+		RestStatus status = new RestStatus();
+		status.setCode("337");
+		status.setMessage("isUsed2 is mandatory");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	} else if (specs.getIsUsed3()==null || specs.getIsUsed3().isEmpty()) {
+		RestStatus status = new RestStatus();
+		status.setCode("338");
+		status.setMessage("isUsed3 is mandatory");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	} else if (specs.getIsUsed1()!=null && specs.getIsUsed1().equals("1") && (specs.getPartName1()== null || specs.getPartName1().isEmpty())) {
+		RestStatus status = new RestStatus();
+		status.setCode("339");
+		status.setMessage("Part Name 1 is mandatory");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	} else if (specs.getIsUsed2()!=null && specs.getIsUsed2().equals("1") && (specs.getPartName2()== null || specs.getPartName2().isEmpty())) {
+		RestStatus status = new RestStatus();
+		status.setCode("340");
+		status.setMessage("Part Name 2 is mandatory");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	} else if (specs.getIsUsed3()!=null && specs.getIsUsed3().equals("1") && (specs.getPartName3()== null || specs.getPartName3().isEmpty())) {
+		RestStatus status = new RestStatus();
+		status.setCode("341");
+		status.setMessage("Part Name 3 is mandatory");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	results = requestsApprovalManager.insertTimesheetSpecs(specs.getPartName1(),specs.getPartEName1(),specs.getIsUsed1(),specs.getPartName2(),specs.getPartEName2(),specs.getIsUsed2(),specs.getPartName3(),specs.getPartEName3(),specs.getIsUsed3());
+	RestStatus status = new RestStatus();
+	status.setCode("200");
+	status.setMessage("Request Success");
+	status.setStatus("True");
+	results.put("Status", status);
+	return results;
+}
+
+public Map insertTimesheetTransDefaults(TimesheetTransDefaultWrapper defaults) {
+	Map results = new HashMap();
+	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
+		RestStatus status = new RestStatus();
+		status.setCode("352");
+		status.setMessage("This request is not enabled for the current application client");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	if (defaults.getEmpCode()==null || defaults.getEmpCode().isEmpty()) {
+		RestStatus status = new RestStatus();
+		status.setCode("342");
+		status.setMessage("employee code is mandatory");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	} else if (defaults.getCostCenterCode()==null || defaults.getCostCenterCode().isEmpty()) {
+		RestStatus status = new RestStatus();
+		status.setCode("343");
+		status.setMessage("cost center is mandatory");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	results = requestsApprovalManager.insertTimesheetTransDefaults(defaults.getEmpCode(),defaults.getCostCenterCode(),defaults.getActivityCode(),defaults.getPartCode1(),defaults.getPartCode2(),defaults.getPartCode3());
+	RestStatus status = new RestStatus();
+	status.setCode("200");
+	status.setMessage("Request Success");
+	status.setStatus("True");
+	results.put("Status", status);
+	return results;
+}
+
+public Map insertTimesheetTransaction(TimesheetTransWrapper trans) {
+	System.out.println("1");
+	Map results = new HashMap();
+	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
+		RestStatus status = new RestStatus();
+		status.setCode("352");
+		status.setMessage("This request is not enabled for the current application client");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
+	System.out.println("2");
+	if (trans.getInDate()==null || trans.getInDate().isEmpty()) {
+		System.out.println("3");
+		RestStatus status = new RestStatus();
+		status.setCode("344");
+		status.setMessage("Timesheet transaction date is mandatory");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	} else {
+		System.out.println("else 3");
+		try {
+			df.parse(trans.getInDate());
+			System.out.println("4");
+		} catch (Exception e) {
+			System.out.println("4 catch");
+			RestStatus status = new RestStatus();
+			status.setCode("345");
+			status.setMessage("Timesheet transaction date must be dd/mm/yyyy");
+			status.setStatus("False");
+			results.put("Results", new ArrayList());
+			results.put("Status", status);
+			return results;
+		}
+	}
+	System.out.println("5");
+	if (trans.getActivityCode()==null || trans.getActivityCode().isEmpty()) {
+		System.out.println("6");
+		RestStatus status = new RestStatus();
+		status.setCode("346");
+		status.setMessage("Can't find activity with the given activity code");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	if (trans.getCostCenterCode()==null || trans.getCostCenterCode().isEmpty()) {
+		System.out.println("7");
+		RestStatus status = new RestStatus();
+		status.setCode("347");
+		status.setMessage("Can't find cost center with the given cost center code");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	System.out.println("8");
+	results = requestsApprovalManager.insertTimesheetTransaction(trans.getEmpCode(),trans.getCostCenterCode(),trans.getActivityCode(),trans.getInDate(),trans.getcHour(),trans.getcMinute(),trans.getPartCode1(),trans.getPartCode2(),trans.getPartCode3(),trans.getRemark());
+	if (results.get("Status") != null) {
+		return results;
+	} else {
+		RestStatus status = new RestStatus();
+		status.setCode("200");
+		status.setMessage("Request Success");
+		status.setStatus("True");
+		results.put("Status", status);
+		return results;
+	}
+}
+
+public Map getActivities() {
+	Map results = new HashMap();
+	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
+		RestStatus status = new RestStatus();
+		status.setCode("352");
+		status.setMessage("This request is not enabled for the current application client");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	List activities = requestsApprovalManager.getObjects(TimesheetActivity.class);
+	List activitiesWrapper = new ArrayList();
+	Iterator itr = activities.iterator();
+	while(itr.hasNext()) {
+		TimesheetActivity activity = (TimesheetActivity)itr.next();
+		activitiesWrapper.add(activity.getWrapper());
+	}
+	results.put("Results", activitiesWrapper);
+	RestStatus status = new RestStatus();
+	status.setCode("200");
+	status.setMessage("Request Success");
+	status.setStatus("True");
+	results.put("Status", status);
+	return results;
+}
+
+public Map getCostcenters() {
+	Map results = new HashMap();
+	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
+		RestStatus status = new RestStatus();
+		status.setCode("352");
+		status.setMessage("This request is not enabled for the current application client");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	
+	List costcenters = requestsApprovalManager.getObjects(TimesheetCostCenter.class);
+	List costcentersWrapper = new ArrayList();
+	Iterator itr = costcenters.iterator();
+	while(itr.hasNext()) {
+		TimesheetCostCenter costCenter = (TimesheetCostCenter)itr.next();
+		costcentersWrapper.add(costCenter.getWrapper());
+	}
+	
+	results.put("Results", costcentersWrapper);
+	RestStatus status = new RestStatus();
+	status.setCode("200");
+	status.setMessage("Request Success");
+	status.setStatus("True");
+	results.put("Status", status);
+	return results;
+}
+
+public Map getParts(Short partNo) {
+	Map results = new HashMap();
+	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
+		RestStatus status = new RestStatus();
+		status.setCode("352");
+		status.setMessage("This request is not enabled for the current application client");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	List parts = new ArrayList();
+	System.out.println("part No " + partNo);
+	if (partNo!= null && (partNo==1 || partNo==2 || partNo==3)) {
+		System.out.println("1.part No " + partNo);
+		parts = requestsApprovalManager.getObjectsByParameter(TimesheetTransactionParts.class, "part_no", partNo);
+	} else if (partNo==null) {
+		System.out.println("2.part No " + partNo);
+		parts = requestsApprovalManager.getObjects(TimesheetTransactionParts.class);
+		
+	} else {
+		System.out.println("3.part No " + partNo);
+		RestStatus status = new RestStatus();
+		status.setCode("351");
+		status.setMessage("Part Number must be 1,2 or 3");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	TimesheetTransactionParts nullPart = (TimesheetTransactionParts)requestsApprovalManager.getObjectByParameter(TimesheetTransactionParts.class, "code", "9999999999");
+	parts.remove(nullPart);
+	List partsWrapper = new ArrayList();
+	Iterator itr = parts.iterator();
+	while(itr.hasNext()) {
+		TimesheetTransactionParts part = (TimesheetTransactionParts)itr.next();
+		partsWrapper.add(part.getWrapper());
+	}
+	
+	results.put("Results", partsWrapper);
+	RestStatus status = new RestStatus();
+	status.setCode("200");
+	status.setMessage("Request Success");
+	status.setStatus("True");
+	results.put("Status", status);
+	return results;
+}
+
+public Map getTimesheetSpecs() {
+	Map results = new HashMap();
+	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
+		RestStatus status = new RestStatus();
+		status.setCode("352");
+		status.setMessage("This request is not enabled for the current application client");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	List specs = requestsApprovalManager.getObjects(TimesheetSpecs.class);
+	List specsWrapper = new ArrayList();
+	Iterator itr = specs.iterator();
+	while(itr.hasNext()) {
+		TimesheetSpecs spec = (TimesheetSpecs)itr.next();
+		specsWrapper.add(spec.getWrapper());
+	}
+	
+	results.put("Results", specsWrapper);
+	RestStatus status = new RestStatus();
+	status.setCode("200");
+	status.setMessage("Request Success");
+	status.setStatus("True");
+	results.put("Status", status);
+	return results;
+}
+
+public Map getTimesheetTransactions(TimesheetTransactionFilters search) {
+	Map results = new HashMap();
+	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
+		RestStatus status = new RestStatus();
+		status.setCode("352");
+		status.setMessage("This request is not enabled for the current application client");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	Employee employee = null;
+	log.debug("search.getEmpCode() " +search.getEmpCode());
+	log.debug("!search.getEmpCode().contains(,) " + !search.getEmpCode().contains(","));
+	Map transMap = new HashMap();
+	if (search.getEmpCode()!= null && !search.getEmpCode().isEmpty() && !search.getEmpCode().contains(",")) {
+		employee = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", search.getEmpCode());
+		if (employee!=null) {
+			transMap = requestsApprovalManager.getTimesheetTransactions(search.getEmpCode(), search.getFromDate(), search.getToDate(), search.getCostCenter(),
+					search.getActivity(), search.getPart1(), search.getPart2(), search.getPart3(), search.getPageNumber(), search.getPageSize(), search.getSort());
+		} else {
+			RestStatus status = new RestStatus();
+			status.setCode("349");
+			status.setMessage("Employee with empCode "+ search.getEmpCode() + " is not found in DB");
+			status.setStatus("False");
+			results.put("Results", new ArrayList());
+			results.put("Status", status);
+			return results;
+		}
+	} else if(search.getEmpCode().contains(",")){
+		transMap = requestsApprovalManager.getTimesheetTransactions(search.getEmpCode(), search.getFromDate(), search.getToDate(), search.getCostCenter(),
+				search.getActivity(), search.getPart1(), search.getPart2(), search.getPart3(), search.getPageNumber(), search.getPageSize(), search.getSort());
+	}else {
+		RestStatus status = new RestStatus();
+		status.setCode("350");
+		status.setMessage("Logged in employee has no empCode, please retry to login again");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}
+	List transWrapper = new ArrayList();
+//	List trans = (List)transMap.get("Results");
+//	if (trans != null) {
+//		Iterator itr = trans.iterator();
+//		while(itr.hasNext()) {
+//			TimesheetTransaction t = (TimesheetTransaction)itr.next();
+//			transWrapper.add(t.getWrapper());
+//		}
+//	}
+//	results.put("Results", transWrapper);
+	results = transMap;
+	RestStatus status = new RestStatus();
+	status.setCode("200");
+	status.setMessage("Request Success");
+	status.setStatus("True");
+	results.put("Status", status);
+	return results;
+}
 
 
 
-
-
- 
- 
- 
 // @Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 // public void saveEmployee(long employeeId, String name, String surname, String jobDescription) throws Exception {
 // 

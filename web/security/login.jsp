@@ -1,7 +1,6 @@
 <%@ include file="/web/common/includes/taglibs.jsp"%>
-<%@ page import="org.acegisecurity.ui.AbstractProcessingFilter" %>
-<%@ page import="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter" %>
-<%@ page import="org.acegisecurity.AuthenticationException" %>
+<%@ page import="org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter" %>
+<%@ page import="org.springframework.security.core.AuthenticationException" %>
 
 
 
@@ -30,19 +29,19 @@
 		var error = params.split('=');
 		//alert(error[1]);
 		
-		var er = error[1];
+		//var er = error[1];
 		//alert(er);
 		document.getElementById("errorMsg").value= error[1];
-		if ( error[1]=='wrongIpAdd') {
+		if ( error[1].valueOf()==='wrongIPAdd'.valueOf()) {
 			//alert("1"+er);
 			document.getElementById("display").innerHTML="<fmt:message key='commons.caption.wrongIpAdd'/>";
-		} else if ( error[1]=='NoIPAddFound') {
+		} else if ( error[1].trim()==='NoIPAddFound'.trim()) {
 			//alert("2"+er);
 			document.getElementById("display").innerHTML="<fmt:message key='commons.caption.NoIPAddFound'/>";	
-		} else if ( error[1]=='') {
+		} else if ( error[1].trim()==='') {
 			
 		}else {
-			document.getElementById("display").innerHTML="<fmt:message key='commons.caption.wrongIpAdd'/>";
+			document.getElementById("display").innerHTML="<fmt:message key='commons.errors.invalidUsernameOrPassword'/>";
 		}
 	}
 	</script>

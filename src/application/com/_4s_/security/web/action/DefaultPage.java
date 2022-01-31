@@ -115,20 +115,21 @@ public class DefaultPage extends BaseController {
 
 		Map model = new HashMap();
 		Settings settings = (Settings)securityManager.getObject(Settings.class, new Long(1)); 
+		log.debug("settings.getIpAddressEnabled() " + settings.getIpAddressEnabled());
 		if (settings.getIpAddressEnabled()) {
 		if (currentIP!= null && !currentIP.isEmpty()) {
 			IPAddress ipAdd = null;
 			IPAddress ipAddForUser = (IPAddress)securityManager.getObjectByParameter(IPAddress.class, "users", user);
 			if (ipAddForUser!=null) {
-				log.debug("ipAddForUser " + ipAddForUser.getIP());
+				log.debug("ipAddForUser " + ipAddForUser.getIp());
 			}
-			if (!currentIP.equals("0:0:0:0:0:0:0:1")) {
+//			if (!currentIP.equals("0:0:0:0:0:0:0:1")) {
 				ipAdd = securityManager.checkIP(currentIP, user);
 				if (ipAdd!=null) {
-					log.debug("ipAdd " + ipAdd.getIP());
+					log.debug("ipAdd " + ipAdd.getIp());
 				}
-			}
-			if ((ipAdd==null && ipAddForUser==null) || (ipAdd!=null && ipAddForUser!=null && ipAdd.equals(ipAddForUser)) || (ipAddForUser!=null && ipAddForUser.getIP().equals(currentIP)) || (currentIP.equals("0:0:0:0:0:0:0:1") && ipAddForUser==null)) {
+//			}
+			if ((ipAdd==null && ipAddForUser==null) || (ipAdd!=null && ipAddForUser!=null && ipAdd.equals(ipAddForUser)) || (ipAddForUser!=null && ipAddForUser.getIp().equals(currentIP)) || (currentIP.equals("0:0:0:0:0:0:0:1") && ipAddForUser==null)) {
 				if (ipAdd==null ) {//&& !currentIP.equals("0:0:0:0:0:0:0:1")
 					log.debug("will save the current IP");
 					IPAddress ip = new IPAddress();

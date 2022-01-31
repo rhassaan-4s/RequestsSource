@@ -91,6 +91,10 @@ public class SettingsForm extends BaseSimpleFormController{
 				settings.setAndroidAttAutomaticApproval(false);
 			}
 			
+			String isTimesheetEnabled = request.getParameter("isTimesheetEnabled");
+			if (isTimesheetEnabled == null || isTimesheetEnabled.equals("")) {
+				settings.setIsTimesheetEnabled(false);
+			}
 		}
 		return settings;
 

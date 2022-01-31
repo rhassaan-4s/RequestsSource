@@ -31,6 +31,10 @@ import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.GroupAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
+import com._4s_.requestsApproval.model.TimesheetActivity;
+import com._4s_.requestsApproval.model.TimesheetCostCenter;
+import com._4s_.requestsApproval.model.TimesheetTransaction;
+import com._4s_.requestsApproval.model.TimesheetTransactionParts;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
@@ -170,5 +174,21 @@ public interface RequestsApprovalManager extends BaseManager {
 	public Map getRequestsStatus(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
 			String requestType, String codeFrom, String codeTo, String statusId, String sort,LoginUsers loggedInUser, List empReqTypeAccs, boolean isWeb, String isInsideCompany, int pageNumber, int pageSize);
 	public List<LoginUsers> getEmployeesByGroup(Long groupId);
+	public Map insertTimesheetActivity(String arName, String enName);
+	public Map insertTimesheetPart(String arName, String enName, Short part_no);
+	public Map insertTimesheetCostcenter(String costName, String costEName,
+			Integer costLevel, String leafCost, String beforeLast);
+	public Map insertTimesheetSpecs(String partName1, String partEName1,
+			String isUsed1, String partName2, String partEName2,
+			String isUsed2, String partName3, String partEName3, String isUsed3);
+	public Map insertTimesheetTransDefaults(String empCode,
+			String costCenterCode, String activityCode, String partCode1,
+			String partCode2, String partCode3);
+	public Map insertTimesheetTransaction(String empCode,
+			String costCenterCode, String activityCode, String inDate,
+			Integer getcHour, Integer getcMinute, String partCode1,
+			String partCode2, String partCode3, String remark);
+	public TimesheetTransaction getTimesheetTrans(Employee empCode,Date inDate, TimesheetCostCenter costcenter, TimesheetTransactionParts part1, TimesheetTransactionParts part2, TimesheetTransactionParts part3);
+	public Map getTimesheetTransactions(String empCode, String fromDate, String toDate, String costcenter, String activity, String part1, String part2, String part3, int pageNo, int pageSize, String sort);
 }
 

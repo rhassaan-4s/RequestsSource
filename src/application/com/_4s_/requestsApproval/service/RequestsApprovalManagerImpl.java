@@ -30,6 +30,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.hibernate.HibernateException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -66,6 +67,12 @@ import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.GroupAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
+import com._4s_.requestsApproval.model.TimesheetActivity;
+import com._4s_.requestsApproval.model.TimesheetCostCenter;
+import com._4s_.requestsApproval.model.TimesheetSpecs;
+import com._4s_.requestsApproval.model.TimesheetTransaction;
+import com._4s_.requestsApproval.model.TimesheetTransactionDefaults;
+import com._4s_.requestsApproval.model.TimesheetTransactionParts;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.web.exceptions.ApprovalFirstPriorityNullException;
 import com._4s_.requestsApproval.web.exceptions.ApprovedBeforeException;
@@ -73,6 +80,7 @@ import com._4s_.requestsApproval.web.exceptions.RequestAlreadyRejectedException;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
+import com._4s_.restServices.json.TimesheetTransDefaultWrapper;
 import com._4s_.restServices.model.AttendanceStatus;
 import com.ibm.icu.util.Calendar;
 import com.jenkov.prizetags.tree.itf.ITree;
@@ -1479,17 +1487,21 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					if (temp!=null) {
 						accessLevels = getObjectsByTwoParametersOrderedByFieldList(AccessLevels.class, "level_id",temp.getGroup_id() , "emp_id", loginUsers, ordered1);
 
-						log.debug("access levels size " + accessLevels.size());
+						if (accessLevels!=null) {
+							log.debug("access levels size " + accessLevels.size());
+						}
 						//					if(accessLevels.size()>0){
 						approvalRequest = new HashMap();
 
+						log.debug("temp " + temp);
+						log.debug("group id " + temp.getGroup_id());
 						approvalRequest.put("title", temp.getGroup_id().getTitle());
 
 						approvalRequest.put("id", temp.getId());
 						log.debug("------catch temp id (level id to be created )---"+temp.getId() + " for group id " + temp.getGroup_id().getId());
 						//					}
 					}
-					if(accessLevels.size()>0){
+					if(accessLevels!=null && accessLevels.size()>0){
 						approvalRequest.put("user", loginUsers.getName());
 						log.debug("------catch if user---"+loginUsers.getName());
 						approvalRequest.put("status", "2");
@@ -2404,8 +2416,270 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			mgrs.addAll(emps);
 			return mgrs;
 		}
+
+		public Map insertTimesheetActivity(String arName, String enName) {
+			TimesheetActivity activity = new TimesheetActivity();
+			activity.setName(arName);
+			activity.setEname(enName);
+			saveObject(activity);
+			Map results = new HashMap();
+			results.put("Results", activity);
+			return results;
+		}
+
+		public Map insertTimesheetPart(String arName, String enName, Short part_no) {
+			TimesheetTransactionParts part = new TimesheetTransactionParts();
+			part.setName(arName);
+			part.setEname(enName);
+			System.out.println("part no " + part_no);
+			part.setPart_no(part_no);
+			saveObject(part);
+			Map results = new HashMap();
+			results.put("Results", part);
+			return results;
+		}
+
+		public Map insertTimesheetCostcenter(String costName, String costEName,
+				Integer costLevel, String leafCost, String beforeLast) {
+			TimesheetCostCenter costcenter = new TimesheetCostCenter();
+			costcenter.setCostName(costName);
+			costcenter.setEng_name(costEName);
+			costcenter.setCostLevel(costLevel);
+			costcenter.setLeafCost(leafCost);
+			costcenter.setBeforeLast(beforeLast);
+			saveObject(costcenter);
+			Map results = new HashMap();
+			results.put("Results", costcenter);
+			return results;
+		}
+
+		public Map insertTimesheetSpecs(String partName1, String partEName1,
+				String isUsed1, String partName2, String partEName2,
+				String isUsed2, String partName3, String partEName3,
+				String isUsed3) {
+			TimesheetSpecs specs = new TimesheetSpecs();
+			Map results = new HashMap();
+			specs.setCode("1");
+			specs.setPart1_name(partName1);
+			specs.setPart1_ename(partEName1);
+			specs.setIs_used1(isUsed1);
+			specs.setPart2_name(partName2);
+			specs.setPart2_ename(partEName2);
+			specs.setIs_used2(isUsed2);
+			specs.setPart3_name(partName3);
+			specs.setPart3_ename(partEName3);
+			specs.setIs_used3(isUsed3);
+			try {
+				saveObject(specs);
+			} catch (HibernateException e) {
+				// TODO Auto-generated catch block
+				if (e.getMessage().equals("Unable to generate Primary Key")) {
+					RestStatus status = new RestStatus();
+					results.put("Results", null);
+					status.setCode("335");
+					status.setMessage("Unable to generate specifications code (please reset the sequence)");
+					status.setStatus("False");
+					results.put("Status", status);
+					return results;
+				}
+				e.printStackTrace();
+			}
+			
+			results.put("Results", specs);
+			return results;
+		}
+
+		public Map insertTimesheetTransDefaults(String empCode,
+				String costCenterCode, String activityCode, String partCode1,
+				String partCode2, String partCode3) {
+			// TODO Auto-generated method stub
+			TimesheetTransactionDefaults defaults = new TimesheetTransactionDefaults();
+			TimesheetActivity activity = (TimesheetActivity)getObjectByParameter(TimesheetActivity.class, "activity", activityCode);
+			TimesheetCostCenter costcenter = (TimesheetCostCenter)getObjectByParameter(TimesheetCostCenter.class, "costCode", costCenterCode);
+			Employee employee = (Employee)getObjectByParameter(Employee.class, "empCode", empCode);
+			if (partCode1!=null && !partCode1.isEmpty()) {
+				TimesheetTransactionParts part1 = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", partCode1);
+				defaults.setPart1(part1);
+			}
+			if (partCode2!=null && !partCode2.isEmpty()) {
+				TimesheetTransactionParts part2 = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", partCode2);
+				defaults.setPart2(part2);
+			}
+			if (partCode3!=null && !partCode3.isEmpty()) {
+				TimesheetTransactionParts part3 = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", partCode3);
+				defaults.setPart3(part3);
+			}
+			defaults.setActivity(activity);
+			defaults.setCostCode(costcenter);
+			defaults.setEmpCode(employee);
+			saveObject(defaults);
+			TimesheetTransDefaultWrapper defaultsWrapper = defaults.getWrapper();
+			Map results = new HashMap();
+			results.put("Results", defaultsWrapper);
+			return results;
+		}
+
+		public Map insertTimesheetTransaction(String empCode,
+				String costCenterCode, String activityCode, String inDate,
+				Integer cHour, Integer cMinute, String partCode1,
+				String partCode2, String partCode3, String remark) {
+			Map results = new HashMap();
+			log.debug("1");
+			DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
+			TimesheetTransaction trans = new TimesheetTransaction();
+			TimesheetActivity activity = (TimesheetActivity)getObjectByParameter(TimesheetActivity.class, "activity", activityCode);
+			TimesheetCostCenter costcenter = (TimesheetCostCenter)getObjectByParameter(TimesheetCostCenter.class, "costCode", costCenterCode);
+			Employee employee = (Employee)getObjectByParameter(Employee.class, "empCode", empCode);
+			TimesheetTransactionParts nullPart = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", "9999999999");
+			
+			if (activity==null) {
+				System.out.println("6");
+				RestStatus status = new RestStatus();
+				status.setCode("346");
+				status.setMessage("Timesheet activity code is mandatory");
+				status.setStatus("False");
+				results.put("Results", new ArrayList());
+				results.put("Status", status);
+				return results;
+			}
+			if (costcenter==null) {
+				System.out.println("7");
+				RestStatus status = new RestStatus();
+				status.setCode("347");
+				status.setMessage("Timesheet cost center  code is mandatory");
+				status.setStatus("False");
+				results.put("Results", new ArrayList());
+				results.put("Status", status);
+				return results;
+			}
+			
+			trans.setActivity(activity);
+			trans.setCostCode(costcenter);
+			trans.setEmpCode(employee);
+			trans.setChour(cHour);
+			trans.setCminute(cMinute);
+			trans.setRemark(remark);
+			try {
+				trans.setInDate(df.parse(inDate));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			log.debug("2");
+			TimesheetTransactionParts part1 = null;
+			TimesheetTransactionParts part2 = null;
+			TimesheetTransactionParts part3 = null;
+			if (partCode1!=null && !partCode1.isEmpty()) {
+				part1 = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", partCode1);
+			} else {
+				part1 = nullPart;
+			}
+			if (partCode2!=null && !partCode2.isEmpty()) {
+				part2 = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", partCode2);
+			} else {
+				part2 = nullPart;
+			}
+			log.debug("3");
+			if (partCode3!=null && !partCode3.isEmpty()) {
+				part3 = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", partCode3);
+			} else {
+				part3 = nullPart;
+			}
+			trans.setPart1(part1);
+			trans.setPart2(part2);
+			trans.setPart3(part3);
+			TimesheetTransaction persistedTrans = getTimesheetTrans(employee, trans.getInDate(), costcenter, part1, part2, part3);
+			log.debug("4");
+			if (persistedTrans == null) {
+				saveObject(trans);
+				log.debug("5");
+				results.put("Results", trans.getWrapper());
+				log.debug("6");
+				return results;
+			} else {
+				RestStatus status = new RestStatus();
+				status.setCode("351");
+				status.setMessage("Timesheet transaction for the same employee, costcenter and parts are already persisted for the specified date");
+				status.setStatus("False");
+				results.put("Results", new ArrayList());
+				results.put("Status", status);
+				return results;
+			}
+		}
+
+		public TimesheetTransaction getTimesheetTrans(Employee empCode,
+				Date inDate, TimesheetCostCenter costcenter,
+				TimesheetTransactionParts part1,
+				TimesheetTransactionParts part2, TimesheetTransactionParts part3) {
+			return requestsApprovalDAO.getTimesheetTrans(empCode, inDate, costcenter, part1, part2, part3);
+		}
+
+		public Map getTimesheetTransactions(String empCode, String fromDate,
+				String toDate, String costcenter,
+				String activity, String part1,
+				String part2,
+				String part3, int pageNo, int pageSize,
+				String sort) {
+			Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
+			String hostName = settings.getServer();
+			String serviceName = settings.getService();
+			String userName = settings.getUsername();
+			String password = settings.getPassword();
+			
+			DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
+			
+			TimesheetActivity activityObj = (TimesheetActivity)getObjectByParameter(TimesheetActivity.class, "activity", activity);
+			TimesheetCostCenter costcenterObj = (TimesheetCostCenter)getObjectByParameter(TimesheetCostCenter.class, "costCode", costcenter);
+			TimesheetTransactionParts nullPart = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", "9999999999");
+			TimesheetTransactionParts partObj1 = null;
+			TimesheetTransactionParts partObj2 = null;
+			TimesheetTransactionParts partObj3 = null;
+			
+			if (part1!=null && !part1.isEmpty()) {
+				partObj1 = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", part1);
+			} 
+//			else {
+//				partObj1 = nullPart;
+//			}
+			if (part2!=null && !part2.isEmpty()) {
+				partObj2 = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", part2);
+			}
+//			else {
+//				partObj2 = nullPart;
+//			}
+			log.debug("3");
+			if (part3!=null && !part3.isEmpty()) {
+				partObj3 = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", part3);
+			} 
+//			else {
+//				partObj3 = nullPart;
+//			}
+			Date fromDateStr = null;
+			Date toDateStr = null;
+
+
+			if (fromDate!=null && !fromDate.isEmpty()) {
+				try {
+					fromDateStr = df.parse(fromDate);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (toDate!=null && !toDate.isEmpty()) {
+				try {
+					toDateStr = df.parse(toDate);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return requestsApprovalDAO.getTimesheetTransactions(hostName, serviceName, userName, password, empCode, fromDateStr, toDateStr, costcenterObj, activityObj, partObj1, partObj2, partObj3, pageNo, pageSize, sort);
+		}
 	    
-	    
+	   
+		
+		
 //	public List getAttendanceRequests(Date date, String empCode) {
 //		return requestsApprovalDAO.getAttendanceRequests(date,empCode);
 //	}

@@ -34,7 +34,7 @@ public class IPAddress {
 		this.id = id;
 	}
 
-	public String getIP() {
+	public String getIp() {
 		return ip;
 	}
 

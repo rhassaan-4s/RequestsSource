@@ -158,11 +158,27 @@
 		</property>
 	</bean>	
 	
-	
 	<bean id="imeiController" parent="txProxyTemplate">
 		<property name="target">
 			<bean
 				class="com._4s_.security.web.action.ImeiController">
+				<property name="mgr">
+					<ref bean="securityManager"/>
+				</property>
+				<property name="commonManager">
+					<ref bean="commonManager"/>
+				</property>
+				<property name="baseManager">
+					<ref bean="baseManager"/>
+				</property>
+			</bean>
+		</property>
+	</bean>				
+	
+	<bean id="ipController" parent="txProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.security.web.action.IpController">
 				<property name="mgr">
 					<ref bean="securityManager"/>
 				</property>
@@ -388,6 +404,7 @@
 				<prop key="/defaultPage.html">defaultPageController</prop>
 				<prop key="/userDetails.html">userController</prop>
 				<prop key="/imeiView.html">imeiController</prop>
+				<prop key="/ipView.html">ipController</prop>
 				<prop key="/roleDetails.html">roleController</prop>
 				<prop key="/updateRole.html">updateRoleFormController</prop>
 				<prop key="/changeUserPassword.html">changeUserPasswordFormController</prop>
