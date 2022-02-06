@@ -11,6 +11,8 @@
 	<bean id="restService" class="com._4s_.restServices.service.RequestsServiceImpl" >
 		 <property name="requestsApprovalDAO"><ref bean="requestsApprovalDAO"/></property>
 		 <property name="requestsApprovalManager"><ref bean="requestsApprovalManager"/></property>
+		 <property name="timesheetDAO"><ref bean="timesheetDAO"/></property>
+		 <property name="timesheetManager"><ref bean="timesheetManager"/></property>
 		<property name="securityDao"><ref bean="securityDAO"/></property>
 	</bean>
 	 

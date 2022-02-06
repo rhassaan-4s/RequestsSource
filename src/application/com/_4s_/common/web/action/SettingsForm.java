@@ -9,6 +9,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.BaseManager;
+import com._4s_.security.model.SecurityApplication;
 
 public class SettingsForm extends BaseSimpleFormController{
 
@@ -104,7 +105,15 @@ public class SettingsForm extends BaseSimpleFormController{
 		Settings  settings = (Settings)cmd;
 		log.error(">>>> start of onSubmit() ");
 		
-		
+		SecurityApplication application = (SecurityApplication)baseManager.getObjectByParameter(SecurityApplication.class, "name", "timesheet");
+		if (settings.getIsTimesheetEnabled()) {
+			//set application active
+			application.setIs_active(new Boolean(true));
+		} else {
+			// set application inactive
+			application.setIs_active(new Boolean(false));
+		}
+		baseManager.saveObject(application);
 		baseManager.saveObject(settings);
 		
 				

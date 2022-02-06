@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="timesheetManager" parent="baseManager" class="com._4s_.timesheet.service.TimesheetManagerImpl" >
+		<property name="timesheetDAO"><ref bean="timesheetDAO"/></property>
+		<property name="sequenceManager"><ref bean="sequenceManager"/></property>
+		<property name="externalQueries">
+			<ref bean="timesheetExternalQueries" />
+		</property>
+		<property name="messageManager"><ref bean="messageManager"/></property>
+	</bean>
+</beans>

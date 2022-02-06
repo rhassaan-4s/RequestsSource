@@ -1,4 +1,4 @@
-package com._4s_.requestsApproval.model;
+package com._4s_.timesheet.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

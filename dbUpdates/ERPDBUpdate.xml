@@ -16214,4 +16214,27 @@ start with 20&#xD;
 increment by 1&#xD;
 cache 20;</statment></query><query><sqlindex>192</sqlindex><statment>insert into time_sheet_parts values (0,'9999999999',null,null);</statment></query><query><sqlindex>193</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD ISTIMESHEETENABLED NUMBER;</statment></query><query><sqlindex>194</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101485,'requestsApproval.header.isTimesheetEnabled', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116484,'تفعيل جدول الأعمال', 101485, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116485, 'Enable Timesheet', 101485, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116485, 'Enable Timesheet', 101485, 3);</statment></query><query><sqlindex>195</sqlindex><statment>INSERT INTO SECURITY_APPLICATIONS (ID,NAME,DEFAULTPAGE,DISPLAY_IN_GL,IS_ACTIVE)&#xD;
+ VALUES (13,'timesheet','/Requests/timesheet/timesheetTrans.html','0','0');</statment></query><query><sqlindex>196</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101486, 'timesheet.caption.applicationName', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116486,'جدول الأعمال', 101486, 1);</statment></query><query><sqlindex>197</sqlindex><statment>insert into SECURITY_ROLES&#xD;
+values (7, 'موظف جدول أعمال', 13, '/Requests/timesheet/timesheetTrans.html?activeLink=linkOne');&#xD;</statment></query><query><sqlindex>198</sqlindex><statment>insert into security_user_roles&#xD;
+select id,7 from security_users where isactive =1;</statment></query><query><sqlindex>199</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101487, 'timesheet.header.timesheetTrans', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116488,'جدول الأعمال', 101487, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116489, 'Timesheet', 101487, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101488, 'timesheet.caption.activityName', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116490,'اسم النشاط', 101488, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116491, 'Activity Name', 101488, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101489, 'timesheet.caption.costcenterName', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116492,'اسم مركز التكلفة', 101489, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116493, 'Cost Center Name', 101489, 3);</statment></query><query><sqlindex>200</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101490, 'timesheet.menu.basicScreens', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116494,'البيانات الأساسية', 101490, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116495, 'Basic Data', 101490, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101491, 'timesheet.header.activity', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116496,'النشاط', 101491, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116497, 'Activity', 101491, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101492, 'timesheet.header.part', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116498,'اجزاء جدول الأعمال', 101492, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116499, 'Timesheet Parts', 101492, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101493, 'timesheet.header.specs', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116500,'مواصفات جدول الأعمال', 101493, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116501, 'Timesheet specifications', 101493, 3);</statment></query></SQL>

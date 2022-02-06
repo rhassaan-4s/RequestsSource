@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -29,20 +28,13 @@ import com._4s_.common.dao.Queries;
 import com._4s_.common.model.Clients;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
-import com._4s_.common.service.CommonManager;
 import com._4s_.common.util.MultiCalendarDate;
-import com._4s_.requestsApproval.dao.ExternalQueries;
 import com._4s_.requestsApproval.dao.RequestsApprovalDAO;
 import com._4s_.requestsApproval.model.AccessLevels;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
-import com._4s_.requestsApproval.model.TimesheetActivity;
-import com._4s_.requestsApproval.model.TimesheetCostCenter;
-import com._4s_.requestsApproval.model.TimesheetSpecs;
-import com._4s_.requestsApproval.model.TimesheetTransaction;
-import com._4s_.requestsApproval.model.TimesheetTransactionParts;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.requestsApproval.web.action.TimeAttend;
@@ -50,14 +42,12 @@ import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.EmployeeResponse;
 import com._4s_.restServices.json.EmployeeWrapper;
 import com._4s_.restServices.json.GroupWrapper;
-import com._4s_.restServices.json.ImeiWrapper;
 import com._4s_.restServices.json.LoginUserWrapper;
 import com._4s_.restServices.json.PasswordWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
 import com._4s_.restServices.json.TimesheetActivityWrapper;
-import com._4s_.restServices.json.TimesheetCostcenterWrapper;
 import com._4s_.restServices.json.TimesheetPartWrapper;
 import com._4s_.restServices.json.TimesheetSpecsWrapper;
 import com._4s_.restServices.json.TimesheetTransDefaultWrapper;
@@ -68,9 +58,15 @@ import com._4s_.restServices.model.AttendanceStatus;
 import com._4s_.security.dao.MySecurityDAO;
 import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
+import com._4s_.timesheet.dao.TimesheetDAO;
 //import com.javacodegeeks.gwtspring.server.utils.NotificationsProducer;
 //import com.javacodegeeks.gwtspring.shared.dto.EmployeeDTO;
 //import com.javacodegeeks.gwtspring.shared.services.EmployeeService;
+import com._4s_.timesheet.model.TimesheetActivity;
+import com._4s_.timesheet.model.TimesheetCostCenter;
+import com._4s_.timesheet.model.TimesheetSpecs;
+import com._4s_.timesheet.model.TimesheetTransactionParts;
+import com._4s_.timesheet.service.TimesheetManager;
 
 
 @Service("requestsService")
@@ -84,6 +80,12 @@ public class RequestsServiceImpl implements RequestsService, UserDetailsService 
  
  @Autowired
  private RequestsApprovalManager requestsApprovalManager;
+ 
+ @Autowired
+ private TimesheetDAO timesheetDAO;
+ 
+ @Autowired
+ private TimesheetManager timesheetManager;
  
  @Autowired
  private MySecurityDAO securityDao;
@@ -108,6 +110,22 @@ public RequestsApprovalDAO getRequestsApprovalDAO() {
 
 public void setRequestsApprovalDAO(RequestsApprovalDAO requestsApprovalDAO) {
 	this.requestsApprovalDAO = requestsApprovalDAO;
+}
+
+public TimesheetDAO getTimesheetDAO() {
+	return timesheetDAO;
+}
+
+public void setTimesheetDAO(TimesheetDAO timesheetDAO) {
+	this.timesheetDAO = timesheetDAO;
+}
+
+public TimesheetManager getTimesheetManager() {
+	return timesheetManager;
+}
+
+public void setTimesheetManager(TimesheetManager timesheetManager) {
+	this.timesheetManager = timesheetManager;
 }
 
 public MySecurityDAO getSecurityDao() {
@@ -1969,7 +1987,7 @@ public Map getUserGroups(Employee employee) {
 public Map insertTimesheetActivity(TimesheetActivityWrapper activity) {
 	// TODO Auto-generated method stub
 	Map results = new HashMap();
-	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	Settings settings = (Settings)timesheetManager.getObject(Settings.class, new Long(1));
 	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
 		RestStatus status = new RestStatus();
 		status.setCode("352");
@@ -1988,7 +2006,7 @@ public Map insertTimesheetActivity(TimesheetActivityWrapper activity) {
 		results.put("Status", status);
 		return results;
 	} else {
-		results = requestsApprovalManager.insertTimesheetActivity(activity.getArName(),activity.getEnName());
+		results = timesheetManager.insertTimesheetActivity(activity.getArName(),activity.getEnName());
 		RestStatus status = new RestStatus();
 		status.setCode("200");
 		status.setMessage("Request Success");
@@ -2001,7 +2019,7 @@ public Map insertTimesheetActivity(TimesheetActivityWrapper activity) {
 public Map insertTimesheetPart(TimesheetPartWrapper part) {
 	System.out.println("part.getPartNo() " + part.getPartNo());
 	Map results = new HashMap();
-	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	Settings settings = (Settings)timesheetManager.getObject(Settings.class, new Long(1));
 	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
 		RestStatus status = new RestStatus();
 		status.setCode("352");
@@ -2044,7 +2062,7 @@ public Map insertTimesheetPart(TimesheetPartWrapper part) {
 		results.put("Status", status);
 		return results;
 	}else {
-		results = requestsApprovalManager.insertTimesheetPart(part.getArName(),part.getEnName(),part.getPartNo());
+		results = timesheetManager.insertTimesheetPart(part.getArName(),part.getEnName(),part.getPartNo());
 		RestStatus status = new RestStatus();
 		status.setCode("200");
 		status.setMessage("Request Success");
@@ -2056,7 +2074,7 @@ public Map insertTimesheetPart(TimesheetPartWrapper part) {
 
 public Map insertTimesheetSpecs(TimesheetSpecsWrapper specs) {
 	Map results = new HashMap();
-	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	Settings settings = (Settings)timesheetManager.getObject(Settings.class, new Long(1));
 	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
 		RestStatus status = new RestStatus();
 		status.setCode("352");
@@ -2115,7 +2133,7 @@ public Map insertTimesheetSpecs(TimesheetSpecsWrapper specs) {
 		results.put("Status", status);
 		return results;
 	}
-	results = requestsApprovalManager.insertTimesheetSpecs(specs.getPartName1(),specs.getPartEName1(),specs.getIsUsed1(),specs.getPartName2(),specs.getPartEName2(),specs.getIsUsed2(),specs.getPartName3(),specs.getPartEName3(),specs.getIsUsed3());
+	results = timesheetManager.insertTimesheetSpecs(specs.getPartName1(),specs.getPartEName1(),specs.getIsUsed1(),specs.getPartName2(),specs.getPartEName2(),specs.getIsUsed2(),specs.getPartName3(),specs.getPartEName3(),specs.getIsUsed3());
 	RestStatus status = new RestStatus();
 	status.setCode("200");
 	status.setMessage("Request Success");
@@ -2126,7 +2144,7 @@ public Map insertTimesheetSpecs(TimesheetSpecsWrapper specs) {
 
 public Map insertTimesheetTransDefaults(TimesheetTransDefaultWrapper defaults) {
 	Map results = new HashMap();
-	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	Settings settings = (Settings)timesheetManager.getObject(Settings.class, new Long(1));
 	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
 		RestStatus status = new RestStatus();
 		status.setCode("352");
@@ -2153,7 +2171,7 @@ public Map insertTimesheetTransDefaults(TimesheetTransDefaultWrapper defaults) {
 		results.put("Status", status);
 		return results;
 	}
-	results = requestsApprovalManager.insertTimesheetTransDefaults(defaults.getEmpCode(),defaults.getCostCenterCode(),defaults.getActivityCode(),defaults.getPartCode1(),defaults.getPartCode2(),defaults.getPartCode3());
+	results = timesheetManager.insertTimesheetTransDefaults(defaults.getEmpCode(),defaults.getCostCenterCode(),defaults.getActivityCode(),defaults.getPartCode1(),defaults.getPartCode2(),defaults.getPartCode3());
 	RestStatus status = new RestStatus();
 	status.setCode("200");
 	status.setMessage("Request Success");
@@ -2165,7 +2183,7 @@ public Map insertTimesheetTransDefaults(TimesheetTransDefaultWrapper defaults) {
 public Map insertTimesheetTransaction(TimesheetTransWrapper trans) {
 	System.out.println("1");
 	Map results = new HashMap();
-	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	Settings settings = (Settings)timesheetManager.getObject(Settings.class, new Long(1));
 	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
 		RestStatus status = new RestStatus();
 		status.setCode("352");
@@ -2224,7 +2242,7 @@ public Map insertTimesheetTransaction(TimesheetTransWrapper trans) {
 		return results;
 	}
 	System.out.println("8");
-	results = requestsApprovalManager.insertTimesheetTransaction(trans.getEmpCode(),trans.getCostCenterCode(),trans.getActivityCode(),trans.getInDate(),trans.getcHour(),trans.getcMinute(),trans.getPartCode1(),trans.getPartCode2(),trans.getPartCode3(),trans.getRemark());
+	results = timesheetManager.insertTimesheetTransaction(trans.getEmpCode(),trans.getCostCenterCode(),trans.getActivityCode(),trans.getInDate(),trans.getcHour(),trans.getcMinute(),trans.getPartCode1(),trans.getPartCode2(),trans.getPartCode3(),trans.getRemark());
 	if (results.get("Status") != null) {
 		return results;
 	} else {
@@ -2239,7 +2257,7 @@ public Map insertTimesheetTransaction(TimesheetTransWrapper trans) {
 
 public Map getActivities() {
 	Map results = new HashMap();
-	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	Settings settings = (Settings)timesheetManager.getObject(Settings.class, new Long(1));
 	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
 		RestStatus status = new RestStatus();
 		status.setCode("352");
@@ -2249,7 +2267,7 @@ public Map getActivities() {
 		results.put("Status", status);
 		return results;
 	}
-	List activities = requestsApprovalManager.getObjects(TimesheetActivity.class);
+	List activities = timesheetManager.getObjects(TimesheetActivity.class);
 	List activitiesWrapper = new ArrayList();
 	Iterator itr = activities.iterator();
 	while(itr.hasNext()) {
@@ -2267,7 +2285,7 @@ public Map getActivities() {
 
 public Map getCostcenters() {
 	Map results = new HashMap();
-	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	Settings settings = (Settings)timesheetManager.getObject(Settings.class, new Long(1));
 	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
 		RestStatus status = new RestStatus();
 		status.setCode("352");
@@ -2278,7 +2296,7 @@ public Map getCostcenters() {
 		return results;
 	}
 	
-	List costcenters = requestsApprovalManager.getObjects(TimesheetCostCenter.class);
+	List costcenters = timesheetManager.getObjects(TimesheetCostCenter.class);
 	List costcentersWrapper = new ArrayList();
 	Iterator itr = costcenters.iterator();
 	while(itr.hasNext()) {
@@ -2297,7 +2315,7 @@ public Map getCostcenters() {
 
 public Map getParts(Short partNo) {
 	Map results = new HashMap();
-	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	Settings settings = (Settings)timesheetManager.getObject(Settings.class, new Long(1));
 	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
 		RestStatus status = new RestStatus();
 		status.setCode("352");
@@ -2311,10 +2329,10 @@ public Map getParts(Short partNo) {
 	System.out.println("part No " + partNo);
 	if (partNo!= null && (partNo==1 || partNo==2 || partNo==3)) {
 		System.out.println("1.part No " + partNo);
-		parts = requestsApprovalManager.getObjectsByParameter(TimesheetTransactionParts.class, "part_no", partNo);
+		parts = timesheetManager.getObjectsByParameter(TimesheetTransactionParts.class, "part_no", partNo);
 	} else if (partNo==null) {
 		System.out.println("2.part No " + partNo);
-		parts = requestsApprovalManager.getObjects(TimesheetTransactionParts.class);
+		parts = timesheetManager.getObjects(TimesheetTransactionParts.class);
 		
 	} else {
 		System.out.println("3.part No " + partNo);
@@ -2326,7 +2344,7 @@ public Map getParts(Short partNo) {
 		results.put("Status", status);
 		return results;
 	}
-	TimesheetTransactionParts nullPart = (TimesheetTransactionParts)requestsApprovalManager.getObjectByParameter(TimesheetTransactionParts.class, "code", "9999999999");
+	TimesheetTransactionParts nullPart = (TimesheetTransactionParts)timesheetManager.getObjectByParameter(TimesheetTransactionParts.class, "code", "9999999999");
 	parts.remove(nullPart);
 	List partsWrapper = new ArrayList();
 	Iterator itr = parts.iterator();
@@ -2346,7 +2364,7 @@ public Map getParts(Short partNo) {
 
 public Map getTimesheetSpecs() {
 	Map results = new HashMap();
-	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	Settings settings = (Settings)timesheetManager.getObject(Settings.class, new Long(1));
 	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
 		RestStatus status = new RestStatus();
 		status.setCode("352");
@@ -2356,7 +2374,7 @@ public Map getTimesheetSpecs() {
 		results.put("Status", status);
 		return results;
 	}
-	List specs = requestsApprovalManager.getObjects(TimesheetSpecs.class);
+	List specs = timesheetManager.getObjects(TimesheetSpecs.class);
 	List specsWrapper = new ArrayList();
 	Iterator itr = specs.iterator();
 	while(itr.hasNext()) {
@@ -2375,7 +2393,7 @@ public Map getTimesheetSpecs() {
 
 public Map getTimesheetTransactions(TimesheetTransactionFilters search) {
 	Map results = new HashMap();
-	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	Settings settings = (Settings)timesheetManager.getObject(Settings.class, new Long(1));
 	if (settings.getIsTimesheetEnabled().equals(new Boolean(false))) {
 		RestStatus status = new RestStatus();
 		status.setCode("352");
@@ -2390,9 +2408,9 @@ public Map getTimesheetTransactions(TimesheetTransactionFilters search) {
 	log.debug("!search.getEmpCode().contains(,) " + !search.getEmpCode().contains(","));
 	Map transMap = new HashMap();
 	if (search.getEmpCode()!= null && !search.getEmpCode().isEmpty() && !search.getEmpCode().contains(",")) {
-		employee = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", search.getEmpCode());
+		employee = (Employee)timesheetManager.getObjectByParameter(Employee.class, "empCode", search.getEmpCode());
 		if (employee!=null) {
-			transMap = requestsApprovalManager.getTimesheetTransactions(search.getEmpCode(), search.getFromDate(), search.getToDate(), search.getCostCenter(),
+			transMap = timesheetManager.getTimesheetTransactions(search.getEmpCode(), search.getFromDate(), search.getToDate(), search.getCostCenter(),
 					search.getActivity(), search.getPart1(), search.getPart2(), search.getPart3(), search.getPageNumber(), search.getPageSize(), search.getSort());
 		} else {
 			RestStatus status = new RestStatus();
@@ -2404,7 +2422,7 @@ public Map getTimesheetTransactions(TimesheetTransactionFilters search) {
 			return results;
 		}
 	} else if(search.getEmpCode().contains(",")){
-		transMap = requestsApprovalManager.getTimesheetTransactions(search.getEmpCode(), search.getFromDate(), search.getToDate(), search.getCostCenter(),
+		transMap = timesheetManager.getTimesheetTransactions(search.getEmpCode(), search.getFromDate(), search.getToDate(), search.getCostCenter(),
 				search.getActivity(), search.getPart1(), search.getPart2(), search.getPart3(), search.getPageNumber(), search.getPageSize(), search.getSort());
 	}else {
 		RestStatus status = new RestStatus();

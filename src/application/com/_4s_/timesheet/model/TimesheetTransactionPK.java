@@ -1,4 +1,4 @@
-package com._4s_.requestsApproval.model;
+package com._4s_.timesheet.model;
 
 import java.io.Serializable;
 import java.util.Date;

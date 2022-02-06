@@ -17,13 +17,8 @@ import com._4s_.HR.model.HRSpecialtyLevel;
 import com._4s_.HR.model.HRVacation;
 import com._4s_.common.dao.BaseDAO;
 import com._4s_.common.model.Employee;
-import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.GroupAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
-import com._4s_.requestsApproval.model.TimesheetActivity;
-import com._4s_.requestsApproval.model.TimesheetCostCenter;
-import com._4s_.requestsApproval.model.TimesheetTransaction;
-import com._4s_.requestsApproval.model.TimesheetTransactionParts;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 
@@ -114,6 +109,4 @@ public interface RequestsApprovalDAO extends BaseDAO {
 			String codeFrom, String codeTo);
 	public List<LoginUsers> getEmployeesByGroup(Long groupId);
 	public List<LoginUsers> getMgrsByGroup(Long groupId);
-	public TimesheetTransaction getTimesheetTrans(Employee empCode,Date inDate, TimesheetCostCenter costcenter, TimesheetTransactionParts part1, TimesheetTransactionParts part2, TimesheetTransactionParts part3);
-	public Map getTimesheetTransactions(String hostName,String serviceName,String userName,String password,String empCode, Date fromDate, Date toDate, TimesheetCostCenter costcenter, TimesheetActivity activity, TimesheetTransactionParts part1, TimesheetTransactionParts part2, TimesheetTransactionParts part3, int pageNo, int pageSize, String sort);
 }

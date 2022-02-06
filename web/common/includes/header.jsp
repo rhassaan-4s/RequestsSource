@@ -11,7 +11,10 @@
 	lang="<fmt:message key="commons.language.code"/>">
 <head>
 <!-- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> -->
-<meta http-equiv=“Content-Security-Policy” content=“default-src;‘self’; gap://ready file://* *; style-src ‘self’ ‘unsafe-inline’; script-src ‘self’ ‘unsafe-inline’ ‘unsafe-eval’; charset=UTF-8”/> <!-- ‘self’ gap://ready file://* *; style-src ‘self’ ‘unsafe-inline’; script-src ‘self’ ‘unsafe-inline’ ‘unsafe-eval’ -->
+<meta http-equiv=“Content-Security-Policy” content=“default-src;‘self’;
+	gap://ready
+	file://* *; style-src ‘self’ ‘unsafe-inline’; script-src ‘self’ ‘unsafe-inline’ ‘unsafe-eval’; charset=UTF-8” />
+<!-- ‘self’ gap://ready file://* *; style-src ‘self’ ‘unsafe-inline’; script-src ‘self’ ‘unsafe-inline’ ‘unsafe-eval’ -->
 <title>Requests System</title>
 <link type="text/css" rel="stylesheet"
 	href="/Requests/web/common/css/all.css">
@@ -28,12 +31,15 @@
 <script language="JavaScript" type="text/javascript"
 	src="/Requests/web/common/js/toolTipContent.js"></script>
 <SCRIPT LANGUAGE="JavaScript" SRC="/Requests/web/common/js/popup.js"></SCRIPT>
-<script type="text/javascript" src="/Requests/web/common/js/myLiveSearch.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/myLiveSearch.js"></script>
 <script type="text/javascript" src="/Requests/dwr/interface/qry.js"></script>
 <script type="text/javascript" src="/Requests/dwr/engine.js"></script>
 <script type="text/javascript" src="/Requests/dwr/util.js"></script>
-<script type="text/javascript" src="/Requests/web/common/js/Tokenizer.js"></script>
-<script type="text/javascript" src="/Requests/web/common/js/sorttable.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/Tokenizer.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/sorttable.js"></script>
 <script type="text/javascript" src="/Requests/web/common/js/extAjax.js"></script>
 
 <script type="text/javascript" src="/Requests/web/common/js/initMap.js"></script>
@@ -41,28 +47,44 @@
 
 
 <!--  ///////////////////////// Islamic Calendar -->
- <script type="text/javascript" src="/Requests/web/common/js/jquery.min.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/jquery.min.js"></script>
 
-   <script type="text/javascript" src="/Requests/web/common/js/jquery.calendars.js"></script> 
-   <script type="text/javascript" src="/Requests/web/common/js/jquery.calendars.plus.js"></script>
-   <link  rel="stylesheet" type="text/css" href="/Requests/web/common/css/jquery.calendars.picker.css"/>
-   <script type="text/javascript" src="/Requests/web/common/js/jquery.calendars.picker.js"></script>
-   <script type="text/javascript" src="/Requests/web/common/js/jquery.calendars.islamic.js"></script>
-  <script type="text/javascript" src="/Requests/web/common/js/calendarDate.js"></script>
-  
-  <link type="text/css" rel="stylesheet"	href="/Requests/web/common/timepicker/ui-lightness/jquery-ui-1.8.21.custom.css" />
-<link type="text/css" rel="stylesheet"	href="/Requests/web/common/timepicker/jquery-ui-timepicker-addon.css" />
-<script type="text/javascript" src="/Requests/web/common/timepicker/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="/Requests/web/common/timepicker/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/Requests/web/common/timepicker/jquery-ui-timepicker-addon.js"></script>
-<script type="text/javascript" src="/Requests/web/common/timepicker/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/jquery.calendars.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/jquery.calendars.plus.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="/Requests/web/common/css/jquery.calendars.picker.css" />
+<script type="text/javascript"
+	src="/Requests/web/common/js/jquery.calendars.picker.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/jquery.calendars.islamic.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/calendarDate.js"></script>
 
-<link type="text/css" rel="stylesheet"	href="/Requests/web/common/clockpicker/clockpicker.css" />
-<link type="text/css" rel="stylesheet"	href="/Requests/web/common/clockpicker/standalone.css" />
-<script type="text/javascript" src="/Requests/web/common/clockpicker/clockpicker.js"></script>
+<link type="text/css" rel="stylesheet"
+	href="/Requests/web/common/timepicker/ui-lightness/jquery-ui-1.8.21.custom.css" />
+<link type="text/css" rel="stylesheet"
+	href="/Requests/web/common/timepicker/jquery-ui-timepicker-addon.css" />
+<script type="text/javascript"
+	src="/Requests/web/common/timepicker/jquery-1.7.2.min.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/timepicker/jquery-ui.min.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/timepicker/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/timepicker/jquery-ui-sliderAccess.js"></script>
+
+<link type="text/css" rel="stylesheet"
+	href="/Requests/web/common/clockpicker/clockpicker.css" />
+<link type="text/css" rel="stylesheet"
+	href="/Requests/web/common/clockpicker/standalone.css" />
+<script type="text/javascript"
+	src="/Requests/web/common/clockpicker/clockpicker.js"></script>
 
 
-		<script type="text/javascript">
+<script type="text/javascript">
 			
 			$(function(){
 				
@@ -124,24 +146,28 @@
 			
 			
 		</script>
-  <script type="text/javascript">
+<script type="text/javascript">
      $(document).ready(function(){
 	  CalendarChecktype();
 	});
   </script>
 <!-- link calendar files  -->
-	<!-- script language="JavaScript" src="/Requests/web/common/tigra_calendar/calendar_eu.js"></script>-->
-	<!-- <script language="JavaScript" src="/Requests/web/common/tigra_calendar/calendar_db.js"></script>-->
-	
-	<SCRIPT LANGUAGE="JavaScript" SRC="/Requests/web/common/AnyTimePicker/anytime.js"></SCRIPT>
-	<link rel="stylesheet" href="/Requests/web/common/tigra_calendar/calendar.css">
-	<link rel="stylesheet" href="/Requests/web/common/AnyTimePicker/anytime.css">
-	
+<!-- script language="JavaScript" src="/Requests/web/common/tigra_calendar/calendar_eu.js"></script>-->
+<!-- <script language="JavaScript" src="/Requests/web/common/tigra_calendar/calendar_db.js"></script>-->
+
+<SCRIPT LANGUAGE="JavaScript"
+	SRC="/Requests/web/common/AnyTimePicker/anytime.js"></SCRIPT>
+<link rel="stylesheet"
+	href="/Requests/web/common/tigra_calendar/calendar.css">
+<link rel="stylesheet"
+	href="/Requests/web/common/AnyTimePicker/anytime.css">
+
 <%
 	String applicationName = (String) session.getAttribute("appName");
-//System.out.println("applicationName " + applicationName);
+	//System.out.println("applicationName " + applicationName);
 
-	Settings settings = (Settings)request.getSession().getAttribute("settings");
+	Settings settings = (Settings) request.getSession().getAttribute(
+			"settings");
 	System.out.println("settings in header" + settings);
 	List activeApplications = (List) request.getSession().getAttribute(
 			"activeApplications");
@@ -151,27 +177,41 @@
 	if (locale != null && locale.equalsIgnoreCase("en")) {
 		align = "left";
 %>
-<script language="JavaScript" src="/Requests/web/common/tigra_calendar/calendar_us.js"></script>
-<link href="/Requests/web/common/css/tables_en.css" rel="stylesheet"	type="text/css" />
-<link rel="stylesheet" type="text/css" href="/Requests/web/common/css/ddsmoothmenu_en.css" />
-<script type="text/javascript" src="/Requests/web/common/js/ddsmoothmenu_en.js"></script>
-<link href="/Requests/web/common/css/vertical_menu_en.css" rel="stylesheet" type="text/css" />
-<link href="/Requests/web/common/css/tab_en.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript"
+	src="/Requests/web/common/tigra_calendar/calendar_us.js"></script>
+<link href="/Requests/web/common/css/tables_en.css" rel="stylesheet"
+	type="text/css" />
+<link rel="stylesheet" type="text/css"
+	href="/Requests/web/common/css/ddsmoothmenu_en.css" />
+<script type="text/javascript"
+	src="/Requests/web/common/js/ddsmoothmenu_en.js"></script>
+<link href="/Requests/web/common/css/vertical_menu_en.css"
+	rel="stylesheet" type="text/css" />
+<link href="/Requests/web/common/css/tab_en.css" rel="stylesheet"
+	type="text/css" />
 <%
 	} else {
 		align = "right";
 %>
 
-<script language="JavaScript" src="/Requests/web/common/tigra_calendar/calendar_ar.js"></script>
-<link href="/Requests/web/common/css/tables_ar.css" rel="stylesheet"	type="text/css" />
-<link rel="stylesheet" type="text/css" href="/Requests/web/common/css/ddsmoothmenu_ar.css" />
-<script type="text/javascript" src="/Requests/web/common/js/ddsmoothmenu_ar.js"></script>
-<link href="/Requests/web/common/css/vertical_menu_ar.css" rel="stylesheet" type="text/css" />
-<link href="/Requests/web/common/css/tab_ar.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript"
+	src="/Requests/web/common/tigra_calendar/calendar_ar.js"></script>
+<link href="/Requests/web/common/css/tables_ar.css" rel="stylesheet"
+	type="text/css" />
+<link rel="stylesheet" type="text/css"
+	href="/Requests/web/common/css/ddsmoothmenu_ar.css" />
+<script type="text/javascript"
+	src="/Requests/web/common/js/ddsmoothmenu_ar.js"></script>
+<link href="/Requests/web/common/css/vertical_menu_ar.css"
+	rel="stylesheet" type="text/css" />
+<link href="/Requests/web/common/css/tab_ar.css" rel="stylesheet"
+	type="text/css" />
 
-<link rel="stylesheet" type="text/css" href="/Requests/web/common/css/epoch_styles.css" />
-<script type="text/javascript" src="/Requests/web/common/js/epoch_classes.js"></script>
-        
+<link rel="stylesheet" type="text/css"
+	href="/Requests/web/common/css/epoch_styles.css" />
+<script type="text/javascript"
+	src="/Requests/web/common/js/epoch_classes.js"></script>
+
 <%
 	}
 %>
@@ -195,35 +235,77 @@
 	 */
 </script>
 <style type="text/css">
-                            /*Menu Links*/
+/*Menu Links*/
 
 /*NOTE: anything not specified for the #(menu id's) a selector and its pseudo classes
 may be inherited in some browsers from other 'a' element styles (if any) on the page*/
+#menu1 a {
+	color: black;
+	background-color: white;
+	text-decoration: none;
+	text-indent: 1ex;
+}
 
-#menu1 a {color:black;background-color:white;text-decoration:none;text-indent:1ex;}
-#menu1 a:active {color:black;text-decoration:none;}
-#menu1 a:hover {color:black;background-color:#FFFF99}
-#menu1 a:visited {color:black;text-decoration:none;}
+#menu1 a:active {
+	color: black;
+	text-decoration: none;
+}
 
-#menu2 a {color:white;background-color:#2175bc;text-decoration:none;text-indent:1ex;}
-#menu2 a:active	{color:white;text-decoration:none;}
-#menu2 a:visited {color:white;text-decoration:none;}
-#menu2 a:hover {color:white;background-color:#2586d7}
+#menu1 a:hover {
+	color: black;
+	background-color: #FFFF99
+}
+
+#menu1 a:visited {
+	color: black;
+	text-decoration: none;
+}
+
+#menu2 a {
+	color: white;
+	background-color: #2175bc;
+	text-decoration: none;
+	text-indent: 1ex;
+}
+
+#menu2 a:active {
+	color: white;
+	text-decoration: none;
+}
+
+#menu2 a:visited {
+	color: white;
+	text-decoration: none;
+}
+
+#menu2 a:hover {
+	color: white;
+	background-color: #2586d7
+}
 
 #menu3 a { /*Menu3 Links*/
-color:black;
-background-color:white;
-text-decoration:none;
-text-indent:1ex;
+	color: black;
+	background-color: white;
+	text-decoration: none;
+	text-indent: 1ex;
 }
+
 #menu3 a:hover {
-color:black;background-color:#FFFF99;
+	color: black;
+	background-color: #FFFF99;
 }
-#menu3 a:active	{color:black;text-decoration:none;}
-#menu3 a:visited	{color:black;text-decoration:none;}
 
+#menu3 a:active {
+	color: black;
+	text-decoration: none;
+}
 
-                           /*End Menu Links*/
+#menu3 a:visited {
+	color: black;
+	text-decoration: none;
+}
+
+/*End Menu Links*/
 </style>
 <script src="/Requests/web/common/js/mmenu.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -303,25 +385,24 @@ menuItems:[
 	["<b><fmt:message key="commons.button.editUserPreferences" /></b>", "/Requests/security/changeUserApplication.html?activeLink=linkOne", "_new"],
 	["<b><fmt:message key="commons.caption.date" /></b>", "javascript:createWindow('<c:url value="/common/commonAdminDateConverter.html"/>')", "_new"],
 	["<b><fmt:message key="commons.caption.applications" /></b>"]
-<%System.out.println("application " + activeApplications); 
-if (activeApplications != null) {
-		for (int i = 0; i < activeApplications.size(); i++) {
-	  		SecurityApplication securityApplication = (SecurityApplication) activeApplications.get(i);
-%>
+<%System.out.println("application " + activeApplications);
+			SecurityApplication securityApplication = null;
+			if (activeApplications != null) {
+				for (int i = 0; i < activeApplications.size(); i++) {
+					securityApplication = (SecurityApplication) activeApplications
+							.get(i);
+					System.out.println("active app "
+							+ securityApplication.getName());%>
 ,[
-<%
- if (securityApplication.getName().equals("ASSETS")) {
-%>"<b><fmt:message key='assets.caption.applicationName' /></b>"<%
-	} else if (securityApplication.getName().equals("ADMINISTRATION")) {
-%>"<b><fmt:message key='administration.caption.applicationName' /></b>"<%
-	}else if (securityApplication.getName().equals("requestsApproval")) {
-%>"<b><fmt:message key='requestsApproval.caption.applicationName' /></b>"<%
-	}
-%>, "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
-<%
-	}
-}
-%>
+<%if (securityApplication.getName().equals("ASSETS")) {%>"<b><fmt:message key='assets.caption.applicationName' /></b>"<%} else if (securityApplication.getName().equals(
+							"ADMINISTRATION")) {%>"<b><fmt:message key='administration.caption.applicationName' /></b>"<%} else if (securityApplication.getName().equals(
+							"requestsApproval")) {%>"<b><fmt:message key='requestsApproval.caption.applicationName' /></b>"<%} else if (securityApplication.getName()
+							.equals("timesheet")) {
+						if (settings.getIsTimesheetEnabled().equals(
+								new Boolean(true))) {%>"<b><fmt:message key='timesheet.caption.applicationName' /></b>"<%}
+					}%>, "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
+<%}
+			}%>
 ]}; // REQUIRED!! do not edit or remove
 
 //if((securityApplication.getName()!=null) || !securityApplication.getName().equals("")) {
@@ -330,92 +411,114 @@ make_menus();
 </head>
 <body leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0"
 	marginwidth="0" marginheight="0" onload="liveSearchInit();">
-<_4s_:changeLocale
-	value='<%=(String) request.getSession().getAttribute(
-									"locale")%>' />
-<input id="dateType" type="hidden" value="0" >
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td><!-- Top Header Begin------------------------------------------------ -->
-		<div class="formHeader">
+	<_4s_:changeLocale
+		value='<%=(String) request.getSession().getAttribute("locale")%>' />
+	<input id="dateType" type="hidden" value="0">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td>
+				<!-- Top Header Begin------------------------------------------------ -->
+				<div class="formHeader">
 
-		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-			<tr>
-			
-				<td height="100" colspan="7" valign="top" align="center"><img
-					src="/Requests/web/common/images/erp_header.jpg" width="100%" /></td>
-			</tr>
-			<tr>
-				<td class="appName">
-				<%
-					String applicationNameString = "";
-					/* if (applicationName.equals("ASSETS")) {
-						applicationNameString = "gl.caption.applicationName";
-					 }else */
-						 if (applicationName!=null && applicationName.equals("ADMINISTRATION")) {
-						applicationNameString = "administration.caption.applicationName";
-					 }else if (applicationName!=null && applicationName.equals("requestsApproval")) {
-						applicationNameString = "requestsApproval.caption.applicationName";
-					}
-					session
-							.setAttribute("applicationNameString",
-									applicationNameString);
-				%>
-				
-			</tr>
-		</table>
-		<!-- Top Header End------------------------------------------------ -->
-		</div>
-		</td>
-	</tr>
-	<tr>
-		<td bgcolor="#ECF5FF" valign="top"><!-- Menu Begin------------------------------------------------ -->
-		<div class="menu">
-		<%
- 	if (applicationName!=null && applicationName.equals("ADMINISTRATION")) {
- %> <jsp:include page="/web/common/menu.jsp" flush="true" /> <%
- 	} if (applicationName!=null && applicationName.equals("requestsApproval")) {
- %> <jsp:include page="/web/requestsApproval/menu.jsp" flush="true" /> <%
- 	}
- %> 
- 
- <!-- REQUESTSAPPROVAL -->
- <!-- Menu End------------------------------------------------ --></div>
-		</td>
-	</tr>
-	<tr>
-		<td><!-- Username section Begin------------------------------------------------ -->
-		<div class="formHeader">
-		<table width="100%" border="0" bgcolor="#91C8FF">
-			<tr class="normalMediumWhite">
-				<td width="50%"></td>
-				<_4s_:dayOfWeek />
-				<td align="right" nowrap="nowrap">&nbsp;<font
-					class="normalSmallWhite"><fmt:message
-					key="commons.caption.date" /> :</font>&nbsp;</td>
-				<td align="right" nowrap="nowrap">&nbsp;<font
-					class="normalSmallWhite"><fmt:message>${dayOfWeek}</fmt:message></font>&nbsp;</td>
-				
-				<td align="right" nowrap="nowrap"><font
-					class="normalSmallWhite"><_4s_:formatMiladiDate_rtl
-					value="${loginDate}" /> </font></td>
-				<td></td>
- 
-				<td align="right" colspan="4" nowrap="nowrap">&nbsp;&nbsp;<font
-					class="normalSmallWhite"><fmt:message
-					key="commons.caption.username" />
-				:${employee.firstName}&nbsp;</font>&nbsp;<a href=""></a></td>
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
 
-				
-				<td width="50%"></td>
-			</tr>
-		</table>
-		</div>
-		</td>
-		<!-- Username section End------------------------------------------------ -->
-	</tr>
-	<tr>
-		<!--td>
+							<td height="100" colspan="7" valign="top" align="center"><img
+								src="/Requests/web/common/images/erp_header.jpg" width="100%" /></td>
+						</tr>
+						<tr>
+							<td class="appName">
+								<%
+									String applicationNameString = "";
+									/* if (applicationName.equals("ASSETS")) {
+										applicationNameString = "gl.caption.applicationName";
+									 }else */
+									if (applicationName != null
+											&& applicationName.equals("ADMINISTRATION")) {
+										applicationNameString = "administration.caption.applicationName";
+									} else if (applicationName != null
+											&& applicationName.equals("requestsApproval")) {
+										applicationNameString = "requestsApproval.caption.applicationName";
+									} else if (applicationName != null
+											&& applicationName.equals("timesheet")) {
+										applicationNameString = "timesheet.caption.applicationName";
+									}
+									session.setAttribute("applicationNameString", applicationNameString);
+								%>
+							
+						</tr>
+					</table>
+					<!-- Top Header End------------------------------------------------ -->
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td bgcolor="#ECF5FF" valign="top">
+				<!-- Menu Begin------------------------------------------------ -->
+				<div class="menu">
+					<%
+						System.out.println("applicationName in header.jsp "
+								+ applicationName);
+						if (applicationName != null
+								&& applicationName.equals("ADMINISTRATION")) {
+					%>
+					<jsp:include page="/web/common/menu.jsp" flush="true" />
+					<%
+						}
+						if (applicationName != null
+								&& applicationName.equals("requestsApproval")) {
+					%>
+					<jsp:include page="/web/requestsApproval/menu.jsp" flush="true" />
+					<%
+						}
+						if (applicationName != null && applicationName.equals("timesheet")) {
+					%>
+					<jsp:include page="/web/timesheet/menu.jsp" flush="true" />
+					<%
+						}
+					%>
+
+					<!-- REQUESTSAPPROVAL -->
+					<!-- Menu End------------------------------------------------ -->
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<!-- Username section Begin------------------------------------------------ -->
+				<div class="formHeader">
+					<table width="100%" border="0" bgcolor="#91C8FF">
+						<tr class="normalMediumWhite">
+							<td width="50%"></td>
+							<_4s_:dayOfWeek />
+							<td align="right" nowrap="nowrap">&nbsp;<font
+								class="normalSmallWhite"><fmt:message
+										key="commons.caption.date" /> :</font>&nbsp;
+							</td>
+							<td align="right" nowrap="nowrap">&nbsp;<font
+								class="normalSmallWhite"><fmt:message>${dayOfWeek}</fmt:message></font>&nbsp;
+							</td>
+
+							<td align="right" nowrap="nowrap"><font
+								class="normalSmallWhite"><_4s_:formatMiladiDate_rtl
+										value="${loginDate}" /> </font></td>
+							<td></td>
+
+							<td align="right" colspan="4" nowrap="nowrap">&nbsp;&nbsp;<font
+								class="normalSmallWhite"><fmt:message
+										key="commons.caption.username" />
+									:${employee.firstName}&nbsp;</font>&nbsp;<a href=""></a></td>
+
+
+							<td width="50%"></td>
+						</tr>
+					</table>
+				</div>
+			</td>
+			<!-- Username section End------------------------------------------------ -->
+		</tr>
+		<tr>
+			<!--td>
 		<table border="0" cellpadding="0" cellspacing="0" width="100%">
 			<tr>
 				<td width="15%" valign="top">
@@ -475,5 +578,5 @@ make_menus();
 				</div>
 				</td>
 				<td width="10px;">&nbsp;</td-->
-				<td valign="top"><!-- Body Start------------------------------------------------ -->
-				
+			<td valign="top">
+				<!-- Body Start------------------------------------------------ -->
