@@ -13,30 +13,31 @@
 <%@ taglib uri="http://www.springframework.org/security/tags"
 	prefix="authz"%>
 <div id="smoothmenu1" class="ddsmoothmenu">
-	<authz:authorize access="hasRole('CAN_VIEW_page_requestsApproval')">
-		<ul>
+	<ul>
+		<authz:authorize access="hasRole('CAN_VIEW_page_requestsApproval')">
+
 			<li><a href="#"><fmt:message
 						key="timesheet.menu.basicScreens" /></a>
-			<li><abc:i18n property="timesheet.header.activity" /> <a
-				href="/Requests/timesheet/timesheetActivity.html"> &nbsp;&nbsp;
-					<fmt:message key="timesheet.header.activity" />
-			</a></li>
-			<li><abc:i18n property="timesheet.header.part" /> <a
-				href="/Requests/timesheet/timesheetPart.html"> &nbsp;&nbsp; <fmt:message
-						key="timesheet.header.part" />
-			</a></li>
-			<li><abc:i18n property="timesheet.header.specs" /> <a
-				href="/Requests/timesheet/timesheetSpecs.html"> &nbsp;&nbsp; <fmt:message
-						key="timesheet.header.specs" />
-			</a></li>
+				<ul>
+					<li><abc:i18n property="timesheet.header.activity" /> <a
+						href="/Requests/timesheet/activityView.html">
+							&nbsp;&nbsp; <fmt:message key="timesheet.header.activity" />
+					</a></li>
+					<li><abc:i18n property="timesheet.header.part" /> <a
+						href="/Requests/timesheet/timesheetPart.html"> &nbsp;&nbsp; <fmt:message
+								key="timesheet.header.part" />
+					</a></li>
+					<li><abc:i18n property="timesheet.header.specs" /> <a
+						href="/Requests/timesheet/timesheetSpecs.html"> &nbsp;&nbsp; <fmt:message
+								key="timesheet.header.specs" />
+					</a></li>
 
-		</ul>
-	</authz:authorize>
-	<ul>
-		<li><a href="/Requests/timesheet/timesheetTrans.html"><fmt:message
-					key="timesheet.header.timesheetTrans" /></a></li>
-	</ul>
-	<!-- 	
+				</ul></li>
+		</authz:authorize>
+		
+			<li><a href="/Requests/timesheet/timesheetTrans.html"><fmt:message
+						key="timesheet.header.timesheetTrans" /></a></li>
+		<!-- 	
 	<authz:authorize access="hasRole('CAN_VIEW_page_requestsApproval')" >
 	<li><a href="#"><fmt:message key="requestsApproval.menu.reports" /></a>
 		<ul>
@@ -80,7 +81,7 @@
 	</li>
 	</authz:authorize>
 	 -->
-	<!-- 
+		<!-- 
 	<li><a href="#"><fmt:message key="commons.menu.reports" /></a>
 			<ul>
 	        <li>
@@ -114,7 +115,7 @@
 	</li>
 		
 	 -->
-	<!-- 
+		<!-- 
 	<li><a href="#"><fmt:message
 		key="requestsApproval.menu.settings" /></a>
 		<ul>
@@ -145,8 +146,8 @@
 			
 		</li>
  -->
-	<li><a href="/Requests/security/logout.html"><fmt:message
-				key="commons.menu.logout" /></a></li>
+		<li><a href="/Requests/security/logout.html"><fmt:message
+					key="commons.menu.logout" /></a></li>
 	</ul>
 
 	<br style="clear: left" /> <br style="clear: left" />

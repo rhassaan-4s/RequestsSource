@@ -24,6 +24,7 @@ import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.timesheet.model.TimesheetActivity;
 import com._4s_.timesheet.model.TimesheetCostCenter;
 import com._4s_.timesheet.model.TimesheetSpecs;
+import com._4s_.timesheet.model.TimesheetTransactionParts;
 import com._4s_.timesheet.service.TimesheetManager;
 
 public class TimesheetTrans implements Controller{
@@ -86,18 +87,24 @@ public class TimesheetTrans implements Controller{
 		String formattedDate=d.format(firstDay);
 		log.debug("----formattedDate---"+formattedDate);
 		
-		model.put("firstDay", formattedDate);
+		
 		Date today=new Date();
-		String formatedToday=d.format(today);
-		log.debug("----formatedToday---"+formatedToday);
-		model.put("today", formatedToday);
+		String formattedToday=d.format(today);
+		log.debug("----formatedToday---"+formattedToday);
+		
 		
 		String dateFrom = request.getParameter("dateFrom");
 		log.debug("--dateFrom--"+dateFrom);
-		model.put("request_date_from", dateFrom);
+		
+		if(dateFrom==null || dateFrom.isEmpty()) {
+			dateFrom=formattedDate;
+		}
+		
 		String dateTo = request.getParameter("dateTo");
 		log.debug("--dateTo--"+dateTo);
-		model.put("request_date_to", dateTo);
+		if(dateTo==null || dateTo.isEmpty()) {
+			dateTo=formattedToday;
+		}
 		log.debug("---xxxxxxxDatePeriod--");		
 		
 		
@@ -137,6 +144,29 @@ public class TimesheetTrans implements Controller{
 		}
 		/////////////////////////////////////////////////////////////////
 		
+		String selectedPart1=request.getParameter("part1");
+		log.debug("selectedPart1 " + selectedPart1);
+		
+		if (selectedPart1!=null && selectedPart1.equals("")) {
+			selectedPart1=null;
+		}
+		/////////////////////////////////////////////////////////////////
+		String selectedPart2=request.getParameter("part2");
+		log.debug("selectedPart2 " + selectedPart2);
+		
+		if (selectedPart2!=null && selectedPart2.equals("")) {
+			selectedPart2=null;
+		}
+		/////////////////////////////////////////////////////////////////
+		String selectedPart3=request.getParameter("part3");
+		log.debug("selectedPart3 " + selectedPart3);
+		
+		if (selectedPart3!=null && selectedPart3.equals("")) {
+			selectedPart3=null;
+		}
+		/////////////////////////////////////////////////////////////////
+		
+		
 		
 		model = timesheetManager.getTimesheetTransactions(emp.getEmpCode(), dateFrom, dateTo, selectedCostcenter, selectedActivity, null, null, null, pageNumber, 80, "asc");//costcenter, activity, part1, part2, part3, pageNo, pageSize, sort
 		model.put("specs", availableSpecs);
@@ -144,6 +174,23 @@ public class TimesheetTrans implements Controller{
 		model.put("dateFrom", dateFrom);
 		model.put("dateTo", dateTo);
 		
+		model.put("firstDay", formattedDate);
+		model.put("today", formattedToday);
+		model.put("request_date_from", dateFrom);
+		model.put("request_date_to", dateTo);
+		
+		List partList1 = timesheetManager.getObjectsByParameter(TimesheetTransactionParts.class, "part_no", Short.parseShort("1"));
+		model.put("partList1", partList1);
+		///////////////////////////////////////////////////////////
+		List partList2 = timesheetManager.getObjectsByParameter(TimesheetTransactionParts.class, "part_no", Short.parseShort("2"));
+		model.put("partList2", partList2);
+		///////////////////////////////////////////////////////////
+		List partList3 = timesheetManager.getObjectsByParameter(TimesheetTransactionParts.class, "part_no", Short.parseShort("3"));
+		model.put("partList3", partList3);
+		/////////////////////////////////////////////////////////////////
+		model.put("selectedPart1", selectedPart1);
+		model.put("selectedPart2", selectedPart2);
+		model.put("selectedPart3", selectedPart3);
 		Settings settings = (Settings)request.getSession().getAttribute("settings");
 		
 		

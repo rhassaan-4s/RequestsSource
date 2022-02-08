@@ -60,7 +60,7 @@ public class ChangeApplication implements Controller {
 		request.getSession().setAttribute("currentApplication",
 				securityApplication);
 
-		// url =securityApplication.getDefaultPage()+"?activeLink=linkOne";
+		// url =securityApplication.getDefaultPage();
 		String defaultPage = null;
 		User user = (User) request.getSession().getAttribute("user");
 		// log.debug("user "+user);

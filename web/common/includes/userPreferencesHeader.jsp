@@ -303,7 +303,7 @@ make_menus();
 					key="commons.caption.multiItemGroups" /></b></div>
 				<ul>
 					<li><a
-						href="/Requests/security/changeUserApplication.html?activeLink=linkOne">
+						href="/Requests/security/changeUserApplication.html">
 					&nbsp;&nbsp;&nbsp;<b><fmt:message
 						key="commons.button.editUserPreferences" /></b></a></li>
 					<li><a

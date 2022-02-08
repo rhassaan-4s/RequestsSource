@@ -12,12 +12,21 @@
 function searchForm (){
 	var activity=document.getElementById("activity");
 	var costcenter=document.getElementById("costcenter");
-	if(document.getElementById("request_date_from").value!=null){
-		var dateFrom=document.getElementById("request_date_from").value;
+	
+	var part1=document.getElementById("part1");
+	var part2=document.getElementById("part2");
+	var part3=document.getElementById("part3");
+	
+	var partVal1= "";
+	var partVal2= "";
+	var partVal3= "";
+	
+	if(document.getElementById("dateFrom").value!=null){
+		var dateFrom=document.getElementById("dateFrom").value;
 		//alert('---dateFrom----'+dateFrom);
 	}
-	if(document.getElementById("request_date_to").value!=null){
-		var dateTo=document.getElementById("request_date_to").value;
+	if(document.getElementById("dateTo").value!=null){
+		var dateTo=document.getElementById("dateTo").value;
 	}
 	if(activity.value!=null){
 		var activityVal=activity.value;
@@ -25,7 +34,17 @@ function searchForm (){
 	if(costcenter.value!=null){
 		var costcenterVal=costcenter.value;
 	}
-	var URL='timesheetTrans.html?dateFrom='+dateFrom+'&dateTo='+dateTo+'&activity='+activityVal+'&costcenter='+costcenterVal;
+	
+	if(part1!=null && part1.value!=null){
+		partVal1=part1.value;
+	}
+	if(part2!=null && part2.value!=null){
+		partVal2=part2.value;
+	}
+	if(part3!=null && part3.value!=null){
+		partVal3=part3.value;
+	}
+	var URL='timesheetTrans.html?dateFrom='+dateFrom+'&dateTo='+dateTo+'&activity='+activityVal+'&costcenter='+costcenterVal+'&part1='+partVal1+'&part2='+partVal2+'&part3='+partVal3;
 	window.location.href=URL;
 }
 
@@ -76,8 +95,8 @@ function printSelection(node){
 			style="margin-right: 40px">
 			<tr>
 				<td class="tableHeader" colspan=4 nowrap><abc:i18n
-						property="timesheet.header.timesheetTrans" />
-					<fmt:message key="timesheet.header.timesheetTrans" /> :
+						property="timesheet.header.timesheetTrans" /> <fmt:message
+						key="timesheet.header.timesheetTrans" /> :
 					&nbsp;${employee.firstName}</td>
 			</tr>
 
@@ -92,53 +111,96 @@ function printSelection(node){
 									property="requestsApproval.caption.requestDate" /> <fmt:message
 									key="requestsApproval.caption.requestDate" /></td>
 						</tr>
-						<tr id="btnPrint">
+						<tr>
 							<td nowrap class="formBodControl"><abc:i18n
-									property="commons.caption.from" /> <fmt:message
-									key="commons.caption.from" /></td>
+									property="commons.caption.fromDate" /> <fmt:message
+									key="commons.caption.fromDate" /></td>
 							<td class="formBodControl"><input type="text"
 								class="calendar" readonly="readonly" autocomplete="off"
-								dir="ltr" name="request_date_from" id="request_date_from"
-								value="${dateFrom}" /></td>
+								name="dateFrom" id="dateFrom" value="${dateFrom}" /></td>
+							<td nowrap class="formBodControl"><abc:i18n
+									property="commons.caption.toDate" /> <fmt:message
+									key="commons.caption.toDate" /></td>
+							<td class="formBodControl"><input type="text"
+								class="calendar" readonly="readonly" autocomplete="off"
+								name="dateTo" id="dateTo" value="${dateTo}" /></td>
 
-							<td nowrap class="formBodControl"><abc:i18n
-									property="commons.caption.to" /> <fmt:message
-									key="commons.caption.to" /></td>
-							<td class="formBodControl"><input type="text"
-								class="calendar" readonly="readonly" autocomplete="off"
-								dir="ltr" name="request_date_to" id="request_date_to"
-								value="${dateTo}" /></td>
 						</tr>
 
 						<tr>
 							<td nowrap class="formBodControl"><abc:i18n
 									property="timesheet.caption.activityName" /> <fmt:message
 									key="timesheet.caption.activityName" /></td>
-						<td  class="formBodControl" >
-									<select name="activity" id="activity">
-										<option value=""><fmt:message key="commons.caption.select" /></option>						
-											<c:forEach items="${activityList}" var="activity">
-												<option value="${activity.activity}" ${activity.activity == selectedActivity ?'selected':''}>${activity.name}</option>
-											</c:forEach>
-									</select>
-							</td>	
-							</tr>
-							
-							<tr>
+							<td class="formBodControl"><select name="activity"
+								id="activity">
+									<option value=""><fmt:message
+											key="commons.caption.select" /></option>
+									<c:forEach items="${activityList}" var="activity">
+										<option value="${activity.activity}"
+											${activity.activity == selectedActivity ?'selected':''}>${activity.name}</option>
+									</c:forEach>
+							</select></td>
+						</tr>
+
+						<tr>
 							<td nowrap class="formBodControl"><abc:i18n
 									property="timesheet.caption.costcenterName" /> <fmt:message
 									key="timesheet.caption.costcenterName" /></td>
-						<td  class="formBodControl" >
-									<select name="costcenter" id="costcenter">
-										<option value=""><fmt:message key="commons.caption.select" /></option>						
-											<c:forEach items="${costcenterList}" var="costcenter">
-												<option value="${costcenter.costCode}" ${costcenter.costCode == selectedCostcenter ?'selected':''}>${costcenter.costCode}-${costcenter.costName}</option>
+							<td class="formBodControl"><select name="costcenter"
+								id="costcenter">
+									<option value=""><fmt:message
+											key="commons.caption.select" /></option>
+									<c:forEach items="${costcenterList}" var="costcenter">
+										<option value="${costcenter.costCode}"
+											${costcenter.costCode == selectedCostcenter ?'selected':''}>${costcenter.costCode}-${costcenter.costName}</option>
+									</c:forEach>
+							</select></td>
+						</tr>
+						<tr>
+						<c:choose>
+							<c:when
+								test="${specs!=null && specs!='' && specs.part1_name!=null && specs.part1_name!=''}">
+								
+									<td nowrap class="formBodControl">${specs.part1_name}</td>
+									<td class="formBodControl"><select name="part1" id="part1">
+											<option value=""><fmt:message
+													key="commons.caption.select" /></option>
+											<c:forEach items="${partList1}" var="part1">
+												<option value="${part1.code}"
+													${part1.code == selectedPart1 ?'selected':''}>${part1.name}</option>
 											</c:forEach>
-									</select>
-							</td>	
-							</tr>
-							
-							
+									</select></td>
+							</c:when>
+						</c:choose>
+						<c:choose>
+							<c:when
+								test="${specs!=null && specs!='' && specs.part2_name!=null && specs.part2_name!=''}">
+									<td nowrap class="formBodControl">${specs.part2_name}</td>
+									<td class="formBodControl"><select name="part2" id="part2">
+											<option value=""><fmt:message
+													key="commons.caption.select" /></option>
+											<c:forEach items="${partList2}" var="part2">
+												<option value="${part2.code}"
+													${part2.code == selectedPart2 ? 'selected':''}>${part2.name}</option>
+											</c:forEach>
+									</select></td>
+							</c:when>
+						</c:choose>
+						<c:choose>
+							<c:when
+								test="${specs!=null && specs!='' && specs.part3_name!=null && specs.part3_name!=''}">
+									<td nowrap class="formBodControl">${specs.part3_name}</td>
+									<td class="formBodControl"><select name="part3" id="part3">
+											<option value=""><fmt:message
+													key="commons.caption.select" /></option>
+											<c:forEach items="${partList3}" var="part3">
+												<option value="${part3.code}"
+													${part3.code == selectedPart3 ?'selected':''}>${part3.name}</option>
+											</c:forEach>
+									</select></td>
+							</c:when>
+						</c:choose>
+</tr>
 						<tr>
 							<td><abc:i18n property="commons.button.search" /> <input
 								type="button" id="btnPrint" name="aaa" onclick="searchForm()"
@@ -245,7 +307,7 @@ function printSelection(node){
 			</tr>
 
 		</table>
-
+		<!-- 
 		<table align="center">
 			<tr>
 				<td colspan="2" align="center"><br> <abc:i18n
@@ -272,6 +334,7 @@ function printSelection(node){
 					onClick="exportExcel();"></input></td>
 			</tr>
 		</table>
+		 -->
 	</form>
 
 </table>

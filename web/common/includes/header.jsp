@@ -382,7 +382,7 @@ bartext:'MAIN MENU',       // bar text (the vertical cell) use text or img tag
 menuItems:[
 //[name, link, target, colspan, endrow?] - leave 'link' and 'target' blank to make a header
 	["<b><fmt:message key="commons.caption.multiItemGroups" /></b>"],
-	["<b><fmt:message key="commons.button.editUserPreferences" /></b>", "/Requests/security/changeUserApplication.html?activeLink=linkOne", "_new"],
+	["<b><fmt:message key="commons.button.editUserPreferences" /></b>", "/Requests/security/changeUserApplication.html", "_new"],
 	["<b><fmt:message key="commons.caption.date" /></b>", "javascript:createWindow('<c:url value="/common/commonAdminDateConverter.html"/>')", "_new"],
 	["<b><fmt:message key="commons.caption.applications" /></b>"]
 <%System.out.println("application " + activeApplications);
@@ -567,7 +567,7 @@ make_menus();
 					key="commons.caption.multiItemGroups" /></b></div>
 				<ul>
 					<li><a
-						href="/Requests/security/changeUserApplication.html?activeLink=linkOne">
+						href="/Requests/security/changeUserApplication.html">
 					&nbsp;&nbsp;&nbsp;<b><fmt:message
 						key="commons.button.editUserPreferences" /></b></a></li>
 					<li><a

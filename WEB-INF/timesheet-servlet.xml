@@ -51,6 +51,45 @@
 			</bean>
 		</property>
 	</bean>
+	
+	<bean id="activityForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.timesheet.web.action.ActivityForm">
+				<property name="commandName">
+					<value>activity</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.timesheet.model.TimesheetActivity</value>
+				</property>
+				<property name="formView">
+					<value>activityForm</value>
+				</property>
+				<property name="successView">
+					<value>activityView</value>
+				</property>
+				<property name="timesheetManager">
+					<ref bean="timesheetManager" />
+				</property>
+
+				<!-- <property name="binders">
+					<list>
+						<ref bean="requestTypesBinder" />
+					</list>
+				</property>
+				 -->
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="activityView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.timesheet.web.action.ActivityView">
+				<property name="timesheetManager">
+					<ref bean="timesheetManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
 
 	<!--
 		_____________________________________________________________________
@@ -71,6 +110,8 @@
 		<property name="mappings">
 			<props>
 				<prop key="/timesheetTrans.html">timesheetTrans</prop>
+				<prop key="/activityView.html">activityView</prop>
+				<prop key="/activityForm.html">activityForm</prop>
 			</props>
 		</property>
 	</bean>
