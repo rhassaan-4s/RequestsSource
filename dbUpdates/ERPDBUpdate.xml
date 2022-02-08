@@ -16242,4 +16242,11 @@ INSERT INTO i18n_message VALUES (202116502,'كود النشاط', 101494, 1);&#x
 INSERT INTO i18n_message VALUES (202116503, 'Activity Code', 101494, 3);&#xD;
 INSERT INTO I18N_KEY VALUES (101495, 'timesheet.caption.activityEnName', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116504,'اسم النشاط (انجليزي)', 101495, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116505, 'Activity English Name', 101495, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116505, 'Activity English Name', 101495, 3);</statment></query><query><sqlindex>202</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101496, 'timesheet.caption.partCode', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116506,'الكود', 101496, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116507, 'Code', 101496, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101497, 'timesheet.caption.partName', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116508,'الاسم', 101497, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116509, 'Name', 101497, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101498, 'timesheet.caption.partEnName', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116510,'الاسم (انجليزي)', 101498, 1);INSERT INTO i18n_message VALUES (202116511, 'English Name', 101498, 3);</statment></query></SQL>

@@ -32,6 +32,7 @@ import com._4s_.security.model.SecurityApplication;
 import com._4s_.security.model.User;
 import com._4s_.security.service.MySecurityManager;
 import com._4s_.security.service.UsersMap;
+import com._4s_.timesheet.model.TimesheetSpecs;
 
 public class DefaultPage extends BaseController {
 
@@ -207,7 +208,28 @@ public class DefaultPage extends BaseController {
 				request.getSession().setAttribute("settings",settings1);
 				request.getSession().setAttribute("salary_from_day", salary_from_day);
 				request.getSession().setAttribute("requestsDeadline", requestsDeadline);
-
+				
+				TimesheetSpecs specs = null;
+				List specsList = commonManager.getObjects(TimesheetSpecs.class);
+				String partName1 = null;
+				String partName2 = null;
+				String partName3 = null;
+				if (specsList.size()>0) {
+					specs = (TimesheetSpecs)specsList.get(0);
+					if (specs.getIs_used1().equals("1")) {
+						partName1 = specs.getPart1_name();
+					}
+					if (specs.getIs_used2().equals("1")) {
+						partName2 = specs.getPart2_name();
+					}
+					if (specs.getIs_used3().equals("1")) {
+						partName3 = specs.getPart3_name();
+					}
+				}
+				request.getSession().setAttribute("timesheetSpecs", specs);
+				request.getSession().setAttribute("partName1", partName1);
+				request.getSession().setAttribute("partName2", partName2);
+				request.getSession().setAttribute("partName3", partName3);
 				//		
 				//		if (user.getDefaultApplication().getName().equals("GL")) {
 				//			//Throwing gl settings in session/////////////////////////////////////////////

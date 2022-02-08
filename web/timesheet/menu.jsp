@@ -1,3 +1,4 @@
+<%@page import="com._4s_.timesheet.model.TimesheetSpecs"%>
 <%@ include file="/web/common/includes/taglibs.jsp"%>
 <link type="text/css" rel="stylesheet"
 	href="/Requests/web/common/css/all.css">
@@ -8,10 +9,16 @@
 <link rel="stylesheet" type="text/css" media="print, handheld"
 	href="/Requests/web/common/css/print.css">
 
-
-
-<%@ taglib uri="http://www.springframework.org/security/tags"
-	prefix="authz"%>
+	<%
+		TimesheetSpecs specs = (TimesheetSpecs) session.getAttribute("timesheetSpecs");
+		Object partName1 = session.getAttribute("partName1");
+		System.out.println(partName1);
+		Object partName2 = session.getAttribute("partName2");
+		System.out.println(partName2);
+		Object partName3 = session.getAttribute("partName3");
+		System.out.println(partName3);
+	%>
+	
 <div id="smoothmenu1" class="ddsmoothmenu">
 	<ul>
 		<authz:authorize access="hasRole('CAN_VIEW_page_requestsApproval')">
@@ -19,14 +26,45 @@
 			<li><a href="#"><fmt:message
 						key="timesheet.menu.basicScreens" /></a>
 				<ul>
-					<li><abc:i18n property="timesheet.header.activity" /> <a
-						href="/Requests/timesheet/activityView.html">
-							&nbsp;&nbsp; <fmt:message key="timesheet.header.activity" />
+					<li><a
+						href="/Requests/timesheet/activityView.html"> &nbsp;&nbsp; <fmt:message
+								key="timesheet.header.activity" />
 					</a></li>
-					<li><abc:i18n property="timesheet.header.part" /> <a
-						href="/Requests/timesheet/timesheetPart.html"> &nbsp;&nbsp; <fmt:message
-								key="timesheet.header.part" />
+					<%
+						if (partName1!=null) {
+					%>
+					<li><a
+						href="/Requests/timesheet/partView.html?partNo=1"> &nbsp;&nbsp; <%out.println((String)partName1);%>
 					</a></li>
+
+					<%
+						}
+					%>
+
+
+					<%
+						if (partName2!=null) {
+					%>
+					<li><a
+						href="/Requests/timesheet/partView.html?partNo=2"> &nbsp;&nbsp; <%out.println((String)partName2);%>
+					</a></li>
+
+					<%
+						}
+					%>
+					
+					
+					<%
+						if (partName3!=null) {
+					%>
+					<li><a
+						href="/Requests/timesheet/partView.html?partNo=3"> &nbsp;&nbsp; <%out.println((String)partName3);%>
+					</a></li>
+
+					<%
+						}
+					%>
+
 					<li><abc:i18n property="timesheet.header.specs" /> <a
 						href="/Requests/timesheet/timesheetSpecs.html"> &nbsp;&nbsp; <fmt:message
 								key="timesheet.header.specs" />
