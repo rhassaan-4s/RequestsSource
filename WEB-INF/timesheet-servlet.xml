@@ -89,7 +89,7 @@
 		<property name="target">
 			<bean class="com._4s_.timesheet.web.action.PartForm">
 				<property name="commandName">
-					<value>activity</value>
+					<value>part</value>
 				</property>
 				<property name="commandClass">
 					<value>com._4s_.timesheet.model.TimesheetTransactionParts</value>

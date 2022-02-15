@@ -20,7 +20,6 @@ import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.model.Requests;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.timesheet.model.TimesheetTransactionParts;
-import com._4s_.timesheet.model.TimesheetTransactionParts;
 import com._4s_.timesheet.service.TimesheetManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
 
@@ -38,16 +37,18 @@ public class PartForm extends BaseSimpleFormController{
 	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		String partCode=request.getParameter("code");
+		String partCode=request.getParameter("partcode");
 		log.debug("--------partCode------"+partCode);
-		
+		String partNo=request.getParameter("partNo");
+		log.debug("partNo " + partNo);
 		TimesheetTransactionParts part = null;
 		
 		if(partCode==null || partCode.equals(""))
 		{
 			log.debug("--------partCode==null------");
 			part=new TimesheetTransactionParts();
-			
+			log.debug("will set part no");
+			part.setPart_no(new Short(partNo));
 		} else {
 			part=(TimesheetTransactionParts)timesheetManager.getObjectByParameter(TimesheetTransactionParts.class,"code", partCode);
 		}
@@ -63,25 +64,28 @@ public class PartForm extends BaseSimpleFormController{
 		TimesheetTransactionParts part= (TimesheetTransactionParts) command;
 		log.debug("-----part.code----"+part.getCode());
 		Map model=new HashMap();
-		String partCode=request.getParameter("code");
+		String partCode=request.getParameter("partcode");
+		String partNo=request.getParameter("partNo");
+		log.debug("partNo " + partNo);
 		log.debug("partCode------"+partCode);
-		model.put("partCode",partCode);
-		List activitiesList=timesheetManager.getObjects(TimesheetTransactionParts.class);
-		model.put("activitiesList", activitiesList);
+		model.put("code",partCode);
+		model.put("partNo",partNo);
+		List partsList=timesheetManager.getObjectsByParameter(TimesheetTransactionParts.class,"part_no",new Short(partNo));
+		model.put("partsList", partsList);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		return model;
 	}
 
 	//**************************************** onBind ***********************************************\\	
-	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception{
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	}
+//	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception{
+//		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//	}
 //**************************************** onBindAndValidate ***********************************************\\
 	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		TimesheetTransactionParts part= (TimesheetTransactionParts) command;
+		
 //		
 //		if(errors.getErrorCount()==0)
 //		{
@@ -102,10 +106,22 @@ public class PartForm extends BaseSimpleFormController{
 	{	
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		TimesheetTransactionParts part= (TimesheetTransactionParts) command;
-		log.debug("----part code -onsubmit-----"+part.getCode());
+		log.debug("----part code ------"+part.getCode());
+		
+		String partNo=request.getParameter("partNo");
+		log.debug("partNo " + partNo);
+		log.debug("part code " + part.getCode());
+		
+		
+//		log.debug("partNo " + partNo);
+//		if (part.getCode()==null || part.getCode().isEmpty()) {
+//			log.debug("will set part no");
+//			part.setPart_no(new Short(partNo));
+//		}
+		
 		
 		timesheetManager.saveObject(part);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView("partView.html"));
+		return new ModelAndView(new RedirectView("partView.html?partNo="+partNo));
 	}
 }

@@ -39,7 +39,7 @@
 
 								<td class="helpBod" nowrap><abc:i18n
 										property="commons.button.edit" /><a
-									href="partForm.html?code=${record.code}&partNo=${partNo}"><fmt:message
+									href="partForm.html?partcode=${record.code}&partNo=${partNo}"><fmt:message
 											key="commons.button.edit" /></a></td>
 							</tr>
 						</c:forEach>
@@ -53,7 +53,7 @@
 				<td colspan="2" align="center"><br> <abc:i18n
 						property="commons.button.add" /> <input type="button"
 					value="<fmt:message key="commons.button.add"/>" name="add"
-					class="button" onclick="window.location='partForm.html'"></input>
+					class="button" onclick="window.location='partForm.html?partNo=${partNo}'"></input>
 				</td>
 			</tr>
 

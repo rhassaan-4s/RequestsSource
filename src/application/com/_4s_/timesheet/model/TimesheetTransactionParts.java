@@ -17,7 +17,7 @@ import com._4s_.restServices.json.TimesheetPartWrapper;
 public class TimesheetTransactionParts {
 
 	@Id
-	@GenericGenerator(name="part_seq",strategy="com._4s_.requestsApproval.dao.PartStringKeyGenerator")
+	@GenericGenerator(name="part_seq",strategy="com._4s_.timesheet.dao.PartStringKeyGenerator")
 	@GeneratedValue(generator="part_seq")
 	private String code;
 	private Short part_no;
@@ -51,6 +51,7 @@ public class TimesheetTransactionParts {
 	
 	public boolean equals(TimesheetTransactionParts obj) {
 		// TODO Auto-generated method stub
+		System.out.println("equalizing parts"+this.code);
 		return obj.getCode().equals(this.getCode());
 	}
 	@Override
@@ -59,6 +60,7 @@ public class TimesheetTransactionParts {
 	}
 	@Override
 	public int hashCode() {
+		System.out.println("hash of parts"+this.code);
 		return new HashCodeBuilder(991383961, 1226766147)
 		.append(this.getCode())
 
@@ -74,7 +76,8 @@ public class TimesheetTransactionParts {
 		return wrapper;
 	}
 	public Long getId() {
-		return null;
+		System.out.println("gettin id of parts"+this.code);
+		return new Long(this.code);
 	}
 	
 }

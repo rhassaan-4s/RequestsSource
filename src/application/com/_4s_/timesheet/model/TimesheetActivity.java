@@ -15,7 +15,7 @@ import com._4s_.restServices.json.TimesheetActivityWrapper;
 public class TimesheetActivity {
 
 	@Id
-	@GenericGenerator(name="activity_seq",strategy="com._4s_.requestsApproval.dao.ActivityStringKeyGenerator")//sequenceName="time_sheet_activity_seq"
+	@GenericGenerator(name="activity_seq",strategy="com._4s_.timesheet.dao.ActivityStringKeyGenerator")//sequenceName="time_sheet_activity_seq"
 	@GeneratedValue(generator="activity_seq")
 	private String activity;
 	private String name;

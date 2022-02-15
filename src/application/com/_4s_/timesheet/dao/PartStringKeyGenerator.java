@@ -1,4 +1,4 @@
-package com._4s_.requestsApproval.dao;
+package com._4s_.timesheet.dao;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -10,10 +10,10 @@ import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.id.IdentifierGenerator;
 
-public class SpecsStringKeyGenerator implements IdentifierGenerator {
+public class PartStringKeyGenerator implements IdentifierGenerator {
 
 	private String fieldName = "code";
-	private String tableSeq = "time_sheet_specs_seq";
+	private String tableSeq = "time_sheet_part_seq";
     public Serializable generate(SessionImplementor session, Object collection) throws HibernateException {
         Connection connection = session.connection();
         PreparedStatement ps = null;
@@ -28,7 +28,7 @@ public class SpecsStringKeyGenerator implements IdentifierGenerator {
                 int pk = rs.getInt(fieldName);
 
                 // Convert to a String
-                result = Integer.toString(pk);
+                result = String.format("%010d", pk);
             }
         } catch (SQLException e) {
             throw new HibernateException("Unable to generate Primary Key");

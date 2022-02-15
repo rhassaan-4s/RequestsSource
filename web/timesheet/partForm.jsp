@@ -4,17 +4,19 @@
 	
 </script>
 
-<form id="activityForm" name="activityForm" method="POST"
-	action="<c:url value="/timesheet/activityForm.html"/>">
+<form id="partForm" name="partForm" method="POST"
+	action="<c:url value="/timesheet/partForm.html"/>">
 
-<input type="hidden" id="code" name="code"
-			value="${activityCode}" />
+<input type="hidden" id="partNo" name="partNo"
+			value="${partNo}" />
+	<input type="hidden" id="partcode" name="partcode"
+			value="${code}" />
 			
 	<table width="90%" border="0" cellspacing="0" cellpadding="0" 
 		style="padding-right: 10px">
 
 		<tr>
-			<td colspan="2"><spring:bind path="activity.*">
+			<td colspan="2"><spring:bind path="part.*">
 					<c:if test="${not empty status.errorMessages}">
 						<div>
 							<c:forEach var="error" items="${status.errorMessages}">
@@ -30,41 +32,37 @@
 		<tr>
 			<table align="center" width="66%" class="sofT">
 				<tr id="head_1_ep">
-					<td class="helpTitle" colspan="2" nowrap><abc:i18n
-							property="timesheet.header.activity" /> <fmt:message
-							key="timesheet.header.activity" /></td>
+					<td class="helpTitle" colspan="2" nowrap><%
+				Object partNo = session.getAttribute("partNo");
+				Object partName = session.getAttribute("partName"+(String)partNo);
+				out.println(partName); %></td>
 				</tr>
 
 				<tr>
 
-					<c:set var="check" value="" />
-					<c:if test="${activityCode!=null && activityCode!=''}">
-						<c:set var="check" value="disabled" />
-					</c:if>
 
-					<c:if test="${check=''}">
+					<c:if test="${partcode!=null && partcode!=''}">
 						<td nowrap class="formReq" width="30%"><abc:i18n
-								property="timesheet.caption.activityCode" /> <fmt:message
-								key="timesheet.caption.activityCode" /></td>
+								property="timesheet.caption.partCode" /> <fmt:message
+								key="timesheet.caption.partCode" /></td>
 
 
-						<td class="formBodControl"><spring:bind
-								path="activity.activity">
+						<td class="formBodControl">
 								<input size="8" maxlength="8" type="text"
-									name="${status.expression}" value="${status.value}"
-									readonly="readonly" />
-							</spring:bind></td>
+									value="${code}"
+									readonly="readonly" disabled="disabled" />
+							</td>
 					</c:if>
 				</tr>
 
 				<tr>
 
 					<td nowrap class="formReq" width="30%"><abc:i18n
-							property="timesheet.caption.activityName" /> <fmt:message
-							key="timesheet.caption.activityName" /></td>
+							property="timesheet.caption.partName" /> <fmt:message
+							key="timesheet.caption.partName" /></td>
 
 					<td class="formBodControl" width="70%"><spring:bind
-							path="activity.name">
+							path="part.name">
 							<input size="40" type="text" name="${status.expression}"
 								value="${status.value}" />
 						</spring:bind></td>
@@ -73,11 +71,11 @@
 
 				<tr>
 					<td nowrap class="formReq" width="30%"><abc:i18n
-							property="timesheet.caption.activityEnName" /> <fmt:message
-							key="timesheet.caption.activityEnName" /></td>
+							property="timesheet.caption.partEnName" /> <fmt:message
+							key="timesheet.caption.partEnName" /></td>
 
 					<td class="formBodControl" width="70%"><spring:bind
-							path="activity.ename">
+							path="part.ename">
 							<input size="40" type="text" name="${status.expression}"
 								value="${status.value}" />
 						</spring:bind></td>
