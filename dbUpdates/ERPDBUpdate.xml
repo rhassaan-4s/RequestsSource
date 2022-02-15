@@ -16249,4 +16249,24 @@ INSERT INTO I18N_KEY VALUES (101497, 'timesheet.caption.partName', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116508,'الاسم', 101497, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116509, 'Name', 101497, 3);&#xD;
 INSERT INTO I18N_KEY VALUES (101498, 'timesheet.caption.partEnName', NULL);&#xD;
-INSERT INTO i18n_message VALUES (202116510,'الاسم (انجليزي)', 101498, 1);INSERT INTO i18n_message VALUES (202116511, 'English Name', 101498, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116510,'الاسم (انجليزي)', 101498, 1);INSERT INTO i18n_message VALUES (202116511, 'English Name', 101498, 3);</statment></query><query><sqlindex>203</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101499, 'timesheet.header.timesheetSpecs', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116512,'بالإضافه لمركز التكلفة... أجزاء يتم توزيع جدول الأعمال عليها', 101499, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116513, 'In addition to cost centers... Parts to distribute time sheet on', 101499, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101500, 'timesheet.caption.isUsed', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116514,'مستخدم', 101500, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116515, 'Used', 101500, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101501, 'timesheet.caption.name', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116516,'المسمى العربي', 101501, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116517, 'Arabic Name', 101501, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101502, 'timesheet.caption.ename', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116518,'المسمى الانجليزي', 101502, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116519, 'English Name', 101502, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101503, 'timesheet.caption.part1', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116520,'الجزء الأول', 101503, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116521, '1st Part', 101503, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101504, 'timesheet.caption.part2', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116522,'الجزء الثاني', 101504, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116523, '2nd Part', 101504, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101505, 'timesheet.caption.part3', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116524,'الجزء الثالث', 101505, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116525, '3rd Part', 101505, 3);</statment></query></SQL>

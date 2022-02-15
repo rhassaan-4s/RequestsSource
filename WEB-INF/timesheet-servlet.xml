@@ -123,6 +123,28 @@
 			</bean>
 		</property>
 	</bean>
+	
+	<bean id="timesheetSpecs" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.timesheet.web.action.TimesheetSpecsForm">
+				<property name="commandName">
+					<value>specs</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.timesheet.model.TimesheetSpecs</value>
+				</property>
+				<property name="formView">
+					<value>timesheetSpecs</value>
+				</property>
+				<property name="successView">
+					<value>timesheetSpecs</value>
+				</property>
+				<property name="timesheetManager">
+					<ref bean="timesheetManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
 	<!--
 		_____________________________________________________________________
 	-->
@@ -146,6 +168,8 @@
 				<prop key="/activityForm.html">activityForm</prop>
 				<prop key="/partView.html">partView</prop>
 				<prop key="/partForm.html">partForm</prop>
+				
+				<prop key="/timesheetSpecs.html">timesheetSpecs</prop>
 			</props>
 		</property>
 	</bean>
