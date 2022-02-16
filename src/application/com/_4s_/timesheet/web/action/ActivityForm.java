@@ -21,6 +21,7 @@ import com._4s_.requestsApproval.model.Requests;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.timesheet.model.TimesheetActivity;
 import com._4s_.timesheet.service.TimesheetManager;
+import com._4s_.timesheet.web.validate.ValidationStatus;
 import com._4s_.common.web.action.BaseSimpleFormController;
 
 public class ActivityForm extends BaseSimpleFormController{
@@ -81,7 +82,10 @@ public class ActivityForm extends BaseSimpleFormController{
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		TimesheetActivity activity= (TimesheetActivity) command;
-//		
+		ValidationStatus status = timesheetManager.validateActivity(activity);
+		if (status.getStatus().equals("False")) {
+			errors.rejectValue(status.getObjAttribute(), "commons.errors.duplicateFieldEntry");
+		}
 //		if(errors.getErrorCount()==0)
 //		{
 //		

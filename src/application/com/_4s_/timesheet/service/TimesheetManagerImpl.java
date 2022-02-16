@@ -28,6 +28,7 @@ import com._4s_.timesheet.model.TimesheetSpecs;
 import com._4s_.timesheet.model.TimesheetTransaction;
 import com._4s_.timesheet.model.TimesheetTransactionDefaults;
 import com._4s_.timesheet.model.TimesheetTransactionParts;
+import com._4s_.timesheet.web.validate.ValidationStatus;
 
 @Service
 @Transactional
@@ -83,6 +84,50 @@ public class TimesheetManagerImpl extends BaseManagerImpl implements TimesheetMa
 			Map results = new HashMap();
 			results.put("Results", activity);
 			return results;
+		}
+		
+		public ValidationStatus validateActivity(TimesheetActivity activity) {
+			ValidationStatus status = new ValidationStatus();
+			Object actArName = getObjectByParameter(TimesheetActivity.class, "name", activity.getName());
+			if (actArName!=null && !((TimesheetActivity)actArName).getActivity().equals(activity.getActivity())) {
+				//duplicate ar name
+				status.setStatus("False");
+				status.setObjAttribute("name");
+				status.setMsg("Duplicate");
+				return status;
+			}
+			Object actEnName = getObjectByParameter(TimesheetActivity.class, "ename", activity.getEname());
+			if (actEnName!=null && !((TimesheetActivity)actEnName).getActivity().equals(activity.getActivity())) {
+				//duplicate en name
+				status.setStatus("False");
+				status.setObjAttribute("ename");
+				status.setMsg("Duplicate");
+				return status;
+			}
+			status.setStatus("True");
+			return status;
+		}
+		
+		public ValidationStatus validatePart(TimesheetTransactionParts part) {
+			ValidationStatus status = new ValidationStatus();
+			Object partArName = getObjectByParameter(TimesheetTransactionParts.class, "name", part.getName());
+			if (partArName!=null && ((TimesheetTransactionParts)partArName).getPart_no().equals(part.getPart_no()) && !((TimesheetTransactionParts)partArName).getCode().equals(part.getCode())) {
+				//duplicate ar name
+				status.setStatus("False");
+				status.setObjAttribute("name");
+				status.setMsg("Duplicate");
+				return status;
+			}
+			Object partEnName = getObjectByParameter(TimesheetTransactionParts.class, "ename", part.getEname());
+			if (partEnName!=null && ((TimesheetTransactionParts)partEnName).getPart_no().equals(part.getPart_no()) && !((TimesheetTransactionParts)partEnName).getCode().equals(part.getCode())) {
+				//duplicate en name
+				status.setStatus("False");
+				status.setObjAttribute("ename");
+				status.setMsg("Duplicate");
+				return status;
+			}
+			status.setStatus("True");
+			return status;
 		}
 
 		public Map insertTimesheetPart(String arName, String enName, Short part_no) {

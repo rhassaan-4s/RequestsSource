@@ -7,14 +7,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.service.BaseManager;
+import com._4s_.timesheet.model.TimesheetActivity;
 import com._4s_.timesheet.model.TimesheetCostCenter;
 import com._4s_.timesheet.model.TimesheetTransaction;
 import com._4s_.timesheet.model.TimesheetTransactionParts;
+import com._4s_.timesheet.web.validate.ValidationStatus;
 @Transactional
 public interface TimesheetManager extends BaseManager {
 	
 	public Map insertTimesheetActivity(String arName, String enName);
+	public ValidationStatus validateActivity(TimesheetActivity activity);
 	public Map insertTimesheetPart(String arName, String enName, Short part_no);
+	public ValidationStatus validatePart(TimesheetTransactionParts part);
 	public Map insertTimesheetCostcenter(String costName, String costEName,
 			Integer costLevel, String leafCost, String beforeLast);
 	public Map insertTimesheetSpecs(String partName1, String partEName1,

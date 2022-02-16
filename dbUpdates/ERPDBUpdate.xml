@@ -16269,4 +16269,6 @@ INSERT INTO i18n_message VALUES (202116522,'الجزء الثاني', 101504, 1)
 INSERT INTO i18n_message VALUES (202116523, '2nd Part', 101504, 3);&#xD;
 INSERT INTO I18N_KEY VALUES (101505, 'timesheet.caption.part3', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116524,'الجزء الثالث', 101505, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116525, '3rd Part', 101505, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116525, '3rd Part', 101505, 3);</statment></query><query><sqlindex>204</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101506, 'commons.errors.duplicateFieldEntry', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116526,'تم ادخال البيانات من قبل', 101506, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116527, 'Data has been entered before', 101506, 3);</statment></query></SQL>
