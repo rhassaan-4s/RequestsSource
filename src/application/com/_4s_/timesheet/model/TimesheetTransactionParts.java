@@ -76,8 +76,7 @@ public class TimesheetTransactionParts {
 		return wrapper;
 	}
 	public Long getId() {
-		System.out.println("gettin id of parts"+this.code);
-		return new Long(this.code);
+		return null;
 	}
 	
 }

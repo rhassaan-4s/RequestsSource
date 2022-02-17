@@ -88,6 +88,18 @@ public class TimesheetManagerImpl extends BaseManagerImpl implements TimesheetMa
 		
 		public ValidationStatus validateActivity(TimesheetActivity activity) {
 			ValidationStatus status = new ValidationStatus();
+			if (activity.getName()==null || activity.getName().isEmpty()) {
+				status.setStatus("False");
+				status.setObjAttribute("name");
+				status.setMsg("Mandatory");
+				return status;
+			}
+			if (activity.getEname()==null || activity.getEname().isEmpty()) {
+				status.setStatus("False");
+				status.setObjAttribute("ename");
+				status.setMsg("Mandatory");
+				return status;
+			}
 			Object actArName = getObjectByParameter(TimesheetActivity.class, "name", activity.getName());
 			if (actArName!=null && !((TimesheetActivity)actArName).getActivity().equals(activity.getActivity())) {
 				//duplicate ar name
@@ -110,17 +122,35 @@ public class TimesheetManagerImpl extends BaseManagerImpl implements TimesheetMa
 		
 		public ValidationStatus validatePart(TimesheetTransactionParts part) {
 			ValidationStatus status = new ValidationStatus();
-			Object partArName = getObjectByParameter(TimesheetTransactionParts.class, "name", part.getName());
-			if (partArName!=null && ((TimesheetTransactionParts)partArName).getPart_no().equals(part.getPart_no()) && !((TimesheetTransactionParts)partArName).getCode().equals(part.getCode())) {
+			if (part.getName()==null || part.getName().isEmpty()) {
+				status.setStatus("False");
+				status.setObjAttribute("name");
+				status.setMsg("Mandatory");
+				return status;
+			}
+			if (part.getEname()==null || part.getEname().isEmpty()) {
+				status.setStatus("False");
+				status.setObjAttribute("ename");
+				status.setMsg("Mandatory");
+				return status;
+			}
+			Object partArName = getObjectByTwoParameters(TimesheetTransactionParts.class,"part_no", part.getPart_no(), "name", part.getName());
+			log.debug("partarname " + partArName);
+			if (partArName!=null && !((TimesheetTransactionParts)partArName).getCode().equals(part.getCode())) {
 				//duplicate ar name
+				log.debug("duplicate ar");
 				status.setStatus("False");
 				status.setObjAttribute("name");
 				status.setMsg("Duplicate");
 				return status;
 			}
-			Object partEnName = getObjectByParameter(TimesheetTransactionParts.class, "ename", part.getEname());
+			Object partEnName = getObjectByTwoParameters(TimesheetTransactionParts.class,"part_no", part.getPart_no(), "ename", part.getEname());
+			log.debug("partenname " + partEnName);
+			System.out.println("partenname " + partEnName);
 			if (partEnName!=null && ((TimesheetTransactionParts)partEnName).getPart_no().equals(part.getPart_no()) && !((TimesheetTransactionParts)partEnName).getCode().equals(part.getCode())) {
 				//duplicate en name
+				log.debug("duplicate ar");
+				System.out.println("duplicate ar");
 				status.setStatus("False");
 				status.setObjAttribute("ename");
 				status.setMsg("Duplicate");

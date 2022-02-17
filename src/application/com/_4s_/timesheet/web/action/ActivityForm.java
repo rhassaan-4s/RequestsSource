@@ -83,9 +83,14 @@ public class ActivityForm extends BaseSimpleFormController{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		TimesheetActivity activity= (TimesheetActivity) command;
 		ValidationStatus status = timesheetManager.validateActivity(activity);
-		if (status.getStatus().equals("False")) {
+		
+		if (status.getStatus().equals("False") && status.getMsg().equals("Mandatory")) {
+			errors.rejectValue(status.getObjAttribute(), "commons.errors.requiredFields");
+		}
+		if (status.getStatus().equals("False") && status.getMsg().equals("Duplicate")) {
 			errors.rejectValue(status.getObjAttribute(), "commons.errors.duplicateFieldEntry");
 		}
+		
 //		if(errors.getErrorCount()==0)
 //		{
 //		

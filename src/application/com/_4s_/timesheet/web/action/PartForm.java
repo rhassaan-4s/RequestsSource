@@ -89,7 +89,10 @@ public class PartForm extends BaseSimpleFormController{
 		
 		TimesheetTransactionParts part = (TimesheetTransactionParts)command;
 		ValidationStatus status = timesheetManager.validatePart(part);
-		if (status.getStatus().equals("False")) {
+		if (status.getStatus().equals("False") && status.getMsg().equals("Mandatory")) {
+			errors.rejectValue(status.getObjAttribute(), "commons.errors.requiredFields");
+		}
+		if (status.getStatus().equals("False") && status.getMsg().equals("Duplicate")) {
 			errors.rejectValue(status.getObjAttribute(), "commons.errors.duplicateFieldEntry");
 		}
 //		

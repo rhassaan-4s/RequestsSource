@@ -67,6 +67,7 @@ import com._4s_.timesheet.model.TimesheetCostCenter;
 import com._4s_.timesheet.model.TimesheetSpecs;
 import com._4s_.timesheet.model.TimesheetTransactionParts;
 import com._4s_.timesheet.service.TimesheetManager;
+import com._4s_.timesheet.web.validate.ValidationStatus;
 
 
 @Service("requestsService")
@@ -1997,10 +1998,30 @@ public Map insertTimesheetActivity(TimesheetActivityWrapper activity) {
 		results.put("Status", status);
 		return results;
 	}
-	if (activity.getArName()== null || activity.getArName().isEmpty()) {
+	TimesheetActivity a = new TimesheetActivity();
+	a.setEname(activity.getEnName());
+	a.setName(activity.getArName());
+	ValidationStatus validationStatus = timesheetManager.validateActivity(a);
+	if (validationStatus.getMsg().equals("Mandatory") && validationStatus.getObjAttribute().equals("name")) {
 		RestStatus status = new RestStatus();
 		status.setCode("332");
 		status.setMessage("Arabic Name is Mandatory");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	} else if (validationStatus.getMsg().equals("Mandatory") && validationStatus.getObjAttribute().equals("ename")) {
+		RestStatus status = new RestStatus();
+		status.setCode("332");
+		status.setMessage("English Name is Mandatory");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	} else if (validationStatus.getMsg().equals("Duplicate")) {
+		RestStatus status = new RestStatus();
+		status.setCode("332");
+		status.setMessage("Arabic/English Name is entered before");
 		status.setStatus("False");
 		results.put("Results", new ArrayList());
 		results.put("Status", status);
@@ -2029,7 +2050,14 @@ public Map insertTimesheetPart(TimesheetPartWrapper part) {
 		results.put("Status", status);
 		return results;
 	}
-	if (part.getArName()== null || part.getArName().isEmpty()) {
+	TimesheetTransactionParts p = new TimesheetTransactionParts();
+	p.setEname(part.getEnName());
+	p.setName(part.getArName());
+	p.setPart_no(part.getPartNo());
+	ValidationStatus validationStatus = timesheetManager.validatePart(p);
+	System.out.println("msg "+validationStatus.getMsg());
+	System.out.println("attribute "+validationStatus.getObjAttribute());
+	if (validationStatus.getMsg().equals("Mandatory") && validationStatus.getObjAttribute().equals("name")) {
 		RestStatus status = new RestStatus();
 		status.setCode("332");
 		status.setMessage("Arabic Name is Mandatory");
@@ -2037,15 +2065,23 @@ public Map insertTimesheetPart(TimesheetPartWrapper part) {
 		results.put("Results", new ArrayList());
 		results.put("Status", status);
 		return results;
-	} else if (part.getEnName()== null || part.getEnName().isEmpty()) {
+	} else if (validationStatus.getMsg().equals("Mandatory") && validationStatus.getObjAttribute().equals("ename")) {
 		RestStatus status = new RestStatus();
-		status.setCode("333");
+		status.setCode("332");
 		status.setMessage("English Name is Mandatory");
 		status.setStatus("False");
 		results.put("Results", new ArrayList());
 		results.put("Status", status);
 		return results;
-	} else if (part.getPartNo()== null || part.getPartNo()<=0) {
+	} else if (validationStatus.getMsg().equals("Duplicate")) {
+		RestStatus status = new RestStatus();
+		status.setCode("332");
+		status.setMessage("Arabic/English Name is entered before");
+		status.setStatus("False");
+		results.put("Results", new ArrayList());
+		results.put("Status", status);
+		return results;
+	}  else if (part.getPartNo()== null || part.getPartNo()<=0) {
 		RestStatus status = new RestStatus();
 		status.setCode("334");
 		status.setMessage("Part No must have a value greater than zero");
