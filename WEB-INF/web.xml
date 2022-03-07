@@ -6,6 +6,7 @@ id="WebApp_ID"
 version="3.0">
 
 	<display-name>Requests</display-name>
+	<absolute-ordering />
 	<!-- work around for the error javax.naming.NameNotFoundException: Name 
 		[spring.liveBeansView.mbeanDomain] is not bound in this Context -->
 	<context-param>
