@@ -25,7 +25,7 @@
          user-service-ref="restService" token-repository-ref="tokenRepository" />
          -->
         
-   		<form-login login-page="/security/login.html" 
+   		<form-login login-page="/security/login*" 
 			username-parameter="username" password-parameter="password" 
 			authentication-success-handler-ref="mySuccessHandler"
 			authentication-failure-handler-ref="myFailureHandler" />
@@ -352,8 +352,8 @@
 			access="CAN_VIEW_page_approvement" />
 		<intercept-url pattern="\A/requestsApproval/annualVacLimitSetting.html.*\Z"
 			access="CAN_VIEW_page_approvement" />
-		<intercept-url pattern="\A/security/login.html.*\Z"
-			access="CAN_VIEW_page_RequestsAproval_generalEmployee" />
+		<!-- <intercept-url pattern="\A/security/login.html.*\Z"
+			access="CAN_VIEW_page_RequestsAproval_generalEmployee" /> -->
 
 		<form-login login-page="/security/login.html"
 			authentication-failure-url="/security/login.html?failed=true"

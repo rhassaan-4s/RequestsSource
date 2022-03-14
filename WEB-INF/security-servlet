@@ -280,9 +280,9 @@
 		parent="txProxyTemplate">
 		<property name="target">
 			<bean class="com._4s_.security.web.action.ChangeUserPasswordFormController">
-				<property name="commandName">
+				<!--<property name="commandName">
 					<value>changePasswordCommand</value>
-				</property>
+				</property>-->
 				<property name="commandClass">
 					<value>com._4s_.security.web.command.ChangePasswordCommand</value>
 				</property>

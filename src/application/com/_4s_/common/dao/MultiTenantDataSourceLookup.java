@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.jolbox.bonecp.BoneCPDataSource;
 
-@Component(value="dataSourceLookup")
+//@Component(value="dataSourceLookup")
 public class MultiTenantDataSourceLookup extends MapDataSourceLookup {
 
 	Log logger = LogFactory.getLog(getClass());

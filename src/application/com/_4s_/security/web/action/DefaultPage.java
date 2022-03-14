@@ -7,8 +7,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -29,20 +33,22 @@ import com._4s_.security.model.User;
 import com._4s_.security.service.MySecurityManager;
 import com._4s_.security.service.UsersMap;
 
+@Controller
 public class DefaultPage extends BaseController {
 
+	@Autowired
 	private DefaultLocale defaultOne;
-
+	@Autowired
 	private LocaleSource localeSource = null;
-
+	@Autowired
 	private UsersMap userMap = null;
-
+	@Autowired
 	private CommonManager commonManager;
 	
 
-	
+	@Autowired
 	private MySecurityManager securityManager;
-	
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
 
 	public RequestsApprovalManager getRequestsApprovalManager() {
@@ -87,8 +93,10 @@ public class DefaultPage extends BaseController {
 		this.defaultOne = defaultOne;
 	}
 
-	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+//	public ModelAndView handleRequest(HttpServletRequest request,
+//			HttpServletResponse response) throws Exception {
+	@RequestMapping(value = "/defaultPage.html", method = RequestMethod.GET)
+    public String defaultPage(HttpServletRequest request) {
 		// TODO Auto-generated method stub
 		SecurityContext sc = (SecurityContext) (SecurityContextHolder.getContext());
 		log.debug("------------------------------------------username:--- "
@@ -217,7 +225,9 @@ public class DefaultPage extends BaseController {
 			request.getSession().setAttribute("purchasing", (SecurityApplication)purchasing);
 		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>> appName "+user.getDefaultApplication().getName());
-		return new ModelAndView(new RedirectView(defaultPage));
+//		return new ModelAndView(new RedirectView(defaultPage));
+		return "defaultPage.html";
+		
 	}
 
 //	public GlManagerImpl getGlManager() {

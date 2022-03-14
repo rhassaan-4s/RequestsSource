@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
+//import org.springframework.web.bind.annotation.ResponseBody;
+//import org.springframework.web.servlet.ModelAndView;
 
 import com._4s_.security.dao.MySecurityDAO;
 
@@ -37,13 +37,16 @@ public class LoginController {
 
 	@RequestMapping(value = "/login.html", method = RequestMethod.GET)
     public String login(HttpServletRequest request) {
+		log.debug("get login");
 		return "login";
 	}
+	
 	@RequestMapping(value = "/defaultPage.html", method = RequestMethod.POST)
     public String loginPage(@RequestParam(value = "error", required = false) String error, 
                             @RequestParam(value = "logout", required = false) String logout,
                             Model model,
                             HttpServletRequest request) {
+		log.debug("post login");
 //		Map model = new HashMap();
 
 //		log.debug("param: "+request.getParameter("param"));
@@ -75,7 +78,7 @@ public class LoginController {
 		request.getSession().removeAttribute("ACEGI_SECURITY_LAST_EXCEPTION");
 		request.getSession().removeAttribute("ACEGI_SECURITY_LAST_USERNAME");
 		
-		return "login";
+		return "defaultPage.html";
 
 	}
 //	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {

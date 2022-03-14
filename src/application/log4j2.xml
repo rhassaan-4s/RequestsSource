@@ -10,7 +10,7 @@
         <Logger name="com._4s_" level="ERROR" additivity="false">
             <AppenderRef ref="LogToConsole"/>
         </Logger>
-        <Logger name="org.springframework" level="ERROR" additivity="false">
+        <Logger name="org.springframework" level="FATAL" additivity="false">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger>
          <Logger name="org.hibernate" level="ERROR" additivity="false">
@@ -80,6 +80,9 @@
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
         <Logger name="com._4s_.i18n" level="DEBUG" additivity="false">
+        	 <AppenderRef ref="LogToConsole"/>
+        </Logger> 
+        <Logger name="com._4s_.security" level="DEBUG" additivity="false">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
         <Root level="DEBUG">
