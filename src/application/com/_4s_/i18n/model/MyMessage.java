@@ -29,7 +29,7 @@ public class MyMessage implements Serializable,Auditable{
 	@Id
 	private Long id;
 	@ManyToOne
-	//@JoinColumn (name="key")
+	@JoinColumn (name="key_id")
 	private Key key;
 	@ManyToOne
 	@JoinColumn (name="myLocale")

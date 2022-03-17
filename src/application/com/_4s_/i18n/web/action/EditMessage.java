@@ -77,7 +77,7 @@ public class EditMessage extends BaseSimpleFormController {
 		newResource.put(msg.getKey().getName(),msg.getMessage());
 		
 		//add the msg to the key list of msgs
-		msg.getKey().getMessages().add(msg);
+//		msg.getKey().getMessages().add(msg);
 		log
 				.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 		response.setContentType("text/html");

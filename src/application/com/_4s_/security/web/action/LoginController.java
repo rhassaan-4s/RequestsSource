@@ -38,7 +38,7 @@ public class LoginController {
 	@RequestMapping(value = "/login.html", method = RequestMethod.GET)
     public String login(HttpServletRequest request) {
 		log.debug("get login");
-		return "login";
+		return "login.html";
 	}
 	
 	@RequestMapping(value = "/defaultPage.html", method = RequestMethod.POST)
