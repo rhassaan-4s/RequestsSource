@@ -23,7 +23,9 @@ import org.springframework.web.servlet.view.RedirectView;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
+import com._4s_.i18n.model.MyLocale;
 import com._4s_.i18n.model.MyMessage;
+import com._4s_.i18n.service.MessageManager;
 import com._4s_.requestsApproval.model.AccessLevels;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.GroupAcc;
@@ -35,6 +37,15 @@ import com._4s_.requestsApproval.service.RequestsApprovalManager;
 public class TimeAttendanceReport implements Controller{
 	protected final Log log = LogFactory.getLog(getClass());
 	RequestsApprovalManager requestsApprovalManager;
+	private MessageManager messageManager;
+
+	public MessageManager getMessageManager() {
+		return messageManager;
+	}
+
+	public void setMessageManager(MessageManager messageManager) {
+		this.messageManager = messageManager;
+	}
 
 	public RequestsApprovalManager getRequestsApprovalManager() {
 		return requestsApprovalManager;
@@ -304,16 +315,16 @@ public class TimeAttendanceReport implements Controller{
 					log.debug("-------day---"+day);
 					log.debug("-------objects---"+ob.getDay()+"-------getTimeIn---"+ob.getTimeIn()+"-------getTimeOut---"+ob.getTimeOut());
 
-					if (ob.getAddress1()== null && ob.getLatitude1()!=null && !ob.getLatitude1().isEmpty() && ob.getLatitude1()!="0" 
-							&& ob.getLongitude1()!=null && !ob.getLongitude1().isEmpty() && ob.getLongitude1()!="0") {
+					if (ob.getAddress1()== null && ob.getLatitude1()!=null && !ob.getLatitude1().isEmpty() && ob.getLatitude1()!="0" ) {
 						String address1 = requestsApprovalManager.getShortAddressByGpsCoordinates(ob.getLongitude1(), ob.getLatitude1());
 						log.debug("address 1 " + address1);
 						ob.setAddress1(address1);
 					} else {
 						log.debug("long1 " +ob.getLongitude1() + " lat1 " + ob.getLatitude1() + " long2 " + ob.getLongitude2() + " lat2 " + ob.getLatitude2());
 					}
-					if(ob.getAddress2()==null && ob.getLatitude2()!=null && !ob.getLatitude2().isEmpty()  && ob.getLatitude2()!="0"  
-							&& ob.getLongitude2()!=null && !ob.getLongitude2().isEmpty()  &&  ob.getLongitude2()!="0") {
+					log.debug("ob.getAddress2() " + ob.getAddress2());
+					log.debug("ob.getLatitude2() " + ob.getLatitude2());
+					if(ob.getAddress2()==null && ob.getLatitude2()!=null && !ob.getLatitude2().isEmpty()  && ob.getLatitude2()!="0") {
 						String address2 = requestsApprovalManager.getShortAddressByGpsCoordinates(ob.getLongitude2(), ob.getLatitude2());
 						log.debug("address 2 " + address2);
 						ob.setAddress2(address2);
@@ -348,6 +359,12 @@ public class TimeAttendanceReport implements Controller{
 			tableTitle.add("commons.caption.date");
 			tableTitle.add("requestsApproval.caption.in");
 			tableTitle.add("requestsApproval.caption.out");
+			
+			tableTitle.add("requestsApproval.caption.InputTypeIn");
+			tableTitle.add("requestsApproval.caption.InputTypeOut");
+			tableTitle.add("requestsApproval.caption.locationIn");
+			tableTitle.add("requestsApproval.caption.locationOut");
+			
 			tableTitle.add("requestsApproval.caption.netTime");
 
 			List results = new ArrayList();
@@ -384,6 +401,54 @@ public class TimeAttendanceReport implements Controller{
 				} else {
 					temp.add("");
 				}
+				MyMessage msg1 = null;
+				MyMessage msg2 = null;
+				MyLocale myLocale = new MyLocale();
+				myLocale = (MyLocale) requestsApprovalManager.getObjectByParameter(
+						MyLocale.class, "isDefault", new Boolean(true));
+				log.debug("myLocale: " + myLocale.getCode());
+				if (req.getInputType1()!=null) {
+					if (req.getInputType1().equals("Web_Attendance")) {
+						msg1 = messageManager.getMessageByKeyName("requestsApproval.caption.webAttendance", myLocale);
+					} else if (req.getInputType1().equals("Request_Attendance")) {
+						msg1 = messageManager.getMessageByKeyName("requestsApproval.caption.requestAttendance", myLocale);
+					} else if (req.getInputType1().equals("Android_Attendance")) {
+						msg1 = messageManager.getMessageByKeyName("requestsApproval.caption.androidAttendance", myLocale);
+					} else if (req.getInputType1().equals("Fingerprint_Attendance")) {
+						msg1 = messageManager.getMessageByKeyName("requestsApproval.caption.fingerprintAttendance", myLocale);
+					} 
+					log.debug("inputtype " + req.getInputType1() + " msg " + msg1);
+					temp.add(msg1.getMessage());
+				} else {
+					temp.add("");
+				}
+				if (req.getInputType2()!=null) {
+					if (req.getInputType2().equals("Web_Attendance")) {
+						msg2 = messageManager.getMessageByKeyName("requestsApproval.caption.webAttendance", myLocale);
+					} else if (req.getInputType2().equals("Request_Attendance")) {
+						msg2 = messageManager.getMessageByKeyName("requestsApproval.caption.requestAttendance", myLocale);
+					} else if (req.getInputType2().equals("Android_Attendance")) {
+						msg2 = messageManager.getMessageByKeyName("requestsApproval.caption.androidAttendance", myLocale);
+					} else if (req.getInputType2().equals("Fingerprint_Attendance")) {
+						msg2 = messageManager.getMessageByKeyName("requestsApproval.caption.fingerprintAttendance", myLocale);
+					} 
+					log.debug("inputtype " + req.getInputType2() + " msg " + msg2);
+					temp.add(msg2.getMessage());
+				} else {
+					temp.add("");
+				}
+				if (req.getAddress1()!=null) {
+					temp.add(req.getAddress1());
+				} else {
+					temp.add("");
+				}
+				if (req.getAddress2()!=null) {
+					temp.add(req.getAddress2());
+				} else {
+					temp.add("");
+				}
+				
+				
 				if (req.getDiffMins()!=null && !req.getDiffMins().equals("0") && !req.getDiffHrs().equals("0")) {
 					temp.add("0"+req.getDiffHrs()+":"+req.getDiffMins());
 				} else {

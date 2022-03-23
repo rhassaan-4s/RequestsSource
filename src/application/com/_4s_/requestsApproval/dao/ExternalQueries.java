@@ -3572,7 +3572,9 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 		Object atimeObj = inMap.get("attendance_time");
 		if (atimeObj != null) {
 			attendanceTime = atimeObj.toString();
+			log.debug("in time " + attendanceTime);
 			attendanceType = inMap.get("ATTENDANCE_TYPE").toString();
+			log.debug("attendanceType " + attendanceType);
 			inputType1 = inMap.get("INPUT_TYPE").toString();
 			if (inMap.get("latitude")!=null) {
 				latitude1 = inMap.get("latitude").toString();
@@ -3605,7 +3607,11 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 				attendanceTime2 = atimeObj2.toString();
 				log.debug("out time " + attendanceTime2);
 				attendanceType2 = inMap2.get("ATTENDANCE_TYPE").toString();
+				log.debug("attendanceType2 " + attendanceType2);
 				inputType2 = inMap2.get("INPUT_TYPE").toString();
+				
+				log.debug("inMap2.get(latitude) " + inMap2.get("latitude"));
+				log.debug("inMap2.get(longitude) " + inMap2.get("longitude"));
 				if (inMap2.get("latitude")!=null) {
 					latitude2 = inMap2.get("latitude").toString();
 				} else {

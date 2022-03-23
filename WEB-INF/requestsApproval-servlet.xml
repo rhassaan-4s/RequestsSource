@@ -416,6 +416,9 @@
 				<property name="requestsApprovalManager">
 					<ref bean="requestsApprovalManager" />
 				</property>
+				<property name="messageManager">
+					<ref bean="messageManager"/>
+				</property>
 			</bean>
 		</property>
 	</bean>

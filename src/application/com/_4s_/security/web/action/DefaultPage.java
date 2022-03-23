@@ -209,28 +209,33 @@ public class DefaultPage extends BaseController {
 				request.getSession().setAttribute("settings",settings1);
 				request.getSession().setAttribute("salary_from_day", salary_from_day);
 				request.getSession().setAttribute("requestsDeadline", requestsDeadline);
-				
-				TimesheetSpecs specs = null;
-				List specsList = commonManager.getObjects(TimesheetSpecs.class);
-				String partName1 = null;
-				String partName2 = null;
-				String partName3 = null;
-				if (specsList.size()>0) {
-					specs = (TimesheetSpecs)specsList.get(0);
-					if (specs.getIs_used1().equals("1")) {
-						partName1 = specs.getPart1_name();
-					}
-					if (specs.getIs_used2().equals("1")) {
-						partName2 = specs.getPart2_name();
-					}
-					if (specs.getIs_used3().equals("1")) {
-						partName3 = specs.getPart3_name();
-					}
-				}
-				request.getSession().setAttribute("timesheetSpecs", specs);
-				request.getSession().setAttribute("partName1", partName1);
-				request.getSession().setAttribute("partName2", partName2);
-				request.getSession().setAttribute("partName3", partName3);
+//				
+//				TimesheetSpecs specs = null;
+//				List specsList = commonManager.getObjects(TimesheetSpecs.class);
+//				String partName1 = null;
+//				String partName2 = null;
+//				String partName3 = null;
+//				log.debug("spec list size " + specsList.size());
+//				if (specsList.size()>0) {
+//					specs = (TimesheetSpecs)specsList.get(0);
+//					log.debug("specs " + specs);
+//					log.debug("specs used 1 " + specs.getIs_used1());
+//					log.debug("specs used 2 " + specs.getIs_used2());
+//					log.debug("specs used 3 " + specs.getIs_used3());
+//					if (specs.getIs_used1().equals("1")) {
+//						partName1 = specs.getPart1_name();
+//					}
+//					if (specs.getIs_used2().equals("1")) {
+//						partName2 = specs.getPart2_name();
+//					}
+//					if (specs.getIs_used3().equals("1")) {
+//						partName3 = specs.getPart3_name();
+//					}
+//				}
+//				request.getSession().setAttribute("timesheetSpecs", specs);
+//				request.getSession().setAttribute("partName1", partName1);
+//				request.getSession().setAttribute("partName2", partName2);
+//				request.getSession().setAttribute("partName3", partName3);
 				//		
 				//		if (user.getDefaultApplication().getName().equals("GL")) {
 				//			//Throwing gl settings in session/////////////////////////////////////////////
@@ -333,7 +338,32 @@ public class DefaultPage extends BaseController {
 			request.getSession().setAttribute("user",user);
 			Employee employee = commonManager.getEmployeeByUser(user.getId());
 
-
+			TimesheetSpecs specs = null;
+			List specsList = commonManager.getObjects(TimesheetSpecs.class);
+			String partName1 = null;
+			String partName2 = null;
+			String partName3 = null;
+			log.debug("spec list size " + specsList.size());
+			if (specsList.size()>0) {
+				specs = (TimesheetSpecs)specsList.get(0);
+				log.debug("specs " + specs);
+				log.debug("specs used 1 " + specs.getIs_used1());
+				log.debug("specs used 2 " + specs.getIs_used2());
+				log.debug("specs used 3 " + specs.getIs_used3());
+				if (specs.getIs_used1().equals("1")) {
+					partName1 = specs.getPart1_name();
+				}
+				if (specs.getIs_used2().equals("1")) {
+					partName2 = specs.getPart2_name();
+				}
+				if (specs.getIs_used3().equals("1")) {
+					partName3 = specs.getPart3_name();
+				}
+			}
+			request.getSession().setAttribute("timesheetSpecs", specs);
+			request.getSession().setAttribute("partName1", partName1);
+			request.getSession().setAttribute("partName2", partName2);
+			request.getSession().setAttribute("partName3", partName3);
 
 //			Settings settings = (Settings)commonManager.getObjectsOrderedByField(Settings.class,"id").get(0);
 			log.debug("username " + settings.getUsername() + "password " + settings.getPassword());

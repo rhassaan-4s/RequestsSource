@@ -271,8 +271,13 @@ function printSelection(node){
 									</c:when>
 								</c:choose>
 								<td class="helpHed" nowrap="nowrap"><abc:i18n
+										property="commons.caption.time" /> <fmt:message
+										key="commons.caption.time" /></td>
+								<td class="helpHed" nowrap="nowrap"><abc:i18n
 										property="commons.caption.notes" /> <fmt:message
 										key="commons.caption.notes" /></td>
+										
+										
 							</tr>
 							<c:forEach items="${Results}" var="record">
 								<tr height=20 bgcolor="#F8F8F8">
@@ -294,8 +299,9 @@ function printSelection(node){
 										test="${specs!=null && specs!='' && specs.part3_name!=null && specs.part3_name!=''}">
 										<td nowrap>${record.partName3}</td>
 									</c:if>
-
-									<td class="helpBod">${record.remark}</td>
+									<td>${record.cHour}:${record.cMinute}</td>
+									<td nowrap>${record.remark}</td>
+									
 
 								</tr>
 
