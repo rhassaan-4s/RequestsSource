@@ -44,6 +44,7 @@ public class ExceptionControllerAdvice  implements AccessDeniedHandler {
 			AccessDeniedException accessDeniedException) throws IOException,
 			ServletException {
 
+		System.out.println("ExceptionControllerAdvice Class: access denied");
 		RestStatus status = new RestStatus();
 		status.setCode("403");
 		status.setMessage("Access Denied");

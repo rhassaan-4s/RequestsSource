@@ -7,13 +7,18 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.requestsApproval.model.CompanyDetails;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 
-public class WelcomePage implements Controller{
+@Controller	
+public class WelcomePage{
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
 
 	public RequestsApprovalManager getRequestsApprovalManager() {
@@ -25,16 +30,15 @@ public class WelcomePage implements Controller{
 		this.requestsApprovalManager = requestsApprovalManager;
 	}
 	
-	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse arg1) throws Exception {
+	@RequestMapping(value = "/welcome.html")
+	public String handleRequest(Model model,HttpServletRequest request) throws Exception {
 		// TODO Auto-generated method stub
 		
-		Map model=new HashMap();
 		List requests=requestsApprovalManager.getObjects(CompanyDetails.class);
 		System.out.println("requests.size>>>>>>>>>>"+requests.size());
-		model.put("records", requests);
+		model.addAttribute("records", requests);
 		
-		return new ModelAndView("welcomePage",model);
+		return "welcomePage";
 	}
 	
 }

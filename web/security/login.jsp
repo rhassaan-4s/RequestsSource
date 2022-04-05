@@ -38,17 +38,22 @@
 		<form 	id="login"
 				name="login"
 				method="POST" 
-				action="login">
+				action="perform_login">
 
 				<input type="hidden" name="activeLink" value="linkOne"/>
-
+				
+				<!-- /////////////////START to enable authentication with tokens with spring security 5//////////////////// -->
+				<input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}"/>
+				<!-- /////////////////END to enable authentication with tokens with spring security 5  //////////////////// -->
+				
+				
 				<table rules="all" align="center" width="400" class="sofT" >
 					<!--tr>
 						<td colspan=2 bgcolor="#6A6A6A" height=1></td>
 					</tr-->
 
 					<tr>
-						<td class="formBodControl"><img src="/Requests/wRequestscommon/images/login-keys2.gif"></td>
+						<td class="formBodControl"><img src="/Requests/web/common/images/login-keys2.gif"></td>
 						<td>
 							<table width="100%"  cellpadding="2" cellspacing="0" border="0">
 								<tr>
@@ -104,7 +109,7 @@
 										<fmt:message key="commons.caption.userCode"/>
 										</div>
 									</td>
-									<td class="formBodControl"><input   size="30" class="flat" type='text' name='j_username'></td>
+									<td class="formBodControl"><input   size="30" class="flat" type='text' name='username'></td>
 								</tr>
 								<tr>
 									<td class="formReq">
@@ -113,7 +118,7 @@
 										<fmt:message key="commons.caption.password"/>
 										</div>
 									</td>
-									<td class="formBodControl"><input type='password' name='j_password'  size="30" class="flat"></td>
+									<td class="formBodControl"><input type='password' name='password'  size="30" class="flat"></td>
 								</tr>
 								<tr>
 									<td colspan="2" align="center" class="formBodControl">

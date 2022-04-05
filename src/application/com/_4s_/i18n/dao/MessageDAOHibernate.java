@@ -116,7 +116,7 @@ public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO
 		log.debug("tuples iterator " + resourceIterator);
 		while (resourceIterator.hasNext()) {
 			Tuple tuple = resourceIterator.next();
-			log.debug("tuple " + tuple);
+//			log.debug("tuple " + tuple);
 //			myMessage = (MyMessage) resourceIterator.next();
 //			myKey = myMessage.getKey();
 			try {
@@ -133,8 +133,8 @@ public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO
 				log.debug(e.getMessage());
 				e.printStackTrace();
 			}
-			log.debug("Adding to map [" + myKey + ","
-					+ myMessage+ "]");
+//			log.debug("Adding to map [" + myKey + ","
+//					+ myMessage+ "]");
 			resourceMap.put(myKey, myMessage);
 		}
 

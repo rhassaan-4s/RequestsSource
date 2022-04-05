@@ -7,13 +7,22 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="com._4s_" level="ERROR" additivity="false">
+        <Logger name="com._4s_" level="DEBUG" additivity="false">
             <AppenderRef ref="LogToConsole"/>
-        </Logger>
-        <Logger name="org.springframework" level="FATAL" additivity="false">
+       </Logger>
+        <Logger name="org.springframework" level="DEBUG" additivity="false">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger>
          <Logger name="org.hibernate" level="ERROR" additivity="false">
+        	 <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <Logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+        	 <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <Logger name="org.springframework.security.web.access" level="FATAL" additivity="false">
+        	 <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <Logger name="org.springframework.security.web.util.matcher.AntPathRequestMatcher" level="ERROR" additivity="false">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger>
          <Logger name="org.hibernate.cfg.AnnotationBinder" level="ERROR" additivity="false">
@@ -27,8 +36,17 @@
         </logger>
         <logger name="org.springframework.security" level="FATAL" additivity="false">
         	<AppenderRef ref="LogToConsole"/>
+        </logger> 
+        <logger name="org.springframework.security.web.FilterChainProxy" level="FATAL" additivity="false">
+        	<AppenderRef ref="LogToConsole"/>
+        </logger>
+        <logger name="org.springframework.security.access" level="DEBUG" additivity="false">
+        	<AppenderRef ref="LogToConsole"/>
         </logger>
         <logger name="org.springframework.beans.CachedIntrospectionResults" level="FATAL" additivity="false">
+        	<AppenderRef ref="LogToConsole"/>
+        </logger>
+        <logger name="org.springframework.security.web.util.matcher.AntPathRequestMatcher" level="FATAL" additivity="false">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
        <logger name="org.hibernate.type.BasicTypeRegistry" level="FATAL" additivity="false">
@@ -37,7 +55,6 @@
         <logger name="org.hibernate.boot" level="FATAL" additivity="false">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        
        <logger name="org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory" level="FATAL" additivity="false">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
@@ -74,12 +91,10 @@
         <logger name="org.hibernate.cfg.CollectionSecondPass" level="ERROR" additivity="false">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        
-        
         <Logger name="com._4s_.common" level="DEBUG" additivity="false">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
-        <Logger name="com._4s_.i18n" level="DEBUG" additivity="false">
+        <Logger name="com._4s_.i18n" level="FATAL" additivity="false">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
         <Logger name="com._4s_.security" level="DEBUG" additivity="false">

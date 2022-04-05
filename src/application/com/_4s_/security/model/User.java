@@ -207,8 +207,7 @@ public class User implements  Serializable,Auditable,UserDetails {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return new ToStringBuilder(this).append("username", this.username)
-				.append("password", this.password).toString();
+		return "username: " + this.username + " password: " + this.password;
 	}
 
 	public String getEntityDisplayName() {

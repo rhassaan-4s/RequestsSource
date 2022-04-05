@@ -131,7 +131,7 @@ public class SecurityApplication implements Serializable ,Auditable{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return new ToStringBuilder(this).append("name", this.name).toString();
+		return "Application Name: " + this.name;
 	}
 
 	public String getEntityDisplayName() {

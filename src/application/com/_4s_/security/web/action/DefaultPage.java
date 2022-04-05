@@ -7,10 +7,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,8 +37,9 @@ import com._4s_.security.service.MySecurityManager;
 import com._4s_.security.service.UsersMap;
 
 @Controller
-public class DefaultPage extends BaseController {
-
+public class DefaultPage {
+	private final Log log = LogFactory.getLog(getClass());
+	
 	@Autowired
 	private DefaultLocale defaultOne;
 	@Autowired
@@ -44,8 +48,6 @@ public class DefaultPage extends BaseController {
 	private UsersMap userMap = null;
 	@Autowired
 	private CommonManager commonManager;
-	
-
 	@Autowired
 	private MySecurityManager securityManager;
 	@Autowired
@@ -93,17 +95,15 @@ public class DefaultPage extends BaseController {
 		this.defaultOne = defaultOne;
 	}
 
-//	public ModelAndView handleRequest(HttpServletRequest request,
-//			HttpServletResponse response) throws Exception {
-	@RequestMapping(value = "/defaultPage.html", method = RequestMethod.GET)
-    public String defaultPage(HttpServletRequest request) {
+	@GetMapping(value = "/defaultPage.html")
+    public RedirectView defaultPage(HttpServletRequest request) {
 		// TODO Auto-generated method stub
 		SecurityContext sc = (SecurityContext) (SecurityContextHolder.getContext());
 		log.debug("------------------------------------------username:--- "
 				+ sc.getAuthentication().getName());
 		String username = sc.getAuthentication().getName();
 		log.fatal("ussssssssssssser ---------------------------- >>>>>>>>>>>>>> " + username);
-		User user = (User) baseManager.getObjectByParameter(User.class,
+		User user = (User) commonManager.getObjectByParameter(User.class,
 				"username", username);
 		
 		String defaultPage = null;
@@ -226,7 +226,9 @@ public class DefaultPage extends BaseController {
 		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>> appName "+user.getDefaultApplication().getName());
 //		return new ModelAndView(new RedirectView(defaultPage));
-		return "defaultPage.html";
+		RedirectView rView = new RedirectView();
+		rView.setUrl(defaultPage);
+		return rView;
 		
 	}
 

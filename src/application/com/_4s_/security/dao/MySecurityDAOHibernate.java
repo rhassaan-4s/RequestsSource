@@ -201,8 +201,9 @@ MySecurityDAO {
 		    //if user has a http session you need to save context in session for subsequent requests
 //		    HttpSession session = request.getSession(true);
 //		    session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-		    
-		log.debug("SecurityContextHolder.getContext().getAuthentication().getClass() " + SecurityContextHolder.getContext().getAuthentication().getClass());
+		log.debug("SecurityContextHolder.getContext() " + SecurityContextHolder.getContext());   
+		log.debug("SecurityContextHolder.getContext().getAuthentication() " + SecurityContextHolder.getContext().getAuthentication());
+		log.debug("SecurityContextHolder.getContext().getAuthentication() name " + SecurityContextHolder.getContext().getAuthentication().getName());
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 		
 		UserDetails userDet = (UserDetails)token.getPrincipal();

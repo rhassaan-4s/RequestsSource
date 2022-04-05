@@ -14,8 +14,8 @@ import com._4s_.common.web.action.BaseController;
 public class ErrorCode404Controller{
 
 	@RequestMapping(value="/errorCode404.html", method = RequestMethod.GET)
-	public ModelAndView handleRequest() throws Exception {
-		return new ModelAndView("errorCode404");
+	 public String error404(HttpServletRequest request) {
+		return "errorCode404";
 	}
 	
 }
