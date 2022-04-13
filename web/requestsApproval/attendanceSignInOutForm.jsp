@@ -116,8 +116,8 @@ var options = {
 								<fmt:message key="requestsApproval.caption.userCode"/>
 							</td>						
 							<td  class="formBodControl"> 
-							<input type="hidden" name="empCode" id="empCode" value="${employeeCode}"/>
-							${employeeCode}
+							<input type="hidden" name="empCode" id="empCode" value="${model.employeeCode}"/>
+							${model.employeeCode}
 							</td>
 						
 					  		<td nowrap class="formReq" >
@@ -126,7 +126,7 @@ var options = {
 							</td>							
 	 						<td class="formBodControl" id="employeeName" > 
 							&nbsp;
-							${employeeName}
+							${model.employeeName}
 							</td>													
 						</tr>
 						
@@ -150,7 +150,7 @@ var options = {
 								<spring:bind path="loginUsersRequests.request_id">
 									<select name="${status.expression}" id="${status.expression}">
 										<option value=""><fmt:message key="commons.caption.select" /></option>
-											<c:forEach items="${requestTypeList}" var="request">
+											<c:forEach items="${model.requestTypeList}" var="request">
 												<option value="${request.id}" ${request.id == loginUsersRequests.request_id.id ?' selected' : ''}>${request.description}</option>
 											</c:forEach>	
 <!--											

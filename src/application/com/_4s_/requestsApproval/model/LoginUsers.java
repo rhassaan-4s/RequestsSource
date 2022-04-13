@@ -44,10 +44,8 @@ public class LoginUsers  implements Auditable,Serializable {
 		}
 		@Override
 		public String toString() {
-			 return new ToStringBuilder(this)
-			 .append("name", this.name)
-			 .append("ename", this.ename)
-			 .toString();
+			 return "name "+ this.name+
+			 " ename "+ this.ename;
 		}
 		@Override
 		public boolean equals(Object o) {

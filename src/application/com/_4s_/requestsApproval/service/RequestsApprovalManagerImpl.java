@@ -77,7 +77,7 @@ import com.ibm.icu.util.Calendar;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
 
-import sun.net.www.protocol.https.HttpsURLConnectionImpl;
+//import sun.net.www.protocol.https.HttpsURLConnectionImpl;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)

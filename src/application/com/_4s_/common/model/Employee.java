@@ -13,9 +13,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.text.StrBuilder;
 
 import com._4s_.auditing.model.Auditable;
 import com._4s_.security.model.User;
@@ -292,15 +294,18 @@ public class Employee implements Serializable,Auditable,Searchable {
 	public void setCanViewDepartmentMessages(Boolean canViewDepartmentMessages) {
 		this.canViewDepartmentMessages = canViewDepartmentMessages;
 	}
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this)
-		.append("firstName", this.firstName)
-		.append("lastName", this.lastName)
-		.append("jobTitle", this.jobTitle)
-		.append("address", this.address)
-		.toString();
-	}
+//	@Override
+//	public String toString() {
+//		StringUtils.
+//		return new StrBuilder()
+//		.append(this.firstName+",")
+//		.append(this.lastName+",")
+//		.append(this.jobTitle+",")
+//		.append(this.address+",")
+//		.toString();
+//	}
+	
+	
 
 	@Override
 	public boolean equals(Object o) {
@@ -315,6 +320,11 @@ public class Employee implements Serializable,Auditable,Searchable {
 		.append(this.lastName, rhs.getLastName()).isEquals();
 	}
 
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return super.toString();
+	}
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(2090939697, 874530185).append(this.firstName)

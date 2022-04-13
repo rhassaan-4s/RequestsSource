@@ -65,18 +65,26 @@ public class RequestTypes implements Auditable,Serializable {
 		return "Request Types " + description;
 	}
 	
-	@Override
-	public String toString() {
-		 return new ToStringBuilder(this)
-		 .append("name", this.description)
-		 .toString();
-	}
+//	@Override
+//	public String toString() {
+//		 return new ToStringBuilder(this)
+//		 .append("name", this.description)
+//		 .toString();
+//	}
+	
+	
 
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(991383961, 1226766147)
 		.append(this.getId())
 		.toHashCode();
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return super.toString();
 	}
 
 	public void setParentId(RequestTypes parentId) {

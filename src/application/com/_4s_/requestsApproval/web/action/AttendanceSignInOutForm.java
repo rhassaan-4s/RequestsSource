@@ -14,16 +14,23 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
-import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.common.web.action.CommonController;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
@@ -31,8 +38,11 @@ import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RestStatus;
 
-public class AttendanceSignInOutForm extends BaseSimpleFormController{
+@Controller
+@RequestMapping("/attendanceSignInOutForm.html")
+public class AttendanceSignInOutForm extends CommonController {
 
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
 
 	public RequestsApprovalManager getRequestsApprovalManager() {
@@ -44,6 +54,7 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		this.requestsApprovalManager = requestsApprovalManager;
 	}
 	
+	@Autowired
 	private JavaMailSenderImpl mailSender;
 	
 	public JavaMailSenderImpl getMailSender() {
@@ -53,8 +64,10 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		this.mailSender = mailSender;
 	}
 	
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{	
+//	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
+//	{	
+	 @RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
 		DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
@@ -64,18 +77,18 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		mCalDate.setDateString(newDate);
 
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
-		log.debug("----emp from session---"+request.getSession().getAttribute("employee"));
+//		log.debug("----emp from session---"+request.getSession().getAttribute("employee"));
 		
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
 		if(loginUsers!=null){
-			log.debug("-----login.code----"+loginUsers.getEmpCode());
+//			log.debug("-----login.code----"+loginUsers.getEmpCode());
 		}
 		LoginUsersRequests loginUsersRequests = new LoginUsersRequests();
 		String empRequestTypeId=request.getParameter("empRequestTypeId");
 		
 		if(empRequestTypeId == null || empRequestTypeId.equals("")){
 			
-			log.debug("loginUsersRequests------"+loginUsersRequests);
+//			log.debug("loginUsersRequests------"+loginUsersRequests);
 			loginUsersRequests = new LoginUsersRequests();
 			if(loginUsers!=null){
 				loginUsersRequests.setLogin_user(loginUsers);
@@ -90,16 +103,20 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		
 		log.debug("empRequestTypeId------"+empRequestTypeId);
 
-
+		model.addAttribute("loginUsersRequests", loginUsersRequests);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
-	   return loginUsersRequests ;
+//	   return loginUsersRequests ;
+		return "attendanceSignInOutForm";
 	}
 	
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
-	{
+//	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+//	{
+	 
+	 @ModelAttribute("model")
+	 public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
+//		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
 		Map model=new HashMap();
 	
 		Employee emp =(Employee) request.getSession().getAttribute("employee");

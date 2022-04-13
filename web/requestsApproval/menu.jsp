@@ -13,61 +13,33 @@
 		<ul>	
 		
 		<li>
+			<a href="/Requests/requestsApproval/attendanceSignInOutForm.html">
 			<abc:i18n property="requestsApproval.header.AttendanceSignInOut" />
-			<a href="/Requests/requestsApproval/attendanceSignInOutForm.html"> &nbsp;&nbsp;
 				<fmt:message key="requestsApproval.header.AttendanceSignInOut" />
 			</a>
 		</li>
 		<li>
+			<a href="/Requests/requestsApproval/loginUsersRequestsForm.html"> 
 			<abc:i18n property="requestsApproval.header.loginUsersRequests" />
-			<a href="/Requests/requestsApproval/loginUsersRequestsForm.html"> &nbsp;&nbsp;
 				<fmt:message key="requestsApproval.header.loginUsersRequests" />
 			</a>
 		</li>
 		<li>
+			<a href="/Requests/requestsApproval/loginUsersRequestsView.html"> 
 			<abc:i18n property="requestsApproval.header.loginUsersRequestsView" />
-			<a href="/Requests/requestsApproval/loginUsersRequestsView.html"> &nbsp;&nbsp;
 				<fmt:message key="requestsApproval.header.loginUsersRequestsView" />
 			</a>
 		</li>
 		
 		<authz:authorize access="hasRole('CAN_VIEW_page_requestsApproval')" >
 		<li>
+			<a href="/Requests/requestsApproval/reports.html"> 
 			<abc:i18n property="requestsApproval.menu.allReports" />
-			<a href="/Requests/requestsApproval/reports.html"> &nbsp;&nbsp;
 				<fmt:message key="requestsApproval.menu.allReports" />
 			</a>
 		</li>
 		</authz:authorize>
-		<!-- 
-		<li><a href="#"><fmt:message key="requestsApproval.menu.allReports" /></a>
-				<ul>
-					<li>
-			        	<abc:i18n property="requestsApproval.header.empRequestsReportsForm3" />
-			        	<a href="/Requests/requestsApproval/reports.html?requestType=3"> &nbsp;&nbsp;
-			        	<fmt:message key="requestsApproval.header.empRequestsReportsForm3" />
-			        	</a>
-					</li>
-					 
-			         <li>
-			        	<abc:i18n property="requestsApproval.header.empAnnualVacationsReportsForm" />
-			        	<a href="/Requests/requestsApproval/reports.html?requestType=2"> &nbsp;&nbsp;
-			        	<fmt:message key="requestsApproval.header.empAnnualVacationsReportsForm" />
-			        	</a>
-					</li>
-			        
-			        <li>
-			        	<abc:i18n property="requestsApproval.header.empSpecialVacationsReportsForm" />
-			        	<a href="/Requests/requestsApproval/reports?requestType=1"> &nbsp;&nbsp;
-			        	<fmt:message key="requestsApproval.header.empSpecialVacationsReportsForm" />
-			        	</a>
-					</li>	        							
-				</ul>
-			</li>		    	
-	</li>	
-	-->	
-
-
+		
 	<%
 		com._4s_.common.model.Settings settings = (com._4s_.common.model.Settings) session.getAttribute("settings");
 	System.out.println("settings " + settings.getId());
@@ -75,8 +47,8 @@
 		if (settings.getAttendanceRequestEn().equals(new Boolean(true))) {
 	%>
 			<li>
+				<a href="/Requests/requestsApproval/attendanceRequestForm.html">
 				<abc:i18n property="requestsApproval.header.AttendanceRequest" />
-				<a href="/Requests/requestsApproval/attendanceRequestForm.html"> &nbsp;&nbsp;
 					<fmt:message key="requestsApproval.header.AttendanceRequest" />
 				</a>
 			</li>
@@ -90,29 +62,29 @@
 	<li><a href="#"><fmt:message key="requestsApproval.menu.reports" /></a>
 		<ul>
 	        <li>
+	        	<a href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=3"> 
 	        	<abc:i18n property="requestsApproval.header.empRequestsReportsForm3" />
-	        	<a href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=3"> &nbsp;&nbsp;
 	        	<fmt:message key="requestsApproval.header.empRequestsReportsForm3" />
 	        	</a>
 			</li>
 			 
 	         <li>
 	        	<abc:i18n property="requestsApproval.header.empAnnualVacationsReportsForm" />
-	        	<a href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=2"> &nbsp;&nbsp;
+	        	<a href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=2"> 
 	        	<fmt:message key="requestsApproval.header.empAnnualVacationsReportsForm" />
 	        	</a>
 			</li>
 	        
 			<li>
+				<a href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=1"> 
 	        	<abc:i18n property="requestsApproval.header.empSpecialVacationsReportsForm" />
-	        	<a href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=1"> &nbsp;&nbsp;
 	        	<fmt:message key="requestsApproval.header.empSpecialVacationsReportsForm" />
 	        	</a>
 			</li>
 			
 	         <li>
+	         	<a href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=7"> 
 	        	<abc:i18n property="requestsApproval.header.empErrandsReportsForm" />
-	        	<a href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=7"> &nbsp;&nbsp;
 	        	<fmt:message key="requestsApproval.header.empErrandsReportsForm" />
 	        	</a>
 			</li>
@@ -122,8 +94,8 @@
 				if (settings.getAttendanceRequestEn().equals(new Boolean(true))){ 
 			%>
 				<li>
+					<a href="/Requests/requestsApproval/attendanceRequestsReports.html">
 		        	<abc:i18n property="requestsApproval.header.attendanceRequestsReports" />
-		        	<a href="/Requests/requestsApproval/attendanceRequestsReports.html"> &nbsp;&nbsp;
 		        	<fmt:message key="requestsApproval.header.attendanceRequestsReports" />
 		        	</a>
 				</li>
@@ -136,8 +108,8 @@
 	<li><a href="#"><fmt:message key="commons.menu.reports" /></a>
 			<ul>
 	        <li>
+	        	<a href="/Requests/requestsApproval/timeAttendanceReport.html"> 
 	        	<abc:i18n property="requestsApproval.header.timeAttendanceReport" />
-	        	<a href="/Requests/requestsApproval/timeAttendanceReport.html"> &nbsp;&nbsp;
 	        	<fmt:message key="requestsApproval.header.timeAttendanceReport" />
 	        	</a>
 			</li>
@@ -145,10 +117,11 @@
 				<%
 					if (settings.getAnnualVacBalDaysEnabled().equals(new Boolean(true))) {
 				%>
-				<li><abc:i18n
-						property="requestsApproval.header.annualVacationBalance2" /> <a
+				<li><a
 					href="/Requests/requestsApproval/annualVacationBalance.html">
-						&nbsp;&nbsp; <fmt:message
+					<abc:i18n
+						property="requestsApproval.header.annualVacationBalance2" /> 
+						<fmt:message
 							key="requestsApproval.header.annualVacationBalance2" />
 				</a></li>
 				<%
@@ -157,10 +130,10 @@
 				<%
 					if (settings.getAttendanceRequestEn().equals(new Boolean(true))) {
 				%>
-				<li><abc:i18n
-						property="requestsApproval.header.attendanceVacationReport" /> <a
-					href="/Requests/requestsApproval/attendanceVacationReport.html">
-						&nbsp;&nbsp; <fmt:message
+				<li><a
+					href="/Requests/requestsApproval/attendanceVacationReport.html"><abc:i18n
+						property="requestsApproval.header.attendanceVacationReport" /> 
+						<fmt:message
 							key="requestsApproval.header.attendanceVacationReport" />
 				</a></li>
 				<%
@@ -168,8 +141,8 @@
 				%>
 				
 				<li>
+				<a href="/Requests/requestsApproval/requestStatusReports.html">
 		        	<abc:i18n property="requestsApproval.header.requestStatusReports" />
-		        	<a href="/Requests/requestsApproval/requestStatusReports.html"> &nbsp;&nbsp;
 		        	<fmt:message key="requestsApproval.header.requestStatusReports" />
 		        	</a>
 				</li>
@@ -193,21 +166,21 @@
 				<ul>
 					<li>
 						<abc:i18n property="requestsApproval.header.accessLevelsForm" />
-						<a href="/Requests/requestsApproval/accessLevelsForm.html"> &nbsp;&nbsp;
+						<a href="/Requests/requestsApproval/accessLevelsForm.html"> 
 							<fmt:message key="requestsApproval.header.accessLevelsForm" />
 						</a>
 					</li>				
 
 					<li>
 						<abc:i18n property="requestsApproval.header.empReqTypeGroupForm" />
-						<a href="/Requests/requestsApproval/empReqTypeGroupForm.html"> &nbsp;&nbsp;
+						<a href="/Requests/requestsApproval/empReqTypeGroupForm.html"> 
 							<fmt:message key="requestsApproval.header.empReqTypeGroupForm" />
 						</a>
 					</li>
 					
 					<li>
 						<abc:i18n property="requestsApproval.header.empGroupsView" />
-						<a href="/Requests/requestsApproval/empGroupsView.html"> &nbsp;&nbsp;
+						<a href="/Requests/requestsApproval/empGroupsView.html"> 
 							<fmt:message key="requestsApproval.header.empGroupsView" />
 						</a>
 					</li>									
@@ -220,13 +193,13 @@
 				<ul>
 		        <li>
 		        	<abc:i18n property="requestsApproval.header.CompanyRules" />
-		        	<a href="Requests/../../CompanyRules.pdf"> &nbsp;&nbsp;
+		        	<a href="Requests/../../CompanyRules.pdf"> 
 		        	<fmt:message key="requestsApproval.header.CompanyRules" />
 		        	</a>
 				</li>
 				 <li>
 		        	<abc:i18n property="requestsApproval.header.manual" />
-		        	<a href="Requests/../../manual.pdf"> &nbsp;&nbsp;
+		        	<a href="Requests/../../manual.pdf"> 
 		        	<fmt:message key="requestsApproval.header.manual" />
 		        	</a>
 				</li>
