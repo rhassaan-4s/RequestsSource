@@ -1,5 +1,7 @@
 package com._4s_.requestsApproval.web.action;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,16 +16,19 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -244,11 +249,17 @@ public class AttendanceSignInOutForm extends CommonController {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
 	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{
+//	public ModelAndView onSubmit(HttpServletRequest request,
+//			HttpServletResponse response, Object command, BindException errors)throws Exception 
+//	{
+	
+
+	@RequestMapping(method = RequestMethod.POST)
+	public String processSubmit(HttpServletRequest request,
+		@ModelAttribute("loginUsersRequests") LoginUsersRequests command,
+		BindingResult result, SessionStatus status) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		LoginUsersRequests loginUsersRequests=(LoginUsersRequests)command;
+		LoginUsersRequests loginUsersRequests=command;
 		
 		loginUsersRequests.setInputType(new Integer(0));//request to sign in
 		
@@ -259,7 +270,7 @@ public class AttendanceSignInOutForm extends CommonController {
 		loginUsersRequests.setPeriod_from(now);
 		loginUsersRequests.setRequest_date(now);
 
-		log.debug("----loginUsersRequests.getId()-onsubmit-----"+loginUsersRequests.getId()+"-----loginUsersRequests---"+loginUsersRequests.getLogin_user().getEmpCode());
+//		log.debug("----loginUsersRequests.getId()-onsubmit-----"+loginUsersRequests.getId()+"-----loginUsersRequests---"+loginUsersRequests.getLogin_user().getEmpCode());
 		
 		Map model=new HashMap();
 		Settings settings = (Settings)request.getSession().getAttribute("settings");
@@ -270,7 +281,18 @@ public class AttendanceSignInOutForm extends CommonController {
 		log.debug("accuracy " + accuracy);
 		if (accuracy!=null && !accuracy.isEmpty()) {
 			if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
-				address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
+				try {
+					address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} else {
 				address = "Address is not accurate to be saved";
 			}
@@ -348,8 +370,7 @@ public class AttendanceSignInOutForm extends CommonController {
 	
 			log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<  End onSubmit : <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 	
-			return new ModelAndView(new RedirectView(url));
-		
-		//return new ModelAndView(new RedirectView(getSuccessView()));
+//			return new ModelAndView(new RedirectView(url));
+		return "attendanceSignInOutForm";
 	}
 }
