@@ -266,6 +266,7 @@ public class TimesheetManagerImpl extends BaseManagerImpl implements TimesheetMa
 			DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
 			TimesheetTransaction trans = new TimesheetTransaction();
 			TimesheetActivity activity = (TimesheetActivity)getObjectByParameter(TimesheetActivity.class, "activity", activityCode);
+			log.debug("activity object for code " + activityCode + " is " + activity);
 			TimesheetCostCenter costcenter = (TimesheetCostCenter)getObjectByParameter(TimesheetCostCenter.class, "costCode", costCenterCode);
 			Employee employee = (Employee)getObjectByParameter(Employee.class, "empCode", empCode);
 			TimesheetTransactionParts nullPart = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", "9999999999");
@@ -327,9 +328,12 @@ public class TimesheetManagerImpl extends BaseManagerImpl implements TimesheetMa
 			trans.setPart2(part2);
 			trans.setPart3(part3);
 			TimesheetTransaction persistedTrans = getTimesheetTrans(employee, trans.getInDate(), costcenter, part1, part2, part3);
+			log.debug("persisted before " + persistedTrans);
 			log.debug("4");
 			if (persistedTrans == null) {
+				log.debug("will save object");
 				saveObject(trans);
+				log.debug("transaction saved " + trans);
 				log.debug("5");
 				results.put("Results", trans.getWrapper());
 				log.debug("6");

@@ -154,8 +154,7 @@ public class TimesheetTransaction {
 		// TODO Auto-generated method stub
 		String str = "";
 		return str.concat("empcode " + this.getEmpCode().getEmpCode()).concat(" data " + this.getInDate().toString())
-				.concat(" costcode " + this.costCode.getCostCode()).concat(" part1 " + this.getPart1().getCode())
-				.concat(" part2 " + this.getPart2().getCode()).concat(" part3 " + this.getPart3().getCode());
+				.concat(" costcode " + this.costCode.getCostCode());
 	}
 
 	@Override
