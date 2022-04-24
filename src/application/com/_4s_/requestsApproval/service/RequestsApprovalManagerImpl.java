@@ -693,15 +693,24 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		return externalQueries.getTimeAttendAndroid(hostName, serviceName, userName, password, empCode,from_date,to_date);
 	}
 	
-	public List getTimeAttendFromView (String empCode, Date from_date, Date to_date){
+	public List getTimeAttendFromViewForTimeAttendanceReport (String empCode, Date from_date, Date to_date){
 		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
 		String hostName = settings.getServer();
 		String serviceName = settings.getService();
 		String userName = settings.getUsername();
 		String password = settings.getPassword();
-		return externalQueries.getTimeAttendFromView(hostName, serviceName, userName, password, empCode,from_date,to_date);
+		return externalQueries.getTimeAttendFromViewForTimeAttendanceReport(hostName, serviceName, userName, password, empCode,from_date,to_date);
 	}
 	
+//	public List getTimeAttendFromViewForAttendanceVacationReport (String empCode, Date from_date, Date to_date){
+//		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
+//		String hostName = settings.getServer();
+//		String serviceName = settings.getService();
+//		String userName = settings.getUsername();
+//		String password = settings.getPassword();
+//		return externalQueries.getTimeAttendFromViewForAttendanceVacationReport(hostName, serviceName, userName, password, empCode,from_date,to_date);
+//	}
+//	
 	
 	public List getTimeAttendAll(String empCode, Date fromDate, Date toDate, String statusId) {
 		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));

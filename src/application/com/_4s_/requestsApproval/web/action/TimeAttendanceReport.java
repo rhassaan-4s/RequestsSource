@@ -265,7 +265,7 @@ public class TimeAttendanceReport implements Controller{
 				//					totalObjects=requestsApprovalManager.getTimeAttendAndroid(emp.getEmpCode(), fromDate, toDate);
 				//				}
 				log.debug("getting attendance from view");
-				totalObjects = requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
+				totalObjects = requestsApprovalManager.getTimeAttendFromViewForTimeAttendanceReport(empCode, fromDate, toDate);
 				objects=(List) totalObjects.get(0);
 
 

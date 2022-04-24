@@ -3432,7 +3432,7 @@ public List getTimeAttendAndroid (String hostName,String serviceName,String user
 	}
 	
 	
-public List getTimeAttendFromView (String hostName,String serviceName,String userName,String password, String empCode, Date from_date, Date to_date){
+public List getTimeAttendFromViewForTimeAttendanceReport (String hostName,String serviceName,String userName,String password, String empCode, Date from_date, Date to_date){
 	
 	List result = new ArrayList();
 	List totalList = new ArrayList();
@@ -3468,9 +3468,32 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 	if (empCode!= null && !empCode.equals("")){
 		emp = " t.empcode in (" +empCode+ ") and ";
 	}
+	String empCodeOrder = "";
+	if (empCode.contains(",")) {
+		empCodeOrder = " empCode, ";
+	}
 	jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
 	
 	
+	String unionAll = "";
+	if (empCode.contains(",")) {
+		unionAll = "UNION ALL\n" + 
+				"(SELECT empdays.DD , empdays.EMPCODE,emp.FIRSTNAME fName,-- empcode2, ta.DATE_ attendanceDate, ta.TIME_ attendanceTime\n" + 
+				"ta.DATE_  AS  attendance_date,\n" + 
+				"TO_CHAR(ta.TIME_,'YYYY-MM-DD hh24:MI:ss')  AS attendance_time,\n" + 
+				"(CASE WHEN ta.TRANS_TYPE='I' THEN 'IN' WHEN ta.TRANS_TYPE='O' THEN 'OUT' END ) AS ATTENDANCE_Type,\n" + 
+				"(CASE WHEN ta.date_ IS NOT NULL THEN 'Approved' END) AS approval,\n" + 
+				"(CASE WHEN ta.INPUTTYPE=0 THEN 'Web_Attendance' WHEN ta.INPUTTYPE=1 THEN 'Request_Attendance' WHEN ta.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Fingerprint_Attendance' END) AS input_type,\n" +
+				"longitude as longitude, latitude as latitude \n"+
+				"FROM ALL_EMP_DAYS empdays JOIN TIME_ATTEND ta\n" + 
+				"ON  ta.EMP_CODE=empDays.EMPCODE AND TO_CHAR(ta.DATE_,'YYYY-MM-DD')=TO_CHAR(EMPDAYS.DD,'YYYY-MM-DD')\n" + 
+				"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
+				"where\n" + 
+				"empdays.EMPCODE in ("+empCode+")\n" + 
+				"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
+				")\n" ;
+	}
+
 	StringBuilder sql = new StringBuilder("(SELECT empdays.DD , empdays.EMPCODE,emp.FIRSTNAME fName,-- empcode1, req.FROM_DATE requestfromdate, req.PERIOD_FROM requestperiod , req.POSTED posted, req.APPROVED approved\n" + 
 			"req.FROM_DATE AS  attendance_date,\n" + 
 			"TO_CHAR(req.PERIOD_FROM,'YYYY-MM-DD hh24:MI:ss') AS attendance_time,\n" + 
@@ -3482,29 +3505,15 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 			"on req.EMPCODE=empdays.EMPCODE  AND (\n" + 
 			"(req.REQUEST_TYPE=10 OR req.REQUEST_TYPE=11)\n" + 
 			"and TO_CHAR(req.FROM_DATE,'YYYY-MM-DD')=TO_CHAR(empdays.DD,'YYYY-MM-DD')\n" + 
-			"AND req.POSTED != 1\n" + 
+//			"AND req.POSTED != 1\n" + 
 			")\n" + 
 			"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
 			"where\n" + 
 			"empdays.EMPCODE in ("+empCode+")\n" + 
 			"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
 			")\n" + 
-			"UNION ALL\n" + 
-			"(SELECT empdays.DD , empdays.EMPCODE,emp.FIRSTNAME fName,-- empcode2, ta.DATE_ attendanceDate, ta.TIME_ attendanceTime\n" + 
-			"ta.DATE_  AS  attendance_date,\n" + 
-			"TO_CHAR(ta.TIME_,'YYYY-MM-DD hh24:MI:ss')  AS attendance_time,\n" + 
-			"(CASE WHEN ta.TRANS_TYPE='I' THEN 'IN' WHEN ta.TRANS_TYPE='O' THEN 'OUT' END ) AS ATTENDANCE_Type,\n" + 
-			"(CASE WHEN ta.date_ IS NOT NULL THEN 'Approved' END) AS approval,\n" + 
-			"(CASE WHEN ta.INPUTTYPE=0 THEN 'Web_Attendance' WHEN ta.INPUTTYPE=1 THEN 'Request_Attendance' WHEN ta.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Fingerprint_Attendance' END) AS input_type,\n" +
-			"longitude as longitude, latitude as latitude \n"+
-			"FROM ALL_EMP_DAYS empdays JOIN TIME_ATTEND ta\n" + 
-			"ON  ta.EMP_CODE=empDays.EMPCODE AND TO_CHAR(ta.DATE_,'YYYY-MM-DD')=TO_CHAR(EMPDAYS.DD,'YYYY-MM-DD')\n" + 
-			"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
-			"where\n" + 
-			"empdays.EMPCODE in ("+empCode+")\n" + 
-			"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
-			")\n" + 
-			"ORDER BY DD,attendance_time ASC --DD,\n");
+//			unionAll+	
+			"ORDER BY DD,"+empCodeOrder+"attendance_time ASC --DD,\n");
 	
 	
 
@@ -3729,7 +3738,314 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 	return totalList;
 	
 }
-
+//
+//public List getTimeAttendFromViewForAttendanceVacationReport (String hostName,String serviceName,String userName,String password, String empCode, Date from_date, Date to_date){
+//	
+//	List result = new ArrayList();
+//	List totalList = new ArrayList();
+//	
+//	log.debug("----fromdate---"+from_date);
+//    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+//    
+//    String from_dateString=df.format(from_date);
+//    log.debug("----from_dateString- after formatting--"+from_dateString);
+//    
+//    String to_dateString=df.format(to_date);
+//    log.debug("----to_dateString- after formatting--"+to_dateString);
+//    try {
+//    	log.debug("----xxxxxxxxxxxxxxxx-----");
+//		to_date=df.parse(to_dateString);
+//		log.debug("----to_dateString- after formatting--"+to_date);
+//		log.debug("----xxxxxxxxxxxxxxxx-----");
+//	} catch (ParseException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//
+//    
+//    MultiCalendarDate mCalDate = new MultiCalendarDate();
+//	if(from_dateString!=null){
+//		log.debug("-----date entered---"+from_dateString);
+//		mCalDate.setDateTimeString(from_dateString,new Boolean(true));
+//	}
+//	from_date = mCalDate.getDate();
+//	log.debug("----fromdate- after formatting--"+from_date);
+//	
+//	String emp = "";
+//	if (empCode!= null && !empCode.equals("")){
+//		emp = " t.empcode in (" +empCode+ ") and ";
+//	}
+//	String empCodeOrder = "";
+//	if (empCode.contains(",")) {
+//		empCodeOrder = " empCode, ";
+//	}
+//	jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
+//	
+//	
+//	String unionAll = "";
+//	if (empCode.contains(",")) {
+//		unionAll = "UNION ALL\n" + 
+//				"(SELECT empdays.DD , empdays.EMPCODE,emp.FIRSTNAME fName,-- empcode2, ta.DATE_ attendanceDate, ta.TIME_ attendanceTime\n" + 
+//				"ta.DATE_  AS  attendance_date,\n" + 
+//				"TO_CHAR(ta.TIME_,'YYYY-MM-DD hh24:MI:ss')  AS attendance_time,\n" + 
+//				"(CASE WHEN ta.TRANS_TYPE='I' THEN 'IN' WHEN ta.TRANS_TYPE='O' THEN 'OUT' END ) AS ATTENDANCE_Type,\n" + 
+//				"(CASE WHEN ta.date_ IS NOT NULL THEN 'Approved' END) AS approval,\n" + 
+//				"(CASE WHEN ta.INPUTTYPE=0 THEN 'Web_Attendance' WHEN ta.INPUTTYPE=1 THEN 'Request_Attendance' WHEN ta.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Fingerprint_Attendance' END) AS input_type,\n" +
+//				"longitude as longitude, latitude as latitude \n"+
+//				"FROM ALL_EMP_DAYS empdays JOIN TIME_ATTEND ta\n" + 
+//				"ON  ta.EMP_CODE=empDays.EMPCODE AND TO_CHAR(ta.DATE_,'YYYY-MM-DD')=TO_CHAR(EMPDAYS.DD,'YYYY-MM-DD')\n" + 
+//				"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
+//				"where\n" + 
+//				"empdays.EMPCODE in ("+empCode+")\n" + 
+//				"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
+//				")\n" ;
+//	}
+//
+//	StringBuilder sql = new StringBuilder("(SELECT empdays.DD , empdays.EMPCODE,emp.FIRSTNAME fName,-- empcode1, req.FROM_DATE requestfromdate, req.PERIOD_FROM requestperiod , req.POSTED posted, req.APPROVED approved\n" + 
+//			"req.FROM_DATE AS  attendance_date,\n" + 
+//			"TO_CHAR(req.PERIOD_FROM,'YYYY-MM-DD hh24:MI:ss') AS attendance_time,\n" + 
+//			"(CASE WHEN req.REQUEST_TYPE=10 THEN 'IN' WHEN req.REQUEST_TYPE=11 THEN 'OUT' END ) AS ATTENDANCE_Type,\n" + 
+//			"(CASE WHEN req.APPROVED =1 THEN 'Approved' WHEN req.APPROVED =99 THEN 'Rejected' WHEN (req.PERIOD_FROM IS NOT NULL AND req.approved IS NULL) THEN  'Incomplete' END) AS approval ,\n" + 
+//			"(CASE WHEN req.INPUTTYPE=0 THEN 'Web_Attendance' WHEN req.INPUTTYPE=1 THEN 'Request_Attendance' WHEN req.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Absent' END) AS input_type,\n" +
+//			"longitude as longitude, latitude as latitude \n"+
+//			"FROM ALL_EMP_DAYS empdays join LOGIN_USERS_REQUESTS req\n" + 
+//			"on req.EMPCODE=empdays.EMPCODE  AND (\n" + 
+//			"(req.REQUEST_TYPE=10 OR req.REQUEST_TYPE=11)\n" + 
+//			"and TO_CHAR(req.FROM_DATE,'YYYY-MM-DD')=TO_CHAR(empdays.DD,'YYYY-MM-DD')\n" + 
+//			"AND req.POSTED != 1\n" + 
+//			")\n" + 
+//			"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
+//			"where\n" + 
+//			"empdays.EMPCODE in ("+empCode+")\n" + 
+//			"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
+//			")\n" + 
+//			unionAll+	
+//			"ORDER BY DD,"+empCodeOrder+"attendance_time DESC --DD,\n");
+//	
+//	
+//
+//	log.debug("host name " + hostName);
+//	log.debug("service name " + serviceName);
+//	log.debug("username " + userName);
+//	log.debug("password " + password);
+//	log.debug("----sql 1---"+sql);
+//
+//	log.debug("sql statement " + sql.toString());
+//	List in=(List) jdbcTemplate.queryForList(sql.toString());
+//	
+//		
+//	LinkedCaseInsensitiveMap inMap ;
+//	LinkedCaseInsensitiveMap inMap2 ;
+//	
+//	String minDate = null;
+//	
+//	
+//	log.debug("----in---"+in);		
+//	//result.add(minDate);	
+//
+//
+//	if(to_dateString!=null){
+//		log.debug("-----to_dateString entered---"+to_dateString);
+//		mCalDate.setDateTimeString(to_dateString,new Boolean(true));
+//	}
+//	to_date = mCalDate.getDate();
+//	log.debug("----to_dateString- after formatting--"+to_date);
+//	
+////	String maxDate = null;
+//	
+//	TimeAttend timeAttend=null;
+//	Date inDate=null, outDate= null;
+//	long totalMins=0, totalHrs=0;
+//	
+//	int i=0;
+//	
+//	
+//	DateFormat d= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.US);
+//	log.debug("size "+in.size());
+//	
+//	String attendanceTime = null;
+//	String attendanceDate = null;
+//	String attendanceType = null;
+//	String inputType1 = null;
+//	String latitude1 = null;
+//	String longitude1 = null;
+//	
+//	while(i<in.size()){
+//		timeAttend=new TimeAttend();
+//		
+//
+//		
+//		String attendanceTime2 = null;
+//		String attendanceDate2 = null;
+//		String attendanceType2 = null;
+//		String inputType2 = null;
+//		String latitude2 = null;
+//		String longitude2 = null;
+//		
+//		
+////		log.debug("in.get(i) " + in.get(i).getClass());
+//		inMap = (LinkedCaseInsensitiveMap) in.get(i);
+//		Object atimeObj = inMap.get("attendance_time");
+//		if (atimeObj != null) {
+//			attendanceTime = atimeObj.toString();
+//			log.debug("in time " + attendanceTime);
+//			attendanceType = inMap.get("ATTENDANCE_TYPE").toString();
+//			log.debug("attendanceType " + attendanceType);
+//			inputType1 = inMap.get("INPUT_TYPE").toString();
+//			if (inMap.get("latitude")!=null) {
+//				latitude1 = inMap.get("latitude").toString();
+//			} else {
+//				latitude1 = null;
+//			}
+//			if (inMap.get("longitude")!=null) {
+//				longitude1 = inMap.get("longitude").toString();
+//			} else {
+//				longitude1 = null;
+//			}
+//
+//			if (attendanceType.equals("IN")) {
+//				try {
+//					inDate=d.parse(attendanceTime);
+//					log.debug("inDate  = "+inDate);
+//				} catch (ParseException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//		
+//		log.debug("i " + i + " attendanceType " + attendanceType +  " inDate " + inDate);
+//		if(in.size()>(i+1)) {
+//			inMap2 = (LinkedCaseInsensitiveMap)in.get(i+1);
+//
+//			Object atimeObj2 = inMap2.get("attendance_time");
+//			if (atimeObj2!=null) {
+//				attendanceTime2 = atimeObj2.toString();
+//				log.debug("out time " + attendanceTime2);
+//				attendanceType2 = inMap2.get("ATTENDANCE_TYPE").toString();
+//				log.debug("attendanceType2 " + attendanceType2);
+//				inputType2 = inMap2.get("INPUT_TYPE").toString();
+//				
+//				log.debug("inMap2.get(latitude) " + inMap2.get("latitude"));
+//				log.debug("inMap2.get(longitude) " + inMap2.get("longitude"));
+//				if (inMap2.get("latitude")!=null) {
+//					latitude2 = inMap2.get("latitude").toString();
+//				} else {
+//					latitude2 = null;
+//				}
+//				if (inMap2.get("longitude")!=null) {
+//					longitude2 = inMap2.get("longitude").toString();
+//				} else {
+//					longitude2 = null;
+//				}
+//				if(attendanceType2!= null && attendanceType2.equals("OUT")) {
+//					i++;
+//				}
+//				log.debug("i " + i);
+//			} else {
+//				latitude2 = null;
+//				longitude2 = null;
+//			}
+//			log.debug("longitude " + longitude2 + " latitude " + latitude2);
+//		}
+//		timeAttend.setTimeIn(attendanceTime.substring(10));
+//		
+//		timeAttend.setLatitude1(latitude1);
+//		timeAttend.setLatitude2(latitude2);
+//		timeAttend.setLongitude1(longitude1);
+//		timeAttend.setLongitude2(longitude2);
+//		timeAttend.setInputType1(inputType1);
+//		timeAttend.setInputType2(inputType2);
+//		String[] dateOnly = attendanceTime.split(" ");
+//		String[] letters=dateOnly[0].split("-");
+//
+//		int year= Integer.parseInt(letters[0]);
+//		int month =Integer.parseInt(letters[1]);
+//		int day =Integer.parseInt(letters[2]);
+//		String dateString=year+"/"+month+"/"+day;
+//		log.debug("-----dateString-0--"+dateString);
+//		timeAttend.setDay(dateString);
+//
+//		mCalDate.setDateString(dateString);
+//		Date date=mCalDate.getDate();
+//		log.debug("-----date-0--"+date);
+//
+//		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEEE",new Locale("ar","SA")); // the day of the week spelled out completely  
+//		log.debug("-------simpleDateformat.format(mCalDate.getDate())---"+simpleDateformat.format(mCalDate.getDate()));
+//		timeAttend.setDayString(simpleDateformat.format(mCalDate.getDate()));
+//
+//		String empStr =  inMap.get("empcode").toString();
+//		timeAttend.setEmployee(empStr);
+//
+//		String empName =  inMap.get("fName").toString();
+//		timeAttend.setEmpName(empName);
+//		log.debug("------timeAttend.getDay()---"+timeAttend.getDay());
+//		result.add(timeAttend);
+//		
+//
+//		log.debug("attendanceType2 " + attendanceType2);
+////		log.debug("attendanceType2!= null " + attendanceType2!= null + " attendanceType2.equals(OUT) " + attendanceType2.equals("OUT"));
+//		if (attendanceType2!= null && attendanceType2.equals("OUT")) {
+//			log.debug("attendanceType2 " + attendanceType2);
+//			try {
+//				outDate=d.parse(attendanceTime2);
+//				log.debug("outDate  = "+outDate);
+//				Calendar inCal = Calendar.getInstance();
+//				inCal.setTime(inDate);
+//				Calendar outCal = Calendar.getInstance();
+//				outCal.setTime(outDate);
+//				if (inCal.get(Calendar.DAY_OF_MONTH) == outCal.get(Calendar.DAY_OF_MONTH) 
+//						&& inCal.get(Calendar.MONTH) == outCal.get(Calendar.MONTH)
+//						&& inCal.get(Calendar.YEAR) == outCal.get(Calendar.YEAR) ) {
+//					log.debug("same day");
+//					
+//					long diffHrs= (outDate.getTime()-inDate.getTime())/(1000*60*60);
+//					long diffMins= ((outDate.getTime()-inDate.getTime())%(1000*60*60))/(1000*60);
+//					log.debug("diffHrs=== "+diffHrs);
+//					log.debug("diffMins=== "+diffMins);
+//					totalMins+=diffMins;
+//					totalHrs+=diffHrs;
+//					timeAttend.setDiffHrs(diffHrs+"");
+//					timeAttend.setDiffMins(diffMins+"");
+//					
+//					
+//					timeAttend.setTimeOut(attendanceTime2.substring(10));
+//					
+//					
+//										
+//				} else {
+//					timeAttend.setTimeOut(null);
+//					longitude2=null;
+//					latitude2=null;
+//					timeAttend.setLongitude2(longitude2);
+//					timeAttend.setLatitude2(latitude2);
+//				}
+//			} catch (ParseException e) {
+//				// TODO Auto-generated catch block
+//				log.debug("parsing exception of attendanceTime2");
+//				e.printStackTrace();
+//			}
+//		} else {
+//			timeAttend.setTimeOut(null);
+//			longitude2=null;
+//			latitude2=null;
+//			timeAttend.setLongitude2(longitude2);
+//			timeAttend.setLatitude2(latitude2);
+//		}
+//		
+//		log.debug("lat2 " + timeAttend.getLatitude2() + " long2 " + timeAttend.getLongitude2());
+//		i++;
+//		
+//	}
+//		
+//	
+//	totalList.add(result);
+//	totalList.add(totalMins+","+totalHrs);
+//	
+//	return totalList;
+//	
+//}
+//
 	
 public List getTimeAttendAll (String hostName,String serviceName,String userName,String password, String empCode, Date from_date, Date to_date, String statusId){
 	
