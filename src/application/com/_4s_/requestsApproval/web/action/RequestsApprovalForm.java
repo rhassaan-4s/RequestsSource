@@ -3,6 +3,7 @@ package com._4s_.requestsApproval.web.action;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -77,7 +78,8 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 			EmpReqApproval empReqApproval = null;
 
 			Employee emp =(Employee) request.getSession().getAttribute("employee");
-			LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+			LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
+			List accLevels = requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "emp_id", loginUsers);
 			model.put("emp", loginUsers.getName());
 			Map approvalRequest = new HashMap();
 			List<String> ordered1= new ArrayList();
@@ -100,8 +102,11 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 					/**
 					 * Detect if access level is the last order
 					 **/
+					EmpReqTypeAcc temp = null;
+					temp = (EmpReqTypeAcc) empReqAcc.get(i);
 					
 					if (i == (empReqAcc.size() - 1)){
+//						if (temp.getGroup_id())
 						last = "1";
 					}
 					else{
@@ -109,15 +114,14 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 					}
 					/*************************************/
 
-					EmpReqTypeAcc temp = new EmpReqTypeAcc();
-					temp = (EmpReqTypeAcc) empReqAcc.get(i);
+					
 					log.debug("-----temp id---"+temp.getId());
 					log.debug("-----temp group--"+temp.getGroup_id().getId());
 					
 					List<String> orderfieldListApproval = new ArrayList();
 					orderfieldListApproval.add(new String("level_id"));
 					List apps = requestsApprovalManager.getObjectsByThreeParametersThirdNotNullOrderedByFieldList(EmpReqApproval.class,"level_id", temp, "req_id", requestInfo,"approval_date",orderfieldListApproval);
-					
+					log.debug("approvals " + apps.size());
 					if (apps.size()>0) {
 						empReqApproval = (EmpReqApproval)apps.get(0);
 
@@ -226,6 +230,44 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 							requestsApprovalManager.saveObject(requestInfo);
 
 						}
+					} else {
+						// no one approved till now
+						//should check the logged in user if he is the one 
+						//supposed to approve a radio button should be displayed
+						
+						EmpReqTypeAcc empAcc = null;
+						List accLev = null;
+						log.debug("empReqAcc for the requestor size " + empReqAcc.size());
+						if(empReqAcc.size()>0) {
+							empAcc =  (EmpReqTypeAcc)empReqAcc.get(i);
+							log.debug("empAcc " + empAcc.getId());
+							accLev = empAcc.getGroup_id().getAccessLevel();//levels of the current employee request to be approved
+							log.debug("requestor group id " + empAcc.getGroup_id().getId());
+						}
+						Iterator iter = accLevels.iterator();//manager levels
+						while(iter.hasNext()) {
+							AccessLevels managerAccLev = (AccessLevels)iter.next();
+							log.debug("manager acc lev " + managerAccLev.getId());
+							if (accLev!=null && accLev.contains(managerAccLev)) {
+								approvalRequest.put("title", managerAccLev.getLevel_id().getTitle());
+								log.debug("-----title of group-----"+managerAccLev.getLevel_id().getTitle());
+								approvalRequest.put("id", empAcc.getId());
+//								approvalRequest.put("status", empReqApproval.getApproval());
+//								log.debug("-----status-empReqApproval.getApproval()--"+empReqApproval.getApproval());
+								approvalRequest.put("user", loginUsers.getName());
+								log.debug("-----user-----"+loginUsers.getName());
+//								approvalRequest.put("note", empReqApproval.getNote());
+								approvalList.add(approvalRequest);
+								
+								if (i == (empReqAcc.size() - 1)){
+									last = "1";
+								}
+								else{
+									last="0";
+								}
+								log.debug("last " + last);
+							}
+						}
 					}
 				} catch (Exception e) {
 					log.debug("execption " + e);
@@ -250,7 +292,7 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 					
 
 					List accessLevels= requestsApprovalManager.getObjectsByTwoParametersOrderedByFieldList(AccessLevels.class, "level_id",temp.getGroup_id() , "emp_id", loginUsers, ordered1);
-					
+					log.debug("access levels " + accessLevels.size());
 					if(accessLevels.size()>0){
 						approvalRequest.put("user", loginUsers.getName());
 						log.debug("------catch if user---"+loginUsers.getName());
@@ -374,7 +416,7 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 			throws Exception {
 
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		
 		String reqId = request.getParameter("reqId");
 		String status = request.getParameter("status");
@@ -412,7 +454,7 @@ log.debug("requestOb " + requestOb);
 			requestsApprovalManager.saveObject(requestOb);
 			
 		}else if(last.equals("1")){
-			
+			log.debug("last approval priority");
 			requestOb.setApproved(new Long(1));
 			requestsApprovalManager.saveObject(requestOb);
 		}

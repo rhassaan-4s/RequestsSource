@@ -2,6 +2,7 @@ package com._4s_.common.model;
 
 import java.io.Serializable;
 import java.sql.Blob;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -81,10 +82,14 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Boolean managerCanModifyAttendance;
 	
+	private Boolean isTimesheetEnabled;
 	
-	
-	public Settings() {
-		// TODO Auto-generated constructor stub
+	public Boolean getIsTimesheetEnabled() {
+		return isTimesheetEnabled;
+	}
+
+	public void setIsTimesheetEnabled(Boolean isTimesheetEnabled) {
+		this.isTimesheetEnabled = isTimesheetEnabled;
 	}
 
 	public Boolean getManagerCanModifyAttendance() {
@@ -117,7 +122,16 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Boolean signoutBeforePermissionErrand;
 	
+	private Boolean ipAddressEnabled;
 	
+	public Boolean getIpAddressEnabled() {
+		return ipAddressEnabled;
+	}
+
+	public void setIpAddressEnabled(Boolean ipAddressEnabled) {
+		this.ipAddressEnabled = ipAddressEnabled;
+	}
+
 	public Boolean getAndroidAttAutomaticApproval() {
 		return androidAttAutomaticApproval;
 	}
@@ -643,8 +657,4 @@ public class Settings  implements Serializable,Auditable {
 	public void setFingerprintEnabled(Boolean fingerprintEnabled) {
 		this.fingerprintEnabled = fingerprintEnabled;
 	}
-
-
-	
-
 }

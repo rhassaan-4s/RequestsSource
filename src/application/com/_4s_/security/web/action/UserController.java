@@ -15,6 +15,7 @@ import com._4s_.common.model.Branch;
 import com._4s_.common.model.Department;
 import com._4s_.common.service.CommonManager;
 import com._4s_.common.web.action.BaseController;
+import com._4s_.security.model.IPAddress;
 import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
 import com._4s_.security.service.MySecurityManager;
@@ -104,6 +105,18 @@ public class UserController extends BaseController implements Comparator{
 				while (imeiItr.hasNext()) {
 					Imei imei = (Imei)imeiItr.next();
 					mgr.removeObject(imei);
+				}
+					
+//			}
+		}
+		
+		String confirmDeleteIP = request.getParameter("confirmDeleteIP");
+		if (confirmDeleteIP!= null && confirmDeleteIP.equals("true")) {
+				List ips = mgr.getObjects(IPAddress.class);
+				Iterator ipItr = ips.iterator();
+				while (ipItr.hasNext()) {
+					IPAddress ip = (IPAddress)ipItr.next();
+					mgr.removeObject(ip);
 				}
 					
 //			}

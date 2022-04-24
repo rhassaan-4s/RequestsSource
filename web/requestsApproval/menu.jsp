@@ -150,44 +150,7 @@
 		
 	</li>
 		
-	
-	<li><a href="#"><fmt:message
-		key="requestsApproval.menu.settings" /></a>
-		<ul>
-			<li><a href="/Requests/requestsApproval/changeProfileForm.html"><abc:i18n
-				property="requestsApproval.header.changePassword" /> <fmt:message
-				key="requestsApproval.header.changePassword" /></a></li>		
-		
-			<li><a href="/Requests/requestsApproval/annualVacLimitSetting.html"><fmt:message
-				key="requestsApproval.header.annualVacLimitSetting" /></a>
-			</li>
-			
-			<li><a href="#"><fmt:message key="requestsApproval.menu.requestsApprovalPriorities" /></a>
-				<ul>
-					<li>
-						<abc:i18n property="requestsApproval.header.accessLevelsForm" />
-						<a href="/Requests/requestsApproval/accessLevelsForm.html"> 
-							<fmt:message key="requestsApproval.header.accessLevelsForm" />
-						</a>
-					</li>				
 
-					<li>
-						<abc:i18n property="requestsApproval.header.empReqTypeGroupForm" />
-						<a href="/Requests/requestsApproval/empReqTypeGroupForm.html"> 
-							<fmt:message key="requestsApproval.header.empReqTypeGroupForm" />
-						</a>
-					</li>
-					
-					<li>
-						<abc:i18n property="requestsApproval.header.empGroupsView" />
-						<a href="/Requests/requestsApproval/empGroupsView.html"> 
-							<fmt:message key="requestsApproval.header.empGroupsView" />
-						</a>
-					</li>									
-				</ul>
-			</li>
-		</ul>
-	</li>
 	<%if(settings.getCompanyRulesEn().equals(new Boolean(true))){ %>
 		<li><a href="#"><fmt:message key="commons.menu.help" /></a>
 				<ul>

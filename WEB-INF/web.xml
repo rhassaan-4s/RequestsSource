@@ -32,6 +32,7 @@ version="3.0">
 			/WEB-INF/config/dbUpdate/dbUpdate*.xml,
 			/WEB-INF/config/hr/hr*.xml,
 			/WEB-INF/config/requestsApproval/requestsApproval*.xml
+			/WEB-INF/config/timesheet/timesheet*.xml
 			/WEB-INF/config/rest/rest*.xml
 		</param-value>
 	</context-param>
@@ -347,6 +348,21 @@ version="3.0">
 		<url-pattern>/requestsApproval/*</url-pattern>
 	</servlet-mapping>
 
+	<!-- timesheet -->
+
+	<servlet>
+		<servlet-name>timesheet</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>15</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>timesheet</servlet-name>
+		<url-pattern>/timesheet/*</url-pattern>
+	</servlet-mapping>
+
 	
 
 	<!--  rest service -->
@@ -355,7 +371,7 @@ version="3.0">
  		<servlet-class>
  			org.springframework.web.servlet.DispatcherServlet
  		</servlet-class>
- 		<load-on-startup>15</load-on-startup>
+ 		<load-on-startup>16</load-on-startup>
 	</servlet>
 	<servlet-mapping>
 		 <servlet-name>restServices</servlet-name>

@@ -249,6 +249,21 @@ function cancelApp(){
 								
 							<tr>
 								<td width="120" class="formBodControl">${record.title}</td>
+										<c:if test="${(record.status==null || record.status=='') && posted!=1}">
+											<td width="130"><abc:i18n
+												property="requestsApproval.requestsApprovalForm.reqApproval" />
+											<fmt:message
+												key="requestsApproval.requestsApprovalForm.reqApproval" /> <input
+												type="radio" checked="checked" name="status" value="1" /><input type="hidden"
+												name="accId" value="${record.id}"></td>
+											<td width="140"><abc:i18n
+												property="requestsApproval.requestsApprovalForm.reqRejected" />
+											<fmt:message
+												key="requestsApproval.requestsApprovalForm.reqRejected" /> <input
+												type="radio" name="status" value="0" /></td>
+											<td class="formBod" >${record.user}</td>
+											<td class="formBod" >${record.notes}</td>
+										</c:if>
 										<c:if test="${record.status==2 && posted!=1}">
 											<td width="130"><abc:i18n
 												property="requestsApproval.requestsApprovalForm.reqApproval" />
@@ -264,7 +279,6 @@ function cancelApp(){
 											<td class="formBod" >${record.user}</td>
 											<td class="formBod" >${record.notes}</td>
 										</c:if>
-										
 										<c:choose>
 											<c:when test="${record.status==0 && record.user==emp && done!='true' && posted!=1 && approvedBy==operator && approvedBy!='' &&operator!='' && approvedBy!=null &&operator!=null}">
 												<td colspan="2"><abc:i18n

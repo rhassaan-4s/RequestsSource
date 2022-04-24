@@ -77,7 +77,7 @@ import com.ibm.icu.util.Calendar;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
 
-//import sun.net.www.protocol.https.HttpsURLConnectionImpl;
+import sun.net.www.protocol.https.HttpsURLConnectionImpl;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -514,7 +514,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		log.debug("logged in user " + loggedInUser.getEmpCode());
 		Long mgrId = null;
 		if (empReqTypeAccs!=null && empReqTypeAccs.size() > 0) {
-			mgrId = ((Employee)getObjectByParameter(Employee.class,"empCode",loggedInUser.getEmpCode())).getId();
+			mgrId = loggedInUser.getEmpCode().getId();
 		}
 		log.debug("mgr id " + mgrId);
 		
@@ -801,8 +801,8 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		
 		if(emp_code!=null && !emp_code.equals("")){
 			log.debug("---xxxxxxxCodeName--");
-			if(isOnlyNumbers(emp_code) && (getObjectByParameter(LoginUsers.class, "empCode", emp_code)!=null && !getObjectByParameter(LoginUsers.class, "empCode", emp_code).equals(""))){
-				LoginUsers loginUser=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp_code);
+			if(isOnlyNumbers(emp_code) && (getObjectByParameter(LoginUsers.class, "empCode", emp_code)!=null && !getObjectByParameter(LoginUsers.class, "empCode.empCode", emp_code).equals(""))){
+				LoginUsers loginUser=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode.empCode", emp_code);
 				log.debug("--loginUser.getName()--"+loginUser.getName());
 
 				List<String>list=new ArrayList<String>();
@@ -1019,7 +1019,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		log.debug("logged in user " + loggedInUser.getEmpCode());
 		Long mgrId = null;
 		if (empReqTypeAccs!=null && empReqTypeAccs.size() > 0) {
-			mgrId = ((Employee)getObjectByParameter(Employee.class,"empCode",loggedInUser.getEmpCode())).getId();
+			mgrId = ((Employee)getObjectByParameter(Employee.class,"empCode",loggedInUser.getEmpCode().getEmpCode())).getId();
 		}
 		log.debug("mgr id " + mgrId);
 		loginUserReqs= getPagedRequests(fromDate, toDate,reqType,fromExact,toExact,null,null,emp_code,codeFrom,codeTo,status,sort,empReqTypeAccs,requestNumber,mgrId,isWeb,isInsideCompany,pageNumber,pageSize);
@@ -1180,7 +1180,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			
 			EmpReqApproval empReqApproval = null;
 
-			loginUsers=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+			loginUsers=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp);
 			
 			List loggedInLevels = getObjectsByParameter(AccessLevels.class, "emp_id", loginUsers);
 			
@@ -1449,11 +1449,12 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					return response;
 				}catch (Exception e) {
 					log.debug("approval not present and should be created - execption " + e);
-					StackTraceElement[] stack = e.getStackTrace();
-					for(i=0;i<stack.length;i++) {
-						log.debug(stack[i]);
-					}
-					e.printStackTrace();
+//					StackTraceElement[] stack = e.getStackTrace();
+//					for(i=0;i<stack.length;i++) {
+//						log.debug(stack[i]);
+//					}
+//					e.printStackTrace();
+					
 //					StackTraceElement[] trace =  e.getStackTrace();
 //					for(int j=0; j<trace.length; j++) {
 //						log.debug(trace[j]);
@@ -1469,21 +1470,31 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
 //					temp = (EmpReqTypeAcc) empReqAcc.get(i);
 					temp = loggedInAcc;
-					log.debug("------catch temp ---"+temp.getGroup_id().getId());
-					log.debug("------catch title---"+temp.getGroup_id().getTitle());
-					
-					log.debug("level id " + temp.getGroup_id().getId() + " emp id " + loginUsers.getId());
-					List accessLevels= getObjectsByTwoParametersOrderedByFieldList(AccessLevels.class, "level_id",temp.getGroup_id() , "emp_id", loginUsers, ordered1);
-					log.debug("access levels size " + accessLevels.size());
-//					if(accessLevels.size()>0){
+					log.debug("temp " + temp);
+//					log.debug("temp id " + temp.getId());
+//					log.debug("------catch temp ---"+temp.getGroup_id().getId());
+//					log.debug("------catch title---"+temp.getGroup_id().getTitle());
+//					
+//					log.debug("level id " + temp.getGroup_id().getId() + " emp id " + loginUsers.getId());
+					List accessLevels= null;
+					if (temp!=null) {
+						accessLevels = getObjectsByTwoParametersOrderedByFieldList(AccessLevels.class, "level_id",temp.getGroup_id() , "emp_id", loginUsers, ordered1);
+
+						if (accessLevels!=null) {
+							log.debug("access levels size " + accessLevels.size());
+						}
+						//					if(accessLevels.size()>0){
 						approvalRequest = new HashMap();
 
+						log.debug("temp " + temp);
+						log.debug("group id " + temp.getGroup_id());
 						approvalRequest.put("title", temp.getGroup_id().getTitle());
-						
+
 						approvalRequest.put("id", temp.getId());
 						log.debug("------catch temp id (level id to be created )---"+temp.getId() + " for group id " + temp.getGroup_id().getId());
-//					}
-					if(accessLevels.size()>0){
+						//					}
+					}
+					if(accessLevels!=null && accessLevels.size()>0){
 						approvalRequest.put("user", loginUsers.getName());
 						log.debug("------catch if user---"+loginUsers.getName());
 						approvalRequest.put("status", "2");
@@ -1885,7 +1896,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	}
 	
 	public List getEmpReqTypeAcc(Employee emp,String requestType) {
-		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp);
 		List tempLevels = (List)getObjectsByParameter(AccessLevels.class, "emp_id", loggedInUser);
 		log.debug("access levels size " + tempLevels.size());
 		
@@ -1925,7 +1936,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	}
 	
 	public List getEmpReqTypeAccEmpCode(Employee emp,String requestType) {
-		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp);
 		List tempLevels = (List)getObjectsByParameter(AccessLevels.class, "emp_id", loggedInUser);
 		log.debug("access levels size " + tempLevels.size());
 		
@@ -1953,7 +1964,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 //			log.debug("looping empreqtypeAccs");
 			EmpReqTypeAcc acc = (EmpReqTypeAcc)it.next();
 //			log.debug("acc " + acc.getEmp_id().getId());
-			String empCode = acc.getEmp_id().getEmpCode();
+			String empCode = acc.getEmp_id().getEmpCode().getEmpCode();
 //			log.debug("group id " + acc.getGroup_id() + " emp code " + empCode);
 			if (!empReqTypeAccs.contains(empCode)) {
 //				log.debug("new emp code");
@@ -1967,7 +1978,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	
 
 	public List getEmpReqTypeAccEmpCodeBetweenCodes(Employee emp,String requestType, String codeFrom, String codeTo) {
-		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loggedInUser = (LoginUsers)getObjectByParameter(LoginUsers.class, "empCode", emp);
 		Object obj = getObjectByParameter(AccessLevels.class, "emp_id", loggedInUser);
 		AccessLevels lev = null;
 		if (obj!= null) {
@@ -2000,7 +2011,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 //			log.debug("looping empreqtypeAccs");
 			EmpReqTypeAcc acc = (EmpReqTypeAcc)it.next();
 //			log.debug("acc " + acc.getEmp_id().getId());
-			String empCode = acc.getEmp_id().getEmpCode();
+			String empCode = acc.getEmp_id().getEmpCode().getEmpCode();
 			log.debug("group id " + acc.getGroup_id() + " emp code " + empCode);
 			if (!empReqTypeAccs.contains(empCode)) {
 				log.debug("new emp code");
@@ -2307,6 +2318,55 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	            return formattedAddress;
 	        }
 	    }
+	 
+	 public String getShortAddressByGpsCoordinates(String lng, String lat)
+	            throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
+	         String key = "AIzaSyBeCCPQ7VdCQiJxjXGfVO98LyirL1-hC74";
+	         LocaleUtil localeUtil = LocaleUtil.getInstance();
+	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
+	        log.debug("url " + url);
+	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
+	        JSONArray formattedAddress = null;
+	        String longName = "";
+	 
+	        try {
+	            InputStream in = url.openStream();
+	            BufferedReader reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+	            String result, line = reader.readLine();
+	            result = line;
+	            while ((line = reader.readLine()) != null) {
+	                result += line;
+	            }
+	 
+	            JSONParser parser = new JSONParser();
+	            JSONObject rsp = (JSONObject) parser.parse(result);
+	 
+	            if (rsp.containsKey("results")) {
+	                JSONArray matches = (JSONArray) rsp.get("results");
+	                String error = (String)rsp.get("error_message");
+	                log.debug("error string  " + error);
+	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
+	                formattedAddress =  (JSONArray)data.get("address_components");
+	                for (int i=0; i<formattedAddress.size()-2; i++) {
+	                	if (i!=0) {
+	                		longName+=((JSONObject)formattedAddress.get(i)).get("long_name")+",";
+	                	} else {
+	                		longName+=((JSONObject)formattedAddress.get(i)).get("long_name");
+	                	}
+	                }
+	                log.debug("formattedAddress[0] " + formattedAddress.get(0).getClass());
+	                log.debug("formatted address " + formattedAddress);
+	            }
+	 
+	            return longName;
+	        } catch (Exception e) {
+	        	log.debug("exception to get address from location " + e);
+	        	e.printStackTrace();
+	        } finally {
+	            urlConnection.disconnect();
+	            return longName;
+	        }
+	    }
 	
 	 public double distance(double lat1, double lon1, double lat2, double lon2) {//, char unit
 		 //unit M
@@ -2340,8 +2400,16 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		public List getLoginUsersByCodes(String codeFrom, String codeTo) {
 			return requestsApprovalDAO.getLoginUsersByCodes(codeFrom, codeTo);
 		}
-	    
-	    
+
+		public List<LoginUsers> getEmployeesByGroup(Long groupId) {
+			log.debug("group id " + groupId);
+			
+			List<LoginUsers> mgrs = requestsApprovalDAO.getMgrsByGroup(groupId);
+			List<LoginUsers> emps = requestsApprovalDAO.getEmployeesByGroup(groupId);
+			mgrs.addAll(emps);
+			return mgrs;
+		}		
+		
 //	public List getAttendanceRequests(Date date, String empCode) {
 //		return requestsApprovalDAO.getAttendanceRequests(date,empCode);
 //	}

@@ -169,7 +169,7 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 //			model.put("loginUserReqs", allRequests);
 //		}	
 
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(emp, requestType);
 		
 		if (pageNumber>0) {
@@ -244,7 +244,7 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 		String emp_code = request.getParameter("empCode");
 		log.debug("----emp_code---"+emp_code);
 		
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		
 		List<String> orderfieldList = new ArrayList();
 		orderfieldList.add(new String("order"));

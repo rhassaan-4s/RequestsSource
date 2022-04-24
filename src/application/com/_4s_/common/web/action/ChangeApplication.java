@@ -37,84 +37,46 @@ public class ChangeApplication implements Controller {
 		// log.debug("handleRequest");
 		String application = request.getParameter("application");
 		// log.debug("application " +application);
+		System.out.println("application " + application);
 		String url = "";
 		SecurityApplication securityApplication = null;
-		if (application.equals("STORE")) {
-			securityApplication = (SecurityApplication) commonManager
-					.getObject(SecurityApplication.class, new Long(1));
-			request.getSession().setAttribute("appName", "STORE");
-			if (request.getSession().getAttribute("settings") != null) {
-				request.getSession().removeAttribute("settings");
-			}
-		} else if (application.equals("ADMINISTRATION")) {
+
+		if (application.equals("ADMINISTRATION")) {
 			securityApplication = (SecurityApplication) commonManager
 					.getObject(SecurityApplication.class, new Long(3));
 			request.getSession().setAttribute("appName", "ADMINISTRATION");
-//			if (request.getSession().getAttribute("settings") != null) {
-//				request.getSession().removeAttribute("settings");
-//			}
-		}
-			else if (application.equals("GL")) {
-//			securityApplication = (SecurityApplication) commonManager
-//					.getObject(SecurityApplication.class, new Long(5));
-//			// Throwing gl settings in
-//			// session/////////////////////////////////////////////
-//			List settings = commonManager.getObjects(GLSettings.class);
-//			request.getSession().setAttribute("settings",
-//					((GLSettings) (settings.get(0))));
-//			// ///////////////////////////////////////////////////////////////////////////
-//			request.getSession().setAttribute("appName", "GL");
-//		} else if (application.equals("ASSETS")) {
-			securityApplication = (SecurityApplication) commonManager
-					.getObject(SecurityApplication.class, new Long(8));
-			request.getSession().setAttribute("appName", "ASSETS");
-			if (request.getSession().getAttribute("settings") != null) {
-				request.getSession().removeAttribute("settings");
-			}
-		}
-
-		else if (application.equals("HR")) {
-			securityApplication = (SecurityApplication) commonManager
-					.getObject(SecurityApplication.class, new Long(6));
-			request.getSession().setAttribute("appName", "HR");
-		}
-		
-		else if (application.equals("requestsApproval")) {
+		} else if (application.equals("requestsApproval")) {
 			securityApplication = (SecurityApplication) commonManager
 					.getObject(SecurityApplication.class, new Long(12));
 			request.getSession().setAttribute("appName", "requestsApproval");
-		}
-		else if (application.equals("ATTENDANCE")) {
+		} else if (application.equals("timesheet")) {
+			System.out.println("############Timesheet");
 			securityApplication = (SecurityApplication) commonManager
-					.getObject(SecurityApplication.class, new Long(10));
-			request.getSession().setAttribute("appName", "ATTENDANCE");
+					.getObject(SecurityApplication.class, new Long(13));
+			request.getSession().setAttribute("appName", "timesheet");
 		}
 
-		else if (application.equals("PORTAL")) {
-			securityApplication = (SecurityApplication) commonManager
-					.getObject(SecurityApplication.class, new Long(9));
-			request.getSession().setAttribute("appName", "PORTAL");
-			if (request.getSession().getAttribute("settings") != null) {
-				request.getSession().removeAttribute("settings");
-			}
-		}
-
+		System.out.println("current application " + securityApplication.getDefaultPage());
 		request.getSession().setAttribute("currentApplication",
 				securityApplication);
 
-		// url =securityApplication.getDefaultPage()+"?activeLink=linkOne";
+		// url =securityApplication.getDefaultPage();
 		String defaultPage = null;
 		User user = (User) request.getSession().getAttribute("user");
 		// log.debug("user "+user);
 		if (securityApplication != null && user != null) {
+			System.out.println("user " + user);
 			// defaultPage = user.getDefaultApplication().getDefaultPage();
 			List userRoles = user.getRoles();
 			List applicationRoles = securityApplication.getRoles();
 			Iterator itr = applicationRoles.iterator();
 			while (itr.hasNext()) {
+				System.out.println("user " + user);
 				Roles role = (Roles) itr.next();
+				System.out.println("role " + role);
 				if (userRoles.contains(role)) {
 					defaultPage = role.getDefaultPage();
+					System.out.println("default page " + defaultPage);
 					break;
 				}
 			}
@@ -127,7 +89,6 @@ public class ChangeApplication implements Controller {
 
 		// // Reports Portal ////////////////////////////////////////
 		Roles role = null;
-		System.out.println("portal");
 
 		Iterator itr = user.getRoles().iterator();
 		while (itr.hasNext()) {
@@ -162,3 +123,50 @@ public class ChangeApplication implements Controller {
 	}
 
 }
+
+//if (application.equals("STORE")) {
+//securityApplication = (SecurityApplication) commonManager
+//		.getObject(SecurityApplication.class, new Long(1));
+//request.getSession().setAttribute("appName", "STORE");
+//if (request.getSession().getAttribute("settings") != null) {
+//	request.getSession().removeAttribute("settings");
+//}
+//} else 
+
+//else if (application.equals("GL")) {
+//securityApplication = (SecurityApplication) commonManager
+//	.getObject(SecurityApplication.class, new Long(5));
+//// Throwing gl settings in
+//// session/////////////////////////////////////////////
+//List settings = commonManager.getObjects(GLSettings.class);
+//request.getSession().setAttribute("settings",
+//	((GLSettings) (settings.get(0))));
+//// ///////////////////////////////////////////////////////////////////////////
+//request.getSession().setAttribute("appName", "GL");
+//} else if (application.equals("ASSETS")) {
+//securityApplication = (SecurityApplication) commonManager
+//	.getObject(SecurityApplication.class, new Long(8));
+//request.getSession().setAttribute("appName", "ASSETS");
+//if (request.getSession().getAttribute("settings") != null) {
+//request.getSession().removeAttribute("settings");
+//}
+//}
+//else if (application.equals("HR")) {
+//securityApplication = (SecurityApplication) commonManager
+//	.getObject(SecurityApplication.class, new Long(6));
+//request.getSession().setAttribute("appName", "HR");
+//}
+//else if (application.equals("ATTENDANCE")) {
+//securityApplication = (SecurityApplication) commonManager
+//	.getObject(SecurityApplication.class, new Long(10));
+//request.getSession().setAttribute("appName", "ATTENDANCE");
+//}
+//else if (application.equals("PORTAL")) {
+//securityApplication = (SecurityApplication) commonManager
+//	.getObject(SecurityApplication.class, new Long(9));
+//request.getSession().setAttribute("appName", "PORTAL");
+//if (request.getSession().getAttribute("settings") != null) {
+//request.getSession().removeAttribute("settings");
+//}
+//}
+

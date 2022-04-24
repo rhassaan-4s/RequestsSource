@@ -65,7 +65,7 @@ public class AnnualVacationBalance implements Controller{
 		}
 		model.put("emp", emp);
 		model.put("empCode", empCode);
-		LoginUsers loginUser=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUser=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		model.put("empName", loginUser.getName());
 
 		String inDateString = request.getParameter("inDate");

@@ -162,7 +162,7 @@ public class RequestStatusReports extends BaseSimpleFormController{
 		
 		log.debug("employee " + employee.getId());
 		if (pageNumber>=0) {
-			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", employee.getEmpCode());
+			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", employee);
 			log.debug("logged in user " + loggedInUser.getId());
 			List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(employee, requestType);
 			log.debug("empReqTypeAccs " + empReqTypeAccs);
@@ -326,7 +326,7 @@ public class RequestStatusReports extends BaseSimpleFormController{
 			pageNumber = 0;
 		}
 		
-		LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", employee.getEmpCode());
+		LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", employee);
 		log.debug("logged in user " + loggedInUser);
 		List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(employee, requestType);
 		log.debug("empReqTypeAccs " + empReqTypeAccs);

@@ -19,7 +19,32 @@
 		<link href="/Requests/web/common/css/vertical_menu_ar.css" rel="stylesheet" type="text/css" />
 	</head>
 
-	<body>
+	<body onload="getError();">
+	
+	<script type="text/javascript">
+	function getError(){
+		urlp=[];
+		urlp=location.toString().split('?');
+		params = urlp[1];
+		var error = params.split('=');
+		//alert(error[1]);
+		
+		//var er = error[1];
+		//alert(er);
+		document.getElementById("errorMsg").value= error[1];
+		if ( error[1].valueOf()==='wrongIPAdd'.valueOf()) {
+			//alert("1"+er);
+			document.getElementById("display").innerHTML="<fmt:message key='commons.caption.wrongIpAdd'/>";
+		} else if ( error[1].trim()==='NoIPAddFound'.trim()) {
+			//alert("2"+er);
+			document.getElementById("display").innerHTML="<fmt:message key='commons.caption.NoIPAddFound'/>";	
+		} else if ( error[1].trim()==='') {
+			
+		}else {
+			document.getElementById("display").innerHTML="<fmt:message key='commons.errors.invalidUsernameOrPassword'/>";
+		}
+	}
+	</script>
 		<table width="100%"  border="0" cellspacing="0" cellpadding="0" >
 	  		<tr>
 				<td height="80" colspan="7" valign="top" align="center"><img
@@ -34,7 +59,6 @@
 		<BR>
 		<BR>
 		<BR>
-
 		<form 	id="login"
 				name="login"
 				method="POST" 
@@ -47,6 +71,8 @@
 				<!-- /////////////////END to enable authentication with tokens with spring security 5  //////////////////// -->
 				
 				
+				<input type="hidden" name="errorMsg" id="errorMsg" value=""/>
+
 				<table rules="all" align="center" width="400" class="sofT" >
 					<!--tr>
 						<td colspan=2 bgcolor="#6A6A6A" height=1></td>
@@ -66,6 +92,17 @@
 										<font style="color: #000066;">
 											<abc:i18n property="commons.caption.pleaseEnterUsernameAndPassword"/>
 											<fmt:message key="commons.caption.pleaseEnterUsernameAndPassword"/>
+										</font><br>
+										<font style="color: #FF0000;">
+										<div id="display"> </div>
+										<c:choose>
+											<c:when test="${errorMsg=='wrongIPAdd'}">
+											    Wrong IP Address
+											</c:when>
+											<c:when test="${errorMsg=='NoIPAddFound'}">
+												NoIPAddFound
+											</c:when>
+										</c:choose>
 										</font>
 										</div>
 									</td>

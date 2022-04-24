@@ -4,6 +4,7 @@ import java.util.List;
 
 import com._4s_.common.service.BaseManager;
 import com._4s_.security.model.Fields;
+import com._4s_.security.model.IPAddress;
 import com._4s_.security.model.User;
 
 
@@ -22,4 +23,5 @@ public interface MySecurityManager extends BaseManager{
  public abstract List getUserByEmail(String email);
  public List getActiveApplications();
 public abstract List getApplicationsByUser(User user);
+public IPAddress checkIP(String currentIP, User user);
 }

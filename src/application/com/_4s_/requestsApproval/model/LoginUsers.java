@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -16,6 +18,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import com._4s_.auditing.model.Auditable;
+import com._4s_.common.model.Employee;
 
 
 @Entity//(access=AccessType.FIELD)
@@ -29,7 +32,9 @@ public class LoginUsers  implements Auditable,Serializable {
 		@SequenceGenerator(name="login_users_seq",sequenceName="login_users_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 		private Long id;
 		
-		private String empCode;
+		@OneToOne 
+		@JoinColumn(name = "empCode", referencedColumnName = "empCode")
+		private Employee empCode;
 		private String name;
 		private String ename;
 		@Column(name="end_serv")
@@ -89,10 +94,10 @@ public class LoginUsers  implements Auditable,Serializable {
 		public void setEname(String ename) {
 			this.ename = ename;
 		}
-		public String getEmpCode() {
+		public Employee getEmpCode() {
 			return empCode;
 		}
-		public void setEmpCode(String empCode) {
+		public void setEmpCode(Employee empCode) {
 			this.empCode = empCode;
 		}
 //		public void setPermissions(String permissions) {

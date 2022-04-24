@@ -435,12 +435,14 @@ function initMap(latitude,longitude) {
 											${record.name}
 										</td>
 										<td  nowrap>
-										<c:if test="${record.approval==null}">
+										<c:choose>
+										<c:when test="${(record.approval==null || record.approval=='')  && (record.approved==1 || record.approved==0)}">
 											<a href="requestsApprovalForm.html?reqId=${record.id}&requestType=${requestType}&errand=${errand}">${record.requestNumber}</a>
-										</c:if>
-										<c:if test="${record.approval!=null}">
+										</c:when>
+										<c:otherwise>
 											${record.requestNumber}
-										</c:if>										
+										</c:otherwise>
+										</c:choose>									
 										</td>										
 										<c:choose>
 											<c:when test="${errand=='true'}">
@@ -493,29 +495,32 @@ function initMap(latitude,longitude) {
 										<td >
 											${record.locationAddress}
 										</td>
-										<td   nowrap>	
-										<c:if test="${record.approval==1 || record.approval==2 || record.approved==1}">					
-										
-										<abc:i18n
-											property="requestsApproval.requestsApprovalForm.reqApproval" />
-										<fmt:message
-											key="requestsApproval.requestsApprovalForm.reqApproval" />
-										</c:if>
-										<c:if test="${record.approval==0}">					
-										
-										<abc:i18n
-											property="requestsApproval.requestsApprovalForm.reqRejected" />
-										<fmt:message
-											key="requestsApproval.requestsApprovalForm.reqRejected" />
-										</c:if>
-										<c:if test="${record.approval==null && record.approved!=1}">
+										<td   nowrap>
+										<!--  record.approval:${record.approval}-record.approved:${record.approved}-->
+										<c:choose>
+											<c:when
+												test="${record.approval==0 || record.approved==99}">
+												<abc:i18n
+													property="requestsApproval.requestsApprovalForm.reqRejected" />
+												<fmt:message
+													key="requestsApproval.requestsApprovalForm.reqRejected" />
+											</c:when>
+											<c:when test="${(record.approval==null || record.approval=='')  && (record.approved==1 || record.approved==0)}">
 									    	لم تكتمل
 									    	<br>
-									    	<input type="checkbox"
-											name="approve${loop.index}" id="approve${loop.index}" />
-										
-										</c:if>
-										</td>										
+												<input type="checkbox" name="approve${loop.index}"
+													id="approve${loop.index}" />
+
+											</c:when>
+											<c:when test="${record.approval==1 && record.approved==1}">
+
+												<abc:i18n
+													property="requestsApproval.requestsApprovalForm.reqApproval" />
+												<fmt:message
+													key="requestsApproval.requestsApprovalForm.reqApproval" />
+											</c:when>
+										</c:choose>
+									</td>										
 										<td  nowrap>
 											${record.reply}
 										</td>
@@ -530,18 +535,20 @@ function initMap(latitude,longitude) {
 											${record.notes}
 										</td>
 									
-										<c:if test="${record.approval==0}">
+										<c:choose>		
+										<c:when test="${record.approval!=null || record.approved==99}">
+											<td  nowrap>
+												&nbsp;
+											</td>
+										</c:when>
+										<c:otherwise>
 										<td  id="btnPrint" nowrap><abc:i18n
 											property="commons.button.approve" /><a
 											href="requestsApprovalForm.html?reqId=${record.id}&requestType=${requestType}"><fmt:message
 											key="commons.button.approve" /></a>
 										</td>								
-										</c:if>		
-										<c:if test="${record.approval!=0}">
-											<td  nowrap>
-												&nbsp;
-											</td>
-										</c:if>
+										</c:otherwise>
+										</c:choose>
 										
 									</tr>
 								</c:forEach>									

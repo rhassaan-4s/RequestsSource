@@ -71,7 +71,7 @@ public class AttendanceRequestsApprovalForm extends BaseSimpleFormController {
 			EmpReqApproval empReqApproval = null;
 
 			Employee emp =(Employee) request.getSession().getAttribute("employee");
-			LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+			LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 			model.put("emp", loginUsers.getName());
 			Map approvalRequest = new HashMap();
 			List<String> ordered1= new ArrayList();
@@ -235,18 +235,25 @@ public class AttendanceRequestsApprovalForm extends BaseSimpleFormController {
 					
 
 					List accessLevels= requestsApprovalManager.getObjectsByTwoParametersOrderedByFieldList(AccessLevels.class, "level_id",temp.getGroup_id() , "emp_id", loginUsers, ordered1);
-					
-					if(accessLevels.size()>0){
+
+					if (empReqApproval!=null) {
+						if(accessLevels.size()>0){
+							approvalRequest.put("user", loginUsers.getName());
+							log.debug("------catch if user---"+loginUsers.getName());
+							approvalRequest.put("status", "2");
+							model.put("lastOne", "false");
+						}
+						else{
+							approvalRequest.put("user", loginUsers.getName());
+							log.debug("------catch else user---"+loginUsers.getName());
+							approvalRequest.put("status", "3");
+							showbSubmit = "0";
+							model.put("lastOne", "false");
+						}
+					} else {
 						approvalRequest.put("user", loginUsers.getName());
 						log.debug("------catch if user---"+loginUsers.getName());
 						approvalRequest.put("status", "2");
-						model.put("lastOne", "false");
-					}
-					else{
-						approvalRequest.put("user", loginUsers.getName());
-						log.debug("------catch else user---"+loginUsers.getName());
-						approvalRequest.put("status", "3");
-						showbSubmit = "0";
 						model.put("lastOne", "false");
 					}
 					approvalList.add(approvalRequest);
@@ -307,7 +314,7 @@ public class AttendanceRequestsApprovalForm extends BaseSimpleFormController {
 			throws Exception {
 
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		
 		String reqId = request.getParameter("reqId");
 		String status = request.getParameter("status");

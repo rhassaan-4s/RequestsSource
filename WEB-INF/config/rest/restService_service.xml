@@ -12,6 +12,8 @@
 		 <property name="requestsApprovalDAO" ref ="requestsApprovalDAO"/>
 		 <property name="requestsApprovalManager" ref ="requestsApprovalManager"/>
 		<property name="securityDao" ref ="securityDAO"/>
+		 <property name="timesheetDAO"><ref bean="timesheetDAO"/></property>
+		 <property name="timesheetManager"><ref bean="timesheetManager"/></property>
 	</bean>
 	 
 	 

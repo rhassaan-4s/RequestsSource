@@ -64,7 +64,7 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
 		log.debug("----emp from session---"+request.getSession().getAttribute("employee"));
 		
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		if(loginUsers!=null){
 			log.debug("-----login.code----"+loginUsers.getEmpCode());
 		}
@@ -77,7 +77,7 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 			loginUsersRequests = new LoginUsersRequests();
 			if(loginUsers!=null){
 				loginUsersRequests.setLogin_user(loginUsers);
-				loginUsersRequests.setEmpCode(loginUsers.getEmpCode());
+				loginUsersRequests.setEmpCode(loginUsers.getEmpCode().getEmpCode());
 			}
 		}else{
 			log.debug("loginUsersRequests------"+loginUsersRequests);
@@ -106,7 +106,7 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 		
 		log.debug("=====emp.getEmpCode()==="+emp.getEmpCode());
 		
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		
 		String empRequestTypeId=request.getParameter("empRequestTypeId");
 		log.debug("empRequestTypeId------"+empRequestTypeId);
@@ -243,7 +243,7 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 		String address = "";
 		log.debug("accuracy " + accuracy);
 		if (accuracy!=null && !accuracy.isEmpty()) {
-			if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
+			if (settings.getLocationAccuracy()>= Double.parseDouble(accuracy)) {
 				address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
 			} else {
 				address = "Address is not accurate to be saved";

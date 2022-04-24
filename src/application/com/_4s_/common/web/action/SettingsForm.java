@@ -9,6 +9,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.BaseManager;
+import com._4s_.security.model.SecurityApplication;
 
 public class SettingsForm extends BaseSimpleFormController{
 
@@ -30,6 +31,11 @@ public class SettingsForm extends BaseSimpleFormController{
 		
 		if(request.getMethod().equals("POST")){
 		
+			String ipAddressEnabled = request.getParameter("ipAddressEnabled");
+			if(ipAddressEnabled == null || ipAddressEnabled.equals("")){
+				settings.setIpAddressEnabled(false);
+			}
+			
 			String annualVacBalDaysEnabled = request.getParameter("annualVacBalDaysEnabled");
 			if(annualVacBalDaysEnabled == null || annualVacBalDaysEnabled.equals("")){
 				settings.setAnnualVacBalDaysEnabled(false);
@@ -86,6 +92,10 @@ public class SettingsForm extends BaseSimpleFormController{
 				settings.setAndroidAttAutomaticApproval(false);
 			}
 			
+			String isTimesheetEnabled = request.getParameter("isTimesheetEnabled");
+			if (isTimesheetEnabled == null || isTimesheetEnabled.equals("")) {
+				settings.setIsTimesheetEnabled(false);
+			}
 		}
 		return settings;
 
@@ -95,7 +105,15 @@ public class SettingsForm extends BaseSimpleFormController{
 		Settings  settings = (Settings)cmd;
 		log.error(">>>> start of onSubmit() ");
 		
-		
+		SecurityApplication application = (SecurityApplication)baseManager.getObjectByParameter(SecurityApplication.class, "name", "timesheet");
+		if (settings.getIsTimesheetEnabled()) {
+			//set application active
+			application.setIs_active(new Boolean(true));
+		} else {
+			// set application inactive
+			application.setIs_active(new Boolean(false));
+		}
+		baseManager.saveObject(application);
 		baseManager.saveObject(settings);
 		
 				

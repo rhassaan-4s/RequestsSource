@@ -81,7 +81,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
 		log.debug("----emp from session---"+request.getSession().getAttribute("employee"));
 		
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		if(loginUsers!=null){
 			log.debug("-----login.code----"+loginUsers.getEmpCode());
 		}
@@ -94,7 +94,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 			loginUsersRequests = new LoginUsersRequests();
 			if(loginUsers!=null){
 				loginUsersRequests.setLogin_user(loginUsers);
-				loginUsersRequests.setEmpCode(loginUsers.getEmpCode());
+				loginUsersRequests.setEmpCode(loginUsers.getEmpCode().getEmpCode());
 			}
 		}else{
 			log.debug("loginUsersRequests------"+loginUsersRequests);
@@ -153,7 +153,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		String accuracy =  (String)request.getParameter("accuracy");
 		log.debug("location " + longitude + " , " + latitude + " , " + accuracy);
 		
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		
 		String empRequestTypeId=request.getParameter("empRequestTypeId");
 		log.debug("empRequestTypeId------"+empRequestTypeId);
@@ -665,7 +665,8 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 					if(!isOnlyNumbers(loginUsersRequests.getEmpCode())){
 						errors.rejectValue("empCode", "requestsApproval.errors.invalidEmpCode");
 					}
-					LoginUsers login_user=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", loginUsersRequests.getEmpCode());
+					Employee emp = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode",  loginUsersRequests.getEmpCode());
+					LoginUsers login_user=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode",emp);
 					if(login_user==null || login_user.equals("")){
 						log.debug("----login_user==null-----");
 						errors.rejectValue("empCode", "requestsApproval.errors.empCodeNotExistance");
@@ -1030,7 +1031,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 //		request.getSession().setAttribute("loginUsersRequests", loginUsersRequests);
 		log.debug("----loginUsersRequests.getId()-onsubmit-----"+loginUsersRequests.getId()+"-----loginUsersRequests---"+loginUsersRequests.getLogin_user().getEmpCode());
 		log.debug("------date from command---"+loginUsersRequests.getFrom_date());
-		log.debug("------period from command---"+loginUsersRequests.getPeriod_from());
+		log.debug("------period from command---"+loginUsersRequests.getPeriod_from()+ "loginUsersRequests.getPeriod_to()" + loginUsersRequests.getPeriod_to());
 		Map model=new HashMap();
 		
 		String reqId="";
@@ -1044,13 +1045,17 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		String accuracy =  (String)request.getParameter("accuracy");
 		String address = "";
 		if (accuracy!=null && !accuracy.isEmpty()) {
-			if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
+			Long acc = Math.round(Double.parseDouble(accuracy));
+			if (settings.getLocationAccuracy()>= acc.intValue()) {
 				address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
 			}
 		}
-		loginUsersRequests.setPeriod_from(loginUsersRequests.getFrom_date());
-		loginUsersRequests.setPeriod_to(loginUsersRequests.getTo_date());
-		
+		if (loginUsersRequests.getFrom_date()!=null) {
+			loginUsersRequests.setPeriod_from(loginUsersRequests.getFrom_date());
+		}
+		if (loginUsersRequests.getTo_date()!=null) {
+			loginUsersRequests.setPeriod_to(loginUsersRequests.getTo_date());
+		}
 		log.debug("loginUsersRequests.getPeriod_to() " + loginUsersRequests.getPeriod_to());
 		String requestNumber="";
 			 // request number
@@ -1089,7 +1094,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 						loginUsersRequests.setPayed(new Long(1));
 					}
 					if (accuracy!=null && !accuracy.isEmpty()) {
-						if (settings.getLocationAccuracy()>= Integer.parseInt(accuracy)) {
+						if (settings.getLocationAccuracy()>= Double.parseDouble(accuracy)) {
 							loginUsersRequests.setLatitude(Double.parseDouble(latitude));
 							loginUsersRequests.setLongitude(Double.parseDouble(longitude));
 							loginUsersRequests.setLocationAddress(address);

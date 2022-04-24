@@ -18,6 +18,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -44,6 +45,7 @@ import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.DBUtils;
 import com._4s_.common.util.Page;
+import com._4s_.requestsApproval.model.AccessLevels;
 import com._4s_.requestsApproval.model.EmpReqApproval;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.GroupAcc;
@@ -2486,16 +2488,38 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		Criteria criteria = getCurrentSession()
 				.createCriteria(EmpReqTypeAcc.class);
 		if (codeFrom!= null && !codeFrom.isEmpty() && codeTo!= null && !codeTo.isEmpty() ) {
-			criteria.createCriteria("emp_id").add(Restrictions.between("empCode", codeFrom, codeTo));
+			criteria.createCriteria("emp_id").createCriteria("empCode").add(Restrictions.between("empCode", codeFrom, codeTo));
 		}
 		criteria.add(Restrictions.eq("group_id", groupId));
 		criteria
 		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
-	
-	
 
+
+	public List<LoginUsers > getEmployeesByGroup(Long groupId) {
+		log.debug("DAO: groupid " + groupId);
+		Criteria criteria = getCurrentSession().createCriteria(EmpReqTypeAcc.class);
+		criteria.createCriteria("emp_id").add(Restrictions.isNull("endServ"));
+		criteria.setProjection(Projections.projectionList()
+                .add(Projections.groupProperty("emp_id")));
+		criteria.createCriteria("group_id")
+		.add(Restrictions.eq("id", groupId));
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
+	
+	public List<LoginUsers > getMgrsByGroup(Long groupId) {
+		log.debug("DAO: groupid " + groupId);
+		Criteria criteria = getCurrentSession().createCriteria(AccessLevels.class);
+		criteria.createCriteria("level_id").add(Restrictions.eq("id", groupId));
+		criteria.setProjection(Projections.projectionList()
+                .add(Projections.groupProperty("emp_id")));
+//		criteria.createCriteria("group_id")
+//		.add(Restrictions.eq("id", groupId));
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
 
 //	public List getAttendanceRequests(Date date, String empCode,RequestTypes reqType) {
 //		try{

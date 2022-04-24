@@ -47,6 +47,21 @@ $(document).ready(function()
 				 window.location="userDetails.html?confirmDeleteImei=false";
 			  }
 		}
+		
+		function confirmCompleteIP() {
+			//alert("confirmComplete");
+			var answer=confirm("Are you sure you want to remove ALL IP Addresses?");
+			if (answer==true)
+			  {
+			    //return true;
+			    window.location="userDetails.html?confirmDeleteIP=true";
+			  }
+			else
+			  {
+				 window.location="userDetails.html?confirmDeleteIP=false";
+			  }
+		}
+		
 
 </script>
 <center>
@@ -75,6 +90,9 @@ $(document).ready(function()
 		<td class="helpHed">&nbsp;<abc:i18n property="commons.caption.removeAllImei" />
 		<a	class="actionLink" href="javascript:confirmComplete();"><fmt:message key="commons.caption.removeAllImei" /></a></TD>&nbsp;</td>
 
+	<td class="helpHed">&nbsp;<abc:i18n property="commons.caption.removeAllIP" />
+		<a	class="actionLink" href="javascript:confirmCompleteIP();"><fmt:message key="commons.caption.removeAllIP" /></a></TD>&nbsp;</td>
+	
 	</tr>
 	<c:forEach var="result" items="${users}">
 		<c:if test="${result.username!='admin'}">
@@ -87,6 +105,9 @@ $(document).ready(function()
 			<TD class="helpBod">&nbsp; <abc:i18n property="commons.button.imei" /> <a
 				href="javascript:createWindow('imeiView.html?userId=${result.id}',450,900)"
 				class="actionLink"><fmt:message key="commons.button.imei" /></a></TD>
+			<TD class="helpBod">&nbsp; <abc:i18n property="commons.button.ipAdd" /> <a
+				href="javascript:createWindow('ipView.html?userId=${result.id}',450,900)"
+				class="actionLink"><fmt:message key="commons.button.ipAdd" /></a></TD>
 			<!-- <TD class="helpBod">&nbsp; <abc:i18n property="commons.button.delete" /> <a
 				href="userDetails.html?deleteId=${result.id}"
 				class="actionLink"><fmt:message key="commons.button.delete" /></a></TD>

@@ -83,7 +83,7 @@ public class ReportsController extends BaseSimpleFormController{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 //		RequestTypes requestTypeObject = null;
 		if (requestType==null || requestType.isEmpty()) {
 			requestType = null;
@@ -227,7 +227,7 @@ public class ReportsController extends BaseSimpleFormController{
 		}
 
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
-		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp.getEmpCode());
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 //		RequestTypes requestTypeObject = null;
 		if (requestType==null || requestType.isEmpty()) {
 			requestType = null;

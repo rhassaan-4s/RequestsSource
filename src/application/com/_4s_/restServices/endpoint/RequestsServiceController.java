@@ -26,12 +26,20 @@ import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.ClientWrapper;
 import com._4s_.restServices.json.EmployeeResponse;
 import com._4s_.restServices.json.EmployeeWrapper;
+import com._4s_.restServices.json.GroupWrapper;
 import com._4s_.restServices.json.ImeiWrapper;
 import com._4s_.restServices.json.PasswordWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestTypeWrapper;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
+import com._4s_.restServices.json.TimesheetActivityWrapper;
+import com._4s_.restServices.json.TimesheetCostcenterWrapper;
+import com._4s_.restServices.json.TimesheetPartWrapper;
+import com._4s_.restServices.json.TimesheetSpecsWrapper;
+import com._4s_.restServices.json.TimesheetTransDefaultWrapper;
+import com._4s_.restServices.json.TimesheetTransWrapper;
+import com._4s_.restServices.json.TimesheetTransactionFilters;
 import com._4s_.restServices.json.UserWrapper;
 import com._4s_.restServices.service.RequestsService;
 import com._4s_.security.model.Imei;
@@ -175,7 +183,7 @@ public class RequestsServiceController {
 							RestStatus status = new RestStatus();
 							status.setStatus("False");
 							status.setCode("340");
-							status.setMessage("Successful Authorization with wrong IMEI");
+							status.setMessage("User is already registered with another device");
 							response.put("Status", status);
 							return response;
 						}
@@ -543,4 +551,111 @@ public class RequestsServiceController {
 		return m;
 	}
 	
+	@RequestMapping(value="/getEmployeesByGroup" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map getEmployeesByGroup(GroupWrapper group) {
+		log.debug("getEmployeesByGroup ");
+		Map m = requestsService.getEmployeesByGroup(group.getGroupId());
+		log.debug("after requesting getEmployeesByGroup");
+		return m;
+	}
+	
+	@RequestMapping(value="/getUserGroups" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map getUserGroups() {
+		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDet = (UserDetails)token.getPrincipal();
+		User user = requestsService.getUser(userDet.getUsername());
+		Map m = requestsService.getUserGroups(user.getEmployee());
+		return m;
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////Timesheet requests///////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	@RequestMapping(value="/insertTimesheetActivity" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map insertTimesheetActivity(TimesheetActivityWrapper activity) {
+		Map response = requestsService.insertTimesheetActivity(activity);	
+		return response;
+	}
+	
+	@RequestMapping(value="/insertTimesheetPart" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map insertTimesheetPart(TimesheetPartWrapper part) {
+		Map response = requestsService.insertTimesheetPart(part);
+		return response;
+	}
+	@RequestMapping(value="/insertTimesheetSpecs" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map insertTimesheetSpecs(TimesheetSpecsWrapper specs) {
+		Map response = requestsService.insertTimesheetSpecs(specs);	
+		return response;
+	}
+	@RequestMapping(value="/insertTimesheetTransDefaults" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map insertTimesheetTransDefaults(TimesheetTransDefaultWrapper defaults) {
+		Map response = requestsService.insertTimesheetTransDefaults(defaults);
+		return response;
+	}
+	@RequestMapping(value="/insertTimesheetTrans" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map insertTimesheetTransaction(TimesheetTransWrapper trans) {
+		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDet = (UserDetails)token.getPrincipal();
+		User user = requestsService.getUser(userDet.getUsername());
+		trans.setEmpCode(user.getEmployee().getEmpCode());
+		Map response = requestsService.insertTimesheetTransaction(trans);
+		return response;
+	}
+
+	@RequestMapping(value="/getActivities" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map getActivities() {
+		Map response = requestsService.getActivities();
+		return response;
+	}
+	@RequestMapping(value="/getCostcenters" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map getCostcenters() {
+		Map response = requestsService.getCostcenters();
+		return response;
+	}
+	@RequestMapping(value="/getParts" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map getParts(TimesheetPartWrapper part) {
+		Map response = requestsService.getParts(part.getPartNo());
+		return response;
+	}
+	@RequestMapping(value="/getTimesheetSpecs" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map getTimesheetSpecs() {
+		Map response = requestsService.getTimesheetSpecs();
+		return response;
+	}
+	@RequestMapping(value="/getTimesheetTrans" , method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody 
+	public Map getTimesheetTransactions(TimesheetTransactionFilters search) {
+		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDet = (UserDetails)token.getPrincipal();
+		User user = requestsService.getUser(userDet.getUsername());
+		if (search.getEmpCode() == null || search.getEmpCode().isEmpty()) {
+			search.setEmpCode(user.getEmployee().getEmpCode());
+		}
+		Map response = requestsService.getTimesheetTransactions(search);
+		return response;
+	}
 }

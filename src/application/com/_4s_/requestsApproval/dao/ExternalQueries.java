@@ -37,6 +37,9 @@ import com._4s_.common.util.MultiCalendarDate;
 //import com._4s_.stores.service.StoresManager;
 //import com._4s_.stores.web.action.ExternalTypeAndCode;
 import com._4s_.requestsApproval.web.action.TimeAttend;
+import com._4s_.timesheet.model.TimesheetActivity;
+import com._4s_.timesheet.model.TimesheetCostCenter;
+import com._4s_.timesheet.model.TimesheetTransactionParts;
 
 public class ExternalQueries {
 	protected final Log log = LogFactory.getLog(getClass());
@@ -3569,7 +3572,9 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 		Object atimeObj = inMap.get("attendance_time");
 		if (atimeObj != null) {
 			attendanceTime = atimeObj.toString();
+			log.debug("in time " + attendanceTime);
 			attendanceType = inMap.get("ATTENDANCE_TYPE").toString();
+			log.debug("attendanceType " + attendanceType);
 			inputType1 = inMap.get("INPUT_TYPE").toString();
 			if (inMap.get("latitude")!=null) {
 				latitude1 = inMap.get("latitude").toString();
@@ -3602,7 +3607,11 @@ public List getTimeAttendFromView (String hostName,String serviceName,String use
 				attendanceTime2 = atimeObj2.toString();
 				log.debug("out time " + attendanceTime2);
 				attendanceType2 = inMap2.get("ATTENDANCE_TYPE").toString();
+				log.debug("attendanceType2 " + attendanceType2);
 				inputType2 = inMap2.get("INPUT_TYPE").toString();
+				
+				log.debug("inMap2.get(latitude) " + inMap2.get("latitude"));
+				log.debug("inMap2.get(longitude) " + inMap2.get("longitude"));
 				if (inMap2.get("latitude")!=null) {
 					latitude2 = inMap2.get("latitude").toString();
 				} else {
@@ -4432,8 +4441,10 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 				statusStr = " approvals.approval is null ";
 			} else if (statusId.equals(new Long(1))) {
 				statusStr = " (approvals.approval =1 or approvals.approval=2) ";
+			} else if (statusId.equals(new Long(99))) {
+				statusStr = " (approvals.approval = 0) ";
 			}
-			if(outerSelectWhere == null) {
+			if(outerSelectWhere == null || outerSelectWhere.isEmpty()) {
 				outerSelectWhere = " where ";
 			} else {
 				outerSelectWhere += " and ";
@@ -5287,12 +5298,5 @@ public List getVacations (String hostName,String serviceName,String userName,Str
 			map.put("listSize", new Long(0));
 		}
 		return map;
-	}
-	
-	
-	
-	
-	
-	
-	
+	}	
 }

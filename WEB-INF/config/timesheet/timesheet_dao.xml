@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans >
+	<bean id="timesheetDAO" class="com._4s_.timesheet.dao.TimesheetDAOHibernate" >
+		<property name="sessionFactory" ref ="sessionFactory"/>
+		<property name="externalQueries" ref ="timesheetExternalQueries" />
+	</bean>
+	
+	<bean id="timesheetExternalQueries" class="com._4s_.timesheet.dao.TimesheetExternalQueries">
+		<property name="platformTransactionManager" ref ="transactionManager" />
+	</bean>
+</beans>

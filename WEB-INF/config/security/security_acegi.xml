@@ -68,7 +68,37 @@
 
 		<intercept-url pattern="/api/workflow/getRequestTypes"
 			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			
+			<intercept-url pattern="/api/workflow/getEmployeesByGroup"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			
+			<intercept-url pattern="/api/workflow/getUserGroups"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			
+			
+			<intercept-url pattern="/api/workflow/insertTimesheetActivity"
+			access="hasRole('CAN_VIEW_page_requestsApproval')" />
+			<intercept-url pattern="/api/workflow/insertTimesheetPart"
+			access="hasRole('CAN_VIEW_page_requestsApproval')" />
+			<intercept-url pattern="/api/workflow/insertTimesheetCostcenter"
+			access="hasRole('CAN_VIEW_page_requestsApproval')" />
+			<intercept-url pattern="/api/workflow/insertTimesheetSpecs"
+			access="hasRole('CAN_VIEW_page_requestsApproval')" />
+			<intercept-url pattern="/api/workflow/insertTimesheetTransDefaults"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			<intercept-url pattern="/api/workflow/insertTimesheetTrans"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 						
+			<intercept-url pattern="/api/workflow/getActivities"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			<intercept-url pattern="/api/workflow/getCostcenters"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			<intercept-url pattern="/api/workflow/getParts"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			<intercept-url pattern="/api/workflow/getTimesheetSpecs"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			<intercept-url pattern="/api/workflow/getTimesheetTrans"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 		<!--  <intercept-url pattern="/api/workflow/getPortNo" access="IS_AUTHENTICATED_ANONYMOUSLY"/> --> 
 			
 		<custom-filter ref="authenticationFilter" before="PRE_AUTH_FILTER" />

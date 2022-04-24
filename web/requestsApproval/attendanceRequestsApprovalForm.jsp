@@ -151,108 +151,137 @@ function cancelApp(){
 						</tr>
 						<c:forEach items="${approvalList}" var="record">
 						<tr>
-							<td width="120" class="formBodControl">${record.title}</td>
-									<c:if test="${record.status==2 && posted!=1}">
-										<td width="130"><abc:i18n
-											property="requestsApproval.requestsApprovalForm.reqApproval" />
-										<fmt:message
-											key="requestsApproval.requestsApprovalForm.reqApproval" /> <input type="hidden"
-											name="accId" value="${record.id}"></td>
-										
-										<td class="formBod" >${record.user}</td>
-									</c:if>
-									
-									<c:choose>
-										<c:when test="${record.status==0 && record.user==emp && done!='true' && posted!=1 && approvedBy==operator && approvedBy!='' &&operator!='' && approvedBy!=null &&operator!=null}">
-											<td ><abc:i18n
+								<td width="120" class="formBodControl">${record.title}</td>
+										<c:if test="${(record.status==null || record.status=='') && posted!=1}">
+											<td width="130"><abc:i18n
+												property="requestsApproval.requestsApprovalForm.reqApproval" />
+											<fmt:message
+												key="requestsApproval.requestsApprovalForm.reqApproval" /> <input
+												type="radio" checked="checked" name="status" value="1" /><input type="hidden"
+												name="accId" value="${record.id}"></td>
+											<td width="140"><abc:i18n
 												property="requestsApproval.requestsApprovalForm.reqRejected" />
 											<fmt:message
-												key="requestsApproval.requestsApprovalForm.reqRejected" /></td>
-											<td>${record.user}</td>
-											<td>									
-											<abc:i18n property="requestsApproval.button.cancelApproval" />
-											<input type="button" name="cancelApproval" onclick="cancelApp()" value=<fmt:message key="requestsApproval.button.cancelApproval"/>
-												class="button" />
-											</td> 	
+												key="requestsApproval.requestsApprovalForm.reqRejected" /> <input
+												type="radio" name="status" value="0" /></td>
+											<td class="formBod" >${record.user}</td>
+											<td class="formBod" >${record.notes}</td>
+										</c:if>
+										<c:if test="${record.status==2 && posted!=1}">
+											<td width="130"><abc:i18n
+												property="requestsApproval.requestsApprovalForm.reqApproval" />
+											<fmt:message
+												key="requestsApproval.requestsApprovalForm.reqApproval" /> <input
+												type="radio" checked="checked" name="status" value="1" /><input type="hidden"
+												name="accId" value="${record.id}"></td>
+											<td width="140"><abc:i18n
+												property="requestsApproval.requestsApprovalForm.reqRejected" />
+											<fmt:message
+												key="requestsApproval.requestsApprovalForm.reqRejected" /> <input
+												type="radio" name="status" value="0" /></td>
+											<td class="formBod" >${record.user}</td>
+											<td class="formBod" >${record.notes}</td>
+										</c:if>
+										<c:choose>
+											<c:when test="${record.status==0 && record.user==emp && done!='true' && posted!=1 && approvedBy==operator && approvedBy!='' &&operator!='' && approvedBy!=null &&operator!=null}">
+												<td colspan="2"><abc:i18n
+													property="requestsApproval.requestsApprovalForm.reqRejected" />
+												<fmt:message
+													key="requestsApproval.requestsApprovalForm.reqRejected" /></td>
+												<td>${record.user}</td>
+												<td>									
+												<abc:i18n property="requestsApproval.button.cancelApproval" />
+												<input type="button" name="cancelApproval" onclick="cancelApp()" value=<fmt:message key="requestsApproval.button.cancelApproval"/>
+													class="button" />
+												</td> 	
+												<td>${record.note}</td>
+											</c:when>
 											
-										</c:when>
-										
-										<c:when test="${record.status==0  && posted!=1 }">
-											<c:if test="${approvedBy!=null && operator!=null}">
-												<c:if test="${approvedBy!=operator}">
-													<td ><abc:i18n
-														property="requestsApproval.requestsApprovalForm.reqRejected" />
-													<fmt:message
-														key="requestsApproval.requestsApprovalForm.reqRejected" /></td>
-													<td>${record.user}</td>
-													<td></td>
-													
-												
+											<c:when test="${record.status==0  && posted!=1 }">
+												<c:if test="${approvedBy!=null && operator!=null}">
+													<c:if test="${approvedBy!=operator}">
+														<td colspan="2"><abc:i18n
+															property="requestsApproval.requestsApprovalForm.reqRejected" />
+														<fmt:message
+															key="requestsApproval.requestsApprovalForm.reqRejected" /></td>
+														<td>${record.user}</td><td></td>
+														<td>${record.note}</td>
+													</c:if>
 												</c:if>
-											</c:if>
-											
-											
-										</c:when>
-									</c:choose>	
-									
-									<c:choose>			
-										<c:when test="${record.status==1 && lastOne=='true'&& record.user==emp && done!='true' && posted!=1 && approvedBy==operator && approvedBy!='' &&operator!='' && approvedBy!=null &&operator!=null}">
-											<td><abc:i18n
-												property="requestsApproval.requestsApprovalForm.reqApproval" />
-											<fmt:message
-												key="requestsApproval.requestsApprovalForm.reqApproval" />
-												</td>
-											<td>${record.user}</td>
-											
-											<td>									
-											<abc:i18n property="requestsApproval.button.cancelApproval" />
-											<input type="button" name="cancelApproval" onclick="cancelApp()" value=<fmt:message key="requestsApproval.button.cancelApproval"/>
-												class="button" />
-											</td>	
-											<td>${record.note}</td>
-										</c:when>
-																																	
-										<c:when test="${record.status==1}" >
-											<td ><abc:i18n
-												property="requestsApproval.requestsApprovalForm.reqApproval" />
-											<fmt:message
-												key="requestsApproval.requestsApprovalForm.reqApproval" />
-												</td>
-											<td>${record.user}</td><td></td>
-											<td>${record.note}</td>
-										</c:when>			
-													
-
-									</c:choose>
-									
-									<c:choose>
-										<c:when test="${record.status==3 && done!='true' && posted!=1 && record.user==emp && approvedBy==operator && approvedBy!='' &&operator!='' && approvedBy!=null &&operator!=null}">
-											<td colspan="2"></td><td></td><td></td><td></td>
-										<tr>
-											<td ></td>
-											<td ><abc:i18n
+												
+												
+											</c:when>
+										</c:choose>	
+										
+										<c:choose>			
+											<c:when test="${record.status==1 && lastOne=='true'&& record.user==emp && done!='true' && posted!=1 && approvedBy==operator && approvedBy!='' &&operator!='' && approvedBy!=null &&operator!=null}">
+												<td colspan="2"><abc:i18n
 													property="requestsApproval.requestsApprovalForm.reqApproval" />
 												<fmt:message
 													key="requestsApproval.requestsApprovalForm.reqApproval" />
 													</td>
-											<td>${record.user}</td>
+												<td>${record.user}</td>
 												
-											<td>
+												<td>									
 												<abc:i18n property="requestsApproval.button.cancelApproval" />
 												<input type="button" name="cancelApproval" onclick="cancelApp()" value=<fmt:message key="requestsApproval.button.cancelApproval"/>
 													class="button" />
-											</td>
-											<td>${record.note}</td>
-										</tr>			
-										</c:when>
+												</td>	
+												<td>${record.note}</td>
+											</c:when>
+																																		
+											<c:when test="${record.status==1}" >
+												<td colspan="2"><abc:i18n
+													property="requestsApproval.requestsApprovalForm.reqApproval" />
+												<fmt:message
+													key="requestsApproval.requestsApprovalForm.reqApproval" />
+													</td>
+												<td>${record.user}</td><td></td>
+												<td>${record.note}</td>
+											</c:when>			
+														
+	
+										</c:choose>
 										
-										<c:when test="${record.status==3  && posted!=1 }">
-										
-										<td></td><td></td>
-										<tr><td></td>
-											<c:if test="${approvedBy!=null && operator!=null}">
-												<c:if test="${approvedBy!=operator}">
-													<td ><abc:i18n
+										<c:choose>
+											<c:when test="${record.status==3 && done!='true' && posted!=1 && record.user==emp && approvedBy==operator && approvedBy!='' &&operator!='' && approvedBy!=null &&operator!=null}">
+												<td colspan="2"></td><td></td><td></td><td></td>
+											<tr>
+												<td colspan="2"></td>
+												<td ><abc:i18n
+														property="requestsApproval.requestsApprovalForm.reqApproval" />
+													<fmt:message
+														key="requestsApproval.requestsApprovalForm.reqApproval" />
+														</td>
+												<td>${record.user}</td>
+													
+												<td>
+													<abc:i18n property="requestsApproval.button.cancelApproval" />
+													<input type="button" name="cancelApproval" onclick="cancelApp()" value=<fmt:message key="requestsApproval.button.cancelApproval"/>
+														class="button" />
+												</td>
+												<td>${record.note}</td>
+											</tr>			
+											</c:when>
+											
+											<c:when test="${record.status==3  && posted!=1 }">
+											
+											<td></td><td></td>
+											<tr><td></td>
+												<c:if test="${approvedBy!=null && operator!=null}">
+													<c:if test="${approvedBy!=operator}">
+														<td colspan="2"><abc:i18n
+															property="requestsApproval.requestsApprovalForm.Approvaldenied" />
+														<fmt:message
+															key="requestsApproval.requestsApprovalForm.Approvaldenied" />
+															</td>
+														<td>${record.user}</td><td></td>
+														<td>${record.note}</td>
+													</c:if>
+												</c:if>
+												
+												<c:if test="${approvedBy==null && operator==null}">
+													<td colspan="2"><abc:i18n
 														property="requestsApproval.requestsApprovalForm.Approvaldenied" />
 													<fmt:message
 														key="requestsApproval.requestsApprovalForm.Approvaldenied" />
@@ -260,22 +289,11 @@ function cancelApp(){
 													<td>${record.user}</td><td></td>
 													<td>${record.note}</td>
 												</c:if>
-											</c:if>
-											
-											<c:if test="${approvedBy==null && operator==null}">
-												<td ><abc:i18n
-													property="requestsApproval.requestsApprovalForm.Approvaldenied" />
-												<fmt:message
-													key="requestsApproval.requestsApprovalForm.Approvaldenied" />
-													</td>
-												<td>${record.user}</td><td></td>
-												<td>${record.note}</td>
-											</c:if>
-										</tr>
-										</c:when>
-									</c:choose>
-							
-						</tr>
+											</tr>
+											</c:when>
+										</c:choose>
+								
+							</tr>
 						</c:forEach> 	
 						<c:if test="${showbSubmit==1}">
 							<tr>
