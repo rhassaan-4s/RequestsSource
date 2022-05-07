@@ -10,7 +10,10 @@
         <Logger name="com._4s_" level="DEBUG" additivity="false">
             <AppenderRef ref="LogToConsole"/>
        </Logger>
-        <Logger name="org.springframework" level="DEBUG" additivity="false">
+       <Logger name="uk.ltd.getahead.dwr" level="ERROR" additivity="false">
+        	 <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <Logger name="org.springframework" level="Error" additivity="false">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger>
          <Logger name="org.hibernate" level="ERROR" additivity="false">
@@ -44,6 +47,9 @@
         	<AppenderRef ref="LogToConsole"/>
         </logger>
         <logger name="org.springframework.beans.CachedIntrospectionResults" level="FATAL" additivity="false">
+        	<AppenderRef ref="LogToConsole"/>
+        </logger>
+        <logger name="org.springframework.beans.factory.support.DefaultListableBeanFactory" level="FATAL" additivity="false">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
         <logger name="org.springframework.security.web.util.matcher.AntPathRequestMatcher" level="FATAL" additivity="false">

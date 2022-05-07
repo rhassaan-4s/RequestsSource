@@ -1,4 +1,5 @@
 <%@ include file="/web/common/includes/taglibs.jsp"%>
+<%@taglib uri = "http://www.springframework.org/tags/form" prefix = "form"%>
 <%@ page import="java.util.*,java.text.SimpleDateFormat"%>
 <jsp:include page="/web/common/includes/header.jsp" flush="true"/>
 
@@ -62,35 +63,32 @@ var options = {
 	<tr>
 		<td colspan="2" height="1"></td>
 	</tr>
-	<tr>
-		<td colspan="2" height="20"></td>
-	</tr>
-	<tr>
-		<td colspan="2">
-			<spring:bind path="loginUsersRequests.*">
-				<c:if test="${not empty status.errorMessages}">
-					<div><c:forEach var="error" items="${status.errorMessages}">
-						<font color="red"> <c:out value="${error}" escapeXml="false" /><br />
-						</font>
-					</c:forEach></div>
-				</c:if>
-			</spring:bind>
-		</td>
-	</tr>
+		<tr>
+			<td colspan="2" height="20"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+
+				<h2 style="color: red;">
+					<form:errors path="loginUsersRequests.*" />
+				</h2>
+			</td>
+		</tr>
 	<tr>
 		<td>
-			<c:if test="${done==true}"><font color="blue" size="5"> 
+			<c:if test="${model.done==true||done==true}"><font color="blue" size="5"> 
 	        <abc:i18n	property="requestsApproval.loginUsersRequests.saveSuccess" /><fmt:message
 					key="requestsApproval.loginUsersRequests.saveSuccess" />
 	 		</font>
 	 		</c:if>
+	 		
 		</td>
 		
 	</tr>
 
 	<tr>
 		<td>
-			<form id="attendanceRequestForm" name="attendanceRequestForm"	method="POST" action="<c:url value="/requestsApproval/attendanceSignInOutForm.html"/>">
+			<form:form	method="POST" action="/Requests/requestsApproval/attendanceSignInOutForm.html" modelAttribute="loginUsersRequests">
 					 <c:set var="dateNow" value="<%=nowDate%>" />
 					 
 					  <input type="hidden" name="longitude" id="longitude" value=""/>
@@ -170,7 +168,7 @@ var options = {
 							</td>
 						</tr>					
 					</table>
-			</form>
+			</form:form>
 		</td>
 	</tr>
 </table>

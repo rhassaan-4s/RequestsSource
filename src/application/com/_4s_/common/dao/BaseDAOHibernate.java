@@ -20,6 +20,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
@@ -120,9 +121,25 @@ public class BaseDAOHibernate  implements BaseDAO {//extends HibernateDaoSupport
         if (log.isDebugEnabled()) {
             log.debug("Saving or Updating Object: " + o.toString());
         }
-
-        checkFlushMode();
-        getCurrentSession().saveOrUpdate(o);
+//        checkFlushMode();
+       
+        Transaction tx = null;
+        Session sess = getCurrentSession();
+        log.debug("flush mode " + sess.getFlushMode());
+        try {
+			tx= sess.beginTransaction();
+			sess.saveOrUpdate(o);
+			tx.commit();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			if (tx!=null) {
+				tx.rollback();
+			}
+		 }
+		 finally {
+			 sess.close();
+		 }
     }
     
  /* (non-Javadoc)
@@ -478,8 +495,8 @@ public class BaseDAOHibernate  implements BaseDAO {//extends HibernateDaoSupport
 	}
 	
 	public void checkFlushMode() {
-//        if (getFlushMode()==FlushMode.NEVER) {
-//        	setFlushModeCommit();
+//        if (getFlushMode().==FlushMode.MANUAL) {
+        	setFlushModeCommit();
 //        }
 	}
 

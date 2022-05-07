@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -76,8 +77,6 @@ import com._4s_.restServices.model.AttendanceStatus;
 import com.ibm.icu.util.Calendar;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
-
-import sun.net.www.protocol.https.HttpsURLConnectionImpl;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -2284,8 +2283,8 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	         String key = "AIzaSyBeCCPQ7VdCQiJxjXGfVO98LyirL1-hC74";
 	         LocaleUtil localeUtil = LocaleUtil.getInstance();
 	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
-	        log.debug("url " + url);
-	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
+//	        log.debug("url " + url);
+	        URLConnection urlConnection = (URLConnection)url.openConnection();
 	        String formattedAddress = "";
 	 
 	        try {
@@ -2314,7 +2313,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	        	log.debug("exception to get address from location " + e);
 	        	e.printStackTrace();
 	        } finally {
-	            urlConnection.disconnect();
+//	            urlConnection.disconnect();
 	            return formattedAddress;
 	        }
 	    }
@@ -2325,7 +2324,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	         LocaleUtil localeUtil = LocaleUtil.getInstance();
 	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
 	        log.debug("url " + url);
-	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
+	        URLConnection urlConnection = (URLConnection)url.openConnection();
 	        JSONArray formattedAddress = null;
 	        String longName = "";
 	 
@@ -2363,7 +2362,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	        	log.debug("exception to get address from location " + e);
 	        	e.printStackTrace();
 	        } finally {
-	            urlConnection.disconnect();
+//	            urlConnection.disconnect();
 	            return longName;
 	        }
 	    }

@@ -7,6 +7,8 @@ import java.beans.PropertyEditorSupport;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com._4s_.auditing.model.Auditable;
 import com._4s_.common.service.BaseManager;
