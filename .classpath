@@ -235,5 +235,6 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/servlet-api-2.5.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jsp-api-2.0.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/spring-security-acl-3.1.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/thymeleaf-spring3-3.0.15.RELEASE.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

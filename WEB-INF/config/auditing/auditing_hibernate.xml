@@ -70,6 +70,8 @@
 		<value>com._4s_.security.model</value>
 		<value>com._4s_.i18n.model</value>
 		<value>com._4s_.requestsApproval.model</value>
+		<value>com._4s_.timesheet.model</value>
+		<value>com._4s_.attendance.model</value>
 		</list>
 		</property>
 		

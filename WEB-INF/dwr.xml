@@ -32,5 +32,9 @@
 			<param name="beanName" value="reportParametersQuery" />
 		</create>
 		
+		<create creator="spring" javascript="attendanceManager">
+			<param name="beanName" value="attendanceManager" />
+		</create>
+		
 	</allow>
 </dwr>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE beans PUBLIC
+    "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="no" default-lazy-init="false"
+	default-dependency-check="none">
+	
+	<bean id="religionBinder" class="com._4s_.attendance.web.binders.ReligionBinder" singleton="false" >
+	    <property name="baseManager">
+			<ref bean="baseManager"/>
+	    </property>
+	</bean>
+
+	<bean id="maritalStatusBinder" class="com._4s_.attendance.web.binders.MaritalStatusBinder" singleton="false" >
+	    <property name="baseManager">
+			<ref bean="baseManager"/>
+	    </property>
+	</bean>
+	
+	
+	<bean id="qualificationBinder" class="com._4s_.attendance.web.binders.QualificationBinder" singleton="false" >
+	    <property name="baseManager">
+			<ref bean="baseManager"/>
+	    </property>
+	</bean>
+	
+	<bean id="departmentBinder" class="com._4s_.attendance.web.binders.AttendanceDepartmentBinder" singleton="false" >
+	    <property name="baseManager">
+			<ref bean="baseManager"/>
+	    </property>
+	</bean>
+	
+	<bean id="titleBinder" class="com._4s_.attendance.web.binders.TitleBinder" singleton="false" >
+	    <property name="baseManager">
+			<ref bean="baseManager"/>
+	    </property>
+	</bean>
+	
+</beans>

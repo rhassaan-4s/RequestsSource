@@ -71,9 +71,19 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Boolean automaticSignInOut;
 	
+	private Boolean webAttendanceAppEnabled;
+	
 	
 	////////////////Android Settings////////////////////
 	
+	public Boolean getWebAttendanceAppEnabled() {
+		return webAttendanceAppEnabled;
+	}
+
+	public void setWebAttendanceAppEnabled(Boolean webAttendanceAppEnabled) {
+		this.webAttendanceAppEnabled = webAttendanceAppEnabled;
+	}
+
 	private Boolean androidAttAutomaticApproval;
 	
 	private Float locationAccuracy;

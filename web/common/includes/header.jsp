@@ -400,6 +400,10 @@ menuItems:[
 							.equals("timesheet")) {
 						if (settings.getIsTimesheetEnabled().equals(
 								new Boolean(true))) {%>"<b><fmt:message key='timesheet.caption.applicationName' /></b>"<%}
+					}else if (securityApplication.getName()
+							.equals("attendance")) {
+						if (settings.getWebAttendanceAppEnabled().equals(
+								new Boolean(true))) {%>"<b><fmt:message key='attendance.caption.applicationName' /></b>"<%}
 					}%>, "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
 <%}
 			}%>
@@ -442,6 +446,9 @@ make_menus();
 									} else if (applicationName != null
 											&& applicationName.equals("timesheet")) {
 										applicationNameString = "timesheet.caption.applicationName";
+									} else if (applicationName != null
+											&& applicationName.equals("attendance")) {
+										applicationNameString = "attendance.caption.applicationName";
 									}
 									session.setAttribute("applicationNameString", applicationNameString);
 								%>
@@ -474,6 +481,11 @@ make_menus();
 						if (applicationName != null && applicationName.equals("timesheet")) {
 					%>
 					<jsp:include page="/web/timesheet/menu.jsp" flush="true" />
+					<%
+						}
+						if (applicationName != null && applicationName.equals("attendance")) {
+					%>
+					<jsp:include page="/web/attendance/menu.jsp" flush="true" />
 					<%
 						}
 					%>

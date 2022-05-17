@@ -330,10 +330,10 @@ function calculateDiff2(){
 	 var empCode =document.getElementById('empCode').value;
 	 var vacId=document.getElementById("annualVacation").value;
 	 var from_date=document.getElementById("from_date").value;
-	 var hostName=document.getElementById('hostName').value;;
-	 var serviceName=document.getElementById('serviceName').value;;
-	 var userName=document.getElementById('userName').value;;
-	 var password=document.getElementById('password').value;;
+	 var hostName=document.getElementById('hostName').value;
+	 var serviceName=document.getElementById('serviceName').value;
+	 var userName=document.getElementById('userName').value;
+	 var password=document.getElementById('password').value;
 	 
 	 
 	// alert("1 "+from_date);
