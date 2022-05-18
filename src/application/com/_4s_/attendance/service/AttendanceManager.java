@@ -23,7 +23,7 @@ public interface AttendanceManager extends BaseManager {
 	
 	public Integer getNumberOfAttendees(Date from, Date to,String hostName, String serviceName, String userName, String password);
 	public List getNumberOfAttendeesAndWorkersByDepartment(String hostName, String serviceName, String userName, String password);
-	public List getDashboardRequests(Date from, Date to,String hostName, String serviceName, String userName, String password);
+	public List getDashboardRequests(String hostName, String serviceName, String userName, String password);
 	
 }
 

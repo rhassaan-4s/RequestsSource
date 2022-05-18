@@ -16415,4 +16415,21 @@ INSERT INTO i18n_message VALUES (202116598,'تحليل أذون الموظفين
 INSERT INTO i18n_message VALUES (202116599, 'Employees Permissions Analysis', 101543, 3);&#xD;
 INSERT INTO I18N_KEY VALUES (101544, 'attendance.caption.requests', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116600,'أذون الموظفين', 101544, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116601, 'Employees Permissions', 101544, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116601, 'Employees Permissions', 101544, 3);</statment></query><query><sqlindex>229</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101545, 'attendance.header.vacRules', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116602,'قواعد الإجازات الدورية', 101545, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116603, 'Periodic Vacations Rules', 101545, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101546, 'attendance.caption.vacCode', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116604,'كود الإجازة', 101546, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116605, 'Vacation Code', 101546, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101547, 'attendance.caption.vacName', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116606,'اسم الإجازة', 101547, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116607, 'Vacation Name', 101547, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101548, 'attendance.caption.serviceYears', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116608,'مدة الخدمة بالسنوات', 101548, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116609, 'Service Years', 101548, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101549, 'attendance.caption.entitled', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116610,'عدد المستحق', 101549, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116611, 'Entitled Numbers', 101549, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101550, 'attendance.header.vacRules', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116612,'قواعد الإجازات الدورية', 101550, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116613, 'Periodic Vacations Rules', 101550, 3);</statment></query></SQL>

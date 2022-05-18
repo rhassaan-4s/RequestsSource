@@ -43,12 +43,12 @@
 		</li>
 		
 		
-	<!-- 	<li>
-			<abc:i18n property="attendance.header.qualificationSpecialty" />
-			<a href="/Requests/attendance/qualificationSpecialtyView.html"> &nbsp;&nbsp;
-				<fmt:message key="attendance.header.qualificationSpecialty" />
+	 	<li>
+			<abc:i18n property="attendance.header.vacRules" />
+			<a href="/Requests/attendance/vacRuleForm.html"> &nbsp;&nbsp;
+				<fmt:message key="attendance.header.vacRules" />
 			</a>
-		</li> -->
+		</li> 
 		
 		<li>
 			<abc:i18n property="attendance.header.empBasic" />

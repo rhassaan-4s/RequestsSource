@@ -27,6 +27,10 @@ public class Vacation implements Auditable,Serializable  {
 //	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="vacation_seq")
 //	@SequenceGenerator(name="vacation_seq",sequenceName="vacation_seq")//(generate=GeneratorType.IDENTITY)
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8084270327439377351L;
 	@Id
 	private String vacation;
 	private String name;

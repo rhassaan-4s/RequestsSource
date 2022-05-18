@@ -329,6 +329,7 @@ public class AttendanceManagerImpl extends BaseManagerImpl implements Attendance
 		Date to = cal2.getTime();
 		return externalQueries.getDashboardRequests(from,to,hostName, serviceName, userName, password);
 	}
+	
 
 		public Map insertTimesheetActivity(String arName, String enName) {
 			TimesheetActivity activity = new TimesheetActivity();

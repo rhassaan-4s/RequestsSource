@@ -195,6 +195,33 @@
 			</bean>
 		</property>
 	</bean>
+	
+	<bean id="vacRuleForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.VacRuleForm">
+				<property name="commandName">
+					<value>rules</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.attendance.model.VacRulesListWrapper</value>
+				</property>
+				<property name="formView">
+					<value>vacRuleForm</value>
+				</property>
+				<property name="successView">
+					<value>vacRuleForm</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+				<property name="binders">
+					<list>
+						<ref bean="vacationBinder" />
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
 	<!--
 		_____________________________________________________________________
 	-->
@@ -224,6 +251,7 @@
 				<prop key="/empBasicView.html">empBasicView</prop>
 				<prop key="/empBasicForm.html">empBasicForm</prop>
 				<prop key="dashboard.html">dashboardView</prop>
+				<prop key="/vacRuleForm.html">vacRuleForm</prop>
 			</props>
 		</property>
 	</bean>

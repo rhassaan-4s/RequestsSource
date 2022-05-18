@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com._4s_.attendance.model.VacRule;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.CommonManager;
@@ -209,6 +210,8 @@ public class DefaultPage extends BaseController {
 				request.getSession().setAttribute("settings",settings1);
 				request.getSession().setAttribute("salary_from_day", salary_from_day);
 				request.getSession().setAttribute("requestsDeadline", requestsDeadline);
+				
+				
 //				
 //				TimesheetSpecs specs = null;
 //				List specsList = commonManager.getObjects(TimesheetSpecs.class);
@@ -411,6 +414,12 @@ public class DefaultPage extends BaseController {
 				//					commonManager.getObjectsByParameter(Reports.class, "role", role));
 				//////////////////////////////////////////////////////////
 			}
+			
+//			List rules = baseManager.getObjects(VacRule.class);
+//			log.debug("##################  vac rules list size " + rules.size());
+//			request.getSession().setAttribute("vacRules", rules);
+			
+			
 			//Putting applications in session
 			Object purchasing = null;
 			try {

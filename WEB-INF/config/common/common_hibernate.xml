@@ -43,6 +43,7 @@
 		<property name="password">
 			<value>${hibernate.connection.password}</value>
 		</property>
+		
 	</bean>
 
 	<!-- Hibernate SessionFactory -->
@@ -51,7 +52,6 @@
 		<property name="dataSource">
 			<ref bean="dataSource" />
 		</property>
-
 		<property name="packagesToScan">
 		<list>
 		<value>com._4s_.HR.model</value>

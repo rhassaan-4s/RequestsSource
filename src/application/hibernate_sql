@@ -1,0 +1,5 @@
+hibernate.connection.driver_class=com.microsoft.sqlserver.jdbc.SQLServerDriver
+hibernate.connection.url=jdbc:sqlserver://198.12.225.198;databaseName=test_pay
+hibernate.connection.username=sa
+hibernate.connection.password=Fours@123
+hibernate.dialect=org.hibernate.dialect.SQLServer2012Dialect
