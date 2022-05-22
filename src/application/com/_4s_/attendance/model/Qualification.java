@@ -17,7 +17,6 @@ import com._4s_.auditing.model.Auditable;
 
 @Entity
 @Table (name = "qual")
-
 public class Qualification implements Serializable,Auditable {
 	@Id
 	@GenericGenerator(name="qual_seq",strategy="com._4s_.attendance.dao.QualStringKeyGenerator")

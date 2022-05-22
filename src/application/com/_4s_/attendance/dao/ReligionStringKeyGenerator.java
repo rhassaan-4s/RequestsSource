@@ -31,7 +31,23 @@ public class ReligionStringKeyGenerator implements IdentifierGenerator {
                 result = String.format("%03d", pk);
             }
         } catch (SQLException e) {
-            throw new HibernateException("Unable to generate Primary Key");
+        	try {
+        		ps.close();
+        		ps = connection.prepareStatement("SELECT (NEXT VALUE FOR " + tableSeq + ") as " + fieldName);
+				ResultSet rs = ps.executeQuery();
+
+				if (rs.next()) {
+				    int pk = rs.getInt(fieldName);
+
+				    // Convert to a String
+				    result = String.format("%03d", pk);
+				}
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				throw new HibernateException("Unable to generate Primary Key");
+			}
+            
         } finally {
             if (ps != null) {
                 try {
