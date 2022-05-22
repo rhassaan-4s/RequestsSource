@@ -81,7 +81,7 @@ public class AuditLogRecord {
 		this.message = message;
 		this.entity = entity;
 		this.entityDisplayName = entityDisplayName;
-		this.entityId = entity.getId();
+		this.entityId = (Long)entity.getId();
 		this.entityClass = entity.getClass();
 		this.userId = userId;
 		this.created = new Date();

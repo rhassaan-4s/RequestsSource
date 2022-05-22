@@ -49,7 +49,11 @@ public class Dashboard implements Controller{
 		cal2.set(Calendar.MINUTE, 59);
 		cal2.set(Calendar.SECOND, 59);
 		
-		Integer attendees = attendanceManager.getNumberOfAttendees(cal1.getTime(), cal2.getTime(),settings.getServer(),settings.getService(),settings.getUsername(),settings.getPassword());
+		String contextPath = (String)request.getSession().getAttribute("contextPath");
+		log.debug("context Path " + contextPath);
+		attendanceManager.setContextPath(contextPath);
+		attendanceManager.setSettings(settings);
+		Integer attendees = attendanceManager.getNumberOfAttendees(cal1.getTime(), cal2.getTime());
 		List workingEmp = attendanceManager.getObjectsByNullParameter(EmpBasic.class, "end_serv");
 		
 //		List attendeesAndWorkersByDepartment = attendanceManager.getNumberOfAttendeesAndWorkersByDepartment(cal1.getTime(), cal2.getTime());

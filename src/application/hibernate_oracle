@@ -3,3 +3,5 @@ hibernate.connection.url=jdbc:oracle:thin:@//184.168.120.48:1521/lehaa.secureser
 hibernate.connection.username=test_pay
 hibernate.connection.password=test_pay
 hibernate.dialect=org.hibernate.dialect.Oracle10gDialect
+hibernate.defaultSchema=test_pay
+hibernate.systemDate=SYSDATE

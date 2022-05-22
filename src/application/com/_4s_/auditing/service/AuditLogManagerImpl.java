@@ -57,7 +57,7 @@ public class AuditLogManagerImpl extends BaseManagerImpl implements
 			ex = new ExternalClass();
 			Auditable oldObject = (Auditable)itr.next();
 			//log.debug(">>>>>>>>>>>>>>>>>>>>>>>..oldObject "+oldObject);
-			ex.setId(oldObject.getId());
+			ex.setId((Long) oldObject.getId());
 			ex.setName(oldObject.getEntityDisplayName());
 			returnedObjects.add(ex);
 			//log.debug(">.......................returnedObjects "+returnedObjects);

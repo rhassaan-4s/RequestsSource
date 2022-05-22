@@ -387,7 +387,7 @@ public class AuditLogInterceptor implements Interceptor {
 		while (itr.hasNext()) {
 			auditLog = (AuditLogRecord) itr.next();
 			if (auditLog.getEntityId() == null) {
-				auditLog.setEntityId(auditLog.getEntity().getId());
+				auditLog.setEntityId((Long) auditLog.getEntity().getId());
 			}
 			auditLogDAO.saveLogEvent(auditLog);
 		}

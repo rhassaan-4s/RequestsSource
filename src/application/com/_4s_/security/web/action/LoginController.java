@@ -1,5 +1,6 @@
 package com._4s_.security.web.action;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +46,12 @@ public class LoginController implements Controller {
 		}
 		
 		log.debug("request.getSession().getAttribute(ACEGI_SECURITY_LAST_EXCEPTION): "+lastException);
+		Enumeration<Object> attrib = request.getSession().getAttributeNames();
+		while(attrib.hasMoreElements()) {
+			Object obj = attrib.nextElement();
+			log.debug("obj class " + obj.getClass());
+			log.debug(obj.toString());
+		}
 		
 		request.getSession().removeAttribute("ACEGI_SECURITY_LAST_EXCEPTION");
 		request.getSession().removeAttribute("ACEGI_SECURITY_LAST_USERNAME");

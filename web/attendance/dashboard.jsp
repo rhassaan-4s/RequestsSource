@@ -1,3 +1,5 @@
+<%@page import="java.util.Calendar"%>
+<%@page import="com._4s_.common.model.Settings"%>
 <%@ include file="/web/common/includes/taglibs.jsp"%>
 <jsp:include page="/web/common/includes/header.jsp" flush="true" />
 
@@ -16,11 +18,7 @@
 
 	<script type="text/javascript">
 		function drawAbsenceAttendanceByDepartment() {
-			var hostName=document.getElementById('hostName').value;
-			 var serviceName=document.getElementById('serviceName').value;
-			 var userName=document.getElementById('userName').value;
-			 var password=document.getElementById('password').value;
-			attendanceManager.getNumberOfAttendeesAndWorkersByDepartment(fillChartByDepartment,hostName,serviceName,userName,password);
+			attendanceManager.getNumberOfAttendeesAndWorkersByDepartment(fillChartByDepartment);
 		}
 		
 		function fillChartByDepartment(data) {
@@ -86,11 +84,7 @@
 		}
 		
 		function drawRequests() {
-			var hostName=document.getElementById('hostName').value;
-			 var serviceName=document.getElementById('serviceName').value;
-			 var userName=document.getElementById('userName').value;
-			 var password=document.getElementById('password').value;
-			attendanceManager.getDashboardRequests(fillRequests,hostName,serviceName,userName,password);
+			attendanceManager.getDashboardRequests(fillRequests);
 		}
 		
 		function fillRequests(data) {
@@ -204,10 +198,6 @@
 		<input type="hidden" id="absence" name="absence" value="${absence}" />
 		<input type="hidden" id="attendance" name="attendance"
 			value="${attendance}" />
-		 <input type="hidden" name="hostName" id="hostName" value="${settings.server}"/>
-		 <input type="hidden" name="serviceName" id="serviceName" value="${settings.service}"/>
-		 <input type="hidden" name="userName" id="userName" value="${settings.username}"/>
-		 <input type="hidden" name="password" id="password" value="${settings.password}"/>
 
 		<table width="90%" border="0" cellspacing="0" cellpadding="0"
 			style="padding-right: 10px">

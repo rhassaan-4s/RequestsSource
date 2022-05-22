@@ -57,27 +57,4 @@ public class AttendanceDAOHibernate extends BaseDAOHibernate implements Attendan
 		}
 	}
 	
-	public TimesheetTransaction getTimesheetTrans(Employee empCode,
-			Date inDate, TimesheetCostCenter costcenter,
-			TimesheetTransactionParts part1, TimesheetTransactionParts part2,
-			TimesheetTransactionParts part3) {
-		Criteria criteria = getCurrentSession().createCriteria(TimesheetTransaction.class);
-		criteria.add(Restrictions.eq("empCode", empCode));
-		criteria.add(Restrictions.eq("inDate", inDate));
-		criteria.add(Restrictions.eq("costCode", costcenter));
-		criteria.add(Restrictions.eq("part1", part1));
-		criteria.add(Restrictions.eq("part2", part2));
-		criteria.add(Restrictions.eq("part3", part3));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		if (criteria.list()!=null && criteria.list().size()>0) {
-			return (TimesheetTransaction)criteria.list().get(0);
-		} else {
-			return null;
-		}
-	}
-	
-	public Map getTimesheetTransactions(String hostName,String serviceName,String userName,String password,String empCode, Date fromDate, Date toDate, TimesheetCostCenter costcenter, TimesheetActivity activity, TimesheetTransactionParts part1, TimesheetTransactionParts part2, TimesheetTransactionParts part3, int pageNo, int pageSize, String sort) {
-		Page page = new Page();
-		return page.getPage(externalQueries.getTimesheetTransactions(hostName, serviceName, userName, password, empCode, fromDate, toDate, costcenter, activity, part1, part2, part3, pageNo, pageSize, sort), pageNo, pageSize);
-	}
 }

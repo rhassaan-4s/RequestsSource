@@ -3,6 +3,7 @@ package com._4s_.dbUpdate.web.action;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -21,11 +22,14 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.common.model.Flag;
 import com._4s_.common.model.LastSequence;
+import com._4s_.common.model.Settings;
 import com._4s_.common.service.CommonManager;
 
 public class UpdateDB implements Controller {
@@ -55,10 +59,15 @@ public class UpdateDB implements Controller {
 		}
 
 		public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-			
+			String fileName = "";
+			Settings settings = (Settings)comMger.getObject(Settings.class, new Long(1));
 			String contextPath = request.getSession().getServletContext().getRealPath("/");
 			log.debug(">>>>>>>>>>>>>>>>>>>>contextPath "+contextPath);
-			String fileName = contextPath+"/dbUpdates/ERPDBUpdate.xml";
+//			if (settings.getSqlServerConnectionEnabled()) {
+//				fileName=contextPath+"/dbUpdates/ERPDBUpdateSQL.xml";
+//			} else {
+			fileName=contextPath+"/dbUpdates/ERPDBUpdate.xml";
+//			}
 			String absolutePath= request.getRealPath("/");
 			File witeTo=new File(contextPath+"/dbUpdates/ERPDBUpdateLogs.txt");
 			FileWriter witer=new FileWriter(witeTo);
@@ -99,11 +108,16 @@ public class UpdateDB implements Controller {
         			
         			
 //        			jt.execute("start transaction");
+        			
+        			
         			while (tokenizer.hasMoreTokens()) { //for all statements in the Block
         				qry = tokenizer.nextToken();
         				qry = StringUtils.trim(qry);
         				try{
         					if (qry != null && qry.length() != 0){
+        						if (settings.getSqlServerConnectionEnabled()) {
+        							qry = convertOracleToSqlScript(qry,settings);
+        						}
         						jt.execute(qry);
         					}
         				}catch (Exception ec) {
@@ -122,7 +136,7 @@ public class UpdateDB implements Controller {
     				}else{
     					jt.execute("rollback");
     					currentIndex--;
-    					break; // this will terminater the run of the script
+    					break; // this will terminate the run of the script
     				}
 
         		}
@@ -154,6 +168,41 @@ public class UpdateDB implements Controller {
 			return new ModelAndView("updateDBView",model);
 		}
 		
+		
+		private String convertOracleToSqlScript(String sql,Settings settings) {
+			JdbcTemplate jt = new JdbcTemplate(dataSource);
+			String dbName = settings.getService();
+			String replacedString = sql;
+			replacedString = replacedString.toLowerCase();
+			replacedString.replaceAll("number", "BIGINT");
+			replacedString.replaceAll("VARCHAR2", "VARCHAR");
+			replacedString.replaceAll("DATE", "	DATETIME2(0)");
+			
+			return replacedString;
+//			try{
+//				String statement = "DECLARE @dbName AS VARCHAR(100);"
+//				+ "Declare @sql varchar(100);"
+//				+ "set  @dbName='"+settings.getService()+"'; "
+//				+"set @sql='select table_name from '+ @dbName+'.information_schema.tables;';"
+//				+"exec(@sql)";
+////				+ "set @sql='select * from '+ @dbName+'.i18n_locale;';"
+////				+ "exec(@sql)";
+//				List tableName = jt.queryForList(statement);
+//				Iterator itr = tableName.iterator();
+//				while(itr.hasNext()) {
+//					LinkedCaseInsensitiveMap resultMap = (LinkedCaseInsensitiveMap) tableName.get(0);
+//					String tName =   (String)resultMap.get("table_name");
+////					if (replacedString.contains(tName)) {
+//						replacedString.replace(tName, dbName+"."+tName);
+////					}
+////				}
+//				log.debug("replaced query " + replacedString);
+//				return replacedString;
+//			}catch (Exception e) {
+//				e.printStackTrace();
+//				return sql;
+//			}
+		}
 		
 		private void migrate_gristration_anotherServicePackage(List codeMigrationList) { // flag No.1
 			Flag flag = (Flag)comMger.getObject(Flag.class , new Long(1));

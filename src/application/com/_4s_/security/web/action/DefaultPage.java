@@ -118,7 +118,9 @@ public class DefaultPage extends BaseController {
 		Map model = new HashMap();
 		Settings settings = (Settings)securityManager.getObject(Settings.class, new Long(1)); 
 		log.debug("settings " + settings);
-		log.debug("settings.getIpAddressEnabled() " + settings.getIpAddressEnabled());
+		String contextPath = request.getSession().getServletContext().getRealPath("/");
+		request.getSession().setAttribute("contextPath", contextPath);
+//		log.debug("settings.getIpAddressEnabled() " + settings.getIpAddressEnabled());
 		if (settings.getIpAddressEnabled()) {
 		if (currentIP!= null && !currentIP.isEmpty()) {
 			IPAddress ipAdd = null;

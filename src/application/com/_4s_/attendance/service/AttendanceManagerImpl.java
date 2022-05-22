@@ -43,6 +43,30 @@ public class AttendanceManagerImpl extends BaseManagerImpl implements Attendance
 	private MessageManager messageManager;
 	
 	private SequenceManager sequenceManager ;
+	
+	private String contextPath="";
+	
+	private Settings settings;
+	
+	
+	
+	public Settings getSettings() {
+		return settings;
+	}
+
+	public void setSettings(Settings settings) {
+		this.settings = settings;
+	}
+
+	public String getContextPath() {
+		log.debug(contextPath);
+		return contextPath;
+	}
+
+	public void setContextPath(String contextPath) {
+		this.contextPath = contextPath;
+		log.debug(this.contextPath);
+	}
 
 	public AttendanceDAO getAttendanceDAO() {
 		return attendanceDAO;
@@ -298,11 +322,11 @@ public class AttendanceManagerImpl extends BaseManagerImpl implements Attendance
 	}
 	
 	
-	public Integer getNumberOfAttendees(Date from, Date to,String hostName, String serviceName, String userName, String password) {
-		return externalQueries.getNumberOfAttendees(from, to, hostName, serviceName, userName, password);
+	public Integer getNumberOfAttendees(Date from, Date to) {
+		return externalQueries.getNumberOfAttendees(contextPath,from, to,settings);
 	}
 	
-	public List getNumberOfAttendeesAndWorkersByDepartment(String hostName, String serviceName, String userName, String password) {
+	public List getNumberOfAttendeesAndWorkersByDepartment() {
 		Calendar cal1 = Calendar.getInstance();
 		cal1.set(Calendar.HOUR_OF_DAY, 0);
 		cal1.set(Calendar.MINUTE, 0);
@@ -313,10 +337,10 @@ public class AttendanceManagerImpl extends BaseManagerImpl implements Attendance
 		cal2.set(Calendar.MINUTE, 59);
 		cal2.set(Calendar.SECOND, 59);
 		Date to = cal2.getTime();
-		return externalQueries.getNumberOfAttendeesAndWorkersByDepartment(from,to,hostName, serviceName, userName, password);
+		return externalQueries.getNumberOfAttendeesAndWorkersByDepartment(contextPath,from,to,settings);
 	}
 	
-	public List getDashboardRequests(String hostName, String serviceName, String userName, String password) {
+	public List getDashboardRequests() {
 		Calendar cal1 = Calendar.getInstance();
 		cal1.set(Calendar.HOUR_OF_DAY, 0);
 		cal1.set(Calendar.MINUTE, 0);
@@ -327,188 +351,6 @@ public class AttendanceManagerImpl extends BaseManagerImpl implements Attendance
 		cal2.set(Calendar.MINUTE, 59);
 		cal2.set(Calendar.SECOND, 59);
 		Date to = cal2.getTime();
-		return externalQueries.getDashboardRequests(from,to,hostName, serviceName, userName, password);
+		return externalQueries.getDashboardRequests(contextPath,from,to,settings);
 	}
-	
-
-		public Map insertTimesheetActivity(String arName, String enName) {
-			TimesheetActivity activity = new TimesheetActivity();
-			activity.setName(arName);
-			activity.setEname(enName);
-			saveObject(activity);
-			Map results = new HashMap();
-			results.put("Results", activity);
-			return results;
-		}
-		
-		public ValidationStatus validateActivity(TimesheetActivity activity) {
-			ValidationStatus status = new ValidationStatus();
-			if (activity.getName()==null || activity.getName().isEmpty()) {
-				status.setStatus("False");
-				status.setObjAttribute("name");
-				status.setMsg("Mandatory");
-				return status;
-			}
-			if (activity.getEname()==null || activity.getEname().isEmpty()) {
-				status.setStatus("False");
-				status.setObjAttribute("ename");
-				status.setMsg("Mandatory");
-				return status;
-			}
-			Object actArName = getObjectByParameter(TimesheetActivity.class, "name", activity.getName());
-			if (actArName!=null && !((TimesheetActivity)actArName).getActivity().equals(activity.getActivity())) {
-				//duplicate ar name
-				status.setStatus("False");
-				status.setObjAttribute("name");
-				status.setMsg("Duplicate");
-				return status;
-			}
-			Object actEnName = getObjectByParameter(TimesheetActivity.class, "ename", activity.getEname());
-			if (actEnName!=null && !((TimesheetActivity)actEnName).getActivity().equals(activity.getActivity())) {
-				//duplicate en name
-				status.setStatus("False");
-				status.setObjAttribute("ename");
-				status.setMsg("Duplicate");
-				return status;
-			}
-			status.setStatus("True");
-			return status;
-		}
-		
-		public ValidationStatus validatePart(TimesheetTransactionParts part) {
-			ValidationStatus status = new ValidationStatus();
-			if (part.getName()==null || part.getName().isEmpty()) {
-				status.setStatus("False");
-				status.setObjAttribute("name");
-				status.setMsg("Mandatory");
-				return status;
-			}
-			if (part.getEname()==null || part.getEname().isEmpty()) {
-				status.setStatus("False");
-				status.setObjAttribute("ename");
-				status.setMsg("Mandatory");
-				return status;
-			}
-			Object partArName = getObjectByTwoParameters(TimesheetTransactionParts.class,"part_no", part.getPart_no(), "name", part.getName());
-			log.debug("partarname " + partArName);
-			if (partArName!=null && !((TimesheetTransactionParts)partArName).getCode().equals(part.getCode())) {
-				//duplicate ar name
-				log.debug("duplicate ar");
-				status.setStatus("False");
-				status.setObjAttribute("name");
-				status.setMsg("Duplicate");
-				return status;
-			}
-			Object partEnName = getObjectByTwoParameters(TimesheetTransactionParts.class,"part_no", part.getPart_no(), "ename", part.getEname());
-			log.debug("partenname " + partEnName);
-			System.out.println("partenname " + partEnName);
-			if (partEnName!=null && ((TimesheetTransactionParts)partEnName).getPart_no().equals(part.getPart_no()) && !((TimesheetTransactionParts)partEnName).getCode().equals(part.getCode())) {
-				//duplicate en name
-				log.debug("duplicate ar");
-				System.out.println("duplicate ar");
-				status.setStatus("False");
-				status.setObjAttribute("ename");
-				status.setMsg("Duplicate");
-				return status;
-			}
-			status.setStatus("True");
-			return status;
-		}
-
-		public Map insertTimesheetPart(String arName, String enName, Short part_no) {
-			TimesheetTransactionParts part = new TimesheetTransactionParts();
-			part.setName(arName);
-			part.setEname(enName);
-			System.out.println("part no " + part_no);
-			part.setPart_no(part_no);
-			saveObject(part);
-			Map results = new HashMap();
-			results.put("Results", part);
-			return results;
-		}
-
-		public Map insertTimesheetCostcenter(String costName, String costEName,
-				Integer costLevel, String leafCost, String beforeLast) {
-			TimesheetCostCenter costcenter = new TimesheetCostCenter();
-			costcenter.setCostName(costName);
-			costcenter.setEng_name(costEName);
-			costcenter.setCostLevel(costLevel);
-			costcenter.setLeafCost(leafCost);
-			costcenter.setBeforeLast(beforeLast);
-			saveObject(costcenter);
-			Map results = new HashMap();
-			results.put("Results", costcenter);
-			return results;
-		}
-
-		public Map insertTimesheetSpecs(String partName1, String partEName1,
-				String isUsed1, String partName2, String partEName2,
-				String isUsed2, String partName3, String partEName3,
-				String isUsed3) {
-			TimesheetSpecs specs = new TimesheetSpecs();
-			Map results = new HashMap();
-			Object availableSpecs = getObject(TimesheetSpecs.class,new Long(1));
-			if (availableSpecs!= null) {
-				specs = (TimesheetSpecs)availableSpecs;
-			} else {
-				specs.setCode("1");
-			}
-			specs.setPart1_name(partName1);
-			specs.setPart1_ename(partEName1);
-			specs.setIs_used1(isUsed1);
-			specs.setPart2_name(partName2);
-			specs.setPart2_ename(partEName2);
-			specs.setIs_used2(isUsed2);
-			specs.setPart3_name(partName3);
-			specs.setPart3_ename(partEName3);
-			specs.setIs_used3(isUsed3);
-			try {
-				saveObject(specs);
-			} catch (HibernateException e) {
-				// TODO Auto-generated catch block
-				if (e.getMessage().equals("Unable to generate Primary Key")) {
-					RestStatus status = new RestStatus();
-					results.put("Results", null);
-					status.setCode("335");
-					status.setMessage("Unable to generate specifications code (please reset the sequence)");
-					status.setStatus("False");
-					results.put("Status", status);
-					return results;
-				}
-				e.printStackTrace();
-			}
-			
-			results.put("Results", specs);
-			return results;
-		}
-
-		public Map insertTimesheetTransDefaults(String empCode,
-				String costCenterCode, String activityCode, String partCode1,
-				String partCode2, String partCode3) {
-			// TODO Auto-generated method stub
-			TimesheetTransactionDefaults defaults = new TimesheetTransactionDefaults();
-			TimesheetActivity activity = (TimesheetActivity)getObjectByParameter(TimesheetActivity.class, "activity", activityCode);
-			TimesheetCostCenter costcenter = (TimesheetCostCenter)getObjectByParameter(TimesheetCostCenter.class, "costCode", costCenterCode);
-			Employee employee = (Employee)getObjectByParameter(Employee.class, "empCode", empCode);
-			if (partCode1!=null && !partCode1.isEmpty()) {
-				TimesheetTransactionParts part1 = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", partCode1);
-				defaults.setPart1(part1);
-			}
-			if (partCode2!=null && !partCode2.isEmpty()) {
-				TimesheetTransactionParts part2 = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", partCode2);
-				defaults.setPart2(part2);
-			}
-			if (partCode3!=null && !partCode3.isEmpty()) {
-				TimesheetTransactionParts part3 = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", partCode3);
-				defaults.setPart3(part3);
-			}
-			defaults.setActivity(activity);
-			defaults.setCostCode(costcenter);
-			defaults.setEmpCode(employee);
-			saveObject(defaults);
-			TimesheetTransDefaultWrapper defaultsWrapper = defaults.getWrapper();
-			Map results = new HashMap();
-			results.put("Results", defaultsWrapper);
-			return results;
-		}
 }

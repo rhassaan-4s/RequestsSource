@@ -73,9 +73,29 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Boolean webAttendanceAppEnabled;
 	
+	private Boolean sqlServerConnectionEnabled;
+	
+	private String dbPortNo;
+	
 	
 	////////////////Android Settings////////////////////
 	
+	public Boolean getSqlServerConnectionEnabled() {
+		return sqlServerConnectionEnabled;
+	}
+
+	public void setSqlServerConnectionEnabled(Boolean sqlServerConnectionEnabled) {
+		this.sqlServerConnectionEnabled = sqlServerConnectionEnabled;
+	}
+
+	public String getDbPortNo() {
+		return dbPortNo;
+	}
+
+	public void setDbPortNo(String dbPortNo) {
+		this.dbPortNo = dbPortNo;
+	}
+
 	public Boolean getWebAttendanceAppEnabled() {
 		return webAttendanceAppEnabled;
 	}

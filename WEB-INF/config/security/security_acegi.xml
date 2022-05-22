@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 	http://www.springframework.org/schema/security
-	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
 	<!-- Security 2.0 Spring (Migrating from acegi) -->
 
@@ -444,12 +444,13 @@
 				users-by-username-query="SELECT userName, password,1 as enabled FROM
 				security_users WHERE userName=?"
 				authorities-by-username-query="select distinct userName,permessionname from
-				security_users,security_user_roles,security_role_permissions,security_permissions,security_roles
+				security_users,security_user_roles,security_role_permissions,
+				security_permissions,security_roles
 				where security_users.id=security_user_roles.users and
 				security_user_roles.role=security_roles.id and
 				security_role_permissions.role=security_roles.id and
 				security_role_permissions.permission=security_permissions.id
-				and selected=1 and security_users.isActive=1 and (end_serv is null or (END_SERV >=  SYSDATE)) and userName=?" />
+				and selected=1 and security_users.isActive=1 and (end_serv is null or (END_SERV >= ${hibernate.systemDate})) and userName=?" />
 			
 			<!-- <password-encoder ref="passwordEncoder"/> -->
 		</authentication-provider>

@@ -77,9 +77,9 @@
 				<prop key="hibernate.dialect">
 					${hibernate.dialect}
 				</prop>
-				<prop key="hibernate.default_schema">
+				<!-- <prop key="hibernate.default_schema">
 					${hibernate.defaultSchema}
-				</prop>
+				</prop> -->
 				<!-- <prop key="hibernate.connection.release_mode">after_statement</prop>-->
   				<prop key="hibernate.show_sql">true</prop>  
 <!--		    <prop key="hibernate.hbm2ddl.auto">update</prop>  -->
