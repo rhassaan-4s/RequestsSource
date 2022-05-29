@@ -22,7 +22,7 @@ package com._4s_.HR.model;
 @Table(name="hr_functional_group")
 public class HRFunctionalGroup  implements Auditable,Serializable {
 		
-		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_functional_group_seq")
+		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_functional_group_seq")
 		@SequenceGenerator(name="hr_functional_group_seq",sequenceName="hr_functional_group_seq")//(generate=GeneratorType.IDENTITY)
 		private Long id;
 	    private String code;

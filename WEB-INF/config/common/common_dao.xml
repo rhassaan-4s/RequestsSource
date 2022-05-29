@@ -13,9 +13,23 @@
 		<property name="dataSource">
 		      <ref bean="dataSource"/>
 		</property>
+		<property name="driverClass">
+		      <value>${hibernate.connection.driver_class}</value>
+		</property>
+		<property name="url">
+			<value>${hibernate.connection.url}</value>
+		</property>
+		<property name="username">
+			<value>${hibernate.connection.username}</value>
+		</property>
+		<property name="password">
+			<value>${hibernate.connection.password}</value>
+		</property>
+		<property name="schema">
+			<value>${hibernate.defaultSchema}</value>
+		</property>
 	</bean>
-
-
+	
 <!-- this bean is not used anywhere, just the goal of it to inject dataSource static variable into DBUtils	-->
 	<bean id="dbUtilsDataSourceInjector" class="com._4s_.common.util.DBUtils" >
 		<property name="dataSource">

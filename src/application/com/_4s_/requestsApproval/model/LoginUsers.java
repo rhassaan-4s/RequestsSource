@@ -25,7 +25,7 @@ import com._4s_.common.model.Employee;
 @Table(name="login_users")
 public class LoginUsers  implements Auditable,Serializable {
 		
-		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="login_users_seq")
+		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="login_users_seq")
 		@SequenceGenerator(name="login_users_seq",sequenceName="login_users_seq")//(generate=GeneratorType.IDENTITY)
 		private Long id;
 		

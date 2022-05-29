@@ -94,10 +94,6 @@ public class AttendanceVacationReport implements Controller{
 		Settings settings = (Settings)request.getSession().getAttribute("settings");
 		
 		boolean tAttRepWithHrsMin = settings.getTAttRepWithHrsMin();
-		String server = settings.getServer();
-		String service = settings.getService();
-		String username = settings.getUsername();
-		String password = settings.getPassword();
 		
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
 
@@ -141,11 +137,11 @@ public class AttendanceVacationReport implements Controller{
 					if (empArray == null || empArray.isEmpty()) {
 						empArray = "'" + emp.getEmpCode() +  "'";
 					}
-					totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,null);
+					totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,null,settings);
 				} else {
 //					totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
 //					totalObjects=requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
-					totalObjects=requestsApprovalManager.getTimeAttendAll(empCode, fromDate, toDate,null);
+					totalObjects=requestsApprovalManager.getTimeAttendAll(empCode, fromDate, toDate,null,settings);
 				}
 				
 				objects=(List) totalObjects.get(0);
@@ -207,11 +203,11 @@ public class AttendanceVacationReport implements Controller{
 					if (empArray == null || empArray.isEmpty()) {
 						empArray = "'" + emp.getEmpCode() +  "'";
 					}
-					days=requestsApprovalManager.getVacations(empArray, new Long(2), fromDate,toDate);
+					days=requestsApprovalManager.getVacations(empArray, new Long(2), fromDate,toDate,settings);
 				} else {
 //					totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
 //					totalObjects=requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
-					days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate);
+					days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate,settings);
 				}
 //				days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate);
 				log.debug("-----days 001 ---"+days.size());

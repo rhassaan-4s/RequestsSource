@@ -211,54 +211,7 @@
 					<fmt:message key="commons.caption.serverSettings" />
 				</td>
 			</tr>
-			<tr>
-				<td nowrap class="formBodControl" >
-					<abc:i18n property="commons.caption.server" />
-					<fmt:message key="commons.caption.server" />
-				</td>
-				<td  class="formBod"> 
-					<spring:bind path="settings.server">
-						<input type="text"  name="${status.expression}" value="${status.value}"/>
-					</spring:bind> 
-				</td>
-				<TD width="50%">&nbsp;</TD>
-			</tr>
-			<tr>
-				<td nowrap class="formBodControl" >
-					<abc:i18n property="commons.caption.service" />
-					<fmt:message key="commons.caption.service" />
-				</td>
-				<td  class="formBod"> 
-					<spring:bind path="settings.service">
-						<input type="text"  name="${status.expression}" value="${status.value}"/>
-					</spring:bind> 
-				</td>
-				<TD width="50%">&nbsp;</TD>
-			</tr>
-			<tr>
-				<td nowrap class="formBodControl" >
-					<abc:i18n property="commons.caption.username" />
-					<fmt:message key="commons.caption.username" />
-				</td>
-				<td  class="formBod"> 
-					<spring:bind path="settings.username">
-						<input type="text" name="${status.expression}" value="${status.value}"/>
-					</spring:bind> 
-				</td>
-				<TD width="50%">&nbsp;</TD>
-			</tr>
-			<tr>
-				<td nowrap class="formBodControl" >
-					<abc:i18n property="commons.caption.password" />
-					<fmt:message key="commons.caption.password" />
-				</td>
-				<td  class="formBod"> 
-					<spring:bind path="settings.password">
-						<input type="text" name="${status.expression}" value="${status.value}"/>
-					</spring:bind> 
-				</td>
-				<TD width="50%">&nbsp;</TD>
-			</tr>
+			
 			<tr>
 				<td nowrap class="formBodControl" >
 					<abc:i18n property="commons.caption.loginUrl" />

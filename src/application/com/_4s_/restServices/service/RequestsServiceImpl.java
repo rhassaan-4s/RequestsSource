@@ -283,8 +283,7 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 			trans_type = "O";
 		}
 		log.debug("date_" + dateOnly + " time_ " + newDate);
-		int result = requestsApprovalManager.insertTimeAttendance(settings.getServer(),settings.getService(),settings.getUsername(),settings.getPassword(),
-				emp.getEmpCode(),dateOnly, newDate,trans_type);
+		int result = requestsApprovalManager.insertTimeAttendance(emp.getEmpCode(),dateOnly, newDate,trans_type);
 		restStatus.setStatus("true");
 		restStatus.setCode("200");
 		restStatus.setMessage("Successful Automatic Transaction");
@@ -467,7 +466,7 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 	withoutSalVac.setWithdrawDays(daysDiff);
 	log.debug("emp " + emp);
 	
-	Long vacCredit = requestsApprovalManager.getVacationCredit(emp.getEmpCode(), userRequest.getAttendanceType(), userRequest.getVacation(), mCalDateFrom.getDate(), settings.getServer(), settings.getService(), settings.getUsername(), settings.getPassword());
+	Long vacCredit = requestsApprovalManager.getVacationCredit(emp.getEmpCode(), userRequest.getAttendanceType(), userRequest.getVacation(), mCalDateFrom.getDate());
 	log.debug("vaccredit " + vacCredit);
 	if (vacCredit!=null) {
 		withoutSalVac.setVacCredit(vacCredit);
@@ -1472,7 +1471,7 @@ public Map searchEmployees(EmployeeWrapper emp, Employee loggedInEmployee) {
 	return response ;
 }
 
-public Map getAttendanceVacationReport(RequestsApprovalQuery requestApproval) {
+public Map getAttendanceVacationReport(RequestsApprovalQuery requestApproval,Settings settings) {
 Map response = new HashMap();
 	
 MultiCalendarDate mCalDate = new MultiCalendarDate();
@@ -1487,6 +1486,7 @@ List days = new ArrayList();
 Map results = new HashMap();
 
 RestStatus status = new RestStatus();
+
 
 if (dateFrom != null && dateTo != null && empCode != null){
 	if (!dateFrom.equals("") && !dateTo.equals("")  && !empCode.isEmpty()) {
@@ -1504,7 +1504,7 @@ if (dateFrom != null && dateTo != null && empCode != null){
 		List totalObjects= new ArrayList();
 		
 //		totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
-		totalObjects=requestsApprovalManager.getTimeAttendAll(empCode, fromDate, toDate,null);
+		totalObjects=requestsApprovalManager.getTimeAttendAll(empCode, fromDate, toDate,null,settings);
 		
 		objects=(List) totalObjects.get(0);
 		
@@ -1553,7 +1553,7 @@ if (dateFrom != null && dateTo != null && empCode != null){
 		// VIP
 		
 		
-		days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate);
+		days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate,settings);
 		log.debug("-----days 001 ---"+days.size());
 		response.put("Vacations", days);
 		
@@ -1584,7 +1584,7 @@ if (dateFrom != null && dateTo != null && empCode != null){
 return results;
 }
 
-public Map getAttendanceReport(RequestsApprovalQuery requestApproval, Employee emp) {
+public Map getAttendanceReport(RequestsApprovalQuery requestApproval, Employee emp,Settings settings) {
 Map response = new HashMap();
 	
 MultiCalendarDate mCalDate = new MultiCalendarDate();
@@ -1683,7 +1683,7 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 			if (empArray == null || empArray.isEmpty()) {
 				empArray = "'" + emp.getEmpCode() +  "'";
 			}
-			totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId);
+			totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId,settings);
 			
 		} else if (codeFrom!= null && !codeFrom.isEmpty() && codeTo!= null && !codeTo.isEmpty()) {
 			String empArray = "";
@@ -1729,7 +1729,7 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 			if (empArray == null || empArray.isEmpty()) {
 //				empArray = "'" + emp.getEmpCode() +  "'";
 			} else {
-				totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId);
+				totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId,settings);
 			}
 		}
 		else {
@@ -1791,9 +1791,9 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 			if (empArray == null || empArray.isEmpty()) {
 				empArray = "'" + emp.getEmpCode() +  "'";//islam can't see his reports in getAttendanceReport service
 				log.debug("empArray " + empArray);
-				totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId);
+				totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId,settings);
 			} else {
-				totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId);
+				totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId,settings);
 			}
 		}
 		if(!totalObjects.isEmpty()) {

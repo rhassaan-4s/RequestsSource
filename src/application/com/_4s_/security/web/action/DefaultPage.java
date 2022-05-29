@@ -196,7 +196,6 @@ public class DefaultPage extends BaseController {
 
 
 				Settings settings1 = (Settings)commonManager.getObjectsOrderedByField(Settings.class,"id").get(0);
-				log.debug("username " + settings1.getUsername() + "password " + settings1.getPassword());
 				//		int salary_from_day =  requestsApprovalManager.getSalaryFromDay();
 				int salary_from_day = settings1.getSalaryFromDay();
 				log.fatal("salary_from_day " + salary_from_day);
@@ -371,7 +370,6 @@ public class DefaultPage extends BaseController {
 			request.getSession().setAttribute("partName3", partName3);
 
 //			Settings settings = (Settings)commonManager.getObjectsOrderedByField(Settings.class,"id").get(0);
-			log.debug("username " + settings.getUsername() + "password " + settings.getPassword());
 			//		int salary_from_day =  requestsApprovalManager.getSalaryFromDay();
 			int salary_from_day = settings.getSalaryFromDay();
 			log.fatal("salary_from_day " + salary_from_day);

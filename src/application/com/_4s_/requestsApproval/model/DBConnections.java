@@ -22,7 +22,7 @@ public class DBConnections implements Auditable,Serializable {
 	
 	
 	
-			@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="dbconnections_seq")
+			@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="dbconnections_seq")
 			@SequenceGenerator(name="dbconnections_seq",sequenceName="dbconnections_seq")//(generate=GeneratorType.IDENTITY)
 			private Long id;
 		    private String description;

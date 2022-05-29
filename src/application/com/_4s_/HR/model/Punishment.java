@@ -19,7 +19,7 @@ import com._4s_.common.util.LocaleUtil;
 public class Punishment {
 	
 
-		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_punish_seq")
+		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_punish_seq")
 		@SequenceGenerator(name="hr_punish_seq",sequenceName="hr_punish_seq")//(generate=GeneratorType.IDENTITY)
 		private  Long id ;
 		

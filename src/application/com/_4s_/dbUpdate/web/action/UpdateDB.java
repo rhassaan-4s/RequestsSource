@@ -171,7 +171,7 @@ public class UpdateDB implements Controller {
 		
 		private String convertOracleToSqlScript(String sql,Settings settings) {
 			JdbcTemplate jt = new JdbcTemplate(dataSource);
-			String dbName = settings.getService();
+//			String dbName = settings.getService();
 			String replacedString = sql;
 			replacedString = replacedString.toLowerCase();
 			replacedString.replaceAll("number", "BIGINT");

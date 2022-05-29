@@ -20,7 +20,7 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="requests")
 public class Requests implements Auditable,Serializable {
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="requests_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="requests_seq")
 	@SequenceGenerator(name="requests_seq",sequenceName="requests_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	

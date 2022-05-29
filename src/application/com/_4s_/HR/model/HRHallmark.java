@@ -22,7 +22,7 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="dam")
 public class HRHallmark implements Auditable,Serializable {
 	
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_dam_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_dam_seq")
 	@SequenceGenerator(name="hr_dam_seq",sequenceName="hr_dam_seq")//(generate=GeneratorType.IDENTITY)
    private  Long id ;
 	

@@ -19,7 +19,7 @@ import com._4s_.auditing.model.Auditable;
 public class HRIllnessLevels implements Auditable,Serializable {
 	
 	
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="HR_SEQ_ILLNESS_LEVELS")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HR_SEQ_ILLNESS_LEVELS")
 	@SequenceGenerator(name="HR_SEQ_ILLNESS_LEVELS",sequenceName="HR_SEQ_ILLNESS_LEVELS")//(generate=GeneratorType.IDENTITY)
    private  Long id ;
 	

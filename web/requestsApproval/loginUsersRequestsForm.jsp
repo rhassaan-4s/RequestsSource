@@ -330,11 +330,6 @@ function calculateDiff2(){
 	 var empCode =document.getElementById('empCode').value;
 	 var vacId=document.getElementById("annualVacation").value;
 	 var from_date=document.getElementById("from_date").value;
-	 var hostName=document.getElementById('hostName').value;
-	 var serviceName=document.getElementById('serviceName').value;
-	 var userName=document.getElementById('userName').value;
-	 var password=document.getElementById('password').value;
-	 
 	 
 	// alert("1 "+from_date);
 	 if(vacId!=null && vacId!=''){
@@ -352,7 +347,7 @@ function calculateDiff2(){
 			 dFrom.setMonth(x[1]-1);
 			 
 			// alert("4 "+dFrom);
-			 requestsDwr.getVacationCredit(fillBalance,empCode,2,vacId, dFrom, hostName, serviceName, userName, password);
+			 requestsDwr.getVacationCredit(fillBalance,empCode,2,vacId, dFrom);
 			
 		} else if(from_date!=null && from_date!=''){
 		 var z1=from_date.substring(0,10);
@@ -466,11 +461,6 @@ function calculateDiff2(){
 					 <input type="hidden" name="accuracy" id="accuracy" value=""/>
 					 
 					 <input type="hidden"  id="empRequestTypeId" name="empRequestTypeId" value="${empRequestTypeId}"/>
-					 
-					 <input type="hidden" name="hostName" id="hostName" value="${settings.server}"/>
-					 <input type="hidden" name="serviceName" id="serviceName" value="${settings.service}"/>
-					 <input type="hidden" name="userName" id="userName" value="${settings.username}"/>
-					 <input type="hidden" name="password" id="password" value="${settings.password}"/>
 					 
 					<table border=0 cellspacing=1 cellpadding=0 id="ep" style="margin-right:40px">
 						<tr id="head_1_ep">

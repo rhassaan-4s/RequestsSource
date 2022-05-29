@@ -19,7 +19,7 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="emp_inst_exper_years")
 public class EmpInstExperYears implements Auditable,Serializable {
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="emp_inst_exper_years_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="emp_inst_exper_years_seq")
 	@SequenceGenerator(name="emp_inst_exper_years_seq",sequenceName="emp_inst_exper_years_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
     private String empCode; 

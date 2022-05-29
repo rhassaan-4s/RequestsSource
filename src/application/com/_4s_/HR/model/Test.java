@@ -21,7 +21,7 @@ public class Test implements Auditable,Serializable {
 	
 	
 	
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="test_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="test_seq")
 	@SequenceGenerator(name="test_seq",sequenceName="test_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	private String name;

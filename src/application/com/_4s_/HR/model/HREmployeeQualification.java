@@ -26,7 +26,7 @@ import com._4s_.auditing.model.Auditable;
 
 public class HREmployeeQualification implements Auditable,Serializable {
 		
-		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_employee_qual_seq")
+		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_employee_qual_seq")
 		@SequenceGenerator(name="hr_employee_qual_seq",sequenceName="hr_employee_qual_seq")//(generate=GeneratorType.IDENTITY)
        
 		private Long id;

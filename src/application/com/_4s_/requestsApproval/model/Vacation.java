@@ -24,7 +24,7 @@ import javax.persistence.Id;
 @Table(name="vacation")
 public class Vacation implements Auditable,Serializable  {
 	
-//	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="vacation_seq")
+//	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="vacation_seq")
 //	@SequenceGenerator(name="vacation_seq",sequenceName="vacation_seq")//(generate=GeneratorType.IDENTITY)
 	
 	/**

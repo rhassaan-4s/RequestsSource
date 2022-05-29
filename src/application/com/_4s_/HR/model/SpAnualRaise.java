@@ -20,7 +20,7 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="sp_anual_raise")
 public class SpAnualRaise implements Auditable,Serializable {
 	
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="sp_anual_raise_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="sp_anual_raise_seq")
 	@SequenceGenerator(name="sp_anual_raise_seq",sequenceName="sp_anual_raise_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	

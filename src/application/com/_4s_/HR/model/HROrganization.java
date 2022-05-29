@@ -19,7 +19,7 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="hr_organization")
 public class HROrganization implements Auditable,Serializable {
 	
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_organization_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_organization_seq")
 	@SequenceGenerator(name="hr_organization_seq",sequenceName="hr_organization_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
     private String code;

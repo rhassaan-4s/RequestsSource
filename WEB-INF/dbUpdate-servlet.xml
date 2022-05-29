@@ -33,6 +33,9 @@
 				<property name="dataSource">
 					<ref bean="dataSource" />
 				</property>
+				<property name="queries">
+					<ref bean="queries" />
+				</property>
 				<property name="comMger">
 					<ref bean="commonManager" />
 				</property>

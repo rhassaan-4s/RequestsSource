@@ -246,7 +246,7 @@ public class AttendanceManagerImpl extends BaseManagerImpl implements Attendance
 		ValidationStatus status = new ValidationStatus();
 		if (emp.getEmpName()==null || emp.getEmpName().isEmpty()) {
 			status.setStatus("False");
-			status.setObjAttribute("name");
+			status.setObjAttribute("empName");
 			status.setMsg("Mandatory");
 			return status;
 		}
@@ -323,7 +323,7 @@ public class AttendanceManagerImpl extends BaseManagerImpl implements Attendance
 	
 	
 	public Integer getNumberOfAttendees(Date from, Date to) {
-		return externalQueries.getNumberOfAttendees(contextPath,from, to,settings);
+		return externalQueries.getNumberOfAttendees(from, to,settings);
 	}
 	
 	public List getNumberOfAttendeesAndWorkersByDepartment() {
@@ -337,7 +337,7 @@ public class AttendanceManagerImpl extends BaseManagerImpl implements Attendance
 		cal2.set(Calendar.MINUTE, 59);
 		cal2.set(Calendar.SECOND, 59);
 		Date to = cal2.getTime();
-		return externalQueries.getNumberOfAttendeesAndWorkersByDepartment(contextPath,from,to,settings);
+		return externalQueries.getNumberOfAttendeesAndWorkersByDepartment(from,to,settings);
 	}
 	
 	public List getDashboardRequests() {
@@ -351,6 +351,6 @@ public class AttendanceManagerImpl extends BaseManagerImpl implements Attendance
 		cal2.set(Calendar.MINUTE, 59);
 		cal2.set(Calendar.SECOND, 59);
 		Date to = cal2.getTime();
-		return externalQueries.getDashboardRequests(contextPath,from,to,settings);
+		return externalQueries.getDashboardRequests(from,to,settings);
 	}
 }

@@ -21,7 +21,7 @@ import com._4s_.auditing.model.Auditable;
 @Entity
 @Table (name = "common_last_sequence")
 public class LastSequence implements Serializable,Auditable{
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="common_last_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="common_last_seq")
 	@SequenceGenerator(name="common_last_seq",sequenceName="common_last_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	private String className;

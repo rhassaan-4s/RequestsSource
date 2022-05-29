@@ -32,7 +32,7 @@ import com._4s_.security.model.User;
 @Entity
 @Table (name = "security_user_privilege")
 public class UserPrivilege implements Serializable,Auditable{
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="security_user_privilege_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="security_user_privilege_seq")
 	@SequenceGenerator(name="security_user_privilege_seq",sequenceName="security_user_privilege_seq")
 	private Long id;
 	

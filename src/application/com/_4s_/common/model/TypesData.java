@@ -23,7 +23,7 @@ import com._4s_.auditing.model.Auditable;
 @Entity
 @Table(name = "common_typesData")
 public class TypesData implements Serializable, Auditable {
-	@Id @GeneratedValue(strategy=GenerationType.AUTO,generator="common_typesData_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE,generator="common_typesData_seq")
 	@SequenceGenerator(name="common_typesData_seq",sequenceName="common_typesData_seq")
 	private Long id;
 

@@ -70,6 +70,7 @@ MySecurityDAO {
 
 	public String getApplicationDefaultPage(Long applicationId) {
 		SecurityApplication application = (SecurityApplication)getObject(SecurityApplication.class,applicationId);;
+		log.debug("application " + application);
 		return application.getDefaultPage();
 	}
 

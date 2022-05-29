@@ -11,6 +11,7 @@
 		var applicationSelect = document.getElementById("application");
 		var application = applicationSelect.value;
 		//alert("application "+application);
+		//alert("securityManager "+securityManager);
 		securityManager.getApplicationDefaultPage(fillDefaultPage, application);
 	}
 	function fillDefaultPage(data) {

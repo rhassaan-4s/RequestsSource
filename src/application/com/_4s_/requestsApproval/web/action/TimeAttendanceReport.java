@@ -218,10 +218,6 @@ public class TimeAttendanceReport implements Controller{
 		Settings settings = (Settings)request.getSession().getAttribute("settings");
 
 		boolean tAttRepWithHrsMin = settings.getTAttRepWithHrsMin();
-		String server = settings.getServer();
-		String service = settings.getService();
-		String username = settings.getUsername();
-		String password = settings.getPassword();
 
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
 
@@ -265,7 +261,7 @@ public class TimeAttendanceReport implements Controller{
 				//					totalObjects=requestsApprovalManager.getTimeAttendAndroid(emp.getEmpCode(), fromDate, toDate);
 				//				}
 				log.debug("getting attendance from view");
-				totalObjects = requestsApprovalManager.getTimeAttendFromViewForTimeAttendanceReport(empCode, fromDate, toDate);
+				totalObjects = requestsApprovalManager.getTimeAttendFromViewForTimeAttendanceReport(empCode, fromDate, toDate,settings);
 				objects=(List) totalObjects.get(0);
 
 

@@ -441,8 +441,7 @@
         </authentication-provider>
 		<authentication-provider>
 			<jdbc-user-service data-source-ref="dataSource"
-				users-by-username-query="SELECT userName, password,1 as enabled FROM
-				security_users WHERE userName=?"
+				users-by-username-query="SELECT userName, password,1 as enabled FROM security_users WHERE userName=?"
 				authorities-by-username-query="select distinct userName,permessionname from
 				security_users,security_user_roles,security_role_permissions,
 				security_permissions,security_roles

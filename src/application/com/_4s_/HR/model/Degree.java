@@ -21,7 +21,7 @@ import com._4s_.common.util.LocaleUtil;
 @Table(name="hr_degree")
 public class Degree implements Auditable,Serializable {
 
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_degree_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_degree_seq")
 	@SequenceGenerator(name="hr_degree_seq",sequenceName="hr_degree_seq")//(generate=GeneratorType.IDENTITY)
 	private  Long id ;
 	

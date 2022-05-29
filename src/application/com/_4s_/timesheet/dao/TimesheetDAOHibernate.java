@@ -49,8 +49,8 @@ public class TimesheetDAOHibernate extends BaseDAOHibernate implements Timesheet
 		}
 	}
 	
-	public Map getTimesheetTransactions(String hostName,String serviceName,String userName,String password,String empCode, Date fromDate, Date toDate, TimesheetCostCenter costcenter, TimesheetActivity activity, TimesheetTransactionParts part1, TimesheetTransactionParts part2, TimesheetTransactionParts part3, int pageNo, int pageSize, String sort) {
+	public Map getTimesheetTransactions(String empCode, Date fromDate, Date toDate, TimesheetCostCenter costcenter, TimesheetActivity activity, TimesheetTransactionParts part1, TimesheetTransactionParts part2, TimesheetTransactionParts part3, int pageNo, int pageSize, String sort) {
 		Page page = new Page();
-		return page.getPage(externalQueries.getTimesheetTransactions(hostName, serviceName, userName, password, empCode, fromDate, toDate, costcenter, activity, part1, part2, part3, pageNo, pageSize, sort), pageNo, pageSize);
+		return page.getPage(externalQueries.getTimesheetTransactions(empCode, fromDate, toDate, costcenter, activity, part1, part2, part3, pageNo, pageSize, sort), pageNo, pageSize);
 	}
 }

@@ -27,7 +27,7 @@ import com._4s_.common.util.LocaleUtil;
 @Table(name="hr_internal_division")
 public class HRInternalDivision extends TreeDivisions {
 		
-		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_internal_division_seq")
+		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_internal_division_seq")
 		@SequenceGenerator(name="hr_internal_division_seq",sequenceName="hr_internal_division_seq")//(generate=GeneratorType.IDENTITY)
 		private Long id;
 	   /* private String  code;

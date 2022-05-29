@@ -21,7 +21,7 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="access_levels")
 public class AccessLevels implements Auditable,Serializable {
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="access_levels_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="access_levels_seq")
 	@SequenceGenerator(name="access_levels_seq",sequenceName="access_levels_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	
