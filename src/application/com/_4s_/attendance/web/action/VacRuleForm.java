@@ -96,6 +96,10 @@ public class VacRuleForm extends BaseSimpleFormController{
 		Iterator<VacRule> itrRule = rules.getRules().iterator();
 		while(itrRule.hasNext()) {
 			VacRule rule = itrRule.next();
+			log.debug("rule " + rule);
+			log.debug("service years " + rule.getSrvYear());
+			log.debug("entitles " + rule.getEntitled());
+			log.debug("vac " + rule.getVacation());
 			attendanceManager.saveObject(rule);
 		}
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");

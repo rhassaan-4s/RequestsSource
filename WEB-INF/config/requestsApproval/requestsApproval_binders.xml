@@ -7,6 +7,12 @@
 <beans default-autowire="no" default-lazy-init="false"
 	default-dependency-check="none">
 	
+	<bean id="vacBinder" class="com._4s_.requestsApproval.web.binders.VacationBinder" singleton="false" >
+	    <property name="baseManager">
+			<ref bean="baseManager"/>
+	    </property>
+	</bean>
+	
 	<bean id="requestTypesBinder" parent="domainObjectBinder" >
 		<property name="bindedClass">
 			<value>com._4s_.requestsApproval.model.RequestTypes</value>

@@ -216,7 +216,7 @@
 				</property>
 				<property name="binders">
 					<list>
-						<ref bean="vacationBinder" />
+						<ref bean="vacBinder" />
 					</list>
 				</property>
 			</bean>

@@ -1,7 +1,57 @@
 <jsp:include page="/web/common/includes/header.jsp" flush="true" />
 <%@ include file="/web/common/includes/taglibs.jsp"%>
 <script type="text/javascript">
-	
+function vacationChanged(index){
+	var select = document.getElementById("rules["+index+"].vacation");
+	var newVacCode = select.value;
+	var td = document.getElementById("vacCode["+index+"]");
+	td.innerHTML=newVacCode;
+}
+	function addRow() {
+		var table = document.getElementById("vacRules");
+		var rowLength = table.rows.length;
+		var rowCount = (rowLength-1);
+		//alert(rowLength);
+		//var tr = table.insertRow(rowLength);
+		var prevRow = table.rows[rowCount];
+		//alert(prevRow);
+		var tr = prevRow.cloneNode(true);
+		///////////////////////////////////////
+		//alert(tr.cells[0]);
+		tr.cells[0].innerHTML="";
+		tr.cells[0].id='vacCode['+rowCount+']';
+		///////////////////////////////////////
+		var select = tr.cells[1].children[0];
+		select.id='rules['+rowCount+'].vacation';
+		select.name='rules['+rowCount+'].vacation';
+		//select.addEventListener('change',function(){vacationChanged(rowCount);},false);//function(){vacationChanged(rowCount)}
+		select.setAttribute('onchange','vacationChanged('+rowCount+');');
+		//alert(select.id);
+		var vacList = select.options[0];
+		vacList.selected = true;
+		//alert(vacList);
+		
+		for(var j=1; j<vacList.length; j++) {
+			var vac = vacList[j];
+			vac.selected = false;
+		}
+		/////////////////////////////////////////
+		//alert(tr.cells[2].children[0]);
+		var serviceYear = tr.cells[2].children[0];
+		//alert(serviceYear.name);
+		serviceYear.name='rules['+rowCount+'].srvYear';
+		serviceYear.value="0";
+		////////////////////////////////////////
+		//alert(tr.cells[3].id);
+		var entitled = tr.cells[3].children[0];
+		entitled.name='rules['+rowCount+'].entitled';
+		entitled.value="0";
+		/*for (var j = 0; j < children1.length; j++) {
+		      var child = children1[j];
+		      alert(child);
+		 }*/
+		table.append(tr);
+	}
 </script>
 
 <style>
@@ -61,15 +111,16 @@
 			<td>
 				<table align="center" class="sofT">
 					<tr id="head_1_ep">
-						<td class="helpTitle" colspan="4" nowrap><abc:i18n
+						<td class="helpTitle" colspan="2" nowrap><abc:i18n
 								property="attendance.header.vacRules" /> <fmt:message
-								key="attendance.header.vacRules" /></td>
+								key="attendance.header.vacRules" />
+						<span class="add_user" onclick="addRow();" title="<fmt:message key="commons.button.add" />"></span></td>
 					</tr>
 
 
 					<tr>
 						<td>
-							<table>
+							<table id="vacRules">
 								<tr>
 									<td class="helpHed" nowrap="nowrap"><abc:i18n
 											property="attendance.caption.vacCode" /> <fmt:message
@@ -89,11 +140,11 @@
 
 								<c:forEach items="${rules.rules}" var="record" varStatus="loop">
 									<tr height=20 bgcolor="#F8F8F8">
-										<td class="helpBod" nowrap>${record.vacation.vacation}</td>
+										<td class="helpBod" nowrap id="vacCode[${loop.index}]">${record.vacation.vacation}</td>
 
 										<td class="helpBod" nowrap><spring:bind
 												path="rules.rules[${loop.index}].vacation">
-												<select name="vacation" id="${status.expression}">
+												<select name="${status.expression}" id="${status.expression}" onchange="vacationChanged(${loop.index});">
 													<option value=""><fmt:message
 															key="commons.caption.select" /></option>
 													<c:forEach items="${vacList}" var="vac">
@@ -122,13 +173,9 @@
 
 									</tr>
 								</c:forEach>
-
-
-								<tr id="btn">
-									<td colspan="4" align="center"><abc:i18n
-											property="commons.button.add" /> <input type="button"
-										name="add" value="<fmt:message key="commons.button.add"/>"
-										class="button" onclick="addRow();" /> &nbsp;&nbsp;&nbsp; <input
+							</table>
+							<table width="100%"><tr id="btn">
+									<td colspan="4" align="center"><input
 										type="submit" name="save"
 										value="<fmt:message key="commons.button.save"/>"
 										class="button" />&nbsp;&nbsp;&nbsp; <abc:i18n
@@ -136,8 +183,7 @@
 										name="cancel"
 										value="<fmt:message key="commons.button.cancel"/>"
 										class="button" /></td>
-								</tr>
-							</table>
+								</tr></table>
 					</tr>
 
 				</table>

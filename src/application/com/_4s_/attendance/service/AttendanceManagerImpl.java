@@ -286,13 +286,6 @@ public class AttendanceManagerImpl extends BaseManagerImpl implements Attendance
 			status.setMsg("Mandatory");
 			return status;
 		}
-//		if (emp.getJob_join()==null) {
-//			status.setStatus("False");
-//			status.setObjAttribute("job_join");
-//			status.setMsg("Mandatory");
-//			return status;
-//		}
-		
 		List empBasicArName = getObjectsByParameter(EmpBasic.class, "empName", emp.getEmpName());
 		if (empBasicArName!=null && empBasicArName.size()>0 && !((EmpBasic)(empBasicArName.get(0))).getEmpName().equals(emp.getEmpName())) {
 			//duplicate ar name
