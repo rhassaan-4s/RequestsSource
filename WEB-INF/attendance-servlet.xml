@@ -222,6 +222,33 @@
 			</bean>
 		</property>
 	</bean>
+	
+	<bean id="publicLeavesForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.PublicLeavesForm">
+				<property name="commandName">
+					<value>leaves</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.attendance.model.PublicLeavesListWrapper</value>
+				</property>
+				<property name="formView">
+					<value>publicLeavesForm</value>
+				</property>
+				<property name="successView">
+					<value>publicLeavesForm</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+				<property name="binders">
+					<list>
+					<ref bean="dateBinder" />
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
 	<!--
 		_____________________________________________________________________
 	-->
@@ -252,6 +279,7 @@
 				<prop key="/empBasicForm.html">empBasicForm</prop>
 				<prop key="dashboard.html">dashboardView</prop>
 				<prop key="/vacRuleForm.html">vacRuleForm</prop>
+				<prop key="/publicLeavesForm.html">publicLeavesForm</prop>
 			</props>
 		</property>
 	</bean>

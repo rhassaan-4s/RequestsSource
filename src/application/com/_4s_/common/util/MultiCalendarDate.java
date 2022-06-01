@@ -25,7 +25,7 @@ import com.ibm.icu.util.IslamicCalendar;
 public class MultiCalendarDate implements ApplicationContextAware{
 	private final Log log = LogFactory.getLog(getClass());
 	private long millis;
-	private int dateCalendarType ;
+	private int dateCalendarType;
 	private ApplicationContext applicationContext;
 	BaseManagerImpl baseManager;
 	
@@ -224,68 +224,81 @@ public class MultiCalendarDate implements ApplicationContextAware{
 		String dateString =  null;
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		String miladiDateString = formatter.format(getDate());
-		try {
+		
 //			Class.forName("com.mysql.jdbc.Driver");
 //			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/Requests?useUnicode=true&amp;characterEncoding=utf8","Requests","Requests");
 //			Statement stat = conn.createStatement();
-			Statement stat = DBUtils.createStatement();
-			ResultSet rs = stat.executeQuery("select hijri from common_dates where to_char(miladi,'yyyy-mm-dd') = '"+miladiDateString+"'");
-			
+			Statement stat = null;
+			ResultSet rs = null;
 			try {
-				if (rs.next()){ // date conversion found in Database
-					String dbDateString = rs.getString("hijri");
-					String[] elements = dbDateString.split("/");
-					String dbDayString = elements[2];
-					String dbMonthString = elements[1];
-					String dbYearString = elements[0];
-					Long dbDay = new Long(dbDayString);
-					Long dbMonth = new Long(dbMonthString);
-					Long dbYear = new Long(dbYearString);
-					try{
-						IslamicCalendar islamicCalendar = new IslamicCalendar();
-						
-						islamicCalendar.setLenient(false); 
-						islamicCalendar.setCivil(true);
-						islamicCalendar.clear();
-						islamicCalendar.set(IslamicCalendar.YEAR , dbYear.intValue());
-						islamicCalendar.set(IslamicCalendar.MONTH , dbMonth.intValue()-1);
-						islamicCalendar.set(IslamicCalendar.DAY_OF_MONTH , dbDay.intValue());
-						//dateFormat.setLenient(true);
-						
-						
-						dateString = dateFormat.format(islamicCalendar);
-	
-						Long formattedDay = new Long(dateString.split("/")[0]);
-						log.debug(formattedDay);
-						if(!formattedDay.equals(dbDay)){ // to handle the case of islamic february!! ex: 8/3/2008 > 30/2/1429
+				try {	
+					stat = DBUtils.createStatement();
+					rs = stat.executeQuery("select hijri from common_dates where to_char(miladi,'yyyy-mm-dd') = '"+miladiDateString+"'");
+				} catch (SQLException e) {
+					try {
+						stat = DBUtils.createStatement();
+						rs = stat.executeQuery("select hijri from common_dates where CONVERT(VARCHAR,miladi,23) = '"+miladiDateString+"'");
+					} catch (SQLException ex) {
+						ex.printStackTrace();
+						throw new IllegalArgumentException(ex.getMessage());
+					}
+				}
+				try {
+					if (rs.next()){ // date conversion found in Database
+						String dbDateString = rs.getString("hijri");
+						String[] elements = dbDateString.split("/");
+						String dbDayString = elements[2];
+						String dbMonthString = elements[1];
+						String dbYearString = elements[0];
+						Long dbDay = new Long(dbDayString);
+						Long dbMonth = new Long(dbMonthString);
+						Long dbYear = new Long(dbYearString);
+						try{
+							IslamicCalendar islamicCalendar = new IslamicCalendar();
+							
+							islamicCalendar.setLenient(false); 
+							islamicCalendar.setCivil(true);
+							islamicCalendar.clear();
+							islamicCalendar.set(IslamicCalendar.YEAR , dbYear.intValue());
+							islamicCalendar.set(IslamicCalendar.MONTH , dbMonth.intValue()-1);
+							islamicCalendar.set(IslamicCalendar.DAY_OF_MONTH , dbDay.intValue());
+							//dateFormat.setLenient(true);
+							
+							
+							dateString = dateFormat.format(islamicCalendar);
+
+							Long formattedDay = new Long(dateString.split("/")[0]);
+							log.debug(formattedDay);
+							if(!formattedDay.equals(dbDay)){ // to handle the case of islamic february!! ex: 8/3/2008 > 30/2/1429
+								dateString = dbDayString+"/" + dbMonthString + "/" + dbYearString;
+							}
+						}catch (Exception e) {
 							dateString = dbDayString+"/" + dbMonthString + "/" + dbYearString;
 						}
-					}catch (Exception e) {
-						dateString = dbDayString+"/" + dbMonthString + "/" + dbYearString;
-					}
 //					Date hijri = rs.getDate("hijri");
 //					dateString = dateFormat.format(hijri);
-					log.debug(">>>>>>>>>>> by DB ["+miladiDateString+"]miladi, in hijri is :"+dateString);
-				} else { // date conversion not in DB , so calculate it by IslamicCalendar
-					IslamicCalendar islamicCalendar = new IslamicCalendar();
-					islamicCalendar.setLenient(false);
-					islamicCalendar.setCivil(true);
-					islamicCalendar.setTimeInMillis(this.millis);
-					dateString = dateFormat.format(islamicCalendar);
-					log.error(">>>>>>>>>>>>dateString by IslamicCalendar :"+dateString);
-					log.debug(">>>>>>>>>>> by IsCal ["+miladiDateString+"]miladi, in hijri is :"+dateString);
+						log.debug(">>>>>>>>>>> by DB ["+miladiDateString+"]miladi, in hijri is :"+dateString);
+					} else { // date conversion not in DB , so calculate it by IslamicCalendar
+						IslamicCalendar islamicCalendar = new IslamicCalendar();
+						islamicCalendar.setLenient(false);
+						islamicCalendar.setCivil(true);
+						islamicCalendar.setTimeInMillis(this.millis);
+						dateString = dateFormat.format(islamicCalendar);
+						log.error(">>>>>>>>>>>>dateString by IslamicCalendar :"+dateString);
+						log.debug(">>>>>>>>>>> by IsCal ["+miladiDateString+"]miladi, in hijri is :"+dateString);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new IllegalArgumentException(e.getMessage());
+				}finally{
+					rs.close();
+					stat.close();
 				}
-			} catch (Exception e) {
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
-				throw new IllegalArgumentException(e.getMessage());
-			}finally{
-				rs.close();
-				stat.close();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new IllegalArgumentException(e.getMessage());
-		}
+		
 		
 		log.debug(">>>>>>>>>>>>>dateString "+dateString);
 		return dateString; 
@@ -690,51 +703,68 @@ public class MultiCalendarDate implements ApplicationContextAware{
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy H:mm");
 		SimpleDateFormat timeFormatter = new SimpleDateFormat("H:mm");
 		String miladiDateString = formatter.format(getDate());
+//		try {
+//			Statement stat = DBUtils.createStatement();
+//			ResultSet rs = stat.executeQuery("select hijri from common_dates where to_char(miladi,'yyyy-mm-dd') = '"+miladiDateString+"'");
+//			
+		
+		Statement stat = null;
+		ResultSet rs = null;
 		try {
-			Statement stat = DBUtils.createStatement();
-			ResultSet rs = stat.executeQuery("select hijri from common_dates where to_char(miladi,'yyyy-mm-dd') = '"+miladiDateString+"'");
-			
-			try {
-				if (rs.next()){
-					String dbDateString = rs.getString("hijri");
-					String[] elements = dbDateString.split("/");
-					String dbDayString = elements[2];
-					String dbMonthString = elements[1];
-					String dbYearString = elements[0];
-					Long dbDay = new Long(dbDayString);
-					Long dbMonth = new Long(dbMonthString);
-					Long dbYear = new Long(dbYearString);
-					try{
-						IslamicCalendar islamicCalendar = new IslamicCalendar();
-						islamicCalendar.setLenient(false); 
-						islamicCalendar.setCivil(true);
-						islamicCalendar.clear();
-						islamicCalendar.setTime(getDate());
-						islamicCalendar.set(IslamicCalendar.YEAR , dbYear.intValue());
-						islamicCalendar.set(IslamicCalendar.MONTH , dbMonth.intValue()-1);
-						islamicCalendar.set(IslamicCalendar.DAY_OF_MONTH , dbDay.intValue());
-						dateString = dateFormat.format(islamicCalendar) + " " + timeFormatter.format(islamicCalendar.getTime());
-					}catch (Exception e) {
-						dateString = dbDayString+"/" + dbMonthString + "/" + dbYearString;
-					}
-				} else {
-					IslamicCalendar islamicCalendar = new IslamicCalendar();
-					islamicCalendar.setLenient(false);
-					islamicCalendar.setCivil(true);
-					islamicCalendar.setTimeInMillis(this.millis);
-					dateString = dateFormat.format(islamicCalendar) + " " + timeFormatter.format(islamicCalendar.getTime());
+			try {	
+				stat = DBUtils.createStatement();
+				rs = stat.executeQuery("select hijri from common_dates where to_char(miladi,'yyyy-mm-dd') = '"+miladiDateString+"'");
+			} catch (SQLException e) {
+				try {
+					stat = DBUtils.createStatement();
+					rs = stat.executeQuery("select hijri from common_dates where CONVERT(VARCHAR,miladi,23) = '"+miladiDateString+"'");
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+					throw new IllegalArgumentException(ex.getMessage());
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new IllegalArgumentException(e.getMessage());
-			}finally{
-				rs.close();
-				stat.close();
 			}
+				try {
+					if (rs.next()){
+						String dbDateString = rs.getString("hijri");
+						String[] elements = dbDateString.split("/");
+						String dbDayString = elements[2];
+						String dbMonthString = elements[1];
+						String dbYearString = elements[0];
+						Long dbDay = new Long(dbDayString);
+						Long dbMonth = new Long(dbMonthString);
+						Long dbYear = new Long(dbYearString);
+						try{
+							IslamicCalendar islamicCalendar = new IslamicCalendar();
+							islamicCalendar.setLenient(false); 
+							islamicCalendar.setCivil(true);
+							islamicCalendar.clear();
+							islamicCalendar.setTime(getDate());
+							islamicCalendar.set(IslamicCalendar.YEAR , dbYear.intValue());
+							islamicCalendar.set(IslamicCalendar.MONTH , dbMonth.intValue()-1);
+							islamicCalendar.set(IslamicCalendar.DAY_OF_MONTH , dbDay.intValue());
+							dateString = dateFormat.format(islamicCalendar) + " " + timeFormatter.format(islamicCalendar.getTime());
+						}catch (Exception e) {
+							dateString = dbDayString+"/" + dbMonthString + "/" + dbYearString;
+						}
+					} else {
+						IslamicCalendar islamicCalendar = new IslamicCalendar();
+						islamicCalendar.setLenient(false);
+						islamicCalendar.setCivil(true);
+						islamicCalendar.setTimeInMillis(this.millis);
+						dateString = dateFormat.format(islamicCalendar) + " " + timeFormatter.format(islamicCalendar.getTime());
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new IllegalArgumentException(e.getMessage());
+				}finally{
+					rs.close();
+					stat.close();
+				}
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new IllegalArgumentException(e.getMessage());
 		}
+		
 		return dateString; 
 	}
 	

@@ -16434,4 +16434,8 @@ INSERT INTO I18N_KEY VALUES (101550, 'attendance.header.vacRules', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116612,'قواعد الإجازات الدورية', 101550, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116613, 'Periodic Vacations Rules', 101550, 3);</statment></query><query><sqlindex>230</sqlindex><statment>ALTER TABLE COMMON_SETTINGS ADD SQLSERVERCONNECTIONENABLED NUMBER;&#xD;
 ALTER TABLE COMMON_SETTINGS ADD DBPORTNO VARCHAR2(5);</statment></query><query><sqlindex>231</sqlindex><statment>UPDATE COMMON_SETTINGS SET SQLSERVERCONNECTIONENABLED=1, DBPORTNO='1433' WHERE ID=1;&#xD;
-</statment></query></SQL>
+</statment></query><query><sqlindex>232</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101551, 'attendance.header.vacandworkperiods', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116614,'الاجازات و الورديات', 101551, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116615, 'Vacations and Work Periods', 101551, 3);</statment></query><query><sqlindex>233</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101552, 'attendance.header.publicleaves', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116616,'الاجازات الرسمية', 101552, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116617, 'Public Leaves', 101552, 3);</statment></query></SQL>

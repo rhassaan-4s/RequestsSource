@@ -37,6 +37,7 @@ public class BiCalendarDateBinder extends PropertyEditorSupport implements
 			log.debug(">>>>>>> getAstext if ");
 			MultiCalendarDate mCalDate = new MultiCalendarDate();
 			mCalDate.setDate(date);
+			mCalDate.setCalendarType(MultiCalendarDate.MILADI);
 			text = mCalDate.getDateString(); 
 		} else {
 			log.debug(">>>>>>> getAstext else ");
@@ -56,6 +57,7 @@ public class BiCalendarDateBinder extends PropertyEditorSupport implements
 		if ((text!=null)&&(text.length()>0)) {
 			log.debug(">>>>>>> set as text if");
 			MultiCalendarDate mCalDate = new MultiCalendarDate();
+			mCalDate.setCalendarType(MultiCalendarDate.MILADI);
 			mCalDate.setDateString(text);
 			date = mCalDate.getDate();
 			setValue(date);
