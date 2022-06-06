@@ -16438,4 +16438,17 @@ ALTER TABLE COMMON_SETTINGS ADD DBPORTNO VARCHAR2(5);</statment></query><query><
 INSERT INTO i18n_message VALUES (202116614,'الاجازات و الورديات', 101551, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116615, 'Vacations and Work Periods', 101551, 3);</statment></query><query><sqlindex>233</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101552, 'attendance.header.publicleaves', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116616,'الاجازات الرسمية', 101552, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116617, 'Public Leaves', 101552, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116617, 'Public Leaves', 101552, 3);</statment></query><query><sqlindex>234</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101553, 'attendance.header.vacation', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116618,'تعريف الاجازات', 101553, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116619, 'Vacations', 101553, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101554, 'attendance.caption.monthsentitled', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116620,'شهور خدمة قبل استحقاق الرصيد', 101554, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116621, 'Months Before Balance entitlement', 101554, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101555, 'attendance.caption.monthsallowance', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116622,'يسمح بترحيل الرصيد', 101555, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116623, 'Balance Transfer Allowance', 101555, 3);</statment></query><query><sqlindex>235</sqlindex><statment>create sequence vacation_seq&#xD;
+minvalue 1&#xD;
+maxvalue 999999999&#xD;
+start with 20&#xD;
+increment by 1&#xD;
+cache 20;</statment></query></SQL>

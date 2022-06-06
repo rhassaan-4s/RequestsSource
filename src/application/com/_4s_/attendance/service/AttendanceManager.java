@@ -12,6 +12,7 @@ import com._4s_.attendance.model.Title;
 import com._4s_.common.model.EmpBasic;
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.BaseManager;
+import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.timesheet.web.validate.ValidationStatus;
 @Transactional
 public interface AttendanceManager extends BaseManager {
@@ -28,6 +29,7 @@ public interface AttendanceManager extends BaseManager {
 	public Integer getNumberOfAttendees(Date from, Date to);
 	public List getNumberOfAttendeesAndWorkersByDepartment();
 	public List getDashboardRequests();
+	public ValidationStatus validateVacation(Vacation vacation);
 	
 }
 

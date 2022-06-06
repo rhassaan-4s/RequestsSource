@@ -1,6 +1,5 @@
 package com._4s_.common.dao;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,18 +12,13 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.commons.collections.map.ListOrderedMap;
-import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com._4s_.common.model.Settings;
 import com._4s_.common.util.DBUtils;
 import com._4s_.common.util.Page;
-//import com._4s_.stores.model.DBConnection;
-//import com._4s_.stores.model.Destination;
-//import com._4s_.stores.model.StoreTransactionM;
-//import com._4s_.stores.model.StoreTrnsDepBranch;
-import com.sun.org.apache.bcel.internal.generic.DADD;
     
 public class Queries extends CommonQueries{
 	protected final Log log = LogFactory.getLog(getClass());
@@ -51,7 +45,7 @@ public class Queries extends CommonQueries{
 	
 	
 
-	public Map search(String code,String description,String table,String firstParam,String secondParam,String paramString,String match1,String match2,String level,int pageNumber,int pageSize,String branchId){
+	public Map search(String code,String description,String table,String firstParam,String secondParam,String paramString,String match1,String match2,String level, Settings settings,int pageNumber,int pageSize,String branchId){
 		sql1= null;
 		where1= null;
 		whereFirstParam1= null;
@@ -96,16 +90,22 @@ public class Queries extends CommonQueries{
 			
 		}
 		
+		String rownum = "";
+		if (settings.getSqlServerConnectionEnabled()) {
+			rownum = " ROW_NUMBER() over (order by empCode) as rnum ";
+		} else {
+			rownum = "rownum rnum";
+		}
 		
 		setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		sql1 = "SELECT * FROM (";
 		if (table.equals("store_c_trns_m,store_trns_def ")) {
 			sql1 = sql1 +
-				"select ROWNUM rnum," + firstParam +" as id" ;
+				"select "+rownum+"," + firstParam +" as id" ;
 		}
 		else {
 			sql1 = sql1 +
-				"select id as identity,ROWNUM rnum," + firstParam +" as id" ;
+				"select id as ident,"+rownum+"," + firstParam +" as id" ;
 		}
 		if(secondParam != null && !secondParam.equals("")){
 			sql1 = sql1 + " , "+secondParam+ " as description ";
@@ -234,19 +234,19 @@ public class Queries extends CommonQueries{
 			log.error(">>>>>>>>>>>>>>> where1 != ''");
 			if (where3 != null && !where3.equals("")){
 				log.error(">>>>>>>>>>>>>>> where3 != null ");
-				sql1 = sql1 + where1 + where3 +" and END_SERV IS NULL"+") WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
+				sql1 = sql1 + where1 + where3 +" and END_SERV IS NULL"+")a WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
 			}
 			else{
-				sql1 = sql1 + where1 +" and END_SERV IS NULL"+") WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
+				sql1 = sql1 + where1 +" and END_SERV IS NULL"+")a WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
 			}
 		}
 		else{
 			if (where3 != null && !where3.equals("")){
 				log.error(">>>>>>>>>>>>>>> where3 != null ");
-				sql1 = sql1 + where3 +" and END_SERV IS NULL"+") WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
+				sql1 = sql1 + where3 +" and END_SERV IS NULL"+")a WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
 			}
 			else{
-				sql1 = sql1 +" WHERE END_SERV IS NULL"+") WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
+				sql1 = sql1 +" WHERE END_SERV IS NULL"+")a WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
 			}
 		}
 		

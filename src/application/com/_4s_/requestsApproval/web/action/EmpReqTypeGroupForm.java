@@ -78,7 +78,7 @@ public class EmpReqTypeGroupForm extends BaseSimpleFormController{
 		log.debug("-------currentEmps.size---after"+currentEmps.size());
 		model.put("loginUsers", currentEmps);
 		
-		List requests=requestsApprovalManager.getObjects(RequestTypes.class);
+		List requests=requestsApprovalManager.getObjectsByParameter(RequestTypes.class,"hidden",0);
 		if (empRequestTypeException == true) {//Lotus
 			List reList = new ArrayList();
 			for (int i = 0; i < requests.size(); i++) {

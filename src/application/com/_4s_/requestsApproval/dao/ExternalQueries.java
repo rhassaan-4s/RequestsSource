@@ -2720,11 +2720,17 @@ public class ExternalQueries extends CommonQueries{
 		}
 		/////////////////////////////////////////////////////////////////
 
+		String rownum = "";
+		if (settings.getSqlServerConnectionEnabled()) {
+			rownum = " ROW_NUMBER() over (order by period_from) as rnum ";
+		} else {
+			rownum = "rownum rnum";
+		}
 
 
-		query = "select * from (select rownum rnum, q.* from (" + outerSelectStart + " ("
-				+select + where+orderBy+
-				outerSelectEnd + outerSelectWhere +orderBy+") q where rownum<="+((pageNumber*pageSize)+pageSize-1)+") where rnum>"+(pageSize*pageNumber)  + orderBy;
+		query = "select * from (select "+rownum+", q.* from (" + outerSelectStart + " ("
+				+select + where+
+				outerSelectEnd + outerSelectWhere+") q ) m where rnum<="+((pageNumber*pageSize)+pageSize-1)+ " and rnum>"+(pageSize*pageNumber)  + orderBy;
 		log.debug("query " + query);
 		StringBuilder sql = new StringBuilder(query);
 
@@ -2733,8 +2739,8 @@ public class ExternalQueries extends CommonQueries{
 
 		List in=(List) getJdbcTemplate().queryForList(sql.toString());
 
-		String listSizeQuery = "select count (*) from ("+outerSelectStart+ " ("+select+where+orderBy
-				+outerSelectEnd + outerSelectWhere+orderBy+")"+orderBy;
+		String listSizeQuery = "select count (*) count from ("+outerSelectStart+ " ("+select+where
+				+outerSelectEnd + outerSelectWhere+") q";
 		log.debug("listSizeQuery " + listSizeQuery);
 		StringBuilder sqlListSize = new StringBuilder(listSizeQuery);
 		List in2=(List) getJdbcTemplate().queryForList(sqlListSize.toString());
@@ -2754,8 +2760,14 @@ public class ExternalQueries extends CommonQueries{
 		log.debug(in2.size());
 		map.put("results", in);
 		if (in2.size()>0) {
-			log.debug("listSize " + ((LinkedCaseInsensitiveMap)in2.get(0)).get("count(*)"));
-			map.put("listSize", ((BigDecimal)((LinkedCaseInsensitiveMap)in2.get(0)).get("count(*)")).intValue());
+			int size = 0;
+			if (settings.getSqlServerConnectionEnabled()) {
+				size = ((Integer)((LinkedCaseInsensitiveMap)in2.get(0)).get("count")).intValue();
+			} else {
+				size = ((BigDecimal)((LinkedCaseInsensitiveMap)in2.get(0)).get("count")).intValue();
+			}
+			log.debug("listSize " + size);
+			map.put("listSize", size);
 		} else {
 			map.put("listSize", new Long(0));
 		}

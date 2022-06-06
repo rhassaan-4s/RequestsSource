@@ -23,6 +23,7 @@ import com._4s_.common.model.Settings;
 import com._4s_.common.service.BaseManagerImpl;
 import com._4s_.common.service.SequenceManager;
 import com._4s_.i18n.service.MessageManager;
+import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.restServices.json.RestStatus;
 import com._4s_.restServices.json.TimesheetTransDefaultWrapper;
 import com._4s_.timesheet.model.TimesheetActivity;
@@ -315,6 +316,44 @@ public class AttendanceManagerImpl extends BaseManagerImpl implements Attendance
 	}
 	
 	
+	
+	@Override
+	public ValidationStatus validateVacation(Vacation vacation) {
+		ValidationStatus status = new ValidationStatus();
+		if (vacation.getName()==null || vacation.getName().isEmpty()) {
+			status.setStatus("False");
+			status.setObjAttribute("name");
+			status.setMsg("Mandatory");
+			return status;
+		}
+//		if (vacation.getEname()==null || vacation.getEname().isEmpty())  {
+//			status.setStatus("False");
+//			status.setObjAttribute("title");
+//			status.setMsg("Mandatory");
+//			return status;
+//		}
+		List vacNames = getObjectsByParameter(Vacation.class, "name", vacation.getName());
+		
+		if (vacNames!=null && vacNames.size()>0 && ((Vacation)(vacNames.get(0))).getName().equals(vacation.getName())) {
+			log.debug("((Vacation)(vacNames.get(0))).getName().equals(vacation.getName())"+((Vacation)(vacNames.get(0))).getName().equals(vacation.getName()));
+			//duplicate ar name
+			status.setStatus("False");
+			status.setObjAttribute("name");
+			status.setMsg("Duplicate");
+			return status;
+		}
+		List vacENames = getObjectsByParameter(Vacation.class, "ename", vacation.getEname());
+		if (vacENames!=null && vacENames.size()>0 && ((Vacation)(vacENames.get(0))).getEname().equals(vacation.getEname())) {
+			//duplicate en name
+			status.setStatus("False");
+			status.setObjAttribute("ename");
+			status.setMsg("Duplicate");
+			return status;
+		}
+		status.setStatus("True");
+		return status;
+	}
+
 	public Integer getNumberOfAttendees(Date from, Date to) {
 		return externalQueries.getNumberOfAttendees(from, to,settings);
 	}

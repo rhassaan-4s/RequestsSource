@@ -109,6 +109,9 @@ public class UpdateDB implements Controller {
         			
 //        			jt.execute("start transaction");
         			
+        			if (settings.getSqlServerConnectionEnabled()) {
+        				jt.execute("begin transaction");
+        			}
         			
         			while (tokenizer.hasMoreTokens()) { //for all statements in the Block
         				qry = tokenizer.nextToken();

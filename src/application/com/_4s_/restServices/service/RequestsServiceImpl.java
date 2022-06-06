@@ -1460,7 +1460,9 @@ public Map searchEmployees(EmployeeWrapper emp, Employee loggedInEmployee) {
 		}
 	}
 	
-	Map map = qry.search(emp.getEmpCode(),emp.getEmpName(),"login_users","empCode","name","","1","1",level,emp.getPageNumber(),emp.getPageSize(),"");	
+	Settings settings = (Settings)requestsApprovalManager.getObject(Settings.class, new Long(1));
+	
+	Map map = qry.search(emp.getEmpCode(),emp.getEmpName(),"login_users","empCode","name","","1","1",level,settings,emp.getPageNumber(),emp.getPageSize(),"");	
 	Map response = new HashMap();
 	response.put("Response", map);
 	RestStatus status = new RestStatus();

@@ -59,6 +59,10 @@
 							href="/Requests/attendance/publicLeavesForm.html"> &nbsp;&nbsp; <fmt:message
 									key="attendance.header.publicleaves" />
 						</a></li>
+						<li><abc:i18n property="attendance.header.vacation" /> <a
+							href="/Requests/attendance/vacationView.html"> &nbsp;&nbsp; <fmt:message
+									key="attendance.header.vacation" />
+						</a></li>
 					</ul></li>
 
 			</ul></li>

@@ -249,6 +249,38 @@
 			</bean>
 		</property>
 	</bean>
+	
+	<bean id="vacationForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.VacationForm">
+				<property name="commandName">
+					<value>vacation</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.requestsApproval.model.Vacation</value>
+				</property>
+				<property name="formView">
+					<value>vacationForm</value>
+				</property>
+				<property name="successView">
+					<value>vacationView</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="vacationView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.VacationView">
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
 	<!--
 		_____________________________________________________________________
 	-->
@@ -280,6 +312,8 @@
 				<prop key="dashboard.html">dashboardView</prop>
 				<prop key="/vacRuleForm.html">vacRuleForm</prop>
 				<prop key="/publicLeavesForm.html">publicLeavesForm</prop>
+				<prop key="/vacationView.html">vacationView</prop>
+				<prop key="/vacationForm.html">vacationForm</prop>
 			</props>
 		</property>
 	</bean>
