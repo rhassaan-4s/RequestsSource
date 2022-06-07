@@ -1,6 +1,7 @@
 package com._4s_.common.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -10,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -41,13 +44,17 @@ public class EmpBasic implements Serializable,Auditable {
 	private String eAddress;
 	private String should_sign="1";
 	private String natnl_no;
-	private Date emplDate;
-	private Date birthdate;
-	private Date job_join;
+//	@Temporal(TemporalType.DATE)
+	private Timestamp emplDate;
+//	@Temporal(TemporalType.DATE)
+	private Timestamp birthdate;
+//	@Temporal(TemporalType.DATE)
+	private Timestamp job_join;
 	private String phone;
 	private String mobile;
 	private String sex;
-	private Date end_serv;
+//	@Temporal(TemporalType.DATE)
+	private Timestamp end_serv;
 	@ManyToOne
 	@JoinColumn (name="eldiana")
 	private Religion eldiana;
@@ -99,7 +106,7 @@ public class EmpBasic implements Serializable,Auditable {
 
 
 
-	public void setBirthdate(Date birthdate) {
+	public void setBirthdate(Timestamp birthdate) {
 		this.birthdate = birthdate;
 	}
 
@@ -211,22 +218,22 @@ public class EmpBasic implements Serializable,Auditable {
 		this.natnl_no = natnl_no;
 	}
 
-	public Date getEmplDate() {
+	public Timestamp getEmplDate() {
 		return emplDate;
 	}
 
 
-	public void setEmplDate(Date emplDate) {
+	public void setEmplDate(Timestamp emplDate) {
 		this.emplDate = emplDate;
 	}
 
 
-	public Date getJob_join() {
+	public Timestamp getJob_join() {
 		return job_join;
 	}
 
 
-	public void setJob_join(Date job_join) {
+	public void setJob_join(Timestamp job_join) {
 		this.job_join = job_join;
 	}
 
@@ -335,7 +342,7 @@ public class EmpBasic implements Serializable,Auditable {
 		return end_serv;
 	}
 
-	public void setEnd_serv(Date end_serv) {
+	public void setEnd_serv(Timestamp end_serv) {
 		this.end_serv = end_serv;
 	}
 

@@ -2092,8 +2092,8 @@ public class ExternalQueries extends CommonQueries{
 			from_dateString=df.format(fromDate);
 			to_dateString=df.format(toDate);
 			if (settings.getSqlServerConnectionEnabled()) {
-				where += " ((CONVERT(datetime, loginUsersReq.request_date, 103) >=convert(datetime,'"+from_dateString+"',103) and  "
-						+ "CONVERT(datetime, loginUsersReq.request_date, 103) <= convert(datetime,'"+to_dateString+"',103))) ";
+				where += " ((CONVERT(date, loginUsersReq.request_date) >=convert(date,'"+from_dateString+"',103) and  "
+						+ "CONVERT(date, loginUsersReq.request_date) <= convert(date,'"+to_dateString+"',103))) ";
 			} else {
 				where += " ((trunc(loginUsersReq.request_date) >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') and "
 						+ "trunc(loginUsersReq.request_date)  <= TO_DATE('"+to_dateString+"','DD/MM/YYYY'))) ";
@@ -2109,8 +2109,8 @@ public class ExternalQueries extends CommonQueries{
 			periodf_dateString=df.format(periodFrom);
 			periodt_dateString=df.format(periodTo);
 			if (settings.getSqlServerConnectionEnabled()) {
-				where = "  ((CONVERT(datetime, loginUsersReq.period_from, 103) >= convert(datetime,'"+periodf_dateString+"',103) and  "
-						+ "CONVERT(datetime, loginUsersReq.period_from, 103) <= convert(datetime,'"+periodt_dateString+"',103))) ";
+				where = "  ((CONVERT(date, loginUsersReq.period_from) >= convert(date,'"+periodf_dateString+"',103) and  "
+						+ "CONVERT(date, loginUsersReq.period_from) <= convert(date,'"+periodt_dateString+"',103))) ";
 			} else {
 				where += " ((trunc(loginUsersReq.period_from)  >= TO_DATE('"+periodf_dateString+"','DD/MM/YYYY') and "
 						+ "trunc(loginUsersReq.period_from) <= TO_DATE('"+periodt_dateString+"','DD/MM/YYYY'))) ";
@@ -2126,8 +2126,8 @@ public class ExternalQueries extends CommonQueries{
 			exactf_dateString=df.format(exactFrom);
 			exactt_dateString=df.format(exactTo);
 			if (settings.getSqlServerConnectionEnabled()) {
-				where = "  ((CONVERT(datetime, loginUsersReq.from_date, 103) >= convert(datetime,'"+exactf_dateString+"',103) and  "
-						+ "CONVERT(datetime, loginUsersReq.from_date, 103) <= convert(datetime,'"+exactt_dateString+"',103))) ";
+				where = "  ((CONVERT(date, loginUsersReq.from_date) >= convert(date,'"+exactf_dateString+"',103) and  "
+						+ "CONVERT(date, loginUsersReq.from_date) <= convert(date,'"+exactt_dateString+"',103))) ";
 			} else {
 			where += " ((trunc(loginUsersReq.from_date) >= TO_DATE('"+exactf_dateString+"','DD/MM/YYYY') and "
 					+ "trunc(loginUsersReq.from_date) <= TO_DATE('"+exactt_dateString+"','DD/MM/YYYY'))) ";
@@ -2313,7 +2313,11 @@ public class ExternalQueries extends CommonQueries{
 
 		String rownum = "";
 		if (settings.getSqlServerConnectionEnabled()) {
-			rownum = " ROW_NUMBER() over (order by period_from) as rnum ";
+			if (sort!= null) {
+				rownum = " ROW_NUMBER() over (order by period_from "+sort+") as rnum ";
+			} else {
+				rownum = " ROW_NUMBER() over (order by period_from) as rnum ";
+			}
 		} else {
 			rownum = "rownum rnum";
 		}
@@ -2510,8 +2514,8 @@ public class ExternalQueries extends CommonQueries{
 			
 			
 			if (settings.getSqlServerConnectionEnabled()) {		
-				where += " ((CONVERT(datetime,loginUsersReq.request_date,103) >= CONVERT(datetime,'"+from_dateString+"',103) and "
-						+ "CONVERT(datetime,loginUsersReq.request_date,103)  <= CONVERT(datetime,'"+to_dateString+"',103))) ";
+				where += " ((CONVERT(date,loginUsersReq.request_date) >= CONVERT(date,'"+from_dateString+"',103) and "
+						+ "CONVERT(date,loginUsersReq.request_date)  <= CONVERT(date,'"+to_dateString+"',103))) ";
 			} else {
 				where += " ((trunc(loginUsersReq.request_date) >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') and "
 						+ "trunc(loginUsersReq.request_date)  <= TO_DATE('"+to_dateString+"','DD/MM/YYYY'))) ";
@@ -2527,8 +2531,8 @@ public class ExternalQueries extends CommonQueries{
 			periodf_dateString=df.format(periodFrom);
 			periodt_dateString=df.format(periodTo);
 			if (settings.getSqlServerConnectionEnabled()) {
-				where += " ((CONVERT(datetime,loginUsersReq.period_from,103)  >= CONVERT(datetime,'"+periodf_dateString+"',103) and "
-						+ "CONVERT(datetime,loginUsersReq.period_from,103) <= CONVERT(datetime,'"+periodt_dateString+"',103))) ";
+				where += " ((CONVERT(date,loginUsersReq.period_from)  >= CONVERT(date,'"+periodf_dateString+"',103) and "
+						+ "CONVERT(date,loginUsersReq.period_from) <= CONVERT(date,'"+periodt_dateString+"',103))) ";
 			} else {
 				where += " ((trunc(loginUsersReq.period_from)  >= TO_DATE('"+periodf_dateString+"','DD/MM/YYYY') and "
 						+ "trunc(loginUsersReq.period_from) <= TO_DATE('"+periodt_dateString+"','DD/MM/YYYY'))) ";
@@ -2544,8 +2548,8 @@ public class ExternalQueries extends CommonQueries{
 			exactf_dateString=df.format(exactFrom);
 			exactt_dateString=df.format(exactTo);
 			if (settings.getSqlServerConnectionEnabled()) {
-				where += " ((CONVERT(datetime,loginUsersReq.from_date,103) >= CONVERT(datetime,'"+exactf_dateString+"',103) and "
-						+ "CONVERT(datetime,loginUsersReq.from_date,103) <= CONVERT(datetime,'"+exactt_dateString+"',1030))) ";
+				where += " ((CONVERT(date,loginUsersReq.from_date) >= CONVERT(date,'"+exactf_dateString+"',103) and "
+						+ "CONVERT(date,loginUsersReq.from_date) <= CONVERT(date,'"+exactt_dateString+"',103))) ";
 			} else {
 				where += " ((trunc(loginUsersReq.from_date) >= TO_DATE('"+exactf_dateString+"','DD/MM/YYYY') and "
 						+ "trunc(loginUsersReq.from_date) <= TO_DATE('"+exactt_dateString+"','DD/MM/YYYY'))) ";
@@ -2722,7 +2726,11 @@ public class ExternalQueries extends CommonQueries{
 
 		String rownum = "";
 		if (settings.getSqlServerConnectionEnabled()) {
-			rownum = " ROW_NUMBER() over (order by period_from) as rnum ";
+			if (sort!= null) {
+				rownum = " ROW_NUMBER() over (order by period_from "+sort+") as rnum ";
+			} else {
+				rownum = " ROW_NUMBER() over (order by period_from) as rnum ";
+			}
 		} else {
 			rownum = "rownum rnum";
 		}
@@ -2900,6 +2908,10 @@ public class ExternalQueries extends CommonQueries{
 		//		if (mgrId != null) {
 		//			outerSelectWhere = " where mgr.id= " + mgrId;
 		//		}
+		
+		if (mgrId==null) {
+			outerSelectWhere = " where emp.empCode="+empCode;
+		}
 		////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////Date Filters////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
@@ -2913,8 +2925,8 @@ public class ExternalQueries extends CommonQueries{
 			from_dateString=df.format(fromDate);
 			to_dateString=df.format(toDate);
 			if (settings.getSqlServerConnectionEnabled()) {
-			where += " ((convert(datetime,loginUsersReq.request_date,103) >= convert(datetime,'"+from_dateString+"',103) and "
-					+ "convert(datetime,loginUsersReq.request_date,103)  <= convert(datetime,'"+to_dateString+"',103))) ";
+			where += " ((convert(date,loginUsersReq.request_date) >= convert(date,'"+from_dateString+"',103) and "
+					+ "convert(date,loginUsersReq.request_date)  <= convert(date,'"+to_dateString+"',103))) ";
 			} else {
 				where += " ((trunc(loginUsersReq.request_date) >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') and "
 						+ "trunc(loginUsersReq.request_date)  <= TO_DATE('"+to_dateString+"','DD/MM/YYYY'))) ";
@@ -2930,8 +2942,8 @@ public class ExternalQueries extends CommonQueries{
 			periodf_dateString=df.format(periodFrom);
 			periodt_dateString=df.format(periodTo);
 			if (settings.getSqlServerConnectionEnabled()) {
-				where += " ((convert(datetime,loginUsersReq.period_from,103)  >= convert(datetime,'"+periodf_dateString+"',103) and "
-						+ "convert(datetime,loginUsersReq.period_from,103) <= convert(datetime,'"+periodt_dateString+"',103))) ";
+				where += " ((convert(date,loginUsersReq.period_from)  >= convert(date,'"+periodf_dateString+"',103) and "
+						+ "convert(date,loginUsersReq.period_from) <= convert(date,'"+periodt_dateString+"',103))) ";
 			} else {
 				where += " ((trunc(loginUsersReq.period_from)  >= TO_DATE('"+periodf_dateString+"','DD/MM/YYYY') and "
 						+ "trunc(loginUsersReq.period_from) <= TO_DATE('"+periodt_dateString+"','DD/MM/YYYY'))) ";
@@ -2947,8 +2959,8 @@ public class ExternalQueries extends CommonQueries{
 			exactf_dateString=df.format(exactFrom);
 			exactt_dateString=df.format(exactTo);
 			if (settings.getSqlServerConnectionEnabled()) {
-				where += " ((convert(datetime,loginUsersReq.from_date,103) >= convert(datetime,'"+exactf_dateString+"',103) and "
-						+ "convert(datetime,loginUsersReq.from_date,103) <= convert(datetime,'"+exactt_dateString+"',103))) ";
+				where += " ((convert(date,loginUsersReq.from_date) >= convert(date,'"+exactf_dateString+"',103) and "
+						+ "convert(date,loginUsersReq.from_date) <= convert(date,'"+exactt_dateString+"',103))) ";
 			} else {
 				where += " ((trunc(loginUsersReq.from_date) >= TO_DATE('"+exactf_dateString+"','DD/MM/YYYY') and "
 						+ "trunc(loginUsersReq.from_date) <= TO_DATE('"+exactt_dateString+"','DD/MM/YYYY'))) ";
@@ -3125,8 +3137,12 @@ public class ExternalQueries extends CommonQueries{
 
 		String rownum = "";
 		if (settings.getSqlServerConnectionEnabled()) {
-			rownum = " ROW_NUMBER() over (order by period_from) as rnum ";
-		} else {
+			if (sort!= null) {
+				rownum = " ROW_NUMBER() over (order by period_from "+sort+") as rnum ";
+			} else {
+				rownum = " ROW_NUMBER() over (order by period_from) as rnum ";
+			}
+		}  else {
 			rownum = "rownum rnum";
 		}
 

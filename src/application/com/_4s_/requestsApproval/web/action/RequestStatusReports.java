@@ -172,6 +172,9 @@ public class RequestStatusReports extends BaseSimpleFormController{
 			log.debug("logged in user " + loggedInUser.getId());
 			List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(employee, requestType);
 			log.debug("empReqTypeAccs " + empReqTypeAccs);
+			if (empReqTypeAccs.size()==0) {
+				emp_code = loggedInUser.getEmpCode().getEmpCode();
+			}
 			model = requestsApprovalManager.getRequestsStatus(requestNumber, emp_code, request_date_from, request_date_to, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true,null, pageNumber, 20);
 		}
 		log.debug("status " + statusId);

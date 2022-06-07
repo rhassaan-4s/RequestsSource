@@ -1,6 +1,8 @@
 package com._4s_.attendance.web.action;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,15 +16,14 @@ import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com._4s_.common.model.EmpBasic;
 import com._4s_.attendance.model.AttendanceDepartment;
 import com._4s_.attendance.model.MaritalStatus;
 import com._4s_.attendance.model.Qualification;
 import com._4s_.attendance.model.Religion;
 import com._4s_.attendance.model.Title;
 import com._4s_.attendance.service.AttendanceManager;
+import com._4s_.common.model.EmpBasic;
 import com._4s_.common.web.action.BaseSimpleFormController;
-import com._4s_.timesheet.model.TimesheetActivity;
 import com._4s_.timesheet.web.validate.ValidationStatus;
 
 public class EmpBasicForm extends BaseSimpleFormController{
@@ -127,16 +128,45 @@ public class EmpBasicForm extends BaseSimpleFormController{
 			empBasic.setPermenant("T");
 			log.debug("empBasic permanent " + empBasic.getPermenant());
 		}
+//		 SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss.s");
+//		 if (emp)
+//		 String formatedDate = formatDate.format(empBasic.getBirthdate());
+//		 Date bd = formatDate.parse(formatedDate);
+//		 empBasic.setBirthdate(bd);
+//		 
+//		 formatedDate = formatDate.format(empBasic.getEmplDate());
+//		 Date empD = formatDate.parse(formatedDate);
+//		 empBasic.setEmplDate(empD);
+//
+//		 formatedDate = formatDate.format(empBasic.getJob_join());
+//		 Date jD = formatDate.parse(formatedDate);
+//		 empBasic.setJob_join(jD);
+		 
+		 
+		log.debug("'"+empBasic.getAddress()+"','"+empBasic.getApply_overtime()+"','"+empBasic.getBasic()+"','"+empBasic.getBirthdate()+"','"+empBasic.getCurrency()+"','"+
+				empBasic.getDepartment().getLocation()+"','"+empBasic.getDisplay_flag()+"','"+empBasic.geteAddress()+"','"+empBasic.getE_emp_name()+"','"+empBasic.getEldiana()+"','"+
+				empBasic.getEmpName()+"','"+empBasic.getEmplDate()+"','"+empBasic.getEnd_serv()+"','"+empBasic.getForm()+"','"+empBasic.getHandicapped()+"','"+empBasic.getIllness_code()+"','"+
+				empBasic.getJob_join()+"','"+empBasic.getLang()+"','"+empBasic.getMaritalStatus().getMaritalCode()+"','"+empBasic.getMobile()+"','"+empBasic.getNatnl_no()+"','"+
+				empBasic.getOvertime_code()+"','"+empBasic.getPermenant()+"','"+empBasic.getPhone()+"','"+empBasic.getQual().getQual()+"','"+empBasic.getQualYear()+"','"+
+				empBasic.getQual_specific()+"','"+empBasic.getSex()+"','"+empBasic.getShould_sign()+"','"+empBasic.getTitle()+"','"+
+				empBasic.getTotal_no_hour()+"','"+empBasic.getVacrule_code()+"','"+empBasic.getWork_status()+"','"+empBasic.getWorkingD()+"','"+empBasic.getWorkingH()+" where empCode= " +empBasic.getEmpCode());
 		
 		ValidationStatus status = attendanceManager.validateEmpBasic(empBasic);
 		
 		if (status.getStatus().equals("False") && status.getMsg().equals("Mandatory")) {
-			log.debug("status.getObjAttribute  madatory " + status.getObjAttribute());
+			log.debug("status.getObjAttribute  mandatory " + status.getObjAttribute());
 			errors.rejectValue(status.getObjAttribute(), "commons.errors.requiredFields");
+			log.debug(errors);
 		}
 		if (status.getStatus().equals("False") && status.getMsg().equals("Duplicate")) {
 			log.debug("status.getObjAttribute  duplicated " + status.getObjAttribute());
 			errors.rejectValue(status.getObjAttribute(), "commons.errors.duplicateFieldEntry");
+			log.debug(errors);
+		}
+		if (status.getStatus().equals("False") && status.getMsg().equals("Incorrect Length")) {
+			log.debug("incorrect length");
+			errors.rejectValue(status.getObjAttribute(), "commons.errors.nationalidlength");
+			log.debug(errors);
 		}
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -156,6 +186,14 @@ public class EmpBasicForm extends BaseSimpleFormController{
 		}
 		
 		log.debug("empBasic.getPermenant() " +  empBasic.getPermenant());
+		
+//		log.debug("'"+empBasic.getAddress()+"','"+empBasic.getApply_overtime()+"','"+empBasic.getBasic()+"','"+empBasic.getBirthdate()+"','"+empBasic.getCurrency()+"','"+
+//		empBasic.getDepartment().getLocation()+"','"+empBasic.getDisplay_flag()+"','"+empBasic.geteAddress()+"','"+empBasic.getE_emp_name()+"','"+empBasic.getEldiana()+"','"+
+//		empBasic.getEmpName()+"','"+empBasic.getEmplDate()+"','"+empBasic.getEnd_serv()+"','"+empBasic.getForm()+"','"+empBasic.getHandicapped()+"','"+empBasic.getIllness_code()+"','"+
+//		empBasic.getJob_join()+"','"+empBasic.getLang()+"','"+empBasic.getMaritalStatus().getMaritalCode()+"','"+empBasic.getMobile()+"','"+empBasic.getNatnl_no()+"','"+
+//		empBasic.getOvertime_code()+"','"+empBasic.getPermenant()+"','"+empBasic.getPhone()+"','"+empBasic.getQual().getQual()+"','"+empBasic.getQualYear()+"','"+
+//		empBasic.getQual_specific().getQual_specific()+"','"+empBasic.getSex()+"','"+empBasic.getShould_sign()+"','"+empBasic.getTitle().getTitle()+"','"+
+//		empBasic.getTotal_no_hour()+"','"+empBasic.getVacrule_code()+"','"+empBasic.getWork_status()+"','"+empBasic.getWorkingD()+"','"+empBasic.getWorkingH()+" where empCode= " +empBasic.getEmpCode());
 		attendanceManager.saveObject(empBasic);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 		return new ModelAndView(new RedirectView("empBasicView.html"));

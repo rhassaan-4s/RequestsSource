@@ -16451,4 +16451,6 @@ minvalue 1&#xD;
 maxvalue 999999999&#xD;
 start with 20&#xD;
 increment by 1&#xD;
-cache 20;</statment></query></SQL>
+cache 20;</statment></query><query><sqlindex>236</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101556, 'commons.errors.nationalidlength', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116624,'يجب ان يتكون الرقم القومي من 14 رقم', 101556, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116625, 'National ID must contain 14 digit', 101556, 3);</statment></query></SQL>

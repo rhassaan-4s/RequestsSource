@@ -169,7 +169,8 @@
 						<ref bean="qualificationBinder" />
 						<ref bean="departmentBinder" />
 						<ref bean="titleBinder" />
-						<ref bean="dateBinder"/>
+						<ref bean="timestampBinder" />
+						<!--<ref bean="formattedDateBinder"/>-->
 					</list>
 				</property>
 			</bean>

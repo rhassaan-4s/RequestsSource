@@ -311,6 +311,15 @@ public class AttendanceManagerImpl extends BaseManagerImpl implements Attendance
 			status.setMsg("Duplicate");
 			return status;
 		}
+		
+		char[] national = emp.getNatnl_no().toCharArray();
+		if (national.length!=14) {
+			//duplicate ar name
+			status.setStatus("False");
+			status.setObjAttribute("natnl_no");
+			status.setMsg("Incorrect Length");
+			return status;
+		}
 		status.setStatus("True");
 		return status;
 	}
