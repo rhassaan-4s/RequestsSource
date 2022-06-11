@@ -16453,4 +16453,12 @@ start with 20&#xD;
 increment by 1&#xD;
 cache 20;</statment></query><query><sqlindex>236</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101556, 'commons.errors.nationalidlength', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116624,'يجب ان يتكون الرقم القومي من 14 رقم', 101556, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116625, 'National ID must contain 14 digit', 101556, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116625, 'National ID must contain 14 digit', 101556, 3);</statment></query><query><sqlindex>237</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101557, 'attendance.header.triggervacbalance', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116626,'تجهيز رصيد الاجازات', 101557, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116627, 'Prepare Vacation Balance', 101557, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101558, 'attendance.header.vacbalancefailed', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116628,'فشلت المحاولة برجاء المحاولة في وقت لاحق', 101558, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116629, 'Failed to prepare vacation balance', 101558, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101559, 'attendance.header.vacbalanceprepared', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116630,'تم تجهيز رصيد الاجازات بنجاح', 101559, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116631, 'Successfully prepared vacation balance', 101559, 3);</statment></query></SQL>

@@ -394,4 +394,5 @@ public class AttendanceManagerImpl extends BaseManagerImpl implements Attendance
 		Date to = cal2.getTime();
 		return externalQueries.getDashboardRequests(from,to,settings);
 	}
+	
 }

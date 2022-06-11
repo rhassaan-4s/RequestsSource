@@ -6,8 +6,10 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import com._4s_.common.dao.BaseDAO;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 /**
  * Base class for Business Services - use this class for utility methods and
@@ -75,7 +77,7 @@ public class BaseManagerImpl implements BaseManager {
         baseDAO.saveObjectWithoutUpdate(o);
     }
 
-    public void flush() {
+    public void flush() throws Exception{
     	baseDAO.flush();
     }
     public void setFlushModeNever() {

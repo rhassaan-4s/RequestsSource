@@ -282,6 +282,16 @@
 			</bean>
 		</property>
 	</bean>
+	
+	<bean id="triggerVacBalanceView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.TriggerVacBalanceView">
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
 	<!--
 		_____________________________________________________________________
 	-->
@@ -315,6 +325,7 @@
 				<prop key="/publicLeavesForm.html">publicLeavesForm</prop>
 				<prop key="/vacationView.html">vacationView</prop>
 				<prop key="/vacationForm.html">vacationForm</prop>
+				<prop key="/triggerVacBalanceView.html">triggerVacBalanceView</prop>
 			</props>
 		</property>
 	</bean>

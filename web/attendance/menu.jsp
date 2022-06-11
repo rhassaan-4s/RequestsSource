@@ -63,6 +63,10 @@
 							href="/Requests/attendance/vacationView.html"> &nbsp;&nbsp; <fmt:message
 									key="attendance.header.vacation" />
 						</a></li>
+						<li><abc:i18n property="attendance.header.triggervacbalance" /> <a
+							href="/Requests/attendance/triggerVacBalanceView.html"> &nbsp;&nbsp; <fmt:message
+									key="attendance.header.triggervacbalance" />
+						</a></li>
 					</ul></li>
 
 			</ul></li>

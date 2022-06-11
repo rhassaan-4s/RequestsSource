@@ -1580,8 +1580,13 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					}
 					empReqApproval.setApproval(new Integer(status));
 
-					saveObject(empReqApproval);
-					flush();
+					try {
+						saveObject(empReqApproval);
+						flush();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				log.debug("time at the end of the inner loop " + Calendar.getInstance().getTime());
 				////////////////////////////////////////////////////////////////////////////
