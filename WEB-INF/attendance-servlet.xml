@@ -292,6 +292,16 @@
 			</bean>
 		</property>
 	</bean>
+	
+	<bean id="triggerAttendAnalysisView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.TriggerAttendAnalysisView">
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
 	<!--
 		_____________________________________________________________________
 	-->
@@ -326,6 +336,7 @@
 				<prop key="/vacationView.html">vacationView</prop>
 				<prop key="/vacationForm.html">vacationForm</prop>
 				<prop key="/triggerVacBalanceView.html">triggerVacBalanceView</prop>
+				<prop key="/triggerAttendAnalysisView.html">triggerAttendAnalysisView</prop>
 			</props>
 		</property>
 	</bean>

@@ -16461,4 +16461,17 @@ INSERT INTO i18n_message VALUES (202116628,'فشلت المحاولة برجاء
 INSERT INTO i18n_message VALUES (202116629, 'Failed to prepare vacation balance', 101558, 3);&#xD;
 INSERT INTO I18N_KEY VALUES (101559, 'attendance.header.vacbalanceprepared', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116630,'تم تجهيز رصيد الاجازات بنجاح', 101559, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116631, 'Successfully prepared vacation balance', 101559, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116631, 'Successfully prepared vacation balance', 101559, 3);</statment></query><query><sqlindex>238</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101560, 'attendance.header.transactions', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116632,'الحركات', 101560, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116633, 'Transactions', 101560, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101561, 'attendance.header.triggerattendanalysis', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116634,'تجهيز تحليلات الحضور و الانصراف', 101561, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116635, 'Attendance Analysis Preparation', 101561, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101562, 'attendance.caption.attendanalysisfailed', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116636,'فشل تجهيز تحليلات الحضور و الانصراف، برجاء اعادة المحاولة', 101562, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116637, 'Failed to prepare attendance analysis', 101562, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101563, 'attendance.caption.attendanalysisprepared', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116638,'تم تجهيز تحليلات الحضور و الانصراف', 101563, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116639, 'Attendance analysis prepared successfully', 101563, 3);</statment></query><query><sqlindex>239</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101564, 'attendance.caption.month', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116640,'شهر', 101564, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116641, 'Month', 101564, 3);</statment></query></SQL>

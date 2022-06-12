@@ -1,6 +1,7 @@
 package com._4s_.attendance.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -14,7 +15,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import com._4s_.auditing.model.Auditable;
 
 @Entity
-@Table (name = "trigger_attend_analysiss")
+@Table (name = "trigger_attend_analysis")
 
 public class TriggerAttendAnalysis implements Serializable,Auditable {
 	
@@ -25,8 +26,10 @@ public class TriggerAttendAnalysis implements Serializable,Auditable {
 	@Id
 //	@GenericGenerator(name="religion_seq",strategy="com._4s_.attendance.dao.ReligionStringKeyGenerator")
 //	@GeneratedValue(generator="religion_seq")
-	private Date indate;
+	private Timestamp indate;
+	@Id
 	private Integer month;
+	@Id
 	private Integer year;
 	private String is_handeled = "0";
 	
@@ -34,7 +37,7 @@ public class TriggerAttendAnalysis implements Serializable,Auditable {
 		return null;
 	}
 
-	public Date getIndate() {
+	public Timestamp getIndate() {
 		return indate;
 	}
 
@@ -42,7 +45,7 @@ public class TriggerAttendAnalysis implements Serializable,Auditable {
 
 
 
-	public void setIndate(Date indate) {
+	public void setIndate(Timestamp indate) {
 		this.indate = indate;
 	}
 

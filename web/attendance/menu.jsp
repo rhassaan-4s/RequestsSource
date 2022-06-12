@@ -70,6 +70,13 @@
 					</ul></li>
 
 			</ul></li>
+		<li><a href="#"><fmt:message key="attendance.header.transactions" /></a>
+			<ul>
+				<li><abc:i18n property="attendance.header.triggerattendanalysis" /> <a
+					href="/Requests/attendance/triggerAttendAnalysisView.html"> &nbsp;&nbsp; <fmt:message
+							key="attendance.header.triggerattendanalysis" />
+				</a></li>
+			</ul></li>
 		<li><a href="#"><fmt:message key="commons.menu.reports" /></a>
 			<ul>
 				<li><abc:i18n property="attendance.header.dashboard" /> <a
