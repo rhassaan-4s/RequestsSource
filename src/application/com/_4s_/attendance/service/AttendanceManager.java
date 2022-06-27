@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.attendance.model.AttendanceDepartment;
+import com._4s_.attendance.model.EmpWorkPeriodListWrapper;
 import com._4s_.attendance.model.Qualification;
 import com._4s_.attendance.model.Religion;
 import com._4s_.attendance.model.Title;
@@ -33,6 +34,8 @@ public interface AttendanceManager extends BaseManager {
 	public ValidationStatus validateVacation(Vacation vacation);
 	public WorkPeriodMaster getWorkPeriodMaster(String workperiodCode);
 	public List getActiveEmpBasic();
+	public ValidationStatus validateEmpWorkPeriodWrapper(
+			EmpWorkPeriodListWrapper periods);
 	
 }
 

@@ -2,7 +2,6 @@ package com._4s_.attendance.web.action;
 
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,7 +23,7 @@ import com._4s_.attendance.service.AttendanceManager;
 import com._4s_.common.model.EmpBasic;
 import com._4s_.common.model.Settings;
 import com._4s_.common.web.action.BaseSimpleFormController;
-import com._4s_.requestsApproval.model.LoginUsers;
+import com._4s_.timesheet.web.validate.ValidationStatus;
 import com.ibm.icu.util.Calendar;
 
 public class EmpWorkPeriodForm extends BaseSimpleFormController{
@@ -147,14 +146,14 @@ public class EmpWorkPeriodForm extends BaseSimpleFormController{
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		EmpWorkPeriodListWrapper periods =  (EmpWorkPeriodListWrapper)command;
-//		ValidationStatus status = attendanceManager.validateTitle(title);	
-//		
-//		if (status.getStatus().equals("False") && status.getMsg().equals("Mandatory")) {
-//			errors.rejectValue(status.getObjAttribute(), "commons.errors.requiredFields");
-//		}
-//		if (status.getStatus().equals("False") && status.getMsg().equals("Duplicate")) {
-//			errors.rejectValue(status.getObjAttribute(), "commons.errors.duplicateFieldEntry");
-//		}
+		ValidationStatus status = attendanceManager.validateEmpWorkPeriodWrapper(periods);	
+		
+		if (status.getStatus().equals("False") && status.getMsg().equals("Mandatory")) {
+			errors.rejectValue(status.getObjAttribute(), "commons.errors.requiredFields");
+		}
+		if (status.getStatus().equals("False") && status.getMsg().equals("WrongDate")) {
+			errors.rejectValue(status.getObjAttribute(), "commons.errors.arrangedateorder");
+		}
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}

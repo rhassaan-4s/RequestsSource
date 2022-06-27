@@ -3,35 +3,27 @@ package com._4s_.attendance.service;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import org.hibernate.HibernateException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.attendance.dao.AttendanceDAO;
 import com._4s_.attendance.dao.AttendanceExternalQueries;
 import com._4s_.attendance.model.AttendanceDepartment;
+import com._4s_.attendance.model.EmpWorkPeriod;
+import com._4s_.attendance.model.EmpWorkPeriodListWrapper;
 import com._4s_.attendance.model.Qualification;
 import com._4s_.attendance.model.Religion;
 import com._4s_.attendance.model.Title;
 import com._4s_.attendance.model.WorkPeriodMaster;
 import com._4s_.common.model.EmpBasic;
-import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.BaseManagerImpl;
 import com._4s_.common.service.SequenceManager;
 import com._4s_.i18n.service.MessageManager;
 import com._4s_.requestsApproval.model.Vacation;
-import com._4s_.restServices.json.RestStatus;
-import com._4s_.restServices.json.TimesheetTransDefaultWrapper;
-import com._4s_.timesheet.model.TimesheetActivity;
-import com._4s_.timesheet.model.TimesheetCostCenter;
-import com._4s_.timesheet.model.TimesheetSpecs;
-import com._4s_.timesheet.model.TimesheetTransactionDefaults;
-import com._4s_.timesheet.model.TimesheetTransactionParts;
 import com._4s_.timesheet.web.validate.ValidationStatus;
 
 @Service
@@ -359,6 +351,48 @@ public class AttendanceManagerImpl extends BaseManagerImpl implements Attendance
 			status.setObjAttribute("ename");
 			status.setMsg("Duplicate");
 			return status;
+		}
+		status.setStatus("True");
+		return status;
+	}
+
+	
+	@Override
+	public ValidationStatus validateEmpWorkPeriodWrapper(EmpWorkPeriodListWrapper periods) {
+		ValidationStatus status = new ValidationStatus();
+		if (periods.getEmpCode()==null) {
+			status.setStatus("False");
+			status.setObjAttribute("empCode");
+			status.setMsg("Mandatory");
+			return status;
+		}
+		Iterator itr = periods.getEmpPeriods().iterator();
+		int count = 0;
+		while(itr.hasNext()) {
+			EmpWorkPeriod period =  (EmpWorkPeriod)itr.next();
+			if (period.getWork_period()==null) {
+				status.setStatus("False");
+				status.setObjAttribute("empPeriods["+count+"].work_period");
+				status.setMsg("Mandatory");
+				return status;
+			} else if (period.getStart_date()==null) {
+				status.setStatus("False");
+				status.setObjAttribute("empPeriods["+count+"].start_date");
+				status.setMsg("Mandatory");
+				return status;
+			} else if (period.getEnd_date()==null) {
+				status.setStatus("False");
+				status.setObjAttribute("empPeriods["+count+"].end_date");
+				status.setMsg("Mandatory");
+				return status;
+			}
+			if(period.getEnd_date().before(period.getStart_date())==true) {
+				status.setStatus("False");
+				status.setObjAttribute("empPeriods["+count+"].start_date");
+				status.setMsg("WrongDate");
+				return status;
+			}
+			count++;
 		}
 		status.setStatus("True");
 		return status;

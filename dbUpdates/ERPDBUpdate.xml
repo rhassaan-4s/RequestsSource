@@ -16522,4 +16522,6 @@ INSERT INTO I18N_KEY VALUES (101579, 'attendance.caption.workperiod', NULL);&#xD
 INSERT INTO i18n_message VALUES (202116670,'الوردية', 101579, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116671, 'Work Period', 101579, 3);</statment></query><query><sqlindex>245</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101580, 'attendance.caption.empworkperiodsuccess', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116672,'تم تعريف ورديات الموظف بنجاح', 101580, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116673, 'Employee Work Period added successfully', 101580, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116673, 'Employee Work Period added successfully', 101580, 3);</statment></query><query><sqlindex>246</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101581, 'commons.errors.arrangedateorder', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116674,'تاريخ البداية يجب ان يكون قبل تاريخ النهاية', 101581, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116675, 'Start date must be before end date', 101581, 3);</statment></query></SQL>
