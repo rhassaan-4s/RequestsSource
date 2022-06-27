@@ -59,6 +59,10 @@
     	class="com._4s_.common.web.binders.TimestampBinder"
      	singleton="false" ></bean>
      	
+     <bean id="timestampTimeBinder"
+    	class="com._4s_.common.web.binders.TimestampTimeBinder"
+     	singleton="false" ></bean>
+     	
      <!-- Time Binder -->
     <bean id="timeBinder"
     	class="com._4s_.common.web.binders.BiCalendarTimeBinder"

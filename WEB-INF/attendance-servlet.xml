@@ -283,6 +283,44 @@
 		</property>
 	</bean>
 	
+	<bean id="workperiodForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.WorkPeriodForm">
+				<property name="commandName">
+					<value>period</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.attendance.model.WorkPeriod</value>
+				</property>
+				<property name="formView">
+					<value>workperiodForm</value>
+				</property>
+				<property name="successView">
+					<value>workperiodView</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+				<property name="customBinders">
+					<list>
+						<ref bean="timestampBinder" />
+						<ref bean="timestampTimeBinder" />
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="workperiodView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.WorkPeriodView">
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
 	<bean id="triggerVacBalanceView" parent="txProxyTemplate">
 		<property name="target">
 			<bean class="com._4s_.attendance.web.action.TriggerVacBalanceView">
@@ -298,6 +336,35 @@
 			<bean class="com._4s_.attendance.web.action.TriggerAttendAnalysisView">
 				<property name="attendanceManager">
 					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="empWorkPeriodForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.EmpWorkPeriodForm">
+				<property name="commandName">
+					<value>periods</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.attendance.model.EmpWorkPeriodListWrapper</value>
+				</property>
+				<property name="formView">
+					<value>empWorkPeriodForm</value>
+				</property>
+				<property name="successView">
+					<value>empWorkPeriodForm</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+				<property name="binders">
+					<list>
+						<ref bean="timestampBinder" />
+						<ref bean="workPeriodMasterBinder"/>
+						<ref bean="empBasicBinder"/>
+					</list>
 				</property>
 			</bean>
 		</property>
@@ -337,6 +404,9 @@
 				<prop key="/vacationForm.html">vacationForm</prop>
 				<prop key="/triggerVacBalanceView.html">triggerVacBalanceView</prop>
 				<prop key="/triggerAttendAnalysisView.html">triggerAttendAnalysisView</prop>
+				<prop key="/workperiodView.html">workperiodView</prop>
+				<prop key="/workperiodForm.html">workperiodForm</prop>
+				<prop key="/empWorkPeriodForm.html">empWorkPeriodForm</prop>
 			</props>
 		</property>
 	</bean>

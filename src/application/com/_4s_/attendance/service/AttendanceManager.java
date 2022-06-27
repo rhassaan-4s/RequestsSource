@@ -9,6 +9,7 @@ import com._4s_.attendance.model.AttendanceDepartment;
 import com._4s_.attendance.model.Qualification;
 import com._4s_.attendance.model.Religion;
 import com._4s_.attendance.model.Title;
+import com._4s_.attendance.model.WorkPeriodMaster;
 import com._4s_.common.model.EmpBasic;
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.BaseManager;
@@ -30,6 +31,8 @@ public interface AttendanceManager extends BaseManager {
 	public List getNumberOfAttendeesAndWorkersByDepartment();
 	public List getDashboardRequests();
 	public ValidationStatus validateVacation(Vacation vacation);
+	public WorkPeriodMaster getWorkPeriodMaster(String workperiodCode);
+	public List getActiveEmpBasic();
 	
 }
 

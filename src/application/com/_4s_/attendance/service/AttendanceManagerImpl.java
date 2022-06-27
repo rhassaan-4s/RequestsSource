@@ -17,6 +17,7 @@ import com._4s_.attendance.model.AttendanceDepartment;
 import com._4s_.attendance.model.Qualification;
 import com._4s_.attendance.model.Religion;
 import com._4s_.attendance.model.Title;
+import com._4s_.attendance.model.WorkPeriodMaster;
 import com._4s_.common.model.EmpBasic;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
@@ -394,5 +395,18 @@ public class AttendanceManagerImpl extends BaseManagerImpl implements Attendance
 		Date to = cal2.getTime();
 		return externalQueries.getDashboardRequests(from,to,settings);
 	}
+
+	@Override
+	public WorkPeriodMaster getWorkPeriodMaster(String workperiodCode) {
+		return attendanceDAO.getWorkPeriodMaster(workperiodCode);
+	}
+
+	@Override
+	public List getActiveEmpBasic() {
+		// TODO Auto-generated method stub
+		return attendanceDAO.getActiveEmpBasic();
+	}
+	
+	
 	
 }

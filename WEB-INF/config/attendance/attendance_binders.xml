@@ -38,4 +38,16 @@
 	    </property>
 	</bean>
 	
+	<bean id="workPeriodMasterBinder" class="com._4s_.attendance.web.binders.WorkPeriodMasterBinder" singleton="false" >
+	    <property name="baseManager">
+			<ref bean="baseManager"/>
+	    </property>
+	</bean>
+	
+	<bean id="empBasicBinder" class="com._4s_.attendance.web.binders.EmpBasicBinder" singleton="false" >
+	    <property name="baseManager">
+			<ref bean="baseManager"/>
+	    </property>
+	</bean>
+	
 </beans>

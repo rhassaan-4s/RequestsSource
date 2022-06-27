@@ -12,16 +12,18 @@ import java.util.Date;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.Calendar;
+
 /**
  * @author mragab
  *
  */
-public class TimestampBinder extends PropertyEditorSupport implements
+public class TimestampTimeBinder extends PropertyEditorSupport implements
 		BaseBinder {
 
 	private final Log log = LogFactory.getLog(getClass());
+	SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 	SimpleDateFormat finalformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-	SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 	public Class getBindedClass() {
 		return Timestamp.class;
 	}
@@ -31,20 +33,6 @@ public class TimestampBinder extends PropertyEditorSupport implements
 		log.debug("GetAsText >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
 		log.debug(">>>>>>> getAstext getValue() "+getValue());
-//		Date date = ((Date)getValue());
-//		log.debug(">>>>>>> getAstext date "+date);
-//		String text = null;
-//		
-//		if (date!=null) {
-//			log.debug(">>>>>>> getAstext if ");
-////			MultiCalendarDate mCalDate = new MultiCalendarDate();
-////			mCalDate.setDate(date);
-////			mCalDate.setCalendarType(MultiCalendarDate.MILADI);
-//			text = format.format(date);
-//		} else {
-//			log.debug(">>>>>>> getAstext else ");
-//			text = "" ;
-//		}
 		String text = null;
 		Timestamp date = (Timestamp)getValue();
 		if (date!=null) {
@@ -62,32 +50,20 @@ public class TimestampBinder extends PropertyEditorSupport implements
 		
 		try {
 			Date inputDate = format.parse(text);
-			Timestamp time = Timestamp.valueOf(finalformat.format(inputDate));
+			log.debug(inputDate);
+			Calendar today = Calendar.getInstance();
+			log.debug(today.getTime());
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(inputDate);
+			cal.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DATE));
+			log.debug(cal.getTime());
+			Timestamp time = Timestamp.valueOf(finalformat.format(cal.getTime()));
 			setValue(time);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			setValue(null);
 			e.printStackTrace();
 		}
-//		Date date = null;
-//		
-//		if ((text!=null)&&(text.length()>0)) {
-//			log.debug(">>>>>>> set as text if");
-//			try {
-//				Date d1 = (new SimpleDateFormat("dd/MM/yyyy").parse(text));
-//				date = format.parse(format.format(d1));
-//				setValue(date);
-//			} catch (ParseException e) {
-//				// TODO Auto-generated catch block
-//				setValue(null);
-//				e.printStackTrace();
-//			}
-//			
-//
-//		} else {
-//			log.debug(">>>>>>> set as text else");
-//			setValue(null);
-//		}
 		
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SetAsText");
 	}

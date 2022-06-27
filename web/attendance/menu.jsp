@@ -63,6 +63,10 @@
 							href="/Requests/attendance/vacationView.html"> &nbsp;&nbsp; <fmt:message
 									key="attendance.header.vacation" />
 						</a></li>
+						<li><abc:i18n property="attendance.header.workperiods" /> <a
+							href="/Requests/attendance/workperiodView.html"> &nbsp;&nbsp; <fmt:message
+									key="attendance.header.workperiods" />
+						</a></li>
 						<li><abc:i18n property="attendance.header.triggervacbalance" /> <a
 							href="/Requests/attendance/triggerVacBalanceView.html"> &nbsp;&nbsp; <fmt:message
 									key="attendance.header.triggervacbalance" />
@@ -72,6 +76,10 @@
 			</ul></li>
 		<li><a href="#"><fmt:message key="attendance.header.transactions" /></a>
 			<ul>
+				<li><abc:i18n property="attendance.header.empworkperiod" /> <a
+							href="/Requests/attendance/empWorkPeriodForm.html"> &nbsp;&nbsp; <fmt:message
+									key="attendance.header.empworkperiod" />
+						</a></li>
 				<li><abc:i18n property="attendance.header.triggerattendanalysis" /> <a
 					href="/Requests/attendance/triggerAttendAnalysisView.html"> &nbsp;&nbsp; <fmt:message
 							key="attendance.header.triggerattendanalysis" />

@@ -1,25 +1,17 @@
 package com._4s_.attendance.dao;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com._4s_.attendance.model.WorkPeriodMaster;
 import com._4s_.common.dao.BaseDAOHibernate;
-import com._4s_.common.model.Employee;
-import com._4s_.common.util.Page;
-import com._4s_.requestsApproval.model.EmpReqTypeAcc;
+import com._4s_.common.model.EmpBasic;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
-import com._4s_.timesheet.model.TimesheetActivity;
-import com._4s_.timesheet.model.TimesheetCostCenter;
-import com._4s_.timesheet.model.TimesheetTransaction;
-import com._4s_.timesheet.model.TimesheetTransactionParts;
 
 @Transactional
 @Repository
@@ -56,5 +48,32 @@ public class AttendanceDAOHibernate extends BaseDAOHibernate implements Attendan
 			return new Integer(0);
 		}
 	}
+
+	@Override
+	public WorkPeriodMaster getWorkPeriodMaster(String workperiodCode) {
+		Criteria criteria = getCurrentSession()
+				.createCriteria(WorkPeriodMaster.class);
+		criteria.createCriteria("workperiods").add(Restrictions.eq("workperiods", workperiodCode));
+		criteria
+		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		List list = criteria.list();
+		if (list.size()>0) {
+			return (WorkPeriodMaster)list.get(0);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public List getActiveEmpBasic() {
+		Criteria criteria = getCurrentSession()
+				.createCriteria(EmpBasic.class);
+		criteria.add(Restrictions.isNull("end_serv"));
+		criteria
+		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
+	
+	
 	
 }
