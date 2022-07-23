@@ -31,6 +31,8 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.directwebremoting.annotations.RemoteMethod;
+import org.directwebremoting.annotations.RemoteProxy;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -2409,6 +2411,42 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			return mgrs;
 		}		
 		
+		
+		public int calculateDateDifference(Date a, Date b) {
+		    int tempDifference = 0;
+		    int difference = 0;
+		    Calendar earlier = Calendar.getInstance();
+		    Calendar later = Calendar.getInstance();
+		    System.out.println("-------a.compareTo(b)---"+a.compareTo(b));
+		    if (a.compareTo(b) < 0)
+		    {
+		        earlier.setTime(b);
+		        later.setTime(a);
+		    }
+		    else
+		    {
+		        earlier.setTime(b);
+		        later.setTime(a);
+		    }
+
+		    while (earlier.get(Calendar.YEAR) != later.get(Calendar.YEAR))
+		    {
+		        tempDifference = 365 * (later.get(Calendar.YEAR) - earlier.get(Calendar.YEAR));
+		        difference += tempDifference;
+
+		        earlier.add(Calendar.DAY_OF_YEAR, tempDifference);
+		    }
+
+		    if (earlier.get(Calendar.DAY_OF_YEAR) != later.get(Calendar.DAY_OF_YEAR))
+		    {
+		        tempDifference = later.get(Calendar.DAY_OF_YEAR) - earlier.get(Calendar.DAY_OF_YEAR);
+		        difference += tempDifference;
+
+		        earlier.add(Calendar.DAY_OF_YEAR, tempDifference);
+		    }
+
+		    return difference;
+		}
 //	public List getAttendanceRequests(Date date, String empCode) {
 //		return requestsApprovalDAO.getAttendanceRequests(date,empCode);
 //	}

@@ -23,9 +23,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -41,12 +48,20 @@ import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
+import com._4s_.requestsApproval.web.validators.ValidateLoginUsersRequestForm;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.model.AttendanceStatus;
 
+@Controller
+@RequestMapping("/loginUsersRequestsForm.html")
 public class LoginUsersRequestsForm extends BaseSimpleFormController{
 
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
+	@Autowired
+	private JavaMailSenderImpl mailSender;
+	@Autowired
+	private ValidateLoginUsersRequestForm validateLoginUsersRequest;
 	
 	private String SMTP_AUTH_USER; 
 	
@@ -55,22 +70,25 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 	public RequestsApprovalManager getRequestsApprovalManager() {
 		return requestsApprovalManager;
 	}
-
 	public void setRequestsApprovalManager(
 			RequestsApprovalManager requestsApprovalManager) {
 		this.requestsApprovalManager = requestsApprovalManager;
 	}
-	
-	private JavaMailSenderImpl mailSender;
-	
 	public JavaMailSenderImpl getMailSender() {
 		return mailSender;
 	}
 	public void setMailSender(JavaMailSenderImpl mailSender) {
 		this.mailSender = mailSender;
 	}
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{	
+	public ValidateLoginUsersRequestForm getValidateLoginUsersRequest() {
+		return validateLoginUsersRequest;
+	}
+	public void setValidateLoginUsersRequest(ValidateLoginUsersRequestForm validateLoginUsersRequest) {
+		this.validateLoginUsersRequest = validateLoginUsersRequest;
+	}
+
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
 		DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
@@ -126,21 +144,21 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 //		Settings settings = (Settings)request.getSession().getAttribute("settings");
 		String fromMail = settings.getMailMgr();
 		log.debug("fromMail------"+fromMail);
-	   return loginUsersRequests ;
+		model.addAttribute("loginUsersRequests", loginUsersRequests);
+		model.addAttribute("fromMail", fromMail);
+	   return "loginUsersRequestsForm" ;
 	}
 	
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
-	{
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,
+			HttpServletRequest request,@ModelAttribute("loginUsersRequests") LoginUsersRequests command) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
 		Settings settings = (Settings)request.getSession().getAttribute("settings");
 		
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
-		log.debug("-------period from--referense-"+loginUsersRequests.getPeriod_from());
-//		request.getSession().setAttribute("loginUsersRequests", loginUsersRequests);
-//		log.debug("-----loginUsersRequests.code----"+employeeRequests.getEmployee().getEmployeeCode());
+//		log.debug("-------period from--referense-"+loginUsersRequests.getPeriod_from());
 		Map model=new HashMap();
-//		String fromMail = request.getSession().getServletContext().getInitParameter("mailMgr");
 		String fromMail = settings.getMailMgr();
 		log.debug("mailMgr---fromMail----"+fromMail);
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
@@ -188,6 +206,78 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		
 		boolean specialVacExcep = settings.getSpecialVacExcep();
 		
+		boolean vacLimitProblem = settings.getVacLimitProblem();
+
+		//log.debug("--diff betn reqdate & fromdate---"+calculateDifference(loginUsersRequests.getFrom_date(), loginUsersRequests.getRequest_date()));
+		if(loginUsersRequests!=null){
+			log.debug("loginUsersRequests.getRequest_id()---"+loginUsersRequests.getRequest_id());
+			if(loginUsersRequests.getRequest_id()!=null && loginUsersRequests.getVacation()!=null){
+				log.debug("loginUsersRequests.getRequest_id()-!null--");
+				if(loginUsersRequests.getRequest_id().getId()==2 && loginUsersRequests.getVacation().getVacation().equals("001")){
+					log.debug("loginUsersRequests.getRequest_id()-==2--");
+					if(loginUsersRequests.getWithdrawDays()!=null && !loginUsersRequests.getWithdrawDays().equals("")){
+						log.debug("loginUsersRequests.getWithdrawDays()-----");
+						Double period=loginUsersRequests.getWithdrawDays();
+						log.debug("--period---"+period);
+						int difference=requestsApprovalManager.calculateDateDifference(loginUsersRequests.getFrom_date(),loginUsersRequests.getRequest_date());
+						log.debug("--diff betn reqdate & fromdate---"+difference);
+						if(period.intValue()<2){
+							AnnualVacLimit limit=(AnnualVacLimit) requestsApprovalManager.getObjectByParameter(AnnualVacLimit.class, "vac_period", period.intValue()+"");
+
+							if(limit!=null && !limit.equals("")){
+								log.debug("---limit-id---"+limit.getId());
+								log.debug("--limit-period"+limit.getVac_period());
+								log.debug("--limit.getVac_period()--<2-"+limit.getVac_period());
+								String per=limit.getVac_period();
+								if(per.equals(period.intValue()+"")){
+									if(limit.getVac_limit().equals(difference+"") || Integer.parseInt(limit.getVac_limit())<difference){
+										log.debug("----true---");
+									}
+									else{
+										log.debug("----error---");
+
+										//								model.put("msg1", "requestsApproval.errors.vacLimit1");
+										model.put("limit", limit.getVac_limit());
+									}
+								}
+								else{
+									if(difference<2){
+										log.debug("----difference<2---");
+										model.put("limit", limit.getVac_limit());
+										//errors.reject("requestsApproval.errors.vacLimitProblem");
+									}
+								}
+							}
+
+						}else if(period.intValue()>=2){
+							AnnualVacLimit limit=(AnnualVacLimit) requestsApprovalManager.getObjectByParameter(AnnualVacLimit.class, "vac_period", 2+"");
+							if(limit!=null && !limit.equals("")){
+								log.debug("--limit.getVac_period()---"+limit.getVac_period());
+								String per=limit.getVac_period();
+								if(per.equals(period.intValue()+"") || Double.parseDouble(per)<period){
+									log.debug("--per--"+per);
+									if(limit.getVac_limit().equals(difference+"") || Integer.parseInt(limit.getVac_limit())<difference){
+										log.debug("----period>=2---");
+										model.put("limit", limit.getVac_limit());
+										//errors.reject("requestsApproval.errors.vacLimitProblem");
+									}
+									else if(difference<2){
+										log.debug("----period>=2---difference<2--");
+										model.put("limit", limit.getVac_limit());
+										//	errors.reject("requestsApproval.errors.vacLimitProblem");
+									}
+								}
+								else{
+									log.debug("--period msh fl gadwl--period>=2---");
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		// end of checking rules
+		
 		List specialVacations=requestsApprovalManager.getObjectsByParameter(Vacation.class, "type", "B");
 		for (int i = 0; i < specialVacations.size(); i++) {
 			Vacation vac= (Vacation) specialVacations.get(i);
@@ -226,15 +316,6 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		from_date = mCalDate.getDate();
 		model.put("from_date", from_date);
 		
-//		String vacId=request.getParameter("vacation");
-//		log.debug("--------vacId---"+vacId);
-//		if(vacId!=null && !vacId.equals("") && from_date!=null){
-//			log.debug("----fromdate--"+from_date);
-//			model.put("vacCredit", requestsApprovalManager.getVacationCredit("oraserv", "oraserv", "lotus_pay10", "lotus_pay10", loginUsersRequests.getEmpCode(), new Long(2),vacId, from_date));
-//		}
-//		
-//		loginUsersRequests.setVacCredit(requestsApprovalManager.getVacationCredit("oraserv", "oraserv", "lotus_pay10", "lotus_pay10", loginUsersRequests.getEmpCode(), new Long(2),vacId, from_date));
-//		
 		Date to_date;
 		String dateTo=request.getParameter("to_date");
 		if(dateTo!=null && !dateTo.equals("")){
@@ -245,28 +326,17 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		}
 		to_date = mCalDate.getDate();
 		model.put("to_date", to_date);
-//		int withdrawDays=calculateDifference(from_date, to_date);
-//		log.debug("----noDays---"+withdrawDays);
-//		
 		String withdrawDays=request.getParameter("withdrawDays");
 		log.debug("///withdrawDays--------"+withdrawDays);
 		model.put("withdrawDays", withdrawDays);
 		
-//		String empName = request.getParameter("name");
-//		log.debug("empName entered--------"+empName);
-//		log.debug("----loginUsersRequests--"+loginUsersRequests);
 		if(empRequestTypeId!=null && !empRequestTypeId.equals("")){
 			LoginUsersRequests logRequests = (LoginUsersRequests) requestsApprovalManager.getObject(LoginUsersRequests.class, new Long(empRequestTypeId));
 			log.debug("----mmname---"+logRequests.getLogin_user().getName());
-//			LoginUsers loginUsers =(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp_code);
 			model.put("mm_name", logRequests.getLogin_user().getName());
 			log.debug("----logRequests.getEmpCode()---"+logRequests.getEmpCode());
 			model.put("emplCode", logRequests.getEmpCode());
 		}
-//		String messagNo=request.getParameter("messagNo");
-//		if(messagNo==null)messagNo="1";
-//		model.put("messagNo", messagNo);
-		
 		
 		String done=request.getParameter("done");
 		String reqId=request.getParameter("requestId");
@@ -350,100 +420,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 			
 			
 		
-		// to check rules of annual vacation
-		
-		boolean vacLimitProblem = settings.getVacLimitProblem();
 		boolean vacationRequestExcep = settings.getVacationRequestExcep();
-		
-		//log.debug("--diff betn reqdate & fromdate---"+calculateDifference(loginUsersRequests.getFrom_date(), loginUsersRequests.getRequest_date()));
-		if(loginUsersRequests!=null){
-			log.debug("loginUsersRequests.getRequest_id()---"+loginUsersRequests.getRequest_id());
-			if(loginUsersRequests.getRequest_id()!=null && loginUsersRequests.getVacation()!=null){
-				log.debug("loginUsersRequests.getRequest_id()-!null--");
-				if(loginUsersRequests.getRequest_id().getId()==2 && loginUsersRequests.getVacation().getVacation().equals("001")){
-					log.debug("loginUsersRequests.getRequest_id()-==2--");
-					if(loginUsersRequests.getWithdrawDays()!=null && !loginUsersRequests.getWithdrawDays().equals("")){
-						log.debug("loginUsersRequests.getWithdrawDays()-----");
-						Double period=loginUsersRequests.getWithdrawDays();
-						log.debug("--period---"+period);
-						int difference=calculateDifference(loginUsersRequests.getFrom_date(),loginUsersRequests.getRequest_date());
-						log.debug("--diff betn reqdate & fromdate---"+difference);
-						if(period.intValue()<2){
-							AnnualVacLimit limit=(AnnualVacLimit) requestsApprovalManager.getObjectByParameter(AnnualVacLimit.class, "vac_period", period.intValue()+"");
-							
-							if(limit!=null && !limit.equals("")){
-								log.debug("---limit-id---"+limit.getId());
-								log.debug("--limit-period"+limit.getVac_period());
-								log.debug("--limit.getVac_period()--<2-"+limit.getVac_period());
-								String per=limit.getVac_period();
-								if(per.equals(period.intValue()+"")){
-									if(limit.getVac_limit().equals(difference+"") || Integer.parseInt(limit.getVac_limit())<difference){
-										log.debug("----true---");
-									}
-									else{
-										log.debug("----error---");
-										
-		//								model.put("msg1", "requestsApproval.errors.vacLimit1");
-										model.put("limit", limit.getVac_limit());
-										if(vacLimitProblem == true){//Lotus
-											errors.reject("requestsApproval.errors.vacLimitProblem");
-										}
-									}
-								}
-		//						if(limit.getVac_period().equals("1")){
-		//								if(loginUsersRequests.getFrom_date().compareTo(loginUsersRequests.getRequest_date())<0){
-		//									log.debug("----from<reqdate---");
-		//									errors.reject("requestsApproval.errors.vacLimitOneDay");
-		//								}
-		//						}
-								else{
-									if(difference<2){
-										log.debug("----difference<2---");
-										model.put("limit", limit.getVac_limit());
-										//errors.reject("requestsApproval.errors.vacLimitProblem");
-									}
-								}
-							}
-							
-						}else if(period.intValue()>=2){
-							AnnualVacLimit limit=(AnnualVacLimit) requestsApprovalManager.getObjectByParameter(AnnualVacLimit.class, "vac_period", 2+"");
-							if(limit!=null && !limit.equals("")){
-								log.debug("--limit.getVac_period()---"+limit.getVac_period());
-								String per=limit.getVac_period();
-								if(per.equals(period.intValue()+"") || Double.parseDouble(per)<period){
-									log.debug("--per--"+per);
-									if(limit.getVac_limit().equals(difference+"") || Integer.parseInt(limit.getVac_limit())<difference){
-										log.debug("----period>=2---");
-										model.put("limit", limit.getVac_limit());
-										//errors.reject("requestsApproval.errors.vacLimitProblem");
-									}
-									else if(difference<2){
-										log.debug("----period>=2---difference<2--");
-										model.put("limit", limit.getVac_limit());
-									//	errors.reject("requestsApproval.errors.vacLimitProblem");
-									}
-								}
-								else{
-									log.debug("--period msh fl gadwl--period>=2---");
-								}
-							}
-						}
-					}
-		//			if(period ==1){
-		//				if(loginUsersRequests.getFrom_date().compareTo(loginUsersRequests.getRequest_date())<0){
-		//					errors.reject("requestsApproval.errors.vacLimitOneDay");
-		//				}
-		//			}
-					
-		//			if(period >=2){
-		//				if(difference<2){
-		//					errors.reject("requestsApproval.errors.vacLimitMoreDays");
-		//				}
-		//			}
-				}
-			}
-		}
-		// end of checking rules
 
 		//Lehaa
 		if(vacationRequestExcep==true){
@@ -768,7 +745,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 										log.debug("loginUsersRequests.getWithdrawDays()-----");
 										Double period=loginUsersRequests.getWithdrawDays();
 										log.debug("--period->>>>>>>--"+period);
-										int difference=calculateDifference(loginUsersRequests.getFrom_date(),loginUsersRequests.getRequest_date());
+										int difference=requestsApprovalManager.calculateDateDifference(loginUsersRequests.getFrom_date(),loginUsersRequests.getRequest_date());
 										log.debug("--diff --->>>"+difference);
 										if(period.intValue()<2){
 											AnnualVacLimit limit=(AnnualVacLimit) requestsApprovalManager.getObjectByParameter(AnnualVacLimit.class, "vac_period", period.intValue()+"");
@@ -1224,43 +1201,6 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		return true;
 	}
 	
-	public static int calculateDifference(Date a, Date b)
-	{
-	    int tempDifference = 0;
-	    int difference = 0;
-	    Calendar earlier = Calendar.getInstance();
-	    Calendar later = Calendar.getInstance();
-	    System.out.println("-------a.compareTo(b)---"+a.compareTo(b));
-	    if (a.compareTo(b) < 0)
-	    {
-	        earlier.setTime(b);
-	        later.setTime(a);
-	    }
-	    else
-	    {
-	        earlier.setTime(b);
-	        later.setTime(a);
-	    }
-
-	    while (earlier.get(Calendar.YEAR) != later.get(Calendar.YEAR))
-	    {
-	        tempDifference = 365 * (later.get(Calendar.YEAR) - earlier.get(Calendar.YEAR));
-	        difference += tempDifference;
-
-	        earlier.add(Calendar.DAY_OF_YEAR, tempDifference);
-	    }
-
-	    if (earlier.get(Calendar.DAY_OF_YEAR) != later.get(Calendar.DAY_OF_YEAR))
-	    {
-	        tempDifference = later.get(Calendar.DAY_OF_YEAR) - earlier.get(Calendar.DAY_OF_YEAR);
-	        difference += tempDifference;
-
-	        earlier.add(Calendar.DAY_OF_YEAR, tempDifference);
-	    }
-
-	    return difference;
-	}
-
     private void sendMessage(String smtpServer,String from, String to,
             String subject,String pass, String emailContent, String port) throws Exception {
         Properties properties = System.getProperties();

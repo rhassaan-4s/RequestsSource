@@ -10,9 +10,6 @@
         <Logger name="com._4s_" level="DEBUG" additivity="false">
             <AppenderRef ref="LogToConsole"/>
        </Logger>
-       <Logger name="uk.ltd.getahead.dwr" level="ERROR" additivity="false">
-        	 <AppenderRef ref="LogToConsole"/>
-        </Logger>
         <Logger name="org.springframework" level="Error" additivity="false">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger>

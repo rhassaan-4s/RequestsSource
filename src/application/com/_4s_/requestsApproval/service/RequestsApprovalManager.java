@@ -164,5 +164,6 @@ public interface RequestsApprovalManager extends BaseManager {
 	public Map getRequestsStatus(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
 			String requestType, String codeFrom, String codeTo, String statusId, String sort,LoginUsers loggedInUser, List empReqTypeAccs, boolean isWeb, String isInsideCompany, int pageNumber, int pageSize);
 	public List<LoginUsers> getEmployeesByGroup(Long groupId);
+	public int calculateDateDifference(Date a, Date b);
 }
 

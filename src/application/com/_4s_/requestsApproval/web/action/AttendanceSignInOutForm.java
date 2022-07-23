@@ -65,9 +65,9 @@ import com._4s_.common.web.action.BaseSimpleFormController;
 public class AttendanceSignInOutForm extends CommonController {
 
 	@Autowired
-	RequestsApprovalManager requestsApprovalManager;
+	private RequestsApprovalManager requestsApprovalManager;
 	@Autowired
-	ValidateAttendanceSignInOut validateSignInOut;
+	private ValidateAttendanceSignInOut validateSignInOut;
 	@Autowired
 	private JavaMailSenderImpl mailSender;
 

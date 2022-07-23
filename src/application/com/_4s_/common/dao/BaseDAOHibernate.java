@@ -663,9 +663,9 @@ public class BaseDAOHibernate  implements BaseDAO {//extends HibernateDaoSupport
 		CriteriaQuery queryCriteria = builder.createQuery(clazz);
 		Root<Object> root = queryCriteria.from(clazz);
 		Predicate restrictions = null;
-//		restrictions = builder.equal(root.<Object>get(parameter), value);
+		restrictions = builder.equal(root.<Object>get(parameter), value);
 		queryCriteria.select(root);
-//		queryCriteria.where(restrictions);
+		queryCriteria.where(restrictions);
 		queryCriteria.distinct(true);
 		for (int i = 0; i < fieldList.size(); i++) {
 			queryCriteria.orderBy(builder.desc(root.get(fieldList.get(i))));
