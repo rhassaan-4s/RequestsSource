@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.Controller;
 import com._4s_.common.dao.Queries;
 import com._4s_.common.model.Branch;
 import com._4s_.common.model.Employee;
+import com._4s_.common.model.Settings;
 import com._4s_.common.service.CommonManager;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 //import com._4s_.stores.model.DBConnection;
@@ -313,8 +314,8 @@ public class SearchFormController implements Controller {
 							level += ","+employee.getEmpCode();
 						}
 						log.debug("level " + level);
-						
-						map = qry.search(searchCommandId,searchCommandName,table,firstParam,secondParam,paramString,match1,match2,level,pageNumber,10,branchId);	
+						Settings settings = (Settings)mgr.getObject(Settings.class, new Long(1));
+						map = qry.search(searchCommandId,searchCommandName,table,firstParam,secondParam,paramString,match1,match2,level,settings,pageNumber,10,branchId);	
 					}else {
 						log.debug("Null Result  ");
 					}

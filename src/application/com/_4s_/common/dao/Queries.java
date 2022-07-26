@@ -19,15 +19,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com._4s_.common.util.DBUtils;
 import com._4s_.common.util.Page;
-//import com._4s_.stores.model.DBConnection;
-//import com._4s_.stores.model.Destination;
-//import com._4s_.stores.model.StoreTransactionM;
-//import com._4s_.stores.model.StoreTrnsDepBranch;
     
-public class Queries {
+public class Queries  extends CommonQueries{
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	private JdbcTemplate jt;
 	private JdbcTemplate exjt;
 	private DataSource dataSource;
 	private Connection conn;
@@ -111,16 +106,21 @@ public class Queries {
 			
 		}
 		
-		
-		jt = new JdbcTemplate(dataSource);
+		String rownum = "";
+		if (settings.getSqlServerConnectionEnabled()) {
+			rownum = " ROW_NUMBER() over (order by empCode) as rnum ";
+		} else {
+			rownum = "rownum rnum";
+		}
+		setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		sql1 = "SELECT * FROM (";
 		if (table.equals("store_c_trns_m,store_trns_def ")) {
 			sql1 = sql1 +
-				"select ROWNUM rnum," + firstParam +" as id" ;
+				"select "+rownum+"," + firstParam +" as id" ;
 		}
 		else {
 			sql1 = sql1 +
-				"select id as identity,ROWNUM rnum," + firstParam +" as id" ;
+				"select id as ident,"+rownum+"," + firstParam +" as id" ;
 		}
 		if(secondParam != null && !secondParam.equals("")){
 			sql1 = sql1 + " , "+secondParam+ " as description ";
@@ -249,26 +249,26 @@ public class Queries {
 			log.error(">>>>>>>>>>>>>>> where1 != ''");
 			if (where3 != null && !where3.equals("")){
 				log.error(">>>>>>>>>>>>>>> where3 != null ");
-				sql1 = sql1 + where1 + where3 +" and END_SERV IS NULL"+") WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
+				sql1 = sql1 + where1 + where3 +" and END_SERV IS NULL"+")a WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
 			}
 			else{
-				sql1 = sql1 + where1 +" and END_SERV IS NULL"+") WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
+				sql1 = sql1 + where1 +" and END_SERV IS NULL"+")a WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
 			}
 		}
 		else{
 			if (where3 != null && !where3.equals("")){
 				log.error(">>>>>>>>>>>>>>> where3 != null ");
-				sql1 = sql1 + where3 +" and END_SERV IS NULL"+") WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
+				sql1 = sql1 + where3 +" and END_SERV IS NULL"+")a WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
 			}
 			else{
-				sql1 = sql1 +" WHERE END_SERV IS NULL"+") WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
+				sql1 = sql1 +" WHERE END_SERV IS NULL"+")a WHERE rnum BETWEEN "+((pageNumber * pageSize) + 1) +" and "+((pageNumber + 1) * pageSize);
 			}
 		}
 		
 		
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> sql1"+sql1);
-		List records = jt.queryForList(sql1);
+		List records = getJdbcTemplate().queryForList(sql1);
 		log.debug(">>>>>>>>>>>>>>>>>>>>records "+records);
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -405,7 +405,7 @@ public class Queries {
 		}
 		//sql2=sql2+" and END_SERV IS NULL";
 		log.debug(">>>>>>>>>>>>>>sql2 "+sql2);
-		int count = jt.queryForObject(sql2,Integer.class);
+		int count = getJdbcTemplate().queryForObject(sql2,Integer.class);
 		log.debug(">>>>>>>>>>>>>>>>>>>>count "+count);
 		Map map = new HashMap();
 		if(table != null && !table.equals("") && (table.equals("store_c_trns_m") || table.equals("view_store_dep_trans"))){
@@ -459,11 +459,11 @@ public class Queries {
 			String[] paramList = paramString.split(",");
 			table = tableList[0];
 			List listRows = new ArrayList();
-			JdbcTemplate jt = new JdbcTemplate(DBUtils.getDataSource());
+			JdbcTemplate getJdbcTemplate() = new JdbcTemplate(DBUtils.getDataSource());
 			StringBuilder sql = new StringBuilder();
 			sql.append("select distinct(palette_capacity) from store_trns_room ");
 			sql.append("where " + paramList[0]);
-			listRows = jt.queryForList(sql.toString());
+			listRows = getJdbcTemplate().queryForList(sql.toString());
 			ListOrderedMap codeMap ;
 			paramString="";
 			
@@ -482,7 +482,7 @@ public class Queries {
 		log.debug(">>>>>>>>>>>>>>>>>>>table "+table);
 		log.debug(">>>>>>>>>>>>>>>>>>>firstParam "+firstParam);
 		log.debug(">>>>>>>>>>>>>>>>>>>paramString ("+paramString+")");
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = 
 			"select row_.*, rownum from ( select id as id ," + firstParam+ " as result "+
 			" from " +table;
@@ -508,12 +508,12 @@ public class Queries {
 		}
 		
 		log.debug("sql1 "+sql1);
-		List records = jt.queryForList(sql1);
+		List records = getJdbcTemplate().queryForList(sql1);
 		return records;
 	}
 	
 	public List getExternalDestination(String value,String table,String firstParam,String secondParam,String paramString){
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 		List list = new ArrayList();
 		StringBuilder sql = new StringBuilder("select * from store_db_connection " 
 			+" where is_active='1'");
@@ -543,11 +543,11 @@ public class Queries {
 			table = "dist_names";
 		}
 		
-		list =  jt.queryForList(sql.toString());
+		list =  getJdbcTemplate().queryForList(sql.toString());
 		
 		ListOrderedMap dbConnection ;
 		dbConnection = (ListOrderedMap) list.get(0);
-		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
+		exgetJdbcTemplate() =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
 		
 		log.debug("value "+value);
 		log.debug("table "+table);
@@ -571,7 +571,7 @@ public class Queries {
 		log.debug(">>>>>>>>>>>>>>>>>>>table "+table);
 		log.debug(">>>>>>>>>>>>>>>>>>>firstParam "+firstParam);
 		log.debug(">>>>>>>>>>>>>>>>>>>paramString ("+paramString+")");
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 		
 		 if(arrParamString.length==2 && arrParamString[0].equals("cars")){
 			 sql1 = 
@@ -605,7 +605,7 @@ public class Queries {
 		}
 		
 		log.debug("sql1 "+sql1);
-		List records = exjt.queryForList(sql1);
+		List records = exgetJdbcTemplate().queryForList(sql1);
 		return records;
 	}
 	
@@ -615,16 +615,16 @@ public class Queries {
 									String secondParam,
 									String paramString	) {
 		
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 		List list = new ArrayList();
 		StringBuilder sql = new StringBuilder("select * from store_db_connection " 
 											+ " where is_active='1'");
 		
-		list =  jt.queryForList(sql.toString());
+		list =  getJdbcTemplate().queryForList(sql.toString());
 		
 		ListOrderedMap dbConnection ;
 		dbConnection = (ListOrderedMap) list.get(0);
-		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
+		exgetJdbcTemplate() =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
 
 		value = value.replaceAll("'","");
 		value = value.replaceAll("\\\\","");
@@ -641,7 +641,7 @@ public class Queries {
 		}
 		log.debug("<paramString-aft>----- "+paramString);	
 		
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 		
 		sql1 = "select row_.*, rownum from ( select " + secondParam +
 			   " as id ," + firstParam + " as result from " + table;
@@ -663,7 +663,7 @@ public class Queries {
 		}
 		
 		log.debug("<sql1>----- " + sql1);
-		List records = exjt.queryForList(sql1);
+		List records = exgetJdbcTemplate().queryForList(sql1);
 		return records;
 	}
 	
@@ -695,7 +695,7 @@ public class Queries {
 			paramArr = firstParam.split(",");
 		}
 		
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = 
 			"select row_.*, rownum from ( select ";
 		if(paramArr != null){
@@ -729,7 +729,7 @@ public class Queries {
 		}
 		
 		log.debug("sql1 "+sql1);
-		List records = jt.queryForList(sql1);
+		List records = getJdbcTemplate().queryForList(sql1);
 		return records;
 	}
 	public List getAutoCompleteSuggestionsItemData(String value,String table,String firstParam,String paramString, String secondParam){
@@ -760,7 +760,7 @@ public class Queries {
 			paramArr = firstParam.split(",");
 		}
 		
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = 
 			"select row_.*, rownum from ( select ";
 		if(paramArr != null){
@@ -792,7 +792,7 @@ public class Queries {
 		}
 		
 		log.debug("sql1 "+sql1);
-		List records = jt.queryForList(sql1);
+		List records = getJdbcTemplate().queryForList(sql1);
 		return records;
 	}
 	
@@ -819,7 +819,7 @@ public class Queries {
 		log.debug(">>>>>>>>>>>>>>>>>>>table "+table);
 		log.debug(">>>>>>>>>>>>>>>>>>>firstParam "+firstParam);
 		log.debug(">>>>>>>>>>>>>>>>>>>paramString ("+paramString+")");
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = 
 			"select row_.*, rownum from ( select " + firstParam+ " as result "+
 			" from " +table;
@@ -845,7 +845,7 @@ public class Queries {
 		}
 		
 		log.debug("sql1 "+sql1);
-		List records = jt.queryForList(sql1);
+		List records = getJdbcTemplate().queryForList(sql1);
 		return records;
 	}
 	
@@ -860,7 +860,7 @@ public class Queries {
 		log.debug(">>>>>>>>>>>>>>>> table "+table);
 		log.debug(">>>>>>>>>>>>>>>> firstParam "+firstParam);
 		log.debug(">>>>>>>>>>>>>>>> value "+value);
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 	
 		//String sql = "select id as id from "+table+" where "+firstParam+" = '"+value+"'";
 //		value = StringEscapeUtils.escapeSql(value);
@@ -874,7 +874,7 @@ public class Queries {
 			sql = sql + " and " +paramString;
 		}
 		log.debug(">>>>>>>>>>>>>>>>> sql "+sql);
-		List result = jt.queryForList(sql);
+		List result = getJdbcTemplate().queryForList(sql);
 		log.debug(">>>>>>>>>>>>>>>>>result "+result);
 		if (result != null && result.size() > 0 ){
 			log.debug(">>>>>>>>>> id "+result);
@@ -982,7 +982,7 @@ public class Queries {
 		log.debug(">>>>>>>>>>>>>>>>>>>table "+table);
 		log.debug(">>>>>>>>>>>>>>>>>>>firstParam "+firstParam);
 		log.debug(">>>>>>>>>>>>>>>>>>>paramString ("+paramString+")");
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = 
 			"select row_.*, rownum from ( select id as id ," + firstParam+ " as result , code "+
 			" from " +table;
@@ -1012,7 +1012,7 @@ public class Queries {
 		log.debug("sql1 "+sql1);
 		List records = new ArrayList();
 		if (paramString != null && paramString.length() >0){
-		records = jt.queryForList(sql1);
+		records = getJdbcTemplate().queryForList(sql1);
 		}
 		return records;
 	}
@@ -1118,7 +1118,7 @@ public class Queries {
 			paramString = paramString.replaceAll("\\{sq\\}","'");
 			log.error(">>>>>>>>>>>>>>> paramString "+paramString);
 		}
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = "SELECT * FROM (";
 		if (table.equals("store_c_trns_m,store_trns_def ")) {
 			sql1 = sql1 +
@@ -1253,7 +1253,7 @@ public class Queries {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> sql1"+sql1);
 		List records = new ArrayList();
 		if (splitParamString[0].length()>0){
-		records = jt.queryForList(sql1);
+		records = getJdbcTemplate().queryForList(sql1);
 		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>records "+records);
 		
@@ -1374,7 +1374,7 @@ public class Queries {
 		log.debug(">>>>>>>>>>>>>>sql2 "+sql2);
 		int count = 0;
 		if (splitParamString[0].length()>0){
-		 count = jt.queryForObject(sql2,Integer.class);
+		 count = getJdbcTemplate().queryForObject(sql2,Integer.class);
 		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>count "+count);
 		Map map = new HashMap();
@@ -1440,7 +1440,7 @@ public class Queries {
 		log.debug(">>>>>>>>>>>>>>>>>>>table "+table);
 		log.debug(">>>>>>>>>>>>>>>>>>>firstParam "+firstParam);
 		log.debug(">>>>>>>>>>>>>>>>>>>paramString ("+paramString+")");
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = 
 			"select row_.*, rownum from ( select id as id ," + firstParam+ " as result , code "+
 			" from " +table;
@@ -1474,7 +1474,7 @@ public class Queries {
 		log.debug("sql1 "+sql1);
 		List records = new ArrayList();
 		if (paramString != null && paramString.length() >0){
-		records = jt.queryForList(sql1);
+		records = getJdbcTemplate().queryForList(sql1);
 		}
 		return records;
 	}
@@ -1539,7 +1539,7 @@ public class Queries {
 			paramString = paramString.replaceAll("\\{sq\\}","'");
 			log.error(">>>>>>>>>>>>>>> paramString "+paramString);
 		}
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = "SELECT * FROM (";
 		if (table.equals("store_c_trns_m,store_trns_def ")) {
 			sql1 = sql1 +
@@ -1682,7 +1682,7 @@ public class Queries {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> sql1"+sql1);
 		List records = new ArrayList();
 		if (splitParamString[0].length()>0){
-		records = jt.queryForList(sql1);
+		records = getJdbcTemplate().queryForList(sql1);
 		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>records "+records);
 		
@@ -1813,7 +1813,7 @@ public class Queries {
 		log.debug(">>>>>>>>>>>>>>sql2 "+sql2);
 		int count = 0;
 		if (splitParamString[0].length()>0){
-		 count = jt.queryForObject(sql2,Integer.class);
+		 count = getJdbcTemplate().queryForObject(sql2,Integer.class);
 		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>count "+count);
 		Map map = new HashMap();
@@ -1839,7 +1839,7 @@ public class Queries {
 		limit= null;
 		
 		
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 		List list = new ArrayList();
 		StringBuilder sql = new StringBuilder("select * from store_db_connection " 
 			+" where is_active='1'");
@@ -1869,7 +1869,7 @@ public class Queries {
 			table = "dist_names";
 		}
 		
-		list =  jt.queryForList(sql.toString());
+		list =  getJdbcTemplate().queryForList(sql.toString());
 		
 		
 		ListOrderedMap dbConnection ;
@@ -2179,12 +2179,12 @@ public class Queries {
 		limit= null;
 		
 		
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 		List list = new ArrayList();
 		StringBuilder sql = new StringBuilder("select * from store_db_connection " +
 											  " where is_active='1'");
 			
-		list =  jt.queryForList(sql.toString());
+		list =  getJdbcTemplate().queryForList(sql.toString());
 		
 		ListOrderedMap dbConnection ;
 		dbConnection = (ListOrderedMap) list.get(0);
@@ -2443,11 +2443,11 @@ public class Queries {
 			String[] paramList = paramString.split(",");
 			table = tableList[0];
 			List listRows = new ArrayList();
-			JdbcTemplate jt = new JdbcTemplate(DBUtils.getDataSource());
+			setJdbcTemplate(new JdbcTemplate(DBUtils.getDataSource()));
 			StringBuilder sql = new StringBuilder();
 			sql.append("select distinct(palette_capacity) from store_trns_room ");
 			sql.append("where " + paramList[0]);
-			listRows = jt.queryForList(sql.toString());
+			listRows = getJdbcTemplate().queryForList(sql.toString());
 			ListOrderedMap codeMap ;
 			paramString="";
 			
@@ -2463,7 +2463,7 @@ public class Queries {
 		}
 		
 		
-		jt = new JdbcTemplate(dataSource);
+		setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = "SELECT * FROM (";
 		if (table.equals("store_c_trns_m,store_trns_def ")) {
 			sql1 = sql1 +
@@ -2611,7 +2611,7 @@ public class Queries {
 		
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> sql1"+sql1);
-		List records = jt.queryForList(sql1);
+		List records = getJdbcTemplate().queryForList(sql1);
 		log.debug(">>>>>>>>>>>>>>>>>>>>records "+records);
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2738,7 +2738,7 @@ public class Queries {
 			}
 		}
 		log.debug(">>>>>>>>>>>>>>sql2 "+sql2);
-		int count = jt.queryForObject(sql2,Integer.class);
+		int count = getJdbcTemplate().queryForObject(sql2,Integer.class);
 		log.debug(">>>>>>>>>>>>>>>>>>>>count "+count);
 		Map map = new HashMap();
 		if(table != null && !table.equals("") && table.equals("store_c_trns_m")){

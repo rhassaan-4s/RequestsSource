@@ -23,7 +23,7 @@ public class HRUniversity implements Auditable,Serializable {
 	public HRUniversity() {
 		// TODO Auto-generated constructor stub
 	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_universe_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_universe_seq")
 	@SequenceGenerator(name="hr_universe_seq",sequenceName="hr_universe_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
     private String universe;

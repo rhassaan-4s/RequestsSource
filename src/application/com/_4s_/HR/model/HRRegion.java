@@ -21,7 +21,7 @@ public class HRRegion implements Auditable,Serializable {
 	public HRRegion() {
 		// TODO Auto-generated constructor stub
 	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_region_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_region_seq")
 	@SequenceGenerator(name="hr_region_seq",sequenceName="hr_region_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
     private String region; 

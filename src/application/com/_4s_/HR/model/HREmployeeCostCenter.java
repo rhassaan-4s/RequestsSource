@@ -28,7 +28,7 @@ public class HREmployeeCostCenter implements Auditable, Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "hr_empCostCenter_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hr_empCostCenter_seq")
 	@SequenceGenerator(name = "hr_empCostCenter_seq", sequenceName = "hr_empCostCenter_seq")
 	private Long id;
 

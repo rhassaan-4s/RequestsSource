@@ -10,5 +10,4 @@
 	
 	<bean id="requestsApprovalExternalQueries" class="com._4s_.requestsApproval.dao.ExternalQueries" scope="prototype">
 		<property name="platformTransactionManager" ref ="transactionManager" />
-	</bean>
 </beans>

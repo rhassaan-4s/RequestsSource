@@ -69,9 +69,9 @@
 <link type="text/css" rel="stylesheet"
 	href="/Requests/web/common/timepicker/jquery-ui-timepicker-addon.css" />
 <script type="text/javascript"
-	src="/Requests/web/common/timepicker/jquery-1.7.2.min.js"></script>
+	src="/Requests/web/common/timepicker/jquery-1.8.3.min.js"></script>
 <script type="text/javascript"
-	src="/Requests/web/common/timepicker/jquery-ui.min.js"></script>
+	src="/Requests/web/common/timepicker/jquery-ui.js"></script>
 <script type="text/javascript"
 	src="/Requests/web/common/timepicker/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript"
@@ -88,7 +88,8 @@
 <script type="text/javascript">
 			
 			$(function(){
-				
+				//alert('I hate tomatoes.');
+				console.log($( ".MM_from_d" ).datetimepicker);
 		          // $('.timepac').datetimepicker();
 
           $('.timepaconly').datetimepicker({
@@ -107,7 +108,9 @@
 			
 
 			$( ".MM_from" ).datetimepicker({
-				onSelect: function( selectedDate ) {			
+				onSelect: function( selectedDate ) {
+					alert('I hate tomatoes.');
+					console.log('I hate tomatoes.');
 				$('input.MM_to[title="'+this.title+'"]').datepicker( "option", "minDate", selectedDate );}});
 			
 		    $( ".MM_to" ).datetimepicker({		
@@ -124,12 +127,12 @@
 			$('input.MM_from[title="'+this.title+'"]').datepicker( "option", "maxDate", selectedDate );}});
 		    
 			$( ".MM_from_d" ).datepicker({
-				onSelect: function( selectedDate ) {			
-				$('input.MM_to_d[title="'+this.title+'"]').datepicker( "option", "minDate", selectedDate );}});
+				onSelect:function( selectedDate ) {	
+				$('input.MM_from_d[title="'+this.title+'"]').datepicker( "option", "minDate", selectedDate );}});
 			
 		    $( ".MM_to_d" ).datepicker({		
 			onSelect: function( selectedDate ){
-			$('input.MM_from_d[title="'+this.title+'"]').datepicker( "option", "maxDate", selectedDate );}});
+			$('input.MM_to_d[title="'+this.title+'"]').datepicker( "option", "maxDate", selectedDate );}});
 		    
 
 			$('.timepac').datepicker( "option", "dateFormat", "yy/mm/dd" );
@@ -401,6 +404,10 @@ menuItems:[
 							.equals("timesheet")) {
 						if (settings.getIsTimesheetEnabled().equals(
 								new Boolean(true))) {%>"<b><fmt:message key='timesheet.caption.applicationName' /></b>"<%}
+					}else if (securityApplication.getName()
+							.equals("attendance")) {
+						if (settings.getWebAttendanceAppEnabled().equals(
+								new Boolean(true))) {%>"<b><fmt:message key='attendance.caption.applicationName' /></b>"<%}
 					}%>, "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
 <%}
 			}%>
@@ -443,6 +450,9 @@ make_menus();
 									} else if (applicationName != null
 											&& applicationName.equals("timesheet")) {
 										applicationNameString = "timesheet.caption.applicationName";
+									} else if (applicationName != null
+											&& applicationName.equals("attendance")) {
+										applicationNameString = "attendance.caption.applicationName";
 									}
 									session.setAttribute("applicationNameString", applicationNameString);
 								%>
@@ -475,6 +485,11 @@ make_menus();
 						if (applicationName != null && applicationName.equals("timesheet")) {
 					%>
 					<jsp:include page="/web/timesheet/menu.jsp" flush="true" />
+					<%
+						}
+						if (applicationName != null && applicationName.equals("attendance")) {
+					%>
+					<jsp:include page="/web/attendance/menu.jsp" flush="true" />
 					<%
 						}
 					%>

@@ -49,5 +49,6 @@
 		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
 		<nature>org.eclipse.wst.jsdt.core.jsNature</nature>
 		<nature>edu.ksu.cis.agenttool.validation.at3ValidationNature</nature>
+		<nature>org.jkiss.dbeaver.DBeaverNature</nature>
 	</natures>
 </projectDescription>

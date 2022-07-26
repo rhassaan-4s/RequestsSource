@@ -551,5 +551,4 @@
         <property name="prefix"><value>/web/common/</value></property>
         <property name="suffix"><value>.jsp</value></property>
     </bean>    
-    
 </beans>

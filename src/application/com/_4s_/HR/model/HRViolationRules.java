@@ -26,7 +26,7 @@ public class HRViolationRules implements Auditable,Serializable {
 	}
 
 
-		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_violation_rules_seq")
+		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_violation_rules_seq")
 		@SequenceGenerator(name="hr_violation_rules_seq",sequenceName="hr_violation_rules_seq")//(generate=GeneratorType.IDENTITY)
 	    private Long id;
 		

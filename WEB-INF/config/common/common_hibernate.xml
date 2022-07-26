@@ -50,9 +50,16 @@
 
 	<!-- Hibernate SessionFactory -->
 	<bean id="sessionFactory"
+<<<<<<< HEAD
 		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"> 
 		<property name="dataSource" ref="dataSource" />
 
+=======
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"> 
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+>>>>>>> master
 		<property name="packagesToScan">
 		<list>
 		<value>com._4s_.HR.model</value>
@@ -63,6 +70,7 @@
 		<value>com._4s_.i18n.model</value>
 		<value>com._4s_.requestsApproval.model</value>
 		<value>com._4s_.timesheet.model</value>
+		<value>com._4s_.attendance.model</value>
 		</list>
 		</property>
 		<property name="mappingDirectoryLocations">
@@ -75,6 +83,9 @@
 				<prop key="hibernate.dialect">
 					${hibernate.dialect}
 				</prop>
+				<!-- <prop key="hibernate.default_schema">
+					${hibernate.defaultSchema}
+				</prop> -->
 				<!-- <prop key="hibernate.connection.release_mode">after_statement</prop>-->
   				<prop key="hibernate.show_sql">true</prop>  
 <!--		    <prop key="hibernate.hbm2ddl.auto">update</prop>  -->

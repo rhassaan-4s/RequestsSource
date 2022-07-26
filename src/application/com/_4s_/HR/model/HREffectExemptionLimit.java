@@ -21,11 +21,7 @@ import com._4s_.common.util.LocaleUtil;
 @Table(name="hr_effect_exemption_limit")
 public class HREffectExemptionLimit implements Auditable,Serializable {
 	
-	public HREffectExemptionLimit() {
-		// TODO Auto-generated constructor stub
-	}
-
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="HR_ADDITIONAL_SEQ")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HR_ADDITIONAL_SEQ")
 	@SequenceGenerator(name="HR_ADDITIONAL_SEQ",sequenceName="HR_ADDITIONAL_SEQ")//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	private String name;

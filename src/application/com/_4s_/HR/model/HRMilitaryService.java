@@ -24,7 +24,7 @@ public class HRMilitaryService implements Auditable,Serializable {
 	public HRMilitaryService() {
 		// TODO Auto-generated constructor stub
 	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_military_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_military_seq")
 	@SequenceGenerator(name="hr_military_seq",sequenceName="hr_military_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	private String name;

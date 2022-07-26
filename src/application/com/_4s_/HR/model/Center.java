@@ -22,10 +22,14 @@ public class Center implements Auditable,Serializable {
 	
 	
 	
+<<<<<<< HEAD
 			public Center() {
 		// TODO Auto-generated constructor stub
 	}
 			@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_center_seq")
+=======
+			@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_center_seq")
+>>>>>>> master
 			@SequenceGenerator(name="hr_center_seq",sequenceName="hr_center_seq")//(generate=GeneratorType.IDENTITY)
 			private Long id;
 		    private  String center;

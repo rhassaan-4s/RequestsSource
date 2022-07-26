@@ -23,8 +23,9 @@ public class RequestTypes implements Auditable,Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="request_types_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="request_types_seq")
 	@SequenceGenerator(name="request_types_seq",sequenceName="request_types_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
+>>>>>>> master
 	private Long id;
 	
 	private String description;

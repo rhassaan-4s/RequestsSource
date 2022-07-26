@@ -22,6 +22,7 @@ import com._4s_.HR.model.HRSpecialtyDivision;
 import com._4s_.HR.model.HRSpecialtyLevel;
 import com._4s_.HR.model.HRVacation;
 import com._4s_.common.model.Employee;
+import com._4s_.common.model.Settings;
 import com._4s_.common.service.BaseManager;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
@@ -116,14 +117,15 @@ public interface RequestsApprovalManager extends BaseManager {
 	
 	public Long getEmpVacation (String empCode, String vacId, Date from_date);
 	public Long getVacationLimit (String empCode, String vacId, Date from_date);
-	public Long getVacationCredit (String empCode, Long reqId, String vacId, Date from_date, String hostName, String serviceName, String userName, String password);
+	public Long getVacationCredit (String empCode, Long reqId, String vacId, Date from_date);
 	public List getTimeAttend (String empCode, Date from_date, Date to_date);
 	public List getTimeAttendAndroid(String empCode, Date from_date, Date to_date);
 	
-	public List getTimeAttendFromView (String empCode, Date from_date, Date to_date);
+	public List getTimeAttendFromViewForTimeAttendanceReport (String empCode, Date from_date, Date to_date,Settings settings);
+//	public List getTimeAttendFromViewForAttendanceVacationReport (String empCode, Date from_date, Date to_date);
 	// copied from lotus /////////////////////////////////
-	public List getVacations (String empCode, Long reqId, String vacId, Date from_date);
-	public List getVacations (String empCode, Long reqId, Date from_date, Date to_date);
+	public List getVacations (String empCode, Long reqId, String vacId, Date from_date, Settings settings);
+	public List getVacations (String empCode, Long reqId, Date from_date, Date to_date, Settings settings);
 	////////////////////////////////////////////////////
 	public int getSalaryFromDay();
 	public List getRequestsForApprovalList(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
@@ -137,7 +139,7 @@ public interface RequestsApprovalManager extends BaseManager {
 	public void automaticApprovalsAccessLevels(RequestApproval approval, LoginUsersRequests requestInfo);
 	public Map getVacInfo(Vacation vac, Date from_date, String empCode);
 	public List getEmpReqTypeAccs(List accessLevels,Long requestType);
-	public int insertTimeAttendance(String hostName, String  serviceName, String  userName, String password,String empCode, Date date, Date date2,
+	public int insertTimeAttendance(String empCode, Date date, Date date2,
 			String trans_type);
 	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 			Employee emp);
@@ -159,7 +161,7 @@ public interface RequestsApprovalManager extends BaseManager {
 	
 	public List getLoginUsersByCodes(final String codeFrom,final String codeTo);
 //	public List getAttendanceRequests(Date date, String empCode);
-	public List getTimeAttendAll(String empArray, Date fromDate, Date toDate, String statusId);
+	public List getTimeAttendAll(String empArray, Date fromDate, Date toDate, String statusId, Settings settings);
 	
 	public Map getRequestsStatus(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
 			String requestType, String codeFrom, String codeTo, String statusId, String sort,LoginUsers loggedInUser, List empReqTypeAccs, boolean isWeb, String isInsideCompany, int pageNumber, int pageSize);

@@ -43,21 +43,22 @@ import com._4s_.common.util.Page;
  * <p><a href="BaseDAOHibernate.java.html"><i>View Source</i></a></p>
  *
  * @spring.property name="sessionFactory" ref="sessionFactory"
-**/
+ **/
 @Transactional
 @Repository
-public class BaseDAOHibernate  implements BaseDAO {//extends HibernateDaoSupport
-//    protected final Log log = LogFactory.getLog(getClass());
+public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
+	protected final Log log = LogFactory.getLog(getClass());
 
-	 public static final Logger log = LoggerFactory.getLogger(BaseDAOHibernate.class);
-	 
 	@Autowired
 	private SessionFactory sessionFactory;
-    
+
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;}
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 
+<<<<<<< HEAD
 	private CriteriaBuilder builder;
 
 	public CriteriaBuilder getBuilder() {
@@ -141,32 +142,32 @@ public class BaseDAOHibernate  implements BaseDAO {//extends HibernateDaoSupport
 			 sess.close();
 		 }
     }
-    
- /* (non-Javadoc)
+  
+	/* (non-Javadoc)
 	 * @see com._4s_.commons.dao.BaseDAO2#updateObject(java.lang.Object)
 	 */
-    public void updateObject(Object o) {
-        if (log.isDebugEnabled()) {
-            log.debug("Saving or Updating Object: " + o.toString());
-        }
+	public void updateObject(Object o) {
+		if (log.isDebugEnabled()) {
+			log.debug("Saving or Updating Object: " + o.toString());
+		}
 
-        checkFlushMode();
-        getCurrentSession().update(o);
-    }
-    
-/* (non-Javadoc)
+		checkFlushMode();
+		getCurrentSession().update(o);
+	}
+
+	/* (non-Javadoc)
 	 * @see com._4s_.commons.dao.BaseDAO2#saveObject(java.lang.Object)
 	 */
-    public void saveObjectWithoutUpdate(Object o) {
-        if (log.isDebugEnabled()) {
-            log.debug("Saving or Updating Object: " + o.toString());
-        }
+	public void saveObjectWithoutUpdate(Object o) {
+		if (log.isDebugEnabled()) {
+			log.debug("Saving or Updating Object: " + o.toString());
+		}
 
-        checkFlushMode();
-        getCurrentSession().save(o);
-    }
+		checkFlushMode();
+		getCurrentSession().save(o);
+	}
 
-    /* (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see com._4s_.commons.dao.BaseDAO2#getObject(java.lang.Class, java.io.Serializable)
 	 */
     public Object getObject(Class clazz,Serializable id) {
@@ -205,11 +206,11 @@ public class BaseDAOHibernate  implements BaseDAO {//extends HibernateDaoSupport
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-        	return null;
-        }
-    }
+			return null;
+		}
+	}
 
-    /* (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see com._4s_.commons.dao.BaseDAO2#getObjectByParameter(java.lang.Class, java.lang.String, java.lang.Object)
 	 */
     public Object getObjectByParameter(Class clazz,final String parameter, final Object value) {
@@ -380,23 +381,20 @@ public class BaseDAOHibernate  implements BaseDAO {//extends HibernateDaoSupport
         List list =  query.getResultList();
         return list;
     }
-    /* (non-Javadoc)
-	 * @see com._4s_.commons.dao.BaseDAO2#removeObject(java.lang.Object)
-	 */
-    public void removeObject(Object obj) {
-        if (log.isDebugEnabled()) {
-            log.debug("Removing object :"+ obj.toString());
-        }
+	public void removeObject(Object obj) {
+		if (log.isDebugEnabled()) {
+			log.debug("Removing object :"+ obj.toString());
+		}
 
-        checkFlushMode();
+		checkFlushMode();
 
-        getCurrentSession().delete(obj);
-        if (log.isDebugEnabled()) {
-            log.debug("Object removed from database");
-        }
-    }
+		getCurrentSession().delete(obj);
+		if (log.isDebugEnabled()) {
+			log.debug("Object removed from database");
+		}
+	}
 
-    /* (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see com._4s_.commons.dao.BaseDAO2#removeObject(java.lang.Class, java.io.Serializable)
 	 */
     public void removeObject(Class clazz, Serializable id) {
@@ -466,15 +464,15 @@ public class BaseDAOHibernate  implements BaseDAO {//extends HibernateDaoSupport
 	public void setMatchMode(MatchMode matchMode) {
 		this.matchMode = matchMode;
 	}
-	
+
 	public void flush() {
 		getCurrentSession().flush();
 	}
-	
+
 	public void setFlushModeNever() {
 //		getCurrentSession().setFlushMode(FlushMode.NEVER);
 	}
-	
+
 	public void setFlushModeAuto() {
 		getCurrentSession().setFlushMode(FlushMode.AUTO);
 	}
@@ -482,18 +480,18 @@ public class BaseDAOHibernate  implements BaseDAO {//extends HibernateDaoSupport
 	public void setFlushModeAlways() {
 		getCurrentSession().setFlushMode(FlushMode.ALWAYS);
 	}
-	
+
 	public void setFlushModeCommit() {
 		getCurrentSession().setFlushMode(FlushMode.COMMIT);
 	}
 
 	public FlushMode getFlushMode() {
 		Object object = getCurrentSession().getFlushMode();
-		
+
 		FlushMode flushMode = (FlushMode) object;
 		return flushMode;
 	}
-	
+
 	public void checkFlushMode() {
 //        if (getFlushMode().==FlushMode.MANUAL) {
         	setFlushModeCommit();
@@ -507,7 +505,7 @@ public class BaseDAOHibernate  implements BaseDAO {//extends HibernateDaoSupport
 	public void initializeCollection(Object o) {
 		Hibernate.initialize(o);
 	}
-	
+
 	public void lock(final Object o){
 		getCurrentSession().lock(o,LockMode.NONE);
 	}

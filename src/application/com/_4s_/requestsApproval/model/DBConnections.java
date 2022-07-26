@@ -21,7 +21,7 @@ public class DBConnections implements Auditable,Serializable {
 			public DBConnections() {
 		// TODO Auto-generated constructor stub
 	}
-			@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="dbconnections_seq")
+			@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="dbconnections_seq")
 			@SequenceGenerator(name="dbconnections_seq",sequenceName="dbconnections_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 			private Long id;
 		    private String description;

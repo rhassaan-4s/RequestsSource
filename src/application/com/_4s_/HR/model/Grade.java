@@ -18,7 +18,7 @@ import com._4s_.common.util.LocaleUtil;
 @Table(name="hr_grade")
 public class Grade {
 
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_grade_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_grade_seq")
 	@SequenceGenerator(name="hr_grade_seq",sequenceName="hr_grade_seq")//(generate=GeneratorType.IDENTITY)
 	private  Long id ;
 	

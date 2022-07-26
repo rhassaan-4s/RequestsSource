@@ -1559,8 +1559,11 @@ $.extend(CalendarsPicker.prototype, {
 				}
 			};
 			if (start.toJD() < end.toJD()) {
-				start = (minDate && minDate.compareTo(start) == +1 ? minDate : start).year();
-				end = (maxDate && maxDate.compareTo(end) == -1 ? maxDate : end).year();
+				//System.out.println("JD " + start.toJD());
+				//System.out.println("minDate " + minDate);
+				
+				start = ((minDate && minDate.compareTo(start) == +1 ? minDate : start).year())-70;
+				end = ((maxDate && maxDate.compareTo(end) == -1 ? maxDate : end).year());
 				for (var y = start; y <= end; y++) {
 					addYear(y);
 				}

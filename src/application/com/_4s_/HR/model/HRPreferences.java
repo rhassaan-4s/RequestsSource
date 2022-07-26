@@ -17,7 +17,7 @@ public class HRPreferences implements Serializable {
 	public HRPreferences() {
 		// TODO Auto-generated constructor stub
 	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_preferences_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_preferences_seq")
 	@SequenceGenerator(name="hr_preferences_seq",sequenceName="hr_preferences_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	private String property;

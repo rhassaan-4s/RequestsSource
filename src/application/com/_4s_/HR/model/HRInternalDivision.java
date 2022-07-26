@@ -24,7 +24,7 @@ public class HRInternalDivision extends TreeDivisions {
 		public HRInternalDivision() {
 		// TODO Auto-generated constructor stub
 	}
-		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_internal_division_seq")
+		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_internal_division_seq")
 		@SequenceGenerator(name="hr_internal_division_seq",sequenceName="hr_internal_division_seq")//(generate=GeneratorType.IDENTITY)
 		private Long id;
 	   /* private String  code;

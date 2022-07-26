@@ -22,7 +22,7 @@ public class AccessLevels implements Auditable,Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="access_levels_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="access_levels_seq")
 	@SequenceGenerator(name="access_levels_seq",sequenceName="access_levels_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	

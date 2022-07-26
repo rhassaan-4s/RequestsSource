@@ -25,7 +25,7 @@ public class HRServiceLengthCalculation implements Auditable,Serializable {
 	public HRServiceLengthCalculation() {
 		// TODO Auto-generated constructor stub
 	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="HR_SERLENGTH_CALC_SEQ")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HR_SERLENGTH_CALC_SEQ")
 	@SequenceGenerator(name="HR_SERLENGTH_CALC_SEQ",sequenceName="HR_SERLENGTH_CALC_SEQ")//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	

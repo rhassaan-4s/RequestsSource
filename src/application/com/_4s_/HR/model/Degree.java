@@ -21,11 +21,15 @@ import com._4s_.common.util.LocaleUtil;
 @Table(name="hr_degree")
 public class Degree implements Auditable,Serializable {
 
+<<<<<<< HEAD
 	
 	public Degree() {
 		// TODO Auto-generated constructor stub
 	}
 	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_degree_seq")
+=======
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_degree_seq")
+>>>>>>> master
 	@SequenceGenerator(name="hr_degree_seq",sequenceName="hr_degree_seq")//(generate=GeneratorType.IDENTITY)
 	private  Long id ;
 	

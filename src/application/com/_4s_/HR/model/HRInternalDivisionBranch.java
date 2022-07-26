@@ -24,7 +24,7 @@ public class HRInternalDivisionBranch implements Auditable,Serializable {
 		public HRInternalDivisionBranch() {
 		// TODO Auto-generated constructor stub
 	}
-		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_internaldivision_branch_seq")
+		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_internaldivision_branch_seq")
 		@SequenceGenerator(name="hr_internaldivision_branch_seq",sequenceName="hr_internaldivision_branch_seq")//(generate=GeneratorType.IDENTITY)
 		private Long id;
 	    private String  internal_division_branch;

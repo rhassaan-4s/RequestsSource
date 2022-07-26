@@ -23,7 +23,7 @@ public class HRYearAllowVacationTransfer implements Auditable,Serializable {
 	public HRYearAllowVacationTransfer() {
 		// TODO Auto-generated constructor stub
 	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_year_allow_vac_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_year_allow_vac_seq")
 	@SequenceGenerator(name="hr_year_allow_vac_seq",sequenceName="hr_year_allow_vac_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	private Long year;

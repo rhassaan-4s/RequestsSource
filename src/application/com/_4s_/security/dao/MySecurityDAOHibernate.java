@@ -2,6 +2,8 @@ package com._4s_.security.dao;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequestWrapper;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;

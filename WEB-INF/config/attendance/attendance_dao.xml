@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans >
+	<bean id="attendanceDAO" class="com._4s_.attendance.dao.AttendanceDAOHibernate" >
+		<property name="sessionFactory">
+		      <ref bean="sessionFactory"/>
+		</property>
+		<property name="externalQueries">
+			<ref bean="attendanceExternalQueries" />
+		</property>
+	</bean>
+	
+	<bean id="attendanceExternalQueries" class="com._4s_.attendance.dao.AttendanceExternalQueries"
+		singleton="false">
+		<property name="platformTransactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="driverClass">
+		      <value>${hibernate.connection.driver_class}</value>
+		</property>
+		<property name="url">
+			<value>${hibernate.connection.url}</value>
+		</property>
+		<property name="username">
+			<value>${hibernate.connection.username}</value>
+		</property>
+		<property name="password">
+			<value>${hibernate.connection.password}</value>
+		</property>
+	</bean>
+</beans>

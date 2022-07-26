@@ -25,7 +25,7 @@ public class EmpReqTypeAcc  implements Auditable,Serializable {
 	}
 
 
-		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="emp_reqtype_acc_seq")
+		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="emp_reqtype_acc_seq")
 		@SequenceGenerator(name="emp_reqtype_acc_seq",sequenceName="emp_reqtype_acc_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 		private Long id;
 		

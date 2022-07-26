@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
+import com._4s_.common.dao.CommonQueries;
 import com._4s_.timesheet.model.TimesheetActivity;
 import com._4s_.timesheet.model.TimesheetCostCenter;
 import com._4s_.timesheet.model.TimesheetTransactionParts;
@@ -32,39 +33,10 @@ import com._4s_.timesheet.model.TimesheetTransactionParts;
 //import com._4s_.stores.service.StoresManager;
 //import com._4s_.stores.web.action.ExternalTypeAndCode;
 
-public class TimesheetExternalQueries {
+public class TimesheetExternalQueries extends CommonQueries {
 	protected final Log log = LogFactory.getLog(getClass());
 
-	private JdbcTemplate jdbcTemplate;
-	private BasicDataSource basicDataSource;
-	private JdbcTemplate exjt;
-	
-	private PlatformTransactionManager platformTransactionManager;
-	
-	public PlatformTransactionManager getPlatformTransactionManager() {
-		return platformTransactionManager;
-	}
-
-
-	public void setPlatformTransactionManager(
-			PlatformTransactionManager platformTransactionManager) {
-		this.platformTransactionManager = platformTransactionManager;
-	}
-
-	private BasicDataSource createDataSource(String hostName,String serviceName,String userName,String password) {
-		if(basicDataSource == null){
-			basicDataSource = new BasicDataSource();
-			basicDataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
-			basicDataSource.setUrl("jdbc:oracle:thin:@"
-					+ hostName + ":1521/"
-					+ serviceName);
-			basicDataSource.setUsername(userName);
-			basicDataSource.setPassword(password);
-		}
-		return basicDataSource;
-	}
-	
-	public Map getTimesheetTransactions(String hostName,String serviceName,String userName,String password,String empCode, Date fromDate,
+	public Map getTimesheetTransactions(String empCode, Date fromDate,
 			Date toDate, TimesheetCostCenter costcenter,
 			TimesheetActivity activity, TimesheetTransactionParts part1,
 			TimesheetTransactionParts part2, TimesheetTransactionParts part3,
@@ -108,7 +80,7 @@ public class TimesheetExternalQueries {
 
 		Map map = new HashMap();
 
-		jdbcTemplate = new JdbcTemplate(createDataSource(hostName,serviceName,userName,password));
+		setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		String query = "";
 		String select = "";
 		String where = "";
@@ -193,13 +165,13 @@ public class TimesheetExternalQueries {
 		log.debug(query);
 		StringBuilder sql = new StringBuilder(query);
 		
-		List in=(List) jdbcTemplate.queryForList(sql.toString());
+		List in=(List) getJdbcTemplate().queryForList(sql.toString());
 		
 		String listSizeQuery = "select count (*) from ("+query+")";
 		log.debug(listSizeQuery);
 		log.debug("listSizeQuery " + listSizeQuery);
 		StringBuilder sqlListSize = new StringBuilder(listSizeQuery);
-		List in2=(List) jdbcTemplate.queryForList(sqlListSize.toString());
+		List in2=(List) getJdbcTemplate().queryForList(sqlListSize.toString());
 		
 		log.debug(in2.size());
 		map.put("Results", in);

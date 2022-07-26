@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.common.model.Employee;
+import com._4s_.common.model.Settings;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.EmployeeWrapper;
@@ -15,7 +16,6 @@ import com._4s_.restServices.json.PasswordWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.TimesheetActivityWrapper;
-import com._4s_.restServices.json.TimesheetCostcenterWrapper;
 import com._4s_.restServices.json.TimesheetPartWrapper;
 import com._4s_.restServices.json.TimesheetSpecsWrapper;
 import com._4s_.restServices.json.TimesheetTransDefaultWrapper;
@@ -70,10 +70,10 @@ public interface RequestsService {// extends BaseManager {
 
 	public Map searchEmployees(EmployeeWrapper emp, Employee loggedInEmployee);
 
-	public Map getAttendanceVacationReport(RequestsApprovalQuery requestApproval);
+	public Map getAttendanceVacationReport(RequestsApprovalQuery requestApproval, Settings settings);
 
 	public Map getAttendanceReport(RequestsApprovalQuery requestApproval,
-			Employee employee);
+			Employee employee,Settings settings);
 
 	public Map changePassword(PasswordWrapper passwordWrapper, User user);
 

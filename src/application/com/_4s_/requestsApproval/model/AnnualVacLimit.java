@@ -19,7 +19,7 @@ public class AnnualVacLimit implements Auditable,Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="annual_vac_limit_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="annual_vac_limit_seq")
 	@SequenceGenerator(name="annual_vac_limit_seq",sequenceName="annual_vac_limit_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	

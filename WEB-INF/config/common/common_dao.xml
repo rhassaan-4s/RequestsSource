@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
     "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
@@ -30,4 +31,59 @@
 		<constructor-arg ref = "datasource"/>
 	</bean> -->
 </beans>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="commonDAO" class="com._4s_.common.dao.CommonDAOHibernate" >
+		<property name="sessionFactory">
+		      <ref bean="sessionFactory"/>
+		</property>
+	</bean>
+	
+	<bean id="queries" class="com._4s_.common.dao.Queries" >
+		<property name="dataSource">
+		      <ref bean="dataSource"/>
+		</property>
+		<property name="driverClass">
+		      <value>${hibernate.connection.driver_class}</value>
+		</property>
+		<property name="url">
+			<value>${hibernate.connection.url}</value>
+		</property>
+		<property name="username">
+			<value>${hibernate.connection.username}</value>
+		</property>
+		<property name="password">
+			<value>${hibernate.connection.password}</value>
+		</property>
+		<property name="schema">
+			<value>${hibernate.defaultSchema}</value>
+		</property>
+	</bean>
+	
+<!-- this bean is not used anywhere, just the goal of it to inject dataSource static variable into DBUtils	-->
+	<bean id="dbUtilsDataSourceInjector" class="com._4s_.common.util.DBUtils" >
+		<property name="dataSource">
+		      <ref bean="dataSource"/>
+		</property>
+	</bean>
+	
+	<!-- <bean id="currentTenantIdentifierResolverImpl" 
+		class="com._4s_.common.dao.CurrentTenantIdentifierResolverImpl">
+	</bean>
+
+	<bean id="multiTenantConnectionProviderImpl"
+		class="com._4s_.common.dao.MultiTenantConnectionProviderImpl">
+		<property name="dataSource" ref="dataSource" />
+		<property name="dataSourceLookup" ref="dataSourceLookup"/>
+	</bean>
+	
+	<bean id="dataSourceLookup" class="com._4s_.common.dao.MultiTenantDataSourceLookup">
+		<constructor-arg ref = "datasource"/>
+	</bean> -->
+</beans>
+>>>>>>> master
     

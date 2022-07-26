@@ -216,18 +216,30 @@ public class MultiCalendarDate implements ApplicationContextAware{
 		} 
 	}
 	
-	public String getHijriString() {
+	public String getHijriString() {		
 		log.debug(">>>>>>>>>>>>>getHijriString ");
 		String dateString =  null;
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		String miladiDateString = formatter.format(getDate());
+
+		//		Class.forName("com.mysql.jdbc.Driver");
+		//		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/Requests?useUnicode=true&amp;characterEncoding=utf8","Requests","Requests");
+		//		Statement stat = conn.createStatement();
+		Statement stat = null;
+		ResultSet rs = null;
 		try {
-//			Class.forName("com.mysql.jdbc.Driver");
-//			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/Requests?useUnicode=true&amp;characterEncoding=utf8","Requests","Requests");
-//			Statement stat = conn.createStatement();
-			Statement stat = DBUtils.createStatement();
-			ResultSet rs = stat.executeQuery("select hijri from common_dates where to_char(miladi,'yyyy-mm-dd') = '"+miladiDateString+"'");
-			
+			try {	
+				stat = DBUtils.createStatement();
+				rs = stat.executeQuery("select hijri from common_dates where to_char(miladi,'yyyy-mm-dd') = '"+miladiDateString+"'");
+			} catch (SQLException e) {
+				try {
+					stat = DBUtils.createStatement();
+					rs = stat.executeQuery("select hijri from common_dates where CONVERT(VARCHAR,miladi,23) = '"+miladiDateString+"'");
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+					throw new IllegalArgumentException(ex.getMessage());
+				}
+			}
 			try {
 				if (rs.next()){ // date conversion found in Database
 					String dbDateString = rs.getString("hijri");
@@ -240,7 +252,7 @@ public class MultiCalendarDate implements ApplicationContextAware{
 					Long dbYear = new Long(dbYearString);
 					try{
 						IslamicCalendar islamicCalendar = new IslamicCalendar();
-						
+
 						islamicCalendar.setLenient(false); 
 						islamicCalendar.setCivil(true);
 						islamicCalendar.clear();
@@ -248,10 +260,10 @@ public class MultiCalendarDate implements ApplicationContextAware{
 						islamicCalendar.set(IslamicCalendar.MONTH , dbMonth.intValue()-1);
 						islamicCalendar.set(IslamicCalendar.DAY_OF_MONTH , dbDay.intValue());
 						//dateFormat.setLenient(true);
-						
-						
+
+
 						dateString = dateFormat.format(islamicCalendar);
-	
+
 						Long formattedDay = new Long(dateString.split("/")[0]);
 						log.debug(formattedDay);
 						if(!formattedDay.equals(dbDay)){ // to handle the case of islamic february!! ex: 8/3/2008 > 30/2/1429
@@ -260,8 +272,8 @@ public class MultiCalendarDate implements ApplicationContextAware{
 					}catch (Exception e) {
 						dateString = dbDayString+"/" + dbMonthString + "/" + dbYearString;
 					}
-//					Date hijri = rs.getDate("hijri");
-//					dateString = dateFormat.format(hijri);
+					//				Date hijri = rs.getDate("hijri");
+					//				dateString = dateFormat.format(hijri);
 					log.debug(">>>>>>>>>>> by DB ["+miladiDateString+"]miladi, in hijri is :"+dateString);
 				} else { // date conversion not in DB , so calculate it by IslamicCalendar
 					IslamicCalendar islamicCalendar = new IslamicCalendar();
@@ -280,13 +292,14 @@ public class MultiCalendarDate implements ApplicationContextAware{
 				stat.close();
 			}
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new IllegalArgumentException(e.getMessage());
 		}
-		
+
+
 		log.debug(">>>>>>>>>>>>>dateString "+dateString);
 		return dateString; 
-	} 
+} 
 
 	// old one 
 	/*public String getHijriString() {
@@ -687,10 +700,24 @@ public class MultiCalendarDate implements ApplicationContextAware{
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy H:mm");
 		SimpleDateFormat timeFormatter = new SimpleDateFormat("H:mm");
 		String miladiDateString = formatter.format(getDate());
+//		try {
+//			Statement stat = DBUtils.createStatement();
+//			ResultSet rs = stat.executeQuery("select hijri from common_dates where to_char(miladi,'yyyy-mm-dd') = '"+miladiDateString+"'");
+		Statement stat = null;
+		ResultSet rs = null;
 		try {
-			Statement stat = DBUtils.createStatement();
-			ResultSet rs = stat.executeQuery("select hijri from common_dates where to_char(miladi,'yyyy-mm-dd') = '"+miladiDateString+"'");
-			
+			try {	
+				stat = DBUtils.createStatement();
+				rs = stat.executeQuery("select hijri from common_dates where to_char(miladi,'yyyy-mm-dd') = '"+miladiDateString+"'");
+			} catch (SQLException e) {
+				try {
+					stat = DBUtils.createStatement();
+					rs = stat.executeQuery("select hijri from common_dates where CONVERT(VARCHAR,miladi,23) = '"+miladiDateString+"'");
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+					throw new IllegalArgumentException(ex.getMessage());
+				}
+			}
 			try {
 				if (rs.next()){
 					String dbDateString = rs.getString("hijri");

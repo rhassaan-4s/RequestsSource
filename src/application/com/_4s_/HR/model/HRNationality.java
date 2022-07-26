@@ -22,7 +22,7 @@ public class HRNationality implements Auditable,Serializable {
 	public HRNationality() {
 		// TODO Auto-generated constructor stub
 	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_nationality_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_nationality_seq")
 	@SequenceGenerator(name="hr_nationality_seq",sequenceName="hr_nationality_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
     private String  nationality_code; 

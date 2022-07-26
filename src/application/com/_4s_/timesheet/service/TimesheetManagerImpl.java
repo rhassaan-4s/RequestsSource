@@ -363,10 +363,6 @@ public class TimesheetManagerImpl extends BaseManagerImpl implements TimesheetMa
 				String part3, int pageNo, int pageSize,
 				String sort) {
 			Settings settings = (Settings)timesheetDAO.getObject(Settings.class,new Long(1));
-			String hostName = settings.getServer();
-			String serviceName = settings.getService();
-			String userName = settings.getUsername();
-			String password = settings.getPassword();
 			
 			DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
 			
@@ -416,6 +412,6 @@ public class TimesheetManagerImpl extends BaseManagerImpl implements TimesheetMa
 					e.printStackTrace();
 				}
 			}
-			return timesheetDAO.getTimesheetTransactions(hostName, serviceName, userName, password, empCode, fromDateStr, toDateStr, costcenterObj, activityObj, partObj1, partObj2, partObj3, pageNo, pageSize, sort);
+			return timesheetDAO.getTimesheetTransactions(empCode, fromDateStr, toDateStr, costcenterObj, activityObj, partObj1, partObj2, partObj3, pageNo, pageSize, sort);
 		}	
 }

@@ -95,8 +95,7 @@ public interface RequestsApprovalDAO extends BaseDAO {
 	public List getRequestStatus(final Long req_id);
 	public void signInOut(AttendanceRequest userRequest);
 	public List getEmpReqTypeAccs(List accessLevels,Long requestType);
-	public int insertTimeAttend(String hostName, String serviceName,
-			String userName, String password, String emp_code, Date date_,
+	public int insertTimeAttend(String emp_code, Date date_,
 			Date time_, String trans_type);
 	public Map checkStartedRequests(RequestsApprovalQuery requestQuery,
 			Employee emp);

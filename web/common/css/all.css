@@ -123,10 +123,11 @@ select {
 	font-family: Arabic Transparent;
 	width: 200px;
 	vertical-align:middle;
-	text-align:center;
+	text-align:right;
 	font-weight: bold;
 	font-size: 14px;
 	color:#3E4E60;
+	
 }
 
 .listTable {
@@ -252,6 +253,8 @@ INPUT.button {
 SELECT {
    font-family: 'Arial', 'Helvetica';
    font-size: 9pt;
+   text-align:right;
+   direction: rtl;
 }
 
 

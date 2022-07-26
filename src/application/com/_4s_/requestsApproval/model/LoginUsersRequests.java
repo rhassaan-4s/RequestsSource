@@ -25,8 +25,9 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	public LoginUsersRequests() {
 		// TODO Auto-generated constructor stub
 	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="loginUsersRequests_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="loginUsersRequests_seq")
 	@SequenceGenerator(name="loginUsersRequests_seq",sequenceName="loginUsersRequests_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
+>>>>>>> master
 	private Long id;
 	
 	@ManyToOne

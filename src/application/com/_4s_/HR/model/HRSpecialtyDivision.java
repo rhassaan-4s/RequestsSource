@@ -25,7 +25,7 @@ public class HRSpecialtyDivision extends TreeDivisions {
 	public HRSpecialtyDivision() {
 		// TODO Auto-generated constructor stub
 	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_specialty_division_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_specialty_division_seq")
 	@SequenceGenerator(name="hr_specialty_division_seq",sequenceName="hr_specialty_division_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
    /* private String  code;

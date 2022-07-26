@@ -29,9 +29,9 @@ import javax.persistence.Transient;
  * @hibernate.class table = "auditing_auditLog" mutable = "false"
  */
 @Entity//W(access=AccessType.FIELD)
-//@Table (name = "auditing_auditLog")
+@Table (name = "auditing_auditLog")
 public class AuditLogRecord {
-	@Id @GeneratedValue(strategy=GenerationType.AUTO)//(generate=GeneratorType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)//(generate=GeneratorType.IDENTITY)
 	public Long id;
 
 	public String message;
@@ -58,8 +58,6 @@ public class AuditLogRecord {
 	 * @return
 	 * @hibernate.property column = "entityDisplayName"  not-null="false"
 	 */
-	
-	
 	public String getEntityDisplayName() {
 		return entityDisplayName;
 	}

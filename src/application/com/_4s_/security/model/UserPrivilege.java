@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package com._4s_.security.model; 
 
 import java.io.Serializable;
@@ -12,20 +13,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+mport javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-
+import org.hibernate.annotations.ForeignKey;
 import com._4s_.auditing.model.Auditable;
 //import com._4s_.stores.model.Groupf;
 //import com._4s_.stores.model.StoreTrnsDep;
-
+import com._4s_.security.model.User;
 
 @Entity
 @Table (name = "security_user_privilege")
@@ -33,8 +35,8 @@ public class UserPrivilege implements Serializable,Auditable{
 	public UserPrivilege() {
 		// TODO Auto-generated constructor stub
 	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="security_user_privilege_seq")
-	@SequenceGenerator(name="security_user_privilege_seq",sequenceName="security_user_privilege_seq", allocationSize = 1)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="security_user_privilege_seq")
+	@SequenceGenerator(name="security_user_privilege_seq",sequenceName="security_user_privilege_seq")
 	private Long id;
 	
 	@OneToOne

@@ -124,18 +124,13 @@ public class AnnualVacationBalance implements Controller{
 		List days=new ArrayList();
 
 		
-		String server = settings.getServer();
-		String service = settings.getService();
-		String username = settings.getUsername();
-		String password = settings.getPassword();
-
 		boolean annualVacationBalanceDaysEnabled = settings.getAnnualVacBalDaysEnabled();
 
 		if((inDate!=null && !inDate.equals("")) && (vacType!=null && !vacType.equals(""))){
-			balance=requestsApprovalManager.getVacationCredit( emp.getEmpCode(), new Long(2), vacType, inDate,server,service,username,password);
+			balance=requestsApprovalManager.getVacationCredit( emp.getEmpCode(), new Long(2), vacType, inDate);
 
 			if (annualVacationBalanceDaysEnabled == true){//lotus
-				days=requestsApprovalManager.getVacations( emp.getEmpCode(), new Long(2), vacType, inDate);
+				days=requestsApprovalManager.getVacations( emp.getEmpCode(), new Long(2), vacType, inDate,settings);
 				log.debug("-----days ---"+days.size());
 				model.put("days", days);
 			}
@@ -148,21 +143,21 @@ public class AnnualVacationBalance implements Controller{
 
 		if(inDate!=null && !inDate.equals("")){
 			if (annualVacationBalanceDaysEnabled == true){//lotus
-				days=requestsApprovalManager.getVacations( emp.getEmpCode(), new Long(2), "001", inDate);
+				days=requestsApprovalManager.getVacations( emp.getEmpCode(), new Long(2), "001", inDate,settings);
 				log.debug("-----days 001 ---"+days.size());
 				model.put("days1", days);
 			}
-			balance1=requestsApprovalManager.getVacationCredit(emp.getEmpCode(), new Long(2), "001", inDate,server,service,username,password);
+			balance1=requestsApprovalManager.getVacationCredit(emp.getEmpCode(), new Long(2), "001", inDate);
 			log.debug("-----balance1 ---"+balance1);
 			Vacation vacOb1=(Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class, "vacation", "001");
 			name1 = vacOb1.getName();
 			model.put("name1",name1);
 			model.put("balance1", balance1);
-			balance2=requestsApprovalManager.getVacationCredit(emp.getEmpCode(), new Long(2), "002", inDate,server,service,username,password);
+			balance2=requestsApprovalManager.getVacationCredit(emp.getEmpCode(), new Long(2), "002", inDate);
 			log.debug("-----balance2 ---"+balance2);
 
 			if (annualVacationBalanceDaysEnabled == true){//lotus
-				days=requestsApprovalManager.getVacations(emp.getEmpCode(), new Long(2), "002", inDate);
+				days=requestsApprovalManager.getVacations(emp.getEmpCode(), new Long(2), "002", inDate,settings);
 				log.debug("-----days 002 ---"+days.size());
 				model.put("days2", days);
 			}

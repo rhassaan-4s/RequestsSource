@@ -22,7 +22,7 @@ public class HROrganization implements Auditable,Serializable {
 	public HROrganization() {
 		// TODO Auto-generated constructor stub
 	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_organization_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_organization_seq")
 	@SequenceGenerator(name="hr_organization_seq",sequenceName="hr_organization_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
     private String code;

@@ -25,7 +25,7 @@ public class HRFunctionalGroup  implements Auditable,Serializable {
 		public HRFunctionalGroup() {
 		// TODO Auto-generated constructor stub
 	}
-		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_functional_group_seq")
+		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_functional_group_seq")
 		@SequenceGenerator(name="hr_functional_group_seq",sequenceName="hr_functional_group_seq")//(generate=GeneratorType.IDENTITY)
 		private Long id;
 	    private String code;

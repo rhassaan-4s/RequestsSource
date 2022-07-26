@@ -1,0 +1,7 @@
+hibernate.connection.driver_class=oracle.jdbc.driver.OracleDriver
+hibernate.connection.url=jdbc:oracle:thin:@//184.168.120.48:1521/lehaa.secureserver.net	
+hibernate.connection.username=test_pay
+hibernate.connection.password=test_pay
+hibernate.dialect=org.hibernate.dialect.Oracle10gDialect
+hibernate.defaultSchema=test_pay
+hibernate.systemDate=SYSDATE

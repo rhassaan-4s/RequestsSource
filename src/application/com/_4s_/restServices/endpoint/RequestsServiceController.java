@@ -513,7 +513,8 @@ public class RequestsServiceController {
 	@ResponseBody 
 	public Map getAttendanceVacationReport(RequestsApprovalQuery requestApproval) {
 		log.debug("getAttendanceVacationReport ");
-		Map m = requestsService.getAttendanceVacationReport(requestApproval);
+		Settings settings = (Settings)requestsService.getRequestsApprovalManager().getObject(Settings.class, new Long(1));
+		Map m = requestsService.getAttendanceVacationReport(requestApproval,settings);
 		return m;
 	}
 	
@@ -522,10 +523,11 @@ public class RequestsServiceController {
 	@ResponseBody 
 	public Map getAttendanceReport(RequestsApprovalQuery requestApproval) {
 		log.debug("getAttendanceReport ");
+		Settings settings = (Settings)requestsService.getRequestsApprovalManager().getObject(Settings.class, new Long(1));
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 		UserDetails userDet = (UserDetails)token.getPrincipal();
 		User user = requestsService.getUser(userDet.getUsername());
-		Map m = requestsService.getAttendanceReport(requestApproval,user.getEmployee());
+		Map m = requestsService.getAttendanceReport(requestApproval,user.getEmployee(),settings);
 		return m;
 	}
 	

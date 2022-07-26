@@ -633,85 +633,43 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	}
 	
 	public Long getEmpVacation (String empCode, String vacId, Date from_date){
-		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
-		String hostName = settings.getServer();
-		String serviceName = settings.getService();
-		String userName = settings.getUsername();
-		String password = settings.getPassword();
-		return externalQueries.getEmpVacation(hostName, serviceName, userName, password, empCode, vacId, from_date);
+		return externalQueries.getEmpVacation(empCode, vacId, from_date);
 	}
 	
 	public Long getVacationLimit (String empCode, String vacId, Date from_date){
-		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
-		String hostName = settings.getServer();
-		String serviceName = settings.getService();
-		String userName = settings.getUsername();
-		String password = settings.getPassword();
-		return externalQueries.getVacationLimit(hostName, serviceName, userName, password, empCode, vacId, from_date);
+		return externalQueries.getVacationLimit(empCode, vacId, from_date);
 	}
 
-	public Long getVacationCredit (String empCode, Long reqId, String vacId, Date from_date,String hostName,String serviceName, String userName,String password){
+	public Long getVacationCredit (String empCode, Long reqId, String vacId, Date from_date){
 		log.debug("empCode " + empCode + " reqId " + reqId + " vacId " );
-		Settings settings = (Settings)getObject(Settings.class,new Long(1));
-		log.debug("settings " + settings);
-//		String hostName = settings.getServer();
-//		String serviceName = settings.getService();
-//		String userName = settings.getUsername();
-//		String password = settings.getPassword();
-		return externalQueries.getVacationCredit(hostName, serviceName, userName, password, empCode, reqId, vacId, from_date);
+		return externalQueries.getVacationCredit(empCode, reqId, vacId, from_date);
 	}
 	
-	public List getVacations (String empCode, Long reqId, String vacId, Date from_date){
-		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
-		String hostName = settings.getServer();
-		String serviceName = settings.getService();
-		String userName = settings.getUsername();
-		String password = settings.getPassword();
-		return externalQueries.getVacations(hostName, serviceName, userName, password, empCode, reqId, vacId, from_date);
+	public List getVacations (String empCode, Long reqId, String vacId, Date from_date, Settings settings){
+		return externalQueries.getVacations(empCode, reqId, vacId, from_date, settings);
 	}
-	public List getVacations (String empCode, Long reqId, Date from_date,Date to_date){
-		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
-		String hostName = settings.getServer();
-		String serviceName = settings.getService();
-		String userName = settings.getUsername();
-		String password = settings.getPassword();
-		return externalQueries.getVacations(hostName, serviceName, userName, password, empCode, reqId, from_date,to_date);
+	public List getVacations (String empCode, Long reqId, Date from_date,Date to_date,Settings settings){
+		return externalQueries.getVacations(empCode, reqId, from_date,to_date,settings);
 	}
 	public List getTimeAttend (String empCode, Date from_date, Date to_date){
-		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
-		String hostName = settings.getServer();
-		String serviceName = settings.getService();
-		String userName = settings.getUsername();
-		String password = settings.getPassword();
-		return externalQueries.getTimeAttend(hostName, serviceName, userName, password, empCode,from_date,to_date);
+		return externalQueries.getTimeAttend(empCode,from_date,to_date);
 	}
 	
 	public List getTimeAttendAndroid(String empCode, Date from_date, Date to_date){
-		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
-		String hostName = settings.getServer();
-		String serviceName = settings.getService();
-		String userName = settings.getUsername();
-		String password = settings.getPassword();
-		return externalQueries.getTimeAttendAndroid(hostName, serviceName, userName, password, empCode,from_date,to_date);
+		return externalQueries.getTimeAttendAndroid(empCode,from_date,to_date);
 	}
 	
-	public List getTimeAttendFromView (String empCode, Date from_date, Date to_date){
-		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
-		String hostName = settings.getServer();
-		String serviceName = settings.getService();
-		String userName = settings.getUsername();
-		String password = settings.getPassword();
-		return externalQueries.getTimeAttendFromView(hostName, serviceName, userName, password, empCode,from_date,to_date);
+	public List getTimeAttendFromViewForTimeAttendanceReport (String empCode, Date from_date, Date to_date,Settings settings){
+		return externalQueries.getTimeAttendFromViewForTimeAttendanceReport(empCode,from_date,to_date,settings);
 	}
 	
+//	public List getTimeAttendFromViewForAttendanceVacationReport (String empCode, Date from_date, Date to_date){
+//		return externalQueries.getTimeAttendFromViewForAttendanceVacationReport(empCode,from_date,to_date);
+//	}
+//	
 	
-	public List getTimeAttendAll(String empCode, Date fromDate, Date toDate, String statusId) {
-		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
-		String hostName = settings.getServer();
-		String serviceName = settings.getService();
-		String userName = settings.getUsername();
-		String password = settings.getPassword();
-		return externalQueries.getTimeAttendAll(hostName, serviceName, userName, password, empCode,fromDate,toDate,statusId);
+	public List getTimeAttendAll(String empCode, Date fromDate, Date toDate, String statusId, Settings settings) {
+		return externalQueries.getTimeAttendAll(empCode,fromDate,toDate,statusId,settings);
 	}
 
 	public void setSequenceManager(SequenceManager sequenceManager) {
@@ -731,12 +689,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	}
 
 	public int getSalaryFromDay() {
-		Settings settings = (Settings)requestsApprovalDAO.getObject(Settings.class,new Long(1));
-		String hostName = settings.getServer();
-		String serviceName = settings.getService();
-		String userName = settings.getUsername();
-		String password = settings.getPassword();
-		return externalQueries.getSalaryFromDay(hostName, serviceName, userName, password);
+		return externalQueries.getSalaryFromDay();
 	}
 
 	public List getRequestsForApprovalList(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
@@ -1629,8 +1582,13 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					}
 					empReqApproval.setApproval(new Integer(status));
 
-					saveObject(empReqApproval);
-					flush();
+					try {
+						saveObject(empReqApproval);
+						flush();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				log.debug("time at the end of the inner loop " + Calendar.getInstance().getTime());
 				////////////////////////////////////////////////////////////////////////////
@@ -1881,9 +1839,9 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		}
 	}
 
-	public int insertTimeAttendance(String hostName, String  serviceName, String  userName, String password,String emp_code, Date date_, Date time_,
+	public int insertTimeAttendance(String emp_code, Date date_, Date time_,
 			String trans_type) {
-		return requestsApprovalDAO.insertTimeAttend(hostName, serviceName, userName, password, emp_code, date_, time_, trans_type);
+		return requestsApprovalDAO.insertTimeAttend(emp_code, date_, time_, trans_type);
 	}
 	
 	public Map checkAttendance(Date today, String empCode) {

@@ -28,7 +28,7 @@ public class LoginUsers  implements Auditable,Serializable {
 		public LoginUsers() {
 		// TODO Auto-generated constructor stub
 	}
-		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="login_users_seq")
+		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="login_users_seq")
 		@SequenceGenerator(name="login_users_seq",sequenceName="login_users_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 		private Long id;
 		

@@ -54,6 +54,11 @@ public class ChangeApplication implements Controller {
 			securityApplication = (SecurityApplication) commonManager
 					.getObject(SecurityApplication.class, new Long(13));
 			request.getSession().setAttribute("appName", "timesheet");
+		} else if (application.equals("attendance")) {
+			System.out.println("############Attendance");
+			securityApplication = (SecurityApplication) commonManager
+					.getObject(SecurityApplication.class, new Long(14));
+			request.getSession().setAttribute("appName", "attendance");
 		}
 
 		System.out.println("current application " + securityApplication.getDefaultPage());

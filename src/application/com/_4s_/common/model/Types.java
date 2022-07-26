@@ -21,18 +21,12 @@ import com._4s_.auditing.model.Auditable;
 @Entity
 @Table(name = "common_types")
 public class Types implements Serializable, Auditable{
-@Id @GeneratedValue(strategy=GenerationType.AUTO,generator="common_types_seq")
-@SequenceGenerator(name="common_types_seq",sequenceName="common_types_seq", allocationSize = 1)
+@Id @GeneratedValue(strategy=GenerationType.SEQUENCE,generator="common_types_seq")
+@SequenceGenerator(name="common_types_seq",sequenceName="common_types_seq")
 	private Long id;
 
 	private String description;
 	private String arDesc;
-	
-	
-public Types() {
-		// TODO Auto-generated constructor stub
-	}
-
 public String getArDesc() {
 		return arDesc;
 	}
@@ -97,11 +91,3 @@ public String getEntityDisplayName() {
 
 
 }
-
-
-
-
-	
-
-
-

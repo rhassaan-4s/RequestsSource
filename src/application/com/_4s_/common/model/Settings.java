@@ -32,10 +32,10 @@ public class Settings  implements Serializable,Auditable {
 	private Boolean attendanceRequestEn;
 	private Boolean empRequestCheckDate;
 	private Boolean annualVacBalDaysEnabled;
-	private String server;//
-	private String service;//
-	private String username;//
-	private String password;//
+//	private String server;//
+//	private String service;//
+//	private String username;//
+//	private String password;//
 	private Boolean addNewData;
 	private Boolean checkPostedRequests;
 	private Boolean empRequestTypeException;
@@ -71,9 +71,39 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Boolean automaticSignInOut;
 	
+	private Boolean webAttendanceAppEnabled;
+	
+	private Boolean sqlServerConnectionEnabled;
+	
+//	private String dbPortNo;
+	
 	
 	////////////////Android Settings////////////////////
 	
+	public Boolean getSqlServerConnectionEnabled() {
+		return sqlServerConnectionEnabled;
+	}
+
+	public void setSqlServerConnectionEnabled(Boolean sqlServerConnectionEnabled) {
+		this.sqlServerConnectionEnabled = sqlServerConnectionEnabled;
+	}
+
+//	public String getDbPortNo() {
+//		return dbPortNo;
+//	}
+//
+//	public void setDbPortNo(String dbPortNo) {
+//		this.dbPortNo = dbPortNo;
+//	}
+
+	public Boolean getWebAttendanceAppEnabled() {
+		return webAttendanceAppEnabled;
+	}
+
+	public void setWebAttendanceAppEnabled(Boolean webAttendanceAppEnabled) {
+		this.webAttendanceAppEnabled = webAttendanceAppEnabled;
+	}
+
 	private Boolean androidAttAutomaticApproval;
 	
 	private Float locationAccuracy;
@@ -368,37 +398,37 @@ public class Settings  implements Serializable,Auditable {
 		this.annualVacBalDaysEnabled = annualVacBalDaysEnabled;
 	}
 
-	public String getServer() {
-		return server;
-	}
-
-	public void setServer(String server) {
-		this.server = server;
-	}
-
-	public String getService() {
-		return service;
-	}
-
-	public void setService(String service) {
-		this.service = service;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
+//	public String getServer() {
+//		return server;
+//	}
+//
+//	public void setServer(String server) {
+//		this.server = server;
+//	}
+//
+//	public String getService() {
+//		return service;
+//	}
+//
+//	public void setService(String service) {
+//		this.service = service;
+//	}
+//
+//	public String getUsername() {
+//		return username;
+//	}
+//
+//	public void setUsername(String username) {
+//		this.username = username;
+//	}
+//
+//	public String getPassword() {
+//		return password;
+//	}
+//
+//	public void setPassword(String password) {
+//		this.password = password;
+//	}
 
 	public Boolean getAddNewData() {
 		return addNewData;

@@ -24,7 +24,7 @@ public class GroupAcc implements Auditable,Serializable {
 	public GroupAcc() {
 		// TODO Auto-generated constructor stub
 	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="group_acc_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="group_acc_seq")
 	@SequenceGenerator(name="group_acc_seq",sequenceName="group_acc_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	

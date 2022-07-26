@@ -23,7 +23,7 @@ public class HRQualificationLevel  implements Auditable,Serializable {
 		public HRQualificationLevel() {
 		// TODO Auto-generated constructor stub
 	}
-		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_qualification_level_seq")
+		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_qualification_level_seq")
 		@SequenceGenerator(name="hr_qualification_level_seq",sequenceName="hr_qualification_level_seq")//(generate=GeneratorType.IDENTITY)
 		private Long id;
 		private Integer levelNo;

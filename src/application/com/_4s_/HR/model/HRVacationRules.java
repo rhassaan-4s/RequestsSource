@@ -26,7 +26,7 @@ public class HRVacationRules implements Auditable,Serializable {
 	public HRVacationRules() {
 		// TODO Auto-generated constructor stub
 	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_vacation_rules_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_vacation_rules_seq")
 	@SequenceGenerator(name="hr_vacation_rules_seq",sequenceName="hr_vacation_rules_seq")//(generate=GeneratorType.IDENTITY)
     private Long id;
 	

@@ -28,7 +28,7 @@ public interface BaseManager {
 	public abstract List getObjectsByParameter(final Class clazz,final String parameter, final Object value);
 	public abstract List getObjectsByNullParameter(final Class clazz,final String parameter);
 
-	public abstract void flush();
+	public abstract void flush() throws Exception;
     public abstract void setFlushModeNever();
     public abstract void setFlushModeAuto();
     public abstract void setFlushModeAlways();

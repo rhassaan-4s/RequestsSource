@@ -23,7 +23,7 @@ public class HRLocation implements Auditable,Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_location_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_location_seq")
 	@SequenceGenerator(name="hr_location_seq",sequenceName="hr_location_seq")//(generate=GeneratorType.IDENTITY)
 	private  Long id ;
 

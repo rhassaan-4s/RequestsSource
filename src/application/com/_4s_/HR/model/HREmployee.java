@@ -31,10 +31,7 @@ import com._4s_.common.util.LocaleUtil;
 @Table(name="hr_employee")
 public class HREmployee  implements Auditable,Serializable {
 		
-		public HREmployee() {
-		// TODO Auto-generated constructor stub
-	}
-		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_employee_seq")
+		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_employee_seq")
 		@SequenceGenerator(name="hr_employee_seq",sequenceName="hr_employee_seq")//(generate=GeneratorType.IDENTITY)
 		private Long id;
 		

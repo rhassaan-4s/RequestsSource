@@ -22,7 +22,7 @@ public class HRInstall implements Auditable,Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_install_seq")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_install_seq")
 	@SequenceGenerator(name="hr_install_seq",sequenceName="hr_install_seq")//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	private String instCode;

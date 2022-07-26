@@ -22,7 +22,7 @@ public class HRIllnessLevels implements Auditable,Serializable {
 	public HRIllnessLevels() {
 		// TODO Auto-generated constructor stub
 	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="HR_SEQ_ILLNESS_LEVELS")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HR_SEQ_ILLNESS_LEVELS")
 	@SequenceGenerator(name="HR_SEQ_ILLNESS_LEVELS",sequenceName="HR_SEQ_ILLNESS_LEVELS")//(generate=GeneratorType.IDENTITY)
    private  Long id ;
 	

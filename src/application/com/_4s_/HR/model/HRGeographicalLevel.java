@@ -24,7 +24,7 @@ public class HRGeographicalLevel  implements Auditable,Serializable {
 		public HRGeographicalLevel() {
 		// TODO Auto-generated constructor stub
 	}
-		@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="hr_geographical_level_seq")
+		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_geographical_level_seq")
 		@SequenceGenerator(name="hr_geographical_level_seq",sequenceName="hr_geographical_level_seq")//(generate=GeneratorType.IDENTITY)
 		private Long id;
 		private Integer levelNo;

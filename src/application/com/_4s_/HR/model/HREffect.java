@@ -22,10 +22,7 @@ import com._4s_.auditing.model.Auditable;
 public class HREffect implements Auditable,Serializable {
 
 	
-	public HREffect() {
-		// TODO Auto-generated constructor stub
-	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO, generator="HR_EFFECT_SEQ")
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HR_EFFECT_SEQ")
 	@SequenceGenerator(name="HR_EFFECT_SEQ",sequenceName="HR_EFFECT_SEQ")//(generate=GeneratorType.IDENTITY)
 	private Long id ;
 	private String effcode  ;

@@ -15,5 +15,5 @@ import com._4s_.timesheet.model.TimesheetTransactionParts;
 @Transactional
 public interface TimesheetDAO extends BaseDAO {
 	public TimesheetTransaction getTimesheetTrans(Employee empCode,Date inDate, TimesheetCostCenter costcenter, TimesheetTransactionParts part1, TimesheetTransactionParts part2, TimesheetTransactionParts part3);
-	public Map getTimesheetTransactions(String hostName,String serviceName,String userName,String password,String empCode, Date fromDate, Date toDate, TimesheetCostCenter costcenter, TimesheetActivity activity, TimesheetTransactionParts part1, TimesheetTransactionParts part2, TimesheetTransactionParts part3, int pageNo, int pageSize, String sort);
+	public Map getTimesheetTransactions(String empCode, Date fromDate, Date toDate, TimesheetCostCenter costcenter, TimesheetActivity activity, TimesheetTransactionParts part1, TimesheetTransactionParts part2, TimesheetTransactionParts part3, int pageNo, int pageSize, String sort);
 }
