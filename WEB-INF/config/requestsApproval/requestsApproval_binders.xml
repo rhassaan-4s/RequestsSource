@@ -7,7 +7,7 @@
 <beans default-autowire="no" default-lazy-init="false"
 	 >
 	
-	<bean id="vacBinder" class="com._4s_.requestsApproval.web.binders.VacationBinder" singleton="false" >
+	<bean id="vacBinder" class="com._4s_.requestsApproval.web.binders.VacationBinder" >
 	    <property name="baseManager">
 			<ref bean="baseManager"/>
 	    </property>

@@ -1,33 +1,28 @@
 package com._4s_.security.web.action;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
+import com._4s_.attendance.web.binders.AttendanceDepartmentBinder;
 import com._4s_.common.model.Branch;
 import com._4s_.common.model.City;
 import com._4s_.common.model.Department;
@@ -58,14 +53,19 @@ public class AddUserToRole  extends BaseSimpleFormController implements BaseForm
 	private List<SecurityApplication> applications = new ArrayList<SecurityApplication>();
 	
 	@Autowired
+	@Qualifier("roleBinder")
 	private DomainObjectBinder roleBinder;
 	@Autowired
+	@Qualifier("branchBinder")
 	private DomainObjectBinder branchBinder;
 	@Autowired
-	private DomainObjectBinder departmentBinder;
+	@Qualifier("departmentBinder")
+	private AttendanceDepartmentBinder departmentBinder;
 	@Autowired
+	@Qualifier("cityBinder")
 	private DomainObjectBinder cityBinder;
 	@Autowired
+	@Qualifier("securityApplicationBinder")
 	private DomainObjectBinder securityApplicationBinder;
 	
 	public MessageManager getMgr() {
@@ -92,10 +92,10 @@ public class AddUserToRole  extends BaseSimpleFormController implements BaseForm
 	public void setBranchBinder(DomainObjectBinder branchBinder) {
 		this.branchBinder = branchBinder;
 	}
-	public DomainObjectBinder getDepartmentBinder() {
+	public AttendanceDepartmentBinder getDepartmentBinder() {
 		return departmentBinder;
 	}
-	public void setDepartmentBinder(DomainObjectBinder departmentBinder) {
+	public void setDepartmentBinder(AttendanceDepartmentBinder departmentBinder) {
 		this.departmentBinder = departmentBinder;
 	}
 	public DomainObjectBinder getCityBinder() {

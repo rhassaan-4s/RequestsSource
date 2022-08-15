@@ -18,6 +18,10 @@ import com._4s_.auditing.model.Auditable;
 @Entity
 @Table (name = "location")
 public class AttendanceDepartment implements Serializable,Auditable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 539634772651365779L;
 	@Id
 	@GenericGenerator(name="location_seq",strategy="com._4s_.attendance.dao.DepartmentStringKeyGenerator")
 	@GeneratedValue(generator="location_seq")

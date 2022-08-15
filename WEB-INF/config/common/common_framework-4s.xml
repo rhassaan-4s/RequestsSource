@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
     "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
@@ -50,6 +49,14 @@
     	class="com._4s_.common.web.binders.BiCalendarDateBinder"
      	scope="prototype"></bean>
      	
+      <bean id="timestampBinder"
+    	class="com._4s_.common.web.binders.TimestampBinder"
+     	scope="prototype"></bean>
+     	
+     <bean id="timestampTimeBinder"
+    	class="com._4s_.common.web.binders.TimestampTimeBinder"
+     	scope="prototype"></bean>
+     	
      <!-- Time Binder -->
     <bean id="timeBinder"
     	class="com._4s_.common.web.binders.BiCalendarTimeBinder"
@@ -63,90 +70,4 @@
     <bean id="mainBinder" class="com._4s_.common.web.binders.MainBinder" scope="prototype">
 	    <property name="baseManager" ref ="baseManager"/>
 	</bean>
-	
-	
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
-    "http://www.springframework.org/dtd/spring-beans.dtd">
-
-<beans >
-
-<!-- *********************************************************************
-									DAOs 
-********************************************************************* -->
-
-  <!-- Generic DAO - can be used when doing standard CRUD -->
-  <bean id="baseDAO" class="com._4s_.common.dao.BaseDAOHibernate" >
-      <property name="sessionFactory"><ref bean="sessionFactory"/></property>
-  </bean>
-
-
-<!-- *********************************************************************
-									Services 
-********************************************************************* -->
-
-    <bean id="baseManager" class="com._4s_.common.service.BaseManagerImpl" >
-  		<property name="baseDAO">
-	    	<ref bean="baseDAO"/>
-	    </property>
-	</bean>
-        
-<!-- *********************************************************************
-								Controllers 
-********************************************************************* -->
-   	<bean id="baseController" parent="txProxyTemplate" >
-		<property name="target">
-			<bean class="com._4s_.common.web.action.BaseController">
-				<property name="baseManager">
-					<ref bean="baseManager"/>
-				</property>
-			</bean>
-		</property>
-	</bean>
-	
-<!-- *********************************************************************
-								Binders 
-********************************************************************* -->
-	<!-- Binders of Domain Model Objects -->
-	
-	<bean id="domainObjectBinder" class="com._4s_.common.web.binders.DomainObjectBinder" singleton="false" >
-	    <property name="baseManager">
-			<ref bean="baseManager"/>
-	    </property>
-	</bean>
-	
-	<!-- Other binders -->
-
-		<!-- Hijri / Miladi Date Binder -->
-    <bean id="dateBinder"
-    	class="com._4s_.common.web.binders.BiCalendarDateBinder"
-     	singleton="false" ></bean>
-     	
-     <bean id="timestampBinder"
-    	class="com._4s_.common.web.binders.TimestampBinder"
-     	singleton="false" ></bean>
-     	
-     <bean id="timestampTimeBinder"
-    	class="com._4s_.common.web.binders.TimestampTimeBinder"
-     	singleton="false" ></bean>
-     	
-     <!-- Time Binder -->
-    <bean id="timeBinder"
-    	class="com._4s_.common.web.binders.BiCalendarTimeBinder"
-     	singleton="false" >
-     </bean>
-     	
-   	<bean id="dateTimeBinder"
-    	class="com._4s_.common.web.binders.DateTimeBinder"
-     	singleton="false" ></bean>
-     	
-    <bean id="mainBinder" class="com._4s_.common.web.binders.MainBinder" singleton="false" >
-	    <property name="baseManager">
-			<ref bean="baseManager"/>
-	    </property>
-	</bean>
-	
-	
->>>>>>> master
 </beans>

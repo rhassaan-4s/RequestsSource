@@ -5,46 +5,46 @@
     "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans default-autowire="no" default-lazy-init="false"
-	default-dependency-check="none">
+	>
 	
-	<bean id="religionBinder" class="com._4s_.attendance.web.binders.ReligionBinder" singleton="false" >
+	<bean id="religionBinder" class="com._4s_.attendance.web.binders.ReligionBinder">
 	    <property name="baseManager">
 			<ref bean="baseManager"/>
 	    </property>
 	</bean>
 
-	<bean id="maritalStatusBinder" class="com._4s_.attendance.web.binders.MaritalStatusBinder" singleton="false" >
+	<bean id="maritalStatusBinder" class="com._4s_.attendance.web.binders.MaritalStatusBinder">
 	    <property name="baseManager">
 			<ref bean="baseManager"/>
 	    </property>
 	</bean>
 	
 	
-	<bean id="qualificationBinder" class="com._4s_.attendance.web.binders.QualificationBinder" singleton="false" >
+	<bean id="qualificationBinder" class="com._4s_.attendance.web.binders.QualificationBinder">
 	    <property name="baseManager">
 			<ref bean="baseManager"/>
 	    </property>
 	</bean>
 	
-	<bean id="departmentBinder" class="com._4s_.attendance.web.binders.AttendanceDepartmentBinder" singleton="false" >
+	<bean id="departmentBinder" class="com._4s_.attendance.web.binders.AttendanceDepartmentBinder">
 	    <property name="baseManager">
 			<ref bean="baseManager"/>
 	    </property>
 	</bean>
 	
-	<bean id="titleBinder" class="com._4s_.attendance.web.binders.TitleBinder" singleton="false" >
+	<bean id="titleBinder" class="com._4s_.attendance.web.binders.TitleBinder">
 	    <property name="baseManager">
 			<ref bean="baseManager"/>
 	    </property>
 	</bean>
 	
-	<bean id="workPeriodMasterBinder" class="com._4s_.attendance.web.binders.WorkPeriodMasterBinder" singleton="false" >
+	<bean id="workPeriodMasterBinder" class="com._4s_.attendance.web.binders.WorkPeriodMasterBinder">
 	    <property name="baseManager">
 			<ref bean="baseManager"/>
 	    </property>
 	</bean>
 	
-	<bean id="empBasicBinder" class="com._4s_.attendance.web.binders.EmpBasicBinder" singleton="false" >
+	<bean id="empBasicBinder" class="com._4s_.attendance.web.binders.EmpBasicBinder">
 	    <property name="baseManager">
 			<ref bean="baseManager"/>
 	    </property>

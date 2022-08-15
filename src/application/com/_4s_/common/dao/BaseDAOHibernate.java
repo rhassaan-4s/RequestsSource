@@ -13,6 +13,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
@@ -26,8 +28,6 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.query.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -58,7 +58,6 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 		this.sessionFactory = sessionFactory;
 	}
 
-<<<<<<< HEAD
 	private CriteriaBuilder builder;
 
 	public CriteriaBuilder getBuilder() {

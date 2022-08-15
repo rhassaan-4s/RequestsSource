@@ -27,7 +27,6 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="loginUsersRequests_seq")
 	@SequenceGenerator(name="loginUsersRequests_seq",sequenceName="loginUsersRequests_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
->>>>>>> master
 	private Long id;
 	
 	@ManyToOne

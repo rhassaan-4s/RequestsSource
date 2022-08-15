@@ -117,6 +117,11 @@
 
 
 	<dependencies>
+		<dependency>
+		      <groupId>javax.transaction</groupId>
+		      <artifactId>jta</artifactId>
+		      <version>1.1</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-orm -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -129,7 +134,6 @@
 			<artifactId>javax.persistence-api</artifactId>
 			<version>2.2</version>
 		</dependency>
-
 
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-aop -->
 		<dependency>
@@ -353,13 +357,14 @@
     <artifactId>http</artifactId>
     <version>20070405</version>
 </dependency>
-
-		<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
+		
+				<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
 		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.2</version>
+		    <groupId>commons-logging</groupId>
+		    <artifactId>commons-logging</artifactId>
+		    <version>1.2</version>
 		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
 		<dependency>
 			<groupId>commons-beanutils</groupId>
@@ -371,18 +376,36 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 			<version>3.0-FINAL</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-scratchpad -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-scratchpad</artifactId>
 			<version>3.0.1-FINAL</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-contrib -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-contrib</artifactId>
 			<version>3.6</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.jenkov/prizetags -->
 		<dependency>
@@ -407,6 +430,21 @@
     <version>3.0.2-RELEASE</version>
 </dependency>
 
+<!-- https://mvnrepository.com/artifact/com.oracle.ojdbc/ojdbc8 -->
+<dependency>
+    <groupId>com.oracle.ojdbc</groupId>
+    <artifactId>ojdbc8</artifactId>
+    <version>19.3.0.0</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/com.oracle.ojdbc/orai18n -->
+<dependency>
+    <groupId>com.oracle.ojdbc</groupId>
+    <artifactId>orai18n</artifactId>
+    <version>19.3.0.0</version>
+</dependency>
+
+
 		<!-- https://mvnrepository.com/artifact/javax.servlet.jsp/jsp-api -->
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
@@ -421,23 +459,23 @@
 			<version>1.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
-		<dependency>
+		<!--<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>1.7.32</version>
-		</dependency>
+		</dependency>-->
 		<!--For and sfl4j Bridge maintenance -->
-		<dependency>
+		<!--<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j-impl</artifactId>
 			<version>2.12.0</version>
-		</dependency>
+		</dependency>-->
 		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-		<dependency>
+		<!--<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.32</version>
-		</dependency>
+		</dependency>-->
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -470,6 +508,15 @@
 			<artifactId>mail</artifactId>
 			<version>1.4</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
+		<dependency>
+		    <groupId>com.microsoft.sqlserver</groupId>
+		    <artifactId>mssql-jdbc</artifactId>
+		    <version>6.4.0.jre7</version>
+		</dependency>
+
+
 
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>

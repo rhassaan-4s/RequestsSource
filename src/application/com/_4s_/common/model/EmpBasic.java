@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -30,6 +28,11 @@ import com._4s_.auditing.model.Auditable;
 @Entity
 @Table (name = "EMPBASIC")
 public class EmpBasic implements Serializable,Auditable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9030836215327821538L;
 	@Id
 	@GenericGenerator(name="empBasic_seq",strategy="com._4s_.attendance.dao.EmpBasicStringKeyGenerator")
 	@GeneratedValue(generator="empBasic_seq")

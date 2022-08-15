@@ -17,6 +17,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com._4s_.common.model.Settings;
 import com._4s_.common.util.DBUtils;
 import com._4s_.common.util.Page;
     
@@ -61,7 +62,7 @@ public class Queries  extends CommonQueries{
 		return basicDataSource;
 	}
 
-	public Map search(String code,String description,String table,String firstParam,String secondParam,String paramString,String match1,String match2,String level,int pageNumber,int pageSize,String branchId){
+	public Map search(String code,String description,String table,String firstParam,String secondParam,String paramString,String match1,String match2,String level,Settings settings,int pageNumber,int pageSize,String branchId){
 		sql1= null;
 		where1= null;
 		whereFirstParam1= null;
@@ -459,7 +460,7 @@ public class Queries  extends CommonQueries{
 			String[] paramList = paramString.split(",");
 			table = tableList[0];
 			List listRows = new ArrayList();
-			JdbcTemplate getJdbcTemplate() = new JdbcTemplate(DBUtils.getDataSource());
+			setJdbcTemplate(new JdbcTemplate(DBUtils.getDataSource()));
 			StringBuilder sql = new StringBuilder();
 			sql.append("select distinct(palette_capacity) from store_trns_room ");
 			sql.append("where " + paramList[0]);
@@ -547,7 +548,7 @@ public class Queries  extends CommonQueries{
 		
 		ListOrderedMap dbConnection ;
 		dbConnection = (ListOrderedMap) list.get(0);
-		exgetJdbcTemplate() =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
+		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
 		
 		log.debug("value "+value);
 		log.debug("table "+table);
@@ -605,7 +606,7 @@ public class Queries  extends CommonQueries{
 		}
 		
 		log.debug("sql1 "+sql1);
-		List records = exgetJdbcTemplate().queryForList(sql1);
+		List records = exjt.queryForList(sql1);
 		return records;
 	}
 	
@@ -624,7 +625,7 @@ public class Queries  extends CommonQueries{
 		
 		ListOrderedMap dbConnection ;
 		dbConnection = (ListOrderedMap) list.get(0);
-		exgetJdbcTemplate() =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
+		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
 
 		value = value.replaceAll("'","");
 		value = value.replaceAll("\\\\","");
@@ -663,7 +664,7 @@ public class Queries  extends CommonQueries{
 		}
 		
 		log.debug("<sql1>----- " + sql1);
-		List records = exgetJdbcTemplate().queryForList(sql1);
+		List records = exjt.queryForList(sql1);
 		return records;
 	}
 	

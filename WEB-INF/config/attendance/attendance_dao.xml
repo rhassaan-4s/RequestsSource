@@ -12,8 +12,7 @@
 		</property>
 	</bean>
 	
-	<bean id="attendanceExternalQueries" class="com._4s_.attendance.dao.AttendanceExternalQueries"
-		singleton="false">
+	<bean id="attendanceExternalQueries" class="com._4s_.attendance.dao.AttendanceExternalQueries">
 		<property name="platformTransactionManager">
 			<ref bean="transactionManager" />
 		</property>

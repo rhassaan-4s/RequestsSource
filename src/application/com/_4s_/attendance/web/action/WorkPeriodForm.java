@@ -266,10 +266,9 @@ public class WorkPeriodForm extends BaseSimpleFormController{
 		return new ModelAndView(new RedirectView("workperiodView.html"));
 	}
 
-	@Override
 	public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) {
 		// TODO Auto-generated method stub
-		super.initBinder(request, binder);
+//		super.initBinder(request, binder);
 		Iterator itr = customBinders.iterator();
 		BaseBinder custom = null;
 		log.debug("Binding list of custom editors");

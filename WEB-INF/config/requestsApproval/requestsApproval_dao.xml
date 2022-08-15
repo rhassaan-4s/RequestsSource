@@ -2,7 +2,7 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
     "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 
-<beans >
+<beans>
 	<bean id="requestsApprovalDAO" class="com._4s_.requestsApproval.dao.RequestsApprovalDAOHibernate"  init-method="init">
 		<property name="sessionFactory" ref="sessionFactory"/>
 		<property name="externalQueries" ref="requestsApprovalExternalQueries" />
@@ -10,4 +10,5 @@
 	
 	<bean id="requestsApprovalExternalQueries" class="com._4s_.requestsApproval.dao.ExternalQueries" scope="prototype">
 		<property name="platformTransactionManager" ref ="transactionManager" />
+	</bean>
 </beans>

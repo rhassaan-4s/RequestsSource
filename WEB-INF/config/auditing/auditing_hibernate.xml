@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
     "http://www.springframework.org/dtd/spring-beans-2.0.dtd" >
@@ -51,6 +50,8 @@
 				<value>com._4s_.security.model</value>
 				<value>com._4s_.i18n.model</value>
 				<value>com._4s_.requestsApproval.model</value>
+				<value>com._4s_.timesheet.model</value>
+				<value>com._4s_.attendance.model</value>
 			</list>
 		</property>
 
@@ -61,93 +62,4 @@
 			</props>
 		</property>
 	</bean>
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-    "http://www.springframework.org/dtd/spring-beans.dtd" >
-
-<beans>
-
-	<bean id="auditingDataSource"
-		class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName">
-			<value>${hibernate.connection.driver_class}</value>
-		</property>
-		<property name="url">
-			<value>${hibernate.connection.url}</value>
-		</property>
-		<property name="username">
-			<value>${hibernate.connection.username}</value>
-		</property>
-		<property name="password">
-			<value>${hibernate.connection.password}</value>
-		</property>
-	</bean>
-
-
-	<bean id="auditTransactionManager"
-		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-		<property name="sessionFactory">
-			<ref local="auditSessionFactory" />
-		</property>
-	</bean>
-	<!---->
-	<!---->
-	<!--		 Transaction template for Managers, from:-->
-	<!--		 http://blog.exis.com/colin/archives/2004/07/31/concise-transaction-definitions-spring-11/ -->
-	<bean id="auditTxProxyTemplate" abstract="true"
-		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager">
-			<ref bean="auditTransactionManager" />
-		</property>
-		<property name="transactionAttributes">
-			<props>
-				<prop key="save*">PROPAGATION_REQUIRED,ISOLATION_SERIALIZABLE</prop>
-				<prop key="remove*">PROPAGATION_REQUIRED,ISOLATION_SERIALIZABLE</prop>
-				<prop key="*">PROPAGATION_REQUIRED,ISOLATION_SERIALIZABLE,readOnly</prop>
-			</props>
-		</property>
-	</bean>
-
-	<!---->
-	<!--     Hibernate SessionFactory -->
-	<bean id="auditSessionFactory"
-		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"><!-- org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean -->
-		<property name="dataSource">
-			<ref bean="auditingDataSource" />
-		</property>
-		<!-- <property name="configurationClass">
-			<value>org.hibernate.cfg.AnnotationConfiguration</value>
-		</property> -->
-		<!--<property name="mappingDirectoryLocations">
-			<list>
-				<value>classpath:/com/_4s_/banks/model</value>
-			</list>
-		</property>-->
-
-		<property name="packagesToScan">
-		<list>
-		<value>com._4s_.HR.model</value>
-		<value>com._4s_.auditing.model</value>
-		<value>com._4s_.common.model</value>
-		<value>com._4s_.dbUpdate.model</value>
-		<value>com._4s_.security.model</value>
-		<value>com._4s_.i18n.model</value>
-		<value>com._4s_.requestsApproval.model</value>
-		<value>com._4s_.timesheet.model</value>
-		<value>com._4s_.attendance.model</value>
-		</list>
-		</property>
-		
-		<property name="hibernateProperties">
-			<props>
-				<prop key="hibernate.dialect">
-					${hibernate.dialect}
-				</prop>
-				<prop key="hibernate.show_sql">false</prop>
-<!--				<prop key="hibernate.hbm2ddl.auto">update</prop>-->
-			</props>
-		</property>
-	</bean>
->>>>>>> master
 </beans>

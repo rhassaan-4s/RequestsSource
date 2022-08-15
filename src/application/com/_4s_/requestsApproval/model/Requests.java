@@ -25,7 +25,6 @@ public class Requests implements Auditable,Serializable {
 
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="requests_seq")
 	@SequenceGenerator(name="requests_seq",sequenceName="requests_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
->>>>>>> master
 	private Long id;
 	
 	private String code;
