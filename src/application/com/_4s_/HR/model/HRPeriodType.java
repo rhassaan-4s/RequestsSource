@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -18,7 +19,8 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="hr_period_type")
 public class HRPeriodType implements Auditable,Serializable {
 	
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_periodtype_seq")
+	@SequenceGenerator(name="hr_periodtype_seq",sequenceName="hr_periodtype_seq")
 	private Long id;
 	
 	private String name;

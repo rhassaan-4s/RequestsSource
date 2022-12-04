@@ -369,6 +369,48 @@
 			</bean>
 		</property>
 	</bean>
+	
+	<bean id="empHistView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.EmpHistView">
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="empHistForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.EmpHistForm">
+				<property name="commandName">
+					<value>empHist</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.attendance.model.EmpHist</value>
+				</property>
+				<property name="formView">
+					<value>empHistForm</value>
+				</property>
+				<property name="successView">
+					<value>empHistView</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+				<property name="binders">
+					<list>
+						<ref bean="timestampBinder" />
+						<ref bean="titleBinder" />
+						<ref bean="regionBinder" />
+						<ref bean="sectorBinder" />
+						<ref bean="degreeBinder" />
+						<ref bean="employeeAttendanceBinder"/>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
 	<!--
 		_____________________________________________________________________
 	-->
@@ -407,6 +449,8 @@
 				<prop key="/workperiodView.html">workperiodView</prop>
 				<prop key="/workperiodForm.html">workperiodForm</prop>
 				<prop key="/empWorkPeriodForm.html">empWorkPeriodForm</prop>
+				<prop key="/empHistForm.html">empHistForm</prop>
+				<prop key="/empHistView.html">empHistView</prop>
 			</props>
 		</property>
 	</bean>

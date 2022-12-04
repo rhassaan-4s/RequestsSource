@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -108,8 +109,9 @@ public class UpdateDB implements Controller {
         			
         			
 //        			jt.execute("start transaction");
-        			
-        			if (settings.getSqlServerConnectionEnabled()) {
+        			log.debug("settings " + settings);
+//        			log.debug("settings.getSqlServerConnectionEnabled() " + settings.getSqlServerConnectionEnabled());
+        			if (settings!=null && settings.getSqlServerConnectionEnabled()) {
         				jt.execute("begin transaction");
         			}
         			
@@ -118,7 +120,7 @@ public class UpdateDB implements Controller {
         				qry = StringUtils.trim(qry);
         				try{
         					if (qry != null && qry.length() != 0){
-        						if (settings.getSqlServerConnectionEnabled()) {
+        						if (settings!=null && settings.getSqlServerConnectionEnabled()) {
         							qry = convertOracleToSqlScript(qry,settings);
         						}
         						jt.execute(qry);
@@ -177,10 +179,14 @@ public class UpdateDB implements Controller {
 //			String dbName = settings.getService();
 			String replacedString = sql;
 			replacedString = replacedString.toLowerCase();
-			replacedString.replaceAll("number", "BIGINT");
-			replacedString.replaceAll("VARCHAR2", "VARCHAR");
-			replacedString.replaceAll("DATE", "	DATETIME2(0)");
+			replacedString= replacedString.replaceAll("number[(]\\d+[)]", "BIGINT");
+			replacedString= replacedString.replaceAll("float[(]\\d+[)]", "float");
+			replacedString= replacedString.replaceAll("varchar2", "VARCHAR");
+			replacedString= replacedString.replaceAll("date", "	DATETIME2(0)");
 			
+			System.out.println("***********SQL SERVER STATEMENT START********");
+			System.out.println(replacedString);
+			System.out.println("***********SQL SERVER STATEMENT END ********");
 			return replacedString;
 //			try{
 //				String statement = "DECLARE @dbName AS VARCHAR(100);"

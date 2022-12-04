@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Vacation implements Auditable,Serializable  {
 	
 //	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="vacation_seq")
-//	@SequenceGenerator(name="vacation_seq",sequenceName="vacation_seq")//(generate=GeneratorType.IDENTITY)
+//	@SequenceGenerator(name="vacation_seq",sequenceName="vacation_seq")
 	
 	/**
 	 * 

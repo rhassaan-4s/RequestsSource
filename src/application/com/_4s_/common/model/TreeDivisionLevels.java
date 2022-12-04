@@ -20,7 +20,7 @@ public class TreeDivisionLevels implements Auditable,Serializable {
 	
 	
 //	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_internal_level_seq")
-//	@SequenceGenerator(name="hr_internal_level_seq",sequenceName="hr_internal_level_seq")//(generate=GeneratorType.IDENTITY)
+//	@SequenceGenerator(name="hr_internal_level_seq",sequenceName="hr_internal_level_seq")
 //	private Long id;
 	
 	protected Integer levelNo;

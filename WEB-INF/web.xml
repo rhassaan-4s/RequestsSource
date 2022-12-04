@@ -291,7 +291,7 @@
 <!-- //////////////////////////////////////////////// -->
 <!-- HR -->
 
-	<servlet>
+	<!--<servlet>
 		<servlet-name>hr</servlet-name>
 		<servlet-class>
 			org.springframework.web.servlet.DispatcherServlet
@@ -302,7 +302,7 @@
 	<servlet-mapping>
 		<servlet-name>hr</servlet-name>
 		<url-pattern>/hr/*</url-pattern>
-	</servlet-mapping>
+	</servlet-mapping>-->
 	
 	
 	<!-- requestsApproval -->

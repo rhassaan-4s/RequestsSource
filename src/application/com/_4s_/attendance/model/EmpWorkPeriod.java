@@ -4,21 +4,18 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.hibernate.annotations.GenericGenerator;
 
 import com._4s_.auditing.model.Auditable;
 import com._4s_.common.model.EmpBasic;
+import com._4s_.common.model.EmpBasicParent;
 import com.ibm.icu.util.Calendar;
 
 @Entity

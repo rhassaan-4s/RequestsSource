@@ -20,7 +20,7 @@ import com._4s_.auditing.model.Auditable;
 public class HRNationality implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_nationality_seq")
-	@SequenceGenerator(name="hr_nationality_seq",sequenceName="hr_nationality_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_nationality_seq",sequenceName="hr_nationality_seq")
 	private Long id;
     private String  nationality_code; 
 	private String name;

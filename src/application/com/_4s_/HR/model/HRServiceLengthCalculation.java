@@ -23,7 +23,7 @@ import com._4s_.auditing.model.Auditable;
 public class HRServiceLengthCalculation implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HR_SERLENGTH_CALC_SEQ")
-	@SequenceGenerator(name="HR_SERLENGTH_CALC_SEQ",sequenceName="HR_SERLENGTH_CALC_SEQ")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="HR_SERLENGTH_CALC_SEQ",sequenceName="HR_SERLENGTH_CALC_SEQ")
 	private Long id;
 	
 	@ManyToOne

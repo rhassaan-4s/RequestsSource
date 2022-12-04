@@ -22,7 +22,7 @@ import com._4s_.auditing.model.Auditable;
 public class HREffectEquation implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HR_EFFECT_EQUATION_SEQ")
-	@SequenceGenerator(name="HR_EFFECT_EQUATION_SEQ",sequenceName="HR_EFFECT_EQUATION_SEQ")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="HR_EFFECT_EQUATION_SEQ",sequenceName="HR_EFFECT_EQUATION_SEQ")
 
 	private Long id ;
 	

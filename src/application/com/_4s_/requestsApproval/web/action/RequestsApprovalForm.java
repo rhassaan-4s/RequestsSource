@@ -432,19 +432,21 @@ log.debug("requestOb " + requestOb);
 		requestOb = (LoginUsersRequests) requestsApprovalManager.getObject(
 				LoginUsersRequests.class, new Long(reqId));
 		log.debug("requestOb 2 " + requestOb);
-		empReqTypeAcc = (EmpReqTypeAcc) requestsApprovalManager.getObject(
-				EmpReqTypeAcc.class, new Long(accId));
+		if (accId!=null) {
+			empReqTypeAcc = (EmpReqTypeAcc) requestsApprovalManager.getObject(
+					EmpReqTypeAcc.class, new Long(accId));
 
-		EmpReqApproval empReqApproval = new EmpReqApproval();
+			EmpReqApproval empReqApproval = new EmpReqApproval();
 
-		empReqApproval.setApproval(new Integer(status));
-		empReqApproval.setReq_id(requestOb);
-		empReqApproval.setLevel_id(empReqTypeAcc);
-		empReqApproval.setUser_id(loginUsers);
-		empReqApproval.setNote(note);
-		empReqApproval.setApproval(new Integer(status));
+			empReqApproval.setApproval(new Integer(status));
+			empReqApproval.setReq_id(requestOb);
+			empReqApproval.setLevel_id(empReqTypeAcc);
+			empReqApproval.setUser_id(loginUsers);
+			empReqApproval.setNote(note);
+			empReqApproval.setApproval(new Integer(status));
 
-		requestsApprovalManager.saveObject(empReqApproval);
+			requestsApprovalManager.saveObject(empReqApproval);
+		}
 		System.out.println("Status " + status);
 		System.out.println("last " + last);
 		if(status.equals("0")){

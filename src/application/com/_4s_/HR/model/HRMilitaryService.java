@@ -22,7 +22,7 @@ import com._4s_.common.util.LocaleUtil;
 public class HRMilitaryService implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_military_seq")
-	@SequenceGenerator(name="hr_military_seq",sequenceName="hr_military_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_military_seq",sequenceName="hr_military_seq")
 	private Long id;
 	private String name;
 	private String ename;

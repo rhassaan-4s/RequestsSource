@@ -22,8 +22,9 @@ public class Center implements Auditable,Serializable {
 	
 	
 	
-			@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_center_seq")
-			@SequenceGenerator(name="hr_center_seq",sequenceName="hr_center_seq")//(generate=GeneratorType.IDENTITY)
+			@Id 
+			@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_center_seq")
+			@SequenceGenerator(name="hr_center_seq",sequenceName="hr_center_seq")
 			private Long id;
 		    private  String center;
 			private String name;

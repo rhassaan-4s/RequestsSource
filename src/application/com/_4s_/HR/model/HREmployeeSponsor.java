@@ -23,7 +23,7 @@ import com._4s_.auditing.model.Auditable;
 public class HREmployeeSponsor implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_employee_sponsor_seq")
-	@SequenceGenerator(name="hr_employee_sponsor_seq",sequenceName="hr_employee_sponsor_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_employee_sponsor_seq",sequenceName="hr_employee_sponsor_seq")
 	private Long id;
 	
 	@ManyToOne 

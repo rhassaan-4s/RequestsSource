@@ -22,7 +22,7 @@ import com._4s_.auditing.model.Auditable;
 public class HRInternalDivisionBranch implements Auditable,Serializable {
 		
 		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_internaldivision_branch_seq")
-		@SequenceGenerator(name="hr_internaldivision_branch_seq",sequenceName="hr_internaldivision_branch_seq")//(generate=GeneratorType.IDENTITY)
+		@SequenceGenerator(name="hr_internaldivision_branch_seq",sequenceName="hr_internaldivision_branch_seq")
 		private Long id;
 	    private String  internal_division_branch;
 		private String name;

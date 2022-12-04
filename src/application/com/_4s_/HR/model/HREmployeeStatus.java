@@ -22,7 +22,7 @@ import com._4s_.common.util.LocaleUtil;
 public class HREmployeeStatus implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_empStatus_seq")
-	@SequenceGenerator(name="hr_empStatus_seq",sequenceName="hr_empStatus_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_empStatus_seq",sequenceName="hr_empStatus_seq")
 	private Long id;
 	private String name;
 	private String ename;

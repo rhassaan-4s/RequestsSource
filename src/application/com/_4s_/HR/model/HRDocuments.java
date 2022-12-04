@@ -22,7 +22,7 @@ import com._4s_.common.util.LocaleUtil;
 public class HRDocuments implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_documents_seq")
-	@SequenceGenerator(name="hr_documents_seq",sequenceName="hr_documents_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_documents_seq",sequenceName="hr_documents_seq")
 	private Long id;
     private String code;
 	private String name;

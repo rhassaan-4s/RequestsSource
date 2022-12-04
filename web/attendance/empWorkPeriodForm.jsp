@@ -1,5 +1,6 @@
 <jsp:include page="/web/common/includes/header.jsp" flush="true" />
 <%@ include file="/web/common/includes/taglibs.jsp"%>
+<abc:security property="1034"/>
 
 
 <script type="text/javascript">
@@ -150,7 +151,7 @@ function periodChanged() {
 								key="requestsApproval.caption.userCode" /></td>
 						<td class="formBodControl"><spring:bind
 								path="periods.empCode">
-								<select name="${status.expression}" class="select"
+								<select name="${status.expression}" 
 									multiple="multiple" id="${status.expression}">
 									<c:forEach items="${empBasic}" var="emp">
 										<option value="${emp.empCode}"
@@ -159,12 +160,14 @@ function periodChanged() {
 									</c:forEach>
 								</select>
 							</spring:bind></td>
-						<td class="formBodControl"><abc:i18n
+							
+							
+					<!-- 	<td class="formBodControl"><abc:i18n
 								property="attendance.caption.department" /> <fmt:message
 								key="attendance.caption.department" /></td>
 						<td class="formBodControl"><input type="text" id="department"
 							value="${periods.empCode.department.name}" name="department"
-							disabled="disabled" /></td>
+							disabled="disabled" /></td> -->
 					</tr>
 				</table>
 			</td>
@@ -254,7 +257,7 @@ $("span#add_user").on('click', function() {
     var selected = $(".select").multiselect("widget").find("input:checked").val();
      window.location.href ="/Requests/attendance/empWorkPeriodForm.html?new_period=true&emp="+selected;
 });
-$(".select").multiselect({ 
+$("select:first").multiselect({ 
 		header: false,
 	 	selectedList: 4,
 	 	show: ["bounce", 200],
@@ -269,7 +272,7 @@ $(".select").multiselect({
 	   }
 	   ,
 	   close: function(e){
-		   var selected = $(".select");
+		   var selected = $("select:first");
 		   selected.each(function(index){
 			   var dep = $(this).multiselect("widget").find("input:checked").attr("title");
 			   $( "input[id][name$='department']" ).val(dep);
@@ -283,15 +286,13 @@ $(".select").multiselect({
 					   //});
 		   });
 	   }
-	});
-	</script>
-<script type="text/javascript">
-$(".multi").multiselect({
+	}).multiselectfilter();
+	
+$("select:first").multiselect({
 	  header: "",
 	  selectedList: 4,
 	   show: ["bounce", 200],
 	   hide: ["explode", 1000]}).multiselectfilter();
 </script>
-
 
 <%@ include file="/web/common/includes/footer.jsp"%>

@@ -146,7 +146,7 @@
     	<beans:constructor-arg ref="rememberMeServices"/>
     </beans:bean>
 
-	<http auto-config="true" access-denied-page="/403.jsp"
+	<http auto-config="true" access-denied-page="/403.jsp" 
 		access-decision-manager-ref="accessDecisionManager">
 		<session-management>
 			<concurrency-control max-sessions="10"
@@ -199,7 +199,45 @@
 			access="CAN_VIEW_page_security_roleDetails" />
 		<intercept-url pattern="\A/security/updateRole.html.*\Z"
 			access="CAN_VIEW_page_security_updateRole" />
-
+			
+			
+		<intercept-url pattern="\A/attendance/dashboard.html.*\Z"
+			access="CAN_VIEW_all_dashboard" />
+		<intercept-url pattern="\A/attendance/qualificationView.html.*\Z"
+			access="CAN_VIEW_all_qualification" />
+			<intercept-url pattern="\A/attendance/qualificationForm.html.*\Z"
+			access="CAN_VIEW_all_qualification" />
+		<intercept-url pattern="\A/attendance/departmentView.html.*\Z"
+			access="CAN_VIEW_all_department" />
+			<intercept-url pattern="\A/attendance/departmentForm.html.*\Z"
+			access="CAN_VIEW_all_department" />
+		<intercept-url pattern="\A/attendance/titleView.html.*\Z"
+			access="CAN_VIEW_all_titles" />
+			<intercept-url pattern="\A/attendance/titleForm.html.*\Z"
+			access="CAN_VIEW_all_titles" />
+		<intercept-url pattern="\A/attendance/empBasicView.html.*\Z"
+			access="CAN_VIEW_all_empbasic" />
+		<intercept-url pattern="\A/attendance/empBasicForm.html.*\Z"
+			access="CAN_VIEW_all_empbasic" />
+		<intercept-url pattern="\A/attendance/vacRuleForm.html.*\Z"
+			access="CAN_VIEW_all_vacrule" />
+			<intercept-url pattern="\A/attendance/publicLeavesForm.html.*\Z"
+			access="CAN_VIEW_all_publicleaves" />
+		<intercept-url pattern="\A/attendance/vacationView.html.*\Z"
+			access="CAN_VIEW_all_vacations" />
+			<intercept-url pattern="\A/attendance/vacationForm.html.*\Z"
+			access="CAN_VIEW_all_vacations" />
+		<intercept-url pattern="\A/attendance/workperiodView.html.*\Z"
+			access="CAN_VIEW_all_workperiods" />
+		<intercept-url pattern="\A/attendance/workperiodForm.html.*\Z"
+			access="CAN_VIEW_all_workperiods" />
+		<intercept-url pattern="\A/attendance/triggerVacBalanceView.html.*\Z"
+			access="CAN_VIEW_all_preparevacbalance" />
+			
+		<intercept-url pattern="\A/attendance/empWorkPeriodForm.html.*\Z"
+			access="CAN_VIEW_all_empworkperiod" />
+		<intercept-url pattern="\A/attendance/triggerAttendAnalysisView.html.*\Z"
+			access="CAN_VIEW_all_prepareattendanceanalysis" />
 
 		<intercept-url pattern="\A/stores/storesAdminBranches.html.*\Z"
 			access="CAN_VIEW_page_stores_storesAdminBranches" />

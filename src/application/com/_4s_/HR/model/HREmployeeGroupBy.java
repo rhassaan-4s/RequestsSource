@@ -18,69 +18,70 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="hr_employee_group_by")
 public class HREmployeeGroupBy implements Auditable,Serializable {
-		@Id
-		private Long id;
-		
-		private String name; 
-		private String eName;
-		
-		public String getEntityDisplayName() {
-			return "HREmployeeGroupBy Addition";
-		}
-		
-		@Override
-		public String toString() {
-			 return new ToStringBuilder(this)
-			 .append("id", this.id)
-			 .append("name", this.name)
-			 .append("eName", this.eName)
-			 .toString();
-		}
-		
-		@Override
-		public boolean equals(Object o) {
-			 if (o == this) {
-			 return true;
-			 }
-			 if (!(o instanceof HREmployeeGroupBy)) {
-			 return false;
-			 }
-			 HREmployeeGroupBy hregb = (HREmployeeGroupBy) o;
-			 return new EqualsBuilder()
-			 .append(this.id, hregb.getId())
-			 .append(this.name, hregb.getName())
-			 .append(this.eName, hregb.getEName())
-			 .isEquals();
-		}
-		
-		@Override
-		public int hashCode() {
-			return new HashCodeBuilder(991383961, 1226766147)
-			.append(this.id)
-			.toHashCode();
-		}
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_employee_groupby_seq")
+	@SequenceGenerator(name="hr_employee_groupby_seq",sequenceName="hr_employee_groupby_seq")
+	private Long id;
 
-		public Long getId() {
-			return id;
-		}
+	private String name; 
+	private String eName;
 
-		public void setId(Long id) {
-			this.id = id;
-		}
+	public String getEntityDisplayName() {
+		return "HREmployeeGroupBy Addition";
+	}
 
-		public String getName() {
-			return name;
-		}
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+				.append("id", this.id)
+				.append("name", this.name)
+				.append("eName", this.eName)
+				.toString();
+	}
 
-		public void setName(String name) {
-			this.name = name;
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) {
+			return true;
 		}
+		if (!(o instanceof HREmployeeGroupBy)) {
+			return false;
+		}
+		HREmployeeGroupBy hregb = (HREmployeeGroupBy) o;
+		return new EqualsBuilder()
+				.append(this.id, hregb.getId())
+				.append(this.name, hregb.getName())
+				.append(this.eName, hregb.getEName())
+				.isEquals();
+	}
 
-		public String getEName() {
-			return eName;
-		}
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(991383961, 1226766147)
+				.append(this.id)
+				.toHashCode();
+	}
 
-		public void setEName(String name) {
-			eName = name;
-		}
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEName() {
+		return eName;
+	}
+
+	public void setEName(String name) {
+		eName = name;
+	}
 }

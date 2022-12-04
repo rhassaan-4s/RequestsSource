@@ -1,5 +1,6 @@
 <jsp:include page="/web/common/includes/header.jsp" flush="true" />
 <%@ include file="/web/common/includes/taglibs.jsp"%>
+<abc:security property="1028"/>
 <script type="text/javascript">
 function vacationChanged(index){
 	var select = document.getElementById("rules["+index+"].vacation");

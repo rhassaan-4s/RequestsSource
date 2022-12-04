@@ -20,7 +20,7 @@ import com._4s_.auditing.model.Auditable;
 public class HRCourseSpecialty implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_coursesp_seq")
-	@SequenceGenerator(name="hr_coursesp_seq",sequenceName="hr_coursesp_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_coursesp_seq",sequenceName="hr_coursesp_seq")
 	private Long id;
     private String special;
 	private String name;

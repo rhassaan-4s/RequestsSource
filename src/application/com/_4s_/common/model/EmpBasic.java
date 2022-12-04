@@ -29,11 +29,7 @@ import com._4s_.auditing.model.Auditable;
 
 @Entity
 @Table (name = "EMPBASIC")
-public class EmpBasic implements Serializable,Auditable {
-	@Id
-	@GenericGenerator(name="empBasic_seq",strategy="com._4s_.attendance.dao.EmpBasicStringKeyGenerator")
-	@GeneratedValue(generator="empBasic_seq")
-	private String empCode;
+public class EmpBasic extends EmpBasicParent implements Serializable,Auditable {
 	private String empName;
 	private String e_emp_name;
 	private String permenant="T";
@@ -43,16 +39,16 @@ public class EmpBasic implements Serializable,Auditable {
 	private String address;
 	private String eAddress;
 	private String should_sign="1";
-	private String natnl_no;
+	
 //	@Temporal(TemporalType.DATE)
 	private Timestamp emplDate;
 //	@Temporal(TemporalType.DATE)
-	private Timestamp birthdate;
+	
 //	@Temporal(TemporalType.DATE)
 	private Timestamp job_join;
 	private String phone;
 	private String mobile;
-	private String sex;
+	
 //	@Temporal(TemporalType.DATE)
 	private Timestamp end_serv;
 	@ManyToOne
@@ -99,28 +95,6 @@ public class EmpBasic implements Serializable,Auditable {
 	public Long getId() {
 		return null;
 	}
-
-	public Date getBirthdate() {
-		return birthdate;
-	}
-
-
-
-	public void setBirthdate(Timestamp birthdate) {
-		this.birthdate = birthdate;
-	}
-
-
-
-	public String getEmpCode() {
-		return empCode;
-	}
-
-
-	public void setEmpCode(String empCode) {
-		this.empCode = empCode;
-	}
-
 
 	public String getEmpName() {
 		return empName;
@@ -210,13 +184,6 @@ public class EmpBasic implements Serializable,Auditable {
 	}
 
 
-	public String getNatnl_no() {
-		return natnl_no;
-	}
-
-	public void setNatnl_no(String natnl_no) {
-		this.natnl_no = natnl_no;
-	}
 
 	public Timestamp getEmplDate() {
 		return emplDate;
@@ -255,16 +222,6 @@ public class EmpBasic implements Serializable,Auditable {
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
-	}
-
-
-	public String getSex() {
-		return sex;
-	}
-
-
-	public void setSex(String sex) {
-		this.sex = sex;
 	}
 
 
@@ -420,7 +377,7 @@ public class EmpBasic implements Serializable,Auditable {
 
 	public String toString() {
 		return new ToStringBuilder(this)
-		.append("natNi_no", this.natnl_no)
+		.append("natNi_no", this.getNatnl_no())
 		/*.append("watchedThreads", this.watchedThreads)*/.toString();
 	}
 
@@ -432,11 +389,11 @@ public class EmpBasic implements Serializable,Auditable {
 			return false;
 		}
 		EmpBasic rhs = (EmpBasic) o;
-		return new EqualsBuilder().append(this.natnl_no, rhs.getNatnl_no()).isEquals();
+		return new EqualsBuilder().append(this.getNatnl_no(), rhs.getNatnl_no()).isEquals();
 	}
 
 	public int hashCode() {
-		return new HashCodeBuilder(2090939697, 874530185).append(this.natnl_no).toHashCode();
+		return new HashCodeBuilder(2090939697, 874530185).append(this.getNatnl_no()).toHashCode();
 	}
 
 

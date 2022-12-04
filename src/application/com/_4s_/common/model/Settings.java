@@ -21,7 +21,7 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="common_settings")
 public class Settings  implements Serializable,Auditable {
 	
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
 	
 	@ManyToOne
@@ -75,11 +75,21 @@ public class Settings  implements Serializable,Auditable {
 	
 	private Boolean sqlServerConnectionEnabled;
 	
+	private Boolean desktopHrApplication;
+	
 //	private String dbPortNo;
 	
 	
 	////////////////Android Settings////////////////////
 	
+	public Boolean getDesktopHrApplication() {
+		return desktopHrApplication;
+	}
+
+	public void setDesktopHrApplication(Boolean desktopHrApplication) {
+		this.desktopHrApplication = desktopHrApplication;
+	}
+
 	public Boolean getSqlServerConnectionEnabled() {
 		return sqlServerConnectionEnabled;
 	}

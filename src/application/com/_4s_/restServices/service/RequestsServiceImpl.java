@@ -562,6 +562,13 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		response.put("Status", status);
 		return response;
 	}
+	if (userRequest.getLatitude()==new Double(0) || userRequest.getLongitude()==new Double(0)) {
+		status.setCode("304");
+		status.setMessage("Turn On Location Settings");
+		status.setStatus("False");
+		response.put("Status", status);
+		return response;
+	}
 	
 	DateFormat df=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	DateFormat df2=new SimpleDateFormat("dd/MM/yyyy");

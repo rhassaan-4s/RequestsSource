@@ -26,7 +26,7 @@ import com._4s_.auditing.model.Auditable;
 public class HREmployeeVacation implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_employee_vacation_seq")
-	@SequenceGenerator(name="hr_employee_vacation_seq",sequenceName="hr_employee_vacation_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_employee_vacation_seq",sequenceName="hr_employee_vacation_seq")
 	private Long id;
 	
 	private Date fromDate;

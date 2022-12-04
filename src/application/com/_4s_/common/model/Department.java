@@ -26,7 +26,7 @@ import com._4s_.auditing.model.Auditable;
 @Table (name = "common_department")
 
 public class Department implements Serializable,Auditable {
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
 	private String description;
 	private Boolean isDefault = new Boolean(false);

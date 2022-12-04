@@ -45,6 +45,10 @@ public class ChangeApplication implements Controller {
 			securityApplication = (SecurityApplication) commonManager
 					.getObject(SecurityApplication.class, new Long(3));
 			request.getSession().setAttribute("appName", "ADMINISTRATION");
+		} else if (application.equals("HR")) {
+			securityApplication = (SecurityApplication) commonManager
+					.getObject(SecurityApplication.class, new Long(6));
+			request.getSession().setAttribute("appName", "HR");
 		} else if (application.equals("requestsApproval")) {
 			securityApplication = (SecurityApplication) commonManager
 					.getObject(SecurityApplication.class, new Long(12));

@@ -22,8 +22,9 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="a_insurance_cala")
 public class AInsuranceCala implements Auditable,Serializable {
 
-	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="a_insurance_cala_seq")
-	@SequenceGenerator(name="a_insurance_cala_seq",sequenceName="a_insurance_cala_seq")//(generate=GeneratorType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="a_insurance_cala_seq")
+	@SequenceGenerator(name="a_insurance_cala_seq",sequenceName="a_insurance_cala_seq")
 	private Long id;
 	
 	private String emp_code;

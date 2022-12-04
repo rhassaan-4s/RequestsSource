@@ -19,7 +19,7 @@ import com._4s_.auditing.model.Auditable;
 public class HRInstall implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_install_seq")
-	@SequenceGenerator(name="hr_install_seq",sequenceName="hr_install_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_install_seq",sequenceName="hr_install_seq")
 	private Long id;
 	private String instCode;
 	private String instName;

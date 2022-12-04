@@ -21,8 +21,8 @@ import com._4s_.common.util.LocaleUtil;
 @Table(name="hr_effect_disc_days")
 public class HREffectDiscDays implements Auditable,Serializable {
 	
-	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HR_ADDITIONAL_SEQ")
-	@SequenceGenerator(name="HR_ADDITIONAL_SEQ",sequenceName="HR_ADDITIONAL_SEQ")//(generate=GeneratorType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HR_effect_disc_SEQ")
+	@SequenceGenerator(name="HR_effect_disc_SEQ",sequenceName="HR_effect_disc_SEQ")
 	private Long id;
 	private String name;
 	private String ename;

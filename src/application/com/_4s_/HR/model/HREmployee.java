@@ -33,7 +33,7 @@ import com._4s_.common.util.LocaleUtil;
 public class HREmployee  implements Auditable,Serializable {
 		
 		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_employee_seq")
-		@SequenceGenerator(name="hr_employee_seq",sequenceName="hr_employee_seq")//(generate=GeneratorType.IDENTITY)
+		@SequenceGenerator(name="hr_employee_seq",sequenceName="hr_employee_seq")
 		private Long id;
 		
 		private String empCode;

@@ -34,7 +34,7 @@ import com._4s_.common.util.LocaleUtil;
 public class EmpReqTypeAcc  implements Auditable,Serializable {
 		
 		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="emp_reqtype_acc_seq")
-		@SequenceGenerator(name="emp_reqtype_acc_seq",sequenceName="emp_reqtype_acc_seq")//(generate=GeneratorType.IDENTITY)
+		@SequenceGenerator(name="emp_reqtype_acc_seq",sequenceName="emp_reqtype_acc_seq")
 		private Long id;
 		
 		@ManyToOne

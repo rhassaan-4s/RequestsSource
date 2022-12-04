@@ -24,7 +24,7 @@ import com._4s_.auditing.model.Auditable;
 public class HREmployeePenalty implements Auditable,Serializable {
 
 	   @Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_employee_penalty_seq")
-	   @SequenceGenerator(name="hr_employee_penalty_seq",sequenceName="hr_employee_penalty_seq")//(generate=GeneratorType.IDENTITY)
+	   @SequenceGenerator(name="hr_employee_penalty_seq",sequenceName="hr_employee_penalty_seq")
        private Long id;
 	   
 		private Long decisionNumber;

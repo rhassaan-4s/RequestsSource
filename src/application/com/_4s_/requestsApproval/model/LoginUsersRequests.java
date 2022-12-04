@@ -23,7 +23,7 @@ import com._4s_.common.model.Employee;
 @Table(name="login_users_requests" ,uniqueConstraints= {@UniqueConstraint(columnNames= {"empCode","request_date","from_date","request_type"})})
 public class LoginUsersRequests implements Auditable,Serializable  {
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="loginUsersRequests_seq")
-	@SequenceGenerator(name="loginUsersRequests_seq",sequenceName="loginUsersRequests_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="loginUsersRequests_seq",sequenceName="loginUsersRequests_seq")
 	private Long id;
 	
 	@ManyToOne

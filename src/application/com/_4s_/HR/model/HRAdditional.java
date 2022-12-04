@@ -22,7 +22,7 @@ import com._4s_.auditing.model.Auditable;
 public class HRAdditional implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HR_ADDITIONAL_SEQ")
-	@SequenceGenerator(name="HR_ADDITIONAL_SEQ",sequenceName="HR_ADDITIONAL_SEQ")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="HR_ADDITIONAL_SEQ",sequenceName="HR_ADDITIONAL_SEQ")
      private Long id;
 	
 	private Boolean nightApply;

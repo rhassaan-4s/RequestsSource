@@ -304,6 +304,8 @@ public class MySecurityManagerImpl extends BaseManagerImpl implements
 	
 	public List getApplicationsByUser(User user) {
 		List activeApp = getActiveApplications();
+		log.debug("user " + user.getId());
+		log.debug("active apps before filtering size is " + activeApp.size());
 		List app = new ArrayList();
 		Set appSet = new HashSet();
 		Iterator itr = activeApp.iterator();
@@ -312,6 +314,7 @@ public class MySecurityManagerImpl extends BaseManagerImpl implements
 			Iterator inner_itr = user.getRoles().iterator();
 			while(inner_itr.hasNext()) {
 				Roles role = (Roles)inner_itr.next();
+				log.debug("user "+user.getId()+" - role " + role.getId());
 				if(ap.getRoles().contains(role)) {
 					if(app.contains(role.getApplication())==false) {
 						app.add(role.getApplication());

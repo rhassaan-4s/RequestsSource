@@ -27,7 +27,7 @@ import com._4s_.common.util.LocaleUtil;
 public class HREmployeeMaritalStatus implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_employee_marital_seq")
-	@SequenceGenerator(name="hr_employee_marital_seq",sequenceName="hr_employee_marital_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_employee_marital_seq",sequenceName="hr_employee_marital_seq")
 	private Long id;
 	
 	@ManyToOne 

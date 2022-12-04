@@ -20,7 +20,7 @@ import com._4s_.auditing.model.Auditable;
 public class HRSpecialtyLevel implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_specialty_level_seq")
-	@SequenceGenerator(name="hr_specialty_level_seq",sequenceName="hr_specialty_level_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_specialty_level_seq",sequenceName="hr_specialty_level_seq")
 	private Long id;
 	private Integer levelNo;
 	private Integer length=3;

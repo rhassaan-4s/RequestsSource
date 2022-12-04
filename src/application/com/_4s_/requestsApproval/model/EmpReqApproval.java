@@ -36,7 +36,7 @@ import com._4s_.common.util.LocaleUtil;
 public class EmpReqApproval  implements Auditable,Serializable {
 		
 		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="emp_req_approval_seq")
-		@SequenceGenerator(name="emp_req_approval_seq",sequenceName="emp_req_approval_seq")//(generate=GeneratorType.IDENTITY)
+		@SequenceGenerator(name="emp_req_approval_seq",sequenceName="emp_req_approval_seq")
 		private Long id;
 		
 		@ManyToOne

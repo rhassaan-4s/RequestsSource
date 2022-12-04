@@ -22,7 +22,7 @@ import com._4s_.common.util.LocaleUtil;
 public class HRKinship implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_kinship_seq")
-	@SequenceGenerator(name="hr_kinship_seq",sequenceName="hr_kinship_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_kinship_seq",sequenceName="hr_kinship_seq")
 	private Long id;
 	private String name;
 	private String ename;

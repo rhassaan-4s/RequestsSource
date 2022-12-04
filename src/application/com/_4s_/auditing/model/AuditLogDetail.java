@@ -27,7 +27,7 @@ import javax.persistence.Table;
 @Entity//(access=AccessType.FIELD) -- implicitly declared depending on whether @Id or @EmbeddedId is on field or methods
 @Table (name = "auditing_auditLogDetail")
 public class AuditLogDetail {
-	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)//(generate=GeneratorType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	public Long id;
 	@ManyToOne
 	@JoinColumn (name="auditLogRecord")

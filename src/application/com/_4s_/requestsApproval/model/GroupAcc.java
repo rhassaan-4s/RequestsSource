@@ -25,7 +25,7 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="group_acc")
 public class GroupAcc implements Auditable,Serializable {
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="group_acc_seq")
-	@SequenceGenerator(name="group_acc_seq",sequenceName="group_acc_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="group_acc_seq",sequenceName="group_acc_seq")
 	private Long id;
 	
 	private String title;

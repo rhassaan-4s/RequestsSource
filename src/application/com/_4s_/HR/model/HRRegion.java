@@ -19,7 +19,7 @@ import com._4s_.auditing.model.Auditable;
 public class HRRegion implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_region_seq")
-	@SequenceGenerator(name="hr_region_seq",sequenceName="hr_region_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_region_seq",sequenceName="hr_region_seq")
 	private Long id;
     private String region; 
 	private String name;

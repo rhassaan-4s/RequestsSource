@@ -15,7 +15,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @Entity//(access=AccessType.FIELD)
 @Table (name = "auditing_class_name")
 public class ClassName {
-	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)//(generate=GeneratorType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
 
 	private String name;

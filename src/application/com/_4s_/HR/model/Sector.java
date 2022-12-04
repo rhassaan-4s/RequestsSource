@@ -22,7 +22,7 @@ public class Sector implements Auditable,Serializable {
 	
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_sector_seq")
-	@SequenceGenerator(name="hr_sector_seq",sequenceName="hr_sector_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_sector_seq",sequenceName="hr_sector_seq")
 	private Long id;
     private String sector ;
 	private String name;

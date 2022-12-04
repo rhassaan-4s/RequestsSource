@@ -22,7 +22,7 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="access_levels")
 public class AccessLevels implements Auditable,Serializable {
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="access_levels_seq")
-	@SequenceGenerator(name="access_levels_seq",sequenceName="access_levels_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="access_levels_seq",sequenceName="access_levels_seq")
 	private Long id;
 	
 	@ManyToOne

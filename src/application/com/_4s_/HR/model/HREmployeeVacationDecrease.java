@@ -22,7 +22,7 @@ import com._4s_.auditing.model.Auditable;
 public class HREmployeeVacationDecrease implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_emp_vac_decrease_seq")
-	@SequenceGenerator(name="hr_emp_vac_decrease_seq",sequenceName="hr_emp_vac_decrease_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_emp_vac_decrease_seq",sequenceName="hr_emp_vac_decrease_seq")
 	private Long id;
     
 	private Long days;

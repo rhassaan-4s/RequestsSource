@@ -19,7 +19,7 @@ import com._4s_.auditing.model.Auditable;
 public class Flag implements Serializable, Auditable{
 	private static final long serialVersionUID = 1L;
 	
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
 	private String name;
 	private String description;

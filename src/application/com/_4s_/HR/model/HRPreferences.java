@@ -15,7 +15,7 @@ public class HRPreferences implements Serializable {
 	
 
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_preferences_seq")
-	@SequenceGenerator(name="hr_preferences_seq",sequenceName="hr_preferences_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_preferences_seq",sequenceName="hr_preferences_seq")
 	private Long id;
 	private String property;
 	private String user_code;

@@ -96,6 +96,15 @@ public class SettingsForm extends BaseSimpleFormController{
 			if (isTimesheetEnabled == null || isTimesheetEnabled.equals("")) {
 				settings.setIsTimesheetEnabled(false);
 			}
+			
+			String sqlServerConnectionEnabled = request.getParameter("sqlServerConnectionEnabled");
+			if (sqlServerConnectionEnabled == null || sqlServerConnectionEnabled.equals("")) {
+				settings.setSqlServerConnectionEnabled(false);
+			}
+			String desktopHrApplication = request.getParameter("desktopHrApplication");
+			if (desktopHrApplication == null || desktopHrApplication.equals("")) {
+				settings.setDesktopHrApplication(false);
+			}
 		}
 		return settings;
 

@@ -23,7 +23,7 @@ import com._4s_.common.util.LocaleUtil;
 public class HRInternalLevel extends TreeDivisionLevels {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_internal_level_seq")
-	@SequenceGenerator(name="hr_internal_level_seq",sequenceName="hr_internal_level_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_internal_level_seq",sequenceName="hr_internal_level_seq")
 	private Long id;
 	/*private Integer levelNo;
 	private Integer length=3;

@@ -29,7 +29,7 @@ import com._4s_.auditing.model.Auditable;
 @Entity
 @Table (name = "common_country")
 public class Country implements Serializable,Auditable {
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
 	private String description;
 	private String maleNationality;

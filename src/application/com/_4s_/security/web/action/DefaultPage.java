@@ -116,12 +116,17 @@ public class DefaultPage extends BaseController {
 		log.debug("ip address " +currentIP);
 
 		Map model = new HashMap();
-		Settings settings = (Settings)securityManager.getObject(Settings.class, new Long(1)); 
+		Settings settings = null;
+		try {
+			settings = (Settings)securityManager.getObject(Settings.class, new Long(1));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		log.debug("settings " + settings);
 		String contextPath = request.getSession().getServletContext().getRealPath("/");
 		request.getSession().setAttribute("contextPath", contextPath);
 //		log.debug("settings.getIpAddressEnabled() " + settings.getIpAddressEnabled());
-		if (settings.getIpAddressEnabled()) {
+		if (settings!=null && settings.getIpAddressEnabled()) {
 		if (currentIP!= null && !currentIP.isEmpty()) {
 			IPAddress ipAdd = null;
 			IPAddress ipAddForUser = (IPAddress)securityManager.getObjectByParameter(IPAddress.class, "users", user);
@@ -195,24 +200,29 @@ public class DefaultPage extends BaseController {
 
 
 
-				Settings settings1 = (Settings)commonManager.getObjectsOrderedByField(Settings.class,"id").get(0);
+				//				Settings settings1 = (Settings)commonManager.getObjectsOrderedByField(Settings.class,"id").get(0);
 				//		int salary_from_day =  requestsApprovalManager.getSalaryFromDay();
-				int salary_from_day = settings1.getSalaryFromDay();
-				log.fatal("salary_from_day " + salary_from_day);
-				int requestsDeadline = settings1.getRequestsDeadline();
-				//		glManager.setEmployee(employee);
-				request.getSession().setAttribute("employee",employee);
-				request.getSession().setAttribute("appName",user.getDefaultApplication().getName());
-				request.getSession().setAttribute("currentApplication", user.getDefaultApplication());
-				request.getSession().setAttribute("locale", user.getLanguage().getCode());
-				request.getSession().setAttribute("activeApplications", securityManager.getApplicationsByUser(user));
+				if (settings!=null) {
+					int salary_from_day = settings.getSalaryFromDay();
+					log.fatal("salary_from_day " + salary_from_day);
+					int requestsDeadline = settings.getRequestsDeadline();
 
-				System.out.println("settings - default page controller "+settings1);
-				request.getSession().setAttribute("settings",settings1);
-				request.getSession().setAttribute("salary_from_day", salary_from_day);
-				request.getSession().setAttribute("requestsDeadline", requestsDeadline);
-				
-				
+					//		glManager.setEmployee(employee);
+					request.getSession().setAttribute("employee",employee);
+					request.getSession().setAttribute("appName",user.getDefaultApplication().getName());
+					request.getSession().setAttribute("currentApplication", user.getDefaultApplication());
+					request.getSession().setAttribute("locale", user.getLanguage().getCode());
+					log.debug("will get applications by user");
+					System.out.println("will get applications by user");
+
+					request.getSession().setAttribute("activeApplications", securityManager.getApplicationsByUser(user));
+
+					System.out.println("settings - default page controller "+settings);
+					request.getSession().setAttribute("settings",settings);
+					request.getSession().setAttribute("salary_from_day", salary_from_day);
+					request.getSession().setAttribute("requestsDeadline", requestsDeadline);
+
+				}
 //				
 //				TimesheetSpecs specs = null;
 //				List specsList = commonManager.getObjects(TimesheetSpecs.class);
@@ -369,23 +379,28 @@ public class DefaultPage extends BaseController {
 			request.getSession().setAttribute("partName2", partName2);
 			request.getSession().setAttribute("partName3", partName3);
 
-//			Settings settings = (Settings)commonManager.getObjectsOrderedByField(Settings.class,"id").get(0);
+			//			Settings settings = (Settings)commonManager.getObjectsOrderedByField(Settings.class,"id").get(0);
 			//		int salary_from_day =  requestsApprovalManager.getSalaryFromDay();
-			int salary_from_day = settings.getSalaryFromDay();
-			log.fatal("salary_from_day " + salary_from_day);
-			int requestsDeadline = settings.getRequestsDeadline();
-			//		glManager.setEmployee(employee);
-			request.getSession().setAttribute("employee",employee);
-			request.getSession().setAttribute("appName",user.getDefaultApplication().getName());
-			request.getSession().setAttribute("currentApplication", user.getDefaultApplication());
-			request.getSession().setAttribute("locale", user.getLanguage().getCode());
-			request.getSession().setAttribute("activeApplications", securityManager.getApplicationsByUser(user));
+			if (settings!=null) {
+				int salary_from_day = settings.getSalaryFromDay();
+				log.fatal("salary_from_day " + salary_from_day);
+				int requestsDeadline = settings.getRequestsDeadline();
+				//		glManager.setEmployee(employee);
+				request.getSession().setAttribute("employee",employee);
+				request.getSession().setAttribute("appName",user.getDefaultApplication().getName());
+				request.getSession().setAttribute("currentApplication", user.getDefaultApplication());
+				request.getSession().setAttribute("locale", user.getLanguage().getCode());
+				log.debug("will get applications by user");
+				System.out.println("will get applications by user");
+				List activeApplications = securityManager.getApplicationsByUser(user);
+				log.debug("activeApplications size " + activeApplications.size());
+				request.getSession().setAttribute("activeApplications", activeApplications);
 
-			System.out.println("settings - default page controller "+settings);
-			request.getSession().setAttribute("settings",settings);
-			request.getSession().setAttribute("salary_from_day", salary_from_day);
-			request.getSession().setAttribute("requestsDeadline", requestsDeadline);
-
+				System.out.println("settings - default page controller "+settings);
+				request.getSession().setAttribute("settings",settings);
+				request.getSession().setAttribute("salary_from_day", salary_from_day);
+				request.getSession().setAttribute("requestsDeadline", requestsDeadline);
+			}
 			//		
 			//		if (user.getDefaultApplication().getName().equals("GL")) {
 			//			//Throwing gl settings in session/////////////////////////////////////////////

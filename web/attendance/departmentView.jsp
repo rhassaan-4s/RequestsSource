@@ -1,5 +1,6 @@
 <jsp:include page="/web/common/includes/header.jsp" flush="true" />
 <%@ include file="/web/common/includes/taglibs.jsp"%>
+<abc:security property="1025"/>
 
 <table width="90%" border="0" cellspacing="0" cellpadding="0"
 	style="padding-right: 10px">
