@@ -105,6 +105,7 @@
 		<custom-filter ref="rememberMeFilter" before="REMEMBER_ME_FILTER"/>
 
 		<access-denied-handler ref="exceptionControllerAdvice" />
+		
 
 	</http>
  
@@ -160,7 +161,7 @@
 			
 		<logout logout-url="/security/logout.html"
 			logout-success-url="/security/login.html" delete-cookies="JSESSIONID" />
-		<csrf disabled="true"/>
+		<!--<csrf disabled="true"/>-->
 		
 		
 		<session-management>
@@ -190,8 +191,8 @@
 			access="CAN_VIEW_page_common_regionsView" />
 		<intercept-url pattern="\A/common/commonAdminEditRegion.html.*\Z"
 			access="CAN_VIEW_page_common_regionForm" />
-
-
+			
+		
 		<intercept-url pattern="\A/i18n/editMessage.html.*\Z"
 			access="CAN_VIEW_page_i18n_editMessage" />
 		<intercept-url pattern="\A/i18n/changeDefaultLocale.html.*\Z"
@@ -392,6 +393,26 @@
 			access="CAN_VIEW_page_approvement" />
 		<intercept-url pattern="\A/requestsApproval/annualVacLimitSetting.html.*\Z"
 			access="CAN_VIEW_page_approvement" />
+		
+		<intercept-url pattern="/requestsApproval/loginUsersRequestsForm.html/vacInfo.*\Z"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+		
+		
+		<intercept-url pattern="/requestsApproval/attendanceRequestForm.html.*\Z"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			
+		<intercept-url pattern="/common/changeApplication.html?aaplication=.*\Z"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			
+		<intercept-url pattern="/attendance/vacRuleForm.html.*\Z"
+			access="hasRole('CAN_VIEW_page_approvement')" />
+			
+			<intercept-url pattern="/attendance/ajax-drawAbsenceAttendanceByDepartment"
+			access="hasRole('CAN_VIEW_page_approvement')" />
+			
+			<intercept-url pattern="/attendance/qualificationForm.html.*\Z"
+			access="hasRole('CAN_VIEW_all_qualification')" />
+			
 	</http>
 
 	<global-method-security pre-post-annotations="enabled" />

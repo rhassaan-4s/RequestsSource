@@ -12,8 +12,11 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com._4s_.auditing.model.Auditable;
+import com._4s_.common.web.validators.Mandatory;
+import com._4s_.common.web.validators.Unique;
 
 @Entity
 @Table (name = "location")
@@ -26,7 +29,11 @@ public class AttendanceDepartment implements Serializable,Auditable {
 	@GenericGenerator(name="location_seq",strategy="com._4s_.attendance.dao.DepartmentStringKeyGenerator")
 	@GeneratedValue(generator="location_seq")
 	private String location;
+	@Mandatory(value=AttendanceDepartment.class,property="name")
+	@Unique(value=AttendanceDepartment.class,property = "name")
 	private String name;
+	@Mandatory(value=AttendanceDepartment.class,property="ename")
+	@Unique(value=AttendanceDepartment.class,property = "ename")
 	private String ename;
 	private String lang = "A";
 	

@@ -5,8 +5,8 @@
 <beans default-autowire="no" default-lazy-init="true">
 	<bean id="messageDAO" parent="txProxyTemplate">
 		<property name="target">
-			<bean class="com._4s_.i18n.dao.MessageDAOHibernate"  init-method="init">
-				<property name="sessionFactory" ref="auditSessionFactory" />
+			<bean class="com._4s_.i18n.dao.MessageDAOHibernate" lazy-init="true"  init-method="init">
+				<property name="sessionFactory" ref="sessionFactory" />
 			</bean>
 		</property>
 		<property name="transactionAttributes">

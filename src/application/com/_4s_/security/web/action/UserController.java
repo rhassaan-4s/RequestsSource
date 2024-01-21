@@ -9,6 +9,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com._4s_.common.model.Branch;
@@ -20,10 +26,12 @@ import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
 import com._4s_.security.service.MySecurityManager;
 
-public class UserController extends BaseController implements Comparator{
-	
+@Controller
+public class UserController implements Comparator{//extends BaseController
+	protected final Log log = LogFactory.getLog(getClass());
+	@Autowired
 	private MySecurityManager mgr = null;
-	
+	@Autowired
 	public CommonManager commonManager;
 
 	public MySecurityManager getMgr() {
@@ -49,7 +57,8 @@ public class UserController extends BaseController implements Comparator{
 		return u1.getUsername().compareTo(u2.getUsername());
 	}
 
-	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping("/userDetails.html")
+	public String handleRequest(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>> handleRequest()<<<<<<<<<<<<<<<<<<<<<<<<<<");
 		
@@ -81,16 +90,16 @@ public class UserController extends BaseController implements Comparator{
 		mgr.saveObject(c1);	
 */		
 		/////////////////////////////////////////////////////////////////////
-		Map model = new HashMap();
+//		Map model = new HashMap();
 		
 		String deleteId = request.getParameter("deleteId");
 		if(deleteId != null && !deleteId.equals("")) {
 			Long deleteIdLong = Long.parseLong(deleteId);
-			Object o = baseManager.getObjectByParameter(User.class, "id", deleteIdLong);
+			Object o = mgr.getObjectByParameter(User.class, "id", deleteIdLong);
 			if(o != null) {
 				User u = (User)o;
 				u.setIsActive(false);
-				baseManager.saveObject(u);
+				mgr.saveObject(u);
 			}
 		}
 		
@@ -123,16 +132,17 @@ public class UserController extends BaseController implements Comparator{
 		}
 		
 		
-		List departments = baseManager.getObjects(Department.class);		
+		List departments = mgr.getObjects(Department.class);		
 //		List branches = commonManager.getBranchesRelatedByCompany(new Long(1)); // SCFHS
 		List branches= commonManager.getObjects(Branch.class);
-		model.put("users", users);
-		model.put("branches", branches);
-		model.put("departments", departments);
-		model.put("councilBranch", request.getParameter("councilBranch"));
-		model.put("department", request.getParameter("department"));
-		model.put("isEmployee", request.getParameter("isEmployee"));
-		return new ModelAndView("userDetails", model);
+		model.addAttribute("users", users);
+		model.addAttribute("branches", branches);
+		model.addAttribute("departments", departments);
+		model.addAttribute("councilBranch", request.getParameter("councilBranch"));
+		model.addAttribute("department", request.getParameter("department"));
+		model.addAttribute("isEmployee", request.getParameter("isEmployee"));
+//		return new ModelAndView("userDetails", model);
+		return "userDetails";
 	}
 	
 }

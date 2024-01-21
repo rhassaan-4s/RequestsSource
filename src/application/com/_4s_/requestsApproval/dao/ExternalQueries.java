@@ -18,7 +18,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.DataAccessException;
 //import org.hibernate.hql.ast.tree.DeleteStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
@@ -27,6 +30,8 @@ import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.requestsApproval.web.action.TimeAttend;
 
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+@Repository
 public class ExternalQueries extends CommonQueries{
 	protected final Log log = LogFactory.getLog(getClass());
 
@@ -406,7 +411,15 @@ public class ExternalQueries extends CommonQueries{
 		}
 
 		log.debug("----cc2---"+cc2);
-		Long result=cc1-cc2;
+		
+		Long result=0L;
+		if (cc1==null) {
+			cc1 = 0L;
+		}
+		if (cc2==null) {
+			cc2 = 0L;
+		}
+		result = cc1-cc2;
 		log.debug("----cc1-cc2---"+result);
 
 		return result;

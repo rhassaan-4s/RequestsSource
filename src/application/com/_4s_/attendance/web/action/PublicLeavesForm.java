@@ -13,21 +13,49 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.attendance.model.PublicLeaves;
 import com._4s_.attendance.model.PublicLeavesListWrapper;
+import com._4s_.attendance.model.VacRulesListWrapper;
 import com._4s_.attendance.service.AttendanceManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.common.web.binders.BiCalendarDateBinder;
+import com._4s_.requestsApproval.model.Vacation;
+import com._4s_.requestsApproval.web.binders.VacationBinder;
 
+@Controller
+@RequestMapping("/publicLeavesForm.html")
 public class PublicLeavesForm extends BaseSimpleFormController{
+	@Autowired
 	private AttendanceManager attendanceManager;
 	
+	@Autowired
+	@Qualifier("dateBinder")
+	private BiCalendarDateBinder dateBinder;
 	
 	private List<PublicLeaves> oldLeaves = null;
+	
+	public BiCalendarDateBinder getDateBinder() {
+		return dateBinder;
+	}
+
+	public void setDateBinder(BiCalendarDateBinder dateBinder) {
+		this.dateBinder = dateBinder;
+	}
 
 	public AttendanceManager getAttendanceManager() {
 		return attendanceManager;
@@ -47,8 +75,8 @@ public class PublicLeavesForm extends BaseSimpleFormController{
 		this.oldLeaves = oldLeaves;
 	}
 
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
 		PublicLeavesListWrapper pubLeaves = new PublicLeavesListWrapper();
@@ -72,13 +100,15 @@ public class PublicLeavesForm extends BaseSimpleFormController{
 			
 		pubLeaves.setPubLeaves(p);
 		
-		
+		model.put("leaves", pubLeaves);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	   return pubLeaves;
+	   return "publicLeavesForm";
 	}
 	
 	//**************************************** referenceData ***********************************************\\
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,
+			HttpServletRequest request,@ModelAttribute("leaves") PublicLeavesListWrapper command)
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		PublicLeavesListWrapper pubLeaves =  (PublicLeavesListWrapper)command;
@@ -92,6 +122,12 @@ public class PublicLeavesForm extends BaseSimpleFormController{
 		return model;
 	}
 
+	@Override
+	public void initBinder(WebDataBinder binder) {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		super.initBinder(binder);
+		binder.registerCustomEditor(BiCalendarDateBinder.class, dateBinder);
+	}
 	//**************************************** onBind ***********************************************\\	
 	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -115,9 +151,12 @@ public class PublicLeavesForm extends BaseSimpleFormController{
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{	
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@ModelAttribute("leaves") PublicLeavesListWrapper command,
+//			BindingResult result,
+			Model model) throws Exception
+	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		PublicLeavesListWrapper pubLeaves =  (PublicLeavesListWrapper)command;
 //		Iterator<PublicLeaves> itrLeaves = pubLeaves.getPubLeaves().iterator();

@@ -15,19 +15,26 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
+import com._4s_.common.web.action.CommonController;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 
-
-public class AnnualVacationBalance implements Controller{
+@Controller
+@RequestMapping("/annualVacationBalance.html")
+public class AnnualVacationBalance extends CommonController {
 	protected final Log log = LogFactory.getLog(getClass());
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
 
 	public RequestsApprovalManager getRequestsApprovalManager() {
@@ -40,11 +47,11 @@ public class AnnualVacationBalance implements Controller{
 	}
 
 	
-	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	@RequestMapping(method = RequestMethod.GET)
+	public String handleRequest(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 
-		Map model=new HashMap();
+//		Map model=new HashMap();
 
 		Date inDate = new Date();	
 		Employee loggedInEmp =(Employee) request.getSession().getAttribute("employee");
@@ -63,10 +70,10 @@ public class AnnualVacationBalance implements Controller{
 				log.debug("emp " + emp);
 			}
 		}
-		model.put("emp", emp);
-		model.put("empCode", empCode);
+		model.addAttribute("emp", emp);
+		model.addAttribute("empCode", empCode);
 		LoginUsers loginUser=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
-		model.put("empName", loginUser.getName());
+		model.addAttribute("empName", loginUser.getName());
 
 		String inDateString = request.getParameter("inDate");
 		log.debug("-------inDateString---"+inDateString);
@@ -107,15 +114,15 @@ public class AnnualVacationBalance implements Controller{
 		//			e.printStackTrace();
 		//		}
 
-		model.put("inDate", inDate);	
+		model.addAttribute("inDate", inDate);	
 
 
 		String vacType = request.getParameter("vacType");
-		model.put("vacId", vacType);
+		model.addAttribute("vacId", vacType);
 		log.debug("-----vacType entered---"+vacType);
 		if(vacType!=null && !vacType.equals("")){
 			Vacation vacOb=(Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class, "vacation", vacType);
-			model.put("vacType", vacOb.getName());
+			model.addAttribute("vacType", vacOb.getName());
 		} 
 
 		Long balance = 0L;
@@ -132,10 +139,10 @@ public class AnnualVacationBalance implements Controller{
 			if (annualVacationBalanceDaysEnabled == true){//lotus
 				days=requestsApprovalManager.getVacations( emp.getEmpCode(), new Long(2), vacType, inDate,settings);
 				log.debug("-----days ---"+days.size());
-				model.put("days", days);
+				model.addAttribute("days", days);
 			}
 			log.debug("-----balance ---"+balance);
-			model.put("balance",balance);
+			model.addAttribute("balance",balance);
 		}
 
 		String name1 = "";
@@ -145,30 +152,30 @@ public class AnnualVacationBalance implements Controller{
 			if (annualVacationBalanceDaysEnabled == true){//lotus
 				days=requestsApprovalManager.getVacations( emp.getEmpCode(), new Long(2), "001", inDate,settings);
 				log.debug("-----days 001 ---"+days.size());
-				model.put("days1", days);
+				model.addAttribute("days1", days);
 			}
 			balance1=requestsApprovalManager.getVacationCredit(emp.getEmpCode(), new Long(2), "001", inDate);
 			log.debug("-----balance1 ---"+balance1);
 			Vacation vacOb1=(Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class, "vacation", "001");
 			name1 = vacOb1.getName();
-			model.put("name1",name1);
-			model.put("balance1", balance1);
+			model.addAttribute("name1",name1);
+			model.addAttribute("balance1", balance1);
 			balance2=requestsApprovalManager.getVacationCredit(emp.getEmpCode(), new Long(2), "002", inDate);
 			log.debug("-----balance2 ---"+balance2);
 
 			if (annualVacationBalanceDaysEnabled == true){//lotus
 				days=requestsApprovalManager.getVacations(emp.getEmpCode(), new Long(2), "002", inDate,settings);
 				log.debug("-----days 002 ---"+days.size());
-				model.put("days2", days);
+				model.addAttribute("days2", days);
 			}
 			Vacation vacOb2=(Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class, "vacation", "002");
 			name2 = vacOb2.getName();
-			model.put("name2", name2);
-			model.put("balance2", balance2);
-			model.put("daysEnabled", annualVacationBalanceDaysEnabled);
+			model.addAttribute("name2", name2);
+			model.addAttribute("balance2", balance2);
+			model.addAttribute("daysEnabled", annualVacationBalanceDaysEnabled);
 		}
 
-		model.put("annualVacList", requestsApprovalManager.getObjectsByParameter(Vacation.class ,"type","A"));
+		model.addAttribute("annualVacList", requestsApprovalManager.getObjectsByParameter(Vacation.class ,"type","A"));
 		
 		String exportParameter = (String)request.getParameter("export");
 		if (exportParameter!=null && exportParameter.equals("true")) {
@@ -215,9 +222,11 @@ public class AnnualVacationBalance implements Controller{
 			}
 			log.debug("after export to excel");
 			//			return new ModelAndView(new RedirectView("timeAttendanceReport.html"));
-			return new ModelAndView("annualVacationBalance",model);
+//			return new ModelAndView("annualVacationBalance",model);
+			return "annualVacationBalance";
 		}
-		return new ModelAndView("annualVacationBalance",model);
+//		return new ModelAndView("annualVacationBalance",model);
+		return "annualVacationBalance";
 
 	}
 

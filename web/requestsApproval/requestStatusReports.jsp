@@ -100,6 +100,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 		<td>
 			<form id="requestStatusReports" name="requestStatusReports"	method="POST" action="<c:url value="/requestsApproval/requestStatusReports.html"/>">
 				    <input type="hidden"  id="errand" name="errand" value="${errand}"/>
+				    <input type="hidden" name="${_csrf.parameterName}" id="token" value="${_csrf.token}"/>
 				    
 					<div id="result">
 					<table border=0 cellspacing=1 cellpadding=0 id="ep" style="margin-right:40px">

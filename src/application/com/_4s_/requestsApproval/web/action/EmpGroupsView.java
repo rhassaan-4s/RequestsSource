@@ -10,17 +10,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com._4s_.common.model.Employee;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
-
-public class EmpGroupsView implements Controller{
-
+@Controller	
+public class EmpGroupsView {// implements Controller{
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
 	protected final Log log = LogFactory.getLog(getClass());
 	public RequestsApprovalManager getRequestsApprovalManager() {
@@ -32,11 +36,12 @@ public class EmpGroupsView implements Controller{
 		this.requestsApprovalManager = requestsApprovalManager;
 	}
 	
-	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse arg1) throws Exception {
+	
+	@RequestMapping("/empGroupsView.html")
+	public ModelAndView handleRequest(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception {	
 		// TODO Auto-generated method stub
 
-		Map model=new HashMap();
+//		Map model=new HashMap();
 		
 		Map userdata=new HashMap();
 		
@@ -44,7 +49,7 @@ public class EmpGroupsView implements Controller{
 
 		String done=request.getParameter("done");
 		if(done!=null){
-			model.put("done", done);
+			model.addAttribute("done", done);
 		}
 		
 		List requList=new ArrayList();
@@ -54,10 +59,10 @@ public class EmpGroupsView implements Controller{
 		
 		String empId=request.getParameter("empId");
 		log.debug("empId ------ " + empId);
-		model.put("empId", empId);
+		model.addAttribute("empId", empId);
 		String empCode=request.getParameter("empCode");
 		log.debug("empCode ==>> " + empCode);
-		model.put("employeeCode", empCode);
+		model.addAttribute("employeeCode", empCode);
 		
 		
 //		String groupId=request.getParameter("groupId");
@@ -66,7 +71,7 @@ public class EmpGroupsView implements Controller{
 		
 		String requestId=request.getParameter("requestId");
 		log.debug("xxx----requestId ==>> " + requestId);
-		model.put("requestId", requestId);
+		model.addAttribute("requestId", requestId);
 		
 		if(empId!=null&&!empId.equals("")){
 		 
@@ -111,11 +116,15 @@ public class EmpGroupsView implements Controller{
 			}
 		}
 
-		LoginUsers loginUsers = (LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode.empCode", empCode)	;	
-		if(loginUsers!=null && !loginUsers.equals("")){
-			log.debug("----mmname---"+loginUsers.getName());
-			model.put("mm_name", loginUsers.getName());
+		log.debug("emp code " + empCode);
+		if (empCode!=null) {
+			Employee emp = (Employee) requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", empCode)	;	
+			LoginUsers loginUsers = (LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp)	;	
+			if(loginUsers!=null && !loginUsers.equals("")){
+				log.debug("----mmname---"+loginUsers.getName());
+				model.addAttribute("mm_name", loginUsers.getName());
 
+			}
 		}
 		
 //		String empToBeDeleted=request.getParameter("empId");
@@ -127,8 +136,8 @@ public class EmpGroupsView implements Controller{
 
 		//model.put("info", info);
 		
-		model.put("data", data);
-		model.put("info", info);
+		model.addAttribute("data", data);
+		model.addAttribute("info", info);
 		
 	//	String empRecAccId=request.getParameter("empRecAccId");
 		String[] empRecAccId=request.getParameterValues("empRecAccId");
@@ -142,10 +151,10 @@ public class EmpGroupsView implements Controller{
 				}	
 			}
 			String url="empGroupsView.html?done=true";
-			return new ModelAndView(new RedirectView(url),model);
+			return new ModelAndView(new RedirectView(url));
 		}
 		else		
-		return new ModelAndView("empGroupsView",model);
+		return new ModelAndView("empGroupsView");
 
 	}
 	

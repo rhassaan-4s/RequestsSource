@@ -7,18 +7,23 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 public class CommonQueries {
-	
+
 	private JdbcTemplate jdbcTemplate;
 	private BasicDataSource basicDataSource;
-	
+//	@Autowired
 	private String driverClass;
+//	@Autowired
 	private String url;
+//	@Autowired
 	private String username;
+//	@Autowired
 	private String password;
+//	@Autowired
 	private String schema;
 
 	private PlatformTransactionManager platformTransactionManager;

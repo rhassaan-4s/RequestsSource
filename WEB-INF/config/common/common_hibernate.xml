@@ -81,6 +81,8 @@
 				</prop> -->
 				<!-- <prop key="hibernate.connection.release_mode">after_statement</prop>-->
   				<prop key="hibernate.show_sql">true</prop>  
+  				
+  				<prop key="spring.jpa.properties.javax.persistence.validation.mode">none</prop>
 <!--		    <prop key="hibernate.hbm2ddl.auto">update</prop>  -->
 <!--				<prop key="hibernate.hbm2ddl.auto">create</prop> -->
 			</props>

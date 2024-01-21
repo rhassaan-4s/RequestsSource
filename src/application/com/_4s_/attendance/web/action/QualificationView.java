@@ -1,19 +1,22 @@
 package com._4s_.attendance.web.action;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.attendance.model.Qualification;
 import com._4s_.attendance.service.AttendanceManager;
 
-public class QualificationView implements Controller{
+@Controller
+public class QualificationView {//implements Controller{
+	@Autowired
 	AttendanceManager attendanceManager;
 
 	public AttendanceManager getAttendanceManager() {
@@ -24,15 +27,15 @@ public class QualificationView implements Controller{
 		this.attendanceManager = attendanceManager;
 	}
 	
-	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse arg1) throws Exception {
+	@RequestMapping("/qualificationView.html")
+	public ModelAndView handleRequest(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception {	
 		// TODO Auto-generated method stub
 		
-		Map model=new HashMap();
+//		Map model=new HashMap();
 		List qualifications=attendanceManager.getObjects(Qualification.class);
 		System.out.println("requests.size>>>>>>>>>>"+qualifications.size());
-		model.put("records", qualifications);
+		model.addAttribute("records", qualifications);
 		
-		return new ModelAndView("qualificationView",model);
+		return new ModelAndView("qualificationView");
 	}
 }

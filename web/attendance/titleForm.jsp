@@ -4,8 +4,8 @@
 	
 </script>
 
-<form id="titleForm" name="titleForm" method="POST"
-	action="<c:url value="/attendance/titleForm.html"/>">
+<form:form method="POST" modelAttribute="title"
+	action="/Requests/attendance/titleForm.html">
 
 <input type="hidden" id="titleCode" name="titleCode"
 			value="${titleCode}" />
@@ -35,36 +35,15 @@
 							key="attendance.header.title" /></td>
 				</tr>
 
-			<!-- 	<tr>
-
-					<c:set var="check" value="" />
-					<c:if test="${code!=null && code!=''}">
-						<c:set var="check" value="disabled" />
-					</c:if>
-
-						<td nowrap class="formReq" width="30%"><abc:i18n
-								property="attendance.caption.titleCode" /> <fmt:message
-								key="attendance.caption.titleCode" /></td>
-
-
-						<td class="formBodControl">
-								<input size="8" maxlength="8" type="text"
-									value="${title.title}"
-									readonly="readonly" />
-							</td>
-				</tr>
- -->
 				<tr>
 
 					<td nowrap class="formReq" width="30%"><abc:i18n
 							property="commons.caption.arName" /> <fmt:message
 							key="commons.caption.arName" /></td>
 
-					<td class="formBodControl" width="70%"><spring:bind
-							path="title.name">
-							<input size="40" type="text" name="${status.expression}"
-								value="${status.value}" />
-						</spring:bind></td>
+					<td class="formBodControl" width="70%">
+							<form:input size="40" type="text" path="name" />
+						</td>
 				</tr>
 
 
@@ -73,11 +52,7 @@
 							property="commons.caption.enName" /> <fmt:message
 							key="commons.caption.enName" /></td>
 
-					<td class="formBodControl" width="70%"><spring:bind
-							path="title.ename">
-							<input size="40" type="text" name="${status.expression}"
-								value="${status.value}" />
-						</spring:bind></td>
+					<td class="formBodControl" width="70%"><form:input size="40" type="text" path="ename" /></td>
 				</tr>
 
 				<tr id="btn">
@@ -93,7 +68,7 @@
 		</tr>
 
 	</table>
-</form>
+</form:form>
 
 
 <%@ include file="/web/common/includes/footer.jsp"%>

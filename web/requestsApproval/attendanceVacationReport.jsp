@@ -112,9 +112,6 @@ function printthis(which) {
 								<td nowrap class="formBodControl"><abc:i18n
 										property="requestsApproval.caption.userCode" /> <fmt:message
 										key="requestsApproval.caption.userCode" /></td>
-								<!-- <td  class="formBod"> 
-								<input type="text" name="empCode" id="empCode" value="${empCode}"  />
-							</td>-->
 								<td class="formBod"><abc:autocomplete inputId="empCode"
 										inputName="empCode" table="login_users"
 										firstKey="commons.caption.code"
@@ -123,13 +120,6 @@ function printthis(which) {
 										valueId="" /></td>
 
 
-								<!-- <td nowrap class="formBodControl" >
-								<abc:i18n property="requestsApproval.caption.userName"/>
-								<fmt:message key="requestsApproval.caption.userName"/>
-							</td>						
-							<td  class="formBod"> 
-								<input type="text" name="userName" id="userName" value="${emp.firstName}" readonly="readonly" />
-							</td> -->
 							</tr>
 
 

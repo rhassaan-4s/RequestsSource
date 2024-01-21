@@ -1,6 +1,6 @@
 <%@page import="com._4s_.common.model.Settings"%>
 <%@ include file="/web/common/includes/taglibs.jsp"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="authz" %>
 
 <link type="text/css" rel="stylesheet"
 	href="/Requests/web/common/css/all.css">
@@ -31,18 +31,19 @@
 	<ul>
 	<%
 	Settings settings = (Settings) request.getSession().getAttribute("settings");
-	System.out.println(settings);
+	System.out.println("settings in common menu " + settings.getCompany().getDescription());
 	if (settings.getCompany().getDescription().equals("4s")) {
+		System.out.println("4s");
 		%>
 		<li><a href="/Requests/common/commonAdminClientsView.html"><abc:i18n
 				property="commons.caption.clientsView" /> <fmt:message
 				key="commons.caption.clientsView" /></a></li>
 				<%} %>
-	<sec:authorize ifAllGranted="CAN_UPDATE_settings">
+	<authz:authorize access="hasRole('CAN_UPDATE_settings')">
 		<li><a href="/Requests/common/settingsForm.html"><abc:i18n
 			property="commons.caption.settings" /> <fmt:message
 			key="commons.caption.settings" /></a></li>
-	</sec:authorize>
+	</authz:authorize>
 		<li><a href="/Requests/dbUpdate/updateDBView.html"><abc:i18n
 			property="common.menu.dbUpdate" /> <fmt:message
 			key="common.menu.dbUpdate" /></a></li>
@@ -51,25 +52,24 @@
 			key="dbUpdate.header.updateTriggersScript" /></a></li>
 			
 			
-		<li><a href="#"><fmt:message key="requestsApproval.menu.requestsApprovalPriorities" /></a>
+		<li><a href="#"><abc:i18n
+				property="requestsApproval.menu.requestsApprovalPriorities" /> 
+				<fmt:message key="requestsApproval.menu.requestsApprovalPriorities" /></a>
 				<ul>
 					<li>
-						<abc:i18n property="requestsApproval.header.accessLevelsForm" />
-						<a href="/Requests/requestsApproval/accessLevelsForm.html"> &nbsp;&nbsp;
+						<a href="/Requests/requestsApproval/accessLevelsForm.html">&nbsp;&nbsp; 
 							<fmt:message key="requestsApproval.header.accessLevelsForm" />
 						</a>
 					</li>				
 
 					<li>
-						<abc:i18n property="requestsApproval.header.empReqTypeGroupForm" />
-						<a href="/Requests/requestsApproval/empReqTypeGroupForm.html"> &nbsp;&nbsp;
+						<a href="/Requests/requestsApproval/empReqTypeGroupForm.html">&nbsp;&nbsp; 
 							<fmt:message key="requestsApproval.header.empReqTypeGroupForm" />
 						</a>
 					</li>
 					
 					<li>
-						<abc:i18n property="requestsApproval.header.empGroupsView" />
-						<a href="/Requests/requestsApproval/empGroupsView.html"> &nbsp;&nbsp;
+						<a href="/Requests/requestsApproval/empGroupsView.html">&nbsp;&nbsp; 
 							<fmt:message key="requestsApproval.header.empGroupsView" />
 						</a>
 					</li>									

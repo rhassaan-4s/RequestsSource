@@ -1,6 +1,5 @@
 <%@page import="com._4s_.common.model.Settings"%>
 <%@ include file="/web/common/includes/taglibs.jsp"%>
-<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ page import="java.util.*,java.text.SimpleDateFormat"%>
 <jsp:include page="/web/common/includes/header.jsp" flush="true" />
 
@@ -22,14 +21,57 @@
 	$(document).ready(function() { // for client name 
 		$('#annualVacation').change(function(event) {
 			var vac = $("select#annualVacation").val(); // annual vaction = define value of selected option
-			alert("vac " + vac);
-			$.getJSON('vacInfo', {
-				ptype : country
-			}, function(data) {
+			var empCode = $("input#empCode").val();
+			var token = $("input#token").val();
+			alert(token);
+			//alert("vac " + vac);
+			//alert("empCode " + empCode);
+			var requestApproval = {vac: vac, empCode: empCode};
+		//	var username ='1';
+		//	var password = '123';
+		//	//$.getJSON('/Requests/requestsApproval/loginUsersRequestsForm.html/vacInfo', 
+/*					$.getJSON('../api/workflow/vacInfo',{ user: "1", password: "123" },
+					requestApproval,
+				function(data) {
+				alert(data);
 				var credit = $('#vacCredit');
+					$.each(data, function(key, value) {
+						alert(key);
+						if(key=='Results') {
+							$.each(value, function(k,v) {
+								//alert(k);
+								//alert(v);
+								credit.val(v);
+							});
+						}
+					});
+				}
+		);*/
+			$.ajax
+			({
+			  type: "POST",
+			  url: "../api/workflow/vacInfo",
+			  dataType: 'json',
+			  headers: {
+			    "Authorization": "Basic " + btoa(token)
+			  },
+			  data: requestApproval,
+			  success: function (data){
+			  //  alert('Thanks for your query!'); 
+			   // alert(data);
+			    
+			    var credit = $('#vacCredit');
 				$.each(data, function(key, value) {
-					credit.val(value);
+					//alert(key);
+					if(key=='Results') {
+						$.each(value, function(k,v) {
+							alert(k);
+							alert(v);
+							credit.val(v);
+						});
+					}
 				});
+			  }
 			});
 		});
 	});
@@ -468,18 +510,10 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 					<input type="hidden" name="longitude" id="longitude" value="" />
 					<input type="hidden" name="latitude" id="latitude" value="" />
 					<input type="hidden" name="accuracy" id="accuracy" value="" />
+					<input type="hidden" name="${_csrf.parameterName}" id="token" value="${_csrf.token}"/>
 
 					<input type="hidden" id="empRequestTypeId" name="empRequestTypeId"
 						value="${empRequestTypeId}" />
-
-					<input type="hidden" name="hostName" id="hostName"
-						value="${settings.server}" />
-					<input type="hidden" name="serviceName" id="serviceName"
-						value="${settings.service}" />
-					<input type="hidden" name="userName" id="userName"
-						value="${settings.username}" />
-					<input type="hidden" name="password" id="password"
-						value="${settings.password}" />
 
 					<table border=0 cellspacing=1 cellpadding=0 id="ep"
 						style="margin-right: 40px">

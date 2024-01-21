@@ -6,8 +6,8 @@
 
 <html>
 <head>
-<script type='text/javascript' src='/Requests/dwr/interface/attendanceManager.js'></script>
-<script type='text/javascript' src='/Requests/dwr/engine.js'></script>
+<!-- <script type='text/javascript' src='/Requests/dwr/interface/attendanceManager.js'></script>
+<script type='text/javascript' src='/Requests/dwr/engine.js'></script> -->
 <title>Insert title here</title>
 </head>
 <body>
@@ -17,9 +17,49 @@
 
 
 	<script type="text/javascript">
-		function drawAbsenceAttendanceByDepartment() {
-			attendanceManager.getNumberOfAttendeesAndWorkersByDepartment(fillChartByDepartment);
-		}
+	
+	 $(document).ready(function(){
+		    $('#drawAbsenceAttendanceByDepartment').click(function(event){
+		    	//var token = $("input#token").val();
+				//alert(token);
+		    	//alert('link on click');
+		    	$.ajax
+				({
+				  type: "GET",
+				  url: "./ajax-drawAbsenceAttendanceByDepartment",
+				//  dataType: 'list',
+				  success: function (data){
+//				   alert(data);
+				   fillChartByDepartment(data);
+				 }
+				});
+		    
+	 		});
+		    
+		    
+		    $('#drawRequests').click(function(event){
+		    	//var token = $("input#token").val();
+				//alert(token);
+		    	//alert('link on click');
+		    	$.ajax
+				({
+				  type: "GET",
+				  url: "./ajax-drawRequests",
+				//  dataType: 'list',
+				  success: function (data){
+				//   alert(data);
+				   fillRequests(data);
+				 }
+				});
+		    
+	 		});
+	 });
+	//	function drawAbsenceAttendanceByDepartment() {
+//			attendanceManager.getNumberOfAttendeesAndWorkersByDepartment(fillChartByDepartment);
+	//		/ajax-drawAbsenceAttendanceByDepartment
+		//}
+		
+		
 		
 		function fillChartByDepartment(data) {
 		//alert(data);
@@ -83,9 +123,9 @@
 					});
 		}
 		
-		function drawRequests() {
-			attendanceManager.getDashboardRequests(fillRequests);
-		}
+	//	function drawRequests() {
+	//		attendanceManager.q(fillRequests);
+	//	}
 		
 		function fillRequests(data) {
 		//alert(data);
@@ -198,6 +238,8 @@
 		<input type="hidden" id="absence" name="absence" value="${absence}" />
 		<input type="hidden" id="attendance" name="attendance"
 			value="${attendance}" />
+			
+		<input type="hidden" name="${_csrf.parameterName}" id="token" value="${_csrf.token}"/>
 
 		<table width="90%" border="0" cellspacing="0" cellpadding="0"
 			style="padding-right: 10px">
@@ -220,16 +262,14 @@
 								</a></td>
 							</tr>
 							<tr>
-								<td><a href="javascript:void(0);"
-									onclick="drawAbsenceAttendanceByDepartment();"> <abc:i18n
+								<td  id="drawAbsenceAttendanceByDepartment"><a href="#"> <abc:i18n
 											property="attendance.caption.dashboardAbsenceAttendanceByDepartment" />
 										<fmt:message
 											key="attendance.caption.dashboardAbsenceAttendanceByDepartment" />
 								</a></td>
 							</tr>
 							<tr>
-								<td><a href="javascript:void(0);"
-									onclick="drawRequests();"> <abc:i18n
+								<td id="drawRequests"><a href="#"> <abc:i18n
 											property="attendance.caption.dashboardRequests" />
 										<fmt:message
 											key="attendance.caption.dashboardRequests" />

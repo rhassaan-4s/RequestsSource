@@ -20,24 +20,6 @@
 		</property>
 	</bean>
 
-
-	<bean id="auditTransactionManager"
-		class="org.springframework.orm.hibernate5.HibernateTransactionManager"  lazy-init="true">
-		<property name="sessionFactory" ref="auditSessionFactory" />
-	</bean>
-
-	<bean id="auditTxProxyTemplate" abstract="true"
-		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager" ref ="auditTransactionManager" />
-		<property name="transactionAttributes">
-			<props>
-				<prop key="save*">PROPAGATION_REQUIRED,ISOLATION_SERIALIZABLE</prop>
-				<prop key="remove*">PROPAGATION_REQUIRED,ISOLATION_SERIALIZABLE</prop>
-				<prop key="*">PROPAGATION_REQUIRED,ISOLATION_SERIALIZABLE,readOnly</prop>
-			</props>
-		</property>
-	</bean>
-
 	<!-- Hibernate SessionFactory -->
 	<bean id="auditSessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
 		<property name="dataSource" ref="auditingDataSource" />
@@ -62,4 +44,23 @@
 			</props>
 		</property>
 	</bean>
+	
+	<bean id="auditTransactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager"  lazy-init="true">
+		<property name="sessionFactory" ref="auditSessionFactory" />
+	</bean>
+
+	<bean id="auditTxProxyTemplate" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref ="auditTransactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="save*">PROPAGATION_REQUIRED,ISOLATION_SERIALIZABLE</prop>
+				<prop key="remove*">PROPAGATION_REQUIRED,ISOLATION_SERIALIZABLE</prop>
+				<prop key="*">PROPAGATION_REQUIRED,ISOLATION_SERIALIZABLE,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+
+	
 </beans>

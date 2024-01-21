@@ -178,7 +178,6 @@ function printSelection(node){
 					</table>			
 				</td>
 			</tr>
-
 			<tr>
 				<td>
 				<div id="result">
@@ -233,10 +232,11 @@ function printSelection(node){
 							<td class="helpHed">
 							</td>
 						</tr>
-					<c:forEach items="${results}" var="record">
+						
+					<c:forEach var="record" items="${records.results}">
 						<tr height=20 bgcolor="#F8F8F8"> 							        
 							<td  nowrap>
-						         ${record.empCode }
+						         ${record.empCode}
 							</td>
 							  
 							<td  nowrap>

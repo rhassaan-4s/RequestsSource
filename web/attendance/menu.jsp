@@ -17,15 +17,6 @@
 		<li><a href="#"><fmt:message
 					key="attendance.menu.basicScreens" /></a>
 			<ul>
-
-
-				<!-- <li>
-			<abc:i18n property="attendance.header.religion" />
-			<a href="/Requests/attendance/religionView.html"> &nbsp;&nbsp;
-				<fmt:message key="attendance.header.religion" />
-			</a>
-		</li> -->
-
 				<li><abc:i18n property="attendance.header.qualification" /> <a
 					href="/Requests/attendance/qualificationView.html">
 						&nbsp;&nbsp; <fmt:message key="attendance.header.qualification" />
@@ -42,13 +33,12 @@
 							key="attendance.header.title" />
 				</a></li>
 
-
 				<li><abc:i18n property="attendance.header.empBasic" /> <a
 					href="/Requests/attendance/empBasicView.html"> &nbsp;&nbsp; <fmt:message
 							key="attendance.header.empBasic" />
 				</a></li>
 
-				<li><a href="#"><fmt:message
+				<li><a href="#"><abc:i18n property="attendance.header.vacandworkperiods" /><fmt:message
 							key="attendance.header.vacandworkperiods" /></a>
 					<ul>
 						<li><abc:i18n property="attendance.header.vacRules" /> <a

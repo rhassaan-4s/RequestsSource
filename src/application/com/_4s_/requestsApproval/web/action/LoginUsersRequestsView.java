@@ -16,8 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.model.Employee;
@@ -28,8 +31,10 @@ import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 
-public class LoginUsersRequestsView implements Controller{
+@Controller
+public class LoginUsersRequestsView {
 	protected final Log log = LogFactory.getLog(getClass());
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
 	List<String> fields=new ArrayList<String>();
 	public RequestsApprovalManager getRequestsApprovalManager() {
@@ -41,8 +46,8 @@ public class LoginUsersRequestsView implements Controller{
 		this.requestsApprovalManager = requestsApprovalManager;
 	}
 	
-	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	@RequestMapping("/loginUsersRequestsView.html")
+	public String handleRequest(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		
 		List all=new ArrayList();
@@ -57,7 +62,7 @@ public class LoginUsersRequestsView implements Controller{
 		
 		fields.add("period_from");
 		//fields.add("empCode");
-		Map model=new HashMap();
+//		model=new HashMap();
 		//model.put("employee", emp);
 
 		
@@ -91,18 +96,18 @@ public class LoginUsersRequestsView implements Controller{
 		String formattedDate=d.format(firstDay);
 		log.debug("----formattedDate---"+formattedDate);
 		
-		model.put("firstDay", formattedDate);
+		model.addAttribute("firstDay", formattedDate);
 		Date today=new Date();
 		String formatedToday=d.format(today);
 		log.debug("----formatedToday---"+formatedToday);
-		model.put("today", formatedToday);
+		model.addAttribute("today", formatedToday);
 		
 		String dateFrom = request.getParameter("dateFrom");
 		log.debug("--dateFrom--"+dateFrom);
-		model.put("request_date_from", dateFrom);
+		model.addAttribute("request_date_from", dateFrom);
 		String dateTo = request.getParameter("dateTo");
 		log.debug("--dateTo--"+dateTo);
-		model.put("request_date_to", dateTo);
+		model.addAttribute("request_date_to", dateTo);
 		log.debug("---xxxxxxxDatePeriod--");		
 		
 		
@@ -168,12 +173,12 @@ public class LoginUsersRequestsView implements Controller{
 		}
 		
 		log.debug("request type " + requestTypeLong);
-		
-		model = requestsApprovalManager.getSubmittedRequestsForApproval(null,emp.getEmpCode(),dateFrom,dateTo,null,null,requestTypeLong,null,null,null,"desc",loginUsers, null,true,null,pageNumber,80);				
-		
-		model.put("request_id", requestType);
-		model.put("dateFrom", dateFrom);
-		model.put("dateTo", dateTo);
+		Map records = requestsApprovalManager.getSubmittedRequestsForApproval(null,emp.getEmpCode(),dateFrom,dateTo,null,null,requestTypeLong,null,null,null,"desc",loginUsers, null,true,null,pageNumber,80);
+		model.addAttribute("records",records);				
+		log.debug("results list size " + records.size());
+		model.addAttribute("request_id", requestType);
+		model.addAttribute("dateFrom", dateFrom);
+		model.addAttribute("dateTo", dateTo);
 		
 		List orderBy = new ArrayList();
 		orderBy.add("id");
@@ -191,9 +196,9 @@ public class LoginUsersRequestsView implements Controller{
 					reList.add(requestTypes);
 				}
 			}
-			model.put("requestTypeList",reList );
+			model.addAttribute("requestTypeList",reList );
 		} else {//lehaa
-			model.put("requestTypeList",requests );
+			model.addAttribute("requestTypeList",requests);
 		}
 		
 		
@@ -337,10 +342,10 @@ public class LoginUsersRequestsView implements Controller{
 		    	   e.printStackTrace();
 		       }
 				log.debug("after export to excel");
-			return new ModelAndView(new RedirectView("loginUsersRequestsView.html"));
+			return "loginUsersRequestsView.html";
 		}
 		
-		return new ModelAndView("loginUsersRequestsView",model);
+		return "loginUsersRequestsView";
 	}
 	
 }

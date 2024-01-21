@@ -8,8 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.service.CommonManager;
@@ -19,8 +23,11 @@ import com._4s_.security.model.Roles;
 import com._4s_.security.model.SecurityApplication;
 import com._4s_.security.model.User;
 
-public class ChangeApplication implements Controller {
-	CommonManager commonManager;
+@Controller
+@RequestMapping("/changeApplication.html")
+public class ChangeApplication  extends CommonController {
+	@Autowired
+	private CommonManager commonManager;
 
 	private final Log log = LogFactory.getLog(getClass());
 
@@ -32,12 +39,12 @@ public class ChangeApplication implements Controller {
 		this.commonManager = commonManager;
 	}
 
-	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		// log.debug("handleRequest");
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView handleRequest(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception {
+//		 log.debug("handleRequest");
 		String application = request.getParameter("application");
-		// log.debug("application " +application);
-		System.out.println("application " + application);
+		 log.debug("application " +application);
+		System.out.println("CHANGEAPPLICATION::::application " + application);
 		String url = "";
 		SecurityApplication securityApplication = null;
 
@@ -45,17 +52,19 @@ public class ChangeApplication implements Controller {
 			securityApplication = (SecurityApplication) commonManager
 					.getObject(SecurityApplication.class, new Long(3));
 			request.getSession().setAttribute("appName", "ADMINISTRATION");
+			log.debug("administration");
+			System.out.println("CHANGEAPPLICATION::::############Administration");
 		} else if (application.equals("requestsApproval")) {
 			securityApplication = (SecurityApplication) commonManager
 					.getObject(SecurityApplication.class, new Long(12));
 			request.getSession().setAttribute("appName", "requestsApproval");
 		} else if (application.equals("timesheet")) {
-			System.out.println("############Timesheet");
+			System.out.println("CHANGEAPPLICATION::::############Timesheet");
 			securityApplication = (SecurityApplication) commonManager
 					.getObject(SecurityApplication.class, new Long(13));
 			request.getSession().setAttribute("appName", "timesheet");
 		} else if (application.equals("attendance")) {
-			System.out.println("############Attendance");
+			System.out.println("CHANGEAPPLICATION::::############Attendance");
 			securityApplication = (SecurityApplication) commonManager
 					.getObject(SecurityApplication.class, new Long(14));
 			request.getSession().setAttribute("appName", "attendance");
@@ -81,12 +90,26 @@ public class ChangeApplication implements Controller {
 				System.out.println("role " + role);
 				if (userRoles.contains(role)) {
 					defaultPage = role.getDefaultPage();
-					System.out.println("default page " + defaultPage);
+//					System.out.println("default page " + defaultPage);
+//					String[] defPage = defaultPage.split("/");
+//					for (int i =0; i<defPage.length; i++) {
+//						if (defPage[i].contains(".html")) {
+//							defaultPage = defPage[i];
+//							break;
+//						}
+//					}
+//					log.debug("default page " + defaultPage);
+//					defPage = defaultPage.split(".html");
+//					for (int i =0; i<defPage.length; i++) {
+//							System.out.println(defPage[i]);
+//					}
+//					defaultPage = defPage[0];
 					break;
 				}
 			}
 		} else {
 			defaultPage = "/Requests/security/login.html";
+//			defaultPage = "login";
 		}
 		url = defaultPage;
 
@@ -125,6 +148,7 @@ public class ChangeApplication implements Controller {
 		// log.debug("url "+url);
 
 		return new ModelAndView(new RedirectView(url));
+//		return url;
 	}
 
 }

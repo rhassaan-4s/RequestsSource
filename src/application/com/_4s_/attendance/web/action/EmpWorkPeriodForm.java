@@ -11,25 +11,54 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.attendance.model.EmpWorkPeriod;
 import com._4s_.attendance.model.EmpWorkPeriodListWrapper;
+import com._4s_.attendance.model.VacRulesListWrapper;
 import com._4s_.attendance.model.WorkPeriod;
 import com._4s_.attendance.service.AttendanceManager;
+import com._4s_.attendance.web.binders.EmpBasicBinder;
+import com._4s_.attendance.web.binders.WorkPeriodMasterBinder;
 import com._4s_.common.model.EmpBasic;
 import com._4s_.common.model.Settings;
 import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.common.web.binders.TimestampBinder;
+import com._4s_.requestsApproval.model.Vacation;
+import com._4s_.requestsApproval.web.binders.VacationBinder;
 import com._4s_.timesheet.web.validate.ValidationStatus;
 import com.ibm.icu.util.Calendar;
 
+@Controller
+@RequestMapping("/empWorkPeriodForm.html")
 public class EmpWorkPeriodForm extends BaseSimpleFormController{
+	@Autowired
 	AttendanceManager attendanceManager;
 
-
+	
+	@Autowired
+	@Qualifier("timestampBinder")
+	private TimestampBinder timestampBinder;
+	@Autowired
+	@Qualifier("workPeriodMasterBinder")
+	private WorkPeriodMasterBinder workPeriodMasterBinder;
+	@Autowired
+	@Qualifier("empBasicBinder")
+	private EmpBasicBinder empBasicBinder;
+	
 	public AttendanceManager getAttendanceManager() {
 		return attendanceManager;
 	}
@@ -38,8 +67,8 @@ public class EmpWorkPeriodForm extends BaseSimpleFormController{
 		this.attendanceManager = attendanceManager;
 	}
 
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
 		EmpWorkPeriodListWrapper empPeriods = new EmpWorkPeriodListWrapper();
@@ -82,11 +111,14 @@ public class EmpWorkPeriodForm extends BaseSimpleFormController{
 		
 		empPeriods.setEmpPeriods(periods);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	   return empPeriods;
+		model.put("periods", empPeriods);
+	   return "empWorkPeriodForm";
 	}
 	
 	//**************************************** referenceData ***********************************************\\
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,
+			HttpServletRequest request,@ModelAttribute("periods") EmpWorkPeriodListWrapper command)
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		EmpWorkPeriodListWrapper periods =  (EmpWorkPeriodListWrapper)command;
@@ -136,6 +168,14 @@ public class EmpWorkPeriodForm extends BaseSimpleFormController{
 		return model;
 	}
 
+	@Override
+	public void initBinder(WebDataBinder binder) {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		super.initBinder(binder);
+		binder.registerCustomEditor(EmpBasicBinder.class, empBasicBinder);
+		binder.registerCustomEditor(TimestampBinder.class, timestampBinder);
+		binder.registerCustomEditor(WorkPeriodMasterBinder.class, workPeriodMasterBinder);
+	}
 	//**************************************** onBind ***********************************************\\	
 	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -159,9 +199,12 @@ public class EmpWorkPeriodForm extends BaseSimpleFormController{
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{	
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@ModelAttribute("periods") EmpWorkPeriodListWrapper command,
+//			BindingResult result,
+			Model model) throws Exception
+	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		EmpWorkPeriodListWrapper periods =  (EmpWorkPeriodListWrapper)command;
 		Iterator<EmpWorkPeriod> itrP = periods.getEmpPeriods().iterator();

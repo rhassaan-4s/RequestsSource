@@ -10,15 +10,19 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.attendance.model.TriggerVacBalance;
 import com._4s_.attendance.service.AttendanceManager;
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 
-public class TriggerVacBalanceView implements Controller{
+@Controller
+public class TriggerVacBalanceView {//implements Controller{
+	@Autowired
 	private AttendanceManager attendanceManager;
 
 	 protected final Log log = LogFactory.getLog(getClass());
@@ -31,36 +35,36 @@ public class TriggerVacBalanceView implements Controller{
 		this.attendanceManager = attendanceManager;
 	}
 	
-	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse arg1) throws Exception {
-		// TODO Auto-generated method stub
+	@RequestMapping("/triggerVacBalanceView.html")
+	public ModelAndView handleRequest(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception {	
+		
 		log.debug("handling request");
-		Map model=new HashMap();
+//		Map model=new HashMap();
 		TriggerVacBalance trigger = new TriggerVacBalance();
 		trigger.setIndate(new Timestamp(System.currentTimeMillis()));
 		try {
 			attendanceManager.saveObject(trigger);
-			model.put("failed", new Boolean(false));
+			model.addAttribute("failed", new Boolean(false));
 			log.debug("failed false");
 			System.out.println("failed false");
 		} catch (DataIntegrityViolationException e) {
 			// TODO Auto-generated catch block
-			model.put("failed", new Boolean(true));
+			model.addAttribute("failed", new Boolean(true));
 			System.out.println("failed true DataIntegrityViolationException");
 			e.printStackTrace();
 		} catch (ConstraintViolationException e3) {
 			// TODO Auto-generated catch block
-			model.put("failed", new Boolean(true));
+			model.addAttribute("failed", new Boolean(true));
 			System.out.println("failed true ConstraintViolationException");
 			e3.printStackTrace();
 		}  catch (Exception e2) {
 			// TODO Auto-generated catch block
-			model.put("failed", new Boolean(true));
+			model.addAttribute("failed", new Boolean(true));
 			System.out.println("failed true Exception");
 			e2.printStackTrace();
 		} finally {
 			log.debug("finallyyyyyyyyyyyyy");
-			return new ModelAndView("triggerVacBalanceView",model);
+			return new ModelAndView("triggerVacBalanceView");
 		}
 		
 	}

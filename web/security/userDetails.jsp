@@ -108,24 +108,8 @@ $(document).ready(function()
 			<TD class="helpBod">&nbsp; <abc:i18n property="commons.button.ipAdd" /> <a
 				href="javascript:createWindow('ipView.html?userId=${result.id}',450,900)"
 				class="actionLink"><fmt:message key="commons.button.ipAdd" /></a></TD>
-			<!-- <TD class="helpBod">&nbsp; <abc:i18n property="commons.button.delete" /> <a
-				href="userDetails.html?deleteId=${result.id}"
-				class="actionLink"><fmt:message key="commons.button.delete" /></a></TD>
-				 -->
 		</tr>
 		</c:if>
 	</c:forEach>
 </table>
-<!-- 
-
-<table>
-	<tr>
-		<td align="center"><br>
-		<abc:i18n property="commons.button.add" /> <input type="button"
-			name="add" value=" <fmt:message key="commons.button.add"/> "
-			class="button"
-			onclick="javascript: createWindow('addUserToRole.html', 450, 900);"></td>
-	</tr>
-</table>
- -->
 <%@ include file="/web/common/includes/footer.jsp"%>

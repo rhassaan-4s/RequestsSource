@@ -8,20 +8,34 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import javax.ws.rs.core.MediaType;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.attendance.model.AttendanceDepartment;
+import com._4s_.attendance.model.Qualification;
 import com._4s_.attendance.service.AttendanceManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
-import com._4s_.timesheet.model.TimesheetActivity;
 import com._4s_.timesheet.web.validate.ValidationStatus;
 
+@Controller
+@RequestMapping(value="/departmentForm.html",produces="text/html;charset=UTF-8")
 public class DepartmentForm extends BaseSimpleFormController{
-	AttendanceManager attendanceManager;
+	@Autowired
+	private AttendanceManager attendanceManager;
 
 
 	public AttendanceManager getAttendanceManager() {
@@ -32,8 +46,8 @@ public class DepartmentForm extends BaseSimpleFormController{
 		this.attendanceManager = attendanceManager;
 	}
 
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		String departmentCode=request.getParameter("departmentCode");
 		log.debug("--------departmentCode------"+departmentCode);
@@ -50,11 +64,14 @@ public class DepartmentForm extends BaseSimpleFormController{
 		}
 		log.debug("---------department-------"+department);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	   return department;
+		model.put("department", department);
+	   return "departmentForm";
 	}
 	
 	//**************************************** referenceData ***********************************************\\
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,
+			HttpServletRequest request, @ModelAttribute("department") AttendanceDepartment command)
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		AttendanceDepartment department= (AttendanceDepartment) command;
@@ -75,32 +92,39 @@ public class DepartmentForm extends BaseSimpleFormController{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
 //**************************************** onBindAndValidate ***********************************************\\
-	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
-	{
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		AttendanceDepartment department= (AttendanceDepartment) command;
-		ValidationStatus status = attendanceManager.validateDepartment(department);
-		
-		if (status.getStatus().equals("False") && status.getMsg().equals("Mandatory")) {
-			errors.rejectValue(status.getObjAttribute(), "commons.errors.requiredFields");
-		}
-		if (status.getStatus().equals("False") && status.getMsg().equals("Duplicate")) {
-			errors.rejectValue(status.getObjAttribute(), "commons.errors.duplicateFieldEntry");
-		}
-		
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	}
+//	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
+//	{
+//		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//		AttendanceDepartment department= (AttendanceDepartment) command;
+//		ValidationStatus status = attendanceManager.validateDepartment(department);
+//		
+//		if (status.getStatus().equals("False") && status.getMsg().equals("Mandatory")) {
+//			errors.rejectValue(status.getObjAttribute(), "commons.errors.requiredFields");
+//		}
+//		if (status.getStatus().equals("False") && status.getMsg().equals("Duplicate")) {
+//			errors.rejectValue(status.getObjAttribute(), "commons.errors.duplicateFieldEntry");
+//		}
+//		
+//		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{	
+	@RequestMapping(method = RequestMethod.POST,
+			consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	public String processSubmit(HttpServletRequest request,HttpServletResponse response,
+			@Valid@ModelAttribute("department") AttendanceDepartment command,
+			BindingResult errors,
+			Model model) throws Exception
+	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		AttendanceDepartment department= (AttendanceDepartment) command;
 		log.debug("----activity code -onsubmit-----"+department.getLocation());
-		
-		attendanceManager.saveObject(department);
-		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView("departmentView.html"));
+		if (errors.hasErrors()) {
+			return "departmentForm";
+		} else {
+			attendanceManager.saveObject(department);
+			log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+			return "departmentView";
+		}
 	}
 }

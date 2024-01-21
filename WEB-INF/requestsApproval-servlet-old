@@ -609,7 +609,6 @@
 				<prop key="/requestTypesView.html">requestTypesView</prop>
 				<prop key="/loginUsersRequestsForm.html">loginUsersRequestsForm</prop>
 				<prop key="/loginUsersRequestsView.html">loginUsersRequestsView</prop>
-				<prop key="/accessLevelsForm.html">accessLevelsForm</prop>
 				<prop key="/empReqTypeGroupForm.html">empReqTypeGroupForm</prop>
 				<prop key="/requestsApprovalForm.html">requestsApprovalForm</prop>
 	            <prop key="/requestTypesView.html">requestTypesView</prop>

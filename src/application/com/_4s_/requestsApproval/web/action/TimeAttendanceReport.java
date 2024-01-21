@@ -16,26 +16,32 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
+import com._4s_.common.web.action.CommonController;
 import com._4s_.i18n.model.MyLocale;
 import com._4s_.i18n.model.MyMessage;
 import com._4s_.i18n.service.MessageManager;
 import com._4s_.requestsApproval.model.AccessLevels;
-import com._4s_.requestsApproval.model.EmpReqTypeAcc;
-import com._4s_.requestsApproval.model.GroupAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
-import com._4s_.requestsApproval.model.LoginUsersRequests;
-import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 
-public class TimeAttendanceReport implements Controller{
+@Controller
+@RequestMapping("/timeAttendanceReport.html")
+public class TimeAttendanceReport extends CommonController {
 	protected final Log log = LogFactory.getLog(getClass());
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
+	@Autowired
 	private MessageManager messageManager;
 
 	public MessageManager getMessageManager() {
@@ -55,8 +61,8 @@ public class TimeAttendanceReport implements Controller{
 		this.requestsApprovalManager = requestsApprovalManager;
 	}
 
-	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	@RequestMapping(method = RequestMethod.GET)
+	public String handleRequest(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		Employee loggedInEmp =(Employee) request.getSession().getAttribute("employee");
 		Employee emp = loggedInEmp;
@@ -77,27 +83,27 @@ public class TimeAttendanceReport implements Controller{
 		//				log.debug("emp " + emp);
 		//			}
 		//		}
-		Map model=new HashMap();
-		model.put("emp", emp);
+//		Map model=new HashMap();
+		model.addAttribute("emp", emp);
 		//		model.put("empCode", empCode);
 
-		model.put("differentEmp", differentEmp);
+		model.addAttribute("differentEmp", differentEmp);
 
 		String empCode = "";
 		LoginUsers loginUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", loggedInEmp);
 		List groups = requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "emp_id", loginUser);//(GroupAcc.class);
 		List<LoginUsers> employees = new ArrayList();
-		model.put("groups", groups);
+		model.addAttribute("groups", groups);
 		String groupId = request.getParameter("groupId");
 		log.debug("groupID " + groupId);
-		model.put("groupId", groupId);
+		model.addAttribute("groupId", groupId);
 		String logUser = request.getParameter("empCode");
 		log.debug("loginUser " + logUser);
 		if(groupId!=null && !groupId.isEmpty()) {
 			//			GroupAcc groupAcc = (GroupAcc)requestsApprovalManager.getObject(GroupAcc.class, new Long(groupId));
 			employees = new ArrayList();
 			employees.addAll(requestsApprovalManager.getEmployeesByGroup(new Long(groupId)));
-			model.put("employees", employees);			
+			model.addAttribute("employees", employees);			
 		} 
 		//		if (logUser!=null && !logUser.isEmpty()) {
 		//			empCode = logUser;
@@ -178,15 +184,15 @@ public class TimeAttendanceReport implements Controller{
 		if (empCode!= null && !empCode.isEmpty()) {
 			String [] empCodes = empCode.split(",");
 			log.debug("emp codes " + empCodes);
-			model.put("empCodes", empCodes);
+			model.addAttribute("empCodes", empCodes);
 		}
 
 		String dateFrom = request.getParameter("fromDate");
 		log.debug("--dateFrom--"+dateFrom);
-		model.put("fromDate", dateFrom);
+		model.addAttribute("fromDate", dateFrom);
 		String dateTo = request.getParameter("toDate");
 		log.debug("--dateTo--"+dateTo);
-		model.put("toDate", dateTo);
+		model.addAttribute("toDate", dateTo);
 		log.debug("---xxxxxxxDatePeriod--");		
 
 		Calendar c = Calendar.getInstance();
@@ -208,11 +214,11 @@ public class TimeAttendanceReport implements Controller{
 		String formattedDate=d.format(firstDay);
 		log.debug("----formattedDate---"+formattedDate);
 
-		model.put("firstDay", formattedDate);
+		model.addAttribute("firstDay", formattedDate);
 		Date today=new Date();
 		String formatedToday=d.format(today);
 		log.debug("----formatedToday---"+formatedToday);
-		model.put("today", formatedToday);
+		model.addAttribute("today", formatedToday);
 
 		Settings settings = (Settings)request.getSession().getAttribute("settings");
 
@@ -296,8 +302,8 @@ public class TimeAttendanceReport implements Controller{
 
 				log.debug("sent mins=== "+mins+" && sent hrs=== "+hrs);
 
-				model.put("totalMins", mins);
-				model.put("totalHrs", hrs);
+				model.addAttribute("totalMins", mins);
+				model.addAttribute("totalHrs", hrs);
 				//////////////////////////////////////////////////////////
 				log.debug("-------objects- size--"+objects.size());
 				for (int i = 0; i < objects.size(); i++) {
@@ -335,8 +341,8 @@ public class TimeAttendanceReport implements Controller{
 						log.debug("long1 " +ob.getLongitude1() + " lat1 " + ob.getLatitude1() + " long2 " + ob.getLongitude2() + " lat2 " + ob.getLatitude2());
 					}
 				}
-				model.put("records", objects);
-				model.put("empArray", empArray);
+				model.addAttribute("records", objects);
+				model.addAttribute("empArray", empArray);
 
 				// VIP
 
@@ -474,9 +480,11 @@ public class TimeAttendanceReport implements Controller{
 			}
 			log.debug("after export to excel");
 			//			return new ModelAndView(new RedirectView("timeAttendanceReport.html"));
-			return new ModelAndView("timeAttendanceReport",model);
+//			return new ModelAndView("timeAttendanceReport",model);
+			return "timeAttendanceReport";
 		}
-		return new ModelAndView("timeAttendanceReport",model);
+//		return new ModelAndView("timeAttendanceReport",model);
+		return "timeAttendanceReport";
 	}
 
 }

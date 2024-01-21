@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,25 +17,28 @@ import org.apache.commons.logging.LogFactory;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com._4s_.common.dao.Queries;
 import com._4s_.common.model.Flag;
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.CommonManager;
 
-public class UpdateTriggers implements Controller {
+@Controller
+public class UpdateTriggers {//implements Controller {
 	
 	private final Log log = LogFactory.getLog(getClass());
 	
 		
-		
+		@Autowired
 		CommonManager comMger=null;
-		
+		@Autowired
 		private DataSource dataSource;
-		
+		@Autowired
 		private Queries queries;
 
 
@@ -63,7 +65,9 @@ public class UpdateTriggers implements Controller {
 			this.dataSource = dataSource;
 		}
 
-		public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		@RequestMapping("/updateTriggersView.html")
+		public String handleRequest(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception {	
 			Settings settings = (Settings)comMger.getObject(Settings.class, new Long(1));
 			String contextPath = request.getSession().getServletContext().getRealPath("/");
 			log.debug(">>>>>>>>>>>>>>>>>>>>contextPath "+contextPath);
@@ -202,17 +206,17 @@ public class UpdateTriggers implements Controller {
     				//        		}
     			}
     			witer.close();
-    			HashMap model=new HashMap();
+//    			HashMap model=new HashMap();
     			//			model.put("error",errorNumber);
-    			model.put("total",totalNumber);
+    			model.addAttribute("total",totalNumber);
 
     			//			model.put("lastDesiredIndex" , lastDesiredIndex);
     			//			model.put("oldIndex" , oldIndex);
     			//			model.put("currentIndex" ,currentIndex );
     			if(noErrors){
-    				model.put("noErrors" , "true");
+    				model.addAttribute("noErrors" , "true");
     			}else{
-    				model.put("noErrors" , "false");
+    				model.addAttribute("noErrors" , "false");
     			}
 
     			List codeMigrationList = new ArrayList();
@@ -224,8 +228,9 @@ public class UpdateTriggers implements Controller {
     			//				//  db updates by code migration
     			//				migrate_briefOldApplications(codeMigrationList);
     			//			}
-    			model.put("codeMigrationList" , codeMigrationList);
-    			return new ModelAndView("updateTriggersView",model);		
+    			model.addAttribute("codeMigrationList" , codeMigrationList);
+//    			return new ModelAndView("updateTriggersView",model);
+    			return "updateTriggersView";
     	}
 		
 		

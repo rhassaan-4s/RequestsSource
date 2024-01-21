@@ -1,18 +1,25 @@
 package com._4s_.attendance.web.action;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -21,10 +28,26 @@ import com._4s_.attendance.model.VacRulesListWrapper;
 import com._4s_.attendance.service.AttendanceManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.requestsApproval.model.Vacation;
+import com._4s_.requestsApproval.web.binders.VacationBinder;
 
+@Controller
+@RequestMapping("/vacRuleForm.html")
 public class VacRuleForm extends BaseSimpleFormController{
+	@Autowired
 	AttendanceManager attendanceManager;
 
+
+	@Autowired
+	@Qualifier("vacBinder")
+	private VacationBinder vacBinder;
+	
+	public VacationBinder getVacBinder() {
+		return vacBinder;
+	}
+
+	public void setVacBinder(VacationBinder vacBinder) {
+		this.vacBinder = vacBinder;
+	}
 
 	public AttendanceManager getAttendanceManager() {
 		return attendanceManager;
@@ -34,8 +57,8 @@ public class VacRuleForm extends BaseSimpleFormController{
 		this.attendanceManager = attendanceManager;
 	}
 
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
 		VacRulesListWrapper rules = new VacRulesListWrapper();
@@ -45,11 +68,14 @@ public class VacRuleForm extends BaseSimpleFormController{
 		
 		rules.setRules(r);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	   return rules;
+		model.put("rules",rules);
+	   return "vacRuleForm";
 	}
 	
 	//**************************************** referenceData ***********************************************\\
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,
+			HttpServletRequest request,@ModelAttribute("rules") VacRulesListWrapper command)
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		VacRulesListWrapper rules =  (VacRulesListWrapper)command;
@@ -65,6 +91,13 @@ public class VacRuleForm extends BaseSimpleFormController{
 		return model;
 	}
 
+	
+	@Override
+	public void initBinder(WebDataBinder binder) {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		super.initBinder(binder);
+		binder.registerCustomEditor(Vacation.class, vacBinder);
+	}
 	//**************************************** onBind ***********************************************\\	
 	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -88,9 +121,12 @@ public class VacRuleForm extends BaseSimpleFormController{
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{	
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@ModelAttribute("rules") VacRulesListWrapper command,
+//			BindingResult result,
+			Model model) throws Exception
+	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		VacRulesListWrapper rules =  (VacRulesListWrapper)command;
 		Iterator<VacRule> itrRule = rules.getRules().iterator();

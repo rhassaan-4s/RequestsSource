@@ -1,20 +1,20 @@
 <%@page import="com._4s_.common.model.Settings"%>
 <%@ include file="/web/common/includes/taglibs.jsp"%>
-<%@taglib uri = "http://www.springframework.org/tags/form" prefix = "form"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 
 <%@page import="java.util.List"%>
-
+<%@page  contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@page import="com._4s_.security.model.SecurityApplication"%>
 <html dir="<fmt:message key="commons.language.dir"/>"
 	xml:lang="<fmt:message key="commons.language.code"/>"
 	lang="<fmt:message key="commons.language.code"/>">
 <head>
-<!-- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> -->
-<meta http-equiv=“Content-Security-Policy” content=“default-src;‘self’;
-	gap://ready
-	file://* *; style-src ‘self’ ‘unsafe-inline’; script-src ‘self’ ‘unsafe-inline’ ‘unsafe-eval’; charset=UTF-8” />
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+	
+<meta name="_csrf" content="${_csrf.token}"/>
+<meta name="_csrf_header" content="${_csrf.headerName}"/>
+
 <!-- ‘self’ gap://ready file://* *; style-src ‘self’ ‘unsafe-inline’; script-src ‘self’ ‘unsafe-inline’ ‘unsafe-eval’ -->
 <title>Requests System</title>
 <link type="text/css" rel="stylesheet"
@@ -109,8 +109,8 @@
 
 			$( ".MM_from" ).datetimepicker({
 				onSelect: function( selectedDate ) {
-					alert('I hate tomatoes.');
-					console.log('I hate tomatoes.');
+					//alert('I hate tomatoes.');
+					//console.log('I hate tomatoes.');
 				$('input.MM_to[title="'+this.title+'"]').datepicker( "option", "minDate", selectedDate );}});
 			
 		    $( ".MM_to" ).datetimepicker({		

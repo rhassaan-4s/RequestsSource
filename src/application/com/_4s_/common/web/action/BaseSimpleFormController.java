@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,4 +152,30 @@ public class BaseSimpleFormController {
 	}
 
 	
+	
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
+		log.debug(">>> Start:BaseSimpleFormController.initBinder");
+
+		log.debug("Binding custom editor for class "+Long.class.getName());
+		binder.registerCustomEditor(Long.class, null, new CustomNumberEditor(Long.class, true));
+
+		log.debug("Binding custom editor for class "+Integer.class.getName());
+		binder.registerCustomEditor(Integer.class, null,new CustomNumberEditor(Integer.class, true));
+		binder.registerCustomEditor(Double.class, null,new CustomNumberEditor(Double.class, true));
+		binder.registerCustomEditor(Float.class, null,new CustomNumberEditor(Float.class, true));
+		binder.registerCustomEditor(BigDecimal.class, null,new CustomNumberEditor(BigDecimal.class, true));
+		Iterator itr = binders.iterator();
+		BaseBinder baseBinder = null;
+		log.debug("Binding list of custom editors");
+		while (itr.hasNext()) {
+			baseBinder = (BaseBinder) itr.next();
+			log.debug("Binding custom editor for class "+baseBinder.getBindedClass().getName());
+
+			binder.registerCustomEditor(baseBinder.getBindedClass(), null, baseBinder);
+			log.debug("... Binded");
+		}
+		log.debug("Finished binding list of custom editors");
+
+		log.debug("End:BaseSimpleFormController.initBinder <<<");
+	}
 }

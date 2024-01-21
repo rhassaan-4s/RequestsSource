@@ -3,9 +3,10 @@
 <script type="text/javascript">
 	
 </script>
+	
+<form:form method="POST" modelAttribute="empBasic"  acceptCharset="UTF-8"
+	action="/Requests/attendance/empBasicForm.html">
 
-<form id="empBasicForm" name="empBasicForm" method="POST"
-	action="<c:url value="/attendance/empBasicForm.html"/>">
 
 	<input type="hidden" id="empCode" name="empCode" value="${empCode}" />
 
@@ -36,37 +37,19 @@
 
 				<tr>
 
-				<!-- 	<c:set var="check" value="" />
-					<c:if test="${code!=null && code!=''}">
-						<c:set var="check" value="disabled" />
-					</c:if>
-
-					<td nowrap class="formReq" width="30%"><abc:i18n
-							property="attendance.caption.empCode" /> <fmt:message
-							key="attendance.caption.empCode" /></td>
-
-					<td class="formBodControl"><input size="8" maxlength="8"
-						type="text" value="${empBasic.empCode}" readonly="readonly" /></td>
- -->
 					<td nowrap class="formReq" width="30%"><abc:i18n
 							property="commons.caption.arName" /> <fmt:message
 							key="commons.caption.arName" /></td>
 
-					<td class="formBodControl" colspan="2"><spring:bind
-							path="empBasic.empName">
-							<input size="40" type="text" name="${status.expression}"
-								value="${status.value}" />
-						</spring:bind></td>
+					<td class="formBodControl" colspan="2">
+							<form:input size="40" type="text" path="empName" /></td>
 
 					<td nowrap class="formReq" width="30%"><abc:i18n
 							property="commons.caption.enName" /> <fmt:message
 							key="commons.caption.enName" /></td>
 
-					<td class="formBodControl" colspan="2"><spring:bind
-							path="empBasic.e_emp_name">
-							<input size="40" type="text" name="${status.expression}"
-								value="${status.value}" />
-						</spring:bind></td>
+					<td class="formBodControl" colspan="2">
+							<form:input size="40" type="text" path="e_emp_name" /></td>
 				</tr>
 				<tr>
 					<td nowrap class="formReq" width="30%"><abc:i18n
@@ -74,18 +57,14 @@
 							key="attendance.caption.arAddress" /></td>
 
 
-					<td class="formBodControl"  colspan="3"><input size="75" maxlength="90"
-						type="text" value="${empBasic.address}" /></td>
+					<td class="formBodControl"  colspan="3"><form:input size="75" type="text" path="address" /></td>
 
 					<td nowrap class="formReq" width="30%"><abc:i18n
 							property="attendance.caption.enAddress" /> <fmt:message
 							key="attendance.caption.enAddress" /></td>
 
-					<td class="formBodControl" colspan="3"><spring:bind
-							path="empBasic.eAddress">
-							<input size="75" maxlength="45" type="text" name="${status.expression}"
-								value="${status.value}" />
-						</spring:bind></td>
+					<td class="formBodControl" colspan="3">
+							<form:input size="45" type="text" path="eAddress" /></td>
 				</tr>
 				<tr>
 					<td nowrap class="formReq" width="30%"><abc:i18n
@@ -100,11 +79,7 @@
 					<td nowrap class="formReq" width="30%"><abc:i18n
 							property="attendance.caption.nationalID" /> <fmt:message
 							key="attendance.caption.nationalID" /></td>
-					<td class="formBodControl"><spring:bind
-							path="empBasic.natnl_no">
-							<input maxlength="20" type="text" name="${status.expression}"
-								value="${status.value}" />
-						</spring:bind></td>
+					<td class="formBodControl"><form:input size="20" type="text" path="natnl_no" /></td>
 
 					<td nowrap class="formReq" width="30%"><abc:i18n
 							property="attendance.caption.birthdate" /> <fmt:message
@@ -138,7 +113,7 @@
 								<spring:bind path="empBasic.maritalStatus">
 									<select name="maritalStatus" id="${status.expression}" >
 										<option value=""><fmt:message key="commons.caption.select" /></option>						
-											<c:forEach items="${maritalList}" var="marital">
+											<c:forEach items="${model.maritalList}" var="marital">
 												<option value="${marital.maritalCode}" ${marital.maritalCode== empBasic.maritalStatus.maritalCode?'selected':''}>${marital.maritalName}</option>
 											</c:forEach>	
 									</select>
@@ -152,7 +127,7 @@
 								<spring:bind path="empBasic.eldiana">
 									<select name="eldiana" id="${status.expression}" >
 										<option value=""><fmt:message key="commons.caption.select" /></option>						
-											<c:forEach items="${religionList}" var="rel">
+											<c:forEach items="${model.religionList}" var="rel">
 												<option value="${rel.religion}" ${rel.religion == empBasic.eldiana.religion?'selected':''}>${rel.name}</option>
 											</c:forEach>	
 									</select>
@@ -182,7 +157,7 @@
 					<spring:bind path="empBasic.qual">
 									<select name="qual" id="${status.expression}" >
 										<option value=""><fmt:message key="commons.caption.select" /></option>						
-											<c:forEach items="${qualificationList}" var="qual">
+											<c:forEach items="${model.qualificationList}" var="qual">
 												<option value="${qual.qual}" ${qual.qual==empBasic.qual.qual?'selected':''}>${qual.name}</option>
 											</c:forEach>	
 									</select>
@@ -196,7 +171,7 @@
 								<spring:bind path="empBasic.department">
 									<select name="department" id="${status.expression}" >
 										<option value=""><fmt:message key="commons.caption.select" /></option>						
-											<c:forEach items="${departmentList}" var="dep">
+											<c:forEach items="${model.departmentList}" var="dep">
 												<option value="${dep.location}" ${dep.location == empBasic.department.location?'selected' : ''}>${dep.name}</option>
 											</c:forEach>	
 									</select>
@@ -210,7 +185,7 @@
 								<spring:bind path="empBasic.title">
 									<select name="title" id="${status.expression}" >
 										<option value=""><fmt:message key="commons.caption.select" /></option>						
-											<c:forEach items="${titleList}" var="title">
+											<c:forEach items="${model.titleList}" var="title">
 												<option value="${title.title}" ${title.title==empBasic.title.title?'selected':''}>${title.name}</option>
 											</c:forEach>	
 									</select>
@@ -242,7 +217,7 @@
 		</tr>
 
 	</table>
-</form>
+</form:form>
 
 
 <%@ include file="/web/common/includes/footer.jsp"%>

@@ -1,19 +1,26 @@
 package com._4s_.attendance.web.action;
 
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -22,10 +29,38 @@ import com._4s_.attendance.model.WorkPeriodMaster;
 import com._4s_.attendance.service.AttendanceManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.common.web.binders.BaseBinder;
+import com._4s_.common.web.binders.TimestampBinder;
+import com._4s_.common.web.binders.TimestampTimeBinder;
 
+@Controller
+@RequestMapping("/workperiodForm.html")
 public class WorkPeriodForm extends BaseSimpleFormController{
+	@Autowired
 	private AttendanceManager attendanceManager;
+	@Autowired
 	private List customBinders = new ArrayList();
+	
+	
+	private TimestampBinder timestampBinder;
+	private TimestampTimeBinder timestampTimeBinder;
+	
+	
+
+	public TimestampBinder getTimestampBinder() {
+		return timestampBinder;
+	}
+
+	public void setTimestampBinder(TimestampBinder timestampBinder) {
+		this.timestampBinder = timestampBinder;
+	}
+
+	public TimestampTimeBinder getTimestampTimeBinder() {
+		return timestampTimeBinder;
+	}
+
+	public void setTimestampTimeBinder(TimestampTimeBinder timestampTimeBinder) {
+		this.timestampTimeBinder = timestampTimeBinder;
+	}
 
 	public AttendanceManager getAttendanceManager() {
 		return attendanceManager;
@@ -44,8 +79,8 @@ public class WorkPeriodForm extends BaseSimpleFormController{
 		this.customBinders = customBinders;
 	}
 
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		String workperiodCode=request.getParameter("workperiodCode");
 		log.debug("--------workperiodCode------"+workperiodCode);
@@ -103,13 +138,16 @@ public class WorkPeriodForm extends BaseSimpleFormController{
 
 		log.debug("---------period-------"+period);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		return period;
+		model.put("period",period);
+		return "workperiodForm";
 	}
 
 
 
 	//**************************************** referenceData ***********************************************\\
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,
+			HttpServletRequest request,@ModelAttribute("period") WorkPeriod command)
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		WorkPeriod period= (WorkPeriod) command;
@@ -124,6 +162,9 @@ public class WorkPeriodForm extends BaseSimpleFormController{
 		return model;
 	}
 
+
+	
+	
 	//**************************************** onBindAndValidate ***********************************************\\
 	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
 	{
@@ -183,9 +224,11 @@ public class WorkPeriodForm extends BaseSimpleFormController{
 	}
 
 	//**************************************** onSubmit ***********************************************\\	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{	
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@ModelAttribute("period") WorkPeriod command,
+//			BindingResult result,
+			Model model) throws Exception {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		WorkPeriod period= (WorkPeriod) command;
 		log.debug("----activity code -onsubmit-----"+period.getWorkperiods());
@@ -266,7 +309,18 @@ public class WorkPeriodForm extends BaseSimpleFormController{
 		return new ModelAndView(new RedirectView("workperiodView.html"));
 	}
 
-	public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) {
+	
+//	@Override
+//	public void initBinder(WebDataBinder binder) {
+//		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//		super.initBinder(binder);
+//		binder.registerCustomEditor(Timestamp.class, timestampBinder);
+//		binder.registerCustomEditor(Timestamp.class, timestampTimeBinder);
+//	}
+	
+	
+	@Override
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {//(HttpServletRequest request, ServletRequestDataBinder binder) {
 		// TODO Auto-generated method stub
 //		super.initBinder(request, binder);
 		Iterator itr = customBinders.iterator();

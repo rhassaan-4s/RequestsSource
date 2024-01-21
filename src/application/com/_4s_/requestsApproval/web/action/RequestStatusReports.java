@@ -13,24 +13,41 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
-import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.common.web.action.CommonController;
+import com._4s_.common.web.binders.DateTimeBinder;
+import com._4s_.common.web.binders.DomainObjectBinder;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.restServices.json.RequestApproval;
 
-
-public class RequestStatusReports extends BaseSimpleFormController{
+@Controller
+@RequestMapping("/requestStatusReports.html")
+public class RequestStatusReports extends CommonController {
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
 
 	public RequestsApprovalManager getRequestsApprovalManager() {
@@ -42,26 +59,31 @@ public class RequestStatusReports extends BaseSimpleFormController{
 		this.requestsApprovalManager = requestsApprovalManager;
 	}
 	
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{
+//	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
+//	{
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
 		LoginUsersRequests loginUsersRequests=new LoginUsersRequests();
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	  
-		return loginUsersRequests;
+//		return loginUsersRequests;
+		return "requestStatusReports";
 	}
 	
 	//**************************************** referenceData ***********************************************\\
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
-	{
+//	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+//	{
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
 		int year, month;
 		
-		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
+//		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
 		Map model=new HashMap();		
 		
 		String emp_code = request.getParameter("empCode");
@@ -114,7 +136,7 @@ public class RequestStatusReports extends BaseSimpleFormController{
 	
 		String request_date_to = request.getParameter("request_date_to");
 		log.debug("---request_date_to--"+request_date_to);
-		if (request_date_to==null || request_date_from.equals("")) {
+		if (request_date_to==null || request_date_to.equals("")) {
 			request_date_to = request.getParameter("date_to");
 		}
 		log.debug("---request_date_to--"+request_date_to);
@@ -185,25 +207,45 @@ public class RequestStatusReports extends BaseSimpleFormController{
 		return model;
 	}
 
-	//**************************************** onBind ***********************************************\\	
-	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception{
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		
-		
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	}
-//**************************************** onBindAndValidate ***********************************************\\
-	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
-	{
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//	//**************************************** onBind ***********************************************\\	
+//	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception{
+//		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//		
+//		
+//		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//	}
+////**************************************** onBindAndValidate ***********************************************\\
+//	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
+//	{
+//		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//		
+//		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//	}
+	
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		DomainObjectBinder loginUserBinder = new DomainObjectBinder();
+		loginUserBinder.setBaseManager(requestsApprovalManager);
+		loginUserBinder.setBindedClass(LoginUsers.class);
+		binder.registerCustomEditor(LoginUsers.class, loginUserBinder);
+
+		DomainObjectBinder requestTypeBinder = new DomainObjectBinder();
+		requestTypeBinder.setBaseManager(requestsApprovalManager);
+		requestTypeBinder.setBindedClass(RequestTypes.class);
+		binder.registerCustomEditor(RequestTypes.class, requestTypeBinder);
+
+		DateTimeBinder dateTimeBinder = new DateTimeBinder();
+		binder.registerCustomEditor(Date.class, dateTimeBinder);
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{	
+//	public ModelAndView onSubmit(HttpServletRequest request,
+//			HttpServletResponse response, Object command, BindException errors)throws Exception 
+//	{	
+	@RequestMapping(method = RequestMethod.POST)
+	public String processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("loginUsersRequests") LoginUsersRequests command,
+			BindingResult result, SessionStatus status,Model model) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
 		
@@ -224,7 +266,7 @@ public class RequestStatusReports extends BaseSimpleFormController{
 		log.debug("employee " + employee);
 		
 		
-		Map model=new HashMap();
+//		Map model=new HashMap();
 		
 		String emp_code = request.getParameter("empCode");
 //		log.debug("----emp_code---"+emp_code);
@@ -284,15 +326,15 @@ public class RequestStatusReports extends BaseSimpleFormController{
 			request_date_from = request.getParameter("date_from");
 		}
 		log.debug("---request_date_from--"+request_date_from);
-		model.put("request_date_from", request_date_from);
+		model.addAttribute("request_date_from", request_date_from);
 	
 		String request_date_to = request.getParameter("request_date_to");
 		log.debug("---request_date_to--"+request_date_to);
-		if (request_date_to==null || request_date_from.equals("")) {
+		if (request_date_to==null || request_date_to.equals("")) {
 			request_date_to = request.getParameter("date_to");
 		}
 		log.debug("---request_date_to--"+request_date_to);
-		model.put("request_date_to", request_date_to);
+		model.addAttribute("request_date_to", request_date_to);
 		
 		
 		dateFrom = request_date_from;
@@ -337,11 +379,11 @@ public class RequestStatusReports extends BaseSimpleFormController{
 		log.debug("dateTo " + dateTo);
 		log.debug("exactDateFrom " + exactDateFrom);
 		log.debug("exactDateTo " + exactDateTo);
-		model = requestsApprovalManager.getRequestsStatus(requestNumber, emp_code, dateFrom, dateTo, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true,null, pageNumber, 20);
+		Map results = requestsApprovalManager.getRequestsStatus(requestNumber, emp_code, dateFrom, dateTo, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true,null, pageNumber, 20);
 		
-		
-		model.put("pageNumber", pageNumber);
-		model.put("requestType", requestType);
+		model.addAttribute("Results",results);
+		model.addAttribute("pageNumber", pageNumber);
+		model.addAttribute("requestType", requestType);
 		
 //		///////////////////////////////////////////////////////////
 //		List results2 = (List)model.get("results");
@@ -435,7 +477,7 @@ public class RequestStatusReports extends BaseSimpleFormController{
 //		}
 
 		
-		List actualRequest = (List)model.get("results");
+		List actualRequest = (List)results.get("results");
 //		log.debug("-----actualRequest---size-"+actualRequest.size());
 //		for (int i = 0; i < actualRequest.size(); i++) {
 //			LoginUsersRequests s=(LoginUsersRequests) actualRequest.get(i);
@@ -487,15 +529,14 @@ public class RequestStatusReports extends BaseSimpleFormController{
 			 String check=request.getParameter("approveAll");
 				log.debug("value of check>>>>>>>>>>>>>"+check);
 				
-				List results = (List)model.get("results");
 				
 				if(check !=null && !check.equals(""))
 				{
 					log.debug("**********************if for second*********************");
 					
-					for(int i=0;i<results.size();i++) {
+					for(int i=0;i<actualRequest.size();i++) {
 						log.debug("**********************inside for *********************");
-						LinkedCaseInsensitiveMap  map= (LinkedCaseInsensitiveMap)results.get(i);
+						LinkedCaseInsensitiveMap  map= (LinkedCaseInsensitiveMap)actualRequest.get(i);
 						LoginUsersRequests loginUserRequest = (LoginUsersRequests)requestsApprovalManager.getObject(LoginUsersRequests.class, ((BigDecimal)map.get("id")).longValue()); 
 						String approve=request.getParameter("approve"+i);
 						log.debug("approve>>>>>>>>>>"+approve);
@@ -509,7 +550,7 @@ public class RequestStatusReports extends BaseSimpleFormController{
 							approvals.setRequestId(loginUserRequest.getId()+"");
 							requestsApprovalManager.approvalsAccessLevels(approvals, loginUserRequest, employee);
 						}
-//						LoginUsersRequests loginUserRequest= (LoginUsersRequests)results.get(i);
+//						LoginUsersRequests loginUserRequest= (LoginUsersRequests)actualRequest.get(i);
 //						String approve=request.getParameter("approve"+i);
 //						log.debug("approve>>>>>>>>>>"+approve);
 //						if(approve!=null && !approve.equals(""))
@@ -540,20 +581,21 @@ public class RequestStatusReports extends BaseSimpleFormController{
 				List requests=requestsApprovalManager.getObjectsByParameterOrderedByFieldList(RequestTypes.class,"hidden" , new Integer(0), orderBy);
 				requests.addAll(requestsApprovalManager.getObjectsByParameterOrderedByFieldList(RequestTypes.class,"hidden" , new Integer(1), orderBy));
 				
-				model.put("firstDay", formattedDate);
-				model.put("empCode", emp_code);
-				model.put("status", statusId);
-				model.put("codeFrom", codeFrom);
-				model.put("codeTo", codeTo);
-				model.put("today", formatedToday);
-				model.put("request_date_from", request_date_from);
-				model.put("request_date_to", request_date_to);
-//				model.put("dateFrom", dateFrom);
-//				model.put("dateTo", dateTo);
+				model.addAttribute("firstDay", formattedDate);
+				model.addAttribute("empCode", emp_code);
+				model.addAttribute("status", statusId);
+				model.addAttribute("codeFrom", codeFrom);
+				model.addAttribute("codeTo", codeTo);
+				model.addAttribute("today", formatedToday);
+				model.addAttribute("request_date_from", request_date_from);
+				model.addAttribute("request_date_to", request_date_to);
+//				model.addAttribute("dateFrom", dateFrom);
+//				model.addAttribute("dateTo", dateTo);
 				
-				model.put("requestTypeList",requests);
+				model.addAttribute("requestTypeList",requests);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView("requestStatusReports",model);
+//		return new ModelAndView("requestStatusReports",model);
+		return "requestStatusReports";
 	}
 	
 	public static boolean isOnlyNumbers(String str){

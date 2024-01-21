@@ -28,15 +28,15 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="loginUsersRequests_seq")
 	@SequenceGenerator(name="loginUsersRequests_seq",sequenceName="loginUsersRequests_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;
-	
+
 	@ManyToOne
 	@JoinColumn(name="login_user")
 	private LoginUsers login_user;
-	
+
 	@ManyToOne
 	@JoinColumn(name="request_type")
 	private RequestTypes request_id;
-	
+
 	private String empCode;
 	private Date request_date;
 	private Date from_date;
@@ -57,30 +57,32 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	@ManyToOne
 	@JoinColumn(name="vacation")
 	private Vacation vacation;
-	
+
 	@Transient
 	private Date vac_period_from;
-	
+
 	@Transient
 	private Date vac_period_to;
-	
+	private Double longitude = new Double(0);
+
+	private String reply;
 	private Double latitude = new Double(0);
-	
+
 	private Integer inputType = 0; //0: attendance from application sign in and out
-								   //1: attendance request (for those who forgot to attend)
-								   //2: Mobile attendance
-	
+	//1: attendance request (for those who forgot to attend)
+	//2: Mobile attendance
+
 	private String locationAddress = null;
-	
+
 	private Boolean isInsideCompany = true;
-	
+
 	private Date from_date_history;
-	
+
 	@ManyToOne
 	@JoinColumn (name="managerModifiedDate")
 	private Employee managerModifiedDate;
-	
-    public Employee getManagerModifiedDate() {
+
+	public Employee getManagerModifiedDate() {
 		return managerModifiedDate;
 	}
 	public void setManagerModifiedDate(Employee managerModifiedDate) {
@@ -122,9 +124,6 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
-	private Double longitude = new Double(0);
-	
-	private String reply;
 	public Long getId() {
 		return id;
 	}
@@ -161,7 +160,7 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	public void setPeriod_to(Date period_to) {
 		this.period_to = period_to;
 	}
-	
+
 	public String getNotes() {
 		return notes;
 	}
@@ -241,19 +240,19 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 
 	@Override
 	public boolean equals(Object o) {
-		 if (o == this) {
-		 return true;
-		 }
-		 if (!(o instanceof LoginUsersRequests)) {
-		 return false;
-		 }
-		 LoginUsersRequests rhs = (LoginUsersRequests) o;
-		 return new EqualsBuilder()
-		 .append(this.request_date, rhs.getRequest_date())
-		 .append(this.from_date, rhs.getFrom_date())
-		 .append(this.request_id, rhs.getRequest_id())
-		 .append(this.empCode, rhs.getEmpCode())
-		 .isEquals();
+		if (o == this) {
+			return true;
+		}
+		if (!(o instanceof LoginUsersRequests)) {
+			return false;
+		}
+		LoginUsersRequests rhs = (LoginUsersRequests) o;
+		return new EqualsBuilder()
+				.append(this.request_date, rhs.getRequest_date())
+				.append(this.from_date, rhs.getFrom_date())
+				.append(this.request_id, rhs.getRequest_id())
+				.append(this.empCode, rhs.getEmpCode())
+				.isEquals();
 	}
 	public void setRequestNumber(String requestNumber) {
 		this.requestNumber = requestNumber;
@@ -291,7 +290,7 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	public void setAltDate(Date altDate) {
 		this.altDate = altDate;
 	}
-	
-	
-	
+
+
+
 }

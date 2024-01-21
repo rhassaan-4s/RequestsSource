@@ -24,6 +24,9 @@ import com._4s_.attendance.model.QualificationSpeciality;
 import com._4s_.attendance.model.Religion;
 import com._4s_.attendance.model.Title;
 import com._4s_.auditing.model.Auditable;
+import com._4s_.common.web.validators.Mandatory;
+import com._4s_.common.web.validators.MandatoryDate;
+import com._4s_.common.web.validators.Unique;
 
 @Entity
 @Table (name = "EMPBASIC")
@@ -37,19 +40,30 @@ public class EmpBasic implements Serializable,Auditable {
 	@GenericGenerator(name="empBasic_seq",strategy="com._4s_.attendance.dao.EmpBasicStringKeyGenerator")
 	@GeneratedValue(generator="empBasic_seq")
 	private String empCode;
+	@Mandatory(value=EmpBasic.class,property="empName")
+	@Unique(value=EmpBasic.class,property = "empName")
 	private String empName;
+	@Mandatory(value=EmpBasic.class,property="e_emp_name")
+	@Unique(value=EmpBasic.class,property = "e_emp_name")
 	private String e_emp_name;
 	private String permenant="T";
 	@ManyToOne
 	@JoinColumn (name="title")
 	private Title title;
+	@Mandatory(value=EmpBasic.class,property="address")
 	private String address;
 	private String eAddress;
 	private String should_sign="1";
+	@Mandatory(value=EmpBasic.class,property="natnl_no")
+	@Unique(value=EmpBasic.class,property = "natnl_no")
 	private String natnl_no;
 //	@Temporal(TemporalType.DATE)
+//	@Mandatory(value=EmpBasic.class,property="emplDate")
+	@MandatoryDate(value=EmpBasic.class,property="emplDate")
 	private Timestamp emplDate;
 //	@Temporal(TemporalType.DATE)
+//	@Mandatory(value=EmpBasic.class,property="birthdate")
+	@MandatoryDate(value=EmpBasic.class,property="birthdate")
 	private Timestamp birthdate;
 //	@Temporal(TemporalType.DATE)
 	private Timestamp job_join;
