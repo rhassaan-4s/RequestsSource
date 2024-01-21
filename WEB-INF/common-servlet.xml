@@ -256,6 +256,15 @@
 		</property>
 	</bean-->
 
+<bean id="webBranchController" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.common.web.action.WebBranchController">
+				<property name="commonManager">
+					<ref bean="commonManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
 
 	<bean id="ClientsController" parent="txProxyTemplate">
 		<property name="target">
@@ -305,6 +314,31 @@
 			</bean>
 		</property>
 	</bean-->
+	<bean id="webBranchFormController" parent="txProxyTemplate">
+		<property name="target">
+			<bean
+				class="com._4s_.common.web.action.WebBranchFormController">
+				<property name="commandName">
+					<value>branch</value>
+				</property>
+
+				<property name="commandClass">
+					<value>com._4s_.common.model.WebBranch</value>
+				</property>
+
+				<property name="formView">
+					<value>webBranchForm</value>
+				</property>
+				<property name="successView">
+					<value>webBranchView.html</value>
+				</property>
+
+				<property name="baseManager">
+					<ref bean="baseManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
 
 	<bean id="ClientsFormController" parent="txProxyTemplate">
 		<property name="target">
@@ -514,10 +548,12 @@
 				
 				<!--prop key="/commonAdminBranchView.html">BranchController</prop>
 				<prop key="/commonAdminBranchForm.html">BranchFormController</prop-->
+				
+				<prop key="/webBranchView.html">webBranchController</prop>
+				<prop key="/webBranchForm.html">webBranchFormController</prop>
+				
 				<prop key="/commonAdminCompanyView.html">CompanyController</prop>
-				<prop key="/commonAdminCompanyForm.html">
-					CompanyFormController
-				</prop>
+				<prop key="/commonAdminCompanyForm.html">CompanyFormController</prop>
 				
 				<prop key="/typesDataFormController.html">typesDataFormController</prop>
 				<prop key="/typesDataController.html">typesDataController</prop>

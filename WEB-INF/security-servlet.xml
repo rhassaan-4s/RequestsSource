@@ -223,7 +223,7 @@
 				<property name="binders">
 					<list>
 						<ref bean="roleBinder"/>
-						<ref bean="branchBinder"/>
+						<ref bean="webBranchBinder"/>
 						<ref bean="departmentBinder"/>
 						<ref bean="cityBinder"/>
 						<ref bean="securityApplicationBinder"/>

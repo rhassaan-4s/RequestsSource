@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diagram version="1" name="security">
+	<entities>
+		<data-source id="mysql8-18cf2e6e92e-60061dc9c7f12582">
+			<entity id="1" name="security_applications" fq-name="`4s`.security_applications">
+				<path name="4s"/>
+			</entity>
+			<entity id="2" name="security_fields" fq-name="`4s`.security_fields">
+				<path name="4s"/>
+			</entity>
+			<entity id="3" name="security_permissions" fq-name="`4s`.security_permissions">
+				<path name="4s"/>
+			</entity>
+			<entity id="4" name="security_role_permissions" fq-name="`4s`.security_role_permissions">
+				<path name="4s"/>
+			</entity>
+			<entity id="5" name="security_roles" fq-name="`4s`.security_roles">
+				<path name="4s"/>
+			</entity>
+			<entity id="6" name="security_user_roles" fq-name="`4s`.security_user_roles">
+				<path name="4s"/>
+			</entity>
+			<entity id="7" name="security_users" fq-name="`4s`.security_users">
+				<path name="4s"/>
+			</entity>
+		</data-source>
+	</entities>
+	<relations/>
+</diagram>

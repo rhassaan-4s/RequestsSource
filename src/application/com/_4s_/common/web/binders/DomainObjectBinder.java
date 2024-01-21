@@ -57,17 +57,19 @@ public class DomainObjectBinder extends PropertyEditorSupport implements BaseBin
 	public String getAsText() {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>bindedClass "+bindedClass);
 		log.debug("GetAsText >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		log.debug(">>>>>>>>>>>>>>>>>getValue() "+getValue());
 		Auditable auditable = ((Auditable)getValue());
 		Object id = null;
 		String text = "";
-		
+		log.debug("auditable " + auditable);
 		if (auditable!=null) {
 			id = auditable.getId();
 		}
+		log.debug("id " + id);
 		if (id!=null) {
 			text = id.toString();
 		}
-		
+		log.debug("text " + text);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< GetAsText");
 		
 		return text;

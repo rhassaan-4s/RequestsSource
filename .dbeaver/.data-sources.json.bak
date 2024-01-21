@@ -4,19 +4,35 @@
 		"microsoft-180eab39ff2-4d30f4a85cbf6ee4": {
 			"provider": "sqlserver",
 			"driver": "microsoft",
-			"name": "master",
+			"name": "test_pay",
+			"save-password": true,
+			"read-only": false,
+			"configuration": {
+				"host": "198.12.225.198",
+				"port": "1433",
+				"database": "test_pay",
+				"url": "jdbc:sqlserver://;serverName=198.12.225.198;databaseName=test_pay",
+				"type": "dev",
+				"provider-properties": {
+					"@dbeaver-show-all-schemas@": "true"
+				},
+				"auth-model": "sqlserver_database"
+			}
+		},
+		"mysql8-18cf2e6e92e-60061dc9c7f12582": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "localhost",
 			"save-password": true,
 			"read-only": false,
 			"configuration": {
 				"host": "localhost",
-				"port": "1433",
-				"database": "master",
-				"url": "jdbc:sqlserver://;serverName=localhost;databaseName=master",
+				"port": "3306",
+				"database": "4s",
+				"url": "jdbc:mysql://localhost:3306/4s",
+				"home": "mysql_client",
 				"type": "dev",
-				"provider-properties": {
-					"@dbeaver-show-all-schemas@": "false"
-				},
-				"auth-model": "sqlserver_database",
+				"auth-model": "native",
 				"handlers": {}
 			}
 		}

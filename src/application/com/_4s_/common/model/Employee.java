@@ -48,8 +48,19 @@ public class Employee implements Serializable,Auditable,Searchable {
 	private String jobTitle;
 	private String address;
 	@ManyToOne
+	@JoinColumn (name="webBranch")
+	private WebBranch webBranch;
+	
+	public WebBranch getWebBranch() {
+		return webBranch;
+	}
+	public void setWebBranch(WebBranch webBranch) {
+		this.webBranch = webBranch;
+	}
+	@ManyToOne
 	@JoinColumn (name="city")
 	private City city;
+	
 	private String tel;
 	private String ext;
 	private String email;

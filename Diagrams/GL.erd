@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diagram version="1" name="GL.erd">
+	<entities>
+		<data-source id="mysql8-18cf2e6e92e-60061dc9c7f12582">
+			<entity id="1" name="gl_account" fq-name="`4s`.gl_account" order="0" x="518" y="306">
+				<path name="4s"/>
+			</entity>
+			<entity id="2" name="gl_account_financial_year_summary" fq-name="`4s`.gl_account_financial_year_summary" order="1" x="1080" y="29">
+				<path name="4s"/>
+			</entity>
+			<entity id="3" name="gl_account_level" fq-name="`4s`.gl_account_level" order="2" x="1540" y="20">
+				<path name="4s"/>
+			</entity>
+			<entity id="4" name="gl_account_trans_v" fq-name="`4s`.gl_account_trans_v" order="3" x="1540" y="418">
+				<path name="4s"/>
+			</entity>
+			<entity id="5" name="gl_account_type" fq-name="`4s`.gl_account_type" order="4" x="20" y="48">
+				<path name="4s"/>
+			</entity>
+			<entity id="6" name="gl_company" fq-name="`4s`.gl_company" order="5" x="570" y="45">
+				<path name="4s"/>
+			</entity>
+			<entity id="7" name="gl_currency" fq-name="`4s`.gl_currency" order="6" x="21" y="143">
+				<path name="4s"/>
+			</entity>
+			<entity id="8" name="gl_detailed_budget" fq-name="`4s`.gl_detailed_budget" order="7" x="1339" y="190">
+				<path name="4s"/>
+			</entity>
+			<entity id="9" name="gl_detailed_transaction" fq-name="`4s`.gl_detailed_transaction" order="8" x="1540" y="181">
+				<path name="4s"/>
+			</entity>
+			<entity id="10" name="gl_detailed_transaction_8feb2012" fq-name="`4s`.gl_detailed_transaction_8feb2012" order="9" x="1741" y="181">
+				<path name="4s"/>
+			</entity>
+			<entity id="11" name="gl_detailed_transaction_analysis" fq-name="`4s`.gl_detailed_transaction_analysis" order="10" x="153" y="143">
+				<path name="4s"/>
+			</entity>
+			<entity id="12" name="gl_document_type" fq-name="`4s`.gl_document_type" order="11" x="1339" y="29">
+				<path name="4s"/>
+			</entity>
+			<entity id="13" name="gl_dt" fq-name="`4s`.gl_dt" order="12" x="17" y="306">
+				<path name="4s"/>
+			</entity>
+			<entity id="14" name="gl_dummy" fq-name="`4s`.gl_dummy" order="13" x="192" y="48">
+				<path name="4s"/>
+			</entity>
+			<entity id="15" name="gl_equation" fq-name="`4s`.gl_equation" order="14" x="395" y="140">
+				<path name="4s"/>
+			</entity>
+			<entity id="16" name="gl_expected_balance" fq-name="`4s`.gl_expected_balance" order="15" x="1741" y="20">
+				<path name="4s"/>
+			</entity>
+			<entity id="17" name="gl_financial_period" fq-name="`4s`.gl_financial_period" order="16" x="704" y="26">
+				<path name="4s"/>
+			</entity>
+			<entity id="18" name="gl_financial_year" fq-name="`4s`.gl_financial_year" order="17" x="1080" y="200">
+				<path name="4s"/>
+			</entity>
+			<entity id="19" name="gl_master_budget" fq-name="`4s`.gl_master_budget" order="18" x="168" y="306">
+				<path name="4s"/>
+			</entity>
+			<entity id="20" name="gl_master_transaction" fq-name="`4s`.gl_master_transaction" order="19" x="1741" y="418">
+				<path name="4s"/>
+			</entity>
+			<entity id="21" name="gl_master_transaction_8feb2012" fq-name="`4s`.gl_master_transaction_8feb2012" order="20" x="710" y="203">
+				<path name="4s"/>
+			</entity>
+			<entity id="22" name="gl_month" fq-name="`4s`.gl_month" order="21" x="309" y="48">
+				<path name="4s"/>
+			</entity>
+			<entity id="23" name="gl_mt" fq-name="`4s`.gl_mt" order="22" x="1080" y="446">
+				<path name="4s"/>
+			</entity>
+			<entity id="24" name="gl_rep" fq-name="`4s`.gl_rep" order="23" x="1339" y="437">
+				<path name="4s"/>
+			</entity>
+			<entity id="25" name="gl_settings" fq-name="`4s`.gl_settings" order="24" x="427" y="49">
+				<path name="4s"/>
+			</entity>
+			<entity id="26" name="gl_supporting_document" fq-name="`4s`.gl_supporting_document" order="25" x="521" y="144">
+				<path name="4s"/>
+			</entity>
+			<entity id="27" name="gl_suspension_details" fq-name="`4s`.gl_suspension_details" order="26" x="323" y="305">
+				<path name="4s"/>
+			</entity>
+		</data-source>
+	</entities>
+	<relations/>
+</diagram>

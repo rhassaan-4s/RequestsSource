@@ -333,8 +333,12 @@ function f_tcalRelDate (d_date, d_diff, s_units) {
 }
 
 function f_tcalHideAll () {
-	for (var i = 0; i < window.A_TCALSIDX.$length; i++)
-		window.A_TCALSIDX[i].f_hide();
+	try{
+		for (var i = 0; i < window.A_TCALSIDX.$length; i++)
+			window.A_TCALSIDX[i].f_hide();
+	} catch (err) {
+		//rana alert("error in calendar arabic file");
+	}
 }
 
 function f_tcalResetTime (d_date) {

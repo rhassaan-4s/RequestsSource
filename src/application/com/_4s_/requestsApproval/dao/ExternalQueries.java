@@ -915,6 +915,7 @@ public class ExternalQueries extends CommonQueries{
 				"where\n" + 
 				"empdays.EMPCODE in ("+empCode+")\n" + 
 				joinDateCondition2 + 
+				" AND req.APPROVED !=99 "+
 				")\n" + 
 				//			unionAll+	
 				"ORDER BY DD,"+empCodeOrder+"attendance_time ASC --DD,\n");
@@ -2326,7 +2327,7 @@ public class ExternalQueries extends CommonQueries{
 				+select + where+
 				//orderBy+
 				outerSelectEnd + outerSelectWhere 
-//				+orderBy
+				+orderBy
 				+") q"+ ") queryView where rnum>"+(pageSize*pageNumber) + " and rnum<="+((pageNumber*pageSize)+pageSize-1)+ orderBy;
 		log.debug("query " + query);
 		StringBuilder sql = new StringBuilder(query);
@@ -2339,7 +2340,7 @@ public class ExternalQueries extends CommonQueries{
 		String listSizeQuery = "select count (*) count from ("+outerSelectStart+ " ("+select+where
 				//+orderBy
 				+outerSelectEnd + outerSelectWhere
-//				+orderBy
+				+orderBy
 				+") queryView ";
 //+orderBy;
 		log.debug("listSizeQuery " + listSizeQuery);

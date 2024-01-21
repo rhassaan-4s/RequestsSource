@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diagram version="1" name="Core">
+	<entities>
+		<data-source id="mysql8-18cf2e6e92e-60061dc9c7f12582">
+			<entity id="1" name="common_branch" fq-name="`4s`.common_branch">
+				<path name="4s"/>
+			</entity>
+			<entity id="2" name="common_city" fq-name="`4s`.common_city">
+				<path name="4s"/>
+			</entity>
+			<entity id="3" name="common_company" fq-name="`4s`.common_company">
+				<path name="4s"/>
+			</entity>
+			<entity id="4" name="common_country" fq-name="`4s`.common_country">
+				<path name="4s"/>
+			</entity>
+			<entity id="5" name="common_country_test" fq-name="`4s`.common_country_test">
+				<path name="4s"/>
+			</entity>
+			<entity id="6" name="common_dates" fq-name="`4s`.common_dates">
+				<path name="4s"/>
+			</entity>
+			<entity id="7" name="common_department" fq-name="`4s`.common_department">
+				<path name="4s"/>
+			</entity>
+			<entity id="8" name="common_employee" fq-name="`4s`.common_employee">
+				<path name="4s"/>
+			</entity>
+			<entity id="9" name="common_employee1" fq-name="`4s`.common_employee1">
+				<path name="4s"/>
+			</entity>
+			<entity id="10" name="common_employee_specialitytype" fq-name="`4s`.common_employee_specialitytype">
+				<path name="4s"/>
+			</entity>
+			<entity id="11" name="common_employee_unit" fq-name="`4s`.common_employee_unit">
+				<path name="4s"/>
+			</entity>
+			<entity id="12" name="common_flag" fq-name="`4s`.common_flag">
+				<path name="4s"/>
+			</entity>
+			<entity id="13" name="common_hijri_date_adjustment" fq-name="`4s`.common_hijri_date_adjustment">
+				<path name="4s"/>
+			</entity>
+			<entity id="14" name="common_hrdepartments" fq-name="`4s`.common_hrdepartments">
+				<path name="4s"/>
+			</entity>
+			<entity id="15" name="common_hremployees" fq-name="`4s`.common_hremployees">
+				<path name="4s"/>
+			</entity>
+			<entity id="16" name="common_hremptitels" fq-name="`4s`.common_hremptitels">
+				<path name="4s"/>
+			</entity>
+			<entity id="17" name="common_last_sequence" fq-name="`4s`.common_last_sequence">
+				<path name="4s"/>
+			</entity>
+			<entity id="18" name="common_region" fq-name="`4s`.common_region">
+				<path name="4s"/>
+			</entity>
+			<entity id="19" name="common_types" fq-name="`4s`.common_types">
+				<path name="4s"/>
+			</entity>
+			<entity id="20" name="common_typesdata" fq-name="`4s`.common_typesdata">
+				<path name="4s"/>
+			</entity>
+			<entity id="21" name="common_unit" fq-name="`4s`.common_unit">
+				<path name="4s"/>
+			</entity>
+		</data-source>
+	</entities>
+	<relations/>
+</diagram>

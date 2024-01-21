@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.attendance.model.VacRule;
+import com._4s_.common.model.Company;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.CommonManager;
@@ -105,7 +106,7 @@ public class DefaultPage extends BaseController {
 				"username", username);
 
 		String defaultPage = null;
-		log.debug("----user.getIsEmployee()-----"+user.getIsEmployee());
+//		log.debug("----user.getIsEmployee()-----"+user.getIsEmployee());
 
 		String reqId = (String)request.getSession().getAttribute("requestId");
 		String requestNumber = (String)request.getSession().getAttribute("requestNumber");
@@ -378,6 +379,12 @@ public class DefaultPage extends BaseController {
 			request.getSession().setAttribute("partName1", partName1);
 			request.getSession().setAttribute("partName2", partName2);
 			request.getSession().setAttribute("partName3", partName3);
+			
+			Object companyObject = baseManager.getObject(Company.class, new Long(1));
+			if (companyObject!=null) {
+				Company company = (Company)companyObject;
+				request.getSession().setAttribute("company", company);
+			} 
 
 			//			Settings settings = (Settings)commonManager.getObjectsOrderedByField(Settings.class,"id").get(0);
 			//		int salary_from_day =  requestsApprovalManager.getSalaryFromDay();

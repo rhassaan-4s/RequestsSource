@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diagram version="1" name="internationalization">
+	<entities>
+		<data-source id="mysql8-18cf2e6e92e-60061dc9c7f12582">
+			<entity id="1" name="i18n_key" fq-name="`4s`.i18n_key">
+				<path name="4s"/>
+			</entity>
+			<entity id="2" name="i18n_locale" fq-name="`4s`.i18n_locale">
+				<path name="4s"/>
+			</entity>
+			<entity id="3" name="i18n_message" fq-name="`4s`.i18n_message">
+				<path name="4s"/>
+			</entity>
+		</data-source>
+	</entities>
+	<relations/>
+</diagram>

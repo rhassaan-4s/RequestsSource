@@ -19,6 +19,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import com._4s_.common.model.Branch;
 import com._4s_.common.model.Department;
 import com._4s_.common.model.Employee;
+import com._4s_.common.model.WebBranch;
 import com._4s_.common.service.CommonManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.i18n.model.MyLocale;
@@ -57,32 +58,18 @@ public class AddUserToRole extends BaseSimpleFormController {
 		log
 		.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		User user = (User) command;
-
-
-		// adding internal Communicator
-		//		InternalCommunicator communicator;
-		//		if (user.getId() == null){
-		//			communicator = new InternalCommunicator();
-		//			Employee employee = user.getEmployee();
-		//			employee.setIsInternalCommunicator(new Boolean (true));
-		//			communicator.setEmployee(employee);
-		//			communicator.setCreationDate(new Date());
-		//			communicator.setFullName(employee.getFirstName() +" "+ employee.getLastName());
-		//			communicator.setAddress(employee.getAddress());
-		//			communicator.setCity(employee.getCity());
-		//			communicator.setCompanyName(employee.getDepartment().getDescription());
-		//		}
-		//		
-		//		else{
-		//			
-		//			Employee employee = user.getEmployee();
-		//			communicator = communicationManager.getInternalCommunicatorByEmployee(employee);
-		//			 communicator.setFullName(employee.getFirstName() +" "+ employee.getLastName());
-		//			 communicator.setAddress(employee.getAddress());
-		//			 communicator.setCity(employee.getCity());
-		//			 communicator.setCompanyName(employee.getDepartment().getDescription());
-		//		}
-
+		
+		log.debug(user.getEmployee());
+		
+		String webBranchSelect = request.getParameter("webBranchSelect");
+		log.debug(" web branch select " + webBranchSelect);
+		if (user.getEmployee()!=null) {
+			if (webBranchSelect!=null && !webBranchSelect.isEmpty()) {
+				WebBranch branch = (WebBranch) baseManager.getObjectByParameter(WebBranch.class, "branch",new Long(webBranchSelect));
+				user.getEmployee().setWebBranch(branch);
+			}
+			log.debug("branch " + user.getEmployee().getWebBranch());
+		}
 
 		String my = request.getParameter("my");
 		String option = request.getParameter("option");
@@ -171,9 +158,10 @@ public class AddUserToRole extends BaseSimpleFormController {
 		String my = request.getParameter("my");
 		List departments = baseManager.getObjects(Department.class);
 		List cities = commonManager.getCitiesByCountry(new Long(1));
+		
 
 //		List branches = commonManager.getBranchesRelatedByCompany(new Long(1)); // SCFHS
-		List branches= commonManager.getObjects(Branch.class);
+		List branches= commonManager.getObjects(WebBranch.class);
 		Map model = new HashMap();
 		model.put("applications", applications);
 		model.put("roles", roles);
@@ -206,7 +194,12 @@ public class AddUserToRole extends BaseSimpleFormController {
 			Employee employee = new Employee();
 			user.setEmployee(employee);
 		}
+		Iterator itr = request.getParameterMap().keySet().iterator();
+		while (itr.hasNext()) {
+			log.debug(itr.next());
+		}
 		log
+		
 		.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> end formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		return user;
 	}
@@ -216,6 +209,10 @@ public class AddUserToRole extends BaseSimpleFormController {
 		// TODO Auto-generated method stub
 		log.debug(">>>>>>>>>>>>>>>> strat onBind");
 		User user = (User) command;
+		log.debug(user.getEmployee());
+		if (user.getEmployee()!=null) {
+			log.debug("branch " + user.getEmployee().getWebBranch());
+		}
 		Roles role;
 		String option = request.getParameter("option");
 		SecurityApplication application = (SecurityApplication) baseManager.getObject(

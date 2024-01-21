@@ -16,6 +16,9 @@
 <ul>
 	<li><a href="#"><fmt:message key="security.menu.security" /></a>
 	<ul>
+	<li><a href="/Requests/common/webBranchView.html"><abc:i18n
+			property="stores.header.branches" /> <fmt:message
+			key="stores.header.branches" /></a></li>
 		<li><a href="/Requests/security/userDetails.html"><abc:i18n
 			property="security.menu.users" /> <fmt:message
 			key="security.menu.users" /></a></li>

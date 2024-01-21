@@ -189,11 +189,11 @@
 					</tr>
 
 					<tr>
-						<td nowrap class="formReq" rowspan="2"><abc:i18n
+						<td nowrap class="formReq" ><abc:i18n
 								property="security.caption.application" /> <fmt:message
 								key="security.caption.application" /></td>
 
-						<td class="formBodControl" rowspan="2"><select name="zeft"
+						<td class="formBodControl" ><select name="zeft"
 							onchange="return reload();">
 								<c:forEach items="${applications}" var="app" varStatus="loop">
 									<option value="${app.id}" ${option==app.id?' selected' : ''}>${app.name}</option>
@@ -201,11 +201,11 @@
 								</c:forEach>
 						</select></td>
 
-						<td nowrap class="formReq" rowspan="2"><abc:i18n
+						<td nowrap class="formReq" ><abc:i18n
 								property="security.caption.roles" /> <fmt:message
 								key="security.caption.roles" /></td>
 
-						<TD class="formBodControl" rowspan="2"><select
+						<td class="formBodControl" ><select
 							name="userRoles" size="3" multiple>
 								<c:forEach items="${roles}" var="role">
 
@@ -222,7 +222,22 @@
 										<option value="${role.id}" ${isSelected}>${role.rolename}</option>
 									</c:if>
 								</c:forEach>
-						</select></TD>
+						</select></td>
+					</tr>
+					<tr>
+						<td nowrap class="formReq" ><abc:i18n
+								property="commons.caption.branch" /> <fmt:message
+								key="commons.caption.branch" /></td>
+
+						<td class="formBodControl"><select name="webBranchSelect">
+						<option value=""><fmt:message
+							key="commons.caption.select" /></option>
+								<c:forEach items="${branches}" var="branch" varStatus="loop">
+									<option value="${branch.branch}" ${user.employee.webBranch.branch==branch.branch?' selected' : ''}>${branch.descr}</option>
+
+								</c:forEach>
+						</select></td>
+						<td colspan="2">&nbsp;</td>
 					</tr>
 					<tr>
 						<td colspan="4">&nbsp;</td>

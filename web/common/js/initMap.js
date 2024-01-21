@@ -10,12 +10,12 @@
 
 //$(document).ready(
 		
-$(document).ready(function() {
+/*$(document).ready(function() {
     $(window).resize(function() {
         google.maps.event.trigger(map, 'resize');
     });
     google.maps.event.trigger(map, 'resize');
-});
+});*/
 
 function initMap(){
 	 $(window).resize(function() {
