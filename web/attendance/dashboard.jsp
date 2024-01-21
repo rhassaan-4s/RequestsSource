@@ -2,7 +2,7 @@
 <%@page import="com._4s_.common.model.Settings"%>
 <%@ include file="/web/common/includes/taglibs.jsp"%>
 <jsp:include page="/web/common/includes/header.jsp" flush="true" />
-
+<abc:security property="1022"/>
 
 <html>
 <head>

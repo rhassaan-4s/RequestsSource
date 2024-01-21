@@ -22,8 +22,9 @@ import com._4s_.common.util.LocaleUtil;
 @Table(name="hr_END_SERV_REASONS")
 public class EndServiceReasons  implements Auditable,Serializable {
 		
-		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_endserv_seq")
-		@SequenceGenerator(name="hr_endserv_seq",sequenceName="hr_endserv_seq")//(generate=GeneratorType.IDENTITY)
+		@Id 
+		@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_endserv_seq")
+		@SequenceGenerator(name="hr_endserv_seq",sequenceName="hr_endserv_seq")
 		private Long id;
 		
 		private String code;

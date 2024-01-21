@@ -16,7 +16,7 @@ public class TreeDivisions   implements Auditable,Serializable {
 	
 	
 //	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_geog_division_seq")
-//	@SequenceGenerator(name="hr_geog_division_seq",sequenceName="hr_geog_division_seq")//(generate=GeneratorType.IDENTITY)
+//	@SequenceGenerator(name="hr_geog_division_seq",sequenceName="hr_geog_division_seq")
 //	private Long id;
 
 	    protected String  code;

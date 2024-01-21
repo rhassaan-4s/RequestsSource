@@ -22,7 +22,7 @@ public class SalaryRaise {
 		// TODO Auto-generated constructor stub
 	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_salraise_seq")
-	@SequenceGenerator(name="hr_salraise_seq",sequenceName="hr_salraise_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_salraise_seq",sequenceName="hr_salraise_seq")
 	private  Long id ;
 	
 	private String salraise  ;

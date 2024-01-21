@@ -10,14 +10,10 @@ import javax.persistence.Table;
 @Entity
 @Table (name = "common_dates")
 public class HijriDates {
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
 	private Date miladi;
 	private String hijri;
-	
-	public HijriDates() {
-		// TODO Auto-generated constructor stub
-	}
 	public String getHijri() {
 		return hijri;
 	}

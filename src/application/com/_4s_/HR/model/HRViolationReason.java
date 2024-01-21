@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -17,11 +18,8 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="hr_violation_reason")
 public class HRViolationReason implements Auditable,Serializable {
-	
-	public HRViolationReason() {
-		// TODO Auto-generated constructor stub
-	}
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_violation_reason_seq")
+	@SequenceGenerator(name="hr_violation_reason_seq",sequenceName="hr_violation_reason_seq")
 	private Long id;
 	
 	private String name;

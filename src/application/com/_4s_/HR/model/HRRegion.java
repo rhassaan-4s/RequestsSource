@@ -22,7 +22,7 @@ public class HRRegion implements Auditable,Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_region_seq")
-	@SequenceGenerator(name="hr_region_seq",sequenceName="hr_region_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_region_seq",sequenceName="hr_region_seq")
 	private Long id;
     private String region; 
 	private String name;

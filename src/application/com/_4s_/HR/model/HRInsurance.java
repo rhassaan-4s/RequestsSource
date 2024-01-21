@@ -23,7 +23,7 @@ public class HRInsurance implements Auditable,Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_insurance_seq")
-	@SequenceGenerator(name="hr_insurance_seq",sequenceName="hr_insurance_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_insurance_seq",sequenceName="hr_insurance_seq")
 	private Long id;
 	
 	private String code;

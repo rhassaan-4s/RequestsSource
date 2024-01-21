@@ -1,4 +1,5 @@
 package com._4s_.requestsApproval.service;
+package com._4s_.requestsApproval.service;
 
 
 import java.io.BufferedReader;
@@ -2242,9 +2243,12 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	            throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
 	         String key = "AIzaSyBeCCPQ7VdCQiJxjXGfVO98LyirL1-hC74";
 	         LocaleUtil localeUtil = LocaleUtil.getInstance();
-	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
-//	        log.debug("url " + url);
-	        URLConnection urlConnection = (URLConnection)url.openConnection();
+
+//	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
+	         System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+	         URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "");
+	        log.debug("url " + url);
+	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
 	        String formattedAddress = "";
 	 
 	        try {
@@ -2259,12 +2263,12 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	            JSONParser parser = new JSONParser();
 	            JSONObject rsp = (JSONObject) parser.parse(result);
 	 
-	            if (rsp.containsKey("results")) {
-	                JSONArray matches = (JSONArray) rsp.get("results");
+	            if (rsp.containsKey("display_name")) {
+	                String matches = (String) rsp.get("display_name");
 	                String error = (String)rsp.get("error_message");
 	                log.debug("error string  " + error);
-	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
-	                formattedAddress = (String) data.get("formatted_address");
+//	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
+	                formattedAddress = matches;//(String) data.get("formatted_address");
 	                log.debug("formatted address " + formattedAddress);
 	            }
 	 
@@ -2282,11 +2286,13 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	            throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
 	         String key = "AIzaSyBeCCPQ7VdCQiJxjXGfVO98LyirL1-hC74";
 	         LocaleUtil localeUtil = LocaleUtil.getInstance();
-	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
+//	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
+	         System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+	        URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "");
 	        log.debug("url " + url);
-	        URLConnection urlConnection = (URLConnection)url.openConnection();
-	        JSONArray formattedAddress = null;
-	        String longName = "";
+
+	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
+	        String formattedAddress = null;
 	 
 	        try {
 	            InputStream in = url.openStream();
@@ -2300,30 +2306,39 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	            JSONParser parser = new JSONParser();
 	            JSONObject rsp = (JSONObject) parser.parse(result);
 	 
-	            if (rsp.containsKey("results")) {
-	                JSONArray matches = (JSONArray) rsp.get("results");
+	            
+	            if (rsp.containsKey("display_name")) {
+	                String matches = (String) rsp.get("display_name");
 	                String error = (String)rsp.get("error_message");
 	                log.debug("error string  " + error);
-	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
-	                formattedAddress =  (JSONArray)data.get("address_components");
-	                for (int i=0; i<formattedAddress.size()-2; i++) {
-	                	if (i!=0) {
-	                		longName+=((JSONObject)formattedAddress.get(i)).get("long_name")+",";
-	                	} else {
-	                		longName+=((JSONObject)formattedAddress.get(i)).get("long_name");
-	                	}
-	                }
-	                log.debug("formattedAddress[0] " + formattedAddress.get(0).getClass());
+//	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
+	                formattedAddress = matches;//(String) data.get("formatted_address");
 	                log.debug("formatted address " + formattedAddress);
 	            }
+//	            if (rsp.containsKey("results")) {
+//	                JSONArray matches = (JSONArray) rsp.get("results");
+//	                String error = (String)rsp.get("error_message");
+//	                log.debug("error string  " + error);
+//	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
+//	                formattedAddress =  (JSONArray)data.get("address_components");
+//	                for (int i=0; i<formattedAddress.size()-2; i++) {
+//	                	if (i!=0) {
+//	                		longName+=((JSONObject)formattedAddress.get(i)).get("long_name")+",";
+//	                	} else {
+//	                		longName+=((JSONObject)formattedAddress.get(i)).get("long_name");
+//	                	}
+//	                }
+//	                log.debug("formattedAddress[0] " + formattedAddress.get(0).getClass());
+//	                log.debug("formatted address " + formattedAddress);
+//	            }
 	 
-	            return longName;
+	            return formattedAddress;
 	        } catch (Exception e) {
 	        	log.debug("exception to get address from location " + e);
 	        	e.printStackTrace();
 	        } finally {
-//	            urlConnection.disconnect();
-	            return longName;
+	            urlConnection.disconnect();
+	            return formattedAddress;
 	        }
 	    }
 	

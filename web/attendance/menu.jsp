@@ -37,6 +37,10 @@
 					href="/Requests/attendance/empBasicView.html"> &nbsp;&nbsp; <fmt:message
 							key="attendance.header.empBasic" />
 				</a></li>
+				<li><abc:i18n property="requestsApproval.header.employmentHistory" /> <a
+					href="/Requests/attendance/empHistView.html"> &nbsp;&nbsp; <fmt:message
+							key="requestsApproval.header.employmentHistory" />
+				</a></li>
 
 				<li><a href="#"><abc:i18n property="attendance.header.vacandworkperiods" /><fmt:message
 							key="attendance.header.vacandworkperiods" /></a>

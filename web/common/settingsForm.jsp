@@ -202,6 +202,28 @@
 				</td>
 			</tr>
 			
+			<td nowrap class="formBodControl" >
+					<abc:i18n property="requestsApproval.header.sqlServerConnectionEnabled" />
+					<fmt:message key="requestsApproval.header.sqlServerConnectionEnabled" />
+				</td>
+				<td  class="formBod">
+				<spring:bind path="settings.sqlServerConnectionEnabled">
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} />
+					</spring:bind> 
+				</td>
+			</tr>
+			
+			<td nowrap class="formBodControl" >
+					<abc:i18n property="requestsApproval.header.desktopHrApplication" />
+					<fmt:message key="requestsApproval.header.desktopHrApplication" />
+				</td>
+				<td  class="formBod">
+				<spring:bind path="settings.desktopHrApplication">
+						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} />
+					</spring:bind> 
+				</td>
+			</tr>
+			
 	<tr>
 				<td class="tableHeader" height="20"></td>
 			</tr>

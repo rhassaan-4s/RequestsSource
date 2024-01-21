@@ -23,7 +23,7 @@ public class AccessLevels implements Auditable,Serializable {
 	}
 
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="access_levels_seq")
-	@SequenceGenerator(name="access_levels_seq",sequenceName="access_levels_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="access_levels_seq",sequenceName="access_levels_seq")
 	private Long id;
 	
 	@ManyToOne

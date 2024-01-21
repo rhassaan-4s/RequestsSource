@@ -88,5 +88,13 @@
 			<value>false</value>
 		</property>
 	</bean>
-	
+	<bean id="webBranchBinder" parent="domainObjectBinder" >
+		<property name="bindedClass">
+			<value>com._4s_.common.model.WebBranch</value>
+		</property>
+		<property name="allowCreateNew">
+			<value>false</value>
+		</property>
+	</bean>
+
 </beans>

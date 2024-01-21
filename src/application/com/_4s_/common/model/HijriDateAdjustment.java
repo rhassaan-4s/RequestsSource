@@ -17,15 +17,12 @@ import com._4s_.auditing.model.Auditable;
 @Entity
 @Table (name = "common_hijri_date_adjustment")
 public class HijriDateAdjustment implements Serializable,Auditable{
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
 	private int value;
 	private Date hijriDate;
 	private Date miladiDate;
 	
-	public HijriDateAdjustment() {
-		// TODO Auto-generated constructor stub
-	}
 	public Long getId() {
 		return id;
 	}

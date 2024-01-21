@@ -27,7 +27,7 @@ public class HREmployeeVacationInstall implements Auditable,Serializable {
 	}
 
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_employee_vacation_inst_seq")
-	@SequenceGenerator(name="hr_employee_vacation_inst_seq",sequenceName="hr_employee_vacation_inst_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_employee_vacation_inst_seq",sequenceName="hr_employee_vacation_inst_seq")
 	private Long id;
 	
 	@ManyToOne 

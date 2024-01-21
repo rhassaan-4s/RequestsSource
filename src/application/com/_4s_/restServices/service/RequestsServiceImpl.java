@@ -271,9 +271,11 @@ public Map signInOut(AttendanceRequest userRequest,Long empId) {
 		restStatus = requestsApprovalManager.validateSignInOut(userRequest.getAttendanceType(), mCalDate.getDate(), emp);
 		
 		if (restStatus.getStatus().equals("False")) {
+			log.debug("########false validation for sign in out#############");
 			response.put("Status", restStatus);
 			return response;
 		} else {
+			log.debug("will create manual attendance");
 			return createManualAttendance(loginUsers,mCalDate,emp,userRequest);
 		}
 	} else {
@@ -559,6 +561,13 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 			|| userRequest.getAttendanceTime().isEmpty()|| userRequest.getLatitude()==null || userRequest.getLongitude()==null){
 		status.setCode("303");
 		status.setMessage("Null/Empty Input Parameter");
+		status.setStatus("False");
+		response.put("Status", status);
+		return response;
+	}
+	if (userRequest.getLatitude()==new Double(0) || userRequest.getLongitude()==new Double(0)) {
+		status.setCode("304");
+		status.setMessage("Turn On Location Settings");
 		status.setStatus("False");
 		response.put("Status", status);
 		return response;

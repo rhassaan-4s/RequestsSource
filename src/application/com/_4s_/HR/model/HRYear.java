@@ -3,7 +3,10 @@ package com._4s_.HR.model;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -15,61 +18,58 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="hr_year")
 public class HRYear implements Auditable,Serializable {
-		public HRYear() {
-		// TODO Auto-generated constructor stub
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_year_seq")
+	@SequenceGenerator(name="hr_year_seq",sequenceName="hr_year_seq")
+	private Long id;
+	private Integer year; 
+
+	public String getEntityDisplayName() {
+		return "HRYear Addition";
 	}
 
-		@Id
-		private Long id;
-		private Integer year; 
-		
-		public String getEntityDisplayName() {
-			return "HRYear Addition";
-		}
-		
-		@Override
-		public String toString() {
-			 return new ToStringBuilder(this)
-			 .append("id", this.id)
-			 .append("year", this.year)
-			 .toString();
-		}
-		
-		@Override
-		public boolean equals(Object o) {
-			 if (o == this) {
-			 return true;
-			 }
-			 if (!(o instanceof HRYear)) {
-			 return false;
-			 }
-			 HRYear hry = (HRYear) o;
-			 return new EqualsBuilder()
-			 .append(this.id, hry.getId())
-			 .append(this.year, hry.getYear())
-			 .isEquals();
-		}
-		
-		@Override
-		public int hashCode() {
-			return new HashCodeBuilder(991383961, 1226766147)
-			.append(this.id)
-			.toHashCode();
-		}
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+				.append("id", this.id)
+				.append("year", this.year)
+				.toString();
+	}
 
-		public Long getId() {
-			return id;
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) {
+			return true;
 		}
+		if (!(o instanceof HRYear)) {
+			return false;
+		}
+		HRYear hry = (HRYear) o;
+		return new EqualsBuilder()
+				.append(this.id, hry.getId())
+				.append(this.year, hry.getYear())
+				.isEquals();
+	}
 
-		public void setId(Long id) {
-			this.id = id;
-		}
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(991383961, 1226766147)
+				.append(this.id)
+				.toHashCode();
+	}
 
-		public Integer getYear() {
-			return year;
-		}
+	public Long getId() {
+		return id;
+	}
 
-		public void setYear(Integer year) {
-			this.year = year;
-		}
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Integer getYear() {
+		return year;
+	}
+
+	public void setYear(Integer year) {
+		this.year = year;
+	}
 }

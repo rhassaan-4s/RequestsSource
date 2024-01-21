@@ -125,7 +125,10 @@
 		}
 
 		function printthis(which) {
-			var tds = document.getElementsByTagName("div");
+			//var tds = document.getElementsByTagName("div");
+			//alert(which);
+			var tds = document.getElementById(which);
+			//alert(tds);
 			for (i = 0; i < tds.length; i++)
 				tds.item(i).style.display = "none";
 			document.getElementById(which).style.display = "block";

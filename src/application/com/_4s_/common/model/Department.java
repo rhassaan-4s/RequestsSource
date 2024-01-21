@@ -26,7 +26,7 @@ import com._4s_.auditing.model.Auditable;
 @Table (name = "common_department")
 
 public class Department implements Serializable,Auditable {
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
 	private String description;
 	private Boolean isDefault = new Boolean(false);
@@ -36,9 +36,6 @@ public class Department implements Serializable,Auditable {
 //	@OrderBy("creationDate desc")
 //	private List<CommunicationThread>watchedThreads = new ArrayList<CommunicationThread>();
 	
-	public Department() {
-		// TODO Auto-generated constructor stub
-	}
 	public Long getId() {
 		return id;
 	}

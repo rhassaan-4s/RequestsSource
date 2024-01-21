@@ -23,7 +23,7 @@ public class HRSponsor implements Auditable,Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_sponsor_seq")
-	@SequenceGenerator(name="hr_sponsor_seq",sequenceName="hr_sponsor_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_sponsor_seq",sequenceName="hr_sponsor_seq")
 	private Long id;
 	
 	private String code;

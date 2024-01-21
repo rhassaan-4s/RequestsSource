@@ -25,7 +25,7 @@ public class HRKinship implements Auditable,Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_kinship_seq")
-	@SequenceGenerator(name="hr_kinship_seq",sequenceName="hr_kinship_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_kinship_seq",sequenceName="hr_kinship_seq")
 	private Long id;
 	private String name;
 	private String ename;

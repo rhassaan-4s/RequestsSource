@@ -30,18 +30,21 @@ import com._4s_.common.web.validators.Unique;
 
 @Entity
 @Table (name = "EMPBASIC")
-public class EmpBasic implements Serializable,Auditable {
+//<<<<<<< HEAD
+//public class EmpBasic implements Serializable,Auditable {
 	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 9030836215327821538L;
-	@Id
-	@GenericGenerator(name="empBasic_seq",strategy="com._4s_.attendance.dao.EmpBasicStringKeyGenerator")
-	@GeneratedValue(generator="empBasic_seq")
-	private String empCode;
-	@Mandatory(value=EmpBasic.class,property="empName")
-	@Unique(value=EmpBasic.class,property = "empName")
+	//private static final long serialVersionUID = 9030836215327821538L;
+//	@Id
+	//@GenericGenerator(name="empBasic_seq",strategy="com._4s_.attendance.dao.EmpBasicStringKeyGenerator")
+	//@GeneratedValue(generator="empBasic_seq")
+	//private String empCode;
+	//@Mandatory(value=EmpBasic.class,property="empName")
+	//@Unique(value=EmpBasic.class,property = "empName")
+//=======
+public class EmpBasic extends EmpBasicParent implements Serializable,Auditable {
 	private String empName;
 	@Mandatory(value=EmpBasic.class,property="e_emp_name")
 	@Unique(value=EmpBasic.class,property = "e_emp_name")
@@ -54,22 +57,26 @@ public class EmpBasic implements Serializable,Auditable {
 	private String address;
 	private String eAddress;
 	private String should_sign="1";
+
 	@Mandatory(value=EmpBasic.class,property="natnl_no")
 	@Unique(value=EmpBasic.class,property = "natnl_no")
 	private String natnl_no;
+
 //	@Temporal(TemporalType.DATE)
 //	@Mandatory(value=EmpBasic.class,property="emplDate")
 	@MandatoryDate(value=EmpBasic.class,property="emplDate")
 	private Timestamp emplDate;
 //	@Temporal(TemporalType.DATE)
+
 //	@Mandatory(value=EmpBasic.class,property="birthdate")
 	@MandatoryDate(value=EmpBasic.class,property="birthdate")
 	private Timestamp birthdate;
+
 //	@Temporal(TemporalType.DATE)
 	private Timestamp job_join;
 	private String phone;
 	private String mobile;
-	private String sex;
+	
 //	@Temporal(TemporalType.DATE)
 	private Timestamp end_serv;
 	@ManyToOne
@@ -135,7 +142,6 @@ public class EmpBasic implements Serializable,Auditable {
 	public void setEmpCode(String empCode) {
 		this.empCode = empCode;
 	}
-
 
 	public String getEmpName() {
 		return empName;
@@ -225,13 +231,6 @@ public class EmpBasic implements Serializable,Auditable {
 	}
 
 
-	public String getNatnl_no() {
-		return natnl_no;
-	}
-
-	public void setNatnl_no(String natnl_no) {
-		this.natnl_no = natnl_no;
-	}
 
 	public Timestamp getEmplDate() {
 		return emplDate;
@@ -270,16 +269,6 @@ public class EmpBasic implements Serializable,Auditable {
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
-	}
-
-
-	public String getSex() {
-		return sex;
-	}
-
-
-	public void setSex(String sex) {
-		this.sex = sex;
 	}
 
 
@@ -435,7 +424,7 @@ public class EmpBasic implements Serializable,Auditable {
 
 	public String toString() {
 		return new ToStringBuilder(this)
-		.append("natNi_no", this.natnl_no)
+		.append("natNi_no", this.getNatnl_no())
 		/*.append("watchedThreads", this.watchedThreads)*/.toString();
 	}
 
@@ -447,11 +436,11 @@ public class EmpBasic implements Serializable,Auditable {
 			return false;
 		}
 		EmpBasic rhs = (EmpBasic) o;
-		return new EqualsBuilder().append(this.natnl_no, rhs.getNatnl_no()).isEquals();
+		return new EqualsBuilder().append(this.getNatnl_no(), rhs.getNatnl_no()).isEquals();
 	}
 
 	public int hashCode() {
-		return new HashCodeBuilder(2090939697, 874530185).append(this.natnl_no).toHashCode();
+		return new HashCodeBuilder(2090939697, 874530185).append(this.getNatnl_no()).toHashCode();
 	}
 
 

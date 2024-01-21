@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com._4s_.common.model.EmpBasic;
-import com._4s_.requestsApproval.model.LoginUsers;
 
 public class EmpWorkPeriodListWrapper implements Serializable{
 

@@ -25,7 +25,7 @@ public class HRReligion implements Auditable,Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_religion_seq")
-	@SequenceGenerator(name="hr_religion_seq",sequenceName="hr_religion_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_religion_seq",sequenceName="hr_religion_seq")
 	private Long id;
     private String religion; 
 	private String name;

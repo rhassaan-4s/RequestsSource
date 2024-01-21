@@ -25,7 +25,7 @@ public class HREmpPrevIllness implements Auditable,Serializable {
 
 
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HR_SEQ_PREV_ILLNESS")
-	@SequenceGenerator(name="HR_SEQ_PREV_ILLNESS",sequenceName="HR_SEQ_PREV_ILLNESS")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="HR_SEQ_PREV_ILLNESS",sequenceName="HR_SEQ_PREV_ILLNESS")
    private  Long id ;
 	private  String empcode;
 	private  String empName;

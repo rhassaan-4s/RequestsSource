@@ -23,7 +23,7 @@ public class HRTax implements Auditable,Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_tax_seq")
-	@SequenceGenerator(name="hr_tax_seq",sequenceName="hr_tax_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_tax_seq",sequenceName="hr_tax_seq")
      private Long id ;
 	
 	private String effCode  ;

@@ -2887,6 +2887,11 @@
 				<prop key="/courseSpecialtyForm.html">courseSpecialtyForm</prop>
 				<prop key="/courseSpecialtiesView.html">courseSpecialtiesView</prop>
 	            <prop key="/nationalityForm.html">nationalityForm</prop>
+	            
+	            
+	            <prop key="/employeeMaritalStatusView.html">employeeMaritalStatusView</prop>
+				<prop key="/employeeMaritalStatusForm.html">employeeMaritalStatusForm</prop>
+	            <prop key="/viewEmployeePhoto.html">viewEmployeePhoto</prop>
 				<prop key="/nationalitiesView.html">nationalitiesView</prop>
 				<prop key="/religionForm.html">religionForm</prop>
 				<prop key="/religionsView.html">religionsView</prop>
@@ -2898,6 +2903,27 @@
 				<prop key="/internalDivisionForm.html">internalDivisionForm</prop>
 				<prop key="/qualificationDivisionTree.html">qualificationDivisionTree</prop>
 				<prop key="/qualificationDivisionForm.html">qualificationDivisionForm</prop>
+				
+				
+				<prop key="/vacationsView.html">vacationsView</prop>
+				<prop key="/vacationForm.html">vacationForm</prop>
+				<prop key="/yearAllowVacationTransferForm.html">yearAllowVacationTransferForm</prop>
+	            <prop key="/vacationRulesForm.html">vacationRulesForm</prop>
+	            <prop key="/employeeVacationAtInstallationForm.html">employeeVacationAtInstallationForm</prop>
+	            <prop key="/serviceLengthCalculationForm.html">serviceLengthCalculationForm</prop>
+	            <prop key="/employeeVacationForm.html">employeeVacationForm</prop>
+	            <prop key="/employeeVacationView.html">employeeVacationView</prop>
+	            <prop key="/employeeVacationIncreaseView.html">employeeVacationIncreaseView</prop>
+	            <prop key="/employeeVacationDecreaseView.html">employeeVacationDecreaseView</prop>
+	            <prop key="/employeeVacationDecreaseForm.html">employeeVacationDecreaseForm</prop>
+	            <prop key="/employeeVacationIncreaseForm.html">employeeVacationIncreaseForm</prop>
+	            <prop key="/employeeSpecialVacationForm.html">employeeSpecialVacationForm</prop>
+	            <prop key="/employeeSpecialVacationView.html">employeeSpecialVacationView</prop>
+	            <prop key="/employeeErrandForm.html">employeeErrandForm</prop>
+	            <prop key="/employeeErrandView.html">employeeErrandView</prop>
+	            <prop key="/vacationDaysTransactionForm.html">vacationDaysTransactionForm</prop>
+	            <prop key="/vacationDaysTransactionView.html">vacationDaysTransactionView</prop>
+				
 				<prop key="/geographicalDivisionTree.html">geographicalDivisionTree</prop>
 				<prop key="/geographicalDivisionForm.html">geographicalDivisionForm</prop>
 				<prop key="/qualificationLevelForm.html">qualificationLevelForm</prop>
@@ -2911,7 +2937,7 @@
 				<prop key="/titlesView.html">titlesView</prop>
 				<prop key="/documentsForm.html">documentsForm</prop>
 				<prop key="/documentsView.html">documentsView</prop>
-				<prop key="/viewEmployeePhoto.html">viewEmployeePhoto</prop>
+				
 				<prop key="/divisionOrder.html">divisionOrderController</prop>
 				<prop key="/copyController.html">copyController</prop>
 				<prop key="/copyFormController.html">copyFormController</prop>
@@ -2921,8 +2947,7 @@
 				<prop key="/employeeAllocationForm.html">employeeAllocationForm</prop>
 				<prop key="/functionalGroupsView.html">functionalGroupsView</prop>
 				<prop key="/functionalGroupForm.html">functionalGroupForm</prop>
-				<prop key="/employeeMaritalStatusView.html">employeeMaritalStatusView</prop>
-				<prop key="/employeeMaritalStatusForm.html">employeeMaritalStatusForm</prop>
+				
 				<prop key="/employeeKinshipsDataView.html">employeeKinshipsDataView</prop>
 				<prop key="/employeeKinshipsDataForm.html">employeeKinshipsDataForm</prop>
 	            <prop key="/employeeStatusView.html">employeeStatusView</prop>
@@ -2934,33 +2959,18 @@
 				<prop key="/sponsorView.html">sponsorView</prop>
 				<prop key="/employeeSponsorsView.html">employeeSponsorsView</prop>
 				<prop key="/employeeSponsorForm.html">employeeSponsorForm</prop>
-				<prop key="/vacationsView.html">vacationsView</prop>
-				<prop key="/vacationForm.html">vacationForm</prop>
+				
 				<prop key="/violationsView.html">violationsView</prop>
 				<prop key="/violationForm.html">violationForm</prop>
 				<prop key="/violationResultsView.html">violationResultsView</prop>
 				<prop key="/violationResultForm.html">violationResultForm</prop>
 				<prop key="/violationRulesForm.html">violationRulesForm</prop>
-				<prop key="/yearAllowVacationTransferForm.html">yearAllowVacationTransferForm</prop>
-	            <prop key="/vacationRulesForm.html">vacationRulesForm</prop>
-	            <prop key="/employeeVacationAtInstallationForm.html">employeeVacationAtInstallationForm</prop>
-	            <prop key="/serviceLengthCalculationForm.html">serviceLengthCalculationForm</prop>
+				
 	            <prop key="/employeePenaltyView.html">employeePenaltyView</prop>
 				<prop key="/employeePenaltyForm.html">employeePenaltyForm</prop>
                 <prop key="/employeeAccusationView.html">employeeAccusationView</prop>
 				<prop key="/employeeAccusationForm.html">employeeAccusationForm</prop>
-	            <prop key="/employeeVacationForm.html">employeeVacationForm</prop>
-	            <prop key="/employeeVacationView.html">employeeVacationView</prop>
-	            <prop key="/employeeVacationIncreaseView.html">employeeVacationIncreaseView</prop>
-	            <prop key="/employeeVacationDecreaseView.html">employeeVacationDecreaseView</prop>
-	            <prop key="/employeeVacationDecreaseForm.html">employeeVacationDecreaseForm</prop>
-	            <prop key="/employeeVacationIncreaseForm.html">employeeVacationIncreaseForm</prop>
-	            <prop key="/employeeSpecialVacationForm.html">employeeSpecialVacationForm</prop>
-	            <prop key="/employeeSpecialVacationView.html">employeeSpecialVacationView</prop>
-	            <prop key="/employeeErrandForm.html">employeeErrandForm</prop>
-	            <prop key="/employeeErrandView.html">employeeErrandView</prop>
-	            <prop key="/vacationDaysTransactionForm.html">vacationDaysTransactionForm</prop>
-	            <prop key="/vacationDaysTransactionView.html">vacationDaysTransactionView</prop>
+				
 	            <prop key="/test.html">testForm</prop>
 	            <prop key="/testCalculationForm.html">testCalculation</prop>
 	            <prop key="/syndicateView.html">syndicateView</prop>

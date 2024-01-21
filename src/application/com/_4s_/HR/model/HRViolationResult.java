@@ -24,7 +24,7 @@ public class HRViolationResult implements Auditable,Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_violation_result_seq")
-	@SequenceGenerator(name="hr_violation_result_seq",sequenceName="hr_violation_result_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_violation_result_seq",sequenceName="hr_violation_result_seq")
 	private Long id;
     private String code;
 	private String name;

@@ -3,11 +3,14 @@ package com._4s_.dbUpdate.web.action;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,26 +22,25 @@ import org.apache.commons.logging.LogFactory;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.common.model.Flag;
 import com._4s_.common.model.LastSequence;
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.CommonManager;
 
-@Controller
-public class UpdateDB {//implements Controller {
+public class UpdateDB implements Controller {
 	
 	private final Log log = LogFactory.getLog(getClass());
 	
-		@Autowired
+		
+		
 		CommonManager comMger=null;
-		@Autowired
+		
 		private DataSource dataSource;
 		
 		
@@ -57,13 +59,9 @@ public class UpdateDB {//implements Controller {
 			this.dataSource = dataSource;
 		}
 
-		
-//		public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		@RequestMapping("/updateDBView.html")
-		public String handleRequest(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception {	
+		public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 			String fileName = "";
 			Settings settings = (Settings)comMger.getObject(Settings.class, new Long(1));
-			log.debug("settings " + settings);
 			String contextPath = request.getSession().getServletContext().getRealPath("/");
 			log.debug(">>>>>>>>>>>>>>>>>>>>contextPath "+contextPath);
 //			if (settings.getSqlServerConnectionEnabled()) {
@@ -111,8 +109,9 @@ public class UpdateDB {//implements Controller {
         			
         			
 //        			jt.execute("start transaction");
-        			
-        			if (settings.getSqlServerConnectionEnabled()) {
+        			log.debug("settings " + settings);
+//        			log.debug("settings.getSqlServerConnectionEnabled() " + settings.getSqlServerConnectionEnabled());
+        			if (settings!=null && settings.getSqlServerConnectionEnabled()) {
         				jt.execute("begin transaction");
         			}
         			
@@ -121,7 +120,7 @@ public class UpdateDB {//implements Controller {
         				qry = StringUtils.trim(qry);
         				try{
         					if (qry != null && qry.length() != 0){
-        						if (settings.getSqlServerConnectionEnabled()) {
+        						if (settings!=null && settings.getSqlServerConnectionEnabled()) {
         							qry = convertOracleToSqlScript(qry,settings);
         						}
         						jt.execute(qry);
@@ -148,17 +147,17 @@ public class UpdateDB {//implements Controller {
         		}
             }
 			witer.close();
-//			HashMap model=new HashMap();
+			HashMap model=new HashMap();
 //			model.put("error",errorNumber);
-			model.addAttribute("total",totalNumber);
+			model.put("total",totalNumber);
 
-			model.addAttribute("lastDesiredIndex" , lastDesiredIndex);
-			model.addAttribute("oldIndex" , oldIndex);
-			model.addAttribute("currentIndex" ,currentIndex );
+			model.put("lastDesiredIndex" , lastDesiredIndex);
+			model.put("oldIndex" , oldIndex);
+			model.put("currentIndex" ,currentIndex );
 			if(noErrors){
-				model.addAttribute("noErrors" , "true");
+				model.put("noErrors" , "true");
 			}else{
-				model.addAttribute("noErrors" , "false");
+				model.put("noErrors" , "false");
 			}
 			
 			List codeMigrationList = new ArrayList();
@@ -170,9 +169,8 @@ public class UpdateDB {//implements Controller {
 //				//  db updates by code migration
 //				migrate_briefOldApplications(codeMigrationList);
 //			}
-			model.addAttribute("codeMigrationList" , codeMigrationList);
-//			return new ModelAndView("updateDBView",model);
-			return "updateDBView";
+			model.put("codeMigrationList" , codeMigrationList);
+			return new ModelAndView("updateDBView",model);
 		}
 		
 		
@@ -181,10 +179,14 @@ public class UpdateDB {//implements Controller {
 //			String dbName = settings.getService();
 			String replacedString = sql;
 			replacedString = replacedString.toLowerCase();
-			replacedString.replaceAll("number", "BIGINT");
-			replacedString.replaceAll("VARCHAR2", "VARCHAR");
-			replacedString.replaceAll("DATE", "	DATETIME2(0)");
+			replacedString= replacedString.replaceAll("number[(]\\d+[)]", "BIGINT");
+			replacedString= replacedString.replaceAll("float[(]\\d+[)]", "float");
+			replacedString= replacedString.replaceAll("varchar2", "VARCHAR");
+			replacedString= replacedString.replaceAll("date", "	DATETIME2(0)");
 			
+			System.out.println("***********SQL SERVER STATEMENT START********");
+			System.out.println(replacedString);
+			System.out.println("***********SQL SERVER STATEMENT END ********");
 			return replacedString;
 //			try{
 //				String statement = "DECLARE @dbName AS VARCHAR(100);"

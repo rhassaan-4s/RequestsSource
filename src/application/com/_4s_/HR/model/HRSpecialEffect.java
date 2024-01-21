@@ -25,7 +25,7 @@ public class HRSpecialEffect implements Auditable,Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HR_SPECIAL_EFFECT_SEQ")
-	@SequenceGenerator(name="HR_SPECIAL_EFFECT_SEQ",sequenceName="HR_SPECIAL_EFFECT_SEQ")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="HR_SPECIAL_EFFECT_SEQ",sequenceName="HR_SPECIAL_EFFECT_SEQ")
 	private Long id;
 	
 	private String effcode;

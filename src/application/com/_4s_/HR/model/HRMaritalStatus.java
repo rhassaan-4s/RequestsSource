@@ -26,7 +26,7 @@ public class HRMaritalStatus implements Auditable,Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_marital_seq")
-	@SequenceGenerator(name="hr_marital_seq",sequenceName="hr_marital_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_marital_seq",sequenceName="hr_marital_seq")
 	private Long id;
 	private String name;
 	private String ename;

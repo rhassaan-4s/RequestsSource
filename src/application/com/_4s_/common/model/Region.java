@@ -23,17 +23,13 @@ import com._4s_.auditing.model.Auditable;
 @Table (name = "common_region")
 public class Region implements Serializable,Auditable
 {
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
 
 	private String description;
 	
 	private String code;
 	
-	public Region() {
-		// TODO Auto-generated constructor stub
-	}
-
 	@ManyToOne
 	@JoinColumn (name="country")
 	private Country country;

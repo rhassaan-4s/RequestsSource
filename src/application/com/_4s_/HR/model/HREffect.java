@@ -23,7 +23,7 @@ public class HREffect implements Auditable,Serializable {
 
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HR_EFFECT_SEQ")
-	@SequenceGenerator(name="HR_EFFECT_SEQ",sequenceName="HR_EFFECT_SEQ")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="HR_EFFECT_SEQ",sequenceName="HR_EFFECT_SEQ")
 	private Long id ;
 	private String effcode  ;
 	private String effname ;

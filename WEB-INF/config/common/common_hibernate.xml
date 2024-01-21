@@ -55,7 +55,7 @@
 		
 		<property name="packagesToScan">
 		<list>
-		<value>com._4s_.HR.model</value>
+		<!--<value>com._4s_.HR.model</value>-->
 		<value>com._4s_.auditing.model</value>
 		<value>com._4s_.common.model</value>
 		<value>com._4s_.dbUpdate.model</value>

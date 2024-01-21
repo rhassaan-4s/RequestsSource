@@ -22,7 +22,7 @@ import com._4s_.auditing.model.Auditable;
 public class HRCity implements Auditable,Serializable {
 	
 		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_city_seq")
-		@SequenceGenerator(name="hr_city_seq",sequenceName="hr_city_seq")//(generate=GeneratorType.IDENTITY)
+		@SequenceGenerator(name="hr_city_seq",sequenceName="hr_city_seq")
 		private Long id;
 	    private String city;
 		private String name;

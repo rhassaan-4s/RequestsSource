@@ -1,5 +1,6 @@
 <jsp:include page="/web/common/includes/header.jsp" flush="true" />
 <%@ include file="/web/common/includes/taglibs.jsp"%>
+<abc:security property="1031"/>
 <script type="text/javascript">
 	function check(box,textfield) {
 		var b = document.getElementById(box);

@@ -30,7 +30,7 @@ import com._4s_.auditing.model.Auditable;
 @Entity
 @Table (name = "common_city")
 public class City implements Serializable,Auditable {
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
 	private String description;
 	private String englishDescription;
@@ -42,9 +42,6 @@ public class City implements Serializable,Auditable {
 	@Transient
 	private final Log log = LogFactory.getLog(getClass());
 	private Boolean isDefault = new Boolean (false);
-	public City() {
-		// TODO Auto-generated constructor stub
-	}
 	/**
 	 * @return Returns the id.
 	 * @hibernate.id generator-class = "native"

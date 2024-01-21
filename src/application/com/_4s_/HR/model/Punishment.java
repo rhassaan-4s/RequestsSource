@@ -23,7 +23,7 @@ public class Punishment {
 		// TODO Auto-generated constructor stub
 	}
 		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_punish_seq")
-		@SequenceGenerator(name="hr_punish_seq",sequenceName="hr_punish_seq")//(generate=GeneratorType.IDENTITY)
+		@SequenceGenerator(name="hr_punish_seq",sequenceName="hr_punish_seq")
 		private  Long id ;
 		
 		private  String punch;

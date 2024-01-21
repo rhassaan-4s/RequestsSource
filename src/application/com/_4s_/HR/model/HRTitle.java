@@ -26,7 +26,7 @@ public class HRTitle implements Auditable,Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_title_seq")
-	@SequenceGenerator(name="hr_title_seq",sequenceName="hr_title_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="hr_title_seq",sequenceName="hr_title_seq")
 	private Long id;
     private String code;
 	private String name;

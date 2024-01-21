@@ -31,7 +31,7 @@ import javax.persistence.Transient;
 @Entity//W(access=AccessType.FIELD)
 @Table (name = "auditing_auditLog")
 public class AuditLogRecord {
-	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)//(generate=GeneratorType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	public Long id;
 
 	public String message;

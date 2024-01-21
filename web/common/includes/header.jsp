@@ -391,24 +391,33 @@ menuItems:[
 	["<b><fmt:message key="commons.caption.applications" /></b>"]
 <%System.out.println("application " + activeApplications);
 			SecurityApplication securityApplication = null;
+			System.out.println("activeApplications.size() " + activeApplications.size());
 			if (activeApplications != null) {
 				for (int i = 0; i < activeApplications.size(); i++) {
+					System.out.println("i " + i);
 					securityApplication = (SecurityApplication) activeApplications
 							.get(i);
-					System.out.println("active app "
-							+ securityApplication.getName());%>
+					System.out.println("active app "+i+" - "+ securityApplication.getName());%>
 ,[
-<%if (securityApplication.getName().equals("ASSETS")) {%>"<b><fmt:message key='assets.caption.applicationName' /></b>"<%} else if (securityApplication.getName().equals(
-							"ADMINISTRATION")) {%>"<b><fmt:message key='administration.caption.applicationName' /></b>"<%} else if (securityApplication.getName().equals(
-							"requestsApproval")) {%>"<b><fmt:message key='requestsApproval.caption.applicationName' /></b>"<%} else if (securityApplication.getName()
-							.equals("timesheet")) {
+<%if (securityApplication.getName().equals("ASSETS")) {%>
+	"<b><fmt:message key='assets.caption.applicationName' /></b>"
+<%} else if (securityApplication.getName().equals("ADMINISTRATION")) {%>
+	"<b><fmt:message key='administration.caption.applicationName' /></b>"
+<%} else if (securityApplication.getName().equals("requestsApproval")) {%>
+	"<b><fmt:message key='requestsApproval.caption.applicationName' /></b>"
+<%} else if (securityApplication.getName().equals("HR")) {%>
+	"<b><fmt:message key='hr.caption.applicationName' /></b>"
+<%} else if (securityApplication.getName().equals("timesheet")) {
 						if (settings.getIsTimesheetEnabled().equals(
-								new Boolean(true))) {%>"<b><fmt:message key='timesheet.caption.applicationName' /></b>"<%}
-					}else if (securityApplication.getName()
-							.equals("attendance")) {
+								new Boolean(true))) {%>
+									"<b><fmt:message key='timesheet.caption.applicationName' /></b>"
+						<%}
+  }else if (securityApplication.getName().equals("attendance")) {
 						if (settings.getWebAttendanceAppEnabled().equals(
-								new Boolean(true))) {%>"<b><fmt:message key='attendance.caption.applicationName' /></b>"<%}
-					}%>, "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
+								new Boolean(true))) {%>
+	"<b><fmt:message key='attendance.caption.applicationName' /></b>"
+						<%}
+	}%>, "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
 <%}
 			}%>
 ]}; // REQUIRED!! do not edit or remove
@@ -453,6 +462,9 @@ make_menus();
 									} else if (applicationName != null
 											&& applicationName.equals("attendance")) {
 										applicationNameString = "attendance.caption.applicationName";
+									} else if (applicationName != null
+											&& applicationName.equals("HR")) {
+										applicationNameString = "hr.caption.applicationName";
 									}
 									session.setAttribute("applicationNameString", applicationNameString);
 								%>
@@ -492,7 +504,12 @@ make_menus();
 					<jsp:include page="/web/attendance/menu.jsp" flush="true" />
 					<%
 						}
-					%>
+						if (applicationName != null && applicationName.equals("HR")) {
+							%>
+							<jsp:include page="/web/hr/menu.jsp" flush="true" />
+							<%
+								}
+							%>
 
 					<!-- REQUESTSAPPROVAL -->
 					<!-- Menu End------------------------------------------------ -->

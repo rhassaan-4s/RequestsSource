@@ -25,7 +25,7 @@ public class SpAnualRaise implements Auditable,Serializable {
 	}
 
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="sp_anual_raise_seq")
-	@SequenceGenerator(name="sp_anual_raise_seq",sequenceName="sp_anual_raise_seq")//(generate=GeneratorType.IDENTITY)
+	@SequenceGenerator(name="sp_anual_raise_seq",sequenceName="sp_anual_raise_seq")
 	private Long id;
 	
     private String empCode; 

@@ -92,6 +92,7 @@ public class TimeAttendanceReport extends CommonController {
 		String empCode = "";
 		LoginUsers loginUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", loggedInEmp);
 		List groups = requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "emp_id", loginUser);//(GroupAcc.class);
+		log.debug("group size " + groups.size());
 		List<LoginUsers> employees = new ArrayList();
 		model.addAttribute("groups", groups);
 		String groupId = request.getParameter("groupId");

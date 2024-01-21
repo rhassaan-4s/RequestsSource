@@ -43,6 +43,7 @@ public class TitleBinder extends PropertyEditorSupport implements BaseBinder{
 	public void setAsText(String text) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		log.debug(">>>>>>>>>>>> Starting setAsText");
+		System.out.println("binding title with id " + text);
 		if ((text != null) && (text.length() > 0)) {
 			log.debug(">>>>>>>>>>>>text " + text);
 			Title title = (Title) baseManager

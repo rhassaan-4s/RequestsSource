@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -17,11 +18,9 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="hr_calculation_method")
 public class HRCalculationMethod implements Auditable,Serializable {
-	
-	public HRCalculationMethod() {
-		// TODO Auto-generated constructor stub
-	}
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_calc_seq")
+	@SequenceGenerator(name="hr_calc_seq",sequenceName="hr_calc_seq")
 	private Long id;
 	
 	private String name;

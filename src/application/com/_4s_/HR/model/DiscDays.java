@@ -21,13 +21,9 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="disc_days")
 public class DiscDays implements Auditable,Serializable {
-	
-	public DiscDays() {
-		// TODO Auto-generated constructor stub
-	}
-
-	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="disc_days_seq")
-	@SequenceGenerator(name="disc_days_seq",sequenceName="disc_days_seq")//(generate=GeneratorType.IDENTITY)
+	@Id 
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="disc_days_seq")
+	@SequenceGenerator(name="disc_days_seq",sequenceName="disc_days_seq")
 	private Long id;
 	
 	private String emp_id; 
