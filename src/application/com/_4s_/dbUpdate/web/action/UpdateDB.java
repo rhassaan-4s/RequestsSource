@@ -120,29 +120,33 @@ public class UpdateDB implements Controller {
         				qry = StringUtils.trim(qry);
         				try{
         					if (qry != null && qry.length() != 0){
+        						log.debug("settings.getSqlServerConnectionEnabled() "+settings.getSqlServerConnectionEnabled());
         						if (settings!=null && settings.getSqlServerConnectionEnabled()) {
         							qry = convertOracleToSqlScript(qry,settings);
         						}
+        						log.debug("will execute sql server query");
         						jt.execute(qry);
         					}
         				}catch (Exception ec) {
+        					log.debug(ec.getMessage());
                     		noErrors=false;
 //                    		TransactionInterceptor.currentTransactionStatus().setRollbackOnly();
             	        	String BadLine="Error in line" + "\n"+qry+"   with index : "+blockIndex+"\n";
             				witer.append(BadLine+"\n \t"+ec.getCause()+"\n\n\n\n\n the block:\n"+queryBlock);
-            				break; // stop this block
             	       }
         			}
-        			
-    				if(noErrors) {
-    					String updateSQL="update  common_last_sequence set classSequence="+blockIndex+" where className='QueryIndex'";
-    					jt.execute(updateSQL);
-    					jt.execute("commit");
-    				}else{
-    					jt.execute("rollback");
-    					currentIndex--;
-    					break; // this will terminate the run of the script
-    				}
+        			if (settings!=null && !settings.getSqlServerConnectionEnabled()) {
+        				if(noErrors) {
+        					String updateSQL="update  common_last_sequence set classSequence="+blockIndex+" where className='QueryIndex'";
+        					jt.execute(updateSQL);
+        					jt.execute("commit");
+        					currentIndex++;
+        				}else{
+        					jt.execute("rollback transaction");
+        					currentIndex--;
+        					break; // this will terminate the run of the script
+        				}
+        			}
 
         		}
             }
@@ -180,13 +184,28 @@ public class UpdateDB implements Controller {
 			String replacedString = sql;
 			replacedString = replacedString.toLowerCase();
 			replacedString= replacedString.replaceAll("number[(]\\d+[)]", "BIGINT");
+			replacedString= replacedString.replaceAll(" number", " BIGINT");
 			replacedString= replacedString.replaceAll("float[(]\\d+[)]", "float");
 			replacedString= replacedString.replaceAll("varchar2", "VARCHAR");
-			replacedString= replacedString.replaceAll("date", "	DATETIME2(0)");
+			replacedString= replacedString.replaceAll(" date ", "	DATETIME2(0)");
+			replacedString= replacedString.replaceAll("timestamp[(]\\d+[)]"," DATETIME");
+			replacedString= replacedString.replaceAll(" enable", " ");
+			System.out.println("after replacing enable");
+//			replacedString= replacedString.replaceAll(" percent"," percentt");
+			System.out.println("will replace blob");
+			replacedString= replacedString.replaceAll("blob", "	VARBINARY(MAX)");
+			System.out.println("(replacedString.contains(\"%rename%\") " +(replacedString.contains("rename")));
+			replacedString= replacedString.replaceAll("maxvalue 999999999999999999999999999", "	maxvalue 999999999999999999 ");
 			
-			System.out.println("***********SQL SERVER STATEMENT START********");
-			System.out.println(replacedString);
-			System.out.println("***********SQL SERVER STATEMENT END ********");
+			replacedString= replacedString.replaceAll(" modify ", "	alter column ");
+			if (replacedString.contains("rename")) {
+				replacedString ="";
+			}
+//			System.out.println("after replacing blob");
+			
+//			System.out.println("***********SQL SERVER STATEMENT START********");
+//			System.out.println(replacedString);
+//			System.out.println("***********SQL SERVER STATEMENT END ********");
 			return replacedString;
 //			try{
 //				String statement = "DECLARE @dbName AS VARCHAR(100);"

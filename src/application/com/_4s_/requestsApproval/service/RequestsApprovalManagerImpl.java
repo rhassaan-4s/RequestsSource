@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,13 +31,10 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import sun.net.www.protocol.https.HttpsURLConnectionImpl;
 
 import com._4s_.HR.model.HREmployee;
 import com._4s_.HR.model.HRGeographicalDivision;
@@ -78,11 +76,13 @@ import com.ibm.icu.util.Calendar;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
 
+import sun.net.www.protocol.https.HttpsURLConnectionImpl;
+
 @Service
 @Transactional
 public class RequestsApprovalManagerImpl extends BaseManagerImpl implements RequestsApprovalManager{
 
-
+	private static final Object geoCodeLock = new Object ();
 	private RequestsApprovalDAO requestsApprovalDAO;	
 	
 	private ExternalQueries externalQueries = null;
@@ -2237,105 +2237,129 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	
 
 	 public String getAddressByGpsCoordinates(String lng, String lat)
-	            throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
-	         String key = "AIzaSyBeCCPQ7VdCQiJxjXGfVO98LyirL1-hC74";
-	         LocaleUtil localeUtil = LocaleUtil.getInstance();
-//	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
-	         System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
-	         URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "");
-	        log.debug("url " + url);
-	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
-	        String formattedAddress = "";
-	 
-	        try {
-	            InputStream in = url.openStream();
-	            BufferedReader reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
-	            String result, line = reader.readLine();
-	            result = line;
-	            while ((line = reader.readLine()) != null) {
-	                result += line;
-	            }
-	 
-	            JSONParser parser = new JSONParser();
-	            JSONObject rsp = (JSONObject) parser.parse(result);
-	 
-	            if (rsp.containsKey("display_name")) {
-	                String matches = (String) rsp.get("display_name");
-	                String error = (String)rsp.get("error_message");
-	                log.debug("error string  " + error);
-//	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
-	                formattedAddress = matches;//(String) data.get("formatted_address");
-	                log.debug("formatted address " + formattedAddress);
-	            }
-	 
-	            return formattedAddress;
-	        } catch (Exception e) {
-	        	log.debug("exception to get address from location " + e);
-	        	e.printStackTrace();
-	        } finally {
-	            urlConnection.disconnect();
-	            return formattedAddress;
-	        }
-	    }
+			 throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
+		 synchronized (geoCodeLock) {
+
+			 String key = "AIzaSyBeCCPQ7VdCQiJxjXGfVO98LyirL1-hC74";
+			 LocaleUtil localeUtil = LocaleUtil.getInstance();
+			 //	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
+			 System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+			 URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "&api_key=65c8b9e1c9c01804850676ribdd12fa");
+			 log.debug("url " + url);
+			 HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
+			 String formattedAddress = "";
+
+
+			 InputStream in=null;
+			 BufferedReader reader=null;
+			 try {
+				 TimeUnit.SECONDS.sleep(1);
+				 in = url.openStream();
+				 reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+				 String result, line = reader.readLine();
+				 result = line;
+				 while ((line = reader.readLine()) != null) {
+					 result += line;
+				 }
+
+				 JSONParser parser = new JSONParser();
+				 JSONObject rsp = (JSONObject) parser.parse(result);
+
+				 if (rsp.containsKey("display_name")) {
+					 String matches = (String) rsp.get("display_name");
+					 String error = (String)rsp.get("error_message");
+					 log.debug("error string  " + error);
+					 //	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
+					 formattedAddress = matches;//(String) data.get("formatted_address");
+					 log.debug("formatted address " + formattedAddress);
+				 }
+
+				 return formattedAddress;
+			 } catch (Exception e) {
+				 log.debug("exception to get address from location " + e);
+				 e.printStackTrace();
+			 } finally {
+				 //	            urlConnection.disconnect();
+				 if(reader!=null) {
+					 reader.close();
+				 }
+				 if(in!=null) {
+					 in.close();
+				 }
+				 return formattedAddress;
+			 }
+		 }
+	 }
 	 
 	 public String getShortAddressByGpsCoordinates(String lng, String lat)
-	            throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
-	         String key = "AIzaSyBeCCPQ7VdCQiJxjXGfVO98LyirL1-hC74";
-	         LocaleUtil localeUtil = LocaleUtil.getInstance();
-//	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
-	         System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
-	        URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "");
-	        log.debug("url " + url);
-	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
-	        String formattedAddress = null;
-	 
-	        try {
-	            InputStream in = url.openStream();
-	            BufferedReader reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
-	            String result, line = reader.readLine();
-	            result = line;
-	            while ((line = reader.readLine()) != null) {
-	                result += line;
-	            }
-	 
-	            JSONParser parser = new JSONParser();
-	            JSONObject rsp = (JSONObject) parser.parse(result);
-	 
-	            
-	            if (rsp.containsKey("display_name")) {
-	                String matches = (String) rsp.get("display_name");
-	                String error = (String)rsp.get("error_message");
-	                log.debug("error string  " + error);
-//	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
-	                formattedAddress = matches;//(String) data.get("formatted_address");
-	                log.debug("formatted address " + formattedAddress);
-	            }
-//	            if (rsp.containsKey("results")) {
-//	                JSONArray matches = (JSONArray) rsp.get("results");
-//	                String error = (String)rsp.get("error_message");
-//	                log.debug("error string  " + error);
-//	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
-//	                formattedAddress =  (JSONArray)data.get("address_components");
-//	                for (int i=0; i<formattedAddress.size()-2; i++) {
-//	                	if (i!=0) {
-//	                		longName+=((JSONObject)formattedAddress.get(i)).get("long_name")+",";
-//	                	} else {
-//	                		longName+=((JSONObject)formattedAddress.get(i)).get("long_name");
-//	                	}
-//	                }
-//	                log.debug("formattedAddress[0] " + formattedAddress.get(0).getClass());
-//	                log.debug("formatted address " + formattedAddress);
-//	            }
-	 
-	            return formattedAddress;
-	        } catch (Exception e) {
-	        	log.debug("exception to get address from location " + e);
-	        	e.printStackTrace();
-	        } finally {
-	            urlConnection.disconnect();
-	            return formattedAddress;
-	        }
-	    }
+			 throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
+		 synchronized (geoCodeLock) {
+			 String key = "AIzaSyBeCCPQ7VdCQiJxjXGfVO98LyirL1-hC74";
+			 LocaleUtil localeUtil = LocaleUtil.getInstance();
+			 //	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
+			 System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+			 URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "&api_key=65c8b9e1c9c01804850676ribdd12fa");
+			 log.debug("url " + url);
+			 //	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
+			 String formattedAddress = null;
+
+			 InputStream in=null;
+			 BufferedReader reader=null;
+			 try {
+				 TimeUnit.SECONDS.sleep(1);
+				 in = url.openStream();
+				 reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+				 String result, line = reader.readLine();
+				 result = line;
+				 while ((line = reader.readLine()) != null) {
+					 result += line;
+				 }
+
+				 JSONParser parser = new JSONParser();
+				 JSONObject rsp = (JSONObject) parser.parse(result);
+
+
+				 if (rsp.containsKey("display_name")) {
+					 String matches = (String) rsp.get("display_name");
+					 String error = (String)rsp.get("error_message");
+					 log.debug("error string  " + error);
+					 //	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
+					 formattedAddress = matches;//(String) data.get("formatted_address");
+					 log.debug("formatted address " + formattedAddress);
+				 }
+				 //	            if (rsp.containsKey("results")) {
+				 //	                JSONArray matches = (JSONArray) rsp.get("results");
+				 //	                String error = (String)rsp.get("error_message");
+				 //	                log.debug("error string  " + error);
+				 //	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
+				 //	                formattedAddress =  (JSONArray)data.get("address_components");
+				 //	                for (int i=0; i<formattedAddress.size()-2; i++) {
+				 //	                	if (i!=0) {
+				 //	                		longName+=((JSONObject)formattedAddress.get(i)).get("long_name")+",";
+				 //	                	} else {
+				 //	                		longName+=((JSONObject)formattedAddress.get(i)).get("long_name");
+				 //	                	}
+				 //	                }
+				 //	                log.debug("formattedAddress[0] " + formattedAddress.get(0).getClass());
+				 //	                log.debug("formatted address " + formattedAddress);
+				 //	            }
+
+				 return formattedAddress;
+			 } catch (Exception e) {
+				 log.debug("exception to get address from location " + e);
+				 e.printStackTrace();
+			 } finally {
+				 //	            urlConnection.disconnect();
+				 if(reader!=null) {
+					 reader.close();
+				 }
+				 if(in!=null) {
+					 in.close();
+				 }
+				 return formattedAddress;
+			 }
+		 }
+	 }
 	
 	 public double distance(double lat1, double lon1, double lat2, double lon2) {//, char unit
 		 //unit M

@@ -64,6 +64,9 @@ function periodChanged() {
 		
 		table.append(tr);
 	}
+	function onsubmit(data) {
+		alert(data);
+	}
 </script>
 
 <style>
@@ -107,10 +110,11 @@ function periodChanged() {
 <script type="text/javascript"
 	src="/Requests/web/common/timepicker/jquery.multiselect.filter.min.js"></script>
 
-<form id="empworkperiodForm" name="empworkperiodForm" method="POST"
-	action="<c:url value="/attendance/empWorkPeriodForm.html"/>">
+<form id="empworkperiodForm" name="empworkperiodForm" method="POST"  action="<c:url value="/attendance/empWorkPeriodForm.html"/>">
 
-	<input type="hidden" id="success" name="success" value=${success}/>
+	<input type="hidden" id="success" name="success" value="${success}"/>
+	<input type="hidden" id="periodsSize" id="periodsSize" value="${periods.empPeriods.size()}"/>
+	<input type="text" id="emp_code" name="emp_code" value="${empCode}"/>
 	<table width="90%" border="0" cellspacing="0" cellpadding="0"
 		style="padding-right: 10px">
 
@@ -189,12 +193,13 @@ function periodChanged() {
 
 					</tr>
 					<tr>
+				
 						<td colspan="4"><table id="periods" width="100%">
 								<c:forEach items="${periods.empPeriods}" var="record"
 									varStatus="loop">
 									<tr height=20 bgcolor="#F8F8F8">
 
-										<td width="40%" class="helpBod" nowrap><spring:bind
+										<td width="40%" class="helpBod" nowrap>${periods.empPeriods[loop.index].work_period.workperiods}<spring:bind
 												path="periods.empPeriods[${loop.index}].work_period">
 												<select name="${status.expression}"
 													id="${status.expression}">
@@ -237,7 +242,7 @@ function periodChanged() {
 				</table>
 				<table width="100%">
 					<tr id="btn">
-						<td colspan="4" align="center"><input type="submit"
+						<td colspan="4" align="center"><input type="submit" onclick="onsubmit()"
 							name="save" value="<fmt:message key="commons.button.save"/>"
 							class="button" />&nbsp;&nbsp;&nbsp; <abc:i18n
 								property="commons.button.cancel" /><input type="reset"

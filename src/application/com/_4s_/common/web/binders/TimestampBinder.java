@@ -28,9 +28,9 @@ public class TimestampBinder extends PropertyEditorSupport implements
 
 	
 	public String getAsText() {
-		log.debug("GetAsText >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//		log.debug("GetAsText >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
-		log.debug(">>>>>>> getAstext getValue() "+getValue());
+//		log.debug(">>>>>>> getAstext getValue() "+getValue());
 //		Date date = ((Date)getValue());
 //		log.debug(">>>>>>> getAstext date "+date);
 //		String text = null;
@@ -52,13 +52,13 @@ public class TimestampBinder extends PropertyEditorSupport implements
 		}
 		
 		
-		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< GetAsText"+ text);
+//		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< GetAsText"+ text);
 		
 		return text;
 	}
 	
 	public void setAsText(String text) throws IllegalArgumentException {
-		log.debug("SetAsText >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//		log.debug("SetAsText >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
 		try {
 			Date inputDate = format.parse(text);
@@ -89,7 +89,7 @@ public class TimestampBinder extends PropertyEditorSupport implements
 //			setValue(null);
 //		}
 		
-		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SetAsText");
+//		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SetAsText");
 	}
 
 }
