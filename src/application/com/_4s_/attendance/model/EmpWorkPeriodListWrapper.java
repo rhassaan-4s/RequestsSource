@@ -22,9 +22,11 @@ public class EmpWorkPeriodListWrapper implements Serializable{
 		this.empCode = empCode;
 	}
 	public List<EmpWorkPeriod> getEmpPeriods() {
+//		System.out.println("********************####"+empPeriods.size());
 		return empPeriods;
 	}
 	public void setEmpPeriods(List<EmpWorkPeriod> empPeriods) {
+		System.out.println("********************$$$$"+empPeriods.size());
 		this.empPeriods = empPeriods;
 	}
 	

@@ -70,10 +70,12 @@ public class EmpWorkPeriodForm extends BaseSimpleFormController{
 	@RequestMapping(method = RequestMethod.GET)
 	public String initForm(ModelMap model,HttpServletRequest request) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		
+		log.debug(request.getMethod());
 		EmpWorkPeriodListWrapper empPeriods = new EmpWorkPeriodListWrapper();
 		
 		String empCode = request.getParameter("emp_code");
+		
+		String periodsSize = request.getParameter("periodsSize");
 		log.debug("empCode " + empCode);
 		String empStr = request.getParameter("emp");
 		log.debug("empStr " + empStr);
@@ -89,6 +91,7 @@ public class EmpWorkPeriodForm extends BaseSimpleFormController{
 		
 		if (empCode!=null && !empCode.isEmpty()) {
 			periods = (List)attendanceManager.getObjectsByParameter(EmpWorkPeriod.class,"emp_code.empCode",empCode);
+			log.debug("periods size " + periods.size());
 			if(periods.size()==0) {
 				EmpWorkPeriod p = new EmpWorkPeriod();
 				periods.add(p);
@@ -103,10 +106,12 @@ public class EmpWorkPeriodForm extends BaseSimpleFormController{
 			empPeriods.setEmpCode(ebasic);
 		}
 		
-		if (new_period!=null && !new_period.isEmpty() && new_period.equals("true")) {
+		if (new_period!=null && !new_period.isEmpty() && new_period.equals("true") 
+				&& periodsSize!=null && !periodsSize.isEmpty() && !periodsSize.equals("1") ) {
 			EmpWorkPeriod p = new EmpWorkPeriod();
 			periods.add(p);
 		}
+		
 		log.debug("##################  periods list size " + periods.size());
 		
 		empPeriods.setEmpPeriods(periods);
@@ -133,8 +138,9 @@ public class EmpWorkPeriodForm extends BaseSimpleFormController{
 		String success = request.getParameter("success");
 		model.put("success", success);
 		
-		String empCode = request.getParameter("emp_code");
+		String empCode = request.getParameter("emp");
 		model.put("empCode", empCode);
+//		String empCode = request.getParameter("emp_code");
 		
 		Settings settings = (Settings)request.getSession().getAttribute("settings");
 		boolean empRequestCheckDate = settings.getEmpRequestCheckDate();
@@ -179,13 +185,18 @@ public class EmpWorkPeriodForm extends BaseSimpleFormController{
 	//**************************************** onBind ***********************************************\\	
 	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		EmpWorkPeriodListWrapper periods =  (EmpWorkPeriodListWrapper)command;
+		log.debug("periods size " + periods.getEmpPeriods().size());
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
-//**************************************** onBindAndValidate ***********************************************\\
+	
+
+	//**************************************** onBindAndValidate ***********************************************\\
 	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		EmpWorkPeriodListWrapper periods =  (EmpWorkPeriodListWrapper)command;
+		log.debug("periods size " + periods.getEmpPeriods().size());
 		ValidationStatus status = attendanceManager.validateEmpWorkPeriodWrapper(periods);	
 		
 		if (status.getStatus().equals("False") && status.getMsg().equals("Mandatory")) {
