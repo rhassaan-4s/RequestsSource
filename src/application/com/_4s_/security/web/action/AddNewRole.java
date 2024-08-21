@@ -71,23 +71,23 @@ public class AddNewRole  extends BaseSimpleFormController implements BaseFormCon
 
 
 	
-	@ModelAttribute("applications")
-	public List<SecurityApplication> populateApplications() {
-		List applications = new ArrayList();
-		applications = baseManager.getObjects(SecurityApplication.class);
-		return applications;
+	@Override
+	public Map populateWebFrameworkList(String error, 
+			HttpServletRequest request, @ModelAttribute("model")Object command) {
+		// TODO Auto-generated method stub
+		Map model = new HashMap();
+		List applications = baseManager.getObjects(SecurityApplication.class);
+		List roles = baseManager.getObjects(Roles.class);
+		model.put("applications", applications);
+		model.put("roles", roles);
+		return model;
 	}
 
-	@ModelAttribute("roles")
-	public List<Roles> populateRoles() {
-		List roles = baseManager.getObjects(Roles.class);
-		return roles;
-	}
 
 	@Override
-	public void initBinder(WebDataBinder binder) {
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
 		// TODO Auto-generated method stub
-		super.initBinder(binder);
+		super.initBinder(request,binder);
 		binder.registerCustomEditor(securityApplicationBinder.getBindedClass(), null, securityApplicationBinder);
 		binder.registerCustomEditor(roleBinder.getBindedClass(), null, roleBinder);
 	}
@@ -131,14 +131,14 @@ public class AddNewRole  extends BaseSimpleFormController implements BaseFormCon
 
 	@RequestMapping(method = RequestMethod.POST)
 	@Override
-	public String processSubmit(
+	public ModelAndView processSubmit(
 			@ModelAttribute("role") Object command,HttpServletRequest request, HttpServletResponse response,
 			BindingResult result, SessionStatus status) {
 
 		roleValidator.validate((Roles)command, result);
 
 		if (result.hasErrors()) { 
-			return "addNewRole";
+			return new ModelAndView("addNewRole");
 		} else {
 
 			String application = request.getParameter("selectApplication");
@@ -180,7 +180,7 @@ public class AddNewRole  extends BaseSimpleFormController implements BaseFormCon
 				e.printStackTrace();
 			}
 			status.setComplete();
-			return "addNewRole";
+			return new ModelAndView("addNewRole");
 		}
 	}
 

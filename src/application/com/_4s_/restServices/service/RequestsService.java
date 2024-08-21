@@ -45,6 +45,8 @@ public interface RequestsService {// extends BaseManager {
 
 	public Map approveRequest(RequestApproval requestApproval,Employee emp);
 	
+	public Map getRequestStatus(Long req_id);
+	
 	public Map getVacInfo(RequestApproval requestApproval);
 	
 	public Map getVacTypes(Long requestType);

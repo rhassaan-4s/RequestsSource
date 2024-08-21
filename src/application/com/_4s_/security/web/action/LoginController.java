@@ -1,20 +1,15 @@
 package com._4s_.security.web.action;
 
+import java.nio.charset.Charset;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 //import org.springframework.web.bind.annotation.ResponseBody;
@@ -62,6 +57,8 @@ public class LoginController {
 		
 		log.debug("request.getSession().getAttribute(ACEGI_SECURITY_LAST_EXCEPTION): "+lastException);
 		
+		
+		log.debug("Charset.defaultCharset().displayName(); " + Charset.defaultCharset().displayName());
 		request.getSession().removeAttribute("ACEGI_SECURITY_LAST_EXCEPTION");
 		request.getSession().removeAttribute("ACEGI_SECURITY_LAST_USERNAME");
 		

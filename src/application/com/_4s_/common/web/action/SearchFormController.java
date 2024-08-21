@@ -15,8 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 //import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
+//import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.common.dao.Queries;
 import com._4s_.common.model.Branch;
@@ -37,7 +40,9 @@ import com._4s_.requestsApproval.service.RequestsApprovalManager;
 //import com._4s_.stores.service.StoresManager;
 //import com._4s_.stores.web.action.ExternalTypeAndCode;
 
-public class SearchFormController implements Controller {
+@Controller
+public class SearchFormController  extends BaseSimpleFormController {//implements Controller {
+	@Autowired
 	CommonManager mgr;
 //	private StoresManager storesManager;
 //	
@@ -49,7 +54,7 @@ public class SearchFormController implements Controller {
 //	public StoresManager getStoresManager() {
 //		return storesManager;
 //	}
-	
+	@Autowired
 	private RequestsApprovalManager reqMgr;
 	
 	
@@ -72,6 +77,7 @@ public class SearchFormController implements Controller {
 		this.mgr = mgr;
 	}
 
+	@Autowired
 	Queries qry ;
 	
 	public Queries getQry() {
@@ -84,6 +90,8 @@ public class SearchFormController implements Controller {
 	}  
 	
 	protected final Log log = LogFactory.getLog(getClass());
+	
+	@RequestMapping("/searchForm.html")
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse respons) throws Exception {
 		
 		Map model = new HashMap();
@@ -329,6 +337,7 @@ public class SearchFormController implements Controller {
 			model.putAll(map);
 		}
 		return new ModelAndView("searchForm",model);
+//		return "searchForm";
 	}
 
 

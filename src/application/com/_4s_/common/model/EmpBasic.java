@@ -44,7 +44,13 @@ import com._4s_.common.web.validators.Unique;
 	//@Mandatory(value=EmpBasic.class,property="empName")
 	//@Unique(value=EmpBasic.class,property = "empName")
 //=======
-public class EmpBasic extends EmpBasicParent implements Serializable,Auditable {
+public class EmpBasic  implements Serializable,Auditable {//extends EmpBasicParent
+	@Id
+	@GenericGenerator(name="empBasic_seq",strategy="com._4s_.attendance.dao.EmpBasicStringKeyGenerator")
+	@GeneratedValue(generator="empBasic_seq")
+	private String empCode;
+	@Mandatory(value=EmpBasic.class,property="empName")
+	@Unique(value=EmpBasic.class,property = "empName")
 	private String empName;
 	@Mandatory(value=EmpBasic.class,property="e_emp_name")
 	@Unique(value=EmpBasic.class,property = "e_emp_name")
@@ -53,29 +59,28 @@ public class EmpBasic extends EmpBasicParent implements Serializable,Auditable {
 	@ManyToOne
 	@JoinColumn (name="title")
 	private Title title;
-	@Mandatory(value=EmpBasic.class,property="address")
+//	@Mandatory(value=EmpBasic.class,property="address")
 	private String address;
 	private String eAddress;
 	private String should_sign="1";
 
-	@Mandatory(value=EmpBasic.class,property="natnl_no")
+//	@Mandatory(value=EmpBasic.class,property="natnl_no")
 	@Unique(value=EmpBasic.class,property = "natnl_no")
 	private String natnl_no;
 
 //	@Temporal(TemporalType.DATE)
-//	@Mandatory(value=EmpBasic.class,property="emplDate")
-	@MandatoryDate(value=EmpBasic.class,property="emplDate")
+//	@MandatoryDate(value=EmpBasic.class,property="emplDate")
 	private Timestamp emplDate;
 //	@Temporal(TemporalType.DATE)
-
-//	@Mandatory(value=EmpBasic.class,property="birthdate")
-	@MandatoryDate(value=EmpBasic.class,property="birthdate")
+//	@MandatoryDate(value=EmpBasic.class,property="birthdate")
 	private Timestamp birthdate;
 
 //	@Temporal(TemporalType.DATE)
 	private Timestamp job_join;
 	private String phone;
 	private String mobile;
+	
+	private String sex;
 	
 //	@Temporal(TemporalType.DATE)
 	private Timestamp end_serv;
@@ -136,12 +141,12 @@ public class EmpBasic extends EmpBasicParent implements Serializable,Auditable {
 
 
 
-	public String getEmpCode() {
-		return empCode;
-	}
-	public void setEmpCode(String empCode) {
-		this.empCode = empCode;
-	}
+//	public String getEmpCode() {
+//		return empCode;
+//	}
+//	public void setEmpCode(String empCode) {
+//		this.empCode = empCode;
+//	}
 
 	public String getEmpName() {
 		return empName;
@@ -420,6 +425,31 @@ public class EmpBasic extends EmpBasicParent implements Serializable,Auditable {
 
 	public void setCurrency(String currency) {
 		this.currency = currency;
+	}
+
+	
+	public String getEmpCode() {
+		return empCode;
+	}
+
+	public void setEmpCode(String empCode) {
+		this.empCode = empCode;
+	}
+
+	public String getNatnl_no() {
+		return natnl_no;
+	}
+
+	public void setNatnl_no(String natnl_no) {
+		this.natnl_no = natnl_no;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
 	}
 
 	public String toString() {

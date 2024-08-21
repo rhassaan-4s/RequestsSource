@@ -11,10 +11,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com._4s_.auditing.model.Auditable;
 import com._4s_.common.model.Employee;
@@ -38,10 +41,21 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	private RequestTypes request_id;
 
 	private String empCode;
+//	private Date request_date;
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@Temporal(TemporalType.DATE)
 	private Date request_date;
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
+//	@Temporal(TemporalType.DATE)
 	private Date from_date;
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
+//	@Temporal(TemporalType.DATE)
 	private Date to_date;
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
+//	@Temporal(TemporalType.DATE)
 	private Date period_from;
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
+//	@Temporal(TemporalType.DATE)
 	private Date period_to;
 	private Long approved;
 	private Long posted;
@@ -141,15 +155,16 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	}
 	public void setRequest_id(RequestTypes request_id) {
 		this.request_id = request_id;
+	}	
+	
+	public Date getPeriod_from() {
+		return period_from;
 	}
 	public Date getRequest_date() {
 		return request_date;
 	}
 	public void setRequest_date(Date request_date) {
 		this.request_date = request_date;
-	}
-	public Date getPeriod_from() {
-		return period_from;
 	}
 	public void setPeriod_from(Date period_from) {
 		this.period_from = period_from;

@@ -42,7 +42,7 @@
 				property="commons.caption.clientsView" /> <fmt:message
 				key="commons.caption.clientsView" /></a></li>
 				<%} %>
-	<authz:authorize access="hasRole('CAN_UPDATE_settings')">
+	<authz:authorize access="hasAuthority('CAN_UPDATE_settings')">
 		<li><a href="/Requests/common/settingsForm.html"><abc:i18n
 			property="commons.caption.settings" /> <fmt:message
 			key="commons.caption.settings" /></a></li>

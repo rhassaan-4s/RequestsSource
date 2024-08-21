@@ -62,7 +62,7 @@ public class BaseManagerImpl implements BaseManager {
     /* (non-Javadoc)
 	 * @see com._4s_.commons.service.BaseManager2#saveObject(java.lang.Object)
 	 */
-    public void saveObject(Object o) {
+    public void saveObject(Object o){
         baseDAO.saveObject(o);
     }
     

@@ -68,8 +68,8 @@
 }
 </style>
 
-<form id="pubLeavesForm" name="pubLeavesForm" method="POST"
-	action="<c:url value="/attendance/publicLeavesForm.html"/>">
+<form:form method="POST" modelAttribute="leaves"
+	action="/Requests/attendance/publicLeavesForm.html">
 
 
 	<table width="90%" border="0" cellspacing="0" cellpadding="0"
@@ -164,7 +164,6 @@
 			</td>
 		</tr>
 		</table>
-</form>
-
+</form:form>
 
 <%@ include file="/web/common/includes/footer.jsp"%>

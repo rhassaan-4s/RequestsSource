@@ -2,6 +2,7 @@ package com._4s_.requestsApproval.web.action;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,58 +12,44 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
+import com._4s_.attendance.web.binders.EmpBasicBinder;
+import com._4s_.attendance.web.binders.WorkPeriodMasterBinder;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
-import com._4s_.common.web.action.CommonController;
-import com._4s_.common.web.binders.DateTimeBinder;
+import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.common.web.binders.DomainObjectBinder;
+import com._4s_.common.web.binders.TimestampBinder;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.requestsApproval.web.validators.ValidateAttendanceSignInOut;
 import com._4s_.restServices.json.RequestApproval;
-import com._4s_.restServices.json.RestStatus;
-
-
-import com._4s_.auditing.validators.ValidateSearch;
-import com._4s_.common.model.Employee;
-import com._4s_.common.model.Settings;
-import com._4s_.common.util.HttpReqRespUtils;
-import com._4s_.common.util.MultiCalendarDate;
-import com._4s_.common.web.action.BaseSimpleFormController;
 
 @Controller
 @RequestMapping("/attendanceSignInOutForm.html")
-public class AttendanceSignInOutForm extends CommonController {
+public class AttendanceSignInOutForm extends BaseSimpleFormController {
 
 	@Autowired
 	private RequestsApprovalManager requestsApprovalManager;
@@ -70,6 +57,22 @@ public class AttendanceSignInOutForm extends CommonController {
 	private ValidateAttendanceSignInOut validateSignInOut;
 	@Autowired
 	private JavaMailSenderImpl mailSender;
+	
+	@Autowired
+	@Qualifier("timestampBinder")
+	private TimestampBinder timestampBinder;
+	@Autowired
+	@Qualifier("requestTypesBinder")
+	private DomainObjectBinder requestTypesBinder;
+	@Autowired
+	@Qualifier("loginUsersBinder")
+	private DomainObjectBinder loginUsersBinder;
+//	@Autowired
+//	@Qualifier("requestTypesBinder")
+//	private DomainObjectBinder dateTimeBinder;
+	
+	SimpleDateFormat finalformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//	SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
 	///////////////////////////////////////////////////////////////////
 	public RequestsApprovalManager getRequestsApprovalManager() {
@@ -96,8 +99,19 @@ public class AttendanceSignInOutForm extends CommonController {
 	}
 	/////////////////////////////////////////////////////////////////
 
-	//	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
+	//	@RequestMapping(method = RequestMethod.GET)  public String initForm(ModelMap model,HttpServletRequest request){
 	//	{	
+	
+	@Override
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		binder.registerCustomEditor(RequestTypes.class, requestTypesBinder);
+		binder.registerCustomEditor(LoginUsers.class, loginUsersBinder);
+		binder.registerCustomEditor(TimestampBinder.class, timestampBinder);
+		super.initBinder(request,binder);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Finished init binder: >>>>>>");
+	}
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public String initForm(ModelMap model,HttpServletRequest request){
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -143,7 +157,7 @@ public class AttendanceSignInOutForm extends CommonController {
 		return "attendanceSignInOutForm";
 	}
 
-	//	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+	//	@ModelAttribute("model")	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) 
 	//	{
 
 	@ModelAttribute("model")
@@ -187,24 +201,6 @@ public class AttendanceSignInOutForm extends CommonController {
 		return model;
 	}
 
-
-	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-		DomainObjectBinder loginUserBinder = new DomainObjectBinder();
-		loginUserBinder.setBaseManager(requestsApprovalManager);
-		loginUserBinder.setBindedClass(LoginUsers.class);
-		binder.registerCustomEditor(LoginUsers.class, loginUserBinder);
-
-		DomainObjectBinder requestTypeBinder = new DomainObjectBinder();
-		requestTypeBinder.setBaseManager(requestsApprovalManager);
-		requestTypeBinder.setBindedClass(RequestTypes.class);
-		binder.registerCustomEditor(RequestTypes.class, requestTypeBinder);
-
-		DateTimeBinder dateTimeBinder = new DateTimeBinder();
-		binder.registerCustomEditor(Date.class, dateTimeBinder);
-	}
-
-
 	@RequestMapping(method = RequestMethod.POST)
 	public String processSubmit(HttpServletRequest request,
 			@Valid @ModelAttribute("loginUsersRequests") LoginUsersRequests command,
@@ -230,6 +226,11 @@ public class AttendanceSignInOutForm extends CommonController {
 
 		if (result.hasErrors()) {
 			log.debug("binding result error");
+			List<ObjectError> err = result.getAllErrors();
+			Iterator errIterator = err.iterator();
+			while (errIterator.hasNext()) {
+				log.debug(((ObjectError)errIterator.next()).getDefaultMessage());
+			}
 			String url="attendanceSignInOutForm.html?done=false";
 //			RedirectView rView = new RedirectView();
 //			log.debug(result.getFieldValue("error"));
@@ -285,7 +286,7 @@ public class AttendanceSignInOutForm extends CommonController {
 		Date now = c.getTime();
 		log.debug("Time now " + now);
 		loginUsersRequests.setPeriod_from(now);
-		loginUsersRequests.setRequest_date(now);
+		loginUsersRequests.setRequest_date(Timestamp.valueOf(finalformat.format(c.getTime())));
 
 		//			log.debug("----loginUsersRequests.getId()-onsubmit-----"+loginUsersRequests.getId()+"-----loginUsersRequests---"+loginUsersRequests.getLogin_user().getEmpCode());
 

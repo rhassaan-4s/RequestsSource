@@ -4,8 +4,9 @@
 	
 </script>
 
-<form id="partForm" name="partForm" method="POST"
-	action="<c:url value="/timesheet/partForm.html"/>">
+	<form:form method="POST"
+					action="/Requests/timesheet/partForm.html"
+					modelAttribute="part">
 
 <input type="hidden" id="partNo" name="partNo"
 			value="${partNo}" />
@@ -16,7 +17,12 @@
 		style="padding-right: 10px">
 
 		<tr>
-			<td colspan="2"><spring:bind path="part.*">
+			<td colspan="2">
+			<h2 style="color: red;">
+					<form:errors path="part.*" />
+				</h2>
+				
+			<spring:bind path="part.*">
 					<c:if test="${not empty status.errorMessages}">
 						<div>
 							<c:forEach var="error" items="${status.errorMessages}">
@@ -94,7 +100,6 @@
 		</tr>
 
 	</table>
-</form>
-
+</form:form>
 
 <%@ include file="/web/common/includes/footer.jsp"%>

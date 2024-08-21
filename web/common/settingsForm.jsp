@@ -8,9 +8,8 @@
 
 </SCRIPT>
 
-<form id="settings" name="settings" method="POST" action="<c:url value="/common/settingsForm.html"/>">
-	
-	
+<form:form method="POST" modelAttribute="settings"
+	action="/Requests/common/settingsForm.html">	
 	<table border="0" width="50%" cellspacing="0" cellpadding="0" style="padding-right:10px ">
 		<tr>
 			<td class="tableHeader" height="1"></td>
@@ -439,8 +438,7 @@
 		
 		
 	</table>
-</form>
-
+</form:form>
 
 <script language="JavaScript" type="text/javascript" src="/4s/web/common/js/wz_tooltip.js"></script>
 <%@ include file="/web/common/includes/footer.jsp" %>

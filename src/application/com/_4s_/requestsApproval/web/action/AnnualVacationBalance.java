@@ -230,7 +230,7 @@ public class AnnualVacationBalance extends CommonController {
 
 	}
 
-//	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
+//	@RequestMapping(method = RequestMethod.GET)  public String initForm(ModelMap model,HttpServletRequest request){
 //	{
 //		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 //
@@ -242,7 +242,7 @@ public class AnnualVacationBalance extends CommonController {
 //	}
 //
 //	//**************************************** referenceData ***********************************************\\
-//	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+//	@ModelAttribute("model")	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) 
 //	{
 //		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 //

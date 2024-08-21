@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -58,7 +59,8 @@ public class AInsuranceCalaFormController extends BaseSimpleFormController{
 	
 	List aInsuranceCalaList2;
 	//**************************************** referenceData ***********************************************\\
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException{
+	@ModelAttribute("model")	
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
 		Map model=new HashMap();
@@ -75,18 +77,18 @@ public class AInsuranceCalaFormController extends BaseSimpleFormController{
 		
 		String month = request.getParameter("month");
 		log.debug("Entered month: "+month);
-		if(errors.getErrorCount()==0){
-			if((month == null || month.equals("")) && ((search != null && search.equals("true")) || (copy != null && copy.equals("true")))){
-				errors.rejectValue("month", "commons.errors.requiredFields");
-			}
-		}
-		String year=request.getParameter("year");
-		log.debug("Entered year: "+year);
-		if(errors.getErrorCount()==0){
-			if((year == null || year.equals("")) && ((search != null && search.equals("true")) || (copy != null && copy.equals("true")))){
-				errors.rejectValue("year", "commons.errors.requiredFields");
-			}
-		}
+//		if(errors.getErrorCount()==0){
+//			if((month == null || month.equals("")) && ((search != null && search.equals("true")) || (copy != null && copy.equals("true")))){
+//				errors.rejectValue("month", "commons.errors.requiredFields");
+//			}
+//		}
+//		String year=request.getParameter("year");
+//		log.debug("Entered year: "+year);
+//		if(errors.getErrorCount()==0){
+//			if((year == null || year.equals("")) && ((search != null && search.equals("true")) || (copy != null && copy.equals("true")))){
+//				errors.rejectValue("year", "commons.errors.requiredFields");
+//			}
+//		}
 		String insurance=request.getParameter("insuranceCode");
 		log.debug("Entered insurance: "+insurance);
 		String emp_code = request.getParameter("emp_code");
@@ -110,34 +112,34 @@ public class AInsuranceCalaFormController extends BaseSimpleFormController{
 
 		//COPY DATA FROM PRE MONTH
 		log.debug("Copy: "+copy);
-		if((month != null && month.length() > 0) && (year != null && year.length() > 0) && (copy != null && copy.equals("true"))){
-			log.debug("COPY DATA FROM PRE MONTH");
-			copyFromPreMonth(copy, month, year, insurance);
-		}
-		
+//		if((month != null && month.length() > 0) && (year != null && year.length() > 0) && (copy != null && copy.equals("true"))){
+//			log.debug("COPY DATA FROM PRE MONTH");
+//			copyFromPreMonth(copy, month, year, insurance);
+//		}
+//		
 		//SEARCH DATA FOR VIEW
 		log.debug("SEARCH DATA FOR VIEW");
 		aInsuranceCalaList2 = new ArrayList();
-		if((month == null || month.length() == 0) && (year == null || year.length() == 0) && (insurance == null || insurance.length() == 0)){
-			log.debug("All Null");
-		}
-		else if((month != null && month.length() > 0) && (year != null && year.length() > 0)){
-			List aInsuranceCalaList = hrManager.getFilteredGroupedAInsuranceCala(month, year, insurance, emp_code, empName, insuranceNo, subscriptionDate, groupBy);
-			for(int i=0; i<aInsuranceCalaList.size(); i++){
-				AInsuranceCala a =(AInsuranceCala) aInsuranceCalaList.get(i);
-				HREmployee e = (HREmployee) hrManager.getObjectByParameter(HREmployee.class, "empCode", a.getEmp_code());
-				a.setEmpName(e.getName());
-				log.debug("NAME>>"+e.getName());
-				a.setInsuranceNo(e.getInsurNo());
-				log.debug("INSU NO>>"+e.getInsurNo());
-				a.setSubscriptionDate(e.getSubscriptionDate().toString().split(" ")[0]+"");
-				log.debug("SUBSC DATE>>"+e.getSubscriptionDate()+"a SUBSC DATE>>"+a.getSubscriptionDate());
-//				log.debug("a SUBSC DATE>>"+a.getSubscriptionDate());
-				a.setInsuranceCode(e.getInsurCode()+"");
-				log.debug("INSU CODE>>"+e.getInsurCode());
-				aInsuranceCalaList2.add(a);
-			}
-		}
+//		if((month == null || month.length() == 0) && (year == null || year.length() == 0) && (insurance == null || insurance.length() == 0)){
+//			log.debug("All Null");
+//		}
+//		else if((month != null && month.length() > 0) && (year != null && year.length() > 0)){
+//			List aInsuranceCalaList = hrManager.getFilteredGroupedAInsuranceCala(month, year, insurance, emp_code, empName, insuranceNo, subscriptionDate, groupBy);
+//			for(int i=0; i<aInsuranceCalaList.size(); i++){
+//				AInsuranceCala a =(AInsuranceCala) aInsuranceCalaList.get(i);
+//				HREmployee e = (HREmployee) hrManager.getObjectByParameter(HREmployee.class, "empCode", a.getEmp_code());
+//				a.setEmpName(e.getName());
+//				log.debug("NAME>>"+e.getName());
+//				a.setInsuranceNo(e.getInsurNo());
+//				log.debug("INSU NO>>"+e.getInsurNo());
+//				a.setSubscriptionDate(e.getSubscriptionDate().toString().split(" ")[0]+"");
+//				log.debug("SUBSC DATE>>"+e.getSubscriptionDate()+"a SUBSC DATE>>"+a.getSubscriptionDate());
+////				log.debug("a SUBSC DATE>>"+a.getSubscriptionDate());
+//				a.setInsuranceCode(e.getInsurCode()+"");
+//				log.debug("INSU CODE>>"+e.getInsurCode());
+//				aInsuranceCalaList2.add(a);
+//			}
+//		}
 		
 		List monthList=hrManager.getObjects(HRMonth.class);
 		model.put("monthList", monthList);
@@ -152,7 +154,7 @@ public class AInsuranceCalaFormController extends BaseSimpleFormController{
 		model.put("insuranceList", insuranceList);
 		
 		model.put("results", aInsuranceCalaList2);
-		model.put("year", year);
+//		model.put("year", year);
 		model.put("month", month);
 		model.put("insuranceCode", insurance);
 		model.put("employeeCode", emp_code);
@@ -161,7 +163,7 @@ public class AInsuranceCalaFormController extends BaseSimpleFormController{
 		model.put("subscriptionDate", subscriptionDate);
 		model.put("groupBy", groupBy);
 		
-		log.debug("MAP: year "+year+" month "+month+" insuranceCode "+insurance+" employeeCode "+emp_code+" employeeName "+empName+" insuranceNo "+insuranceNo+" subscriptionDate "+subscriptionDate+" groupBy "+groupBy);
+//		log.debug("MAP: year "+year+" month "+month+" insuranceCode "+insurance+" employeeCode "+emp_code+" employeeName "+empName+" insuranceNo "+insuranceNo+" subscriptionDate "+subscriptionDate+" groupBy "+groupBy);
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		return model;

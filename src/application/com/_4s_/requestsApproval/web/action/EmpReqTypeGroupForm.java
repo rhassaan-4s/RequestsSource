@@ -72,7 +72,7 @@ public class EmpReqTypeGroupForm extends BaseSimpleFormController{
 	}
 	
 	//**************************************** referenceData ***********************************************\\
-//	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+//	@ModelAttribute("model")	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) 
 //	{
 	@ModelAttribute("model")
 	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,
@@ -176,9 +176,9 @@ public class EmpReqTypeGroupForm extends BaseSimpleFormController{
 	
 	
 	
-	public void initBinder(WebDataBinder binder) {
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		super.initBinder(binder);
+		super.initBinder(request,binder);
 		binder.registerCustomEditor(RequestTypes.class, requestTypesBinder);
 		binder.registerCustomEditor(LoginUsers.class, loginUsersBinder);
 		binder.registerCustomEditor(GroupAcc.class, groupAccBinder);

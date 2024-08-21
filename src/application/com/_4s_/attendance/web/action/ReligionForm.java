@@ -5,19 +5,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.attendance.model.Religion;
 import com._4s_.attendance.service.AttendanceManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
-import com._4s_.timesheet.model.TimesheetActivity;
+import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.timesheet.web.validate.ValidationStatus;
 
 public class ReligionForm extends BaseSimpleFormController{
@@ -32,8 +35,8 @@ public class ReligionForm extends BaseSimpleFormController{
 		this.attendanceManager = attendanceManager;
 	}
 
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{
+	@RequestMapping(method = RequestMethod.GET)  
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		String religionCode=request.getParameter("religionCode");
 		log.debug("--------religionCode------"+religionCode);
@@ -50,11 +53,13 @@ public class ReligionForm extends BaseSimpleFormController{
 		}
 		log.debug("---------religion-------"+religion);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	   return religion;
+		model.addAttribute(religion);
+	   return "religionForm";
 	}
 	
 	//**************************************** referenceData ***********************************************\\
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+	@ModelAttribute("model")	
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,@ModelAttribute Religion command,HttpServletRequest request) 
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		Religion religion= (Religion) command;

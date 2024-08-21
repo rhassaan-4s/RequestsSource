@@ -13,8 +13,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -24,6 +27,8 @@ import com._4s_.common.model.Country;
 import com._4s_.common.model.Department;
 import com._4s_.common.model.Employee;
 import com._4s_.common.service.AddRemoveEmployeeHandler;
+import com._4s_.common.web.binders.BaseBinder;
+import com._4s_.common.web.binders.TimestampBinder;
 
 
 /**
@@ -33,6 +38,18 @@ import com._4s_.common.service.AddRemoveEmployeeHandler;
 @Controller
 @RequestMapping("/commonAdminEditEmployee.html")
 public class EditEmployeeFormController extends BaseSimpleFormController {
+	
+	@Autowired
+	@Qualifier("timestampBinder")
+	private TimestampBinder timestampBinder;
+	
+	@Autowired
+	@Qualifier("departmentBinder")
+	private BaseBinder departmentBinder;
+	
+	@Autowired
+	@Qualifier("cityBinder")
+	private BaseBinder cityBinder;
 
 	/**
 	 * Employee Handlers: Post add/update/delete
@@ -45,6 +62,14 @@ public class EditEmployeeFormController extends BaseSimpleFormController {
 		this.employeeHandlers = employeeHandlers;
 	}
 
+	@Override
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		super.initBinder(request,binder);
+		binder.registerCustomEditor(TimestampBinder.class, timestampBinder);
+		binder.registerCustomEditor(Department.class, departmentBinder);
+		binder.registerCustomEditor(City.class, cityBinder);
+	}
 	public ModelAndView onSubmit(HttpServletRequest request,
 			HttpServletResponse response, Object command, BindException errors)
 			throws Exception {

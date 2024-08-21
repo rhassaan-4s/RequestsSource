@@ -59,10 +59,15 @@ public class TimestampBinder extends PropertyEditorSupport implements
 	
 	public void setAsText(String text) throws IllegalArgumentException {
 		log.debug("SetAsText >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		
+		System.out.println("TimestampBinder Begin");
 		try {
 			Date inputDate = format.parse(text);
-			Timestamp time = Timestamp.valueOf(finalformat.format(inputDate));
+			System.out.println("TimestampBinder --- input date ------"+inputDate);
+			log.debug(inputDate);
+			String formatted = finalformat.format(inputDate);
+			System.out.println("TimestampBinder --- formatted ------"+formatted);
+			Timestamp time = Timestamp.valueOf(formatted);
+			log.debug(time);
 			setValue(time);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

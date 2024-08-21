@@ -28,8 +28,10 @@
 	<tr>
 		<td colspan="2">
 
-		<form id="branch" name="branch" method="POST"
-			action="<c:url value="/common/commonAdminBranchForm.html"/>"><spring:bind
+			<form:form method="POST" modelAttribute="branch"
+	action="/Requests/common/commonAdminBranchForm.html">
+			
+			<spring:bind
 			path="branch.*">
 			<c:if test="${not empty status.errorMessages}">
 				<div><c:forEach var="error" items="${status.errorMessages}">
@@ -102,6 +104,7 @@
 		</td>
 	</tr>
 </table>
+</form:form>
 </td>
 </tr>
 </table>

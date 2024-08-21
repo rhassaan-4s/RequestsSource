@@ -7,6 +7,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com._4s_.common.service.CommonManager;
@@ -15,11 +19,11 @@ import com._4s_.security.model.IPAddress;
 import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
 import com._4s_.security.service.MySecurityManager;
-
+@Controller
 public class IpController extends BaseController {
-	
+	@Autowired
 	private MySecurityManager mgr = null;
-	
+	@Autowired
 	public CommonManager commonManager;
 
 	public MySecurityManager getMgr() {
@@ -39,10 +43,13 @@ public class IpController extends BaseController {
 	}
 
 	
-	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+	@RequestMapping("/ipView.html")
+//	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String handleRequest(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>> handleRequest()<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		Map model = new HashMap();
+//		Map model = new HashMap();
 		String userId = request.getParameter("userId");
 		log.debug("user id " + userId);
 		String deleteId = request.getParameter("deleteId");
@@ -57,10 +64,11 @@ public class IpController extends BaseController {
 			log.debug("user " + user);
 			List ips = mgr.getObjectsByParameter(IPAddress.class, "users", user);
 			log.debug("ips " + ips.size());
-			model.put("ip", ips);
+			model.addAttribute("ip", ips);
 		}
-		model.put("userId", userId);
-		return new ModelAndView("ipView", model);
+		model.addAttribute("userId", userId);
+//		return new ModelAndView("ipView", model);
+		return "ipView";
 	}
 	
 }

@@ -18,7 +18,7 @@
 		    <remember-me key="spring-sec"
 		    services-ref="rememberMeServices"/>--><!--  token-validity-seconds="1209600" data-source-ref="dataSource"  remember-me-parameter="remember-me" -->
 		 <remember-me key="jsfspring-sec" services-ref="rememberMeServices"/>
-		 
+		 <csrf disabled="true"/>
 		<!-- <remember-me user-service-ref="restService" token-repository-ref="tokenRepository" token-validity-seconds="86400" />-->
 		<!-- <remember-me key="some_random_key" 
          token-validity-seconds="31536000" 
@@ -47,6 +47,8 @@
 		<intercept-url pattern="/api/workflow/submittedRequests"
 			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 		<intercept-url pattern="/api/workflow/vacInfo"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+		<intercept-url pattern="/api/workflow/requestStatus"
 			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 		<intercept-url pattern="/api/workflow/editUserInfo"
 			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
@@ -159,8 +161,12 @@
 			authentication-failure-url="/security/login.html?failed=true"
 			/>
 			
-		<logout logout-url="/security/logout.html"
-			logout-success-url="/security/login.html" delete-cookies="JSESSIONID" />
+		<!--<logout logout-url="/security/logout.html"
+			logout-success-url="/security/login.html" delete-cookies="JSESSIONID" />-->
+			
+			
+		<logout logout-url="/security/logout.html" invalidate-session="true"
+			delete-cookies="JSESSIONID,SPRING_SECURITY_REMEMBER_ME_COOKIE" success-handler-ref="myLogoutHandler" />
 		<!--<csrf disabled="true"/>-->
 		
 		<session-management>

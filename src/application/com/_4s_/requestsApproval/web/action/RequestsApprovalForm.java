@@ -10,9 +10,19 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -25,7 +35,10 @@ import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 
+@Controller
+@RequestMapping("/requestsApprovalForm.html")
 public class RequestsApprovalForm extends BaseSimpleFormController {
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
 
 	public RequestsApprovalManager getRequestsApprovalManager() {
@@ -37,20 +50,21 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 		this.requestsApprovalManager = requestsApprovalManager;
 	}
 
-	protected Object formBackingObject(HttpServletRequest request)
-			throws ServletException {
+	@RequestMapping(method = RequestMethod.GET)  
+	public String initForm(ModelMap model,HttpServletRequest request){
 
 		AccessLevels accessLevel = new AccessLevels();
 
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-
-		return accessLevel;
+		model.addAttribute(accessLevel);
+		return "requestsApprovalForm";
 	}
 
 	// **************************************** referenceData
 	// ***********************************************\\
-	protected Map referenceData(HttpServletRequest request, Object command,
-			Errors errors) throws ServletException {
+	@ModelAttribute("model")	
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) 
+	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
 		Map model = new HashMap();
@@ -365,15 +379,6 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 
 	}
 
-	// **************************************** onBind
-	// ***********************************************\\
-	protected void onBind(HttpServletRequest request, Object command,
-			BindException errors) throws Exception {
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	}
-
 	// **************************************** onBindAndValidate
 	// ***********************************************\\
 	protected void onBindAndValidate(HttpServletRequest request,
@@ -411,30 +416,36 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 
 	// **************************************** onSubmit
 	// ***********************************************\\
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-			throws Exception {
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+//			@Valid @ModelAttribute("loginUsersRequests") LoginUsersRequests command,
+//			BindingResult result,
+			SessionStatus sessStatus,Map model) {
 
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
 		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		
+		log.debug("login users "+loginUsers);
 		String reqId = request.getParameter("reqId");
 		String status = request.getParameter("status");
+		log.debug("status " + status);
 //		String empCode = request.getParameter("empCode");
 		String accId = request.getParameter("accId");
+		log.debug(accId);
 		String note = request.getParameter("note");
 		String last = request.getParameter("last");
 
 		LoginUsersRequests requestOb = new LoginUsersRequests();
 		EmpReqTypeAcc empReqTypeAcc = new EmpReqTypeAcc();
 //		LoginUsers loginUsers = new LoginUsers();
-log.debug("requestOb " + requestOb);
+
 		requestOb = (LoginUsersRequests) requestsApprovalManager.getObject(
 				LoginUsersRequests.class, new Long(reqId));
-		log.debug("requestOb 2 " + requestOb);
+		log.debug("login user request " + requestOb);
 		if (accId!=null) {
 			empReqTypeAcc = (EmpReqTypeAcc) requestsApprovalManager.getObject(
 					EmpReqTypeAcc.class, new Long(accId));
+			log.debug("empReqTypeAcc " + empReqTypeAcc);
 
 			EmpReqApproval empReqApproval = new EmpReqApproval();
 
@@ -449,7 +460,7 @@ log.debug("requestOb " + requestOb);
 		}
 		System.out.println("Status " + status);
 		System.out.println("last " + last);
-		if(status.equals("0")){
+		if(status!= null && status.equals("0")){
 			
 			requestOb.setApproved(new Long(99));
 

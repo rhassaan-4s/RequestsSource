@@ -70,7 +70,7 @@
 					property="security.caption.privileges" /> <fmt:message
 					key="security.caption.privileges" /></td>
 				<TD class="formBodControl"><select id="s2" name="permissions" size="20" multiple  style="width: 350px; text-align: left;">
-					<c:forEach items="${permessions}" var="permession">
+					<c:forEach items="${model.permessions}" var="permession">
 						<c:set var="isSelected" value="" />
 						<c:forEach items="${role.permissions}" var="sel_per">
 

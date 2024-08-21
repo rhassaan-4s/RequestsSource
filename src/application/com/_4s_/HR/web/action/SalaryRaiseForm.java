@@ -4,12 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -29,8 +32,8 @@ public class SalaryRaiseForm  extends  BaseSimpleFormController{
 	
 
 		//**************************************** formBackingObject ***********************************************\\
-		protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-		{
+		@RequestMapping(method = RequestMethod.GET)  
+		public String initForm(ModelMap model,HttpServletRequest request){
 			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			String salaryRaiseId=request.getParameter("salaryRaiseId");
 			log.debug("salaryRaiseId"+salaryRaiseId);
@@ -46,10 +49,12 @@ public class SalaryRaiseForm  extends  BaseSimpleFormController{
 			}
 			log.debug("salaryRaise>>>>>>>>>"+salaryRaise);
 			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		   return salaryRaise;
+			model.addAttribute(salaryRaise);
+		   return "salaryRaiseForm";
 		}
 	//**************************************** referenceData ***********************************************\\
-		protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+		@ModelAttribute("model")	
+		public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) 
 		{
 			log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			Map model=new HashMap();

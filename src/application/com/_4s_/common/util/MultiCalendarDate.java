@@ -280,7 +280,8 @@ public class MultiCalendarDate implements ApplicationContextAware{
 					islamicCalendar.setLenient(false);
 					islamicCalendar.setCivil(true);
 					islamicCalendar.setTimeInMillis(this.millis);
-					dateString = dateFormat.format(islamicCalendar);
+//					log.debug("islamic calendar " + islamicCalendar);
+					dateString = dateFormat.format(islamicCalendar.getTime());
 					log.error(">>>>>>>>>>>>dateString by IslamicCalendar :"+dateString);
 					log.debug(">>>>>>>>>>> by IsCal ["+miladiDateString+"]miladi, in hijri is :"+dateString);
 				}

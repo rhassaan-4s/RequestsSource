@@ -36,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties({"users"})
 public class Employee implements Serializable,Auditable,Searchable {
 	@Id
-	@SequenceGenerator(name = "userID", sequenceName = "USER_ID")
+	@SequenceGenerator(name = "userID", sequenceName = "SEC_USER_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userID")
 	private Long id;
 	private String firstName;

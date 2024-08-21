@@ -62,7 +62,7 @@ public class AccessLevelsForm extends BaseSimpleFormController{
 		this.loginUsersBinder = loginUsersBinder;
 	}
 
-//	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
+//	@RequestMapping(method = RequestMethod.GET)  public String initForm(ModelMap model,HttpServletRequest request){
 //	{
 	
 	@RequestMapping(method = RequestMethod.GET)
@@ -77,7 +77,7 @@ public class AccessLevelsForm extends BaseSimpleFormController{
 	}
 	
 	//**************************************** referenceData ***********************************************\\
-//	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+//	@ModelAttribute("model")	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) 
 //	{
 	@ModelAttribute("model")
 	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,
@@ -143,9 +143,9 @@ public class AccessLevelsForm extends BaseSimpleFormController{
 		return model;
 	}
 
-	public void initBinder(WebDataBinder binder) {
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		super.initBinder(binder);
+		super.initBinder(request,binder);
 		binder.registerCustomEditor(LoginUsers.class, loginUsersBinder);
 	}
 	//**************************************** onBind ***********************************************\\	

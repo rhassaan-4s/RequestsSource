@@ -7,12 +7,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -58,7 +60,8 @@ public class EmployeeForm extends BaseSimpleFormController {
 	}
 	
 	
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException {
+	@RequestMapping(method = RequestMethod.GET)  
+	public String initForm(ModelMap model,HttpServletRequest request){
 	 
 		String employeeId=request.getParameter("employeeId");
 		log.debug("employeeId>>>>>>>>>>>>>>>>>>>."+employeeId);
@@ -150,8 +153,9 @@ public class EmployeeForm extends BaseSimpleFormController {
 			log.debug(">>>>>>>>>> hrEmployee.getEmployeeRelatives().size(): "+hrEmployee.getEmployeeRelatives().size());
 		}
 		log.debug("empAddress>>>>>>>>>>>>>>>>>>>>>"+hrEmployee.getEmpAddress());
-		log.debug(">>>>>>>>>>>>>>>>>>>> end of formBackingObject.........................................");	
-		return hrEmployee;
+		log.debug(">>>>>>>>>>>>>>>>>>>> end of formBackingObject.........................................");
+		model.addAttribute("hrEmployee", hrEmployee);
+		return "employeeForm";
 	}
 	
 	

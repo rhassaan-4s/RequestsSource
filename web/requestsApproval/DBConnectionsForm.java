@@ -30,7 +30,7 @@ public class DBConnectionsForm extends  BaseSimpleFormController{
 		}
 		
 		//**************************************** formBackingObject ***********************************************\\
-		protected Object formBackingObject(HttpServletRequest request) throws ServletException 
+		@RequestMapping(method = RequestMethod.GET)  public String initForm(ModelMap model,HttpServletRequest request){
 		{
 			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			String connectionId=request.getParameter("connectionId");
@@ -50,7 +50,7 @@ public class DBConnectionsForm extends  BaseSimpleFormController{
 		   return dbConnections;
 		}
 	//**************************************** referenceData ***********************************************\\
-		protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+		@ModelAttribute("model")	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) 
 		{
 			log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			Map model=new HashMap();

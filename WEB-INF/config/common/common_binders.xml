@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+
+<!DOCTYPE beans PUBLIC
+    "-//SPRING//DTD BEAN//EN"
     "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 
-<beans >
+<beans default-autowire="no" default-lazy-init="false">
+
 
 	<bean id="typesDataBinder" parent="domainObjectBinder" >
 		<property name="bindedClass">
@@ -22,13 +25,19 @@
 		</property>
 	</bean>
 
-	<bean id="countryBinder" parent="domainObjectBinder" >
+	<!--<bean id="countryBinder" parent="domainObjectBinder" >
 		<property name="bindedClass">
 			<value>com._4s_.common.model.Country</value>
 		</property>
 		<property name="allowCreateNew">
 			<value>false</value>
 		</property>
+	</bean>-->
+	
+	<bean id="countryBinder" class="com._4s_.common.web.binders.CountryBinder" >
+	    <property name="baseManager">
+			<ref bean="baseManager"/>
+	    </property>
 	</bean>
 	
 	<bean id="regionBinder" parent="domainObjectBinder" >
@@ -53,6 +62,8 @@
 	</bean>
 
 <!-- *************************** Employee *************************** -->	
+
+
 	<bean id="employeesController" parent="txProxyTemplate" >
 		<property name="target">
 			<bean class="com._4s_.common.web.action.EmployeesController">

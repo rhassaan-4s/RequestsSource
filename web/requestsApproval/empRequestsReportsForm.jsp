@@ -128,9 +128,10 @@ function initMap(latitude,longitude) {
 	</tr>
 	<tr>
 		<td>
-			<form id="empRequestsReportsForm" name="empRequestsReportsForm"	method="POST" action="<c:url value="/requestsApproval/empRequestsReportsForm.html"/>">
-				    <input type="hidden"  id="requestType" name="requestType" value="${requestType}"/>
-				    <input type="hidden"  id="errand" name="errand" value="${errand}"/>
+			<form:form method="POST" modelAttribute="loginUsersRequests"
+				action="/Requests/requestsApproval/empRequestsReportsForm.html">
+				    <input type="hidden"  id="requestType" name="requestType" value="${model.requestType}"/>
+				    <input type="hidden"  id="errand" name="errand" value="${model.errand}"/>
 				   
 					<div id="result">
 					<table border=0 cellspacing=1 cellpadding=0 id="ep" style="margin-right:40px">
@@ -205,14 +206,14 @@ function initMap(latitude,longitude) {
 								<fmt:message key="commons.caption.from"/>
 							</td>
 							<c:choose>
-								<c:when  test="${request_date_from ==null || request_date_from==''}">
+								<c:when  test="${model.request_date_from ==null || model.request_date_from==''}">
 								<td  class="formBodControl" >
-									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${firstDay}" />
+									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${model.firstDay}" />
 								</td>
 								</c:when>
 								<c:when test="${request_date_from !=null || request_date_from!=''}">
 								<td  class="formBodControl" >
-									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${request_date_from}" />
+									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${model.request_date_from}" />
 								</td>
 								</c:when>
 							</c:choose>
@@ -221,14 +222,14 @@ function initMap(latitude,longitude) {
 								<fmt:message key="commons.caption.to"/>
 							</td>
 							<c:choose>
-								<c:when  test="${request_date_to ==null || request_date_to==''}">
+								<c:when  test="${model.request_date_to ==null || model.request_date_to==''}">
 								<td  class="formBodControl" >
-									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_to" id="request_date_to" value="${today}" />
+									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_to" id="request_date_to" value="${model.today}" />
 								</td>
 								</c:when>
-								<c:when test="${request_date_to !=null || request_date_to!=''}">
+								<c:when test="${model.request_date_to !=null || model.request_date_to!=''}">
 								<td  class="formBodControl">
-									<input type="text"  class="calendar" title="ccc" class="MM_to_d" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_to" id="request_date_to" value="${request_date_to}"/>
+									<input type="text"  class="calendar" title="ccc" class="MM_to_d" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_to" id="request_date_to" value="${model.request_date_to}"/>
 								</td>
 								</c:when>
 							</c:choose>
@@ -246,14 +247,14 @@ function initMap(latitude,longitude) {
 								<fmt:message key="commons.caption.from"/>
 							</td>
 							<c:choose>
-								<c:when  test="${exact_request_date_from ==null || exact_request_date_from==''}">
+								<c:when  test="${model.exact_request_date_from ==null || modelexact_request_date_from==''}">
 								<td  class="formBodControl" >
 									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="exact_request_date_from" id="exact_request_date_from" value="" />
 								</td>
 								</c:when>
-								<c:when test="${exact_request_date_from !=null || exact_request_date_from!=''}">
+								<c:when test="${model.exact_request_date_from !=null || model.exact_request_date_from!=''}">
 								<td  class="formBodControl" >
-									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="exact_request_date_from" id="exact_request_date_from" value="${exact_request_date_from}" />
+									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="exact_request_date_from" id="exact_request_date_from" value="${model.exact_request_date_from}" />
 								</td>
 								</c:when>
 							</c:choose>
@@ -262,14 +263,14 @@ function initMap(latitude,longitude) {
 								<fmt:message key="commons.caption.to"/>
 							</td>
 							<c:choose>
-								<c:when  test="${exact_request_date_to ==null || exact_request_date_to==''}">
+								<c:when  test="${model.exact_request_date_to ==null || model.exact_request_date_to==''}">
 								<td  class="formBodControl" >
 									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="exact_request_date_to" id="exact_request_date_to" value="" />
 								</td>
 								</c:when>
-								<c:when test="${exact_request_date_to !=null || exact_request_date_to!=''}">
+								<c:when test="${model.exact_request_date_to !=null || model.exact_request_date_to!=''}">
 								<td  class="formBodControl">
-									<input type="text"  class="calendar" title="ccc" class="MM_to_d" readonly="readonly" autocomplete="off" dir="ltr" name="exact_request_date_to" id="exact_request_date_to" value="${exact_request_date_to}"/>
+									<input type="text"  class="calendar" title="ccc" class="MM_to_d" readonly="readonly" autocomplete="off" dir="ltr" name="exact_request_date_to" id="exact_request_date_to" value="${model.exact_request_date_to}"/>
 								</td>
 								</c:when>
 							</c:choose>
@@ -315,27 +316,27 @@ function initMap(latitude,longitude) {
 					</table>
 					
 					<abc:paging url="empRequestsReportsForm.html" 
-					parametersString="requestType=${requestType}&empCode=${empCode}&statusId=${status}&request_date_from=${request_date_from}&request_date_to=${request_date_to}&exact_request_date_from=${exact_request_date_from}&exact_request_date_to=${exact_request_date_to}&codeFrom=${codeFrom}&codeTo=${codeTo}"/>
+					parametersString="requestType=${model.requestType}&empCode=${model.empCode}&statusId=${model.status}&request_date_from=${model.request_date_from}&request_date_to=${model.request_date_to}&exact_request_date_from=${model.exact_request_date_from}&exact_request_date_to=${model.exact_request_date_to}&codeFrom=${model.codeFrom}&codeTo=${model.codeTo}"/>
 					<table rules="all" align="center" class="sofT">
 									<tr>
-									<c:if test="${requestType=='1' && errand!='true'}">
+									<c:if test="${model.requestType=='1' && model.errand!='true'}">
 										<td colspan="16" class="helpTitle">
 											<abc:i18n property="requestsApproval.header.empSpecialVacationsReportsForm" />
 											<fmt:message key="requestsApproval.header.empSpecialVacationsReportsForm" />
 										</td>
 									</c:if>
-									<c:if test="${requestType=='1' && errand=='true'}">
+									<c:if test="${model.requestType=='1' && model.errand=='true'}">
 										<td colspan="16" class="helpTitle">
 										<abc:i18n property="requestsApproval.header.empErrandsReportsForm"/><fmt:message key="requestsApproval.header.empErrandsReportsForm"/>
 										</td>
 									</c:if>
-									<c:if test="${requestType=='2'}">
+									<c:if test="${model.requestType=='2'}">
 										<td colspan="16" class="helpTitle">
 											<abc:i18n property="requestsApproval.header.empAnnualVacationsReportsForm" />
 											<fmt:message key="requestsApproval.header.empAnnualVacationsReportsForm" />
 										</td>
 									</c:if>
-									<c:if test="${requestType=='3'}">
+									<c:if test="${model.requestType=='3'}">
 										<td colspan="16" class="helpTitle">
 											<abc:i18n property="requestsApproval.header.empRequestsReportsForm3" />
 											<fmt:message key="requestsApproval.header.empRequestsReportsForm3" />
@@ -364,7 +365,7 @@ function initMap(latitude,longitude) {
 											<abc:i18n property="requestsApproval.caption.requestDate" />
 										 	<fmt:message key="requestsApproval.caption.requestDate" />
 										</td>
-										<c:if test="${requestType=='1'||requestType=='2'}">
+										<c:if test="${model.requestType=='1'||model.requestType=='2'}">
 								  		<td nowrap class="helpHed" nowrap="nowrap">
 											<abc:i18n property="commons.caption.fromDate"/>
 											<fmt:message key="commons.caption.fromDate"/>
@@ -377,14 +378,14 @@ function initMap(latitude,longitude) {
 											<abc:i18n property="requestsApproval.requestsApprovalForm.reqPeriod"/>
 											<fmt:message key="requestsApproval.requestsApprovalForm.reqPeriod"/>
 										</td>
-										<c:if test="${requestType=='2'}">
+										<c:if test="${model.requestType=='2'}">
 										<td nowrap class="helpHed" nowrap="nowrap">
 											<abc:i18n property="commons.button.getVacCredit"/>
 											<fmt:message key="commons.button.getVacCredit"/>
 										</td>	
 										</c:if>									
 										</c:if>
-										<c:if test="${requestType=='3'}">
+										<c:if test="${model.requestType=='3'}">
 										<td class="helpHed" nowrap="nowrap">
 											<abc:i18n property="commons.caption.from" />
 										 	<fmt:message key="commons.caption.from" />
@@ -410,7 +411,7 @@ function initMap(latitude,longitude) {
 										 	<fmt:message key="requestsApproval.caption.reply" />
 										</td>
 										
-										<c:if test="${requestType=='1'}">
+										<c:if test="${model.requestType=='1'}">
 											<td class="helpHed" nowrap>
 											<abc:i18n property="commons.caption.altDate"/><fmt:message key="commons.caption.altDate"/>
 											</td>
@@ -566,7 +567,7 @@ function initMap(latitude,longitude) {
 										</td>
 									</tr>
 								</table>								
-			</form>
+			</form:form>
 		</td>
 	</tr>
 </table>

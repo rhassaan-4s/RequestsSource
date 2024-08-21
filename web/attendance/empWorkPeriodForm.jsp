@@ -107,8 +107,9 @@ function periodChanged() {
 <script type="text/javascript"
 	src="/Requests/web/common/timepicker/jquery.multiselect.filter.min.js"></script>
 
-<form id="empworkperiodForm" name="empworkperiodForm" method="POST"
-	action="<c:url value="/attendance/empWorkPeriodForm.html"/>">
+	
+<form:form method="POST" modelAttribute="periods"
+	action="/Requests/attendance/empWorkPeriodForm.html">
 
 	<input type="hidden" id="success" name="success" value=${success}/>
 	<table width="90%" border="0" cellspacing="0" cellpadding="0"
@@ -248,8 +249,7 @@ function periodChanged() {
 		</tr>
 
 	</table>
-
-</form>
+</form:form>
 <script type="text/javascript">
 $("span#add_user").on('click', function() {
     //var $val = $('#add_user').text();

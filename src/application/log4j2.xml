@@ -7,109 +7,111 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="com._4s_" level="DEBUG" additivity="false">
+        <Logger name="com._4s_" level="DEBUG" additivity="off">
             <AppenderRef ref="LogToConsole"/>
        </Logger>
-        <Logger name="org.springframework" level="ERROR" additivity="false">
+        <Logger name="org.springframework" level="TRACE" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger>
-         <Logger name="org.hibernate" level="ERROR" additivity="false">
+         <Logger name="org.hibernate" level="ERROR" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger>
-        <Logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+        <Logger name="org.hibernate.SQL" level="FATAL" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger>
-        <Logger name="org.springframework.security.web.access" level="FATAL" additivity="false">
-        	 <AppenderRef ref="LogToConsole"/>
-        </Logger>
-        <Logger name="org.springframework.security.web.util.matcher.AntPathRequestMatcher" level="FATAL" additivity="false">
-        	 <AppenderRef ref="LogToConsole"/>
-        </Logger>
-         <Logger name="org.hibernate.cfg.AnnotationBinder" level="ERROR" additivity="false">
-        	<AppenderRef ref="LogToConsole"/>
-        </Logger>
-        <logger name="org.hibernate.mapping.PrimaryKey" level="ERROR" additivity="false">
-        	<AppenderRef ref="LogToConsole"/>
-        </logger>
-        <logger name="org.hibernate.persister.entity.AbstractPropertyMapping" level="ERROR" additivity="false">
-        	<AppenderRef ref="LogToConsole"/>
-        </logger>
-        <logger name="org.springframework.security" level="debug" additivity="false">
+        
+         <logger name="org.springframework.security" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger> 
-        <logger name="org.springframework.security.web.FilterChainProxy" level="FATAL" additivity="false">
+        <Logger name="org.springframework.security.web.access" level="INFO" additivity="off">
+        	 <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <Logger name="org.springframework.security.web.util.matcher.AntPathRequestMatcher" level="INFO" additivity="off">
+        	 <AppenderRef ref="LogToConsole"/>
+        </Logger>
+         <Logger name="org.hibernate.cfg.AnnotationBinder" level="ERROR" additivity="off">
+        	<AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <logger name="org.hibernate.mapping.PrimaryKey" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.springframework.security.access" level="FATAL" additivity="false">
+        <logger name="org.hibernate.persister.entity.AbstractPropertyMapping" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.springframework.beans.CachedIntrospectionResults" level="ERROR" additivity="false">
+       
+        <logger name="org.springframework.security.web.FilterChainProxy" level="FATAL" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.springframework.beans.factory.support.DefaultListableBeanFactory" level="ERROR" additivity="false">
+        <logger name="org.springframework.security.access" level="FATAL" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-       <logger name="org.hibernate.type.BasicTypeRegistry" level="ERROR" additivity="false">
+        <logger name="org.springframework.beans.CachedIntrospectionResults" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.hibernate.boot" level="ERROR" additivity="false">
+        <logger name="org.springframework.beans.factory.support.DefaultListableBeanFactory" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-       <logger name="org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory" level="ERROR" additivity="false">
+       <logger name="org.hibernate.type.BasicTypeRegistry" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.springframework.core.io.support" level="ERROR" additivity="false">
+        <logger name="org.hibernate.boot" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.hibernate.cfg.Ejb3Column" level="ERROR" additivity="false">
+       <logger name="org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-         <logger name="org.hibernate.loader.plan.build.spi.LoadPlanTreePrinter" level="ERROR" additivity="false">
+        <logger name="org.springframework.core.io.support" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.hibernate.persister.walking.spi.MetamodelGraphWalker" level="ERROR" additivity="false">
+        <logger name="org.hibernate.cfg.Ejb3Column" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.hibernate.loader.plan.build.internal" level="ERROR" additivity="false">
+         <logger name="org.hibernate.loader.plan.build.spi.LoadPlanTreePrinter" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.hibernate.loader.plan.exec.internal.LoadQueryJoinAndFetchProcessor" level="ERROR" additivity="false">
+        <logger name="org.hibernate.persister.walking.spi.MetamodelGraphWalker" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.hibernate.loader" level="ERROR" additivity="false">
+        <logger name="org.hibernate.loader.plan.build.internal" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-         <logger name="org.hibernate.cfg.annotations" level="ERROR" additivity="false">
+        <logger name="org.hibernate.loader.plan.exec.internal.LoadQueryJoinAndFetchProcessor" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.hibernate.cfg.AbstractPropertyHolder" level="ERROR" additivity="false">
+        <logger name="org.hibernate.loader" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.hibernate.persister" level="ERROR" additivity="false">
+         <logger name="org.hibernate.cfg.annotations" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.hibernate.cfg.CollectionSecondPass" level="ERROR" additivity="false">
+        <logger name="org.hibernate.cfg.AbstractPropertyHolder" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <Logger name="com._4s_.common" level="FALSE" additivity="false">
+        <logger name="org.hibernate.persister" level="ERROR" additivity="off">
+        	<AppenderRef ref="LogToConsole"/>
+        </logger>
+        <logger name="org.hibernate.cfg.CollectionSecondPass" level="ERROR" additivity="off">
+        	<AppenderRef ref="LogToConsole"/>
+        </logger>
+        <Logger name="com._4s_.common" level="DEBUG" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
-        <Logger name="com._4s_.i18n" level="ERROR" additivity="false">
+        <Logger name="com._4s_.i18n" level="ERROR" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
-        <Logger name="com._4s_.security" level="DEBUG" additivity="false">
+        <Logger name="com._4s_.security" level="DEBUG" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
-        <Logger name="com._4s_.requestsApproval" level="DEBUG" additivity="false">
+        <Logger name="com._4s_.requestsApproval" level="DEBUG" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
-         <Logger name="org.springframework.security.web.csrf.CsrfFilter" level="ERROR" additivity="false">
+         <Logger name="org.springframework.security.web.csrf.CsrfFilter" level="FATAL" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
-         <Logger name="org.springframework.security.web" level="ERROR" additivity="false">
+         <Logger name="org.springframework.security.web" level="INFO" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
-        <Logger name="org.springframework.security.config.http" level="ERROR" additivity="false">
+        <Logger name="org.springframework.security.config.http" level="INFO" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
         <Root level="DEBUG">

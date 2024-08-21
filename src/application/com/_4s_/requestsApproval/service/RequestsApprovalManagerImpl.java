@@ -1,6 +1,4 @@
 package com._4s_.requestsApproval.service;
-package com._4s_.requestsApproval.service;
-
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -24,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import sun.net.www.protocol.https.HttpsURLConnectionImpl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -32,9 +30,6 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.directwebremoting.annotations.RemoteMethod;
-import org.directwebremoting.annotations.RemoteProxy;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Service;
@@ -1801,6 +1796,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	
 	public Map getVacInfo(Vacation vac, Date from_date, String empCode) {
 		Map model = new HashMap();
+		log.debug("vac " + vac);
 		if (vac !=null){
 			String vacId =  vac.getVacation();
 			
@@ -1817,6 +1813,12 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			
 			Long vacLimit = getVacationLimit(empCode, vacId, from_date);
 			Long vacConsumed = getEmpVacation(empCode, vacId, from_date);
+			if (vacLimit == null) {
+				vacLimit = 0L;
+			}
+			if (vacConsumed == null) {
+				vacConsumed = 0L;
+			}
 			Long vacCredit = vacLimit - vacConsumed;
 			
 			Map output = new HashMap();
@@ -2241,19 +2243,22 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
 	 public String getAddressByGpsCoordinates(String lng, String lat)
 	            throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
-	         String key = "AIzaSyBeCCPQ7VdCQiJxjXGfVO98LyirL1-hC74";
+	         String key = "65c8b9e1c9c01804850676ribdd12fa";
 	         LocaleUtil localeUtil = LocaleUtil.getInstance();
-
-//	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
-	         System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
-	         URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "");
+//		        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
+		         System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+		        URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "&api_key="+key);
 	        log.debug("url " + url);
-	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
+//	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
 	        String formattedAddress = "";
 	 
+	        
+
+	        InputStream in=null;
+	        BufferedReader reader=null;
 	        try {
-	            InputStream in = url.openStream();
-	            BufferedReader reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+	            in = url.openStream();
+	            reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
 	            String result, line = reader.readLine();
 	            result = line;
 	            while ((line = reader.readLine()) != null) {
@@ -2278,25 +2283,32 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	        	e.printStackTrace();
 	        } finally {
 //	            urlConnection.disconnect();
+	        	reader.close();
+	        	in.close();
 	            return formattedAddress;
 	        }
 	    }
 	 
 	 public String getShortAddressByGpsCoordinates(String lng, String lat)
 	            throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
-	         String key = "AIzaSyBeCCPQ7VdCQiJxjXGfVO98LyirL1-hC74";
+	         String key = "65c8b9e1c9c01804850676ribdd12fa";
 	         LocaleUtil localeUtil = LocaleUtil.getInstance();
 //	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
 	         System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
-	        URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "");
+	        URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "&api_key="+key);
 	        log.debug("url " + url);
 
-	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
+//	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
+	        
+	        
 	        String formattedAddress = null;
 	 
+	        InputStream in=null;
+	        BufferedReader reader=null;
 	        try {
-	            InputStream in = url.openStream();
-	            BufferedReader reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+	            in = url.openStream();
+	            reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+	            log.debug("reader " + reader);
 	            String result, line = reader.readLine();
 	            result = line;
 	            while ((line = reader.readLine()) != null) {
@@ -2333,11 +2345,19 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 //	            }
 	 
 	            return formattedAddress;
+	        } catch (IOException ie) {
+	        	log.debug("exception to get address from location " + ie);
+	        	ie.printStackTrace();
 	        } catch (Exception e) {
 	        	log.debug("exception to get address from location " + e);
 	        	e.printStackTrace();
 	        } finally {
-	            urlConnection.disconnect();
+	        	if (reader!=null) {
+	        		reader.close();
+	        		in.close();
+	        	}
+//	            urlConnection.disconnect();
+	        	
 	            return formattedAddress;
 	        }
 	    }

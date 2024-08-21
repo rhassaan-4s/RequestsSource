@@ -30,19 +30,21 @@ function cancelApp(){
 	border: 1px solid #99CCFF;
 }
 </style>
-
-	<c:if test="${data==1}"><form id="requestsApprovalForm" name="requestsApprovalForm" method="POST"
-				action="<c:url value="/requestsApproval/requestsApprovalForm.html?reqId="/>${requestInfo.id}">
+	<c:if test="${model.data==1}">
+	
+	<form:form method="POST" 
+				action="/Requests/requestsApproval/requestsApprovalForm.html">
+				
 		<table width="100%" border="0" cellspacing="0" cellpadding="7"
 			style="padding-right: 10px">
 			
 			<tr>
 				<td colspan="2">
 	<!--			<input type="text" name="done" id="done" value="" >-->
-				<input type="hidden" name="reqId" id="reqId" value="${requestInfo.id}" >
-				<input type="hidden" name="last" value="${last}" >
-				<input type="hidden" name="requestType" id="requestType" value="${requestType}" >
-				<input type="hidden"  id="errand" name="errand" value="${errand}"/>
+				<input type="hidden" name="reqId" id="reqId" value="${model.requestInfo.id}" >
+				<input type="hidden" name="last" value="${model.last}" >
+				<input type="hidden" name="requestType" id="requestType" value="${model.requestType}" >
+				<input type="hidden"  id="errand" name="errand" value="${model.errand}"/>
 				<c:if test="${not empty status.errorMessages}">
 					<div><c:forEach var="error" items="${status.errorMessages}">
 						<font color="red"> <c:out value="${error}" escapeXml="false" /><br />
@@ -101,7 +103,7 @@ function cancelApp(){
 							key="commons.caption.to" /></td>
 	
 	<c:choose>
-						<c:when test="${requestType==3}"><td nowrap class="formBodControl" >
+						<c:when test="${model.requestType==3}"><td nowrap class="formBodControl" >
 						<abc:i18n
 							property="requestsApproval.caption.leaveEffect" /> <fmt:message
 							key="requestsApproval.caption.leaveEffect" /></td>
@@ -123,7 +125,7 @@ function cancelApp(){
 		
 					<tr>
 						<c:choose>
-						<c:when test="${errand=='true'}">
+						<c:when test="${model.errand=='true'}">
 							<td nowrap class="formBodControl" >مأموريه</td>
 			
 							<td nowrap class="formBodControl" >
@@ -149,23 +151,23 @@ function cancelApp(){
 						</td>	
 		
 						<td class="formBodControl">
-							<c:if test="${requestType==3}">
-						${requestInfo.period_to}</c:if>
-							<c:if test="${requestType!=3}">
-						<_4s_:formatMiladiDate value="${requestInfo.to_date}"/></c:if>
+							<c:if test="${model.requestType==3}">
+						${model.requestInfo.period_to}</c:if>
+							<c:if test="${model.requestType!=3}">
+						<_4s_:formatMiladiDate value="${model.requestInfo.to_date}"/></c:if>
 						</td>
 						
-						<c:if test="${requestType!=3}"><td class="formBodControl">
-							${requestInfo.withdrawDays}
+						<c:if test="${model.requestType!=3}"><td class="formBodControl">
+							${model.requestInfo.withdrawDays}
 						</td></c:if>
-						<c:if test="${requestType==3}"><td class="formBodControl">
+						<c:if test="${model.requestType==3}"><td class="formBodControl">
 							&nbsp;
 						</td></c:if>
 						
-						<c:if test="${requestInfo.notes!=null && requestInfo.notes!=''}">
-						<td nowrap class="formBodControl" >${requestInfo.notes}</td>
+						<c:if test="${model.requestInfo.notes!=null && model.requestInfo.notes!=''}">
+						<td nowrap class="formBodControl" >${model.requestInfo.notes}</td>
 						</c:if>
-						<c:if test="${requestInfo.notes==null || requestInfo.notes==''}">
+						<c:if test="${model.requestInfo.notes==null || model.requestInfo.notes==''}">
 						<td nowrap class="formBodControl" >&nbsp;</td>
 						</c:if>
 						
@@ -199,9 +201,9 @@ function cancelApp(){
 							</tr>
 								
 							<tr>
-								<td  class="formBodControl">${vacLimit}</td>
-								<td  class="formBodControl">${vacConsumed}</td>
-								<td  class="formBodControl">${vacCredit}</td>
+								<td  class="formBodControl">${model.vacLimit}</td>
+								<td  class="formBodControl">${model.vacConsumed}</td>
+								<td  class="formBodControl">${model.vacCredit}</td>
 							</tr>
 					</table>
 					</td>
@@ -245,7 +247,7 @@ function cancelApp(){
 		
 		
 							</tr>
-							<c:forEach items="${approvalList}" var="record">
+							<c:forEach items="${model.approvalList}" var="record">
 								
 							<tr>
 								<td width="120" class="formBodControl">${record.title}</td>
@@ -393,7 +395,7 @@ function cancelApp(){
 							</tr>
 							</c:forEach> 	
 							
-							<c:if test="${showbSubmit==1}">
+							<c:if test="${model.showbSubmit==1}">
 								<tr>
 									<td width="130" class="formBodControl"><abc:i18n
 										property="commons.caption.notes" /> <fmt:message
@@ -410,7 +412,7 @@ function cancelApp(){
 						<tr>
 							<c:choose>
 			
-								<c:when test="${showbSubmit==1}">
+								<c:when test="${model.showbSubmit==1}">
 									<td colspan="7"><abc:i18n property="commons.button.save" /><input
 										type="submit" name="save"
 										value="<fmt:message key="commons.button.save"/>" class="button" />&nbsp;&nbsp;&nbsp;
@@ -419,21 +421,21 @@ function cancelApp(){
 										class="button" /></td>
 								</c:when>
 								
-								<c:when test="${showbSubmit==0}">
+								<c:when test="${model.showbSubmit==0}">
 								
 									<td colspan="6">
 									<font size="+2" color="green">
 									<abc:i18n
 										property="requestsApproval.requestsApprovalForm.reqStatus" /> <fmt:message
 										key="requestsApproval.requestsApprovalForm.reqStatus" /> : 
-									<c:if test="${requestInfo.approved==1}">					
+									<c:if test="${model.requestInfo.approved==1}">					
 									
 									<abc:i18n
 										property="requestsApproval.requestsApprovalForm.reqApproval" />
 									<fmt:message
 										key="requestsApproval.requestsApprovalForm.reqApproval" />
 									</c:if>
-									<c:if test="${requestInfo.approved==99}">					
+									<c:if test="${model.requestInfo.approved==99}">					
 									
 									<abc:i18n
 										property="requestsApproval.requestsApprovalForm.reqRejected" />
@@ -441,7 +443,7 @@ function cancelApp(){
 										key="requestsApproval.requestsApprovalForm.reqRejected" />
 									</c:if>
 									
-									<c:if test="${requestInfo.approved==0}">					
+									<c:if test="${model.requestInfo.approved==0}">					
 										لم يكتمل	
 										في انتظار موافقة الموظف المسئول
 									</c:if>
@@ -461,7 +463,7 @@ function cancelApp(){
 				</td>
 			</tr>
 		</table>
-			</form>
+			</form:form>
 	</c:if>
 	<!-- </div>
 

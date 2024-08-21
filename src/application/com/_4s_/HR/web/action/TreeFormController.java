@@ -3,11 +3,13 @@ package com._4s_.HR.web.action;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com._4s_.HR.service.HRManager;
@@ -31,12 +33,13 @@ public class TreeFormController extends  BaseSimpleFormController{
 	}
 	
 	
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{
+	@RequestMapping(method = RequestMethod.GET)  
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start parent formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
          
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End  parent formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		   return new TreeDivisions();
+		model.addAttribute(new TreeDivisions());
+		   return "treeForm";
 		}
 	
 	

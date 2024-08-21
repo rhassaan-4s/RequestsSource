@@ -8,7 +8,8 @@
 	rel="stylesheet" media="screen" />
 <link rel="stylesheet" type="text/css" media="print, handheld"
 	href="/Requests/web/common/css/print.css">
-
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="authz"%>
 	<%
 		TimesheetSpecs specs = (TimesheetSpecs) session.getAttribute("timesheetSpecs");
 		Object partName1 = session.getAttribute("partName1");
@@ -21,7 +22,6 @@
 	
 <div id="smoothmenu1" class="ddsmoothmenu">
 	<ul>
-		<authz:authorize access="hasRole('CAN_VIEW_page_requestsApproval')">
 
 			<li><a href="#"><fmt:message
 						key="timesheet.menu.basicScreens" /></a>
@@ -71,12 +71,11 @@
 					</a></li>
 
 				</ul></li>
-		</authz:authorize>
 		
 			<li><a href="/Requests/timesheet/timesheetTrans.html"><fmt:message
 						key="timesheet.header.timesheetTrans" /></a></li>
-		<!-- 	
-	<authz:authorize access="hasRole('CAN_VIEW_page_requestsApproval')" >
+			
+	<authz:authorize access="hasAuthority('CAN_VIEW_page_requestsApproval')" >
 	<li><a href="#"><fmt:message key="requestsApproval.menu.reports" /></a>
 		<ul>
 	        <li>
@@ -118,72 +117,7 @@
 		</ul>		
 	</li>
 	</authz:authorize>
-	 -->
-		<!-- 
-	<li><a href="#"><fmt:message key="commons.menu.reports" /></a>
-			<ul>
-	        <li>
-	        	<abc:i18n property="requestsApproval.header.timeAttendanceReport" />
-	        	<a href="/Requests/requestsApproval/timeAttendanceReport.html"> &nbsp;&nbsp;
-	        	<fmt:message key="requestsApproval.header.timeAttendanceReport" />
-	        	</a>
-			</li>
-
-				<li><abc:i18n
-						property="requestsApproval.header.annualVacationBalance2" /> <a
-					href="/Requests/requestsApproval/annualVacationBalance.html">
-						&nbsp;&nbsp; <fmt:message
-							key="requestsApproval.header.annualVacationBalance2" />
-				</a></li>
-				<li><abc:i18n
-						property="requestsApproval.header.attendanceVacationReport" /> <a
-					href="/Requests/requestsApproval/attendanceVacationReport.html">
-						&nbsp;&nbsp; <fmt:message
-							key="requestsApproval.header.attendanceVacationReport" />
-				</a></li>
-				
-				<li>
-		        	<abc:i18n property="requestsApproval.header.requestStatusReports" />
-		        	<a href="/Requests/requestsApproval/requestStatusReports.html"> &nbsp;&nbsp;
-		        	<fmt:message key="requestsApproval.header.requestStatusReports" />
-		        	</a>
-				</li>
-			</ul>	
-		
-	</li>
-		
-	 -->
-		<!-- 
-	<li><a href="#"><fmt:message
-		key="requestsApproval.menu.settings" /></a>
-		<ul>
-			<li><a href="/Requests/requestsApproval/changeProfileForm.html"><abc:i18n
-				property="requestsApproval.header.changePassword" /> <fmt:message
-				key="requestsApproval.header.changePassword" /></a></li>		
-		
-			<li><a href="/Requests/requestsApproval/annualVacLimitSetting.html"><fmt:message
-				key="requestsApproval.header.annualVacLimitSetting" /></a>
-			</li>
-		</ul>
-	</li>
-		<li><a href="#"><fmt:message key="commons.menu.help" /></a>
-				<ul>
-		        <li>
-		        	<abc:i18n property="requestsApproval.header.CompanyRules" />
-		        	<a href="Requests/../../CompanyRules.pdf"> &nbsp;&nbsp;
-		        	<fmt:message key="requestsApproval.header.CompanyRules" />
-		        	</a>
-				</li>
-				 <li>
-		        	<abc:i18n property="requestsApproval.header.manual" />
-		        	<a href="Requests/../../manual.pdf"> &nbsp;&nbsp;
-		        	<fmt:message key="requestsApproval.header.manual" />
-		        	</a>
-				</li>
-				</ul>	
-			
-		</li>
- -->
+	 
 		<li><a href="/Requests/security/logout.html"><fmt:message
 					key="commons.menu.logout" /></a></li>
 	</ul>

@@ -39,30 +39,30 @@
 	</bean>
 	
 
-	<bean id="regionBinder" class="com._4s_.attendance.web.binders.RegionBinder" singleton="false" >
+	<bean id="regionBinder" class="com._4s_.attendance.web.binders.RegionBinder" >
 	    <property name="baseManager">
 			<ref bean="baseManager"/>
 	    </property>
 	</bean>
 	
-	<bean id="sectorBinder" class="com._4s_.attendance.web.binders.SectorBinder" singleton="false" >
+	<bean id="sectorBinder" class="com._4s_.attendance.web.binders.SectorBinder" >
 	    <property name="baseManager">
 			<ref bean="baseManager"/>
 	    </property>
 	</bean>
-	<bean id="degreeBinder" class="com._4s_.attendance.web.binders.DegreeBinder" singleton="false" >
-	    <property name="baseManager">
-			<ref bean="baseManager"/>
-	    </property>
-	</bean>
-	
-	<bean id="employeeAttendanceBinder" class="com._4s_.attendance.web.binders.EmployeeBinder" singleton="false" >
+	<bean id="degreeBinder" class="com._4s_.attendance.web.binders.DegreeBinder" >
 	    <property name="baseManager">
 			<ref bean="baseManager"/>
 	    </property>
 	</bean>
 	
-	<bean id="workPeriodMasterBinder" class="com._4s_.attendance.web.binders.WorkPeriodMasterBinder" singleton="false" >
+	<bean id="employeeAttendanceBinder" class="com._4s_.attendance.web.binders.EmployeeBinder" >
+	    <property name="baseManager">
+			<ref bean="baseManager"/>
+	    </property>
+	</bean>
+	
+	<bean id="workPeriodMasterBinder" class="com._4s_.attendance.web.binders.WorkPeriodMasterBinder" >
 	    <property name="baseManager">
 			<ref bean="baseManager"/>
 	    </property>

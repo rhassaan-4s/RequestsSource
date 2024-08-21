@@ -365,9 +365,15 @@ public class TimesheetManagerImpl extends BaseManagerImpl implements TimesheetMa
 			Settings settings = (Settings)timesheetDAO.getObject(Settings.class,new Long(1));
 			
 			DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
-			
-			TimesheetActivity activityObj = (TimesheetActivity)getObjectByParameter(TimesheetActivity.class, "activity", activity);
-			TimesheetCostCenter costcenterObj = (TimesheetCostCenter)getObjectByParameter(TimesheetCostCenter.class, "costCode", costcenter);
+			log.debug("activity " + activity);
+			TimesheetActivity activityObj = null;
+			if (activity !=null && !activity.isEmpty()) {
+				activityObj = (TimesheetActivity)getObjectByParameter(TimesheetActivity.class, "activity", activity);
+			}
+			TimesheetCostCenter costcenterObj = null;
+			if (activity !=null && !activity.isEmpty()) {
+				costcenterObj = (TimesheetCostCenter)getObjectByParameter(TimesheetCostCenter.class, "costCode", costcenter);
+			}
 			TimesheetTransactionParts nullPart = (TimesheetTransactionParts)getObjectByParameter(TimesheetTransactionParts.class, "code", "9999999999");
 			TimesheetTransactionParts partObj1 = null;
 			TimesheetTransactionParts partObj2 = null;

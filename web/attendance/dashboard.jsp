@@ -232,8 +232,9 @@
 
 
 
-	<form method="POST"
-		action="<c:url value="/attendance/dashboard.html"/>">
+	<form:form method="POST"
+					action="/Requests/attendance/dashboard.html"
+					modelAttribute="report">
 
 		<input type="hidden" id="absence" name="absence" value="${absence}" />
 		<input type="hidden" id="attendance" name="attendance"
@@ -286,8 +287,7 @@
 
 		</table>
 
-	</form>
-
+</form:form>
 
 
 	<%@ include file="/web/common/includes/footer.jsp"%>

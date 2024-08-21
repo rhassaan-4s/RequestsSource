@@ -123,9 +123,9 @@ public class PublicLeavesForm extends BaseSimpleFormController{
 	}
 
 	@Override
-	public void initBinder(WebDataBinder binder) {
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		super.initBinder(binder);
+		super.initBinder(request,binder);
 		binder.registerCustomEditor(BiCalendarDateBinder.class, dateBinder);
 	}
 	//**************************************** onBind ***********************************************\\	

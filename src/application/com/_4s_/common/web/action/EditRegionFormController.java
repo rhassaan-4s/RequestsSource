@@ -9,9 +9,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -20,19 +23,41 @@ import com._4s_.common.model.City;
 import com._4s_.common.model.Country;
 import com._4s_.common.model.Region;
 import com._4s_.common.service.CommonManager;
+import com._4s_.common.web.binders.BaseBinder;
 
 @Controller
 @RequestMapping("/commonAdminEditRegion.html")
 public class EditRegionFormController extends BaseSimpleFormController
 {
+	@Autowired
 	CommonManager commonManager=null;
+	@Autowired
+	@Qualifier("countryBinder")
+	private BaseBinder countryBinder;
+	
+	
 	public CommonManager getCommonManager() {
 		return commonManager;
 	}
-
 	public void setCommonManager(CommonManager commonManager) {
 		this.commonManager = commonManager;
 	}
+	
+	
+	public BaseBinder getCountryBinder() {
+		return countryBinder;
+	}
+	public void setCountryBinder(BaseBinder countryBinder) {
+		this.countryBinder = countryBinder;
+	}
+	@Override
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
+
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		super.initBinder(request,binder);
+		binder.registerCustomEditor(Country.class, countryBinder);
+	}
+
 
 	protected Object formBackingObject (HttpServletRequest request)
 	throws ServletException

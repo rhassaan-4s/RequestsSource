@@ -1,6 +1,7 @@
 package com._4s_.requestsApproval.web.action;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,22 +10,36 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.common.web.binders.DomainObjectBinder;
 import com._4s_.requestsApproval.model.AccessLevels;
 import com._4s_.requestsApproval.model.EmpReqApproval;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
+import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 
+@Controller
+@RequestMapping("/attendanceRequestsApprovalForm.html")
 public class AttendanceRequestsApprovalForm extends BaseSimpleFormController {
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
+	
+	@Autowired
+	@Qualifier("loginUsersBinder")
+	private DomainObjectBinder loginUsersBinder;
 
 	public RequestsApprovalManager getRequestsApprovalManager() {
 		return requestsApprovalManager;
@@ -45,6 +60,13 @@ public class AttendanceRequestsApprovalForm extends BaseSimpleFormController {
 		return accessLevel;
 	}
 
+	@Override
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		super.initBinder(request,binder);
+		binder.registerCustomEditor(LoginUsers.class, loginUsersBinder);
+	}
+	
 	// **************************************** referenceData
 	// ***********************************************\\
 	protected Map referenceData(HttpServletRequest request, Object command,

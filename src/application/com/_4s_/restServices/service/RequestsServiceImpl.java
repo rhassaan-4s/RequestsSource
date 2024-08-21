@@ -1,5 +1,6 @@
 package com._4s_.restServices.service;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -312,7 +313,11 @@ private Map createManualAttendance(LoginUsers loginUsers, MultiCalendarDate mCal
 		loginUsersRequests.setRequestNumber(requestNumber);
 	}
 
-	loginUsersRequests.setRequest_date(mCalDate.getDate());
+	SimpleDateFormat finalformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+	String formatted = finalformat.format(mCalDate.getDate());
+	System.out.println("TimestampBinder --- formatted ------"+formatted);
+	Timestamp time = Timestamp.valueOf(formatted);
+	loginUsersRequests.setRequest_date(time);
 	loginUsersRequests.setPeriod_from(mCalDate.getDate());
 
 	if(loginUsersRequests.getApproved()==null || loginUsersRequests.getApproved().equals("")){
@@ -477,7 +482,11 @@ public LoginUsersRequests handleVacations(AttendanceRequest userRequest, Long em
 	withoutSalVac.setEmpCode(emp.getEmpCode());
 	log.debug("login user " + loginUsers);
 	withoutSalVac.setLogin_user(loginUsers);
-	withoutSalVac.setRequest_date(Calendar.getInstance().getTime());
+	SimpleDateFormat finalformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+	String formatted = finalformat.format(Calendar.getInstance().getTime());
+	System.out.println("TimestampBinder --- formatted ------"+formatted);
+	Timestamp time = Timestamp.valueOf(formatted);
+	withoutSalVac.setRequest_date(time);
 	log.debug("userRequest notes " + userRequest.getNotes());
 	withoutSalVac.setApproved(new Long(0));
 	withoutSalVac.setApplicable(new Long(1));
@@ -942,7 +951,11 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 //			loginUsersRequests.setRequest_date(mCalDate.getDate());
 //		}
 
-		loginUsersRequests.setRequest_date(Calendar.getInstance().getTime());
+		SimpleDateFormat finalformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		String formatted = finalformat.format(Calendar.getInstance().getTime());
+		System.out.println("TimestampBinder --- formatted ------"+formatted);
+		Timestamp time = Timestamp.valueOf(formatted);
+		loginUsersRequests.setRequest_date(time);
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		
@@ -1156,7 +1169,10 @@ public Map userRequest(AttendanceRequest userRequest,Long empId) {
 		loginUsersRequests.setNotes(userRequest.getNotes());
 	}
 	
-	loginUsersRequests.setRequest_date(Calendar.getInstance().getTime());
+	formatted = finalformat.format(Calendar.getInstance().getTime());
+	System.out.println("TimestampBinder --- formatted ------"+formatted);
+	time = Timestamp.valueOf(formatted);
+	loginUsersRequests.setRequest_date(time);
 	
 	if(loginUsersRequests.getPeriod_from()!=null) {
 		loginUsersRequests.setFrom_date(loginUsersRequests.getPeriod_from());
@@ -1295,17 +1311,35 @@ public Map approveRequest(RequestApproval requestApproval,Employee emp) {
 	}
 }
 
+public Map getRequestStatus(Long req_id) {
+	RestStatus status = new RestStatus();
+	Map response = new HashMap();
+	List reqStatus = requestsApprovalManager.getRequestStatus(req_id);
+	
+	status.setCode("200");
+	status.setMessage("Request Inserted Successfully");
+	status.setStatus("true");
+	response.put("Status", status);
+	response.put("Response", reqStatus);
+	log.debug("request status returned finished");
+	return response ;
+}
+
 public Map getVacInfo(RequestApproval requestApproval) {
 	RestStatus status = new RestStatus();
 	Object obj = null;
 	Vacation vac = null;
 	Map response = new HashMap();
 	if (requestApproval.getRequestId() != null) {
+		log.debug("request id " + requestApproval.getRequestId());
 		obj = requestsApprovalManager.getObject(LoginUsersRequests.class, new Long(requestApproval.getRequestId()));
 	} else if (requestApproval.getVac()!= null && !requestApproval.getVac().isEmpty() 
 			&& requestApproval.getEmpCode()!=null && !requestApproval.getEmpCode().isEmpty()){
+		log.debug("requestApproval.getVac() " + requestApproval.getVac());
 		vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class, "vacation", requestApproval.getVac());
+		log.debug("vac " + vac);
 	} else {
+		log.debug("error");
 		status.setCode("303");
 		status.setMessage("Null/Empty input parameter");
 		status.setStatus("false");
@@ -1315,10 +1349,13 @@ public Map getVacInfo(RequestApproval requestApproval) {
 	
 	Date from = null;
 	MultiCalendarDate mCalDateFrom = new MultiCalendarDate();
+	log.debug("will check date");
+	log.debug(requestApproval.getFromDate());
 	if (requestApproval.getFromDate() != null && !requestApproval.getFromDate().isEmpty()) {
 		DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
 		try {
 			from = df.parse(requestApproval.getFromDate());
+			log.debug("from date " + from);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			log.debug(e.getMessage());
@@ -1337,7 +1374,10 @@ public Map getVacInfo(RequestApproval requestApproval) {
 //		status.setStatus("false");
 //		response.put("Status", status);
 //		return response;
-		return requestsApprovalManager.getVacInfo(vac,from,requestApproval.getEmpCode());
+		log.debug("will return vacinfo");
+		Map vacInfo = requestsApprovalManager.getVacInfo(vac,from,requestApproval.getEmpCode());
+		log.debug(vacInfo);
+		return vacInfo;
 	} else if (obj!=null){
 		log.debug("object " + obj);
 		LoginUsersRequests loginUser = (LoginUsersRequests)obj;

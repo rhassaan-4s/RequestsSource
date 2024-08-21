@@ -225,7 +225,7 @@ public class ValidateAttendanceSignInOut implements Validator {
 		}
 	}
 	
-	public void validateBrabch(User user, Errors errors) {
+	public void validateBranch(User user, Errors errors) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>  ");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "employee.branch",
 				"commons.errors.requiredFields", "");

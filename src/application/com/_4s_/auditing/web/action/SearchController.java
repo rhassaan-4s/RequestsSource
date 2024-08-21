@@ -10,19 +10,30 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com._4s_.attendance.web.binders.EmpBasicBinder;
 import com._4s_.auditing.model.AuditLogRecord;
 import com._4s_.auditing.model.AuditSearchCommand;
 import com._4s_.auditing.model.Auditable;
 import com._4s_.auditing.model.ClassName;
 import com._4s_.auditing.service.AuditLogManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.common.web.binders.DomainObjectBinder;
+import com._4s_.common.web.binders.TimestampBinder;
 import com._4s_.security.model.User;
 
+@Controller
+@RequestMapping("/searchController.html")
 public class SearchController extends BaseSimpleFormController {
+	@Autowired
 	private AuditLogManager mgr = null;
 
 	public AuditLogManager getMgr() {
@@ -33,6 +44,22 @@ public class SearchController extends BaseSimpleFormController {
 		this.mgr = mgr;
 	}
 
+	@Autowired
+	@Qualifier("timestampBinder")
+	private TimestampBinder timestampBinder;
+	
+	@Autowired
+	@Qualifier("userBinder")
+	private DomainObjectBinder userBinder;
+	
+	@Override
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		super.initBinder(request,binder);
+		binder.registerCustomEditor(Date.class, timestampBinder);
+		binder.registerCustomEditor(User.class, userBinder);
+	}
+	
 	protected ModelAndView onSubmit(HttpServletRequest request,
 			HttpServletResponse response, Object command, BindException error)
 			throws Exception {

@@ -134,9 +134,7 @@ var options = {
 								<fmt:message key="requestsApproval.caption.requestDate"/>
 							</td>
 							<td  class="formBodControl">
-								<spring:bind path="loginUsersRequests.request_date">
-									<input type="text"  readonly="readonly"  dir="ltr"  name="${status.expression}" id="${status.expression}"  value="${dateNow}" />
-								</spring:bind>
+									<input type="text"  readonly="readonly"  dir="ltr"  value="${dateNow}" />
 							</td>
 						</tr>								
 						<tr>

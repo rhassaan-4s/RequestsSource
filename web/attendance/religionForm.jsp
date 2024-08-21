@@ -4,8 +4,8 @@
 	
 </script>
 
-<form id="religionForm" name="religionForm" method="POST"
-	action="<c:url value="/attendance/religionForm.html"/>">
+<form:form method="POST" modelAttribute="religion"
+	action="/Requests/attendance/religionForm.html">
 
 <input type="hidden" id="religionCode" name="religionCode"
 			value="${religionCode}" />
@@ -93,7 +93,6 @@
 		</tr>
 
 	</table>
-</form>
-
+</form:form>
 
 <%@ include file="/web/common/includes/footer.jsp"%>

@@ -1,5 +1,8 @@
 package com._4s_.requestsApproval.web.action;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.core.MediaType;
 
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -35,14 +39,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.common.web.binders.BiCalendarDateBinder;
+import com._4s_.common.web.binders.DateTimeBinder;
 import com._4s_.common.web.binders.DomainObjectBinder;
 import com._4s_.common.web.binders.MainBinder;
+import com._4s_.common.web.binders.TimestampBinder;
 import com._4s_.requestsApproval.model.AccessLevels;
 import com._4s_.requestsApproval.model.AnnualVacLimit;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
@@ -60,13 +69,13 @@ import com._4s_.restServices.service.RequestsService;
 public class LoginUsersRequestsForm extends BaseSimpleFormController{
 
 	@Autowired
-	RequestsApprovalManager requestsApprovalManager;
+	private RequestsApprovalManager requestsApprovalManager;
 	@Autowired
-	RequestsService requestsService;
+	private RequestsService requestsService;
 	@Autowired
 	private JavaMailSenderImpl mailSender;
-	@Autowired
-	private ValidateLoginUsersRequestForm validateLoginUsersRequest;
+//	@Autowired
+//	private ValidateLoginUsersRequestForm validateLoginUsersRequest;
 	@Autowired
 	@Qualifier("requestTypesBinder")
 	private DomainObjectBinder requestTypesBinder;
@@ -77,6 +86,12 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 	@Qualifier("dateBinder")
 	private BiCalendarDateBinder dateBinder;
 	@Autowired
+	@Qualifier("dateTimeBinder")
+	private DateTimeBinder dateTimeBinder;
+	@Autowired
+	@Qualifier("timestampBinder")
+	private TimestampBinder timestampBinder;
+	@Autowired
 	@Qualifier("vacationBinder")
 	private MainBinder vacationBinder;
 	
@@ -84,6 +99,18 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 	
 	private String SMTP_AUTH_PWD; 
 
+	public DateTimeBinder getDateTimeBinder() {
+		return dateTimeBinder;
+	}
+	public void setDateTimeBinder(DateTimeBinder dateTimeBinder) {
+		this.dateTimeBinder = dateTimeBinder;
+	}
+	public TimestampBinder getTimestampBinder() {
+		return timestampBinder;
+	}
+	public void setTimestampBinder(TimestampBinder timestampBinder) {
+		this.timestampBinder = timestampBinder;
+	}
 	
 	public RequestsService getRequestsService() {
 		return requestsService;
@@ -129,14 +156,14 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 	public void setMailSender(JavaMailSenderImpl mailSender) {
 		this.mailSender = mailSender;
 	}
-	public ValidateLoginUsersRequestForm getValidateLoginUsersRequest() {
-		return validateLoginUsersRequest;
-	}
-	public void setValidateLoginUsersRequest(ValidateLoginUsersRequestForm validateLoginUsersRequest) {
-		this.validateLoginUsersRequest = validateLoginUsersRequest;
-	}
+//	public ValidateLoginUsersRequestForm getValidateLoginUsersRequest() {
+//		return validateLoginUsersRequest;
+//	}
+//	public void setValidateLoginUsersRequest(ValidateLoginUsersRequestForm validateLoginUsersRequest) {
+//		this.validateLoginUsersRequest = validateLoginUsersRequest;
+//	}
 
-	@RequestMapping(value="/vacInfo", method=RequestMethod.POST,
+	@RequestMapping(value="/vacInfo", method=RequestMethod.GET,
 			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody
 	public Map vacInfo (String vac, String empCode) {
@@ -505,28 +532,41 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		return model;
 	}
 	
-	
-
 	@Override
-	public void initBinder(WebDataBinder binder) {
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		super.initBinder(binder);
+		super.initBinder(request,binder);
 		binder.registerCustomEditor(RequestTypes.class, requestTypesBinder);
 		binder.registerCustomEditor(LoginUsers.class, loginUsersBinder);
 		binder.registerCustomEditor(Date.class, dateBinder);
+		binder.registerCustomEditor(Date.class, dateTimeBinder);
+		binder.registerCustomEditor(TimestampBinder.class, timestampBinder);
 		binder.registerCustomEditor(Vacation.class, vacationBinder);
 	}
-
-	@RequestMapping(method = RequestMethod.POST)
-	public String processSubmit(HttpServletRequest request,
-			@Valid@ModelAttribute("loginUsersRequests") LoginUsersRequests command,
-			BindingResult result, Model model) throws Exception {//SessionStatus status,
+//method=RequestMethod.POST,
+	@RequestMapping(method=RequestMethod.POST)//,consumes=MediaType.APPLICATION_FORM_URLENCODED
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid@ModelAttribute("loginUsersRequests") LoginUsersRequests command
+			,BindingResult result 
+			,SessionStatus status
+			,Map model
+			) {
 		
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting process submit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		
+		log.debug(result);
 		LoginUsersRequests loginUsersRequests=command;
+		Employee emp =(Employee) request.getSession().getAttribute("employee");
+		log.debug("----emp from session---"+request.getSession().getAttribute("employee"));
+		
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
+		if (loginUsersRequests.getLogin_user()==null) {
+			loginUsersRequests.setLogin_user(loginUsers);
+			loginUsersRequests.setEmpCode(loginUsers.getEmpCode().getEmpCode());
+		}
 //		request.getSession().setAttribute("loginUsersRequests", loginUsersRequests);
-		log.debug("----loginUsersRequests.getId()-onsubmit-----"+loginUsersRequests.getId()+"-----loginUsersRequests---"+loginUsersRequests.getLogin_user().getEmpCode());
+//		log.debug("----loginUsersRequests.getId()-onsubmit-----"+loginUsersRequests.getId()+"-----loginUsersRequests---"+loginUsersRequests.getLogin_user().getEmpCode());
 		log.debug("------date from command---"+loginUsersRequests.getFrom_date());
 		log.debug("------period from command---"+loginUsersRequests.getPeriod_from()+ "loginUsersRequests.getPeriod_to()" + loginUsersRequests.getPeriod_to());
 		
@@ -543,7 +583,18 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		if (accuracy!=null && !accuracy.isEmpty()) {
 			Long acc = Math.round(Double.parseDouble(accuracy));
 			if (settings.getLocationAccuracy()>= acc.intValue()) {
-				address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
+				try {
+					address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		if (loginUsersRequests.getFrom_date()!=null) {
@@ -558,7 +609,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 			if (loginUsersRequests.getId() == null){
 				requestNumber=requestsApprovalManager.CreateRequestNumber();
 				loginUsersRequests.setRequestNumber(requestNumber);
-				loginUsersRequests.setRequest_date(Calendar.getInstance().getTime());
+				loginUsersRequests.setRequest_date(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			}
 			log.debug("loginUsersRequests.getEmpCode() entered--------"+loginUsersRequests.getEmpCode());
 			
@@ -583,7 +634,8 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 						toCalErrand.set(Calendar.HOUR_OF_DAY, 23);
 						toCalErrand.set(Calendar.MINUTE, 59);
 						toCalErrand.set(Calendar.SECOND, 59);
-						loginUsersRequests.setPeriod_to(toCalErrand.getTime());
+						Timestamp ts = new Timestamp(toCalErrand.getTime().getTime());
+						loginUsersRequests.setPeriod_to(ts);
 					} else if(loginUsersRequests.getRequest_id().getId()==5) {
 //						loginUsersRequests.setRequest_id(loginUsersRequests.getRequest_id().getParentId());
 //						loginUsersRequests.setVacation(vac);
@@ -695,20 +747,27 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 				loginUsersRequests.setRequestNumber(requestNumber);
 			}
 			//////////////////////////////////////////////////////////////
-			
+			log.debug(loginUsersRequests.getAltDate()+","+loginUsersRequests.getApplicable()+","+ loginUsersRequests.getApproved()+",\n"
+			+ loginUsersRequests.getEmpCode()+","+ loginUsersRequests.getFrom_date()+","+ loginUsersRequests.getFrom_date_history()+","+ loginUsersRequests.getInputType()+",\n"
+					+ loginUsersRequests.getIsInsideCompany()+","+ loginUsersRequests.getLatitude()+","+ loginUsersRequests.getLeave_effect()+",\n"
+			+ loginUsersRequests.getLeave_type()+","+ loginUsersRequests.getLocationAddress()+","+ loginUsersRequests.getLogin_user()+","+ loginUsersRequests.getLongitude()+",\n"
+					+ loginUsersRequests.getManagerModifiedDate()+","+ loginUsersRequests.getNotes()+","+ loginUsersRequests.getPayed()+","+ loginUsersRequests.getPeriod_from()+",\n"
+			+ loginUsersRequests.getPeriod_to()+","+ loginUsersRequests.getPosted()+","+ loginUsersRequests.getReply()+","+ loginUsersRequests.getRequestNumber()+",\n"
+					+ loginUsersRequests.getRequest_date()+","+ loginUsersRequests.getRequest_id()+","+ loginUsersRequests.getTo_date()+","+ loginUsersRequests.getVacCredit()+",\n"
+			+ loginUsersRequests.getVacation()+","+ loginUsersRequests.getWithdrawDays()+","+ loginUsersRequests.getId());
 			requestsApprovalManager.saveObject(loginUsersRequests);
-				
+			log.debug("loginUsersRequests.getId() " + loginUsersRequests.getId());
 			request.getSession().setAttribute("requestNumber", loginUsersRequests.getId());
 			
-//			String url="loginUsersRequestsForm.html?done=true&requestId="+reqId;
-			model.addAttribute("done","true");
-			model.addAttribute("requestId", reqId);
-			log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<  End onSubmit : <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-	
-			model.addAttribute("settings", settings);
-//			return new ModelAndView(new RedirectView(url),model);
+			String url="loginUsersRequestsForm.html?done=true&requestId="+reqId;
+//			model.put("done","true");
+//			model.put("requestId", reqId);
+//			log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<  End onSubmit : <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+//	
+//			model.put("settings", settings);
+			return new ModelAndView(new RedirectView(url),model);
 		
-		return "loginUsersRequestsForm";
+//		return "loginUsersRequestsForm";
 	}
 
 	

@@ -3,12 +3,15 @@ package com._4s_.HR.web.action;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,6 +23,7 @@ import com._4s_.HR.model.HREmployeeDocuments;
 import com._4s_.HR.model.HREmployeeRelative;
 import com._4s_.HR.service.HRManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.requestsApproval.model.LoginUsersRequests;
 
 public class EmployeeDocumentsForm extends BaseSimpleFormController {
 	 protected HRManager hrManager = null;
@@ -34,8 +38,8 @@ public class EmployeeDocumentsForm extends BaseSimpleFormController {
 		}
 	
 	//**************************************** formBackingObject ***********************************************\\
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{
+	@RequestMapping(method = RequestMethod.GET)  
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		HREmployeeDocuments hrEmployeeDocuments=null;
 		String empDocumentsId=request.getParameter("empDocumentsId");
@@ -54,10 +58,11 @@ public class EmployeeDocumentsForm extends BaseSimpleFormController {
 		}
     
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	   return hrEmployeeDocuments;
+		model.addAttribute("hrEmployeeDocuments",hrEmployeeDocuments);
+	   return "employeeDocumentsForm";
 	}
 //**************************************** referenceData ***********************************************\\
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+	@ModelAttribute("model")	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,@ModelAttribute HREmployeeDocuments command,HttpServletRequest request) 
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		 Map model=new HashMap();

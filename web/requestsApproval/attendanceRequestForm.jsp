@@ -64,20 +64,16 @@
 		<td colspan="2" height="20"></td>
 	</tr>
 	<tr>
-		<td colspan="2">
-			<spring:bind path="loginUsersRequests.*">
-				<c:if test="${not empty status.errorMessages}">
-					<div><c:forEach var="error" items="${status.errorMessages}">
-						<font color="red"> <c:out value="${error}" escapeXml="false" /><br />
-						</font>
-					</c:forEach></div>
-				</c:if>
-			</spring:bind>
-		</td>
-	</tr>
+			<td colspan="2">
+
+				<h2 style="color: red;">
+					<form:errors path="loginUsersRequests.*" />
+				</h2>
+			</td>
+		</tr>
 	<tr>
 		<td>
-			<c:if test="${done==true}"><font color="blue" size="5"> 
+			<c:if test="${model.done==true}"><font color="blue" size="5"> 
 	        <abc:i18n	property="requestsApproval.loginUsersRequests.saveSuccess" /><fmt:message
 					key="requestsApproval.loginUsersRequests.saveSuccess" />
 	 		</font>
@@ -89,10 +85,11 @@
 	<tr>
 		<td>
 		
-			<form action="/Requests/requestsApproval/attendanceRequestForm.html" method="POST" >
+			<form:form method="POST" modelAttribute="loginUsersRequests"
+				action="/Requests/requestsApproval/attendanceRequestForm.html">
 					 <c:set var="dateNow" value="<%=nowDate%>" />
 					 
-					 <input type="hidden"  id="empRequestTypeId" name="empRequestTypeId" value="${empRequestTypeId }"/>
+					 <input type="hidden"  id="empRequestTypeId" name="empRequestTypeId" value="${model.empRequestTypeId}"/>
 					   <input type="hidden" name="longitude" id="longitude" value=""/>
 					 <input type="hidden" name="latitude" id="latitude" value=""/>
 					 <input type="hidden" name="accuracy" id="accuracy" value=""/>
@@ -197,7 +194,7 @@
 							</td>
 						</tr>					
 					</table>
-			</form>
+			</form:form>
 		</td>
 	</tr>
 </table>

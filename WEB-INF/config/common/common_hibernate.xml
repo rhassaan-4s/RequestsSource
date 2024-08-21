@@ -46,6 +46,19 @@
 		<property name="password">
 			<value>${hibernate.connection.password}</value>
 		</property>
+		
+		<!--<property name="hibernate.connection.charSet">
+			<value>utf8</value>
+		</property>
+		<property name="hibernate.connection.characterEncoding">
+			<value>utf8</value>
+		</property>
+		<property name="hibernate.connection.useUnicode">
+			<value>true</value>
+		</property>
+		<property name="hibernate.connection.defaultNChar">
+		 	<value>true</value>
+		 </property>-->
 	</bean>
 
 	<!-- Hibernate SessionFactory -->

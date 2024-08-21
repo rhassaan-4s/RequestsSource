@@ -5,17 +5,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.attendance.service.AttendanceManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.timesheet.web.validate.ValidationStatus;
 
@@ -31,8 +35,8 @@ public class VacationForm extends BaseSimpleFormController{
 		this.attendanceManager = attendanceManager;
 	}
 
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{
+	@RequestMapping(method = RequestMethod.GET)  
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		String vacationCode=request.getParameter("vacationCode");
 		log.debug("--------vacationCode------"+vacationCode);
@@ -54,11 +58,13 @@ public class VacationForm extends BaseSimpleFormController{
 		log.debug("---------vacation-------"+vacation);
 		log.debug("---------vacation.may transfer-------"+vacation.getMay_transfer());
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	   return vacation;
+		model.addAttribute(vacation);
+	   return "vacationForm";
 	}
 	
 	//**************************************** referenceData ***********************************************\\
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+	@ModelAttribute("model")	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,@ModelAttribute Vacation command
+			,HttpServletRequest request) 
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		Vacation vacation= (Vacation) command;

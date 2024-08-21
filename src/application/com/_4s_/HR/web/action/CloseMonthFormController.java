@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -47,7 +48,8 @@ public class CloseMonthFormController extends  BaseSimpleFormController{
 	}
 	
 	//**************************************** referenceData ***********************************************\\
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException{
+	@ModelAttribute("model")	
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
 		Map model=new HashMap();

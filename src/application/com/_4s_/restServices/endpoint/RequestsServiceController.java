@@ -469,6 +469,13 @@ public class RequestsServiceController {
 		return requestsService.getVacInfo(requestApproval);
 	}
 	
+	@RequestMapping(value="/requestStatus", method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@ResponseBody
+	public Map requestStatus (Long reqId) {
+		return requestsService.getRequestStatus(reqId);
+	}
+	
 	@RequestMapping(value="/vacTypes", method=RequestMethod.POST,
 			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
 	@ResponseBody

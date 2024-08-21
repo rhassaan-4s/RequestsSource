@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -35,6 +36,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
+import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.common.web.action.CommonController;
 import com._4s_.common.web.binders.DateTimeBinder;
 import com._4s_.common.web.binders.DomainObjectBinder;
@@ -46,10 +48,20 @@ import com._4s_.restServices.json.RequestApproval;
 
 @Controller
 @RequestMapping("/requestStatusReports.html")
-public class RequestStatusReports extends CommonController {
+public class RequestStatusReports extends BaseSimpleFormController {
 	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
 
+	@Autowired
+	@Qualifier("requestTypesBinder")
+	private DomainObjectBinder requestTypesBinder;
+	@Autowired
+	@Qualifier("loginUsersBinder")
+	private DomainObjectBinder loginUsersBinder;
+	@Autowired
+	@Qualifier("requestTypesBinder")
+	private DomainObjectBinder dateTimeBinder;
+	
 	public RequestsApprovalManager getRequestsApprovalManager() {
 		return requestsApprovalManager;
 	}
@@ -59,7 +71,16 @@ public class RequestStatusReports extends CommonController {
 		this.requestsApprovalManager = requestsApprovalManager;
 	}
 	
-//	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
+	@Override
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		super.initBinder(request,binder);
+		binder.registerCustomEditor(RequestTypes.class, requestTypesBinder);
+		binder.registerCustomEditor(LoginUsers.class, loginUsersBinder);
+		binder.registerCustomEditor(Date.class, dateTimeBinder);
+	}
+	
+//	@RequestMapping(method = RequestMethod.GET)  public String initForm(ModelMap model,HttpServletRequest request){
 //	{
 	@RequestMapping(method = RequestMethod.GET)
 	public String initForm(ModelMap model,HttpServletRequest request){
@@ -74,7 +95,7 @@ public class RequestStatusReports extends CommonController {
 	}
 	
 	//**************************************** referenceData ***********************************************\\
-//	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+//	@ModelAttribute("model")	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) 
 //	{
 	@ModelAttribute("model")
 	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) {

@@ -23,59 +23,63 @@
 			var vac = $("select#annualVacation").val(); // annual vaction = define value of selected option
 			var empCode = $("input#empCode").val();
 			var token = $("input#token").val();
-			alert(token);
+			var from_date = $("input#request_date").val(); 
+			//alert(token);
 			//alert("vac " + vac);
 			//alert("empCode " + empCode);
-			var requestApproval = {vac: vac, empCode: empCode};
+		//	alert(from_date);
+			var requestApproval = {vac: vac, empCode: empCode, fromDate: from_date};
 		//	var username ='1';
 		//	var password = '123';
 		//	//$.getJSON('/Requests/requestsApproval/loginUsersRequestsForm.html/vacInfo', 
-/*					$.getJSON('../api/workflow/vacInfo',{ user: "1", password: "123" },
-					requestApproval,
-				function(data) {
-				alert(data);
-				var credit = $('#vacCredit');
-					$.each(data, function(key, value) {
-						alert(key);
-						if(key=='Results') {
-							$.each(value, function(k,v) {
-								//alert(k);
-								//alert(v);
-								credit.val(v);
-							});
-						}
-					});
-				}
-		);*/
-			$.ajax
-			({
-			  type: "POST",
-			  url: "../api/workflow/vacInfo",
-			  dataType: 'json',
-			  headers: {
-			    "Authorization": "Basic " + btoa(token)
-			  },
-			  data: requestApproval,
-			  success: function (data){
-			  //  alert('Thanks for your query!'); 
-			   // alert(data);
-			    
-			    var credit = $('#vacCredit');
-				$.each(data, function(key, value) {
-					//alert(key);
-					if(key=='Results') {
-						$.each(value, function(k,v) {
-							alert(k);
-							alert(v);
-							credit.val(v);
+//					$.getJSON('../api/workflow/vacInfo',{ user: "1", password: "123" },
+//					requestApproval,
+//				function(data) {
+//				alert(data);
+//				var credit = $('#vacCredit');
+//					$.each(data, function(key, value) {
+//						alert(key);
+//						if(key=='Results') {
+//							$.each(value, function(k,v) {
+//								//alert(k);
+//								//alert(v);
+//								credit.val(v);
+//							});
+//						}
+//					});
+//				}
+//		);
+		
+				$.ajax({
+					type : "GET",
+					url : "../requestsApproval/ajax/vacInfo",
+					dataType : 'json',
+					// headers: {
+					// "Authorization": "Basic " + btoa(token)
+					//},
+					data : requestApproval,
+					success : function(data) {
+						//  alert('Thanks for your query!'); 
+						//  alert(data);
+
+						var credit = $('#vacCredit');
+
+						$.each(data, function(key, value) {
+							//alert(key);
+							//alert(value);
+							if (key == 'Response') {
+								$.each(value, function(k, v) {
+									if (k == 'vacCredit') {
+										credit.val(v);
+									}
+								});
+							}
 						});
 					}
 				});
-			  }
 			});
 		});
-	});
-	/////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////
 		function showVacationTypes() {
 
 			document.getElementById("errandDuration").className = 'hideClass';
@@ -502,15 +506,19 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 				</c:if></td>
 		</tr>
 		<tr>
-			<td><form:form method="POST"
-					action="/Requests/requestsApproval/loginUsersRequestsForm.html"
-					modelAttribute="loginUsersRequests">
+			<td>
+			
+			<form:form method="POST" modelAttribute="loginUsersRequests"
+				action="/Requests/requestsApproval/loginUsersRequestsForm.html">
+			
+					
+					
 					<c:set var="dateNow" value="<%=nowDate%>" />
 
 					<input type="hidden" name="longitude" id="longitude" value="" />
 					<input type="hidden" name="latitude" id="latitude" value="" />
 					<input type="hidden" name="accuracy" id="accuracy" value="" />
-					<input type="hidden" name="${_csrf.parameterName}" id="token" value="${_csrf.token}"/>
+					
 
 					<input type="hidden" id="empRequestTypeId" name="empRequestTypeId"
 						value="${empRequestTypeId}" />
@@ -565,7 +573,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 							<td class="formBodControl"><spring:bind
 									path="loginUsersRequests.request_id">
 									<select name="request_id" id="${status.expression}"
-										onchange="showVacationTypes();">
+										onchange="showVacationTypes()">
 										<option value=""><fmt:message
 												key="commons.caption.select" /></option>
 										<c:forEach items="${model.requestTypeList}" var="request">
@@ -579,7 +587,6 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 
 						<c:if
 							test="${(loginUsersRequests.request_id.id == null || loginUsersRequests.request_id.id== '')}">
-
 							<tr id="specialVacationTypes" class="hideClass">
 								<td nowrap class="formReq"><abc:i18n
 										property="requestsApproval.caption.vacationType" /> <fmt:message
@@ -591,7 +598,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 										<c:forEach items="${model.specialVacations}" var="vacation">
 											<option value="${vacation.vacation}"
 												${vacation.vacation == loginUsersRequests.vacation.vacation?' selected' : ''}
-												onclick="showVacationTypes()">${vacation.name}</option>
+												onclick="alert('test');showVacationTypes()">${vacation.name}</option>
 										</c:forEach>
 								</select></td>
 							</tr>
@@ -601,7 +608,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 										property="requestsApproval.caption.vacationType" /> <fmt:message
 										key="requestsApproval.caption.vacationType" /></td>
 								<td class="formBodControl"><select name="annualVacation"
-									id="annualVacation"
+									id="annualVacation" onchange="showVacationTypes()"
 									><!-- onchange="getBalanceVac();showVacationTypes()" -->
 										<option value=""><fmt:message
 												key="commons.caption.select" /></option>

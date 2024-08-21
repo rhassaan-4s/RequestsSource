@@ -8,25 +8,41 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.BindException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com._4s_.common.web.action.BaseFormControllerInterface;
 import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.security.model.SecurityApplication;
 import com._4s_.security.model.User;
 import com._4s_.security.service.MySecurityManager;
 
-public class ChangeUserApplication extends BaseSimpleFormController {
+@Controller
+@RequestMapping("/changeUserApplication.html")
+public class ChangeUserApplication extends BaseSimpleFormController  implements BaseFormControllerInterface{
 
+	@Autowired
 	private MySecurityManager mgr;
 	
-	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException error)
-			throws Exception {
+	@RequestMapping(method = RequestMethod.POST)
+	@Override
+	public ModelAndView processSubmit(
+			@ModelAttribute("role") Object command,HttpServletRequest request, HttpServletResponse response,
+			BindingResult result, SessionStatus status) {
+
 		// TODO Auto-generated method stub
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>.......start Onsubmit.......");
 		// TODO Auto-generated method stub
@@ -55,8 +71,10 @@ public class ChangeUserApplication extends BaseSimpleFormController {
 		return new ModelAndView(new RedirectView("changeUserApplication.html"));
 	}
 
-	protected Map referenceData(HttpServletRequest request, Object arg1,
-			Errors arg2) throws Exception {
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,
+			HttpServletRequest request,@ModelAttribute("model") Object command)
+	{
 		// TODO Auto-generated method stub
 		List applications = new ArrayList();
 		User user = (User)request.getSession().getAttribute("user");
@@ -68,8 +86,9 @@ public class ChangeUserApplication extends BaseSimpleFormController {
 		return model;
 	}
 
-	protected Object formBackingObject(HttpServletRequest arg0)
-			throws Exception {
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request, HttpServletResponse response){
+
 		// TODO Auto-generated method stub
 		SecurityContext sc = (SecurityContext) (SecurityContextHolder.getContext());
 		log.debug("------------------------------------------username:--- "
@@ -81,7 +100,8 @@ public class ChangeUserApplication extends BaseSimpleFormController {
 		log.debug(">>>>>>>>>>>>>...user " + user);
 		log
 				.debug(">>>>>>>>>>>>>>>>>>>>>>.......end fromBackingObject............<<<<<<<<<<<<<<<<<<<<<");
-		return user;
+		model.addAttribute(user);
+		return "changeUserApplication";
 	}
 
 	public MySecurityManager getMgr() {

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,19 +18,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.common.web.binders.DateTimeBinder;
 import com._4s_.common.web.binders.DomainObjectBinder;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
@@ -53,9 +52,8 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 	@Qualifier("loginUsersBinder")
 	private DomainObjectBinder loginUsersBinder;
 	@Autowired
-	@Qualifier("requestTypesBinder")
-	private DomainObjectBinder dateTimeBinder;
-	
+	@Qualifier("dateTimeBinder")
+	private DateTimeBinder dateTimeBinder;
 	@Autowired
 	private JavaMailSenderImpl mailSender;
 	
@@ -84,11 +82,13 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 		this.loginUsersBinder = loginUsersBinder;
 	}
 
-	public DomainObjectBinder getDateTimeBinder() {
+	
+
+	public DateTimeBinder getDateTimeBinder() {
 		return dateTimeBinder;
 	}
 
-	public void setDateTimeBinder(DomainObjectBinder dateTimeBinder) {
+	public void setDateTimeBinder(DateTimeBinder dateTimeBinder) {
 		this.dateTimeBinder = dateTimeBinder;
 	}
 
@@ -99,7 +99,7 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 		this.mailSender = mailSender;
 	}
 	
-//	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
+//	@RequestMapping(method = RequestMethod.GET)  public String initForm(ModelMap model,HttpServletRequest request){
 //	{
 	@RequestMapping(method = RequestMethod.GET)
 	public String initForm(ModelMap model,HttpServletRequest request){
@@ -144,7 +144,7 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 	   return "attendanceRequestForm" ;
 	}
 	
-//	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+//	@ModelAttribute("model")	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) 
 	@ModelAttribute("model")
 	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,
 			HttpServletRequest request,@ModelAttribute("loginUsersRequests") LoginUsersRequests command)
@@ -195,7 +195,7 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 		
 		String done=request.getParameter("done");
 		String reqId=request.getParameter("requestId");
-		
+		log.debug("done " + done + " reqId " + reqId);
 		log.debug("before email sending " + Calendar.getInstance().getTime());
 		if(done!=null && reqId!=null){
 			model.put("done", done);
@@ -207,9 +207,9 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 	
 
 	@Override
-	public void initBinder(WebDataBinder binder) {
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		super.initBinder(binder);
+		super.initBinder(request,binder);
 		binder.registerCustomEditor(RequestTypes.class, requestTypesBinder);
 		binder.registerCustomEditor(LoginUsers.class, loginUsersBinder);
 		binder.registerCustomEditor(Date.class, dateTimeBinder);
@@ -288,7 +288,7 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public String processSubmit(HttpServletRequest request,
+	public ModelAndView processSubmit(HttpServletRequest request,
 			@ModelAttribute("loginUsersRequests") LoginUsersRequests command,
 //			BindingResult result,
 			Model model) throws Exception
@@ -298,6 +298,15 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 		
 		loginUsersRequests.setInputType(new Integer(1));//request to sign in
 
+		Employee emp =(Employee) request.getSession().getAttribute("employee");
+		log.debug("----emp from session---"+request.getSession().getAttribute("employee"));
+		
+		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
+		if (loginUsersRequests.getLogin_user()==null) {
+			loginUsersRequests.setLogin_user(loginUsers);
+			loginUsersRequests.setEmpCode(loginUsers.getEmpCode().getEmpCode());
+		}
+		
 		log.debug("----loginUsersRequests.getId()-onsubmit-----"+loginUsersRequests.getId()+"-----loginUsersRequests---"+loginUsersRequests.getLogin_user().getEmpCode());
 		
 //		Map model=new HashMap();
@@ -383,8 +392,8 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 	
 			log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<  End onSubmit : <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"+ Calendar.getInstance().getTime());
 	
-//			return new ModelAndView(new RedirectView(url));
-		return "attendanceRequestForm";
+			return new ModelAndView(new RedirectView(url));
+//		return "attendanceRequestForm";
 		//return new ModelAndView(new RedirectView(getSuccessView()));
 	}
 }

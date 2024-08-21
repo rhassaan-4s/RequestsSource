@@ -3,9 +3,6 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <abc:security property="106"/>
 
-<script type='text/javascript' src='/Requests/dwr/interface/requestsDwr.js'></script>
-<script type='text/javascript' src='/Requests/dwr/engine.js'></script>
-
 <script type="text/javascript">
 function searchForm (){
 	//alert('from---'+document.getElementById("from").value);
@@ -34,50 +31,120 @@ function printthis(which) {
 }
 
 function getRequestStatus(id){
-	//alert('entered');
-	//alert('--id value---'+id.id);
-	var req_id =id.id;
-		//document.getElementById('empRequestTypeId').value;
-	//alert('req_id= '+req_id);
-	requestsDwr.getRequestStatus(returnedData,req_id);	
-}
+	// for client name 
+		var recordId = id.id;
+//		alert(recordId);
+		//var token = $("input#token").val();
+		//alert(token);
+		//var requestApproval = {vac: vac, empCode: empCode};
+	
+	var token;
+		var header;
 
-function returnedData(data){
-	//alert('entered after');
-	if (data!=null){
-		 //alert('not null');
-		var st='';
-		var result='';
-		 //<form action="file.php" method="post" target="foo" onSubmit="window.open('', 'foo', 'width=450,height=300,status=yes,resizable=yes,scrollbars=yes')">
-		// alert('---- i< data.length---'+data.length);
-		for ( var i= 0; i < data.length; i++) {
-			 //alert('---for- i< data.length---'+data.length);
-			var ob=data[i];
-			if(ob.approval==1){
-				st='موافق';
-			}else if(ob.approval==0){
-				st='مرفوض\n سبب الرفض: '+ob.note;
-			}
-			result +="\n"+ob.level_id.order+" . "+ob.user_id.name+" -- "+st;
+		$(function() {
+			token = $("meta[name='_csrf']").attr("content");
+//			alert(token);
+			header = $("meta[name='_csrf_header']").attr("content");
+//			alert(header);
+			$(document).ajaxSend(function(e, xhr, options) {
+				xhr.setRequestHeader(header, token);
+			});
+		});
+
+		$.ajax({
+			type : "POST",
+			url : "../requestsApproval/ajax/requestStatus",
+			dataType : 'json',
+		//	headers : {
 			
-			//alert(ob.user_id.name+"--"+st);
-		}
-			//alert('-----out----');
-		if(st=='' && result==''){
-			result='لم يتم الموافقه عليه';
-		}
-		alert(result);
-		document.getElementById("resultList").value=result;
-	 }
-}
+	//	"Authorization" : "Basic " + btoa(token)
+			//},
+			data : recordId,
 
-function exportExcel() {
-	var fromDate = document.getElementById('request_date_from').value;
-	var toDate = document.getElementById('request_date_to').value;
-	var requestId = document.getElementById('request_id').value;
-	var link = '/Requests/requestsApproval/loginUsersRequestsView.html?export=true&dateFrom='+fromDate+'&dateTo='+toDate+'&requestType='+requestId;
-	window.open(link);
-}
+			success : function(data) {
+				//  alert('Thanks for your query!'); 
+				// alert(data);
+
+				$.each(data, function(key, value) {
+					//alert(key);
+					//alert(value);
+					if (key == 'Response') {
+						var st = '';
+						var result = '';
+						$.each(value, function(k, v) {
+							//	alert(k);
+							//	alert(v);
+							//credit.val(v);
+							var ob = v;
+							if (ob.approval == 1) {
+								st = 'موافق';
+							} else if (ob.approval == 0) {
+								st = 'مرفوض\n سبب الرفض: ' + ob.note;
+							}
+							result += "\n" + ob.level_id.order + " . "
+									+ ob.user_id.name + " -- " + st;
+
+							alert(ob.user_id.name + "--" + st);
+						});
+						//alert('-----out----');
+						if (st == '' && result == '') {
+							result = 'لم يتم الموافقه عليه';
+						}
+						alert(result);
+						document.getElementById("resultList").value = result;
+					}
+				});
+			}
+		});
+	}
+
+	function getRequestStatusOLD(id) {
+		//alert('entered');
+		//alert('--id value---'+id.id);
+		var req_id = id.id;
+		//document.getElementById('empRequestTypeId').value;
+		//alert('req_id= '+req_id);
+		requestsDwr.getRequestStatus(returnedData, req_id);
+	}
+
+	function returnedData(data) {
+		//alert('entered after');
+		if (data != null) {
+			//alert('not null');
+			var st = '';
+			var result = '';
+			//<form action="file.php" method="post" target="foo" onSubmit="window.open('', 'foo', 'width=450,height=300,status=yes,resizable=yes,scrollbars=yes')">
+			// alert('---- i< data.length---'+data.length);
+			for (var i = 0; i < data.length; i++) {
+				//alert('---for- i< data.length---'+data.length);
+				var ob = data[i];
+				if (ob.approval == 1) {
+					st = 'موافق';
+				} else if (ob.approval == 0) {
+					st = 'مرفوض\n سبب الرفض: ' + ob.note;
+				}
+				result += "\n" + ob.level_id.order + " . " + ob.user_id.name
+						+ " -- " + st;
+
+				//alert(ob.user_id.name+"--"+st);
+			}
+			//alert('-----out----');
+			if (st == '' && result == '') {
+				result = 'لم يتم الموافقه عليه';
+			}
+			alert(result);
+			document.getElementById("resultList").value = result;
+		}
+	}
+
+	function exportExcel() {
+		var fromDate = document.getElementById('request_date_from').value;
+		var toDate = document.getElementById('request_date_to').value;
+		var requestId = document.getElementById('request_id').value;
+		var link = '/Requests/requestsApproval/loginUsersRequestsView.html?export=true&dateFrom='
+				+ fromDate + '&dateTo=' + toDate + '&requestType=' + requestId;
+		window.open(link);
+	}
 </script>
 <script type="text/javascript">
 
@@ -110,9 +177,13 @@ function printSelection(node){
 </style> 
 
 <table width="90%" border="0" cellspacing="0" cellpadding="0" style="padding-right:10px ">
-   <form id="loginUsersRequestsView" name="loginUsersRequestsView" method="POST"  action="<c:url value="/requestsApproval/loginUsersRequestsView.html"/>">
+   
+   <form:form method="POST"
+					action="/Requests/requestsApproval/loginUsersRequestsView.html"
+					modelAttribute="loginUsersRequests">
 		 <input type="hidden"  id="empRequestTypeId" name="empRequestTypeId" value="${empRequestTypeId }"/>
 		 <input type="hidden"  id="resultList" name="resultList" value=""/>
+		 <input type="hidden" name="${_csrf.parameterName}" id="token" value="${_csrf.token}"/>
  
 		<table border=0 cellspacing=1 cellpadding=0 id="ep" style="margin-right:40px">
 			<tr>
@@ -385,8 +456,7 @@ function printSelection(node){
 			</td>
 		</tr>
 	</table>
-   </form>
-
+</form:form>
 </table>
 
 	

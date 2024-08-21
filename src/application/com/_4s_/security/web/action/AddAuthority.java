@@ -101,18 +101,21 @@ public class AddAuthority extends BaseSimpleFormController implements BaseFormCo
 
 	
 	@Override
-	public void initBinder(WebDataBinder binder) {
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
 		// TODO Auto-generated method stub
-		super.initBinder(binder);
+		super.initBinder(request,binder);
 		binder.registerCustomEditor(userBinder.getBindedClass(), null, userBinder);
 	}
 
-	@ModelAttribute("userBranches")
-	public List<UserBranch> populateUserBranches(HttpServletRequest request) {
+	public Map populateWebFrameworkList(String error, 
+			HttpServletRequest request, @ModelAttribute("model")Object command) {
 		String userId=(String)request.getParameter("userId");		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>userId" + userId);
 		UserPrivilege getUserPrivilege =new UserPrivilege();
 		User user = null;
+		
+		Map model = new HashMap();
+		
 		if (userId != null && !userId.equals("")) {
 			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>userId" + userId);
 			user = (User) baseManager.getObject(User.class, new Long(userId));
@@ -120,29 +123,22 @@ public class AddAuthority extends BaseSimpleFormController implements BaseFormCo
 			if(getUserPrivilege != null && !getUserPrivilege.equals("")){	
 				List list = baseManager.getObjectsByParameter(UserBranch.class,"userprivilege", getUserPrivilege);
 				log.info(">>>>>>>>>>>>list size + "+list.size());	
-				return (List<UserBranch>)baseManager.getObjectsByParameter(UserBranch.class,"userprivilege", getUserPrivilege);
+				List branches = (List<UserBranch>)baseManager.getObjectsByParameter(UserBranch.class,"userprivilege", getUserPrivilege);
+				model.put("userBranches ",branches);
 			}
 			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>" + user + "<<<<<<<<<<<<");
 		}
-		return null;
-	}
-	
-	@ModelAttribute("branchList")
-	public List<Branch> populateBranchList() {
+		
 		List branchList = new ArrayList();
 		branchList = mgr.getObjects(Branch.class);
-		return (List<Branch>)branchList;
-	}
-	
-	public String populateUserId(HttpServletRequest request) {
-		String userId=(String)request.getParameter("userId");		
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>userId" + userId);
-		return userId;
+		model.put("branchList",(List<Branch>)branchList);
+		model.put("usedId", userId);
+		return model;
 	}
 	
 	@Override
 	@RequestMapping(method = RequestMethod.POST)
-	public String processSubmit(@ModelAttribute("userPrivilege") Object command, HttpServletRequest request, HttpServletResponse response,
+	public ModelAndView processSubmit(@ModelAttribute("userPrivilege") Object command, HttpServletRequest request, HttpServletResponse response,
 			BindingResult result, SessionStatus status) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		UserPrivilege saveUserPrivilege = (UserPrivilege) command;
@@ -165,7 +161,7 @@ public class AddAuthority extends BaseSimpleFormController implements BaseFormCo
 		
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 //		return new ModelAndView(new RedirectView("addAuthority.html?userId="+ saveUserPrivilege.getUser().getId()));
-		return ("addAuthority.html?userId="+ saveUserPrivilege.getUser().getId());
+		return new ModelAndView("addAuthority.html?userId="+ saveUserPrivilege.getUser().getId());
 	}
 }
 	

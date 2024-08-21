@@ -101,6 +101,33 @@ version="3.0">
             com._4s_.requestsApproval.web.action.CreateDatabase
         </listener-class>
     </listener>
+    
+    <!-- Force Encoding to UTF-8 -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>
+			org.springframework.web.filter.CharacterEncodingFilter
+		</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+    
+    
 	<!-- ========================Security Filters ======================== -->
 	<!-- <filter>
 		<filter-name>Acegi-Integration</filter-name>
@@ -406,31 +433,6 @@ version="3.0">
 		<url-pattern>/dwr/*</url-pattern>
 	</servlet-mapping>
  -->
-	<!-- Force Encoding to UTF-8 -->
-	<filter>
-		<filter-name>encodingFilter</filter-name>
-		<filter-class>
-			org.springframework.web.filter.CharacterEncodingFilter
-		</filter-class>
-		<init-param>
-			<param-name>encoding</param-name>
-			<param-value>UTF-8</param-value>
-		</init-param>
-		<init-param>
-			<param-name>forceEncoding</param-name>
-			<param-value>true</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>encodingFilter</filter-name>
-		<url-pattern>*.html</url-pattern>
-	</filter-mapping>
-
-	<filter-mapping>
-		<filter-name>encodingFilter</filter-name>
-		<url-pattern>*.jsp</url-pattern>
-	</filter-mapping>
-
 
 	<welcome-file-list>
 		<!-- Redirects to "login.jsp" for dispatcher handling -->

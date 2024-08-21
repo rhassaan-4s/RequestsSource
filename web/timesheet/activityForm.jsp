@@ -7,6 +7,11 @@
 <form id="activityForm" name="activityForm" method="POST"
 	action="<c:url value="/timesheet/activityForm.html"/>">
 
+<form:form method="POST"
+					action="/Requests/timesheet/activityForm.html"
+					modelAttribute="activity">
+
+
 <input type="hidden" id="code" name="code"
 			value="${activityCode}" />
 			
@@ -14,7 +19,12 @@
 		style="padding-right: 10px">
 
 		<tr>
-			<td colspan="2"><spring:bind path="activity.*">
+			<td colspan="2">
+			<h2 style="color: red;">
+					<form:errors path="activity.*" />
+				</h2>
+			
+			<spring:bind path="activity.*">
 					<c:if test="${not empty status.errorMessages}">
 						<div>
 							<c:forEach var="error" items="${status.errorMessages}">
@@ -96,7 +106,6 @@
 		</tr>
 
 	</table>
-</form>
-
+</form:form>
 
 <%@ include file="/web/common/includes/footer.jsp"%>

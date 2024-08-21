@@ -8,17 +8,17 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
-import com._4s_.requestsApproval.model.Requests;
-import com._4s_.restServices.json.TimesheetPartWrapper;
-import com._4s_.timesheet.model.TimesheetActivity;
-import com._4s_.timesheet.model.TimesheetSpecs;
 import com._4s_.timesheet.model.TimesheetTransactionParts;
 import com._4s_.timesheet.service.TimesheetManager;
 
-public class PartView implements Controller{
+@Controller
+public class PartView {//implements Controller{
+	@Autowired
 	TimesheetManager timesheetManager;
 
 	public TimesheetManager getTimesheetManager() {
@@ -28,7 +28,7 @@ public class PartView implements Controller{
 	public void setTimesheetManager(TimesheetManager timesheetManager) {
 		this.timesheetManager = timesheetManager;
 	}
-	
+	@RequestMapping("/partView.html")
 	public ModelAndView handleRequest(HttpServletRequest request,
 			HttpServletResponse arg1) throws Exception {
 		// TODO Auto-generated method stub
