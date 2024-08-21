@@ -1,0 +1,54 @@
+package com._4s_.common.service;
+
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+
+import org.springframework.stereotype.Component;
+
+public class CustomTrustManager  implements X509TrustManager{
+	private X509TrustManager jreTrustManager;	
+	private X509TrustManager customTrustManager;
+	
+	
+	
+	
+	public CustomTrustManager(X509TrustManager jreTrustManager, X509TrustManager customTrustManager) {
+		super();
+		this.jreTrustManager = jreTrustManager;
+		this.customTrustManager = customTrustManager;
+	}
+
+	@Override
+	public X509Certificate[] getAcceptedIssuers() {
+		// If you're planning to use client-cert auth,
+		// merge results from "defaultTm" and "myTm".
+		return jreTrustManager.getAcceptedIssuers();
+	}
+
+	@Override
+	public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+		try {
+			customTrustManager.checkServerTrusted(chain, authType);
+		} catch (CertificateException e) {
+			// This will throw another CertificateException if this fails too.
+			jreTrustManager.checkServerTrusted(chain, authType);
+		}
+	}
+
+	@Override
+	public void checkClientTrusted(X509Certificate[] chain, String authType)
+			throws java.security.cert.CertificateException {
+		// If you're planning to use client-cert auth,
+		// do the same as checking the server.
+		jreTrustManager.checkClientTrusted(chain, authType);
+	}
+	
+	
+}

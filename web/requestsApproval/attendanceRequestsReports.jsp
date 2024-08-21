@@ -11,6 +11,28 @@
 </head>
 <body>
 <script type="text/javascript">
+
+function selectAllFn() {
+	var sel = document.getElementById('selects');
+	var inputs = document.getElementById("attendanceRequestsReports").getElementsByTagName("input");
+	var ele = [];
+    for(var i=0, len=inputs.length; i<len; i++){
+        if(inputs[i].name.match(/^approve\d+$/)){
+            ele.push(inputs[i]);
+        }
+    }
+	for (var i = 0; i < ele.length; i++) {
+		if (ele[i].type == 'checkbox') {
+			if (sel.checked == true) {
+				ele[i].checked = 'checked';
+			} else {
+				ele[i].checked = '';
+			}
+
+		}
+	}
+}
+
 function searchForm (){
 	if(document.getElementById("empCode").value!=null){
 		var empCode=document.getElementById("empCode").value;
@@ -271,6 +293,9 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											<abc:i18n
 											property="requestsApproval.requestsApprovalForm.reqStatus" /> <fmt:message
 											key="requestsApproval.requestsApprovalForm.reqStatus" /> 
+											<fmt:message
+										key="requestsApproval.requestsApprovalForm.reqStatus" /> <br>
+									<input type="checkbox" id="selects" name="selects" onclick="selectAllFn()" />
 										</td>
 										<td class="helpHed" nowrap="nowrap">
 											<abc:i18n property="requestsApproval.caption.reply" />

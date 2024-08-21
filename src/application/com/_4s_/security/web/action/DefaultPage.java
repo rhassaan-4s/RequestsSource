@@ -14,11 +14,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com._4s_.attendance.model.VacRule;
 import com._4s_.common.model.Company;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.CommonManager;
+//import com._4s_.common.util.CustomTrustStore;
 import com._4s_.common.util.HttpReqRespUtils;
 import com._4s_.common.web.action.BaseController;
 //import com._4s_.gl.model.GLSettings;
@@ -100,6 +100,7 @@ public class DefaultPage extends BaseController {
 		SecurityContext sc = (SecurityContext) (SecurityContextHolder.getContext());
 		log.debug("------------------------------------------username:--- "
 				+ sc.getAuthentication().getName());
+		
 		String username = sc.getAuthentication().getName();
 		log.fatal("ussssssssssssser ---------------------------- >>>>>>>>>>>>>> " + username);
 		User user = (User) baseManager.getObjectByParameter(User.class,

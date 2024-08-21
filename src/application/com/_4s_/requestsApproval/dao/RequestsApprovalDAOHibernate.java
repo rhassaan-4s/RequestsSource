@@ -1,6 +1,7 @@
 package com._4s_.requestsApproval.dao;
 
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -2403,7 +2404,27 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			LoginUsersRequests req = (LoginUsersRequests)list.get(0);
 			
 			attStatus.setSignIn(new Boolean(true));
-			attStatus.setSignInTime(req.getPeriod_from().getTime());
+			log.debug(req.getPeriod_from().getTime());
+			Long tsLong = req.getPeriod_from().getTime();
+//			String tsString = tsLong.toString();
+//			if (tsString.length()>10) {
+//				tsLong = new Long (tsString.substring(0, 10));
+//				log.debug(tsLong);
+//			}
+			attStatus.setSignInTime(tsLong);
+//			Timestamp ts = new Timestamp(req.getPeriod_from().getTime());
+//			log.debug(ts);
+//			Calendar fromCal= Calendar.getInstance();
+//			fromCal.setTime(req.getPeriod_from());
+//			DateFormat ff =	new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.sss");
+//			try {
+//				final Date fDate =(Date) format.parse(ff.format(req.getPeriod_from()));
+//				log.debug(fDate.getTime());
+//				attStatus.setSignInTime(fDate.getTime());
+//			} catch (ParseException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			
 			log.debug(req.getId() + " - " + req.getPeriod_from());
 //			response.put("Response",format.format(req.getPeriod_from()));

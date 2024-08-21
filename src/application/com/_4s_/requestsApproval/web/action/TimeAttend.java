@@ -200,6 +200,12 @@ public class TimeAttend {
 	public void setDiffMins(String diffMins) {
 		this.diffMins = diffMins;
 	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return this.dayString + " - "+this.day+"- timeIn:" + this.timeIn + " -- timeOut:" + this.timeOut + "(" + this.longitude1+","+this.latitude1+")"+ "(" + this.longitude2+","+this.latitude2+")";
+	}
 	
 	
 	

@@ -114,7 +114,7 @@ function periodChanged() {
 
 	<input type="hidden" id="success" name="success" value="${success}"/>
 	<input type="hidden" id="periodsSize" id="periodsSize" value="${periods.empPeriods.size()}"/>
-	<input type="text" id="emp_code" name="emp_code" value="${empCode}"/>
+	<input type="hidden" id="emp_code" name="emp_code" value="${empCode}"/>
 	<table width="90%" border="0" cellspacing="0" cellpadding="0"
 		style="padding-right: 10px">
 

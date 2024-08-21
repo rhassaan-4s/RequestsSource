@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -546,6 +547,7 @@ public class ExternalQueries extends CommonQueries{
 			//			log.debug("outDate  = "+outDate);
 			//log.debug("----DateIn---"+test);
 			if(minDate.equals(maxDate)){
+				log.debug("nulling time out for **equal** mindate and maxdate");
 				timeAttend.setTimeOut(null);
 			}
 			else{			
@@ -736,6 +738,7 @@ public class ExternalQueries extends CommonQueries{
 
 			if (maxDate!=null) {
 				if(minDate.equals(maxDate)){
+					log.debug("nulling time out for EQUAL min and max date");
 					timeAttend.setTimeOut(null);
 				}
 				else{			
@@ -967,7 +970,8 @@ public class ExternalQueries extends CommonQueries{
 		while(i<in.size()){
 			timeAttend=new TimeAttend();
 
-
+			inDate = null;
+			outDate=null;
 
 			String attendanceTime2 = null;
 			String attendanceDate2 = null;
@@ -975,14 +979,20 @@ public class ExternalQueries extends CommonQueries{
 			String inputType2 = null;
 			String latitude2 = null;
 			String longitude2 = null;
+			
+			String empCode1 = null;
+			String empCode2 = null;
 
 
 			//		log.debug("in.get(i) " + in.get(i).getClass());
 			inMap = (LinkedCaseInsensitiveMap) in.get(i);
+			
 			Object atimeObj = inMap.get("attendance_time");
+			empCode1 = inMap.get("empCode").toString();	
+			
 			if (atimeObj != null) {
 				attendanceTime = atimeObj.toString();
-				log.debug("in time " + attendanceTime);
+				log.debug("attendanceTime " + attendanceTime);
 				attendanceType = inMap.get("ATTENDANCE_TYPE").toString();
 				log.debug("attendanceType " + attendanceType);
 				inputType1 = inMap.get("INPUT_TYPE").toString();
@@ -996,11 +1006,26 @@ public class ExternalQueries extends CommonQueries{
 				} else {
 					longitude1 = null;
 				}
-
+				log.debug("longitude " + longitude1 + " latitude " + latitude1);
+				log.debug("attendanceType.equals(\"IN\") " + attendanceType.equals("IN") + " attendanceType.equals(\"OUT\") " + attendanceType.equals("OUT") + " inDate "+inDate + " outDate "+outDate);
 				if (attendanceType.equals("IN")) {
 					try {
 						inDate=d.parse(attendanceTime);
+						timeAttend.setTimeIn(attendanceTime.substring(10));
 						log.debug("inDate  = "+inDate);
+						log.debug("timeAttend " + timeAttend);
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else if (attendanceType.equals("OUT") && inDate ==null){
+					try {
+						outDate=d.parse(attendanceTime);
+						timeAttend.setTimeOut(attendanceTime.substring(10));
+						timeAttend.setLatitude2(latitude1);
+						timeAttend.setLongitude2(longitude1);
+						log.debug("outDate  = "+outDate);
+						log.debug("timeAttend (out without in) " + timeAttend);
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -1008,14 +1033,24 @@ public class ExternalQueries extends CommonQueries{
 				}
 			}
 
-			log.debug("i " + i + " attendanceType " + attendanceType +  " inDate " + inDate);
-			if(in.size()>(i+1)) {
+			log.debug("i " + i + " attendanceType " + attendanceType +  " inDate " + inDate + " outDate " + outDate);
+			if(in.size()>(i+1) && outDate == null) {
 				inMap2 = (LinkedCaseInsensitiveMap)in.get(i+1);
 
+				
+				empCode2 = inMap2.get("empCode").toString();	
 				Object atimeObj2 = inMap2.get("attendance_time");
 				if (atimeObj2!=null) {
 					attendanceTime2 = atimeObj2.toString();
 					log.debug("out time " + attendanceTime2);
+					try {
+						outDate=d.parse(attendanceTime2);
+						timeAttend.setTimeOut(attendanceTime2.substring(10));
+						log.debug("outDate  = "+outDate);
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					attendanceType2 = inMap2.get("ATTENDANCE_TYPE").toString();
 					log.debug("attendanceType2 " + attendanceType2);
 					inputType2 = inMap2.get("INPUT_TYPE").toString();
@@ -1042,14 +1077,31 @@ public class ExternalQueries extends CommonQueries{
 				}
 				log.debug("longitude " + longitude2 + " latitude " + latitude2);
 			}
-			timeAttend.setTimeIn(attendanceTime.substring(10));
+//			if (inDate !=null) {
+//				timeAttend.setTimeIn(attendanceTime.substring(10));
+//			} else {
+//				timeAttend.setTimeOut(attendanceTime.substring(10));
+//			}
 
-			timeAttend.setLatitude1(latitude1);
-			timeAttend.setLatitude2(latitude2);
-			timeAttend.setLongitude1(longitude1);
-			timeAttend.setLongitude2(longitude2);
-			timeAttend.setInputType1(inputType1);
-			timeAttend.setInputType2(inputType2);
+			
+			if (timeAttend.getLatitude1()==null) {
+				timeAttend.setLatitude1(latitude1);
+			}
+			if (timeAttend.getLatitude2()==null) {
+				timeAttend.setLatitude2(latitude2);
+			}
+			if (timeAttend.getLongitude1()==null) {
+				timeAttend.setLongitude1(longitude1);
+			}
+			if (timeAttend.getLongitude2()==null) {
+				timeAttend.setLongitude2(longitude2);
+			}
+			if (timeAttend.getInputType1()==null) {
+				timeAttend.setInputType1(inputType1);
+			}
+			if (timeAttend.getInputType2()==null) {
+				timeAttend.setInputType2(inputType2);
+			}
 			String[] dateOnly = attendanceTime.split(" ");
 			String[] letters=dateOnly[0].split("-");
 
@@ -1059,11 +1111,12 @@ public class ExternalQueries extends CommonQueries{
 			String dateString=year+"/"+month+"/"+day;
 			log.debug("-----dateString-0--"+dateString);
 			timeAttend.setDay(dateString);
-
+			log.debug(timeAttend);
 			mCalDate.setDateString(dateString);
 			Date date=mCalDate.getDate();
 			log.debug("-----date-0--"+date);
-
+			
+			log.debug("timeAttend " + timeAttend.getDay() + ": " + timeAttend.getTimeIn() + "-"+ timeAttend.getTimeOut() + "->"+timeAttend.getDiffHrs()+":"+timeAttend.getDiffMins());
 			SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEEE",new Locale("ar","SA")); // the day of the week spelled out completely  
 			log.debug("-------simpleDateformat.format(mCalDate.getDate())---"+simpleDateformat.format(mCalDate.getDate()));
 			timeAttend.setDayString(simpleDateformat.format(mCalDate.getDate()));
@@ -1074,20 +1127,33 @@ public class ExternalQueries extends CommonQueries{
 			String empName =  inMap.get("fName").toString();
 			timeAttend.setEmpName(empName);
 			log.debug("------timeAttend.getDay()---"+timeAttend.getDay());
+			log.debug(timeAttend);
 			result.add(timeAttend);
+			log.debug("timeAttend added to list");
+			Iterator itRes = result.iterator();
+			while(itRes.hasNext()) {
+				TimeAttend ta = (TimeAttend)itRes.next();
+				log.debug(ta);
+			}
 
 
 			log.debug("attendanceType2 " + attendanceType2);
 			//		log.debug("attendanceType2!= null " + attendanceType2!= null + " attendanceType2.equals(OUT) " + attendanceType2.equals("OUT"));
-			if (attendanceType2!= null && attendanceType2.equals("OUT")) {
+			
+			if (attendanceType2!= null && attendanceType2.equals("OUT") && inDate!=null) {
+				
 				log.debug("attendanceType2 " + attendanceType2);
 				try {
 					outDate=d.parse(attendanceTime2);
 					log.debug("outDate  = "+outDate);
 					Calendar inCal = Calendar.getInstance();
-					inCal.setTime(inDate);
+					if (inDate != null) {
+						inCal.setTime(inDate);
+					}
 					Calendar outCal = Calendar.getInstance();
-					outCal.setTime(outDate);
+					if (outDate != null) {
+						outCal.setTime(outDate);
+					}
 					if (inCal.get(Calendar.DAY_OF_MONTH) == outCal.get(Calendar.DAY_OF_MONTH) 
 							&& inCal.get(Calendar.MONTH) == outCal.get(Calendar.MONTH)
 							&& inCal.get(Calendar.YEAR) == outCal.get(Calendar.YEAR) ) {
@@ -1108,6 +1174,7 @@ public class ExternalQueries extends CommonQueries{
 
 
 					} else {
+						log.debug("nulling time out for same day");
 						timeAttend.setTimeOut(null);
 						longitude2=null;
 						latitude2=null;
@@ -1120,7 +1187,12 @@ public class ExternalQueries extends CommonQueries{
 					e.printStackTrace();
 				}
 			} else {
-				timeAttend.setTimeOut(null);
+				log.debug("***STOP****nulling time out");
+				log.debug("empCode1 " + empCode1);
+				log.debug("empCode2 " + empCode2);
+				if (empCode2!=null && !empCode1.equals(empCode2)) {//in case of different employees attendance records
+					timeAttend.setTimeOut(null);
+				}
 				longitude2=null;
 				latitude2=null;
 				timeAttend.setLongitude2(longitude2);
@@ -1131,8 +1203,11 @@ public class ExternalQueries extends CommonQueries{
 			i++;
 
 		}
-
-
+//		Iterator itRes = result.iterator();
+//		while(itRes.hasNext()) {
+//			TimeAttend ta = (TimeAttend)itRes.next();
+//			log.debug(ta);
+//		}
 		totalList.add(result);
 		totalList.add(totalMins+","+totalHrs);
 
@@ -1759,6 +1834,7 @@ public class ExternalQueries extends CommonQueries{
 			//		log.debug("outDate  = "+outDate);
 			//log.debug("----DateIn---"+test);
 			if(minDate.equals(maxDate)){
+				log.debug("nulling time out for same mindate and maxdate");
 				timeAttend.setTimeOut(null);
 			}
 			else{			
@@ -2738,8 +2814,8 @@ public class ExternalQueries extends CommonQueries{
 
 
 		query = "select * from (select "+rownum+", q.* from (" + outerSelectStart + " ("
-				+select + where+
-				outerSelectEnd + outerSelectWhere+") q ) m where rnum<="+((pageNumber*pageSize)+pageSize-1)+ " and rnum>"+(pageSize*pageNumber)  + orderBy;
+				+select + where+  orderBy +
+				outerSelectEnd + outerSelectWhere+orderBy+") q ) m where rnum<="+((pageNumber*pageSize)+pageSize-1)+ " and rnum>"+(pageSize*pageNumber);//  + orderBy;
 		log.debug("query " + query);
 		StringBuilder sql = new StringBuilder(query);
 
