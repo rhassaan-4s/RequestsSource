@@ -15,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -39,7 +40,6 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	@ManyToOne
 	@JoinColumn(name="request_type")
 	private RequestTypes request_id;
-
 	private String empCode;
 //	private Date request_date;
 	@DateTimeFormat(pattern = "dd/MM/yyyy")

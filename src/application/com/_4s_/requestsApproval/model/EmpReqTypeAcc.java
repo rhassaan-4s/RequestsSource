@@ -108,6 +108,19 @@ public class EmpReqTypeAcc  implements Auditable,Serializable {
 		}
 
 
+		public boolean equals(GroupAcc obj) {
+			// TODO Auto-generated method stub
+//			return super.equals(obj);
+			return this.getId().equals(obj.getId());
+		}
+
+
+		public String toString() {
+			// TODO Auto-generated method stub
+			return super.toString();
+		}
+
+
 
 	
 }

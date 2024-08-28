@@ -39,7 +39,7 @@ public class ValidateLoginUsersRequestForm implements Validator {
 	}
 
 	public void validate(Object obj, Errors errors) {
-		log.debug(">>>>>.................. start validate().....");
+		log.debug(">>>>>.................. start validate() of ValidateLoginUsersRequestForm .....");
 		// TODO Auto-generated method stub
 		LoginUsersRequests loginUsersRequests = (LoginUsersRequests) obj;
 

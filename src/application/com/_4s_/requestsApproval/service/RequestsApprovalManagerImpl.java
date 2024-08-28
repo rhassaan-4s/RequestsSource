@@ -22,7 +22,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
-import sun.net.www.protocol.https.HttpsURLConnectionImpl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -77,7 +76,8 @@ import com.ibm.icu.util.Calendar;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
 
-import sun.net.www.protocol.https.HttpsURLConnectionImpl;
+//import sun.net.www.protocol.https.HttpsURLConnectionImpl;
+
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -1136,14 +1136,15 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			loginUsers=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp);
 			
 			List loggedInLevels = getObjectsByParameter(AccessLevels.class, "emp_id", loginUsers);
-			
+			log.debug("loggedInLevels size " +loggedInLevels.size());
 			 
 			AccessLevels loggedInAccessLevel = null;
 			levelFind: for (int j=0;j<loggedInLevels.size();j++) {
 				AccessLevels tempLoggedInAccessLevel = (AccessLevels)loggedInLevels.get(j);
 				for(int k = 0; k<empReqAcc.size(); k++) {
 					EmpReqTypeAcc tempAcc =(EmpReqTypeAcc)empReqAcc.get(k); 
-					if (tempAcc.getGroup_id().equals(tempLoggedInAccessLevel.getLevel_id())) {
+					log.debug("Group_id " + tempAcc.getGroup_id().getId() + " level_id "+ tempLoggedInAccessLevel.getLevel_id().getId() + " equal? "+tempAcc.getGroup_id().getId().equals(tempLoggedInAccessLevel.getLevel_id().getId()));
+					if (tempAcc.getGroup_id().getId().equals(tempLoggedInAccessLevel.getLevel_id().getId())) {
 						loggedInAccessLevel = tempLoggedInAccessLevel;
 						log.debug("breaking- got logged in level "+ loggedInAccessLevel.getLevel_id().getId());
 						break levelFind;
@@ -1151,9 +1152,10 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				}
 			}
 			
-			log.debug("loggedInAccessLevel.getLevel_id() " + loggedInAccessLevel.getLevel_id().getId());
-			log.debug("req_id " + requestInfo.getRequest_id().getId());
-			log.debug("emp_id " + requestInfo.getLogin_user().getId());
+//			log.debug("loggedInAccessLevel.getLevel_id() " + loggedInAccessLevel.getLevel_id().getId());
+//			log.debug("req_id " + requestInfo.getRequest_id().getId());
+//			log.debug("emp_id " + requestInfo.getLogin_user().getId());
+			log.debug("loggedInAccessLevel " + loggedInAccessLevel);
 			List loggedInEmpReqAcc = getObjectsByThreeParametersOrderedByFieldList(
 					EmpReqTypeAcc.class, "req_id", requestInfo.getRequest_id(), 
 					"emp_id", requestInfo.getLogin_user(),
@@ -1229,7 +1231,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 						log.debug(" loggedInGroupAcc " + loggedInGroupAcc);
 						log.debug("temp " + temp);
 						log.debug("temp.groupId " + temp.getGroup_id());
-						if (i==0 && !loggedInGroupAcc.equals(temp.getGroup_id())) {
+						if (i==0 && !loggedInGroupAcc.getId().equals(temp.getGroup_id().getId())) {
 							//first priority didn't approve - and first priority isn't the one approving now
 							log.debug("first priority didn't approve - and first priority isn't the one approving now");
 							throw new ApprovalFirstPriorityNullException("1st Priority Manager should approve first (The logged in employee isn't privileged to approve request "+requestInfo.getRequestNumber()+")");
@@ -2302,7 +2304,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			 System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
 			 URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "&api_key=65c8b9e1c9c01804850676ribdd12fa");
 			 log.debug("url " + url);
-			 HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
+//			 HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
 			 String formattedAddress = "";
 
 

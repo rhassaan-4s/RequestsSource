@@ -479,13 +479,14 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 			<td colspan="2" height="20"></td>
 		</tr>
 		<tr>
-			<td colspan="2">
+							<td colspan="2">
 
-				<h2 style="color: red;">
-					<form:errors path="loginUsersRequests.*" />
-				</h2>
-			</td>
-		</tr>
+								<h2 style="color: red;">
+									<form:errors path="loginUsersRequests.*" />
+								</h2>
+							</td>
+						</tr>
+		
 		<tr>
 			<td><c:if test="${model.done==true||done==true}">
 					<font color="blue" size="5"> <abc:i18n
@@ -525,7 +526,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 
 					<table border=0 cellspacing=1 cellpadding=0 id="ep"
 						style="margin-right: 40px">
-						<tr id="head_1_ep">
+												<tr id="head_1_ep">
 							<td class="bodyBold" colspan=4 nowrap><abc:i18n
 									property="requestsApproval.header.loginUsersRequests" />
 								<fmt:message key="requestsApproval.header.loginUsersRequests" /></td>

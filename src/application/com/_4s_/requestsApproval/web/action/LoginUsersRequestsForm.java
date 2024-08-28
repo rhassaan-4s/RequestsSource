@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -30,9 +31,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,8 +63,9 @@ import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
-import com._4s_.requestsApproval.web.validators.ValidateLoginUsersRequestForm;
 import com._4s_.restServices.json.RequestApproval;
+import com._4s_.restServices.json.RequestsApprovalQuery;
+import com._4s_.restServices.model.AttendanceStatus;
 import com._4s_.restServices.service.RequestsService;
 
 @Controller
@@ -74,8 +78,9 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 	private RequestsService requestsService;
 	@Autowired
 	private JavaMailSenderImpl mailSender;
-//	@Autowired
-//	private ValidateLoginUsersRequestForm validateLoginUsersRequest;
+	@Autowired
+	@Qualifier("validateLoginUsersRequest")
+	private Validator validator;
 	@Autowired
 	@Qualifier("requestTypesBinder")
 	private DomainObjectBinder requestTypesBinder;
@@ -99,6 +104,12 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 	
 	private String SMTP_AUTH_PWD; 
 
+	public Validator getValidator() {
+		return validator;
+	}
+	public void setValidator(Validator validator) {
+		this.validator = validator;
+	}
 	public DateTimeBinder getDateTimeBinder() {
 		return dateTimeBinder;
 	}
@@ -544,18 +555,29 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		binder.registerCustomEditor(Vacation.class, vacationBinder);
 	}
 //method=RequestMethod.POST,
+	@Validated
 	@RequestMapping(method=RequestMethod.POST)//,consumes=MediaType.APPLICATION_FORM_URLENCODED
 	public ModelAndView processSubmit(HttpServletRequest request,
 			@Valid@ModelAttribute("loginUsersRequests") LoginUsersRequests command
-			,BindingResult result 
+			,BindingResult errors 
 			,SessionStatus status
 			,Map model
 			) {
 		
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting process submit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		
-		log.debug(result);
+		try {
+			onBindAndValidate(request,command,errors);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		log.debug(errors.getAllErrors());
+		if (errors.hasErrors()) {
+			model.put("done",false);
+			model.put("errors", errors);
+			return new ModelAndView("loginUsersRequestsForm",model);
+		}
 		LoginUsersRequests loginUsersRequests=command;
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
 		log.debug("----emp from session---"+request.getSession().getAttribute("employee"));
@@ -756,6 +778,12 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 					+ loginUsersRequests.getRequest_date()+","+ loginUsersRequests.getRequest_id()+","+ loginUsersRequests.getTo_date()+","+ loginUsersRequests.getVacCredit()+",\n"
 			+ loginUsersRequests.getVacation()+","+ loginUsersRequests.getWithdrawDays()+","+ loginUsersRequests.getId());
 			requestsApprovalManager.saveObject(loginUsersRequests);
+//			try {
+//				requestsApprovalManager.flush();
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				errors.
+//			}
 			log.debug("loginUsersRequests.getId() " + loginUsersRequests.getId());
 			request.getSession().setAttribute("requestNumber", loginUsersRequests.getId());
 			
@@ -852,478 +880,478 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 //		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 //	}
 //	
-//	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
-//	{
-//		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-//		LoginUsersRequests loginUsersRequests=(LoginUsersRequests)command;
-//		
-//		Settings settings = (Settings)request.getSession().getAttribute("settings");
-//		boolean withdrawDaysQuartPolicy = settings.getWithdrawDaysQuartPolicy();
-//		boolean withoutSalPeriodValidation = settings.getWithoutSalPeriodValidation();
-//		boolean notesValidation = settings.getNotesValidation();
-//		boolean fromToRequestVald = settings.getFromToRequestVald();
-//		boolean automaticRequestsValidation = settings.getAutomaticRequestsValidation();
-//		
-//		String longitude = (String)request.getParameter("longitude");
-//		String latitude =  (String)request.getParameter("latitude");
-//		String accuracy =  (String)request.getParameter("accuracy");
-//		log.debug("location " + longitude + " , " + latitude + " , " + accuracy);
-//		String address = "";
-//		if (loginUsersRequests.getRequest_id()==null) {
-//			errors.reject("commons.errors.requiredFields");
-//		}
-//		if (errors.hasErrors()==false) {
-//			if(loginUsersRequests.getRequest_id().getId()==4 || loginUsersRequests.getRequest_id().getId()==5){
-//				if(errors.hasErrors()==false) {
-//					if (accuracy!=null && !accuracy.isEmpty()) {
-//						//					if (settings.getLocationAccuracy()< Integer.parseInt(accuracy)) {
-//						//						errors.reject("requestsApproval.errors.notAccurateLocation");
-//						//					} 
-//					} else {
-//						errors.reject("requestsApproval.errors.locationIsNotSet");
-//					}
-//				}
-//				if(errors.hasErrors()==false) {
-//					if (longitude == null || latitude == null || Double.parseDouble(longitude)==0 || Double.parseDouble(latitude)==0) {
-//						errors.reject("requestsApproval.errors.locationIsNotSet");
-//					}
-//				}
-//			}
-//		}
-//		String withdrawDays=request.getParameter("withdrawDays");
-//		log.debug("-----withdrawDays entered--------"+withdrawDays);
-//		if(withdrawDays!=null && !withdrawDays.equals("")){
-//			
-//			log.debug("--calculated period---"+withdrawDays);
-//			loginUsersRequests.setWithdrawDays(Double.parseDouble(withdrawDays));
-//			log.debug("--calculated period-end--"+loginUsersRequests.getWithdrawDays());
-//			
-//		}
-//		
-//		String withoutSalPeriod= request.getParameter("withoutSalPeriod");
-//		log.debug("----withoutSalPeriod==="+withoutSalPeriod);
-//		String withdraw=request.getParameter("withdraw");
-//		log.debug("----withdraw==="+withdraw);
-//		if(withoutSalPeriod!=null && !withoutSalPeriod.equals("")){
-//			if(withdrawDaysQuartPolicy==true){//Lotus
-//				if(withoutSalPeriod.equals("quar") || withoutSalPeriod.equals("half")){
-//					log.debug("--fraction period---"+withoutSalPeriod);
-//					if(withoutSalPeriod.equals("half")){
-//						loginUsersRequests.setWithdrawDays(new Double(4));
-//					}
-//					else if(withoutSalPeriod.equals("quar")){
-//						loginUsersRequests.setWithdrawDays(new Double(2));
-//						}
-//				}
-//			} else {//Lehaa
-//				if(withoutSalPeriod.equals("half") || withoutSalPeriod.equals("full")){
-//					log.debug("--fraction period---"+withoutSalPeriod);
-//					if(withoutSalPeriod.equals("half")){
-//						loginUsersRequests.setWithdrawDays(0.5);
-//					}
-//					else if(withoutSalPeriod.equals("full")){
-//						if(withdraw==null || withdraw.equals("")){
-//							errors.reject("requestsApproval.errors.nullRequestDatesPeriod");
-//						}
-//						else{
-//							loginUsersRequests.setWithdrawDays(Double.parseDouble(withdraw));
-//						}
-//					}
-//				}
-//			}
-//		}
-//		log.debug("-after setting--"+loginUsersRequests.getWithdrawDays());
-//		
-//		String annVacation = request.getParameter("annualVacation");
-//		log.debug("-----annVacation entered--------"+annVacation);
-//		
-////		RequestTypes reqType = (RequestTypes)requestsApprovalManager.getObject(RequestTypes.class, new Long(1));
-////		Vacation vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class,"vacation", "999");
-//		
-//		if (annVacation != null && !annVacation.isEmpty()) {
-//			if (loginUsersRequests.getVacCredit()!=null && loginUsersRequests.getVacCredit() == 0) {
-//				errors.rejectValue("empCode", "requestsApproval.errors.zerovacationcredit");
-//			}
-//		}
-//		
-//		String speVacation = request.getParameter("specialVacation");
-//		log.debug("-----speVacation entered--------"+speVacation);
-//		if(errors.getErrorCount()==0)
-//		{	
-//			if(loginUsersRequests==null || loginUsersRequests.equals("")){
-//				errors.rejectValue("empCode", "commons.errors.requiredFields");
-////				errors.rejectValue("name", "commons.errors.requiredFields");
-//			}
-//			else{
-////				String empName=request.getParameter("name");
-//				if((loginUsersRequests.getEmpCode()==null || loginUsersRequests.getEmpCode().equals("")))
-//				{
-////					errors.rejectValue("empCode", "commons.errors.requiredFields");
-//					log.debug("null empcode");
-//					errors.reject("commons.errors.requiredFields");
-//				}
-//				if((loginUsersRequests.getEmpCode()!=null && !loginUsersRequests.getEmpCode().equals("")) ){
-//					log.debug("----loginUsersRequests.getEmpCode()---"+loginUsersRequests.getEmpCode());
-//					if(!isOnlyNumbers(loginUsersRequests.getEmpCode())){
-//						errors.rejectValue("empCode", "requestsApproval.errors.invalidEmpCode");
-//					}
-//					Employee emp = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode",  loginUsersRequests.getEmpCode());
-//					LoginUsers login_user=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode",emp);
-//					if(login_user==null || login_user.equals("")){
-//						log.debug("----login_user==null-----");
-//						errors.rejectValue("empCode", "requestsApproval.errors.empCodeNotExistance");
-//					}
-//				}
-//	
-//				if(loginUsersRequests.getRequest_id()==null || loginUsersRequests.getRequest_id().equals(""))
-//				{
-//					errors.rejectValue("request_id", "commons.errors.requiredFields");
-//				}
-//				
-//				if(loginUsersRequests.getRequest_date()==null || loginUsersRequests.getRequest_date().equals(""))
-//				{
-//					errors.rejectValue("request_date", "commons.errors.requiredFields");
-//				}
-//				
-//				if(loginUsersRequests.getRequest_id()!=null && !loginUsersRequests.getRequest_id().equals("")){
-//					if(loginUsersRequests.getRequest_id().getId()==1 || loginUsersRequests.getRequest_id().getId()==2 || loginUsersRequests.getRequest_id().getId()==4){
-//
-//						//Lehaa///////////////////////////////
-//						if((loginUsersRequests.getFrom_date()==null || loginUsersRequests.getFrom_date().equals(""))|| (loginUsersRequests.getTo_date()==null || loginUsersRequests.getTo_date().equals(""))){
-//							errors.reject("requestsApproval.errors.nullRequestPeriod");
-//						}
-//						if((loginUsersRequests.getFrom_date()!=null && !loginUsersRequests.getFrom_date().equals(""))&& (loginUsersRequests.getTo_date()!=null && !loginUsersRequests.getTo_date().equals(""))){
-//							if (loginUsersRequests.getFrom_date().after(loginUsersRequests.getTo_date())){
-//								errors.rejectValue("from_date","requestsApproval.errors.toTimeShouldBeGreaterThanOrEqualFromTime");
-//							}
-//						}
-//						//////////////////////////////////////////
-//						
-//						if(loginUsersRequests.getWithdrawDays()==null || loginUsersRequests.getWithdrawDays().equals("")){
-//							log.debug("--null Req period-   2--" +loginUsersRequests.getWithdrawDays());
-//							errors.reject("requestsApproval.errors.nullRequestPeriod");
-//						}
-//						
-//						if(loginUsersRequests.getRequest_id().getId()!=4){
-//							if(loginUsersRequests.getVacation()==null || loginUsersRequests.getVacation().equals("")){
-//								errors.reject("requestsApproval.errors.nullVacationType");
-//							}
-//						}else if(loginUsersRequests.getRequest_id().getId()==4){
-//							if(notesValidation==true){//Lehaa
-//								if(loginUsersRequests.getNotes().equals("") || loginUsersRequests.getNotes()==null){
-//									errors.rejectValue("request_id", "requestsApproval.errors.nullNotes");
-//								}
-//							}
-//						}	
-//						
-//						if(withoutSalPeriodValidation==true && loginUsersRequests.getRequest_id().getId()==2 
-//								&& loginUsersRequests.getVacation().getVacation().equals("001")){//Lehaa
-//							if(withoutSalPeriod==null || withoutSalPeriod.equals("")){
-//								errors.reject("commons.errors.requiredFields");
-//							}
-//						} else if ((withoutSalPeriodValidation==false &&
-//								!(loginUsersRequests.getRequest_id().getId()==1 && loginUsersRequests.getVacation()!=null
-//								&& (loginUsersRequests.getVacation().getVacation().equals("008") || 
-//										loginUsersRequests.getVacation().getVacation().equals("010")))) // Lotus
-//								|| withoutSalPeriodValidation==true && !(loginUsersRequests.getRequest_id().getId()==2 
-//										&& loginUsersRequests.getVacation().getVacation().equals("001")) //Lehaa
-//								){
-//							
-//							if((loginUsersRequests.getFrom_date()==null || loginUsersRequests.getFrom_date().equals(""))|| (loginUsersRequests.getTo_date()==null || loginUsersRequests.getTo_date().equals(""))){
-//							log.debug("--null Req period- 1111--" +loginUsersRequests.getWithdrawDays());
-//							errors.reject("requestsApproval.errors.nullRequestPeriod");
-//							}
-//							if((loginUsersRequests.getFrom_date()!=null && !loginUsersRequests.getFrom_date().equals(""))&& (loginUsersRequests.getTo_date()!=null && !loginUsersRequests.getTo_date().equals(""))){
-//								if (loginUsersRequests.getFrom_date().after(loginUsersRequests.getTo_date())){
-//									errors.rejectValue("from_date","requestsApproval.errors.toTimeShouldBeGreaterThanOrEqualFromTime");
-//								}
-//							}
-//							
-//							int requestsDeadline = (Integer)request.getSession().getAttribute("requestsDeadline");
-//							log.debug("requestsDeadline " + requestsDeadline);
-//							Calendar c = Calendar.getInstance();
-//							c.add(Calendar.HOUR_OF_DAY, (-1)*requestsDeadline);
-//							log.debug("deadline time " + c.getTime());
-////							log.debug("loginUsersRequests.getFrom_date().before(c.getTime()) " + loginUsersRequests.getFrom_date().before(c.getTime()));
-//							if (loginUsersRequests.getFrom_date()==null) {
-//								errors.reject("commons.errors.requiredFields");
-//							} else if (loginUsersRequests.getFrom_date().before(c.getTime())){
-//								errors.rejectValue("from_date","requestsApproval.errors.requestDeadlineExceeded");
-//							}
-//							if(loginUsersRequests.getVacation()!=null && loginUsersRequests.getVacation().getVacation()!= null && 
-//									loginUsersRequests.getVacation().getVacation().equals("010")){
-//								if (loginUsersRequests.getAltDate()!=null && ! loginUsersRequests.getAltDate().equals("")){
-//									errors.reject("commons.errors.requiredFields");
-//								}
-//							}
-//							
-//							// to check rules of annual vacation
-//						log.debug("testing");
-//						//log.debug("--diff betn reqdate & fromdate---"+calculateDifference(loginUsersRequests.getFrom_date(), loginUsersRequests.getRequest_date()));
-//						//if(loginUsersRequests!=null){
-//							log.debug("loginUsersRequests.getRequest_id()---"+loginUsersRequests.getRequest_id());
-//							if(loginUsersRequests.getVacation()!=null){
-//								log.debug("loginUsersRequests.getRequest_id()-!null--");
-//								if(loginUsersRequests.getRequest_id().getId()==2 && loginUsersRequests.getVacation().getVacation().equals("001")){
-//									log.debug("loginUsersRequests.getRequest_id()-==2--");
-//									if(loginUsersRequests.getWithdrawDays()!=null && !loginUsersRequests.getWithdrawDays().equals("")){
-//										log.debug("loginUsersRequests.getWithdrawDays()-----");
-//										Double period=loginUsersRequests.getWithdrawDays();
-//										log.debug("--period->>>>>>>--"+period);
-//										int difference=requestsApprovalManager.calculateDateDifference(loginUsersRequests.getFrom_date(),loginUsersRequests.getRequest_date());
-//										log.debug("--diff --->>>"+difference);
-//										if(period.intValue()<2){
-//											AnnualVacLimit limit=(AnnualVacLimit) requestsApprovalManager.getObjectByParameter(AnnualVacLimit.class, "vac_period", period.intValue()+"");
-//											log.debug("---limit-limit---"+limit.getVac_limit());
-//											log.debug("--limit.getVac_period()--<2-"+limit.getVac_period());
-//											if(limit!=null && !limit.equals("")){
-//												log.debug("--limit period()---"+limit.getVac_period());
-//												String per=limit.getVac_period();
-//												if(per.equals(period.intValue()+"")){
-//													if(limit.getVac_limit().equals(difference+"") || Integer.parseInt(limit.getVac_limit())<difference){
-//														log.debug("--->>>>-true---");
-//													}
-//													else{
-//														log.debug("-->>>--error---");
-//														
-//						//								model.put("msg1", "requestsApproval.errors.vacLimit1");
-//														//model.put("limit", limit.getVac_limit());
-//														errors.reject("requestsApproval.errors.vacLimitProblem");
-//													}
-//												}
-//						//						if(limit.getVac_period().equals("1")){
-//						//								if(loginUsersRequests.getFrom_date().compareTo(loginUsersRequests.getRequest_date())<0){
-//						//									log.debug("----from<reqdate---");
-//						//									errors.reject("requestsApproval.errors.vacLimitOneDay");
-//						//								}
-//						//						}
-//												else{
-//													if(difference<2){
-//														log.debug("----difference<2---");
-//														//model.put("limit", limit.getVac_limit());
-//														errors.reject("requestsApproval.errors.vacLimitProblem");
-//													}
-//												}
-//											}
-//											
-//										}else if(period.intValue()>=2){
-//											AnnualVacLimit limit=(AnnualVacLimit) requestsApprovalManager.getObjectByParameter(AnnualVacLimit.class, "vac_period", 2+"");
-//											if(limit!=null && !limit.equals("")){
-//												log.debug("--limit.getVac_period()---"+limit.getVac_period());
-//												String per=limit.getVac_period();
-//												if(per.equals(period.intValue()+"") || Double.parseDouble(per)<period){
-//													log.debug("--per--"+per);
-//													if(limit.getVac_limit().equals(difference+"") || Integer.parseInt(limit.getVac_limit())<difference){
-//														log.debug("----period>=2---");
-//														//model.put("limit", limit.getVac_limit());
-//														
-//													}
-//													else{
-//														errors.reject("requestsApproval.errors.vacLimitProblem");
-//													}
-//													
-//												}else if(difference<2){
-//													log.debug("----period>=2---difference<2--");
-//													//model.put("limit", limit.getVac_limit());
-//													errors.reject("requestsApproval.errors.vacLimitProblem");
-//												}
-//												else{
-//													log.debug("--period msh fl gadwl--period>=2---");
-//												}
-//											}
-//										}
-//									}
-//						//			if(period ==1){
-//						//				if(loginUsersRequests.getFrom_date().compareTo(loginUsersRequests.getRequest_date())<0){
-//						//					errors.reject("requestsApproval.errors.vacLimitOneDay");
-//						//				}
-//						//			}
-//									
-//						//			if(period >=2){
-//						//				if(difference<2){
-//						//					errors.reject("requestsApproval.errors.vacLimitMoreDays");
-//						//				}
-//						//			}
-//								}
-//							}
-//						//}
-//						// end of checking rules
-//							
-//					}
-//				}
-//					else if(loginUsersRequests.getRequest_id().getId()==3){
-//						if((loginUsersRequests.getPeriod_from()==null || loginUsersRequests.getPeriod_from().equals(""))||(loginUsersRequests.getPeriod_to()==null||loginUsersRequests.getPeriod_to().equals(""))){
-//							errors.reject("requestsApproval.errors.nullRequestPeriod");
-//						}
-//						if(loginUsersRequests.getLeave_effect()==null || loginUsersRequests.getLeave_effect().equals("")){
-//							errors.reject("requestsApproval.errors.nullLeaveEffect");
-//						}
-//						
-////						if(fromToRequestVald==true){//Lotus
-//							Date f = loginUsersRequests.getPeriod_from();
-//							Calendar fCal = Calendar.getInstance();
-//							fCal.setTime(f);
-//							
-//							Date t = loginUsersRequests.getPeriod_to();
-//							Calendar tCal = Calendar.getInstance();
-//							tCal.setTime(t);
-//							
-//							String perFrom=loginUsersRequests.getPeriod_from()+"";
-//							String perTo=loginUsersRequests.getPeriod_to()+"";
-//							String ar_from[]=perFrom.split(":");
-//							String fromHour =fCal.get(Calendar.HOUR_OF_DAY)+"";
-////							fromHour=fromHour.substring(fromHour.length()-2);
-//							log.debug("fromHour=== "+fromHour);
-//							String fromMinutes =ar_from[1];
-//							log.debug("fromMinutes=== "+fromMinutes);
-//							String pmAM=perFrom.substring(6, perFrom.length()-1);
-//							String ar_to[]=perTo.split(":");
-//							String toHour =tCal.get(Calendar.HOUR_OF_DAY)+"";
-////							toHour=toHour.substring(toHour.length()-2);
-//							log.debug("toHour=== "+toHour);
-//							String toMinutes =ar_to[1];
-//							log.debug("toMinutes=== "+toMinutes);
-//							if(Integer.parseInt(fromHour)>Integer.parseInt(toHour)){
-//								errors.reject("requestsApproval.errors.fromIsGreaterThanTo");
-//							}else if((Integer.parseInt(fromHour)==Integer.parseInt(toHour))&& (Integer.parseInt(fromHour)!=0 && Integer.parseInt(toHour)!=0)){
-//								log.debug("after parsing to int===fromMins=== "+Integer.parseInt(fromMinutes));
-//								log.debug("after parsing to int===toMinutes=== "+Integer.parseInt(toMinutes));
-//								if(Integer.parseInt(fromMinutes)>Integer.parseInt(toMinutes) || Integer.parseInt(fromMinutes)==Integer.parseInt(toMinutes)){
-//									errors.reject("requestsApproval.errors.fromIsGreaterThanTo");
-//								}
-//							}
-//							
-//							if((Integer.parseInt(fromHour)==0)||(Integer.parseInt(toHour)==0)){
-//								errors.reject("requestsApproval.errors.fromOrToIsZero");
-//							}
-////						}
-//						
-//					} else if(loginUsersRequests.getRequest_id().getId()==5){
-//						if((loginUsersRequests.getPeriod_from()==null || loginUsersRequests.getPeriod_from().equals(""))||(loginUsersRequests.getPeriod_to()==null||loginUsersRequests.getPeriod_to().equals(""))){
-//							errors.reject("requestsApproval.errors.nullRequestPeriod");
-//						}
-//						
-////						if(fromToRequestVald==true){//Lotus
-//							String perFrom=loginUsersRequests.getPeriod_from()+"";
-//							log.debug("perfrom " + perFrom);
-//							String perTo=loginUsersRequests.getPeriod_to()+"";
-//							log.debug("perTo " + perTo);
-//							String ar_from[]=perFrom.split(":");
-//							String fromHour =ar_from[0];
+	protected void onBindAndValidate(HttpServletRequest request, Object command, BindingResult errors) throws Exception
+	{
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		LoginUsersRequests loginUsersRequests=(LoginUsersRequests)command;
+		
+		Settings settings = (Settings)request.getSession().getAttribute("settings");
+		boolean withdrawDaysQuartPolicy = settings.getWithdrawDaysQuartPolicy();
+		boolean withoutSalPeriodValidation = settings.getWithoutSalPeriodValidation();
+		boolean notesValidation = settings.getNotesValidation();
+		boolean fromToRequestVald = settings.getFromToRequestVald();
+		boolean automaticRequestsValidation = settings.getAutomaticRequestsValidation();
+		
+		String longitude = (String)request.getParameter("longitude");
+		String latitude =  (String)request.getParameter("latitude");
+		String accuracy =  (String)request.getParameter("accuracy");
+		log.debug("location " + longitude + " , " + latitude + " , " + accuracy);
+		String address = "";
+		if (loginUsersRequests.getRequest_id()==null) {
+			errors.reject("commons.errors.requiredFields");
+		}
+		if (errors.hasErrors()==false) {
+			if(loginUsersRequests.getRequest_id().getId()==4 || loginUsersRequests.getRequest_id().getId()==5){
+				if(errors.hasErrors()==false) {
+					if (accuracy!=null && !accuracy.isEmpty()) {
+						//					if (settings.getLocationAccuracy()< Integer.parseInt(accuracy)) {
+						//						errors.reject("requestsApproval.errors.notAccurateLocation");
+						//					} 
+					} else {
+						errors.reject("requestsApproval.errors.locationIsNotSet");
+					}
+				}
+				if(errors.hasErrors()==false) {
+					if (longitude == null || latitude == null || Double.parseDouble(longitude)==0 || Double.parseDouble(latitude)==0) {
+						errors.reject("requestsApproval.errors.locationIsNotSet");
+					}
+				}
+			}
+		}
+		String withdrawDays=request.getParameter("withdrawDays");
+		log.debug("-----withdrawDays entered--------"+withdrawDays);
+		if(withdrawDays!=null && !withdrawDays.equals("")){
+			
+			log.debug("--calculated period---"+withdrawDays);
+			loginUsersRequests.setWithdrawDays(Double.parseDouble(withdrawDays));
+			log.debug("--calculated period-end--"+loginUsersRequests.getWithdrawDays());
+			
+		}
+		
+		String withoutSalPeriod= request.getParameter("withoutSalPeriod");
+		log.debug("----withoutSalPeriod==="+withoutSalPeriod);
+		String withdraw=request.getParameter("withdraw");
+		log.debug("----withdraw==="+withdraw);
+		if(withoutSalPeriod!=null && !withoutSalPeriod.equals("")){
+			if(withdrawDaysQuartPolicy==true){//Lotus
+				if(withoutSalPeriod.equals("quar") || withoutSalPeriod.equals("half")){
+					log.debug("--fraction period---"+withoutSalPeriod);
+					if(withoutSalPeriod.equals("half")){
+						loginUsersRequests.setWithdrawDays(new Double(4));
+					}
+					else if(withoutSalPeriod.equals("quar")){
+						loginUsersRequests.setWithdrawDays(new Double(2));
+						}
+				}
+			} else {//Lehaa
+				if(withoutSalPeriod.equals("half") || withoutSalPeriod.equals("full")){
+					log.debug("--fraction period---"+withoutSalPeriod);
+					if(withoutSalPeriod.equals("half")){
+						loginUsersRequests.setWithdrawDays(0.5);
+					}
+					else if(withoutSalPeriod.equals("full")){
+						if(withdraw==null || withdraw.equals("")){
+							errors.reject("requestsApproval.errors.nullRequestDatesPeriod");
+						}
+						else{
+							loginUsersRequests.setWithdrawDays(Double.parseDouble(withdraw));
+						}
+					}
+				}
+			}
+		}
+		log.debug("-after setting--"+loginUsersRequests.getWithdrawDays());
+		
+		String annVacation = request.getParameter("annualVacation");
+		log.debug("-----annVacation entered--------"+annVacation);
+		
+//		RequestTypes reqType = (RequestTypes)requestsApprovalManager.getObject(RequestTypes.class, new Long(1));
+//		Vacation vac = (Vacation)requestsApprovalManager.getObjectByParameter(Vacation.class,"vacation", "999");
+		
+		if (annVacation != null && !annVacation.isEmpty()) {
+			if (loginUsersRequests.getVacCredit()!=null && loginUsersRequests.getVacCredit() == 0) {
+				errors.rejectValue("empCode", "requestsApproval.errors.zerovacationcredit");
+			}
+		}
+		
+		String speVacation = request.getParameter("specialVacation");
+		log.debug("-----speVacation entered--------"+speVacation);
+		if(errors.getErrorCount()==0)
+		{	
+			if(loginUsersRequests==null || loginUsersRequests.equals("")){
+				errors.rejectValue("empCode", "commons.errors.requiredFields");
+//				errors.rejectValue("name", "commons.errors.requiredFields");
+			}
+			else{
+//				String empName=request.getParameter("name");
+				if((loginUsersRequests.getEmpCode()==null || loginUsersRequests.getEmpCode().equals("")))
+				{
+//					errors.rejectValue("empCode", "commons.errors.requiredFields");
+					log.debug("null empcode");
+					errors.reject("commons.errors.requiredFields");
+				}
+				if((loginUsersRequests.getEmpCode()!=null && !loginUsersRequests.getEmpCode().equals("")) ){
+					log.debug("----loginUsersRequests.getEmpCode()---"+loginUsersRequests.getEmpCode());
+					if(!isOnlyNumbers(loginUsersRequests.getEmpCode())){
+						errors.rejectValue("empCode", "requestsApproval.errors.invalidEmpCode");
+					}
+					Employee emp = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode",  loginUsersRequests.getEmpCode());
+					LoginUsers login_user=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode",emp);
+					if(login_user==null || login_user.equals("")){
+						log.debug("----login_user==null-----");
+						errors.rejectValue("empCode", "requestsApproval.errors.empCodeNotExistance");
+					}
+				}
+	
+				if(loginUsersRequests.getRequest_id()==null || loginUsersRequests.getRequest_id().equals(""))
+				{
+					errors.rejectValue("request_id", "commons.errors.requiredFields");
+				}
+				
+				if(loginUsersRequests.getRequest_date()==null || loginUsersRequests.getRequest_date().equals(""))
+				{
+					errors.rejectValue("request_date", "commons.errors.requiredFields");
+				}
+				
+				if(loginUsersRequests.getRequest_id()!=null && !loginUsersRequests.getRequest_id().equals("")){
+					if(loginUsersRequests.getRequest_id().getId()==1 || loginUsersRequests.getRequest_id().getId()==2 || loginUsersRequests.getRequest_id().getId()==4){
+
+						//Lehaa///////////////////////////////
+						if((loginUsersRequests.getFrom_date()==null || loginUsersRequests.getFrom_date().equals(""))|| (loginUsersRequests.getTo_date()==null || loginUsersRequests.getTo_date().equals(""))){
+							errors.reject("requestsApproval.errors.nullRequestPeriod");
+						}
+						if((loginUsersRequests.getFrom_date()!=null && !loginUsersRequests.getFrom_date().equals(""))&& (loginUsersRequests.getTo_date()!=null && !loginUsersRequests.getTo_date().equals(""))){
+							if (loginUsersRequests.getFrom_date().after(loginUsersRequests.getTo_date())){
+								errors.rejectValue("from_date","requestsApproval.errors.toTimeShouldBeGreaterThanOrEqualFromTime");
+							}
+						}
+						//////////////////////////////////////////
+						
+						if(loginUsersRequests.getWithdrawDays()==null || loginUsersRequests.getWithdrawDays().equals("")){
+							log.debug("--null Req period-   2--" +loginUsersRequests.getWithdrawDays());
+							errors.reject("requestsApproval.errors.nullRequestPeriod");
+						}
+						
+						if(loginUsersRequests.getRequest_id().getId()!=4){
+							if(loginUsersRequests.getVacation()==null || loginUsersRequests.getVacation().equals("")){
+								errors.reject("requestsApproval.errors.nullVacationType");
+							}
+						}else if(loginUsersRequests.getRequest_id().getId()==4){
+							if(notesValidation==true){//Lehaa
+								if(loginUsersRequests.getNotes().equals("") || loginUsersRequests.getNotes()==null){
+									errors.rejectValue("request_id", "requestsApproval.errors.nullNotes");
+								}
+							}
+						}	
+						
+						if(withoutSalPeriodValidation==true && loginUsersRequests.getRequest_id().getId()==2 
+								&& loginUsersRequests.getVacation().getVacation().equals("001")){//Lehaa
+							if(withoutSalPeriod==null || withoutSalPeriod.equals("")){
+								errors.reject("commons.errors.requiredFields");
+							}
+						} else if ((withoutSalPeriodValidation==false &&
+								!(loginUsersRequests.getRequest_id().getId()==1 && loginUsersRequests.getVacation()!=null
+								&& (loginUsersRequests.getVacation().getVacation().equals("008") || 
+										loginUsersRequests.getVacation().getVacation().equals("010")))) // Lotus
+								|| withoutSalPeriodValidation==true && !(loginUsersRequests.getRequest_id().getId()==2 
+										&& loginUsersRequests.getVacation().getVacation().equals("001")) //Lehaa
+								){
+							
+							if((loginUsersRequests.getFrom_date()==null || loginUsersRequests.getFrom_date().equals(""))|| (loginUsersRequests.getTo_date()==null || loginUsersRequests.getTo_date().equals(""))){
+							log.debug("--null Req period- 1111--" +loginUsersRequests.getWithdrawDays());
+							errors.reject("requestsApproval.errors.nullRequestPeriod");
+							}
+							if((loginUsersRequests.getFrom_date()!=null && !loginUsersRequests.getFrom_date().equals(""))&& (loginUsersRequests.getTo_date()!=null && !loginUsersRequests.getTo_date().equals(""))){
+								if (loginUsersRequests.getFrom_date().after(loginUsersRequests.getTo_date())){
+									errors.rejectValue("from_date","requestsApproval.errors.toTimeShouldBeGreaterThanOrEqualFromTime");
+								}
+							}
+							
+							int requestsDeadline = (Integer)request.getSession().getAttribute("requestsDeadline");
+							log.debug("requestsDeadline " + requestsDeadline);
+							Calendar c = Calendar.getInstance();
+							c.add(Calendar.HOUR_OF_DAY, (-1)*requestsDeadline);
+							log.debug("deadline time " + c.getTime());
+//							log.debug("loginUsersRequests.getFrom_date().before(c.getTime()) " + loginUsersRequests.getFrom_date().before(c.getTime()));
+							if (loginUsersRequests.getFrom_date()==null) {
+								errors.reject("commons.errors.requiredFields");
+							} else if (loginUsersRequests.getFrom_date().before(c.getTime())){
+								errors.rejectValue("from_date","requestsApproval.errors.requestDeadlineExceeded");
+							}
+							if(loginUsersRequests.getVacation()!=null && loginUsersRequests.getVacation().getVacation()!= null && 
+									loginUsersRequests.getVacation().getVacation().equals("010")){
+								if (loginUsersRequests.getAltDate()!=null && ! loginUsersRequests.getAltDate().equals("")){
+									errors.reject("commons.errors.requiredFields");
+								}
+							}
+							
+							// to check rules of annual vacation
+						log.debug("testing");
+						//log.debug("--diff betn reqdate & fromdate---"+calculateDifference(loginUsersRequests.getFrom_date(), loginUsersRequests.getRequest_date()));
+						//if(loginUsersRequests!=null){
+							log.debug("loginUsersRequests.getRequest_id()---"+loginUsersRequests.getRequest_id());
+							if(loginUsersRequests.getVacation()!=null){
+								log.debug("loginUsersRequests.getRequest_id()-!null--");
+								if(loginUsersRequests.getRequest_id().getId()==2 && loginUsersRequests.getVacation().getVacation().equals("001")){
+									log.debug("loginUsersRequests.getRequest_id()-==2--");
+									if(loginUsersRequests.getWithdrawDays()!=null && !loginUsersRequests.getWithdrawDays().equals("")){
+										log.debug("loginUsersRequests.getWithdrawDays()-----");
+										Double period=loginUsersRequests.getWithdrawDays();
+										log.debug("--period->>>>>>>--"+period);
+										int difference=requestsApprovalManager.calculateDateDifference(loginUsersRequests.getFrom_date(),loginUsersRequests.getRequest_date());
+										log.debug("--diff --->>>"+difference);
+										if(period.intValue()<2){
+											AnnualVacLimit limit=(AnnualVacLimit) requestsApprovalManager.getObjectByParameter(AnnualVacLimit.class, "vac_period", period.intValue()+"");
+											log.debug("---limit-limit---"+limit.getVac_limit());
+											log.debug("--limit.getVac_period()--<2-"+limit.getVac_period());
+											if(limit!=null && !limit.equals("")){
+												log.debug("--limit period()---"+limit.getVac_period());
+												String per=limit.getVac_period();
+												if(per.equals(period.intValue()+"")){
+													if(limit.getVac_limit().equals(difference+"") || Integer.parseInt(limit.getVac_limit())<difference){
+														log.debug("--->>>>-true---");
+													}
+													else{
+														log.debug("-->>>--error---");
+														
+						//								model.put("msg1", "requestsApproval.errors.vacLimit1");
+														//model.put("limit", limit.getVac_limit());
+														errors.reject("requestsApproval.errors.vacLimitProblem");
+													}
+												}
+						//						if(limit.getVac_period().equals("1")){
+						//								if(loginUsersRequests.getFrom_date().compareTo(loginUsersRequests.getRequest_date())<0){
+						//									log.debug("----from<reqdate---");
+						//									errors.reject("requestsApproval.errors.vacLimitOneDay");
+						//								}
+						//						}
+												else{
+													if(difference<2){
+														log.debug("----difference<2---");
+														//model.put("limit", limit.getVac_limit());
+														errors.reject("requestsApproval.errors.vacLimitProblem");
+													}
+												}
+											}
+											
+										}else if(period.intValue()>=2){
+											AnnualVacLimit limit=(AnnualVacLimit) requestsApprovalManager.getObjectByParameter(AnnualVacLimit.class, "vac_period", 2+"");
+											if(limit!=null && !limit.equals("")){
+												log.debug("--limit.getVac_period()---"+limit.getVac_period());
+												String per=limit.getVac_period();
+												if(per.equals(period.intValue()+"") || Double.parseDouble(per)<period){
+													log.debug("--per--"+per);
+													if(limit.getVac_limit().equals(difference+"") || Integer.parseInt(limit.getVac_limit())<difference){
+														log.debug("----period>=2---");
+														//model.put("limit", limit.getVac_limit());
+														
+													}
+													else{
+														errors.reject("requestsApproval.errors.vacLimitProblem");
+													}
+													
+												}else if(difference<2){
+													log.debug("----period>=2---difference<2--");
+													//model.put("limit", limit.getVac_limit());
+													errors.reject("requestsApproval.errors.vacLimitProblem");
+												}
+												else{
+													log.debug("--period msh fl gadwl--period>=2---");
+												}
+											}
+										}
+									}
+						//			if(period ==1){
+						//				if(loginUsersRequests.getFrom_date().compareTo(loginUsersRequests.getRequest_date())<0){
+						//					errors.reject("requestsApproval.errors.vacLimitOneDay");
+						//				}
+						//			}
+									
+						//			if(period >=2){
+						//				if(difference<2){
+						//					errors.reject("requestsApproval.errors.vacLimitMoreDays");
+						//				}
+						//			}
+								}
+							}
+						//}
+						// end of checking rules
+							
+					}
+				}
+					else if(loginUsersRequests.getRequest_id().getId()==3){
+						if((loginUsersRequests.getPeriod_from()==null || loginUsersRequests.getPeriod_from().equals(""))||(loginUsersRequests.getPeriod_to()==null||loginUsersRequests.getPeriod_to().equals(""))){
+							errors.reject("requestsApproval.errors.nullRequestPeriod");
+						}
+						if(loginUsersRequests.getLeave_effect()==null || loginUsersRequests.getLeave_effect().equals("")){
+							errors.reject("requestsApproval.errors.nullLeaveEffect");
+						}
+						
+//						if(fromToRequestVald==true){//Lotus
+							Date f = loginUsersRequests.getPeriod_from();
+							Calendar fCal = Calendar.getInstance();
+							fCal.setTime(f);
+							
+							Date t = loginUsersRequests.getPeriod_to();
+							Calendar tCal = Calendar.getInstance();
+							tCal.setTime(t);
+							
+							String perFrom=loginUsersRequests.getPeriod_from()+"";
+							String perTo=loginUsersRequests.getPeriod_to()+"";
+							String ar_from[]=perFrom.split(":");
+							String fromHour =fCal.get(Calendar.HOUR_OF_DAY)+"";
 //							fromHour=fromHour.substring(fromHour.length()-2);
-//							log.debug("fromHour=== "+fromHour);
-//							String fromMinutes =ar_from[1];
-//							log.debug("fromMinutes=== "+fromMinutes);
-//							String pmAM=perFrom.substring(6, perFrom.length()-1);
-//							String ar_to[]=perTo.split(":");
-//							String toHour =ar_to[0];
+							log.debug("fromHour=== "+fromHour);
+							String fromMinutes =ar_from[1];
+							log.debug("fromMinutes=== "+fromMinutes);
+							String pmAM=perFrom.substring(6, perFrom.length()-1);
+							String ar_to[]=perTo.split(":");
+							String toHour =tCal.get(Calendar.HOUR_OF_DAY)+"";
 //							toHour=toHour.substring(toHour.length()-2);
-//							log.debug("toHour=== "+toHour);
-//							String toMinutes =ar_to[1];
-//							log.debug("toMinutes=== "+toMinutes);
-//							if(Integer.parseInt(fromHour)>Integer.parseInt(toHour)){
-//								errors.reject("requestsApproval.errors.fromIsGreaterThanTo");
-//							}else if((Integer.parseInt(fromHour)==Integer.parseInt(toHour))&& (Integer.parseInt(fromHour)!=0 && Integer.parseInt(toHour)!=0)){
-//								log.debug("after parsing to int===fromMins=== "+Integer.parseInt(fromMinutes));
-//								log.debug("after parsing to int===toMinutes=== "+Integer.parseInt(toMinutes));
-//								if(Integer.parseInt(fromMinutes)>Integer.parseInt(toMinutes) || Integer.parseInt(fromMinutes)==Integer.parseInt(toMinutes)){
-//									errors.reject("requestsApproval.errors.fromIsGreaterThanTo");
-//								}
-//							}
-//							
-//							log.debug("(Integer.parseInt(fromHour)==0) " + (Integer.parseInt(fromHour)==0));
-//							log.debug("(Integer.parseInt(toHour)==0) " + (Integer.parseInt(toHour)==0));
-//							if((Integer.parseInt(fromHour)==0)||(Integer.parseInt(toHour)==0)){
-//								log.debug("time is zero");
-//								errors.reject("requestsApproval.errors.fromOrToIsZero");
-//							}
-////						}
-//						
-//					}
-//					
-//				}
-//				if(notesValidation==true){
-//					if(loginUsersRequests.getNotes().equals("") || loginUsersRequests.getNotes()==null){
-//						errors.rejectValue("notes", "commons.errors.requiredFields");
-//					}
-//				}
-//				
-//
-//				if (automaticRequestsValidation==true) {
-//					log.debug("loginUsersRequests.getRequest_id() " + loginUsersRequests.getRequest_id().getId());
-//					if (loginUsersRequests.getRequest_id().getId().equals(new Long(5))) {
-//
-//						//check if full day errand
-//
-//
-//						DateFormat df=new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-////						String perFrom=loginUsersRequests.getPeriod_from()+"";
-//						String perFrom = df.format(loginUsersRequests.getPeriod_from());
-////						String perTo=loginUsersRequests.getPeriod_to()+"";
-//						String perTo = df.format(loginUsersRequests.getPeriod_to());
-//
-//						log.debug("perFrom " + perFrom);
-//						log.debug("perTo " + perTo);
-//						Map att = requestsApprovalManager.checkAttendance(loginUsersRequests.getPeriod_from(), loginUsersRequests.getEmpCode());
-//						AttendanceStatus attendanceResponse = (AttendanceStatus)att.get("Response");
-//						System.out.println("attendance status response " + attendanceResponse);
-//						RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
-//						requestQuery.setDateFrom(perFrom);
-//						requestQuery.setDateTo(perTo);
-//						System.out.println("attendanceResponse.getSignIn() " + attendanceResponse.getSignIn());
-//
-//						Employee e = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", loginUsersRequests.getEmpCode());
-//						Map checkStartedMap = requestsApprovalManager.checkStartedRequests(requestQuery, e);
-//						System.out.println("after checking started requests " + checkStartedMap);
-//						List startedRequests = (List)checkStartedMap.get("Response");
-//						System.out.println("after checking started requests 2" + startedRequests);
-//
-//						if (attendanceResponse!=null && attendanceResponse.getSignIn()!=null && attendanceResponse.getSignIn().equals(new Boolean(true))) {
-//							// check attendance on this day//
-//
-//							System.out.println("attendance status response " + attendanceResponse.getSignIn());
-//
-//							errors.rejectValue("request_id","requestsApproval.errors.fullDayErrandIsNotAllowedToday","User Signed In Already on the specified date, full day errand is not allowed.");
-//
-//							////////////////////////////////
-//						} else if (startedRequests != null && startedRequests.size() > 0) {
-//							errors.rejectValue("request_id","requestsApproval.errors.fullDayErrandIsNotAllowedToday","Another request is made already on the specified date, full day errand is not allowed.");
+							log.debug("toHour=== "+toHour);
+							String toMinutes =ar_to[1];
+							log.debug("toMinutes=== "+toMinutes);
+							if(Integer.parseInt(fromHour)>Integer.parseInt(toHour)){
+								errors.reject("requestsApproval.errors.fromIsGreaterThanTo");
+							}else if((Integer.parseInt(fromHour)==Integer.parseInt(toHour))&& (Integer.parseInt(fromHour)!=0 && Integer.parseInt(toHour)!=0)){
+								log.debug("after parsing to int===fromMins=== "+Integer.parseInt(fromMinutes));
+								log.debug("after parsing to int===toMinutes=== "+Integer.parseInt(toMinutes));
+								if(Integer.parseInt(fromMinutes)>Integer.parseInt(toMinutes) || Integer.parseInt(fromMinutes)==Integer.parseInt(toMinutes)){
+									errors.reject("requestsApproval.errors.fromIsGreaterThanTo");
+								}
+							}
+							
+							if((Integer.parseInt(fromHour)==0)||(Integer.parseInt(toHour)==0)){
+								errors.reject("requestsApproval.errors.fromOrToIsZero");
+							}
 //						}
-//					} else {
-//						//if not full day errand check requests overlapping/////////////////
-//						////////////////////////////////////1///////////////////////////////
-//						//Signing in ///////////////////////////////////////////////////////
-//						////////////////////////////////////////////////////////////////////
-//						//					if(loginUsersRequests.getRequest_id().getId().equals(new Long(10))) {
-//						Calendar temp = Calendar.getInstance();
-//						temp.setTime(loginUsersRequests.getPeriod_from());
-//
-//						List requests = requestsApprovalManager.getRequestsByExactDatePeriodAndEmpCode(loginUsersRequests.getPeriod_from(), loginUsersRequests.getPeriod_to(), loginUsersRequests.getEmpCode());
-//						log.debug("requests on exact date size " + requests.size());
-//						if (requests.size() >0) {
-//							Iterator reqItr = requests.iterator();
-//							while (reqItr.hasNext()) {
-//								LoginUsersRequests req = (LoginUsersRequests)reqItr.next();
-//								if (req.getPeriod_to() == null) {
-//									String[] args = {req.getRequestNumber()};
-//									log.debug("req.getRequestNumber() " + req.getRequestNumber());
-//									errors.rejectValue("request_id","requestsApproval.errors.endStartedRequestsInDateIntervalSpecified",args,"");
-//								} else {
-//									if (req.getPeriod_to().compareTo(loginUsersRequests.getPeriod_from()) > 0) {
-//										errors.rejectValue("request_id","requestsApproval.errors.overlappingRequests");
-//									}
-//								}
-//							}
+						
+					} else if(loginUsersRequests.getRequest_id().getId()==5){
+						if((loginUsersRequests.getPeriod_from()==null || loginUsersRequests.getPeriod_from().equals(""))||(loginUsersRequests.getPeriod_to()==null||loginUsersRequests.getPeriod_to().equals(""))){
+							errors.reject("requestsApproval.errors.nullRequestPeriod");
+						}
+						
+//						if(fromToRequestVald==true){//Lotus
+							String perFrom=loginUsersRequests.getPeriod_from()+"";
+							log.debug("perfrom " + perFrom);
+							String perTo=loginUsersRequests.getPeriod_to()+"";
+							log.debug("perTo " + perTo);
+							String ar_from[]=perFrom.split(":");
+							String fromHour =ar_from[0];
+							fromHour=fromHour.substring(fromHour.length()-2);
+							log.debug("fromHour=== "+fromHour);
+							String fromMinutes =ar_from[1];
+							log.debug("fromMinutes=== "+fromMinutes);
+							String pmAM=perFrom.substring(6, perFrom.length()-1);
+							String ar_to[]=perTo.split(":");
+							String toHour =ar_to[0];
+							toHour=toHour.substring(toHour.length()-2);
+							log.debug("toHour=== "+toHour);
+							String toMinutes =ar_to[1];
+							log.debug("toMinutes=== "+toMinutes);
+							if(Integer.parseInt(fromHour)>Integer.parseInt(toHour)){
+								errors.reject("requestsApproval.errors.fromIsGreaterThanTo");
+							}else if((Integer.parseInt(fromHour)==Integer.parseInt(toHour))&& (Integer.parseInt(fromHour)!=0 && Integer.parseInt(toHour)!=0)){
+								log.debug("after parsing to int===fromMins=== "+Integer.parseInt(fromMinutes));
+								log.debug("after parsing to int===toMinutes=== "+Integer.parseInt(toMinutes));
+								if(Integer.parseInt(fromMinutes)>Integer.parseInt(toMinutes) || Integer.parseInt(fromMinutes)==Integer.parseInt(toMinutes)){
+									errors.reject("requestsApproval.errors.fromIsGreaterThanTo");
+								}
+							}
+							
+							log.debug("(Integer.parseInt(fromHour)==0) " + (Integer.parseInt(fromHour)==0));
+							log.debug("(Integer.parseInt(toHour)==0) " + (Integer.parseInt(toHour)==0));
+							if((Integer.parseInt(fromHour)==0)||(Integer.parseInt(toHour)==0)){
+								log.debug("time is zero");
+								errors.reject("requestsApproval.errors.fromOrToIsZero");
+							}
 //						}
-//
-//						//					}
-//					}
-//					///////////////////////////////////////////////////////////////////
-//				}
-//			}
-//		}
-//		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-//	}
+						
+					}
+					
+				}
+				if(notesValidation==true){
+					if(loginUsersRequests.getNotes().equals("") || loginUsersRequests.getNotes()==null){
+						errors.rejectValue("notes", "commons.errors.requiredFields");
+					}
+				}
+				
+
+				if (automaticRequestsValidation==true) {
+					log.debug("loginUsersRequests.getRequest_id() " + loginUsersRequests.getRequest_id().getId());
+					if (loginUsersRequests.getRequest_id().getId().equals(new Long(5))) {
+
+						//check if full day errand
+
+
+						DateFormat df=new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+//						String perFrom=loginUsersRequests.getPeriod_from()+"";
+						String perFrom = df.format(loginUsersRequests.getPeriod_from());
+//						String perTo=loginUsersRequests.getPeriod_to()+"";
+						String perTo = df.format(loginUsersRequests.getPeriod_to());
+
+						log.debug("perFrom " + perFrom);
+						log.debug("perTo " + perTo);
+						Map att = requestsApprovalManager.checkAttendance(loginUsersRequests.getPeriod_from(), loginUsersRequests.getEmpCode());
+						AttendanceStatus attendanceResponse = (AttendanceStatus)att.get("Response");
+						System.out.println("attendance status response " + attendanceResponse);
+						RequestsApprovalQuery requestQuery = new RequestsApprovalQuery();
+						requestQuery.setDateFrom(perFrom);
+						requestQuery.setDateTo(perTo);
+						System.out.println("attendanceResponse.getSignIn() " + attendanceResponse.getSignIn());
+
+						Employee e = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", loginUsersRequests.getEmpCode());
+						Map checkStartedMap = requestsApprovalManager.checkStartedRequests(requestQuery, e);
+						System.out.println("after checking started requests " + checkStartedMap);
+						List startedRequests = (List)checkStartedMap.get("Response");
+						System.out.println("after checking started requests 2" + startedRequests);
+
+						if (attendanceResponse!=null && attendanceResponse.getSignIn()!=null && attendanceResponse.getSignIn().equals(new Boolean(true))) {
+							// check attendance on this day//
+
+							System.out.println("attendance status response " + attendanceResponse.getSignIn());
+
+							errors.rejectValue("request_id","requestsApproval.errors.fullDayErrandIsNotAllowedToday","User Signed In Already on the specified date, full day errand is not allowed.");
+
+							////////////////////////////////
+						} else if (startedRequests != null && startedRequests.size() > 0) {
+							errors.rejectValue("request_id","requestsApproval.errors.fullDayErrandIsNotAllowedToday","Another request is made already on the specified date, full day errand is not allowed.");
+						}
+					} else {
+						//if not full day errand check requests overlapping/////////////////
+						////////////////////////////////////1///////////////////////////////
+						//Signing in ///////////////////////////////////////////////////////
+						////////////////////////////////////////////////////////////////////
+						//					if(loginUsersRequests.getRequest_id().getId().equals(new Long(10))) {
+						Calendar temp = Calendar.getInstance();
+						temp.setTime(loginUsersRequests.getPeriod_from());
+
+						List requests = requestsApprovalManager.getRequestsByExactDatePeriodAndEmpCode(loginUsersRequests.getPeriod_from(), loginUsersRequests.getPeriod_to(), loginUsersRequests.getEmpCode());
+						log.debug("requests on exact date size " + requests.size());
+						if (requests.size() >0) {
+							Iterator reqItr = requests.iterator();
+							while (reqItr.hasNext()) {
+								LoginUsersRequests req = (LoginUsersRequests)reqItr.next();
+								if (req.getPeriod_to() == null) {
+									String[] args = {req.getRequestNumber()};
+									log.debug("req.getRequestNumber() " + req.getRequestNumber());
+									errors.rejectValue("request_id","requestsApproval.errors.endStartedRequestsInDateIntervalSpecified",args,"");
+								} else {
+									if (req.getPeriod_to().compareTo(loginUsersRequests.getPeriod_from()) > 0) {
+										errors.rejectValue("request_id","requestsApproval.errors.overlappingRequests");
+									}
+								}
+							}
+						}
+
+						//					}
+					}
+					///////////////////////////////////////////////////////////////////
+				}
+			}
+		}
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+	}
 
 	//	public ModelAndView onSubmit(HttpServletRequest request,
 //			HttpServletResponse response, Object command, BindException errors)throws Exception 
