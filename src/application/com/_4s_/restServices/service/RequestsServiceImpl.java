@@ -1310,11 +1310,23 @@ public Map approveRequest(RequestApproval requestApproval,Employee emp) {
 		}
 	}
 }
-
 public Map getRequestStatus(Long req_id) {
 	RestStatus status = new RestStatus();
 	Map response = new HashMap();
 	List reqStatus = requestsApprovalManager.getRequestStatus(req_id);
+	
+	status.setCode("200");
+	status.setMessage("Request Inserted Successfully");
+	status.setStatus("true");
+	response.put("Status", status);
+	response.put("Response", reqStatus);
+	log.debug("request status returned finished");
+	return response ;
+}
+public Map getRequestStatus(Long req_id,final Long emp_id) {
+	RestStatus status = new RestStatus();
+	Map response = new HashMap();
+	List reqStatus = requestsApprovalManager.getRequestStatus(req_id,emp_id);
 	
 	status.setCode("200");
 	status.setMessage("Request Inserted Successfully");

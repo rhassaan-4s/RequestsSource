@@ -119,7 +119,8 @@
 
 		    
 		   	$( ".MM_from_vac" ).datetimepicker({
-				onSelect: function( selectedDate ) {			
+				onSelect: function( selectedDate ) {
+					alert(selectedDate);
 				$('input.MM_to[title="'+this.title+'"]').datepicker( "option", "minDate", selectedDate );}});
 			
 		    $( ".MM_to_vac" ).datetimepicker({		

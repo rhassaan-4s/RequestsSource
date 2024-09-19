@@ -47,6 +47,7 @@ import com._4s_.common.util.DBUtils;
 import com._4s_.common.util.Page;
 import com._4s_.requestsApproval.model.AccessLevels;
 import com._4s_.requestsApproval.model.EmpReqApproval;
+import com._4s_.requestsApproval.model.EmpReqApprovalJSON;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.GroupAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
@@ -1972,12 +1973,47 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		try{
 			Criteria criteria = getCurrentSession()
 					.createCriteria(EmpReqApproval.class);
+			log.debug("request id " + req_id);
 			criteria.add(Restrictions.eq("req_id.id", req_id));
 			criteria
 			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-			return criteria.list();
+			List result = criteria.list();
+			System.out.println("result size " + result.size());
+			return result;
 		}
 		catch (Exception e) {
+			System.out.println("exception");
+			e.printStackTrace();
+			return new ArrayList();
+		}
+
+	}
+	
+	public List getRequestStatus(final Long req_id,final Long emp_id){
+		try{
+			Criteria criteria = getCurrentSession()
+					.createCriteria(EmpReqApproval.class);
+			log.debug("request id " + req_id);
+			criteria.add(Restrictions.eq("req_id.id", req_id));
+			if (emp_id!=null) {
+				criteria.add(Restrictions.eq("user_id.id", emp_id));
+			}
+			criteria
+			.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			List result = criteria.list();
+			System.out.println("result size " + result.size());
+			List returnResult = new ArrayList();
+			Iterator resultItr = result.iterator();
+			while(resultItr.hasNext()) {
+				EmpReqApproval app = (EmpReqApproval)resultItr.next();
+				EmpReqApprovalJSON approvalJSON = new EmpReqApprovalJSON(app.getUser_id().getName(),app.getLevel_id().getOrder(),app.getApproval_date(),app.getNote(),app.getApproval());
+				returnResult.add(approvalJSON);
+			}
+			return returnResult;
+		}
+		catch (Exception e) {
+			System.out.println("exception");
+			e.printStackTrace();
 			return new ArrayList();
 		}
 

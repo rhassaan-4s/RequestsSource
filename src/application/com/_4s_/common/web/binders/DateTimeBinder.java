@@ -28,7 +28,7 @@ public class DateTimeBinder extends PropertyEditorSupport implements
 	public String getAsText() {
 		log.debug("GetAsText >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
-		log.debug(">>>>>>> getAstext getValue() "+getValue());
+		log.debug(">>>>>>> getAstext getValue() "+getValue());//+ " class " + getValue().getClass()
 		Date date = ((Date)getValue());
 		log.debug(">>>>>>> getAstext date "+date);
 		String text = null;
@@ -37,7 +37,7 @@ public class DateTimeBinder extends PropertyEditorSupport implements
 			log.debug(">>>>>>> getAstext if ");
 			MultiCalendarDate mCalDate = new MultiCalendarDate();
 			mCalDate.setDate(date);
-			text = mCalDate.getDateTimeString(); 
+			text = mCalDate.getDateTimeStringReverse(); 
 		} else {
 			log.debug(">>>>>>> getAstext else ");
 			text = "" ;
@@ -52,7 +52,7 @@ public class DateTimeBinder extends PropertyEditorSupport implements
 		log.debug("SetAsText >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
 		Date date = null;
-		
+		log.debug("date " + text);
 		if ((text!=null)&&(text.length()>0)) {
 			log.debug(">>>>>>> set as text if");
 			MultiCalendarDate mCalDate = new MultiCalendarDate();

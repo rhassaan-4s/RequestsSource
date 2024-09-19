@@ -25,48 +25,37 @@
 			var token = $("input#token").val();
 			var from_date = $("input#request_date").val(); 
 			//alert(token);
-			//alert("vac " + vac);
+		//	alert("vac " + vac);
 			//alert("empCode " + empCode);
 		//	alert(from_date);
 			var requestApproval = {vac: vac, empCode: empCode, fromDate: from_date};
-		//	var username ='1';
-		//	var password = '123';
-		//	//$.getJSON('/Requests/requestsApproval/loginUsersRequestsForm.html/vacInfo', 
-//					$.getJSON('../api/workflow/vacInfo',{ user: "1", password: "123" },
-//					requestApproval,
-//				function(data) {
-//				alert(data);
-//				var credit = $('#vacCredit');
-//					$.each(data, function(key, value) {
-//						alert(key);
-//						if(key=='Results') {
-//							$.each(value, function(k,v) {
-//								//alert(k);
-//								//alert(v);
-//								credit.val(v);
-//							});
-//						}
-//					});
-//				}
-//		);
-		
+		//alert("request " + requestApproval);
 				$.ajax({
 					type : "GET",
 					url : "../requestsApproval/ajax/vacInfo",
-					dataType : 'json',
+				//	dataType : 'json',
 					// headers: {
 					// "Authorization": "Basic " + btoa(token)
 					//},
+					datatype : "application/json; charset=utf-8",
+    				contentType: "application/json; charset=utf-8",
 					data : requestApproval,
+					beforeSend: function (request) {
+					//	alert("before send");
+					//alert(request);
+					 //alert("before send " +request.withCredentails);
+					//    request.withCredentials = false;
+					//    alert("before send 2 " +request.withCredentails);
+					},
 					success : function(data) {
-						//  alert('Thanks for your query!'); 
-						//  alert(data);
+						//  alert('Thanks for your vac info query!'); 
+						 // alert(data);
 
 						var credit = $('#vacCredit');
 
 						$.each(data, function(key, value) {
-							//alert(key);
-							//alert(value);
+						//	alert(key);
+						//	alert(value);
 							if (key == 'Response') {
 								$.each(value, function(k, v) {
 									if (k == 'vacCredit') {
@@ -75,26 +64,99 @@
 								});
 							}
 						});
-					}
+					},
+					error: function(xhr, status, error) {
+						//alert(xhr);
+					//	alert("responseText " + xhr.responseText);
+					//	alert("statusText " + xhr.statusText);
+					//	alert("ERROR  " + error);
+					//	alert("ERROR RESPONSE " + error.response);
+						 // var err =JSON.parse(xhr.responseText);
+						  //alert(err.Message);
+						}
 				});
 			});
 		});
 		/////////////////////////////////////////////////////////
+		
+		function getBalanceVac() {
+			//alert("getting balance");
+			var empCode = document.getElementById('empCode').value;
+			var vacId = document.getElementById("annualVacation").value;
+			var from_date = document.getElementById("from_date").value;
+			var hostName = document.getElementById('hostName').value;
+			var serviceName = document.getElementById('serviceName').value;
+			var userName = document.getElementById('userName').value;
+			var password = document.getElementById('password').value;
+
+			// alert("1 "+from_date);
+			if (vacId != null && vacId != '') {
+
+				if (from_date == null || from_date == "") {
+					var period_from = document.getElementById("period_from").value;
+					var z1;
+					z1 = period_from.substring(0, 10);
+					// alert("2 "+z1);
+					var x = z1.split("/");
+					// alert("3  "+x);
+					var dFrom = new Date();
+					dFrom.setDate(x[2]);
+					dFrom.setFullYear(x[0]);
+					dFrom.setMonth(x[1] - 1);
+
+					// alert("4 "+dFrom);
+					//requestsDwr.getVacationCredit(fillBalance, empCode, 2,
+						//	vacId, dFrom, hostName, serviceName, userName,
+							//password);
+					
+					
+
+				} else if (from_date != null && from_date != '') {
+					var z1 = from_date.substring(0, 10);
+					var x = z1.split("/");
+					var dFrom = new Date();
+					dFrom.setDate(x[0]);
+					dFrom.setMonth(x[1] - 1);
+					dFrom.setFullYear(x[2]);
+
+					requestsDwr.getVacationCredit(fillBalance, empCode, 2,
+							vacId, dFrom);
+				}
+			}
+
+		}
+
+		function fillBalance(data) {
+			// alert('--data='+data);
+			if (data != null) {
+				document.getElementById('vacCredit').value = data;
+			}
+		}
+
+		var options = {
+			enableHighAccuracy : true,
+			timeout : 5000,
+			maximumAge : 0
+		};
+
+
 		function showVacationTypes() {
 
 			document.getElementById("errandDuration").className = 'hideClass';
 			document.getElementById("leavePermission").className = 'hideClass';
 			document.getElementById("vacationDates").className = 'hideClass';
-			document.getElementById("alternativeDate").className = 'hideClass';
+			var altD = document.getElementById("alternativeDate");
+			if (altD!=null) { altD.className = 'hideClass';}
 			document.getElementById("annualVacationTypes").className = 'hideClass';
 			document.getElementById("specialVacationTypes").className = 'hideClass';
 			document.getElementById("vacWithoutSal").className = 'hideClass';
 
 			var request_id = document.getElementById("request_id");
 
-			//alert("request " + request_id.value);
+		//	alert("request " + request_id.value);
 
 			if (request_id.value != null && request_id.value != '') {
+				//alert("req");
 				if (request_id.value == "1") {
 					//	alert('---1');
 					document.getElementById("specialVacationTypes").className = 'showClass';
@@ -106,12 +168,13 @@
 					//alert('---1.hi');
 	<%Settings settings = (Settings) session.getAttribute("settings");
 if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
-		//alert("lehaa");
+		//alert("bedoon moratab disabled");
 					document.getElementById("vacWithoutSal").className = 'hideClass';
 					document.getElementById("vacationDates").className = 'showClass';
-					document.getElementById("alternativeDate").className = 'hideClass';
+					if (altD!=null) { altD.className = 'hideClass';}
 	<%} else {%>
-		//alert("lotus");
+		//alert("bedoon moratab enabled");
+		
 					var vac_id = document.getElementById("specialVacation");
 					//	var vac_id2=document.getElementById("annualVacation");
 					//alert('vac_id....='+vac_id.value);
@@ -121,7 +184,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 						if (vac_id.value == '008') {
 							document.getElementById("vacWithoutSal").className = 'showClass';
 							document.getElementById("vacationDates").className = 'hideClass';
-							document.getElementById("alternativeDate").className = 'hideClass';
+							if (altD!=null) { altD.className = 'hideClass';}
 						} else if (vac_id.value == '010') {
 							//		alert("ra7aa esboo3eya");
 							document.getElementById("vacWithoutSal").className = 'hideClass';
@@ -130,7 +193,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 						} else {
 							document.getElementById("vacationDates").className = 'showClass';
 							document.getElementById("vacWithoutSal").className = 'hideClass';
-							document.getElementById("alternativeDate").className = 'hideClass';
+							if (altD!=null) { altD.className = 'hideClass';}
 						}
 					}
 	<%}%>
@@ -147,14 +210,14 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 					if (vac_id.value != null && vac_id.value != '') {
 						//alert('vac_id....='+vac_id.value);
 						if (vac_id.value == '001') {
-							//alert("showing vac without sal");
+							//alert("showing vac without sal#########");
 							document.getElementById("vacWithoutSal").className = 'showClass';
 							document.getElementById("vacationDates").className = 'hideClass';
-							document.getElementById("alternativeDate").className = 'hideClass';
+							if (altD!=null) { altD.className = 'hideClass';};
 						} else {
 							document.getElementById("vacationDates").className = 'showClass';
 							document.getElementById("vacWithoutSal").className = 'hideClass';
-							document.getElementById("alternativeDate").className = 'hideClass';
+							if (altD!=null) { altD.className = 'hideClass';};
 						}
 					}
 	<%} else {%>
@@ -164,7 +227,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 					document.getElementById("leavePermission").className = 'hideClass';
 					document.getElementById("vacationDates").className = 'showClass';
 					document.getElementById("vacWithoutSal").className = 'hideClass';
-					document.getElementById("alternativeDate").className = 'hideClass';
+					if (altD!=null) { altD.className = 'hideClass';};
 	<%}%>
 		} else if (request_id.value == "3") {
 					document.getElementById("specialVacationTypes").className = 'hideClass';
@@ -173,7 +236,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 					document.getElementById("leavePermission").className = 'showClass';
 					document.getElementById("vacationDates").className = 'hideClass';
 					document.getElementById("vacWithoutSal").className = 'hideClass';
-					document.getElementById("alternativeDate").className = 'hideClass';
+					if (altD!=null) { altD.className = 'hideClass';};
 				} else if (request_id.value == "4") {
 					document.getElementById("specialVacationTypes").className = 'hideClass';
 					document.getElementById("annualVacationTypes").className = 'hideClass';
@@ -181,7 +244,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 					document.getElementById("leavePermission").className = 'hideClass';
 					document.getElementById("vacationDates").className = 'showClass';
 					document.getElementById("vacWithoutSal").className = 'hideClass';
-					document.getElementById("alternativeDate").className = 'hideClass';
+					if (altD!=null) { altD.className = 'hideClass';};
 				} else if (request_id.value == "5") {
 					document.getElementById("specialVacationTypes").className = 'hideClass';
 					document.getElementById("annualVacationTypes").className = 'hideClass';
@@ -189,7 +252,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 					document.getElementById("errandDuration").className = 'showClass';
 					document.getElementById("vacationDates").className = 'hideClass';
 					document.getElementById("vacWithoutSal").className = 'hideClass';
-					document.getElementById("alternativeDate").className = 'hideClass';
+					if (altD!=null) { altD.className = 'hideClass';};
 				} else {
 					document.getElementById("specialVacationTypes").className = 'hideClass';
 					document.getElementById("annualVacationTypes").className = 'hideClass';
@@ -197,7 +260,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 					document.getElementById("leavePermission").className = 'hideClass';
 					document.getElementById("vacationDates").className = 'hideClass';
 					document.getElementById("vacWithoutSal").className = 'hideClass';
-					document.getElementById("alternativeDate").className = 'hideClass';
+					if (altD!=null) { altD.className = 'hideClass';};
 				}
 			}
 		}
@@ -216,7 +279,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 			window.location.href = URL;
 			//document.loginUsersRequestsForm.action = URL;
 			//	document.loginUsersRequestsForm.submit();
-			//alert('Your balance = '+document.getElementById("vacCredit").value);
+			//alert('Your credit = '+document.getElementById("vacCredit").value);
 		}
 
 		function calculateDiff() {
@@ -370,67 +433,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 				}
 			}
 		}
-		function getBalanceVac() {
-			//alert("getting balance");
-			var empCode = document.getElementById('empCode').value;
-			var vacId = document.getElementById("annualVacation").value;
-			var from_date = document.getElementById("from_date").value;
-			var hostName = document.getElementById('hostName').value;
-			var serviceName = document.getElementById('serviceName').value;
-			var userName = document.getElementById('userName').value;
-			var password = document.getElementById('password').value;
-
-			// alert("1 "+from_date);
-			if (vacId != null && vacId != '') {
-
-				if (from_date == null || from_date == "") {
-					var period_from = document.getElementById("period_from").value;
-					var z1;
-					z1 = period_from.substring(0, 10);
-					// alert("2 "+z1);
-					var x = z1.split("/");
-					// alert("3  "+x);
-					var dFrom = new Date();
-					dFrom.setDate(x[2]);
-					dFrom.setFullYear(x[0]);
-					dFrom.setMonth(x[1] - 1);
-
-					// alert("4 "+dFrom);
-					//requestsDwr.getVacationCredit(fillBalance, empCode, 2,
-						//	vacId, dFrom, hostName, serviceName, userName,
-							//password);
-					
-					
-
-				} else if (from_date != null && from_date != '') {
-					var z1 = from_date.substring(0, 10);
-					var x = z1.split("/");
-					var dFrom = new Date();
-					dFrom.setDate(x[0]);
-					dFrom.setMonth(x[1] - 1);
-					dFrom.setFullYear(x[2]);
-
-					requestsDwr.getVacationCredit(fillBalance, empCode, 2,
-							vacId, dFrom);
-				}
-			}
-
-		}
-
-		function fillBalance(data) {
-			// alert('--data='+data);
-			if (data != null) {
-				document.getElementById('vacCredit').value = data;
-			}
-		}
-
-		var options = {
-			enableHighAccuracy : true,
-			timeout : 5000,
-			maximumAge : 0
-		};
-
-		function success(pos) {
+				function success(pos) {
 			var crd = pos.coords;
 
 			//alert (crd.latitude+","+crd.longitude+","+crd.accuracy);
@@ -465,8 +468,8 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 		</tr>
 		<tr>
 			<td class="tableHeader"><abc:i18n
-					property="requestsApproval.header.loginUsersRequests" />
-				<fmt:message key="requestsApproval.header.loginUsersRequests" /></td>
+					property="requestsApproval.header.loginUsersRequests" /> <fmt:message
+					key="requestsApproval.header.loginUsersRequests" /></td>
 			<td align="left"></td>
 		</tr>
 		<tr>
@@ -479,19 +482,19 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 			<td colspan="2" height="20"></td>
 		</tr>
 		<tr>
-							<td colspan="2">
+			<td colspan="2">
 
-								<h2 style="color: red;">
-									<form:errors path="loginUsersRequests.*" />
-								</h2>
-							</td>
-						</tr>
-		
+				<h2 style="color: red;">
+					<form:errors path="loginUsersRequests.*" />
+				</h2>
+			</td>
+		</tr>
+
 		<tr>
 			<td><c:if test="${model.done==true||done==true}">
 					<font color="blue" size="5"> <abc:i18n
-							property="requestsApproval.loginUsersRequests.saveSuccess" />
-						<fmt:message key="requestsApproval.loginUsersRequests.saveSuccess" />
+							property="requestsApproval.loginUsersRequests.saveSuccess" /> <fmt:message
+							key="requestsApproval.loginUsersRequests.saveSuccess" />
 					</font>
 				</c:if></td>
 
@@ -499,37 +502,35 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 		<tr>
 			<td><c:if test="${limit!=null}">
 					<font color="red"> <abc:i18n
-							property="requestsApproval.errors.vacLimit" />
-						<fmt:message key="requestsApproval.errors.vacLimit" />&nbsp;
-						${limit }&nbsp; <abc:i18n property="requestsApproval.errors.day" />
-						<fmt:message key="requestsApproval.errors.day" />
+							property="requestsApproval.errors.vacLimit" /> <fmt:message
+							key="requestsApproval.errors.vacLimit" />&nbsp; ${limit }&nbsp;
+						<abc:i18n property="requestsApproval.errors.day" /> <fmt:message
+							key="requestsApproval.errors.day" />
 					</font>
 				</c:if></td>
 		</tr>
 		<tr>
-			<td>
-			
-			<form:form method="POST" modelAttribute="loginUsersRequests"
-				action="/Requests/requestsApproval/loginUsersRequestsForm.html">
-			
-					
-					
+			<td><form:form method="POST" modelAttribute="loginUsersRequests"
+					action="/Requests/requestsApproval/loginUsersRequestsForm.html">
+
+
+
 					<c:set var="dateNow" value="<%=nowDate%>" />
 
 					<input type="hidden" name="longitude" id="longitude" value="" />
 					<input type="hidden" name="latitude" id="latitude" value="" />
 					<input type="hidden" name="accuracy" id="accuracy" value="" />
-					
+
 
 					<input type="hidden" id="empRequestTypeId" name="empRequestTypeId"
 						value="${empRequestTypeId}" />
 
 					<table border=0 cellspacing=1 cellpadding=0 id="ep"
 						style="margin-right: 40px">
-												<tr id="head_1_ep">
+						<tr id="head_1_ep">
 							<td class="bodyBold" colspan=4 nowrap><abc:i18n
-									property="requestsApproval.header.loginUsersRequests" />
-								<fmt:message key="requestsApproval.header.loginUsersRequests" /></td>
+									property="requestsApproval.header.loginUsersRequests" /> <fmt:message
+									key="requestsApproval.header.loginUsersRequests" /></td>
 							<td nowrap colspan=1 align=left><abc:i18n
 									property="commons.caption.requiredInformation" /><span
 								class="bodySmallBold"><fmt:message
@@ -539,7 +540,6 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 						<c:if test="${empRequestTypeId!=null && empRequestTypeId!='' }">
 							<c:set var="check" value="disabled" />
 						</c:if>
-
 
 						<tr class="showClass">
 							<td nowrap class="formReq"><abc:i18n
@@ -560,12 +560,8 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 							<td nowrap class="formReq"><abc:i18n
 									property="requestsApproval.caption.requestDate" /> <fmt:message
 									key="requestsApproval.caption.requestDate" /></td>
-							<td class="formBodControl"><spring:bind
-									path="loginUsersRequests.request_date">
-									<input type="text" readonly="readonly" dir="ltr"
-										name="${status.expression}" id="${status.expression}"
-										value="${dateNow}" />
-								</spring:bind></td>
+							<td class="formBodControl"><form:input type="text"
+									readonly="readonly" dir="ltr" path="request_date" /></td>
 						</tr>
 						<tr>
 							<td nowrap class="formReq"><abc:i18n
@@ -585,7 +581,6 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 									</select>
 								</spring:bind></td>
 						</tr>
-
 						<c:if
 							test="${(loginUsersRequests.request_id.id == null || loginUsersRequests.request_id.id== '')}">
 							<tr id="specialVacationTypes" class="hideClass">
@@ -599,7 +594,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 										<c:forEach items="${model.specialVacations}" var="vacation">
 											<option value="${vacation.vacation}"
 												${vacation.vacation == loginUsersRequests.vacation.vacation?' selected' : ''}
-												onclick="alert('test');showVacationTypes()">${vacation.name}</option>
+												onclick="showVacationTypes()">${vacation.name}</option>
 										</c:forEach>
 								</select></td>
 							</tr>
@@ -609,8 +604,8 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 										property="requestsApproval.caption.vacationType" /> <fmt:message
 										key="requestsApproval.caption.vacationType" /></td>
 								<td class="formBodControl"><select name="annualVacation"
-									id="annualVacation" onchange="showVacationTypes()"
-									><!-- onchange="getBalanceVac();showVacationTypes()" -->
+									id="annualVacation" onchange="showVacationTypes()">
+										<!-- onchange="getBalanceVac();showVacationTypes()" -->
 										<option value=""><fmt:message
 												key="commons.caption.select" /></option>
 										<c:forEach items="${model.annualVacations}" var="vacation">
@@ -638,22 +633,16 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 								<td nowrap class="formReq"><abc:i18n
 										property="commons.caption.fromDate" /> <fmt:message
 										key="commons.caption.fromDate" /></td>
-								<td class="formBodControl"><spring:bind
-										path="loginUsersRequests.from_date">
-										<input type="text" class="calendar" readonly="readonly"
-											autocomplete="off" dir="ltr" name="${status.expression}"
-											id="${status.expression}" value="${status.value}" />
-									</spring:bind></td>
+								<td class="formBodControl"><form:input type="text"
+										class="calendar" readonly="readonly" autocomplete="off"
+										dir="ltr" path="from_date" /></td>
 
 								<td nowrap class="formReq"><abc:i18n
 										property="commons.caption.toDate" /> <fmt:message
 										key="commons.caption.toDate" /></td>
-								<td class="formBodControl"><spring:bind
-										path="loginUsersRequests.to_date">
-										<input type="text" class="calendar" readonly="readonly"
-											autocomplete="off" dir="ltr" name="${status.expression}"
-											id="${status.expression}" value="${status.value}" />
-									</spring:bind></td>
+								<td class="formBodControl"><form:input type="text"
+										class="calendar" readonly="readonly" autocomplete="off"
+										dir="ltr" path="to_date" /></td>
 
 								<td nowrap class="formReq"><abc:i18n
 										property="requestsApproval.requestsApprovalForm.reqPeriod" />
@@ -667,34 +656,24 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 								<td nowrap class="formReq"><abc:i18n
 										property="commons.caption.altDate" /> <fmt:message
 										key="commons.caption.altDate" /></td>
-								<td class="formBodControl"><spring:bind
-										path="loginUsersRequests.altDate">
-										<input type="text" class="calendar" readonly="readonly"
-											autocomplete="off" dir="ltr" name="${status.expression}"
-											id="${status.expression}" value="${status.value}" />
-									</spring:bind></td>
+								<td class="formBodControl"><form:input type="text"
+										class="calendar" readonly="readonly" autocomplete="off"
+										dir="ltr" path="altDate" /></td>
 							</tr>
 
 							<tr id="errandDuration" class="hideClass">
 								<td nowrap class="formReq"><abc:i18n
 										property="commons.caption.from" /> <fmt:message
 										key="commons.caption.from" /></td>
-								<td class="formBodControl"><spring:bind
-										path="loginUsersRequests.period_from">
-										<input type="text" class="MM_from" title="ccc" dir="ltr"
-											name="${status.expression}" id="${status.expression}"
-											value="${status.value}" />
-									</spring:bind></td>
+								<td class="formBodControl"><form:input type="text"
+										class="MM_from" title="ccc" dir="ltr" path="period_from" /></td>
 
 								<td nowrap class="formReq"><abc:i18n
 										property="commons.caption.to" /> <fmt:message
 										key="commons.caption.to" /></td>
-								<td class="formBodControl"><spring:bind
-										path="loginUsersRequests.period_to">
-										<input type="text" class="MM_to" title="ccc"
-											autocomplete="off" dir="ltr" name="${status.expression}"
-											id="${status.expression}" value="${status.value}" />
-									</spring:bind></td>
+								<td class="formBodControl"><form:input type="text"
+										class="MM_to" title="ccc" autocomplete="off" dir="ltr"
+										path="period_to" /></td>
 							</tr>
 
 
@@ -708,7 +687,6 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 										<select name="${status.expression}" id="${status.expression}">
 											<option value=""><fmt:message
 													key="commons.caption.select" /></option>
-											<!-- <option value="0" ${status.value == "0" ? ' selected':''}><fmt:message key="requestsApproval.caption.without"/></option>-->
 											<option value="1" ${status.value == "1" ? ' selected':''}><fmt:message
 													key="requestsApproval.caption.delay" /></option>
 											<option value="2" ${status.value == "2" ? ' selected':''}><fmt:message
@@ -720,22 +698,19 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 							<tr id="vacWithoutSal" class="hideClass">
 								<td nowrap class="formReq"><abc:i18n
 										property="commons.caption.from" /> <fmt:message
-										key="commons.caption.from" /></td>
-								<td class="formBodControl"><spring:bind
-										path="loginUsersRequests.vac_period_from">
-										<input type="text" class="MM_from_vac" title="ccc" dir="ltr"
-											name="${status.expression}" id="${status.expression}"
-											value="${status.value}" />
-									</spring:bind></td>
+										key="commons.caption.from" />
+									${loginUsersRequests.vac_period_from}</td>
+								<td class="formBodControl"><form:input type="text"
+										class="MM_from_vac" title="ccc" dir="ltr"
+										path="vac_period_from" /></td>
 
 								<td nowrap class="formReq"><abc:i18n
 										property="commons.caption.to" /> <fmt:message
 										key="commons.caption.to" /></td>
 								<td class="formBodControl"><spring:bind
 										path="loginUsersRequests.vac_period_to">
-										<input type="text" class="MM_to_vac" title="ccc" dir="ltr"
-											name="${status.expression}" id="${status.expression}"
-											value="${status.value}" />
+										<form:input type="text" class="MM_to_vac" title="ccc"
+											dir="ltr" path="vac_period_to" />
 									</spring:bind></td>
 
 								<td nowrap class="formReq"><abc:i18n
@@ -800,20 +775,20 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 						</c:if>
 
 						<c:if
-							test="${(loginUsersRequests.request_id.id!=null && loginUsersRequests.request_id.id!='')}">
-							<c:if test="${loginUsersRequests.request_id.id!=3}">
+							test="${((loginUsersRequests.request_id.id!=null && loginUsersRequests.request_id.id!='') || (model.requestType!=null && model.requestType!=''))}">
+							<c:if
+								test="${loginUsersRequests.request_id.id!=3 || model.requestType!=3}">
 
 								<c:if test="${loginUsersRequests.request_id.id==1}">
 									<tr id="specialVacationTypes" class="showClass">
 										<td nowrap class="formReq"><abc:i18n
 												property="requestsApproval.caption.vacationType" /> <fmt:message
 												key="requestsApproval.caption.vacationType" /></td>
-										<td class="formBodControl"><select
-											name="specialVacation" id="specialVacation"
-											onchange="showVacationTypes()">
+										<td class="formBodControl"><select name="specialVacation"
+											id="specialVacation" onchange="showVacationTypes()">
 												<option value=""><fmt:message
 														key="commons.caption.select" /></option>
-												<c:forEach items="${specialVacations}" var="vacation">
+												<c:forEach items="${model.specialVacations}" var="vacation">
 													<option value="${vacation.vacation}"
 														${vacation.vacation == loginUsersRequests.vacation.vacation?' selected' : ''}
 														onclick="showVacationTypes()">${vacation.name}</option>
@@ -827,8 +802,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 													key="commons.caption.from" /></td>
 											<td class="formBodControl"><spring:bind
 													path="loginUsersRequests.vac_period_from">
-													<input type="text" dir="ltr" name="${status.expression}"
-														id="${status.expression}" value="${status.value}" />
+													<form:input type="text" dir="ltr" path="vac_period_from" />
 												</spring:bind></td>
 
 											<td nowrap class="formReq"><abc:i18n
@@ -836,8 +810,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 													key="commons.caption.to" /></td>
 											<td class="formBodControl"><spring:bind
 													path="loginUsersRequests.vac_period_to">
-													<input type="text" dir="ltr" name="${status.expression}"
-														id="${status.expression}" value="${status.value}" />
+													<form:input type="text" dir="ltr" path="vac_period_to" />
 												</spring:bind></td>
 
 											<td nowrap class="formReq"><abc:i18n
@@ -905,24 +878,16 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 											<td nowrap class="formReq"><abc:i18n
 													property="commons.caption.fromDate" /> <fmt:message
 													key="commons.caption.fromDate" /></td>
-											<td class="formBodControl"><spring:bind
-													path="loginUsersRequests.from_date">
-													<input type="text" title="cc" class="calendar"
-														readonly="readonly" autocomplete="off" dir="ltr"
-														name="${status.expression}" id="${status.expression}"
-														value="${status.value}" />
-												</spring:bind></td>
+											<td class="formBodControl"><form:input type="text"
+													title="cc" class="calendar" 
+													autocomplete="off" dir="ltr" path="from_date" /></td>
 
 											<td nowrap class="formReq"><abc:i18n
 													property="commons.caption.toDate" /> <fmt:message
 													key="commons.caption.toDate" /></td>
-											<td class="formBodControl"><spring:bind
-													path="loginUsersRequests.to_date">
-													<input type="text" title="cc" class="calendar"
-														readonly="readonly" autocomplete="off" dir="ltr"
-														name="${status.expression}" id="${status.expression}"
-														value="${status.value}" />
-												</spring:bind></td>
+											<td class="formBodControl"><form:input type="text"
+													title="cc" class="calendar"
+													autocomplete="off" dir="ltr" path="to_date" /></td>
 
 											<td nowrap class="formReq"><abc:i18n
 													property="requestsApproval.requestsApprovalForm.reqPeriod" />
@@ -941,19 +906,28 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 													value="${withdrawDays}" onfocus="calculateDiff()" /></td>
 											</c:if>
 										</tr>
-										<c:if test="${loginUsersRequests.vacation.vacation=='010'}">
-											<tr id="alternativeDate" class="showClass">
-												<td nowrap class="formReq"><abc:i18n
-														property="commons.caption.altDate" /> <fmt:message
-														key="commons.caption.altDate" /></td>
-												<td class="formBodControl"><spring:bind
-														path="loginUsersRequests.altDate">
-														<input type="text" class="calendar" readonly="readonly"
-															autocomplete="off" dir="ltr" name="${status.expression}"
-															id="${status.expression}" value="${status.value}" />
-													</spring:bind></td>
-											</tr>
-										</c:if>
+										<c:choose>
+											<c:when test="${loginUsersRequests.vacation.vacation=='010'}">
+												<tr id="alternativeDate" class="showClass">
+													<td nowrap class="formReq"><abc:i18n
+															property="commons.caption.altDate" /> <fmt:message
+															key="commons.caption.altDate" /></td>
+													<td class="formBodControl"><form:input type="text"
+															class="calendar" readonly="readonly" autocomplete="off"
+															dir="ltr" path="altDate" /></td>
+												</tr>
+											</c:when>
+											<c:otherwise>
+												<tr id="alternativeDate" class="hideClass">
+													<td nowrap class="formReq"><abc:i18n
+															property="commons.caption.altDate" /> <fmt:message
+															key="commons.caption.altDate" /></td>
+													<td class="formBodControl"><form:input type="text"
+															class="calendar" readonly="readonly" autocomplete="off"
+															dir="ltr" path="altDate" /></td>
+												</tr>
+											</c:otherwise>
+										</c:choose>
 									</c:if>
 									<tr id="annualVacationTypes" class="hideClass">
 										<td nowrap class="formReq"><abc:i18n
@@ -963,7 +937,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 											id="annualVacation" onchange="showVacationTypes()">
 												<option value=""><fmt:message
 														key="commons.caption.select" /></option>
-												<c:forEach items="${annualVacations}" var="vacation">
+												<c:forEach items="${model.annualVacations}" var="vacation">
 													<option value="${vacation.vacation}"
 														${vacation.vacation == loginUsersRequests.vacation.vacation?' selected' : ''}>${vacation.name}</option>
 												</c:forEach>
@@ -973,8 +947,8 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 										<td></td>
 
 										<td class="formBodControl"><abc:i18n
-												property="commons.button.getVacCredit" />
-											<fmt:message key="commons.button.getVacCredit" /></td>
+												property="commons.button.getVacCredit" /> <fmt:message
+												key="commons.button.getVacCredit" /></td>
 
 										<td class="formBodControl"><input type="text" size="10"
 											readonly="readonly" onfocus="getBalanceVac()"
@@ -986,22 +960,16 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 										<td nowrap class="formReq"><abc:i18n
 												property="commons.caption.from" /> <fmt:message
 												key="commons.caption.from" /></td>
-										<td class="formBodControl"><spring:bind
-												path="loginUsersRequests.vac_period_from">
-												<input type="text" class="MM_from_vac" title="ccc" dir="ltr"
-													name="${status.expression}" id="${status.expression}"
-													value="${status.value}" />
-											</spring:bind></td>
+										<td class="formBodControl"><form:input type="text"
+												class="MM_from_vac" title="ccc" dir="ltr"
+												path="vac_period_from" /></td>
 
 										<td nowrap class="formReq"><abc:i18n
 												property="commons.caption.to" /> <fmt:message
 												key="commons.caption.to" /></td>
-										<td class="formBodControl"><spring:bind
-												path="loginUsersRequests.vac_period_to">
-												<input type="text" class="MM_to_vac" title="ccc" dir="ltr"
-													name="${status.expression}" id="${status.expression}"
-													value="${status.value}" />
-											</spring:bind></td>
+										<td class="formBodControl"><form:input type="text"
+												class="MM_to_vac" title="ccc" dir="ltr" path="vac_period_to" />
+										</td>
 
 										<td nowrap class="formReq"><abc:i18n
 												property="requestsApproval.requestsApprovalForm.reqPeriod" />
@@ -1011,7 +979,6 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 											name="withoutSalPeriod" id="withoutSalPeriod">
 												<option value=""><fmt:message
 														key="commons.caption.select" /></option>
-												<!--											<option value="quar" ${status.value == "quar" ? ' selected':''}><fmt:message key="requestsApproval.caption.quarDay"/></option>-->
 												<option value="half"
 													${status.value == "half" ? ' selected':''}><fmt:message
 														key="requestsApproval.caption.halfDay" /></option>
@@ -1020,19 +987,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 														key="requestsApproval.errors.day" /></option>
 										</select></td>
 
-										<!--
-									<td nowrap class="formReq" >
-										<abc:i18n property="requestsApproval.caption.leaveTime"/>
-										<fmt:message key="requestsApproval.caption.leaveTime"/>
-									</td>
-									
-									<td  class="formBodControl" >
-										<select name="leaveTime" id="leaveTime" >
-											<option value=""><fmt:message key="commons.caption.select" /></option>						
-											<option value="start" ${status.value == "start" ? ' selected':''}><fmt:message key="requestsApproval.caption.leaveTimeStart"/></option>
-											<option value="end" ${status.value == "end" ? ' selected':''}><fmt:message key="requestsApproval.caption.leaveTimeEnd"/></option>
-										</select>
-									</td>		-->
+
 										<td nowrap class="formBodControl"><abc:i18n
 												property="requestsApproval.caption.reqPeriod" /> <fmt:message
 												key="requestsApproval.caption.reqPeriod" /></td>
@@ -1045,7 +1000,6 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 								</c:if>
 
 								<c:if test="${loginUsersRequests.request_id.id==2}">
-
 									<tr id="annualVacationTypes" class="showClass">
 										<td nowrap class="formReq"><abc:i18n
 												property="requestsApproval.caption.vacationType" /> <fmt:message
@@ -1054,7 +1008,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 											id="annualVacation" onchange="showVacationTypes()">
 												<option value=""><fmt:message
 														key="commons.caption.select" /></option>
-												<c:forEach items="${annualVacations}" var="vacation">
+												<c:forEach items="${model.annualVacations}" var="vacation">
 													<option value="${vacation.vacation}"
 														${vacation.vacation == loginUsersRequests.vacation.vacation?' selected' : ''}>${vacation.name}</option>
 												</c:forEach>
@@ -1063,8 +1017,8 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 										<td></td>
 
 										<td class="formBodControl"><abc:i18n
-												property="commons.button.getVacCredit" />
-											<fmt:message key="commons.button.getVacCredit" /></td>
+												property="commons.button.getVacCredit" /> <fmt:message
+												key="commons.button.getVacCredit" /></td>
 
 										<td class="formBodControl"><input type="text" size="10"
 											readonly="readonly" onfocus="getBalanceVac()"
@@ -1074,24 +1028,18 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 										<c:when test="${loginUsersRequests.vacation.vacation=='001'}">
 											<tr id="vacWithoutSal" class="showClass">
 												<td nowrap class="formReq"><abc:i18n
-														property="commons.caption.from" /> <fmt:message
-														key="commons.caption.from" /></td>
-												<td class="formBodControl"><spring:bind
-														path="loginUsersRequests.vac_period_from">
-														<input type="text" class="MM_from_vac" title="ccc"
-															dir="ltr" name="${status.expression}"
-															id="${status.expression}" value="${status.value}" />
-													</spring:bind></td>
+														property="commons.caption.from" />
+													<fmt:message key="commons.caption.from" /></td>
+												<td class="formBodControl"><form:input type="text"
+														class="MM_from_vac" title="ccc" dir="ltr"
+														path="vac_period_from" /></td>
 
 												<td nowrap class="formReq"><abc:i18n
 														property="commons.caption.to" /> <fmt:message
 														key="commons.caption.to" /></td>
-												<td class="formBodControl"><spring:bind
-														path="loginUsersRequests.vac_period_to">
-														<input type="text" class="MM_to_vac" title="ccc" dir="ltr"
-															name="${status.expression}" id="${status.expression}"
-															value="${status.value}" />
-													</spring:bind></td>
+												<td class="formBodControl"><form:input type="text"
+														class="MM_to_vac" title="ccc" dir="ltr"
+														path="vac_period_to" /></td>
 
 												<td nowrap class="formReq"><abc:i18n
 														property="requestsApproval.requestsApprovalForm.reqPeriod" />
@@ -1101,7 +1049,6 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 													name="withoutSalPeriod" id="withoutSalPeriod">
 														<option value=""><fmt:message
 																key="commons.caption.select" /></option>
-														<!--											<option value="quar" ${status.value == "quar" ? ' selected':''}><fmt:message key="requestsApproval.caption.quarDay"/></option>-->
 														<option value="half"
 															${status.value == "half" ? ' selected':''}><fmt:message
 																key="requestsApproval.caption.halfDay" /></option>
@@ -1122,24 +1069,16 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 												<td nowrap class="formReq"><abc:i18n
 														property="commons.caption.fromDate" /> <fmt:message
 														key="commons.caption.fromDate" /></td>
-												<td class="formBodControl"><spring:bind
-														path="loginUsersRequests.from_date">
-														<input type="text" title="cc" class="calendar"
-															readonly="readonly" autocomplete="off" dir="ltr"
-															name="${status.expression}" id="${status.expression}"
-															value="${status.value}" />
-													</spring:bind></td>
+												<td class="formBodControl"><form:input type="text"
+														title="cc" class="calendar" readonly="readonly"
+														autocomplete="off" dir="ltr" path="from_date" /></td>
 
 												<td nowrap class="formReq"><abc:i18n
 														property="commons.caption.toDate" /> <fmt:message
 														key="commons.caption.toDate" /></td>
-												<td class="formBodControl"><spring:bind
-														path="loginUsersRequests.to_date">
-														<input type="text" title="cc" class="calendar"
-															readonly="readonly" autocomplete="off" dir="ltr"
-															name="${status.expression}" id="${status.expression}"
-															value="${status.value}" />
-													</spring:bind></td>
+												<td class="formBodControl"><form:input type="text"
+														title="cc" class="calendar" readonly="readonly"
+														autocomplete="off" dir="ltr" path="toDate" /></td>
 
 												<td nowrap class="formReq"><abc:i18n
 														property="requestsApproval.requestsApprovalForm.reqPeriod" />
@@ -1164,24 +1103,16 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 												<td nowrap class="formReq"><abc:i18n
 														property="commons.caption.fromDate" /> <fmt:message
 														key="commons.caption.fromDate" /></td>
-												<td class="formBodControl"><spring:bind
-														path="loginUsersRequests.from_date">
-														<input type="text" title="cc" class="calendar"
-															readonly="readonly" autocomplete="off" dir="ltr"
-															name="${status.expression}" id="${status.expression}"
-															value="${status.value}" />
-													</spring:bind></td>
+												<td class="formBodControl"><form:input type="text"
+														title="cc" class="calendar" readonly="readonly"
+														autocomplete="off" dir="ltr" path="from_date" /></td>
 
 												<td nowrap class="formReq"><abc:i18n
 														property="commons.caption.toDate" /> <fmt:message
 														key="commons.caption.toDate" /></td>
-												<td class="formBodControl"><spring:bind
-														path="loginUsersRequests.to_date">
-														<input type="text" title="cc" class="calendar"
-															readonly="readonly" autocomplete="off" dir="ltr"
-															name="${status.expression}" id="${status.expression}"
-															value="${status.value}" />
-													</spring:bind></td>
+												<td class="formBodControl"><form:input type="text"
+														title="cc" class="calendar" readonly="readonly"
+														autocomplete="off" dir="ltr" path="to_date" /></td>
 
 												<td nowrap class="formReq"><abc:i18n
 														property="requestsApproval.requestsApprovalForm.reqPeriod" />
@@ -1205,22 +1136,17 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 												<td nowrap class="formReq"><abc:i18n
 														property="commons.caption.from" /> <fmt:message
 														key="commons.caption.from" /></td>
-												<td class="formBodControl"><spring:bind
-														path="loginUsersRequests.vac_period_from">
-														<input type="text" class="MM_from_vac" title="ccc"
-															dir="ltr" name="${status.expression}"
-															id="${status.expression}" value="${status.value}" />
-													</spring:bind></td>
+												<td class="formBodControl">< <form:input type="text"
+														class="MM_from_vac" title="ccc" dir="ltr"
+														path="vac_period_from" />
+												</td>
 
 												<td nowrap class="formReq"><abc:i18n
 														property="commons.caption.to" /> <fmt:message
 														key="commons.caption.to" /></td>
-												<td class="formBodControl"><spring:bind
-														path="loginUsersRequests.vac_period_to">
-														<input type="text" class="MM_to_vac" title="ccc" dir="ltr"
-															name="${status.expression}" id="${status.expression}"
-															value="${status.value}" />
-													</spring:bind></td>
+												<td class="formBodControl"><form:input type="text"
+														class="MM_to_vac" title="ccc" dir="ltr"
+														path="vac_period_to" /></td>
 
 												<td nowrap class="formReq"><abc:i18n
 														property="requestsApproval.requestsApprovalForm.reqPeriod" />
@@ -1230,7 +1156,6 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 													name="withoutSalPeriod" id="withoutSalPeriod">
 														<option value=""><fmt:message
 																key="commons.caption.select" /></option>
-														<!--											<option value="quar" ${status.value == "quar" ? ' selected':''}><fmt:message key="requestsApproval.caption.quarDay"/></option>-->
 														<option value="half"
 															${status.value == "half" ? ' selected':''}><fmt:message
 																key="requestsApproval.caption.halfDay" /></option>
@@ -1238,18 +1163,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 															${status.value == "full" ? ' selected':''}><fmt:message
 																key="requestsApproval.errors.day" /></option>
 												</select></td>
-												<!--
-									<td nowrap class="formReq" >
-										<abc:i18n property="requestsApproval.caption.leaveTime"/>
-										<fmt:message key="requestsApproval.caption.leaveTime"/>
-									</td>
-									<td  class="formBodControl" >
-										<select name="leaveTime" id="leaveTime" >
-											<option value=""><fmt:message key="commons.caption.select" /></option>						
-											<option value="start" ${status.value == "start" ? ' selected':''}><fmt:message key="requestsApproval.caption.leaveTimeStart"/></option>
-											<option value="end" ${status.value == "end" ? ' selected':''}><fmt:message key="requestsApproval.caption.leaveTimeEnd"/></option>
-										</select>
-									</td>-->
+
 												<td class="formBodControl"><abc:i18n
 														property="requestsApproval.caption.reqPeriod" /> <fmt:message
 														key="requestsApproval.caption.reqPeriod" /></td>
@@ -1264,12 +1178,11 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 										<td nowrap class="formReq"><abc:i18n
 												property="requestsApproval.caption.vacationType" /> <fmt:message
 												key="requestsApproval.caption.vacationType" /></td>
-										<td class="formBodControl"><select
-											name="specialVacation" id="specialVacation"
-											onchange="showVacationTypes()">
+										<td class="formBodControl"><select name="specialVacation"
+											id="specialVacation" onchange="showVacationTypes()">
 												<option value=""><fmt:message
 														key="commons.caption.select" /></option>
-												<c:forEach items="${specialVacations}" var="vacation">
+												<c:forEach items="${model.specialVacations}" var="vacation">
 													<option value="${vacation.vacation}"
 														${vacation.vacation == loginUsersRequests.vacation.vacation?' selected' : ''}
 														onclick="showVacationTypes()">${vacation.name}</option>
@@ -1285,24 +1198,16 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 										<td nowrap class="formReq"><abc:i18n
 												property="commons.caption.fromDate" /> <fmt:message
 												key="commons.caption.fromDate" /></td>
-										<td class="formBodControl"><spring:bind
-												path="loginUsersRequests.from_date">
-												<input type="text" title="cc" class="calendar"
-													readonly="readonly" autocomplete="off" dir="ltr"
-													name="${status.expression}" id="${status.expression}"
-													value="${status.value}" />
-											</spring:bind></td>
+										<td class="formBodControl"><form:input type="text"
+												title="cc" class="calendar" readonly="readonly"
+												autocomplete="off" dir="ltr" path="from_date" /></td>
 
 										<td nowrap class="formReq"><abc:i18n
 												property="commons.caption.toDate" /> <fmt:message
 												key="commons.caption.toDate" /></td>
-										<td class="formBodControl"><spring:bind
-												path="loginUsersRequests.to_date">
-												<input type="text" title="cc" class="calendar"
-													readonly="readonly" autocomplete="off" dir="ltr"
-													name="${status.expression}" id="${status.expression}"
-													value="${status.value}" />
-											</spring:bind></td>
+										<td class="formBodControl"><input type="text" title="cc"
+											class="calendar" readonly="readonly" autocomplete="off"
+											dir="ltr" path="to_date" /></td>
 
 										<td nowrap class="formReq"><abc:i18n
 												property="requestsApproval.requestsApprovalForm.reqPeriod" />
@@ -1339,8 +1244,8 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 										<td></td>
 
 										<td class="formBodControl"><abc:i18n
-												property="commons.button.getVacCredit" />
-											<fmt:message key="commons.button.getVacCredit" /></td>
+												property="commons.button.getVacCredit" /> <fmt:message
+												key="commons.button.getVacCredit" /></td>
 
 										<td class="formBodControl"><input type="text" size="10"
 											readonly="readonly" onfocus="getBalanceVac()"
@@ -1351,12 +1256,11 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 										<td nowrap class="formReq"><abc:i18n
 												property="requestsApproval.caption.vacationType" /> <fmt:message
 												key="requestsApproval.caption.vacationType" /></td>
-										<td class="formBodControl"><select
-											name="specialVacation" id="specialVacation"
-											onchange="showVacationTypes()">
+										<td class="formBodControl"><select name="specialVacation"
+											id="specialVacation" onchange="showVacationTypes()">
 												<option value=""><fmt:message
 														key="commons.caption.select" /></option>
-												<c:forEach items="${specialVacations}" var="vacation">
+												<c:forEach items="${model.specialVacations}" var="vacation">
 													<option value="${vacation.vacation}"
 														${vacation.vacation == loginUsersRequests.vacation.vacation?' selected' : ''}
 														onclick="showVacationTypes()">${vacation.name}</option>
@@ -1367,22 +1271,15 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 										<td nowrap class="formReq"><abc:i18n
 												property="commons.caption.from" /> <fmt:message
 												key="commons.caption.from" /></td>
-										<td class="formBodControl"><spring:bind
-												path="loginUsersRequests.vac_period_from">
-												<input type="text" class="MM_from_vac" title="ccc" dir="ltr"
-													name="${status.expression}" id="${status.expression}"
-													value="${status.value}" />
-											</spring:bind></td>
+										<td class="formBodControl"><form:input type="text"
+												class="MM_from_vac" title="ccc" dir="ltr"
+												path="vac_period_from" /></td>
 
 										<td nowrap class="formReq"><abc:i18n
 												property="commons.caption.to" /> <fmt:message
 												key="commons.caption.to" /></td>
-										<td class="formBodControl"><spring:bind
-												path="loginUsersRequests.vac_period_to">
-												<input type="text" class="MM_to_vac" title="ccc" dir="ltr"
-													name="${status.expression}" id="${status.expression}"
-													value="${status.value}" />
-											</spring:bind></td>
+										<td class="formBodControl"><form:input type="text"
+												class="MM_to_vac" title="ccc" dir="ltr" path="vac_period_to" /></td>
 
 										<td nowrap class="formReq"><abc:i18n
 												property="requestsApproval.requestsApprovalForm.reqPeriod" />
@@ -1400,19 +1297,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 													${status.value == "full" ? ' selected':''}><fmt:message
 														key="requestsApproval.errors.day" /></option>
 										</select></td>
-										<!--
-									<td nowrap class="formReq" >
-										<abc:i18n property="requestsApproval.caption.leaveTime"/>
-										<fmt:message key="requestsApproval.caption.leaveTime"/>
-									</td>
-									<td  class="formBodControl" >
-										<select name="leaveTime" id="leaveTime" >
-											<option value=""><fmt:message key="commons.caption.select" /></option>						
-											<option value="start" ${status.value == "start" ? ' selected':''}><fmt:message key="requestsApproval.caption.leaveTimeStart"/></option>
-											<option value="end" ${status.value == "end" ? ' selected':''}><fmt:message key="requestsApproval.caption.leaveTimeEnd"/></option>
-										</select>
-									</td>
-									-->
+
 										<td class="formBodControl"><abc:i18n
 												property="requestsApproval.caption.reqPeriod" /> <fmt:message
 												key="requestsApproval.caption.reqPeriod" /></td>
@@ -1426,22 +1311,16 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 									<td nowrap class="formReq"><abc:i18n
 											property="commons.caption.from" /> <fmt:message
 											key="commons.caption.from" /></td>
-									<td class="formBodControl"><spring:bind
-											path="loginUsersRequests.period_from">
-											<input type="text" class="MM_from" title="ccc" dir="ltr"
-												name="${status.expression}" id="${status.expression}"
-												value="${status.value}" />
-										</spring:bind></td>
+									<td class="formBodControl"><form:input type="text"
+											class="MM_from" title="ccc" dir="ltr" path="period_from" />
+									</td>
 
 									<td nowrap class="formReq"><abc:i18n
 											property="commons.caption.to" /> <fmt:message
 											key="commons.caption.to" /></td>
-									<td class="formBodControl"><spring:bind
-											path="loginUsersRequests.period_to">
-											<input type="text" class="MM_to" title="ccc"
-												autocomplete="off" dir="ltr" name="${status.expression}"
-												id="${status.expression}" value="${status.value}" />
-										</spring:bind></td>
+									<td class="formBodControl"><form:input type="text"
+											class="MM_to" title="ccc" autocomplete="off" dir="ltr"
+											path="period_to" /></td>
 								</tr>
 
 								<tr id="leavePermission" class="hideClass">
@@ -1453,7 +1332,6 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 											<select name="${status.expression}" id="${status.expression}">
 												<option value=""><fmt:message
 														key="commons.caption.select" /></option>
-												<!-- <option value="0" ${status.value == "0" ? ' selected':''}><fmt:message key="requestsApproval.caption.without"/></option> -->
 												<option value="1" ${status.value == "1" ? ' selected':''}><fmt:message
 														key="requestsApproval.caption.delay" /></option>
 												<option value="2" ${status.value == "2" ? ' selected':''}><fmt:message
@@ -1469,22 +1347,15 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 									<td nowrap class="formReq"><abc:i18n
 											property="commons.caption.from" /> <fmt:message
 											key="commons.caption.from" /></td>
-									<td class="formBodControl"><spring:bind
-											path="loginUsersRequests.period_from">
-											<input type="text" class="MM_from" title="ccc" dir="ltr"
-												name="${status.expression}" id="${status.expression}"
-												value="${status.value}" />
-										</spring:bind></td>
+									<td class="formBodControl"><form:input type="text"
+											class="MM_from" title="ccc" dir="ltr" path="period_from"/></td>
 
 									<td nowrap class="formReq"><abc:i18n
 											property="commons.caption.to" /> <fmt:message
 											key="commons.caption.to" /></td>
-									<td class="formBodControl"><spring:bind
-											path="loginUsersRequests.period_to">
-											<input type="text" class="MM_to" title="ccc"
-												autocomplete="off" dir="ltr" name="${status.expression}"
-												id="${status.expression}" value="${status.value}" />
-										</spring:bind></td>
+									<td class="formBodControl"><form:input type="text"
+											class="MM_to" title="ccc" autocomplete="off" dir="ltr"
+											path="period_to" /></td>
 								</tr>
 							</c:if>
 							<c:if test="${loginUsersRequests.request_id.id==3}">
@@ -1497,7 +1368,6 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 											<select name="${status.expression}" id="${status.expression}">
 												<option value=""><fmt:message
 														key="commons.caption.select" /></option>
-												<!-- <option value="0" ${status.value == "0" ? ' selected':''}><fmt:message key="requestsApproval.caption.without"/></option> -->
 												<option value="1" ${status.value == "1" ? ' selected':''}><fmt:message
 														key="requestsApproval.caption.delay" /></option>
 												<option value="2" ${status.value == "2" ? ' selected':''}><fmt:message
@@ -1510,24 +1380,16 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 									<td nowrap class="formReq"><abc:i18n
 											property="commons.caption.fromDate" /> <fmt:message
 											key="commons.caption.fromDate" /></td>
-									<td class="formBodControl"><spring:bind
-											path="loginUsersRequests.from_date">
-											<input type="text" title="cc" class="calendar"
-												readonly="readonly" autocomplete="off" dir="ltr"
-												name="${status.expression}" id="${status.expression}"
-												value="${status.value}" />
-										</spring:bind></td>
+									<td class="formBodControl"><form:input type="text"
+											title="cc" class="calendar" readonly="readonly"
+											autocomplete="off" dir="ltr" path="from_date" /></td>
 
 									<td nowrap class="formReq"><abc:i18n
 											property="commons.caption.toDate" /> <fmt:message
 											key="commons.caption.toDate" /></td>
-									<td class="formBodControl"><spring:bind
-											path="loginUsersRequests.to_date">
-											<input type="text" title="cc" class="calendar"
-												readonly="readonly" autocomplete="off" dir="ltr"
-												name="${status.expression}" id="${status.expression}"
-												value="${status.value}" />
-										</spring:bind></td>
+									<td class="formBodControl"><form:input type="text"
+											title="cc" class="calendar" readonly="readonly"
+											autocomplete="off" dir="ltr" path="to_date" /></td>
 
 									<td nowrap class="formReq"><abc:i18n
 											property="requestsApproval.requestsApprovalForm.reqPeriod" />
@@ -1564,8 +1426,8 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 									<td></td>
 
 									<td class="formBodControl"><abc:i18n
-											property="commons.button.getVacCredit" />
-										<fmt:message key="commons.button.getVacCredit" /></td>
+											property="commons.button.getVacCredit" /> <fmt:message
+											key="commons.button.getVacCredit" /></td>
 
 									<td class="formBodControl"><input type="text" size="10"
 										readonly="readonly" onfocus="getBalanceVac()" name="vacCredit"
@@ -1580,7 +1442,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 										id="specialVacation" onchange="showVacationTypes()">
 											<option value=""><fmt:message
 													key="commons.caption.select" /></option>
-											<c:forEach items="${specialVacations}" var="vacation">
+											<c:forEach items="${model.specialVacations}" var="vacation">
 												<option value="${vacation.vacation}"
 													${vacation.vacation == loginUsersRequests.vacation.vacation?' selected' : ''}
 													onclick="showVacationTypes()">${vacation.name}</option>
@@ -1617,12 +1479,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 									%>
 								</c:otherwise>
 							</c:choose>
-							<td class="formBodControl"><spring:bind
-									path="loginUsersRequests.notes">
-									<textarea cols="35" name="${status.expression}"
-										id="${status.expression}" value="${status.value}">${loginUsersRequests.notes}</textarea>
-									<!--									<input type="text" size="50"  name="${status.expression}" id="${status.expression}" value="${status.value}" maxlength="255" />-->
-								</spring:bind></td>
+							<td class="formBodControl"><form:textarea cols="35" path="notes"></form:textarea></td>
 						</tr>
 
 						<tr id="btn">
@@ -1635,7 +1492,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 								class="button"></td>
 						</tr>
 					</table>
-					</form:form></td>
+				</form:form></td>
 		</tr>
 	</table>
 

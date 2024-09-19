@@ -119,6 +119,7 @@ public class ReportsController extends BaseSimpleFormController{
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
 		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 //		RequestTypes requestTypeObject = null;
+		model.put("empId", loginUsers.getId());
 		if (requestType==null || requestType.isEmpty()) {
 			requestType = null;
 		}

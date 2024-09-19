@@ -111,8 +111,8 @@ public interface RequestsApprovalManager extends BaseManager {
 	public List getEmployeesByCodesAndDatePeriod(final String codeFrom,final String codeTo,final Date fromDate, final Date toDate);
 	public List getEmployeesByCodesAndRequestType(final String codeFrom,final String codeTo, final Long requestType);
 	public List getEmployeesByCodesAndDatePeriodAndRequestType(final String codeFrom,final String codeTo,final Date fromDate, final Date toDate, final Long requestType);
-	
 	public List getRequestStatus(final Long req_id);
+	public List getRequestStatus(final Long req_id,final Long emp_id);
 	public String CreateRequestNumber();
 	
 	public Long getEmpVacation (String empCode, String vacId, Date from_date);

@@ -57,7 +57,7 @@ public class LoginUsersRequestsView {
 		log.debug("---ref-emp from session---"+request.getSession().getAttribute("employee"));
 		
 		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
-		
+		model.addAttribute("empId", loginUsers.getId());
 		log.debug("loginUsers " + loginUsers.getId());
 		
 		fields.add("period_from");

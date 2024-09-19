@@ -30,40 +30,19 @@ function printthis(which) {
 	tds.item(i).style.display = "block";
 }
 
-function getRequestStatus(id){
+function getRequestStatus(id,emp){
 	// for client name 
-		var recordId = id.id;
-//		alert(recordId);
-		//var token = $("input#token").val();
-		//alert(token);
-		//var requestApproval = {vac: vac, empCode: empCode};
-	
-	var token;
-		var header;
-
-		$(function() {
-			token = $("meta[name='_csrf']").attr("content");
-//			alert(token);
-			header = $("meta[name='_csrf_header']").attr("content");
-//			alert(header);
-			$(document).ajaxSend(function(e, xhr, options) {
-				xhr.setRequestHeader(header, token);
-			});
-		});
+		var id = id.id;
+		var reqId = {reqId: id,empId: emp};
 
 		$.ajax({
-			type : "POST",
+			type : "GET",
 			url : "../requestsApproval/ajax/requestStatus",
-			dataType : 'json',
-		//	headers : {
-			
-	//	"Authorization" : "Basic " + btoa(token)
-			//},
-			data : recordId,
+			datatype : "application/json; charset=utf-8",
+			contentType: "application/json; charset=utf-8",
+			data : reqId,
 
 			success : function(data) {
-				//  alert('Thanks for your query!'); 
-				// alert(data);
 
 				$.each(data, function(key, value) {
 					//alert(key);
@@ -72,19 +51,16 @@ function getRequestStatus(id){
 						var st = '';
 						var result = '';
 						$.each(value, function(k, v) {
-							//	alert(k);
-							//	alert(v);
-							//credit.val(v);
 							var ob = v;
 							if (ob.approval == 1) {
 								st = 'موافق';
 							} else if (ob.approval == 0) {
 								st = 'مرفوض\n سبب الرفض: ' + ob.note;
 							}
-							result += "\n" + ob.level_id.order + " . "
-									+ ob.user_id.name + " -- " + st;
+							result += "\n" + ob.level_id + " . "
+									+ ob.user_id + " -- " + st;
 
-							alert(ob.user_id.name + "--" + st);
+							//alert(ob.user_id.name + "--" + st);
 						});
 						//alert('-----out----');
 						if (st == '' && result == '') {
@@ -183,6 +159,7 @@ function printSelection(node){
 					modelAttribute="loginUsersRequests">
 		 <input type="hidden"  id="empRequestTypeId" name="empRequestTypeId" value="${empRequestTypeId }"/>
 		 <input type="hidden"  id="resultList" name="resultList" value=""/>
+		 <input type="hidden"  id="empId" name="empId" value="${model.empId}"/>
 		 <input type="hidden" name="${_csrf.parameterName}" id="token" value="${_csrf.token}"/>
  
 		<table border=0 cellspacing=1 cellpadding=0 id="ep" style="margin-right:40px">
@@ -418,7 +395,7 @@ function printSelection(node){
 								</c:otherwise>
 							</c:choose>														
 							<td  nowrap id="btnPrint">
-							<input type="button" id="${record.id}" value="<fmt:message key="requestsApproval.button.requestStatus"/>" name="requestStatus" class="button"	onclick="getRequestStatus(this)"></input>
+							<input type="button" id="${record.id}" value="<fmt:message key="requestsApproval.button.requestStatus"/>" name="requestStatus" class="button"	onclick="getRequestStatus(this,${empId})"></input>
 							</td>
 						</tr>
 						

@@ -9,6 +9,7 @@ height:32px;
 z-index:100;
 margin: 0;
 padding: 0;
+width: 200px;
 list-style-type: none;
 }
 
@@ -17,7 +18,7 @@ list-style-type: none;
 position: relative;
 display: inline;
 float: right;
-width:120px;
+width:190px;
 }
 
 /*Top level menu link items style*/
@@ -76,7 +77,7 @@ top: 0;
 /* Sub level menu links style */
 .ddsmoothmenu ul li ul li a{
 font: normal 13px Verdana;
-width: 160px; /*width of sub menus*/
+width: 180px; /*width of sub menus*/
 padding: 5px;
 margin: 0;
 border-top-width: 0;

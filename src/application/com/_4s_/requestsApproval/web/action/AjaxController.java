@@ -30,25 +30,25 @@ public class AjaxController {
 	@Autowired
 	RequestsService requestsService;
 
-	@RequestMapping(value="/requestStatus", method=RequestMethod.POST,
-			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@RequestMapping(value="/requestStatus", method=RequestMethod.GET,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_JSON)
 	@ResponseBody
-	public Map requestStatus(Long reqId) {
+	public Map requestStatus(Long reqId, Long empId) {
 		RestStatus status = new RestStatus();
-		Map response = new HashMap();
-		List reqStatus = requestsApprovalManager.getRequestStatus(reqId);
-
-		status.setCode("200");
-		status.setMessage("Request Inserted Successfully");
-		status.setStatus("true");
-		response.put("Status", status);
-		response.put("Response", reqStatus);
-		log.debug("request status returned finished");
+//		Map response = new HashMap();
+		Map response = requestsService.getRequestStatus(reqId,empId);
+//		log.debug("request status size " + reqStatus.size());
+//		status.setCode("200");
+//		status.setMessage("Request Inserted Successfully");
+//		status.setStatus("true");
+//		response.put("Status", status);
+//		response.put("Response", reqStatus);
+//		log.debug("request status returned finished");
 		return response;
 	}
 	
-	@RequestMapping(value="/vacInfo", method=RequestMethod.POST,
-			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_FORM_URLENCODED)
+	@RequestMapping(value="/vacInfo", method=RequestMethod.GET,
+			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_JSON)
 	@ResponseBody
 	public Map vacInfo (RequestApproval requestApproval) {
 		log.debug("vac info " + requestApproval.getVac());

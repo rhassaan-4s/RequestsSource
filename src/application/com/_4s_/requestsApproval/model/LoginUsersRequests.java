@@ -43,19 +43,15 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	private String empCode;
 //	private Date request_date;
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@Temporal(TemporalType.DATE)
+//	@Temporal(TemporalType.DATE)
 	private Date request_date;
 	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
-//	@Temporal(TemporalType.DATE)
 	private Date from_date;
 	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
-//	@Temporal(TemporalType.DATE)
 	private Date to_date;
 	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
-//	@Temporal(TemporalType.DATE)
 	private Date period_from;
 	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
-//	@Temporal(TemporalType.DATE)
 	private Date period_to;
 	private Long approved;
 	private Long posted;
@@ -67,15 +63,19 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	private String requestNumber;
 	private Double withdrawDays;
 	private Long vacCredit;
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
 	private Date altDate;
 	@ManyToOne
 	@JoinColumn(name="vacation")
 	private Vacation vacation;
 
 	@Transient
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
 	private Date vac_period_from;
 
 	@Transient
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
 	private Date vac_period_to;
 	private Double longitude = new Double(0);
 

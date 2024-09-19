@@ -66,14 +66,13 @@
 						href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=3">
 							<abc:i18n
 								property="requestsApproval.header.empRequestsReportsForm3" /> <fmt:message
-								key="requestsApproval.header.empRequestsReportsForm3" />
+								key="requestsApproval.header.empRequestsReportsForm3" /> 
 					</a></li>
 
-					<li><abc:i18n
-							property="requestsApproval.header.empAnnualVacationsReportsForm" />
+					<li>
 						<a
-						href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=2">
-							<fmt:message
+						href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=2"><abc:i18n
+							property="requestsApproval.header.empAnnualVacationsReportsForm" /><fmt:message
 								key="requestsApproval.header.empAnnualVacationsReportsForm" />
 					</a></li>
 

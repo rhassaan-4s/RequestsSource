@@ -23,10 +23,10 @@
          <logger name="org.springframework.security" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger> 
-        <Logger name="org.springframework.security.web.access" level="INFO" additivity="off">
+        <Logger name="org.springframework.security.web.access" level="Error" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger>
-        <Logger name="org.springframework.security.web.util.matcher.AntPathRequestMatcher" level="INFO" additivity="off">
+        <Logger name="org.springframework.security.web.util.matcher.AntPathRequestMatcher" level="Error" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger>
          <Logger name="org.hibernate.cfg.AnnotationBinder" level="ERROR" additivity="off">
@@ -39,10 +39,10 @@
         	<AppenderRef ref="LogToConsole"/>
         </logger>
        
-        <logger name="org.springframework.security.web.FilterChainProxy" level="FATAL" additivity="off">
+        <logger name="org.springframework.security.web.FilterChainProxy" level="Trace" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.springframework.security.access" level="FATAL" additivity="off">
+        <logger name="org.springframework.security.access" level="Error" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
         <logger name="org.springframework.beans.CachedIntrospectionResults" level="ERROR" additivity="off">
@@ -60,7 +60,7 @@
        <logger name="org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <logger name="org.springframework.core.io.support" level="ERROR" additivity="off">
+        <logger name="org.springframework.core.io.support" level="Error" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
         <logger name="org.hibernate.cfg.Ejb3Column" level="ERROR" additivity="off">
@@ -93,25 +93,25 @@
         <logger name="org.hibernate.cfg.CollectionSecondPass" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
-        <Logger name="com._4s_.common" level="DEBUG" additivity="off">
+        <Logger name="com._4s_.common" level="Error" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
         <Logger name="com._4s_.i18n" level="ERROR" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
-        <Logger name="com._4s_.security" level="DEBUG" additivity="off">
+        <Logger name="com._4s_.security" level="ERROR" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
         <Logger name="com._4s_.requestsApproval" level="DEBUG" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
-         <Logger name="org.springframework.security.web.csrf.CsrfFilter" level="FATAL" additivity="off">
+         <Logger name="org.springframework.security.web.csrf.CsrfFilter" level="Error" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
-         <Logger name="org.springframework.security.web" level="INFO" additivity="off">
+         <Logger name="org.springframework.security.web" level="ERROR" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
-        <Logger name="org.springframework.security.config.http" level="INFO" additivity="off">
+        <Logger name="org.springframework.security.config.http" level="ERROR" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger> 
         <Root level="DEBUG">

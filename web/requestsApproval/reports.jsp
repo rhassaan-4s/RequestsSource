@@ -8,8 +8,6 @@
 <head>
 
 <title>Insert title here</title>
-<script type='text/javascript' src='/Requests/dwr/interface/requestsDwr.js'></script>
-<script type='text/javascript' src='/Requests/dwr/engine.js'></script>
 </head>
 <body>
 <script type="text/javascript">
@@ -30,25 +28,68 @@ function exportExcel() {
 	//window.open(link);
 }
 
-function getRequestStatus(id){
+function getRequestStatus(id,emp){
 	//alert('entered');
+	//alert('--id value---'+id);
 	//alert('--id value---'+id.id);
-	var req_id =id.id;
-		//document.getElementById('empRequestTypeId').value;
-	//alert('req_id= '+req_id);
-	requestsDwr.getRequestStatus(returnedData,req_id);	
+	var id = id.id;
+	var reqId = {reqId: id,empId: emp};
+//alert(id.id);
+	$.ajax({
+		type : "GET",
+		url : "../requestsApproval/ajax/requestStatus",
+		datatype : "application/json; charset=utf-8",
+		contentType: "application/json; charset=utf-8",
+		data : reqId,
+		success : function(data) {
+			//alert(data);
+			$.each(data, function(key, value) {
+				
+			///	alert(key);
+			//	alert(value);
+				if (key == 'Response') {
+					//alert("VALUE " + value);
+					var st = '';
+					var result = '';
+					$.each(value, function(k, v) {
+					//	alert("k " + k + " v " + v);
+						var ob = v;
+						//alert(ob.approval);
+						if (ob.approval == 1 || ob.approval == 2) {
+							st = 'موافق';
+						} else if (ob.approval == 0) {
+							st = 'مرفوض\n سبب الرفض: ' + ob.note;
+						}
+						result += "\n" + ob.level_id + " . "
+								+ ob.user_id + " -- " + st;
+
+					//	alert(ob.user_id.name + "--" + st);
+					});
+					//alert('-----out----');
+					if (st == '' && result == '') {
+						result = 'لم يتم الموافقه عليه';
+					}
+					alert(result);
+				}
+			});
+		},
+		error: function(data, status){ alert(status); }
+	});
+
 }
 
 function  returnedData(data){
 	//alert('entered after');
 	 if (data!=null){
 		 //alert('not null');
+		 alert(data);
 		 var st='';
 
 		// alert('---- i< data.length---'+data.length);
 		 for ( var i= 0; i < data.length; i++) {
 			 //alert('---for- i< data.length---'+data.length);
 			var ob=data[i];
+			alert(ob.approval);
 			if(ob.approval==1){
 				st='موافق';
 			}else if(ob.approval==0){
@@ -147,6 +188,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 			<form:form method="POST" 
 				action="/Requests/requestsApproval/reports.html">
 				     <input type="hidden"  id="export" name="export" value="${model.export}"/>
+				     <input type="hidden"  id="empId" name="empId" value="${model.empId}"/>
 					<div id="result">
 
 					<table>
@@ -381,7 +423,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 							</td>
 							
 							<td  nowrap id="btnPrint">
-								<input type="button" id="${record.id}" value="<fmt:message key="requestsApproval.button.requestStatus"/>" name="requestStatus" class="button"	onclick="getRequestStatus(this)"></input>
+								<input type="button" id="${record.id}" value="<fmt:message key="requestsApproval.button.requestStatus"/>" name="requestStatus" class="button"	onclick="getRequestStatus(this,${empId})"></input>
 							</td>
 						</tr>
 						

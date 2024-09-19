@@ -102,6 +102,8 @@
 			<intercept-url pattern="/api/workflow/getTimesheetTrans"
 			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 		<!--  <intercept-url pattern="/api/workflow/getPortNo" access="IS_AUTHENTICATED_ANONYMOUSLY"/> --> 
+		
+		
 			
 		<custom-filter ref="authenticationFilter" before="PRE_AUTH_FILTER" />
 		<custom-filter ref="rememberMeFilter" before="REMEMBER_ME_FILTER"/>
@@ -455,6 +457,12 @@
 			
 			<intercept-url pattern="/attendance/qualificationForm.html.*\Z"
 			access="hasRole('CAN_VIEW_all_qualification')" />
+			
+			<intercept-url pattern="/requestsApproval/ajax/vacInfo.html.*\Z"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			
+			<intercept-url pattern="/security/errorCode403.html.*\Z"
+			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			
 	</http>
 

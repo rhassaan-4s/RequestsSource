@@ -582,6 +582,9 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	public List getRequestStatus(final Long req_id){
 		return requestsApprovalDAO.getRequestStatus(req_id);
 	}
+	public List getRequestStatus(final Long req_id,final Long emp_id){
+		return requestsApprovalDAO.getRequestStatus(req_id,emp_id);
+	}
 	
 	
 	public List getEmployeesByCodesAndRequestType(final String codeFrom,final String codeTo, final Long requestType){

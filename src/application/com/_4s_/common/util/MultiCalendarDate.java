@@ -65,7 +65,7 @@ public class MultiCalendarDate implements ApplicationContextAware{
 	public String getConvertedDateString () {
 		String dateString = null;
 		switch (dateCalendarType) {
-		case HIJRI: dateString = getMeladiString();
+		case HIJRI: dateString = getMeladiStringAr();
 			break;
 		case MILADI: dateString = getHijriString();
 			break;
@@ -150,7 +150,7 @@ public class MultiCalendarDate implements ApplicationContextAware{
 		
 	}
 
-	public String getMeladiString() {
+	public String getMeladiStringAr() {
 		String dateString ;
 		
 		Calendar calendar = Calendar.getInstance();
@@ -166,6 +166,26 @@ public class MultiCalendarDate implements ApplicationContextAware{
 		calendar.setTimeInMillis(this.millis);
 //		log.debug("date " + calendar.getTime());
 		dateString = dateFormat.format(calendar.getTime());
+		log.debug("date string " + dateString);
+		return dateString;
+	}
+	
+	public String getMeladiString() {
+		String dateString ;
+		
+		Calendar calendar = Calendar.getInstance();
+		if (calendar.get(Calendar.YEAR)%4==0) {
+//			log.debug("lenient");
+			calendar.setLenient(true);
+//			dateFormat.setLenient(true);
+		} else {
+			calendar.setLenient(false);
+//			dateFormat.setLenient(false)
+//			log.debug("non lenient");
+		}
+		calendar.setTimeInMillis(this.millis);
+//		log.debug("date " + calendar.getTime());
+		dateString = dateFormat3.format(calendar.getTime());
 		log.debug("date string " + dateString);
 		return dateString;
 	}
@@ -687,12 +707,39 @@ public class MultiCalendarDate implements ApplicationContextAware{
 		}
 		return dateString;
 	}
+	public String getDateTimeStringReverse() {
+		String dateString = null;
+		log.debug(" -- dateCalendarType : "+this.dateCalendarType);
+		switch (dateCalendarType) {
+		case HIJRI: 
+			log.debug("Going for Hijri");
+			dateString = getHijriTimeString();
+			log.debug("Hijri :"+dateString);
+			break;
+		case MILADI: 
+			log.debug("Going for Miladi");
+			dateString = getMeladiTimeString();//getMeladiTimeStringReverse
+			log.debug("Miladi :"+dateString);
+			break;
+		}
+		return dateString;
+	}
 	
 	public String getMeladiTimeString() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setLenient(false);
+		log.debug("formating date to miladi string "+this.getDate());
 		calendar.setTimeInMillis(this.millis);
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy H:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		return sdf.format(calendar.getTime());
+	}
+	
+	public String getMeladiTimeStringReverse() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setLenient(false);
+		log.debug("formating date to miladi string "+this.getDate());
+		calendar.setTimeInMillis(this.millis);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 		return sdf.format(calendar.getTime());
 	}
 	

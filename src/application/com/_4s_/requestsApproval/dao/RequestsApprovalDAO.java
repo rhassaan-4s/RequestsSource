@@ -93,6 +93,7 @@ public interface RequestsApprovalDAO extends BaseDAO {
 	public List getEmployeesByCodesAndRequestType(final String codeFrom,final String codeTo, final Long requestType);
 	public List getEmployeesByCodesAndDatePeriodAndRequestType(final String codeFrom,final String codeTo,final Date fromDate, final Date toDate, final Long requestType);
 	public List getRequestStatus(final Long req_id);
+	public List getRequestStatus(final Long req_id,final Long emp_id);
 	public void signInOut(AttendanceRequest userRequest);
 	public List getEmpReqTypeAccs(List accessLevels,Long requestType);
 	public int insertTimeAttend(String emp_code, Date date_,
