@@ -59,6 +59,12 @@ public class GroupAcc implements Auditable,Serializable {
 		.append(this.getId())
 		.toHashCode();
 	}
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+		return this.title.equals(((GroupAcc)obj).getTitle());
+	}
 	public void setTitle(String title) {
 		this.title = title;
 	}

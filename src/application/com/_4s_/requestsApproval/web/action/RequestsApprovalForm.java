@@ -257,12 +257,19 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 							log.debug("empAcc " + empAcc.getId());
 							accLev = empAcc.getGroup_id().getAccessLevel();//levels of the current employee request to be approved
 							log.debug("requestor group id " + empAcc.getGroup_id().getId());
+							Iterator empAccLevItr = accLev.iterator();
+							while(empAccLevItr.hasNext()) {
+								AccessLevels l = (AccessLevels)empAccLevItr.next();
+								System.out.print("employee level " +l.getId()+", ");
+							}
 						}
 						Iterator iter = accLevels.iterator();//manager levels
 						while(iter.hasNext()) {
 							AccessLevels managerAccLev = (AccessLevels)iter.next();
 							log.debug("manager acc lev " + managerAccLev.getId());
-							if (accLev!=null && accLev.contains(managerAccLev)) {
+							boolean  employeeAccLevContainsMgr = accLev.contains(managerAccLev);
+							log.debug("employeeAccLevContainsMgr " + employeeAccLevContainsMgr);
+							if (accLev!=null && employeeAccLevContainsMgr) {
 								approvalRequest.put("title", managerAccLev.getLevel_id().getTitle());
 								log.debug("-----title of group-----"+managerAccLev.getLevel_id().getTitle());
 								approvalRequest.put("id", empAcc.getId());

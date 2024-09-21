@@ -103,7 +103,7 @@ buildmenu:function($, setting){
 			}
 		) //end hover
 	}) //end $headers.each()
-	$mainmenu.find("ul").css({display:'none', visibility:'visible',width: 200px})
+	$mainmenu.find("ul").css({display:'none', visibility:'visible'})
 },
 
 init:function(setting){

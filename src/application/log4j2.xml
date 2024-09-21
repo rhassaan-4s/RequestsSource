@@ -10,7 +10,7 @@
         <Logger name="com._4s_" level="DEBUG" additivity="off">
             <AppenderRef ref="LogToConsole"/>
        </Logger>
-        <Logger name="org.springframework" level="TRACE" additivity="off">
+        <Logger name="org.springframework" level="ERROR" additivity="off">
         	 <AppenderRef ref="LogToConsole"/>
         </Logger>
          <Logger name="org.hibernate" level="ERROR" additivity="off">
@@ -39,7 +39,7 @@
         	<AppenderRef ref="LogToConsole"/>
         </logger>
        
-        <logger name="org.springframework.security.web.FilterChainProxy" level="Trace" additivity="off">
+        <logger name="org.springframework.security.web.FilterChainProxy" level="ERROR" additivity="off">
         	<AppenderRef ref="LogToConsole"/>
         </logger>
         <logger name="org.springframework.security.access" level="Error" additivity="off">

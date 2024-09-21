@@ -86,4 +86,20 @@ public class AccessLevels implements Auditable,Serializable {
 	public GroupAcc getLevel_id() {
 		return level_id;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		AccessLevels lev = (AccessLevels)obj;
+		boolean eq = this.emp_id.equals(lev.getEmp_id())&&this.level_id.equals(lev.getLevel_id());
+		System.out.println(" this id " + id + "level id " + lev.getId() + " equals? " + eq);
+		return eq;
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return super.toString();
+	}
+	
+	
 }
