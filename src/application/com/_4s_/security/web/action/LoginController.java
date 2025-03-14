@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 //import org.springframework.web.bind.annotation.ResponseBody;
 //import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com._4s_.security.dao.MySecurityDAO;
 
@@ -37,7 +39,19 @@ public class LoginController {
           @RequestParam(value = "logout", required = false) String logout,
           Model model,
         HttpServletRequest request) {
-		log.debug("get login");
+		System.out.println("get login");
+		
+		String tenantID = request.getParameter("tenantID");
+		System.out.println("tenantID " + tenantID);
+		request.getSession().setAttribute("tenantID", tenantID);
+		
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		attr.getRequest().getSession().setAttribute("tenantID", tenantID);
+		
+		String client = request.getParameter("client");
+		log.debug("client " + client);
+		model.addAttribute("client", client);
+		
 		
 		String reqId = request.getParameter("requestId");
 		String requestNumber = request.getParameter("requestNumber");

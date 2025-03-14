@@ -4,7 +4,7 @@
 
 <beans>
 
-	<bean id="auditingDataSource"
+	<!--<bean id="auditingDataSource"
 		class="org.apache.tomcat.jdbc.pool.DataSource">
 		<property name="driverClassName">
 			<value>${hibernate.connection.driver_class}</value>
@@ -18,6 +18,31 @@
 		<property name="password">
 			<value>${hibernate.connection.password}</value>
 		</property>
+	</bean>-->
+	
+		<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		    <property name="poolName" value="springHikariCP" />
+		    <property name="connectionTestQuery" value="SELECT 1 from dual" />
+		    <property name="dataSourceClassName" value="${hibernate.connection.dataSourceClassName}" />
+		    <property name="maximumPoolSize" value="${hibernate.hikari.maximumPoolSize}" />
+		    <property name="idleTimeout" value="${hibernate.hikari.idleTimeout}" />
+		    
+		    <property name="minimumIdle" value="${hibernate.hikari.minimumIdle}" />
+		    <property name="maxLifetime" value="${hibernate.hikari.maxLifetime}" />
+		    <property name="connectionTimeout" value="${hibernate.hikari.connectionTimeout}"/>
+		    <property name="validationTimeout" value="${hibernate.hikari.validationTimeout}"/>
+	
+	    <property name="dataSourceProperties">
+	        <props>
+	            <prop key="url">${hibernate.connection.url}</prop>
+	            <prop key="user">${hibernate.connection.username}</prop>
+	            <prop key="password">${hibernate.connection.password}</prop>
+	        </props>
+	    </property>
+	</bean>
+	<!-- HikariCP configuration -->
+	<bean id="auditingDataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+	    <constructor-arg ref="hikariConfig" />
 	</bean>
 
 	<!-- Hibernate SessionFactory -->
@@ -41,6 +66,17 @@
 			<props>
 			<prop key="hibernate.dialect">${hibernate.dialect}</prop>
   			<prop key="hibernate.show_sql">true</prop>  
+  			
+  			<prop key="hibernate.multiTenancy">
+					SCHEMA
+				</prop>
+				<prop key="hibernate.multi_tenant_connection_provider">
+					com._4s_.common.dao.SchemaMultiTenantConnectionProvider
+				</prop>
+				<prop key="hibernate.tenant_identifier_resolver">
+					com._4s_.common.dao.CurrentTenantIdentifierResolverImpl
+				</prop>
+				
 			</props>
 		</property>
 	</bean>

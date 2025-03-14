@@ -1,8 +1,9 @@
-<%@ include file="/web/common/includes/userPreferencesHeader.jsp"%>
+<jsp:include page="/web/common/includes/userPreferencesHeader.jsp" flush="true" />
+<%@ include file="/web/common/includes/taglibs.jsp"%>
 <abc:security property="287" />
 <br>
-<table width="90%" border="0" cellspacing="0" cellpadding="0"
-	style="padding-right: 10px">
+<table 
+	style="padding-right: 10px; width:90%; border:0; cellspacing:0; cellpadding:0;">
 	<!--tr>
 		<td class="tableHeader" height="1"></td>
 	</tr>
@@ -24,12 +25,11 @@
 	</tr-->
 
 	<tr>
-		<td colspan="2">
+		<td colspan="2">s
+			<form:form method="POST" 
+				action="/Requests/security/changeUserApplication.html">
 
-			<form id="defaults" name="defaults" method="POST"
-				action="<c:url value="/security/changeUserApplication.html"/>">
-
-				<table rules="all" align="center" width="50%" class="sofT">
+				<table style="border:hidden; align:center; width:50%;" class="sofT">
 					<tr id="head_1_ep">
 						<td class="helpTitle" colspan="2" nowrap><abc:i18n
 								property="security.header.editUserApplication" /> <fmt:message
@@ -64,7 +64,7 @@
 					</tr>
 
 				</table>
-			</form>
+			</form:form>
 		</td>
 	</tr>
 </table>

@@ -12,15 +12,48 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 //import org.hibernate.hql.ast.tree.DeleteStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
+import com._4s_.attendance.web.util.DashboardAttendeesCountByDepWrapper;
+import com._4s_.attendance.web.util.DashboardReqTypeCountsWrapper;
 import com._4s_.common.dao.CommonQueries;
 import com._4s_.common.model.Settings;
+import com._4s_.requestsApproval.web.util.TimeAttendanceWrapper;
 
 public class AttendanceExternalQueries extends CommonQueries{
 	protected final Log log = LogFactory.getLog(getClass());
+	
+	private SessionFactory sessionFactory;
+	
+	
+
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	@Transactional
+	public Session getCurrentSession(){
+		Session session = null;
+    	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
+    	log.debug("session factory " + sessionFactory);
+    	try {
+    	    session = sessionFactory.getCurrentSession();
+    	} catch (HibernateException e) {
+    	    session = sessionFactory.openSession();
+    	}
+	      return session;
+	}
 
 public Integer getNumberOfAttendees(Date fromDate, Date toDate,Settings settings) {
 		
@@ -42,7 +75,7 @@ public Integer getNumberOfAttendees(Date fromDate, Date toDate,Settings settings
 
 		Map map = new HashMap();
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		String query = "";
 		String select = "";
 		String from = "";
@@ -62,17 +95,30 @@ public Integer getNumberOfAttendees(Date fromDate, Date toDate,Settings settings
 				+ "	JOIN empbasic emp ON location.location = emp.LOCATION "
 				+ "	LEFT OUTER JOIN LOGIN_USERS_REQUESTS login ON  login.empCode = emp.empCode WHERE emp.END_SERV IS NULL AND login.REQUEST_TYPE=10  "+ where;
 		log.debug("query " + query);
-		List in=(List) getJdbcTemplate().queryForList(query);
+//		List in=(List) getJdbcTemplate().queryForList(query);
+		
+		List in;
+		
+		try{
+			Query q = getCurrentSession().createNativeQuery(query.toString());
+			in = q.getResultList();
+//			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
+			log.debug("----cc1---"+in.size());
+		}catch (Exception e) {
+			in= new ArrayList();
+		}
+		
 		log.debug("in list " + in);
 		
-		LinkedCaseInsensitiveMap resultMap = (LinkedCaseInsensitiveMap) in.get(0);
-		if (settings.getSqlServerConnectionEnabled()) {
-			Integer atten =   (Integer)resultMap.get("attendance");
-			return atten.intValue();
-		} else {
-			BigDecimal atten =   (BigDecimal)resultMap.get("attendance");
-			return atten.intValue();
-		}
+		BigDecimal resultMap = (BigDecimal) in.get(0);
+		return resultMap.intValue();
+//		if (settings.getSqlServerConnectionEnabled()) {
+//			Integer atten =   (Integer)resultMap.get("attendance");
+//			return atten.intValue();
+//		} else {
+//			BigDecimal atten =   (BigDecimal)resultMap.get("attendance");
+//			return atten.intValue();
+//		}
 }
 	
 	public List getNumberOfAttendeesAndWorkersByDepartment(Date fromDate, Date toDate,Settings settings) {
@@ -95,7 +141,7 @@ public Integer getNumberOfAttendees(Date fromDate, Date toDate,Settings settings
 
 		Map map = new HashMap();
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		String query = "";
 		String select = "";
 		String from = "";
@@ -127,10 +173,21 @@ public Integer getNumberOfAttendees(Date fromDate, Date toDate,Settings settings
 				+ "group by emp.location,location.location,location.NAME "
 				+ ") attendees ON allWorkers.loc1=attendees.loc2 ORDER BY locationCode";
 		log.debug("query " + query);
-		List in=(List) getJdbcTemplate().queryForList(query);
+//		List in=(List) getJdbcTemplate().queryForList(query);
+		List in;
+		try{
+			Query q = getCurrentSession().createNativeQuery(query.toString());
+//			in = q.getResultList();
+			in = getResultList(q,DashboardAttendeesCountByDepWrapper.class);
+//			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
+			log.debug("----cc1---"+in.size());
+		}catch (Exception e) {
+			in= new ArrayList();
+		}
+		
 		log.debug("in list " + in);
 		Iterator itr = in.iterator();
-		LinkedCaseInsensitiveMap resultMap = null;
+		DashboardAttendeesCountByDepWrapper resultMap = null;
 		Object workersObj = null;
 		String workers = "";
 		Integer diff = 0;
@@ -143,15 +200,15 @@ public Integer getNumberOfAttendees(Date fromDate, Date toDate,Settings settings
 		List chartAttendance = new ArrayList();
 		List chartLocations = new ArrayList();	
 		while (itr.hasNext()) {
-			resultMap = (LinkedCaseInsensitiveMap) itr.next();
-			workersObj = resultMap.get("workers");
+			resultMap = (DashboardAttendeesCountByDepWrapper) itr.next();
+			workersObj = resultMap.getWorkers();
 //			log.debug("workers no " + workersObj);
 			if (workersObj==null) {
 				workers = "0";
 			} else {
 				workers = workersObj.toString();
 			}
-			attendanceObj = resultMap.get("attendance");
+			attendanceObj = resultMap.getAttendance();
 //			log.debug("attendance " + attendanceObj);
 			if (attendanceObj==null) {
 				attendance = "0";
@@ -161,9 +218,9 @@ public Integer getNumberOfAttendees(Date fromDate, Date toDate,Settings settings
 //			log.debug("workers " + workers + " attendance " + attendance);
 			diff = Integer.parseInt(workers)-Integer.parseInt(attendance);
 //			log.debug("diff " + diff);
-			locCode = resultMap.get("locationCode").toString();
+			locCode = resultMap.getLocationCode();
 //			log.debug("loccode " + locCode);
-			locName = resultMap.get("locationName").toString();
+			locName = resultMap.getLocationName();
 //			log.debug("locName " + locName);
 			chartAbsence.add(diff);
 			chartAttendance.add(Integer.parseInt(attendance));
@@ -200,7 +257,7 @@ public List getDashboardRequests(Date fromDate, Date toDate,Settings settings) {
 
 		Map map = new HashMap();
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		String query = "";
 		String select = "";
 		String from = "";
@@ -222,10 +279,20 @@ public List getDashboardRequests(Date fromDate, Date toDate,Settings settings) {
 		log.debug("query " + query);
 		
 		
-		List in=(List) getJdbcTemplate().queryForList(query);
+//		List in=(List) getJdbcTemplate().queryForList(query);
+		List in;
+		try{
+			Query q = getCurrentSession().createNativeQuery(query.toString());
+			in = getResultList(q,DashboardReqTypeCountsWrapper.class);
+//			in = q.getResultList();
+//			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
+			log.debug("----cc1---"+in.size());
+		}catch (Exception e) {
+			in= new ArrayList();
+		}
 		log.debug("in list " + in);
 		
-		LinkedCaseInsensitiveMap resultMap = null;
+		DashboardReqTypeCountsWrapper resultMap = null;
 		Iterator itr = in.iterator();
 		List empCount = new ArrayList();
 		List reqName = new ArrayList();
@@ -237,15 +304,15 @@ public List getDashboardRequests(Date fromDate, Date toDate,Settings settings) {
 		String reqN = "";
 		
 		while (itr.hasNext()) {
-			resultMap = (LinkedCaseInsensitiveMap) itr.next();
-			empCountObj = resultMap.get("empCount");
+			resultMap = (DashboardReqTypeCountsWrapper) itr.next();
+			empCountObj = resultMap.getEmpCount();
 //			log.debug("workers no " + workersObj);
 			if (empCountObj==null) {
 				empC = "0";
 			} else {
 				empC = empCountObj.toString();
 			}
-			reqNameObj = resultMap.get("reqName");
+			reqNameObj = resultMap.getReqName();
 //			log.debug("attendance " + attendanceObj);
 			if (reqNameObj==null) {
 				reqN = "";

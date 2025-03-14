@@ -648,9 +648,11 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	}
 	
 	public List getVacations (String empCode, Long reqId, String vacId, Date from_date, Settings settings){
+		log.debug("getvacations 1");
 		return externalQueries.getVacations(empCode, reqId, vacId, from_date, settings);
 	}
 	public List getVacations (String empCode, Long reqId, Date from_date,Date to_date,Settings settings){
+		log.debug("getvacations 2");
 		return externalQueries.getVacations(empCode, reqId, from_date,to_date,settings);
 	}
 	public List getTimeAttend (String empCode, Date from_date, Date to_date){

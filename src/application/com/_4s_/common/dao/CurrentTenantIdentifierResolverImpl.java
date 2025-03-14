@@ -1,5 +1,9 @@
 package com._4s_.common.dao;
 
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Properties;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
@@ -13,16 +17,30 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 */
 public class CurrentTenantIdentifierResolverImpl implements CurrentTenantIdentifierResolver {
 	
-	private static final String KEY_TENANTID_SESSION = "hibernate.tenant_identifier_resolver";
-    private static final String DEFAULT_TENANTID = "4s";
+	private static final String KEY_TENANTID_SESSION = "tenantID";
+    private static String DEFAULT_TENANTID;
 
 	Log logger = LogFactory.getLog(getClass());
+	
+	public CurrentTenantIdentifierResolverImpl() throws IOException {
+		Properties properties = new Properties();
+		properties.load(getClass().getResourceAsStream("/hibernate.properties"));
+//		while (properties.elements().hasMoreElements()) {
+//			logger.debug(properties.elements().nextElement());
+//		}
+		properties.put("hibernate.multi_tenant_connection_provider", SchemaMultiTenantConnectionProvider.hibernate_multi_tenant_connection_provider);
+		properties.put("hibernate.tenant_identifier_resolver", SchemaMultiTenantConnectionProvider.hibernate_tenant_identifier_resolver);
+		properties.put("hibernate.multiTenancy", SchemaMultiTenantConnectionProvider.hibernate_multiTenancy);
+		logger.debug("***loaded Properties***");
+		DEFAULT_TENANTID = (String)properties.getProperty("hibernate.connection.username");
+		logger.debug("DEFAULT_TENANTID " + DEFAULT_TENANTID);
+	}
 
 //   @Override
    public String resolveCurrentTenantIdentifier() {
-	   System.out.println("*************************CurrentTenantIdentifierResolverImpl*****************************");
+	   logger.debug("*************************CurrentTenantIdentifierResolverImpl*****************************");
        String tenant = resolveTenantByHttpSession();
-       logger.trace("Tenant resolved: " + tenant);
+       logger.debug("Tenant resolved: " + tenant);
        return tenant;
    }
 
@@ -34,10 +52,20 @@ public class CurrentTenantIdentifierResolverImpl implements CurrentTenantIdentif
    {
        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
        //If session attribute exists returns tenantId saved on the session
+      
        if(attr != null){
+    	   logger.debug("ServletRequestAttributes " + attr.getRequest());
+    	   
            HttpSession session = attr.getRequest().getSession(false); // true == allow create
            if(session != null){
+        	   logger.debug("session " + session);
+        	   Enumeration<String> attributes = session.getAttributeNames();
+        	   while (attributes.hasMoreElements()) {
+        		   String att = attributes.nextElement();
+        		   logger.debug("attribute " +att);
+        	   }
                String tenant = (String) session.getAttribute(KEY_TENANTID_SESSION);
+               logger.debug("tenant " + tenant);
                if(tenant != null){
                    return tenant;
                }
@@ -50,7 +78,7 @@ public class CurrentTenantIdentifierResolverImpl implements CurrentTenantIdentif
 
 //   @Override
    public boolean validateExistingCurrentSessions() {
-	   System.out.println("*************************CurrentTenantIdentifierResolverImpl2*****************************");
+	   logger.debug("*************************CurrentTenantIdentifierResolverImpl2*****************************");
        return true;
    }
 }

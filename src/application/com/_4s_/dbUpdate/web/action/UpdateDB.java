@@ -3,14 +3,11 @@ package com._4s_.dbUpdate.web.action;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,25 +19,26 @@ import org.apache.commons.logging.LogFactory;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.util.LinkedCaseInsensitiveMap;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.common.model.Flag;
 import com._4s_.common.model.LastSequence;
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.CommonManager;
 
-public class UpdateDB implements Controller {
+@Controller
+public class UpdateDB {
 	
 	private final Log log = LogFactory.getLog(getClass());
 	
 		
-		
+		@Autowired
 		CommonManager comMger=null;
-		
+		@Autowired
 		private DataSource dataSource;
 		
 		
@@ -59,6 +57,7 @@ public class UpdateDB implements Controller {
 			this.dataSource = dataSource;
 		}
 
+		@RequestMapping("/updateDBView.html")
 		public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 			String fileName = "";
 			Settings settings = (Settings)comMger.getObject(Settings.class, new Long(1));
@@ -140,6 +139,7 @@ public class UpdateDB implements Controller {
         					String updateSQL="update  common_last_sequence set classSequence="+blockIndex+" where className='QueryIndex'";
         					jt.execute(updateSQL);
         					jt.execute("commit");
+        					log.debug("commit sequence");
         					currentIndex++;
         				}else{
         					jt.execute("rollback transaction");

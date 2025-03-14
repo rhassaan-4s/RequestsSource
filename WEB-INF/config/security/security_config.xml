@@ -38,6 +38,15 @@
 		<logout logout-url="/api/workflow/logout" invalidate-session="true"
 			delete-cookies="JSESSIONID,SPRING_SECURITY_REMEMBER_ME_COOKIE" success-handler-ref="myLogoutHandler" />
 
+		
+		
+		
+		<custom-filter ref="authenticationFilter" before="PRE_AUTH_FILTER" />
+		
+		
+		<custom-filter ref="rememberMeFilter" before="REMEMBER_ME_FILTER"/>
+
+		<access-denied-handler ref="exceptionControllerAdvice" />
 		<!-- Rest Web Service -->
 
 		<intercept-url pattern="/api/workflow/signInOut"
@@ -105,10 +114,7 @@
 		
 		
 			
-		<custom-filter ref="authenticationFilter" before="PRE_AUTH_FILTER" />
-		<custom-filter ref="rememberMeFilter" before="REMEMBER_ME_FILTER"/>
-
-		<access-denied-handler ref="exceptionControllerAdvice" />
+		
 		
 
 	</http>
@@ -172,10 +178,12 @@
 		<!--<csrf disabled="true"/>-->
 		
 		<session-management>
-			<concurrency-control max-sessions="10"
+			<concurrency-control max-sessions="50"
 				error-if-maximum-exceeded="true" />
 		</session-management>
 
+		<custom-filter ref="authenticationFilter" before="PRE_AUTH_FILTER" />
+		
 		<intercept-url pattern="\A/common/commonAdminCountryCities.html.*\Z"
 			access="CAN_VIEW_page_common_commonAdminCountryCities" />
 		<intercept-url pattern="\A/common/commonAdminEditCity.html.*\Z"
@@ -452,8 +460,8 @@
 		<intercept-url pattern="/attendance/vacRuleForm.html.*\Z"
 			access="hasRole('CAN_VIEW_page_approvement')" />
 			
-			<intercept-url pattern="/attendance/ajax-drawAbsenceAttendanceByDepartment"
-			access="hasRole('CAN_VIEW_page_approvement')" />
+		<!-- 	<intercept-url pattern="/attendance/ajax-drawAbsenceAttendanceByDepartment"
+			access="hasRole('CAN_VIEW_page_approvement')" /> -->
 			
 			<intercept-url pattern="/attendance/qualificationForm.html.*\Z"
 			access="hasRole('CAN_VIEW_all_qualification')" />
@@ -502,9 +510,16 @@
 		class="com._4s_.restServices.entrypoint.AuthFailureHandler" />
 	<beans:bean id="myLogoutHandler"
 		class="com._4s_.restServices.entrypoint.CustomLogoutSuccessHandler" />
-
-
-
+	
+	<!--<beans:bean id="tenantFilter"
+		class="com._4s_.clients.web.util.TenantFilter">
+		<beans:property name="tenantRepository" ref="tenantRepository"/>
+	</beans:bean>
+	
+	<beans:bean id="tenantAuthorizationFilter"
+		class="com._4s_.clients.web.util.TenantAuthorizationFilter">
+	</beans:bean>
+	-->
 
 	<beans:bean id="authenticationFilter"
 		class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
@@ -540,7 +555,7 @@
 	<beans:bean id="filterChainProxy"
 	class="org.springframework.security.web.FilterChainProxy">
 	<filter-chain-map>
-		<filter-chain pattern="\A/security/login.html"
+		<filter-chain pattern="\A/security/login.html.*\Z"
 			filters="authenticationFilter" />
 	</filter-chain-map>
 </beans:bean> 

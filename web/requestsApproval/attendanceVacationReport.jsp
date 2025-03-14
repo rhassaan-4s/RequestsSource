@@ -246,10 +246,9 @@ function printthis(which) {
 
 							</tr>
 
-
 							<c:forEach varStatus="loop" var="record" items="${days1}">
 								<tr height="30">
-									<td class="helpBod" nowrap>${record.empCode }</td>
+									<td class="helpBod" nowrap>${record.empCode}</td>
 									<td class="helpBod" nowrap>${record.fName}</td>
 									<td class="helpBod" nowrap><_4s_:formatMiladiDate
 											value="${record.fr_date }" /></td>

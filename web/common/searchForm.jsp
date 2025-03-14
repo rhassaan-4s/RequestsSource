@@ -548,12 +548,12 @@ window.onload = function () {
 											<tr>
 												<td nowrap class="helpBod"
 													style="text-align: right; font-size: 10.5pt;"><a
-													href="javascript:selectResult('${aResult.identity}','${aResult.id}','${inputId}');${onlinkclick}">${aResult.id}</a>
+													href="javascript:selectResult('${aResult.ident}','${aResult.id}','${inputId}');${onlinkclick}">${aResult.id}</a>
 												</td>
 												<c:if test="${secondKey != null && secondKey != ''}">
 													<td nowrap class="helpBod"
 														style="text-align: right; font-size: 10.5pt;"
-														id="n${aResult.identity}">*${aResult.description}</td>
+														id="n${aResult.ident}">*${aResult.description}</td>
 												</c:if>
 											</tr>
 

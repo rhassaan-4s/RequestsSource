@@ -426,7 +426,6 @@ function initMap(latitude,longitude) {
 										</td>
 										
 									</tr>
-									
 								<c:forEach varStatus="loop" var="record" items="${results}">
 									<tr height=20 bgcolor="#F8F8F8">
 										<td  nowrap>

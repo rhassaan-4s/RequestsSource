@@ -18167,4 +18167,9 @@ maxvalue 999999999999999999999999999&#xD;
 start with 20&#xD;
 increment by 1&#xD;
 cache 20;</statment></query><query><sqlindex>278</sqlindex><statment>ALTER TABLE  WEB_BRANCH MODIFY BRANCH NUMBER;&#xD;
-</statment></query><query><sqlindex>279</sqlindex><statment>ALTER TABLE COMMON_EMPLOYEE ADD WEBBRANCH NUMBER;</statment></query></SQL>
+</statment></query><query><sqlindex>279</sqlindex><statment>ALTER TABLE COMMON_EMPLOYEE ADD WEBBRANCH NUMBER;</statment></query><query><sqlindex>280</sqlindex><statment>ALTER TABLE COMMON_CLIENTS ADD "schema" VARCHAR2(30);</statment></query><query><sqlindex>281</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101611, 'commons.caption.clients', NULL);&#xD; 
+INSERT INTO i18n_message VALUES (202116734,'العميل', 101611, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116735, 'Client', 101611, 3);&#xD;
+INSERT INTO I18N_KEY VALUES (101612, 'commons.caption.next', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116736,'التالي', 101612, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116737, 'Next', 101612, 3);</statment></query><query><sqlindex>282</sqlindex><statement>ALTER TABLE COMMON_CLIENTS ADD SERVER VARCHAR2(100);</statement></query></SQL>

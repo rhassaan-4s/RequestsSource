@@ -4,6 +4,7 @@
 "http://www.w3.org/TR/html4/loose.dtd">
 
 <%@page import="java.util.List"%>
+<%@page  contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@page import="com._4s_.security.model.SecurityApplication"%>
 <html dir="<fmt:message key="commons.language.dir"/>"
 	xml:lang="<fmt:message key="commons.language.code"/>"
@@ -25,11 +26,43 @@
 	src="/Requests/web/common/js/toolTipContent.js"></script>
 <SCRIPT LANGUAGE="JavaScript" SRC="/Requests/web/common/js/popup.js"></SCRIPT>
 <script type="text/javascript" src="/Requests/web/common/js/myLiveSearch.js"></script>
-<script type="text/javascript" src="/Requests/dwr/interface/qry.js"></script>
+<!-- <script type="text/javascript" src="/Requests/dwr/interface/qry.js"></script>
 <script type="text/javascript" src="/Requests/dwr/engine.js"></script>
-<script type="text/javascript" src="/Requests/dwr/util.js"></script>
+<script type="text/javascript" src="/Requests/dwr/util.js"></script> -->
 <script type="text/javascript" src="/Requests/web/common/js/Tokenizer.js"></script>
 <script type="text/javascript" src="/Requests/web/common/js/jquery.min.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/jquery.calendars.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/jquery.calendars.plus.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="/Requests/web/common/css/jquery.calendars.picker.css" />
+<script type="text/javascript"
+	src="/Requests/web/common/js/jquery.calendars.picker.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/jquery.calendars.islamic.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/calendarDate.js"></script>
+
+<link type="text/css" rel="stylesheet"
+	href="/Requests/web/common/timepicker/ui-lightness/jquery-ui-1.8.21.custom.css" />
+<link type="text/css" rel="stylesheet"
+	href="/Requests/web/common/timepicker/jquery-ui-timepicker-addon.css" />
+<script type="text/javascript"
+	src="/Requests/web/common/timepicker/jquery-1.8.3.min.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/timepicker/jquery-ui.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/timepicker/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/timepicker/jquery-ui-sliderAccess.js"></script>
+
+<link type="text/css" rel="stylesheet"
+	href="/Requests/web/common/clockpicker/clockpicker.css" />
+<link type="text/css" rel="stylesheet"
+	href="/Requests/web/common/clockpicker/standalone.css" />
+<script type="text/javascript"
+	src="/Requests/web/common/clockpicker/clockpicker.js"></script>
 <%
 	String applicationName = (String) session.getAttribute("appName");
 	List activeApplications = (List) request.getSession().getAttribute(
@@ -208,7 +241,7 @@ make_menus();
 </script>
 </head>
 <body leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0"
-	marginwidth="0" marginheight="0" onload="liveSearchInit();">
+	marginwidth="0" marginheight="0" onload="liveSearchInit();"> 
 <_4s_:changeLocale value='<%=(String) request.getSession().getAttribute(
 									"locale")%>'/>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">

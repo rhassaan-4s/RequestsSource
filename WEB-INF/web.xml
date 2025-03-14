@@ -30,11 +30,11 @@ version="3.0">
 			/WEB-INF/config/i18n/i18n*.xml,
 			/WEB-INF/config/auditing/auditing*.xml,
 			/WEB-INF/config/dbUpdate/dbUpdate*.xml,
-			/WEB-INF/config/hr/hr*.xml,
 			/WEB-INF/config/requestsApproval/requestsApproval*.xml
 			/WEB-INF/config/timesheet/timesheet*.xml
 			/WEB-INF/config/attendance/attendance*.xml
 			/WEB-INF/config/rest/rest*.xml
+			/WEB-INF/config/clients/clients*.xml
 		</param-value>
 	</context-param>
 	
@@ -96,6 +96,7 @@ version="3.0">
         <param-name>start</param-name>
         <param-value>off</param-value>
     </context-param>
+   
 	<listener>
         <listener-class>
             com._4s_.requestsApproval.web.action.CreateDatabase
@@ -421,18 +422,7 @@ version="3.0">
 		 <url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 
-	<!-- <servlet>
-	<servlet-name>dwr</servlet-name>
-	<servlet-class>org.springframework.web.servlet.DispatcherServlet
-	</servlet-class>
-	<load-on-startup>17</load-on-startup>
-</servlet> 
-
-	<servlet-mapping>
-		<servlet-name>dwr</servlet-name>
-		<url-pattern>/dwr/*</url-pattern>
-	</servlet-mapping>
- -->
+	<!--  common servlet -->
 
 	<welcome-file-list>
 		<!-- Redirects to "login.jsp" for dispatcher handling -->

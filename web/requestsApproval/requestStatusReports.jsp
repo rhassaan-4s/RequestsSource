@@ -290,7 +290,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 									</tr>
 									
 									<c:set var="reqNo" value=""/>
-								<c:forEach varStatus="loop" var="record" items="${results}">
+								<c:forEach varStatus="loop" var="record" items="${Results.results}">
 									<tr height=20 bgcolor="#F8F8F8">
 
 									<c:choose>
@@ -366,7 +366,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											
 										(${record.mgrName})	
 										</td>
-										<td nowrap>${record.approvalNote}</td>
+										<td nowrap>${record.note}</td>
 								</tr>
 								</c:forEach>									
 								</table>

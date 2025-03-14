@@ -9,6 +9,7 @@
 	</bean>
 	
 	<bean id="timesheetExternalQueries" class="com._4s_.timesheet.dao.TimesheetExternalQueries">
+		<property name="sessionFactory" ref="sessionFactory"/>
 		<property name="platformTransactionManager" ref ="transactionManager" />
 		
 		<property name="driverClass">

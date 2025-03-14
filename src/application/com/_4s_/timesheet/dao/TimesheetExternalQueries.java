@@ -3,6 +3,7 @@ package com._4s_.timesheet.dao;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,11 +13,17 @@ import java.util.Map;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 //import org.hibernate.hql.ast.tree.DeleteStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
+import com._4s_.attendance.web.util.DashboardAttendeesCountByDepWrapper;
 import com._4s_.common.dao.CommonQueries;
 import com._4s_.timesheet.model.TimesheetActivity;
 import com._4s_.timesheet.model.TimesheetCostCenter;
@@ -32,9 +39,37 @@ import com._4s_.timesheet.model.TimesheetTransactionParts;
 //import com._4s_.stores.model.StoreTrnsDep;
 //import com._4s_.stores.service.StoresManager;
 //import com._4s_.stores.web.action.ExternalTypeAndCode;
+import com._4s_.timesheet.web.util.TimesheetTransWrapper;
 
 public class TimesheetExternalQueries extends CommonQueries {
 	protected final Log log = LogFactory.getLog(getClass());
+	
+	
+private SessionFactory sessionFactory;
+	
+	
+
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	@Transactional
+	public Session getCurrentSession(){
+		Session session = null;
+    	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
+    	log.debug("session factory " + sessionFactory);
+    	try {
+    	    session = sessionFactory.getCurrentSession();
+    	} catch (HibernateException e) {
+    	    session = sessionFactory.openSession();
+    	}
+	      return session;
+	}
+
 
 	public Map getTimesheetTransactions(String empCode, Date fromDate,
 			Date toDate, TimesheetCostCenter costcenter,
@@ -80,7 +115,7 @@ public class TimesheetExternalQueries extends CommonQueries {
 
 		Map map = new HashMap();
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		String query = "";
 		String select = "";
 		String where = "";
@@ -165,21 +200,40 @@ public class TimesheetExternalQueries extends CommonQueries {
 		log.debug(query);
 		StringBuilder sql = new StringBuilder(query);
 		
-		List in=(List) getJdbcTemplate().queryForList(sql.toString());
+//		List in=(List) getJdbcTemplate().queryForList(sql.toString());
+		List in;
 		
-		String listSizeQuery = "select count (*) from ("+query+")";
+		try{
+			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			in = q.getResultList();
+			log.debug("----cc1---"+in.size());
+		}catch (Exception e) {
+			in= new ArrayList();
+		}
+		
+		String listSizeQuery = "select count (*) count from ("+query+")";
 		log.debug(listSizeQuery);
 		log.debug("listSizeQuery " + listSizeQuery);
 		StringBuilder sqlListSize = new StringBuilder(listSizeQuery);
-		List in2=(List) getJdbcTemplate().queryForList(sqlListSize.toString());
+//		List in2=(List) getJdbcTemplate().queryForList(sqlListSize.toString());
+		List in2;
+		try{
+			Query q = getCurrentSession().createNativeQuery(listSizeQuery.toString());
+//			in2 = q.getResultList();
+			in2 = getResultList(q,TimesheetTransWrapper.class);
+			log.debug("----cc1---"+in.size());
+		}catch (Exception e) {
+			in2= new ArrayList();
+		}
 		
 		log.debug(in2.size());
 		map.put("Results", in);
 		if (in2.size()>0) {
-			log.debug("listSize " + ((LinkedCaseInsensitiveMap)in2.get(0)).get("count(*)"));
-			map.put("listSize", ((BigDecimal)((LinkedCaseInsensitiveMap)in2.get(0)).get("count(*)")).intValue());
+			BigDecimal count = ((TimesheetTransWrapper)in2.get(0)).getCount();
+			log.debug("listSize " + count);
+			map.put("listSize", count.intValue());
 		} else {
-			map.put("listSize", new Long(0));
+			map.put("listSize", new Integer(0));
 		}
 		return map;
 	}

@@ -12,6 +12,7 @@
 	</bean>
 	 -->
 	<bean id="queries" class="com._4s_.common.dao.Queries" >
+		<property name="sessionFactory" ref="sessionFactory"/>
 		<property name="dataSource">
 		      <ref bean="dataSource"/>
 		</property>

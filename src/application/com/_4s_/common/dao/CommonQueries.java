@@ -4,16 +4,24 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 public class CommonQueries {
 
-	private JdbcTemplate jdbcTemplate;
+	protected final Log log = LogFactory.getLog(getClass());
+	
+//	private JdbcTemplate jdbcTemplate;
 	private BasicDataSource basicDataSource;
 //	@Autowired
 	private String driverClass;
@@ -50,14 +58,14 @@ public class CommonQueries {
 	}
 
 
-	public JdbcTemplate getJdbcTemplate() {
-		return jdbcTemplate;
-	}
+//	public JdbcTemplate getJdbcTemplate() {
+//		return jdbcTemplate;
+//	}
 
 
-	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-	}
+//	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+//		this.jdbcTemplate = jdbcTemplate;
+//	}
 
 
 	public BasicDataSource getBasicDataSource() {
@@ -141,4 +149,47 @@ public class CommonQueries {
 		}
 		return basicDataSource;
 	}
+	
+	
+	public <T> List<T> map(Class<T> type, List<Object[]> records){
+		List<T> result = new ArrayList<T>();
+		   for(Object[] record : records){
+			   T rec = map(type, record);
+			   System.out.println("record " + rec);
+		      result.add(rec);
+		   }
+		   return result;
+	}
+
+	public <T> List<T> getResultList(Query query, Class<T> type){
+		  @SuppressWarnings("unchecked")
+		  List l = query.getResultList();
+//		  log.debug("####First item in list " + l.get(0));
+		  log.debug("####class type " + type);
+		  List<Object[]> records = l;
+		  return map(type, records);
+	}
+	
+	public <T> T map(Class<T> type, Object[] tuple){
+		   List<Class<?>> tupleTypes = new ArrayList<>();
+		   for(Object field : tuple){
+			   if (field !=null) {
+				   System.out.println("field " + field.getClass());
+			   } else {
+				   System.out.println("field is null");
+			   }
+//			   if (field==null) {
+				   tupleTypes.add(Object.class);
+//			   } else {
+//				   tupleTypes.add(field.getClass());
+//			   }
+		   }
+		   try {
+		      Constructor<T> ctor = type.getConstructor(tupleTypes.toArray(new Class<?>[tuple.length]));
+		      log.debug("constructor " + ctor);
+		      return ctor.newInstance(tuple);
+		   } catch (Exception e) {
+		      throw new RuntimeException(e);
+		   }
+		}
 }

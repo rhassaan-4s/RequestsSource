@@ -29,6 +29,7 @@ import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.CommonController;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
+import com._4s_.requestsApproval.web.util.VacationsResultWrapper;
 
 @Controller
 @RequestMapping("/attendanceVacationReport.html")
@@ -211,16 +212,24 @@ public class AttendanceVacationReport extends CommonController {
 					if (empArray == null || empArray.isEmpty()) {
 						empArray = "'" + emp.getEmpCode() +  "'";
 					}
+					log.debug("will get vacations for list of employee");
 					days=requestsApprovalManager.getVacations(empArray, new Long(2), fromDate,toDate,settings);
 				} else {
 //					totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
 //					totalObjects=requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
+					log.debug("will get vacations for certain employee");
 					days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate,settings);
 				}
 //				days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate);
 				log.debug("-----days 001 ---"+days.size());
 				model.addAttribute("days1", days);
-				
+				Iterator itr = days.iterator();
+				while(itr.hasNext()) {
+					Object o = itr.next();
+					log.debug("vac class" + o.getClass());
+					VacationsResultWrapper vac = (VacationsResultWrapper)o;
+					log.debug("###Vac@@@@@"+vac);
+				}
 //				days=requestsApprovalManager.getVacations(emp.getEmpCode(), new Long(2), "002", fromDate,toDate);
 //				log.debug("-----days 002 ---"+days.size());
 //				model.put("days2", days);

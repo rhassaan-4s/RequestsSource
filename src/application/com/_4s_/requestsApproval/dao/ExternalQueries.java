@@ -1,5 +1,6 @@
 package com._4s_.requestsApproval.dao;
 
+import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -15,11 +17,17 @@ import java.util.Map;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 import org.springframework.dao.DataAccessException;
 //import org.hibernate.hql.ast.tree.DeleteStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -29,29 +37,77 @@ import com._4s_.common.dao.CommonQueries;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.requestsApproval.web.action.TimeAttend;
+import com._4s_.requestsApproval.web.util.AnnualVacationBalanceResultWrapper;
+import com._4s_.requestsApproval.web.util.PageRequestsWrapper;
+import com._4s_.requestsApproval.web.util.RequestStatusWrapper;
+import com._4s_.requestsApproval.web.util.TimeAttendanceLocationWrapper;
+import com._4s_.requestsApproval.web.util.TimeAttendanceReportResultWrapper;
+import com._4s_.requestsApproval.web.util.TimeAttendanceWrapper;
+import com._4s_.requestsApproval.web.util.VacationsResultWrapper;
+import com.zaxxer.hikari.HikariDataSource;
 
+@EnableTransactionManagement(proxyTargetClass = true)
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 @Repository
 public class ExternalQueries extends CommonQueries{
 	protected final Log log = LogFactory.getLog(getClass());
+	
+	private HikariDataSource dataSource;
+	
+	private Session session;
+	
+	public HikariDataSource getDataSource() {
+		return dataSource;
+	}
 
+	public void setDataSource(HikariDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	
+	private SessionFactory sessionFactory;
+	
+	
+
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	@Transactional
+	public Session getCurrentSession(){
+		Session session = null;
+    	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
+    	log.debug("session factory " + sessionFactory);
+    	try {
+    	    session = sessionFactory.getCurrentSession();
+    	} catch (HibernateException e) {
+    	    session = sessionFactory.openSession();
+    	}
+	      return session;
+	}
+	
 	public int insertTimeAttend (String emp_code, Date date_, Date time_, String trans_type) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 
 		DefaultTransactionDefinition paramTransactionDefinition = new    DefaultTransactionDefinition();
-
 		TransactionStatus status=getPlatformTransactionManager().getTransaction(paramTransactionDefinition );
 		log.debug("date_ " + date_);
 		log.debug("simpleDateFormat.format(date_) " + simpleDateFormat.format(date_));
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(dataSource));
 		StringBuilder sql = new StringBuilder(
 				" insert into time_attend (emp_code,date_,time_,trans_type) values ('" +emp_code
 				+ "',to_date('" + simpleDateFormat.format(date_) + "','dd-MM-YYYY hh:mi:ss'),to_date('" + simpleDateFormat.format(time_) + "','dd-MM-YYYY hh:mi:ss'),'" + trans_type+"')");
 		log.debug(sql.toString());
 		try {
-			getJdbcTemplate().update(sql.toString());
+//			getJdbcTemplate().update(sql.toString());
 
+			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			q.executeUpdate();
 			log.debug("will commit");
 			getPlatformTransactionManager().commit(status);
 			return 1;
@@ -106,7 +162,8 @@ public class ExternalQueries extends CommonQueries{
 
 
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(dataSource));
 		StringBuilder sql = new StringBuilder(
 				" select entitled+previous from vac_limit where empcode = '" +empCode
 				+ "' and vacation = '" + vacId + "' and year = '"
@@ -114,7 +171,9 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("----sql1---"+sql);
 		try{
-			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
+			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			cc1 = ((BigDecimal)q.getSingleResult()).longValue();
+//			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
 			log.debug("----cc1---"+cc1);
 		}catch (Exception e) {
 			cc1=new Long(0);
@@ -166,7 +225,8 @@ public class ExternalQueries extends CommonQueries{
 
 
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(dataSource));
 		StringBuilder sql = new StringBuilder(
 				" select entitled+previous from vac_limit where empcode = '" +empCode
 				+ "' and vacation = '" + vacId + "' and year = '"
@@ -174,7 +234,9 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("----sql1---"+sql);
 		try{
-			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
+//			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
+			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			cc1 = ((BigDecimal)q.getSingleResult()).longValue();
 			log.debug("----cc1---"+cc1);
 		}catch (Exception e) {
 			cc1=new Long(0);
@@ -242,7 +304,9 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("----sql---"+sql);
 		try{
-			cc2=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
+			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			cc2 = ((BigDecimal)q.getSingleResult()).longValue();
+//			cc2=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
 		}catch (Exception e) {
 			cc2=new Long(0);
 		}
@@ -315,7 +379,9 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("----sql---"+sql);
 		try{
-			cc2=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
+			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			cc2 = ((BigDecimal)q.getSingleResult()).longValue();
+//			cc2=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
 		}catch (Exception e) {
 			cc2=new Long(0);
 		}
@@ -368,7 +434,8 @@ public class ExternalQueries extends CommonQueries{
 		//            System.out.println("Day = " + c.get(Calendar.DAY_OF_MONTH));
 
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(dataSource));
 		StringBuilder sql = new StringBuilder(
 				" select entitled+previous from vac_limit where empcode = '" +empCode
 				+ "' and vacation = '" + vacId + "' and year = '"
@@ -376,7 +443,9 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("getVacationCredit----sql1---"+sql);
 		try{
-			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
+//			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class
+			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			cc1 = ((BigDecimal)q.getSingleResult()).longValue();
 			log.debug("----cc1---"+cc1);
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -405,7 +474,9 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("----sql2---"+sql);
 		try{
-			cc2=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
+//			cc2=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
+			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			cc2 = ((BigDecimal)q.getSingleResult()).longValue();
 		}catch (Exception e) {
 			cc2=new Long(0);
 		}
@@ -461,7 +532,8 @@ public class ExternalQueries extends CommonQueries{
 		if (empCode!= null && !empCode.equals("")){
 			emp = " emp_code in (" +empCode+ ") and ";
 		}
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(dataSource));
 		StringBuilder sql = new StringBuilder(
 				" select min(time_) as minDate, max(time_) as maxDate, emp_code as emp , e.firstName fName, e.lastName lName " 
 						+" from time_attend t, common_employee e where " + emp
@@ -477,10 +549,12 @@ public class ExternalQueries extends CommonQueries{
 		//		log.debug("----sql 1---"+sql);
 
 
-		List in=(List) getJdbcTemplate().queryForList(sql.toString());
+		Query q = getCurrentSession().createNativeQuery(sql.toString());
+		List in = getResultList(q,TimeAttendanceWrapper.class);
+//		List in=(List) getJdbcTemplate().queryForList(sql.toString());
 
 
-		LinkedCaseInsensitiveMap inMap ;
+		TimeAttendanceWrapper inMap ;
 
 		String minDate = null;
 
@@ -502,48 +576,44 @@ public class ExternalQueries extends CommonQueries{
 		for(int i=0;i<in.size();i++){
 			timeAttend=new TimeAttend();
 			log.debug("in.get(i) " + in.get(i).getClass());
-			inMap = (LinkedCaseInsensitiveMap) in.get(i);
-			minDate = inMap.get("minDate").toString();
-			log.debug("----minDate---"+minDate);
-
-			//			minDate=minDate.substring(0,19);
-			log.debug("----minDate---"+minDate);
-
 			DateFormat d= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S",Locale.US);
+//			inMap = (LinkedCaseInsensitiveMap) in.get(i);
+			inMap = (TimeAttendanceWrapper)in.get(i);
+//			minDate = inMap.get("minDate").toString();
+//			log.debug("----minDate---"+minDate);
+//
+//			//			minDate=minDate.substring(0,19);
+//			log.debug("----minDate---"+minDate);
+//
+//			
+//
+//			try {
+//				inDate=d.parse(minDate);
+//				log.debug("inDate  = "+inDate);
+//			} catch (ParseException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 
-			try {
-				inDate=d.parse(minDate);
-				log.debug("inDate  = "+inDate);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			//			mCalDate = new MultiCalendarDate();
-			//			mCalDate.setDateTimeString(minDate.substring(0, minDate.length()-2));
-			//			inDate=mCalDate.getDate();
-
-
-
-			//df=new SimpleDateFormat("dd/MM/yyyy");
-			//	 log.debug("----Date1111---"+ inMap.get("dateDay").toString());
-
-			//timeAttend.setDateDay(new Date (inMap.get("minDate").toString()));
-
-
-			maxDate = inMap.get("maxDate").toString();
-			//			maxDate=maxDate.substring(0,19);
-			log.debug("----maxDate---"+maxDate);
-			//			mCalDate = new MultiCalendarDate();
-			//			mCalDate.setDateTimeString(maxDate);
-			//			outDate=mCalDate.getDate();
-			try {
-				outDate=d.parse(maxDate);
-				log.debug("outDate  = "+outDate);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			inDate= inMap.getMinDate();
+//			maxDate = inMap.get("maxDate").toString();
+//			//			maxDate=maxDate.substring(0,19);
+//			log.debug("----maxDate---"+maxDate);
+//			//			mCalDate = new MultiCalendarDate();
+//			//			mCalDate.setDateTimeString(maxDate);
+//			//			outDate=mCalDate.getDate();
+//			try {
+//				outDate=d.parse(maxDate);
+//				log.debug("outDate  = "+outDate);
+//			} catch (ParseException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+			outDate = inMap.getMaxDate();
+			
+			minDate = d.format(inDate);
+			maxDate = d.format(outDate);
+			
 			if(inDate!=null || outDate!=null){
 				long diffHrs= (outDate.getTime()-inDate.getTime())/(1000*60*60);
 				long diffMins= ((outDate.getTime()-inDate.getTime())%(1000*60*60))/(1000*60);
@@ -593,10 +663,12 @@ public class ExternalQueries extends CommonQueries{
 			log.debug("-------simpleDateformat.format(mCalDate.getDate())---"+simpleDateformat.format(mCalDate.getDate()));
 			timeAttend.setDayString(simpleDateformat.format(mCalDate.getDate()));
 
-			String empStr =  inMap.get("emp").toString();
+//			String empStr =  inMap.get("emp").toString();
+			String empStr = inMap.getEmp();
 			timeAttend.setEmployee(empStr);
 
-			String empName =  inMap.get("fName").toString();
+//			String empName =  inMap.get("fName").toString();
+			String empName = inMap.getfName();
 			timeAttend.setEmpName(empName);
 			//}
 			//timeAttend.setDay();
@@ -658,7 +730,8 @@ public class ExternalQueries extends CommonQueries{
 		if (empCode!= null && !empCode.equals("")){
 			emp = " t.empcode='" +empCode+ "' and ";
 		}
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(dataSource));
 		StringBuilder sql = new StringBuilder(
 				" select min(t.period_from) as minDate, max(t.period_from) as maxDate, t.empcode as emp , e.firstName fName, e.lastName lName " 
 						+" from LOGIN_USERS_REQUESTS t, common_employee e where " + emp
@@ -668,11 +741,16 @@ public class ExternalQueries extends CommonQueries{
 
 
 
-		List in=(List) getJdbcTemplate().queryForList(sql.toString());
+//		List in=(List) getJdbcTemplate().queryForList(sql.toString());
 
+		
+//		LinkedCaseInsensitiveMap inMap ;
+//		LinkedCaseInsensitiveMap inMap2 ;
 
-		LinkedCaseInsensitiveMap inMap ;
-		LinkedCaseInsensitiveMap inMap2 ;
+		Query q = getCurrentSession().createNativeQuery(sql.toString());
+		List in = getResultList(q,TimeAttendanceWrapper.class);
+		TimeAttendanceWrapper inMap ;
+		TimeAttendanceWrapper inMap2 ;
 
 		String minDate = null;
 
@@ -694,42 +772,46 @@ public class ExternalQueries extends CommonQueries{
 		Date inDate=null, outDate= null;
 		long totalMins=0, totalHrs=0;
 
+		DateFormat d= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S",Locale.US);
 		int i=0;
 		while(i<in.size()){
 			timeAttend=new TimeAttend();
 			log.debug("in.get(i) " + in.get(i).getClass());
-			inMap = (LinkedCaseInsensitiveMap) in.get(i);
-			minDate = inMap.get("minDate").toString();
+//			inMap = (LinkedCaseInsensitiveMap) in.get(i);
+			inMap = (TimeAttendanceWrapper)in.get(i);
+//			minDate = inMap.get("minDate").toString();
+			inDate = inMap.getMinDate();
+			minDate = d.format(inDate);
 			log.debug("----minDate---"+minDate);
 
 			//			minDate=minDate.substring(0,19);
 			log.debug("----minDate---"+minDate);
 
-			DateFormat d= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S",Locale.US);
-
-			try {
-				inDate=d.parse(minDate);
-				log.debug("inDate  = "+inDate);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				inDate=d.parse(minDate);
+//				log.debug("inDate  = "+inDate);
+//			} catch (ParseException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			i++;
 			if (i<in.size()) {
-				inMap2 = (LinkedCaseInsensitiveMap) in.get(i);
-				maxDate = inMap2.get("maxDate").toString();
+				inMap2 = (TimeAttendanceWrapper) in.get(i);
+//				maxDate = inMap2.get("maxDate").toString();
 				//			maxDate=maxDate.substring(0,19);
+				outDate = inMap2.getMaxDate();
+				maxDate = d.format(outDate);
 				log.debug("----maxDate---"+maxDate);
 				//			mCalDate = new MultiCalendarDate();
 				//			mCalDate.setDateTimeString(maxDate);
 				//			outDate=mCalDate.getDate();
-				try {
-					outDate=d.parse(maxDate);
-					log.debug("outDate  = "+outDate);
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//				try {
+//					outDate=d.parse(maxDate);
+//					log.debug("outDate  = "+outDate);
+//				} catch (ParseException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 			} else {
 				maxDate = null;
 				outDate = null;
@@ -785,10 +867,12 @@ public class ExternalQueries extends CommonQueries{
 			log.debug("-------simpleDateformat.format(mCalDate.getDate())---"+simpleDateformat.format(mCalDate.getDate()));
 			timeAttend.setDayString(simpleDateformat.format(mCalDate.getDate()));
 
-			String empStr =  inMap.get("emp").toString();
+//			String empStr =  inMap.get("emp").toString();
+			String empStr = inMap.getEmp();
 			timeAttend.setEmployee(empStr);
 
-			String empName =  inMap.get("fName").toString();
+//			String empName =  inMap.get("fName").toString();
+			String empName = inMap.getfName();
 			timeAttend.setEmpName(empName);
 			//}
 			//timeAttend.setDay();
@@ -855,7 +939,8 @@ public class ExternalQueries extends CommonQueries{
 		if (empCode.contains(",")) {
 			empCodeOrder = " empCode, ";
 		}
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(dataSource));
 
 
 		String unionAll = "";
@@ -938,11 +1023,12 @@ public class ExternalQueries extends CommonQueries{
 		log.debug("----sql 1---"+sql);
 
 		log.debug("sql statement " + sql.toString());
-		List in=(List) getJdbcTemplate().queryForList(sql.toString());
-
-
-		LinkedCaseInsensitiveMap inMap ;
-		LinkedCaseInsensitiveMap inMap2 ;
+//		List in=(List) getJdbcTemplate().queryForList(sql.toString());
+		Query q = getCurrentSession().createNativeQuery(sql.toString());
+//		List in  = q.getResultList()
+		List in = getResultList(q,TimeAttendanceReportResultWrapper.class);
+		TimeAttendanceReportResultWrapper inMap ;
+		TimeAttendanceReportResultWrapper inMap2 ;
 
 		String minDate = null;
 
@@ -991,21 +1077,49 @@ public class ExternalQueries extends CommonQueries{
 
 
 			//		log.debug("in.get(i) " + in.get(i).getClass());
-			inMap = (LinkedCaseInsensitiveMap) in.get(i);
-			Object atimeObj = inMap.get("attendance_time");
-			if (atimeObj != null) {
-				attendanceTime = atimeObj.toString();
+//			inMap = (LinkedCaseInsensitiveMap) in.get(i);
+//			Object atimeObj = inMap.get("attendance_time");
+//			if (atimeObj != null) {
+//				attendanceTime = atimeObj.toString();
+//				log.debug("in time " + attendanceTime);
+//				attendanceType = inMap.get("ATTENDANCE_TYPE").toString();
+//				log.debug("attendanceType " + attendanceType);
+//				inputType1 = inMap.get("INPUT_TYPE").toString();
+//				if (inMap.get("latitude")!=null) {
+//					latitude1 = inMap.get("latitude").toString();
+//				} else {
+//					latitude1 = null;
+//				}
+//				if (inMap.get("longitude")!=null) {
+//					longitude1 = inMap.get("longitude").toString();
+//				} else {
+//					longitude1 = null;
+//				}
+//
+//				if (attendanceType.equals("IN")) {
+//					try {
+//						inDate=d.parse(attendanceTime);
+//						log.debug("inDate  = "+inDate);
+//					} catch (ParseException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
+//			}
+			
+			inMap = (TimeAttendanceReportResultWrapper)in.get(i);
+				attendanceTime = inMap.getAttendance_time();
 				log.debug("in time " + attendanceTime);
-				attendanceType = inMap.get("ATTENDANCE_TYPE").toString();
+				attendanceType = inMap.getAttendance_type();
 				log.debug("attendanceType " + attendanceType);
-				inputType1 = inMap.get("INPUT_TYPE").toString();
-				if (inMap.get("latitude")!=null) {
-					latitude1 = inMap.get("latitude").toString();
+				inputType1 = inMap.getInput_type();
+				if (inMap.getLatitude()!=null) {
+					latitude1 = inMap.getLatitude().toString();
 				} else {
 					latitude1 = null;
 				}
-				if (inMap.get("longitude")!=null) {
-					longitude1 = inMap.get("longitude").toString();
+				if (inMap.getLongitude()!=null) {
+					longitude1 = inMap.getLongitude().toString();
 				} else {
 					longitude1 = null;
 				}
@@ -1019,29 +1133,57 @@ public class ExternalQueries extends CommonQueries{
 						e.printStackTrace();
 					}
 				}
-			}
-
 			log.debug("i " + i + " attendanceType " + attendanceType +  " inDate " + inDate);
-			if(in.size()>(i+1)) {
-				inMap2 = (LinkedCaseInsensitiveMap)in.get(i+1);
-
-				Object atimeObj2 = inMap2.get("attendance_time");
-				if (atimeObj2!=null) {
-					attendanceTime2 = atimeObj2.toString();
+//			if(in.size()>(i+1)) {
+//				inMap2 = (LinkedCaseInsensitiveMap)in.get(i+1);
+//
+//				Object atimeObj2 = inMap2.get("attendance_time");
+//				if (atimeObj2!=null) {
+//					attendanceTime2 = atimeObj2.toString();
+//					log.debug("out time " + attendanceTime2);
+//					attendanceType2 = inMap2.get("ATTENDANCE_TYPE").toString();
+//					log.debug("attendanceType2 " + attendanceType2);
+//					inputType2 = inMap2.get("INPUT_TYPE").toString();
+//
+//					log.debug("inMap2.get(latitude) " + inMap2.get("latitude"));
+//					log.debug("inMap2.get(longitude) " + inMap2.get("longitude"));
+//					if (inMap2.get("latitude")!=null) {
+//						latitude2 = inMap2.get("latitude").toString();
+//					} else {
+//						latitude2 = null;
+//					}
+//					if (inMap2.get("longitude")!=null) {
+//						longitude2 = inMap2.get("longitude").toString();
+//					} else {
+//						longitude2 = null;
+//					}
+//					if(attendanceType2!= null && attendanceType2.equals("OUT")) {
+//						i++;
+//					}
+//					log.debug("i " + i);
+//				} else {
+//					latitude2 = null;
+//					longitude2 = null;
+//				}
+//				log.debug("longitude " + longitude2 + " latitude " + latitude2);
+//			}
+			
+			if (in.size()>(i+1)) {
+				inMap2 = (TimeAttendanceReportResultWrapper)in.get(i+1);
+				if (inMap2.getAttendance_time()!=null) {
+					attendanceTime2 = inMap2.getAttendance_time().toString();
 					log.debug("out time " + attendanceTime2);
-					attendanceType2 = inMap2.get("ATTENDANCE_TYPE").toString();
+					attendanceType2 = inMap2.getAttendance_type();
 					log.debug("attendanceType2 " + attendanceType2);
-					inputType2 = inMap2.get("INPUT_TYPE").toString();
+					inputType2 = inMap2.getInput_type();
 
-					log.debug("inMap2.get(latitude) " + inMap2.get("latitude"));
-					log.debug("inMap2.get(longitude) " + inMap2.get("longitude"));
-					if (inMap2.get("latitude")!=null) {
-						latitude2 = inMap2.get("latitude").toString();
+					if (inMap2.getLatitude()!=null) {
+						latitude2 = inMap2.getLatitude().toString();
 					} else {
 						latitude2 = null;
 					}
-					if (inMap2.get("longitude")!=null) {
-						longitude2 = inMap2.get("longitude").toString();
+					if (inMap2.getLongitude()!=null) {
+						longitude2 = inMap2.getLongitude().toString();
 					} else {
 						longitude2 = null;
 					}
@@ -1081,10 +1223,10 @@ public class ExternalQueries extends CommonQueries{
 			log.debug("-------simpleDateformat.format(mCalDate.getDate())---"+simpleDateformat.format(mCalDate.getDate()));
 			timeAttend.setDayString(simpleDateformat.format(mCalDate.getDate()));
 
-			String empStr =  inMap.get("empcode").toString();
+			String empStr =  inMap.getEmpCode();
 			timeAttend.setEmployee(empStr);
 
-			String empName =  inMap.get("fName").toString();
+			String empName =  inMap.getfName();
 			timeAttend.setEmpName(empName);
 			log.debug("------timeAttend.getDay()---"+timeAttend.getDay());
 			result.add(timeAttend);
@@ -1509,7 +1651,8 @@ public class ExternalQueries extends CommonQueries{
 				status = " where approval like 'Rejected' ";
 			}
 		}
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(dataSource));
 
 		String selectDate = "";
 		String joinDateCondition1 = "";
@@ -1663,11 +1806,12 @@ public class ExternalQueries extends CommonQueries{
 		log.debug("----sql 1---"+sql);
 
 
-		List in=(List) getJdbcTemplate().queryForList(sql.toString());
+//		List in=(List) getJdbcTemplate().queryForList(sql.toString());
 
-
-		LinkedCaseInsensitiveMap inMap ;
-		LinkedCaseInsensitiveMap inMap2 ;
+		Query q = getCurrentSession().createNativeQuery(sql.toString());
+		List in = getResultList(q,TimeAttendanceLocationWrapper.class);
+		TimeAttendanceLocationWrapper inMap ;
+//		TimeAttendanceLocationWrapper inMap2 ;
 
 		String minDate = null;
 
@@ -1686,70 +1830,82 @@ public class ExternalQueries extends CommonQueries{
 		TimeAttend timeAttend=null;
 		Date inDate=null, outDate= null;
 
-		String longitude1=null, longitude2=null, latitude1= null, latitude2 = null, addressIn = null, addressOut = null;
+		BigDecimal longitude1=null, longitude2=null, latitude2 = null, addressIn = null;
+		String latitude1= null, addressOut = null;
 
 		long totalMins=0, totalHrs=0;
+		DateFormat d= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.US);
 		for(int i=0;i<in.size();i++){
 			timeAttend=new TimeAttend();
 			log.debug("in.get(i) " + in.get(i).getClass());
-			inMap = (LinkedCaseInsensitiveMap) in.get(i);
-			minDate = inMap.get("minDate").toString();
+//			inMap = (LinkedCaseInsensitiveMap) in.get(i);
+//			minDate = inMap.get("minDate").toString();
+			inMap = (TimeAttendanceLocationWrapper)in.get(i);
+			inDate = inMap.getMinDate();
+			minDate = d.format(inDate);
 			log.debug("----minDate---"+minDate);
 
 			//		minDate=minDate.substring(0,19);
 			log.debug("----minDate---"+minDate);
 
-			DateFormat d= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.US);
+			
 
-			try {
-				inDate=d.parse(minDate);
-				log.debug("inDate  = "+inDate);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				inDate=d.parse(minDate);
+//				log.debug("inDate  = "+inDate);
+//			} catch (ParseException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 
 
-			maxDate = inMap.get("maxDate").toString();
-			log.debug("----maxDate---"+maxDate);
-			try {
-				outDate=d.parse(maxDate);
-				log.debug("outDate  = "+outDate);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			if (inMap.get("longitudeIn")!=null) {
-				longitude1 = inMap.get("longitudeIn").toString();
-			}
+//			maxDate = inMap.get("maxDate").toString();
+//			log.debug("----maxDate---"+maxDate);
+//			try {
+//				outDate=d.parse(maxDate);
+//				log.debug("outDate  = "+outDate);
+//			} catch (ParseException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+			outDate = inMap.getMaxDate();
+			maxDate = d.format(outDate);
+//			if (inMap.get("longitudeIn")!=null) {
+//				longitude1 = inMap.get("longitudeIn").toString();
+//			}
 			log.debug("----longitude1---"+longitude1);
 
-			if (inMap.get("longitudeOut")!=null) {
-				longitude2 = inMap.get("longitudeOut").toString();
-			}
-			log.debug("----longitude2---"+longitude2);
-
-			if (inMap.get("latitudeIn")!=null) {
-				latitude1 = inMap.get("latitudeIn").toString();
-			}
-			log.debug("----latitude1---"+latitude1);
-
-			if (inMap.get("longitudeOut")!=null) {
-				latitude2 = inMap.get("latitudeOut").toString();
-			}
-			log.debug("----latitude2---"+latitude2);
-
-			if (inMap.get("addressIn")!=null) {
-				addressIn = inMap.get("addressIn").toString();
-			}
-			log.debug("----addressIn---"+addressIn);
-
-			if (inMap.get("addressOut")!=null) {
-				addressOut = inMap.get("addressOut").toString();
-			}
-			log.debug("----addressOut---"+addressOut);
-
+//			if (inMap.get("longitudeOut")!=null) {
+//				longitude2 = inMap.get("longitudeOut").toString();
+//			}
+//			log.debug("----longitude2---"+longitude2);
+//
+//			if (inMap.get("latitudeIn")!=null) {
+//				latitude1 = inMap.get("latitudeIn").toString();
+//			}
+//			log.debug("----latitude1---"+latitude1);
+//
+//			if (inMap.get("longitudeOut")!=null) {
+//				latitude2 = inMap.get("latitudeOut").toString();
+//			}
+//			log.debug("----latitude2---"+latitude2);
+//
+//			if (inMap.get("addressIn")!=null) {
+//				addressIn = inMap.get("addressIn").toString();
+//			}
+//			log.debug("----addressIn---"+addressIn);
+//
+//			if (inMap.get("addressOut")!=null) {
+//				addressOut = inMap.get("addressOut").toString();
+//			}
+//			log.debug("----addressOut---"+addressOut);
+			longitude1 = inMap.getLongitudeIn();
+			longitude2 = inMap.getLongitudeOut();
+			latitude1 = inMap.getLatitudeIn();
+			latitude2 = inMap.getLatitudeOut();
+			addressIn = inMap.getAddressIn();
+			addressOut = inMap.getAddressOut();
+			
 			if(inDate!=null || outDate!=null){
 				long diffHrs= (outDate.getTime()-inDate.getTime())/(1000*60*60);
 				long diffMins= ((outDate.getTime()-inDate.getTime())%(1000*60*60))/(1000*60);
@@ -1762,12 +1918,12 @@ public class ExternalQueries extends CommonQueries{
 			}
 
 
-			timeAttend.setLatitude1(latitude1);
-			timeAttend.setLatitude2(latitude2);
-			timeAttend.setLongitude1(longitude1);
-			timeAttend.setLongitude2(longitude2);
-			timeAttend.setAddress1(addressIn);
-			timeAttend.setAddress2(addressOut);
+			timeAttend.setLatitude1(latitude1+"");
+			timeAttend.setLatitude2(latitude2+"");
+			timeAttend.setLongitude1(longitude1+"");
+			timeAttend.setLongitude2(longitude2+"");
+			timeAttend.setAddress1(addressIn+"");
+			timeAttend.setAddress2(addressOut+"");
 
 			//		log.debug("outDate  = "+outDate);
 			//log.debug("----DateIn---"+test);
@@ -1806,10 +1962,12 @@ public class ExternalQueries extends CommonQueries{
 			log.debug("-------simpleDateformat.format(mCalDate.getDate())---"+simpleDateformat.format(mCalDate.getDate()));
 			timeAttend.setDayString(simpleDateformat.format(mCalDate.getDate()));
 
-			String empStr =  inMap.get("emp").toString();
+//			String empStr =  inMap.get("emp").toString();
+			String empStr =  inMap.getEmp();
 			timeAttend.setEmployee(empStr);
 
-			String empName =  inMap.get("fName").toString();
+//			String empName =  inMap.get("fName").toString();
+			String empName = inMap.getfName();
 			timeAttend.setEmpName(empName);
 			//}
 			//timeAttend.setDay();
@@ -1869,7 +2027,9 @@ public class ExternalQueries extends CommonQueries{
 		}
 		dd1 = mCalDate.getDate();
 		log.debug("----dd1- after formatting--"+dd1);
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(dataSource));
+		
 		String dateCondition = "";
 		if (settings.getSqlServerConnectionEnabled()) {
 			dateCondition = "CONVERT(datetime,'"+ dd1String+"', 103) and  CONVERT(datetime,'" +from_dateString +"', 103)";
@@ -1883,7 +2043,14 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("----sql1---"+sql);
 
-		result=(List) getJdbcTemplate().queryForList(sql.toString());
+//		result=(List) getJdbcTemplate().queryForList(sql.toString());
+		Query q = getCurrentSession().createNativeQuery(sql.toString());
+		result = getResultList(q, VacationsResultWrapper.class);
+		Iterator itr = result.iterator();
+		while(itr.hasNext()) {
+			Object o = itr.next();
+			log.debug("result " + o.getClass());
+		}
 		return result;
 	}
 
@@ -1933,7 +2100,9 @@ public class ExternalQueries extends CommonQueries{
 		} else {
 			dateCondition =  " empvac.fr_date >= to_date ('"+ from_dateString+"', 'DD-MM-YYYY') and empvac.fr_date <= to_date('" +	to_dateString+"', 'DD-MM-YYYY')";
 		}
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(dataSource));
+		
 		StringBuilder sql = new StringBuilder(
 				" select empvac.fr_date as fr_date, empvac.to_date as to_date, empvac.withdr as withdr, empvac.vacation as vacation, "
 						+ "empvac.empcode as empCode, e.firstName as fName "
@@ -1946,23 +2115,35 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("----sql1---"+sql);
 
-		result=(List) getJdbcTemplate().queryForList(sql.toString());
+//		result=(List) getJdbcTemplate().queryForList(sql.toString());
+		try {
+		    session = sessionFactory.getCurrentSession();
+		} catch (HibernateException e) {
+		    session = sessionFactory.openSession();
+		}
+
+		NativeQuery q = session.createNativeQuery(sql.toString());
+		result = getResultList(q,VacationsResultWrapper.class);
 		return result;
 	}
 
 	public int getSalaryFromDay(){
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(dataSource));
+		
 		StringBuilder sql = new StringBuilder(
 				" select salary_from_day from system ");
 
 		log.debug("----sql1---"+sql);
 		int day = 0;
-		List result=(List) getJdbcTemplate().queryForList(sql.toString());
-		if (result.size()>0) {
-			ListOrderedMap m = (ListOrderedMap)result.get(0);
-			day = ((BigDecimal)m.getValue(0)).intValue();
-			log.debug("day " + day);
-		}
+//		List result=(List) getJdbcTemplate().queryForList(sql.toString());
+//		if (result.size()>0) {
+//			ListOrderedMap m = (ListOrderedMap)result.get(0);
+//			day = ((BigDecimal)m.getValue(0)).intValue();
+//			log.debug("day " + day);
+//		}
+		Query q = getCurrentSession().createNativeQuery(sql.toString());
+		day = ((BigDecimal)q.getSingleResult()).intValue();
 		return day;
 	}
 
@@ -2066,7 +2247,8 @@ public class ExternalQueries extends CommonQueries{
 
 		Map map = new HashMap();
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(dataSource));
 		String query = "";
 		String outerSelectStart = "SELECT a.*, emp.ID empId,emp.EMPCODE employeeCode, emp.FIRSTNAME name, acc1.GROUP_ID,lev.ID levId, lev.EMP_ID mgrId"
 				+ ",APPROVALS.APPROVAL, APPROVALS.APPROVAL_DATE , APPROVALS.USER_ID , APPROVALS.NOTE "
@@ -2348,7 +2530,16 @@ public class ExternalQueries extends CommonQueries{
 		log.debug("----sql 1---"+sql);
 
 
-		List in=(List) getJdbcTemplate().queryForList(sql.toString());
+//		List in=(List) getJdbcTemplate().queryForList(sql.toString());
+		try {
+		    session = sessionFactory.getCurrentSession();
+		} catch (HibernateException e) {
+		    session = sessionFactory.openSession();
+		}
+
+		NativeQuery sqlQuery = session.createNativeQuery(sql.toString());
+//		List in = sqlQuery.list();
+		List in = getResultList(sqlQuery,PageRequestsWrapper.class);
 
 		String listSizeQuery = "select count (*) count from ("+outerSelectStart+ " ("+select+where
 				//+orderBy
@@ -2358,8 +2549,11 @@ public class ExternalQueries extends CommonQueries{
 //+orderBy;
 		log.debug("listSizeQuery " + listSizeQuery);
 		StringBuilder sqlListSize = new StringBuilder(listSizeQuery);
-		List in2=(List) getJdbcTemplate().queryForList(sqlListSize.toString());
-
+//		List in2=(List) getJdbcTemplate().queryForList(sqlListSize.toString());
+		NativeQuery sqlSizeQuery = session.createNativeQuery(sqlListSize.toString());
+//		List in2 = sqlSizeQuery.list();
+//		List in2 = getResultList(sqlSizeQuery,PageRequestsWrapper.class);
+		List in2 = sqlSizeQuery.getResultList();
 		//////class in list results is LinkedCaseInsensitiveMap 
 
 		int i=0;
@@ -2372,17 +2566,17 @@ public class ExternalQueries extends CommonQueries{
 		//			
 		//			i++;
 		//		}
-		log.debug(in2.size());
+//		log.debug(in2.size());
 		map.put("results", in);
 		if (in2.size()>0) {
-			log.debug("listSize " + ((LinkedCaseInsensitiveMap)in2.get(0)).get("count"));
+			log.debug("listSize " + ((BigDecimal)in2.get(0)));
 			if (settings.getSqlServerConnectionEnabled()) {
-				map.put("listSize", ((Integer)((LinkedCaseInsensitiveMap)in2.get(0)).get("count")).intValue());
+				map.put("listSize", ((BigDecimal)in2.get(0)).intValue());
 			} else {
-				map.put("listSize", ((BigDecimal)((LinkedCaseInsensitiveMap)in2.get(0)).get("count")).intValue());
+				map.put("listSize", ((BigDecimal)in2.get(0)).intValue());
 			}
 		} else {
-			map.put("listSize", new Long(0));
+			map.put("listSize", new Integer(0));
 		}
 		return map;
 	}
@@ -2893,7 +3087,8 @@ public class ExternalQueries extends CommonQueries{
 
 	Map map = new HashMap();
 
-	setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//	setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//	setJdbcTemplate(new JdbcTemplate(dataSource));
 	String query = "";
 	String outerSelectStart = "SELECT a.*, emp.ID empId,emp.EMPCODE employeeCode, emp.FIRSTNAME name "
 			//				+ ", acc1.GROUP_ID,lev.ID levId, lev.EMP_ID mgrId"
@@ -3166,14 +3361,18 @@ public class ExternalQueries extends CommonQueries{
 	log.debug("----sql 1---"+sql);
 
 
-	List in=(List) getJdbcTemplate().queryForList(sql.toString());
+//	List in=(List) getJdbcTemplate().queryForList(sql.toString());
+	NativeQuery sql1Query = session.createNativeQuery(sql.toString());
+	List in = sql1Query.list();
 
 	String listSizeQuery = "select count (*) count from ("+outerSelectStart+ " ("+select+where
 			+outerSelectEnd + outerSelectWhere+") q";
 	log.debug("listSizeQuery " + listSizeQuery);
 	StringBuilder sqlListSize = new StringBuilder(listSizeQuery);
-	List in2=(List) getJdbcTemplate().queryForList(sqlListSize.toString());
-
+//	List in2=(List) getJdbcTemplate().queryForList(sqlListSize.toString());
+	NativeQuery sqlSizeQuery = session.createNativeQuery(sqlListSize.toString());
+	List in2 = sqlSizeQuery.list();
+	
 	//////class in list results is LinkedCaseInsensitiveMap 
 
 	int i=0;
@@ -3305,7 +3504,8 @@ public class ExternalQueries extends CommonQueries{
 
 		Map map = new HashMap();
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(dataSource));
 		String query = "";
 		String outerSelectStart = "SELECT a.*,mgr.FIRSTNAME mgrName, emp.ID empId,emp.EMPCODE employeeCode, emp.FIRSTNAME name, acc1.GROUP_ID,lev.ID levId, lev.EMP_ID mgrId"
 				+ ",APPROVALS.APPROVAL, APPROVALS.APPROVAL_DATE , APPROVALS.USER_ID , APPROVALS.NOTE approvalNote "
@@ -3579,18 +3779,27 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("----sql 1---"+sql);
 
+		try {
+			session = sessionFactory.getCurrentSession();
+		} catch (HibernateException e) {
+			session = sessionFactory.openSession();
+		}
 
-		List in=(List) getJdbcTemplate().queryForList(sql.toString());
+		NativeQuery sqlQuery = session.createNativeQuery(sql.toString());
 
-		String listSizeQuery = "select count (*) count from ("+outerSelectStart+ " ("+select+where
+		List in = getResultList(sqlQuery, RequestStatusWrapper.class);
+
+		String listSizeQuery = "select count (*) count from (" + outerSelectStart + " (" + select + where
 //				+orderBy
-				+outerSelectEnd + outerSelectWhere
+				+ outerSelectEnd + outerSelectWhere
 //				+orderBy
 				+") temp ";
 //+orderBy;
 		log.debug("listSizeQuery " + listSizeQuery);
 		StringBuilder sqlListSize = new StringBuilder(listSizeQuery);
-		List in2=(List) getJdbcTemplate().queryForList(sqlListSize.toString());
+//		List in2=(List) getJdbcTemplate().queryForList(sqlListSize.toString());
+		NativeQuery sqlSizeQuery = session.createNativeQuery(sqlListSize.toString());
+		List in2 = sqlSizeQuery.list();
 
 		//////class in list results is LinkedCaseInsensitiveMap 
 
@@ -3608,12 +3817,12 @@ public class ExternalQueries extends CommonQueries{
 		map.put("results", in);
 		
 		if (in2.size()>0) {
-			log.debug("listSize " + ((LinkedCaseInsensitiveMap)in2.get(0)).get("count"));
+			log.debug("listSize " + ((BigDecimal)in2.get(0)));
 			if (settings.getSqlServerConnectionEnabled()) {
-				Integer count = (Integer)((LinkedCaseInsensitiveMap)in2.get(0)).get("count");
+				Integer count = ((BigDecimal)in2.get(0)).intValue();
 				map.put("listSize", count.intValue());
 			} else {
-				BigDecimal count = (BigDecimal)((LinkedCaseInsensitiveMap)in2.get(0)).get("count");
+				BigDecimal count = (BigDecimal)in2.get(0);
 				map.put("listSize", count.intValue());
 			}
 			
@@ -3622,4 +3831,6 @@ public class ExternalQueries extends CommonQueries{
 		}
 		return map;
 	}	
+	
+	
 }

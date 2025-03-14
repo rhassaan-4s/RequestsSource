@@ -35,8 +35,8 @@
 	<tr>
 		<td colspan="2">
 
-		<form id="Query" name="Query" method="POST"
-			action="<c:url value="/dbUpdate/newQueryForm.html"/>">
+		<form:form method="POST" 
+				action="/Requests/dbUpdate/newQueryForm.html">
 		<br /><br />
 		<table rules="all" align="center" width="70%" class="sofT" >
 			<tr id="head_1_ep">
@@ -68,6 +68,7 @@
 			</td>
 			</tr>
 		</table>
+		</form:form>
 		</td>
 	</tr>
 </table>

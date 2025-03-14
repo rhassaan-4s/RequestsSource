@@ -9,7 +9,6 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>
-			<abc:i18n property="commons.caption.client"/>
 			<fmt:message key="commons.caption.client"/>
 		</title>
 		<link rel="stylesheet" href="/Requests/web/common/css/all.css">
@@ -24,24 +23,31 @@
 	<script type="text/javascript">
 	function getError(){
 		urlp=[];
+		//alert("before split 1 " + location);
 		urlp=location.toString().split('?');
 		params = urlp[1];
-		var error = params.split('=');
+		//alert("before split 2 " + params);
+		var error=null;
+		if (params!=null) {
+			error = params.toString().split('=');
+		}
 		//alert(error[1]);
 		
 		//var er = error[1];
 		//alert(er);
-		document.getElementById("errorMsg").value= error[1];
-		if ( error[1].valueOf()==='wrongIPAdd'.valueOf()) {
-			//alert("1"+er);
-			document.getElementById("display").innerHTML="<fmt:message key='commons.caption.wrongIpAdd'/>";
-		} else if ( error[1].trim()==='NoIPAddFound'.trim()) {
-			//alert("2"+er);
-			document.getElementById("display").innerHTML="<fmt:message key='commons.caption.NoIPAddFound'/>";	
-		} else if ( error[1].trim()==='') {
-			
-		}else {
-			document.getElementById("display").innerHTML="<fmt:message key='commons.errors.invalidUsernameOrPassword'/>";
+		if (error!= null && error[1]!=null) {
+			document.getElementById("errorMsg").value= error[1];
+			if ( error[1].valueOf()==='wrongIPAdd'.valueOf()) {
+				//alert("1"+er);
+				document.getElementById("display").innerHTML="<fmt:message key='commons.caption.wrongIpAdd'/>";
+			} else if ( error[1].trim()==='NoIPAddFound'.trim()) {
+				//alert("2"+er);
+				document.getElementById("display").innerHTML="<fmt:message key='commons.caption.NoIPAddFound'/>";	
+			} else if ( error[1].trim()==='') {
+				
+			}else {
+				document.getElementById("display").innerHTML="<fmt:message key='commons.errors.invalidUsernameOrPassword'/>";
+			}
 		}
 	}
 	</script>

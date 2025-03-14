@@ -32,7 +32,7 @@
 
 
 	<!-- Bean Definition DBCP -->
-	<bean id="dataSource"
+	<!--<bean id="dataSource"
 		class="org.apache.tomcat.jdbc.pool.DataSource">
 		<property name="driverClassName">
 			<value>${hibernate.connection.driver_class}</value>
@@ -46,6 +46,7 @@
 		<property name="password">
 			<value>${hibernate.connection.password}</value>
 		</property>
+		-->
 		
 		<!--<property name="hibernate.connection.charSet">
 			<value>utf8</value>
@@ -59,8 +60,77 @@
 		<property name="hibernate.connection.defaultNChar">
 		 	<value>true</value>
 		 </property>-->
+<!--	</bean>-->
+
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+	    <property name="poolName" value="springHikariCP" />
+	    <property name="connectionTestQuery" value="SELECT 1 from dual" />
+	    <property name="dataSourceClassName" value="${hibernate.connection.dataSourceClassName}" />
+	    <property name="maximumPoolSize" value="${hibernate.hikari.maximumPoolSize}" />
+	    <property name="idleTimeout" value="${hibernate.hikari.idleTimeout}" />
+	    
+	    <property name="minimumIdle" value="${hibernate.hikari.minimumIdle}" />
+	    <property name="maxLifetime" value="${hibernate.hikari.maxLifetime}" />
+	    <property name="connectionTimeout" value="${hibernate.hikari.connectionTimeout}"/>
+	    <property name="validationTimeout" value="${hibernate.hikari.validationTimeout}"/>
+	
+	    <property name="dataSourceProperties">
+	        <props>
+	            <prop key="url">${hibernate.connection.url}</prop>
+	            <prop key="user">${hibernate.connection.username}</prop>
+	            <prop key="password">${hibernate.connection.password}</prop>
+	        </props>
+	    </property>
+	</bean>
+	
+	<!-- HikariCP configuration -->
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+	    <constructor-arg ref="hikariConfig" />
 	</bean>
 
+	<!--<bean id="dataSource"  destroy-method="close"
+		class="com.zaxxer.hikari.HikariDataSource">
+		<property name="driverClass">
+			<value>${hibernate.connection.driver_class}</value>
+		</property>
+		<property name="jdbcUrl">
+			<value>${hibernate.connection.url}</value>
+		</property>
+		<property name="user">
+			<value>${hibernate.connection.username}</value>
+		</property>
+		<property name="password">
+			<value>${hibernate.connection.password}</value>
+		</property>
+		-->
+			<!-- pool sizing -->
+	<!--	<property name="initialPoolSize" value="9" />
+		<property name="minPoolSize" value="0" />
+		<property name="maxPoolSize" value="50" />
+		<property name="acquireIncrement" value="3" />
+		<property name="maxStatements" value="0" />
+		<property name="maxStatementsPerConnection" value="10"/>-->
+		<!-- retries -->
+		<!--<property name="acquireRetryAttempts" value="10" />
+		<property name="acquireRetryDelay" value="1000" />
+		<property name="breakAfterAcquireFailure" value="false" />-->
+		<!-- refreshing connections -->
+		<!--<property name="maxIdleTime" value="180" /> 
+		<property name="maxConnectionAge" value="3600" /> --><!-- 1h - be careful with this! -->
+		<!-- timeouts e testing -->
+	<!--	<property name="checkoutTimeout" value="5000" /> 
+		<property name="idleConnectionTestPeriod" value="60" /> 
+		<property name="testConnectionOnCheckout" value="true" />
+		<property name="preferredTestQuery" value="SELECT 1 from dual" />
+		<property name="unreturnedConnectionTimeout" value="30" />
+	
+		<property name="debugUnreturnedConnectionStackTraces" value="true" />
+	</bean>-->
+
+
+	<bean id="dataSourceLookup"
+		class="com._4s_.common.dao.MultiTenantDataSourceLookup"/>
+		
 	<!-- Hibernate SessionFactory -->
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"> 
@@ -68,7 +138,6 @@
 		
 		<property name="packagesToScan">
 		<list>
-		<!--<value>com._4s_.HR.model</value>-->
 		<value>com._4s_.auditing.model</value>
 		<value>com._4s_.common.model</value>
 		<value>com._4s_.dbUpdate.model</value>
@@ -86,16 +155,28 @@
 		</property>
 		<property name="hibernateProperties">
 			<props>
-				<prop key="hibernate.dialect">
+				<!--<prop key="hibernate.dialect">
 					${hibernate.dialect}
+				</prop>-->
+				<prop key="hibernate.multiTenancy">
+					SCHEMA
 				</prop>
+				<prop key="hibernate.multi_tenant_connection_provider">
+					com._4s_.common.dao.SchemaMultiTenantConnectionProvider
+				</prop>
+				<prop key="hibernate.tenant_identifier_resolver">
+					com._4s_.common.dao.CurrentTenantIdentifierResolverImpl
+				</prop>
+				
 				<!-- <prop key="hibernate.default_schema">
 					${hibernate.defaultSchema}
 				</prop> -->
-				<!-- <prop key="hibernate.connection.release_mode">after_statement</prop>-->
+				<!--<prop key="hibernate.connection.release_mode">AFTER_TRANSACTION </prop>-->
   				<prop key="hibernate.show_sql">true</prop>  
   				
-  				<prop key="spring.jpa.properties.javax.persistence.validation.mode">none</prop>
+    			<prop key="hibernate.connection.autocommit">false</prop>
+  				
+  				<!--<prop key="spring.jpa.properties.javax.persistence.validation.mode">none</prop>-->
 <!--		    <prop key="hibernate.hbm2ddl.auto">update</prop>  -->
 <!--				<prop key="hibernate.hbm2ddl.auto">create</prop> -->
 			</props>
@@ -108,6 +189,7 @@
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate5.HibernateTransactionManager" lazy-init="true">
 		<property name="sessionFactory"  ref="sessionFactory" />
+		<property name="autodetectDataSource" value="false" />
 	</bean>
 
 	<!-- Transaction template for Managers, from:

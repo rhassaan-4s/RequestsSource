@@ -173,7 +173,7 @@
 
 	Settings settings = (Settings) request.getSession().getAttribute(
 			"settings");
-	System.out.println("settings in header" + settings);
+	System.out.println("header.jsp: settings in header" + settings);
 	List activeApplications = (List) request.getSession().getAttribute(
 			"activeApplications");
 	String locale = ((String) request.getSession().getAttribute(
@@ -390,15 +390,15 @@ menuItems:[
 	["<b><fmt:message key="commons.button.editUserPreferences" /></b>", "/Requests/security/changeUserApplication.html", "_new"],
 	["<b><fmt:message key="commons.caption.date" /></b>", "javascript:createWindow('<c:url value="/common/commonAdminDateConverter.html"/>')", "_new"],
 	["<b><fmt:message key="commons.caption.applications" /></b>"]
-<%System.out.println("application " + activeApplications);
+<%System.out.println("header.jsp: application " + activeApplications);
 			SecurityApplication securityApplication = null;
-			System.out.println("activeApplications.size() " + activeApplications.size());
+			System.out.println("header.jsp: activeApplications.size() " + activeApplications.size());
 			if (activeApplications != null) {
 				for (int i = 0; i < activeApplications.size(); i++) {
-					System.out.println("i " + i);
+					System.out.println("header.jsp: i " + i);
 					securityApplication = (SecurityApplication) activeApplications
 							.get(i);
-					System.out.println("active app "+i+" - "+ securityApplication.getName());%>
+					System.out.println("header.jsp: active app "+i+" - "+ securityApplication.getName());%>
 ,[
 <%if (securityApplication.getName().equals("ASSETS")) {%>
 	"<b><fmt:message key='assets.caption.applicationName' /></b>"
@@ -481,7 +481,7 @@ make_menus();
 				<!-- Menu Begin------------------------------------------------ -->
 				<div class="menu">
 					<%
-						System.out.println("applicationName in header.jsp "
+						System.out.println("header.jsp: applicationName in header.jsp "
 								+ applicationName);
 						if (applicationName != null
 								&& applicationName.equals("ADMINISTRATION")) {

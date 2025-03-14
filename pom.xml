@@ -122,13 +122,11 @@
 		      <artifactId>jta</artifactId>
 		      <version>1.1</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-orm -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
 		<dependency>
 			<groupId>javax.persistence</groupId>
 			<artifactId>javax.persistence-api</artifactId>
@@ -141,42 +139,32 @@
 			<artifactId>spring-aop</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-aspects -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aspects</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
 			<version>1.1</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-tx -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.hibernate.javax.persistence</groupId>
-			<artifactId>hibernate-jpa-2.1-api</artifactId>
-			<version>1.0.0.Final</version>
-		</dependency>
-<!-- https://mvnrepository.com/artifact/org.javassist/javassist -->
+	
 <dependency>
     <groupId>org.javassist</groupId>
     <artifactId>javassist</artifactId>
     <version>3.16.1-GA</version>
 </dependency>
-		<!-- https://mvnrepository.com/artifact/commons-collections/commons-collections -->
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
@@ -256,7 +244,44 @@
 			<artifactId>spring-core</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
+		
+		<dependency>
+				<groupId>org.hibernate.javax.persistence</groupId>
+				<artifactId>hibernate-jpa-2.1-api</artifactId>
+				<version>1.0.0.Final</version>
+			</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>1.3.1.Final</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework.cloud</groupId>
+		    <artifactId>spring-cloud-context</artifactId>
+		    <version>2.1.0.RELEASE</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot</artifactId>
+		    <version>2.1.0.RELEASE</version>
+		</dependency>
+		<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-jdbc</artifactId>
+				<version>2.1.0.RELEASE</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-data-jpa</artifactId>
+				<version>2.1.0.RELEASE</version>
+			</dependency>
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-hikaricp</artifactId>
+		    <version>5.2.17.Final</version>
+		</dependency>
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
@@ -267,7 +292,16 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>${servlets.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+		    <groupId>com.fasterxml</groupId>
+		    <artifactId>classmate</artifactId>
+		    <version>1.3.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-annotations</artifactId>
+		    <version>2.12.5</version>
+		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -279,17 +313,21 @@
 			<artifactId>jackson-core</artifactId>
 			<version>2.12.5</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
 		<dependency>
-			<groupId>com.mchange</groupId>
-			<artifactId>c3p0</artifactId>
-			<version>0.9.5.5</version>
+		    <groupId>com.google.guava</groupId>
+		    <artifactId>guava</artifactId>
+		    <version>15.0</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.jolbox/bonecp -->
 		<dependency>
 			<groupId>com.jolbox</groupId>
 			<artifactId>bonecp</artifactId>
 			<version>0.8.0.RELEASE</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -337,7 +375,11 @@
 			<artifactId>corba-rmi</artifactId>
 			<version>1.8</version>
 		</dependency>
-		<!-- Thanks for using https://jar-download.com -->
+		<dependency>
+		    <groupId>antlr</groupId>
+		    <artifactId>antlr</artifactId>
+		    <version>2.7.7</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/commons-dbcp/commons-dbcp -->
 		<dependency>
@@ -407,13 +449,12 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.jenkov/prizetags -->
 		<dependency>
-			<groupId>com.jenkov</groupId>
-			<artifactId>prizetags</artifactId>
-			<version>3.4.0</version>
+		    <groupId>com.jenkov</groupId>
+		    <artifactId>prizetags</artifactId>
+		    <version>3.4.0</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
@@ -430,14 +471,17 @@
     <version>3.0.2-RELEASE</version>
 </dependency>
 
-<!-- https://mvnrepository.com/artifact/com.oracle.ojdbc/ojdbc8 -->
 <dependency>
     <groupId>com.oracle.ojdbc</groupId>
     <artifactId>ojdbc8</artifactId>
     <version>19.3.0.0</version>
 </dependency>
+<dependency>
+    <groupId>com.oracle.ojdbc</groupId>
+    <artifactId>oraclepki</artifactId>
+    <version>19.3.0.0</version>
+</dependency>
 
-<!-- https://mvnrepository.com/artifact/com.oracle.ojdbc/orai18n -->
 <dependency>
     <groupId>com.oracle.ojdbc</groupId>
     <artifactId>orai18n</artifactId>
@@ -476,6 +520,22 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.32</version>
 		</dependency>-->
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-simple</artifactId>
+		    <version>1.7.21</version>
+		</dependency>
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		    <version>1.2.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-core</artifactId>
+		    <version>1.2.3</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -516,8 +576,6 @@
 		    <version>6.4.0.jre7</version>
 		</dependency>
 
-
-
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-jdbc</artifactId>
@@ -531,5 +589,6 @@
 		</dependency>
 
 	</dependencies>
+	
 	<packaging>war</packaging>
 </project>
