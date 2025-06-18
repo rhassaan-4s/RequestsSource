@@ -114,13 +114,16 @@ public class SearchFormController  extends BaseSimpleFormController {//implement
 //		String storeTransDefId = (String) request.getParameter("storeTransDefId");
 		String branchForValidRoom = (String) request.getParameter("branchForValidRoom");
 		model.put("branchForValidRoom",branchForValidRoom);
+		log.debug("^@@@@@@@@@@@@@@@@@@@@@@@@@@@@@^");
+		
+		
 		if(branchId!=null && !branchId.equals("")){
-			
+			log.debug("^^^^^^^^^%%%%%%%%%%%%%%%%%%%%%%^^^^^^^^^^^");
 			model.put("branchId",branchId);
 			
 		}else{
 			if(employee.getCanSeeAllStore()){
-
+				log.debug("^^^^^^^^^^^^^^^^^^^^");
 				branchId = null;
 			}else{
 				log.debug("branchId4 ... " + branchId);
@@ -254,22 +257,24 @@ public class SearchFormController  extends BaseSimpleFormController {//implement
 		model.put("transTableFlag",transTableFlag);
 		
 		if (searchCommandId != null || searchCommandName != null){
-			log.debug(">>>>>>>>>>>>> before query");
+			log.debug(">>>>>>>>>>>>>SearchForm: before query");
+			log.debug("searchCommandId " + searchCommandId);
 			//// Check Filter Method for Store or Cooling room by Branch  ///////
 			if(paramString != null && !paramString.equals("")){
 				splitParamString =  paramString.split("@@");
 			}
-			log.debug("splitParamString.....  "+splitParamString);
+			log.debug("*****************splitParamString.....  "+splitParamString);
 //			log.error(">>>>>>>>>>>splitParamString...  "+splitParamString.length);
 //			log.error(">>>>0...&"+splitParamString[0]+"&.........1...."+splitParamString[1]);
 			if(splitParamString != null && !splitParamString.equals("")){
 				if(splitParamString.length ==3){
-					log.debug("true  ");
+					log.debug("*************splitParamString.length 3");
 					 map = qry.searchByTypeAndBranch(searchCommandId,searchCommandName,table,firstParam,secondParam,paramString,match1,match2,pageNumber,10);
 				}else if(splitParamString.length ==2){
-					log.debug("true  ");
+					log.debug("**************splitParamString.length 2");
 					 map = qry.searchByBranch(searchCommandId,searchCommandName,table,firstParam,secondParam,paramString,match1,match2,pageNumber,10);
 				}else{
+					log.debug("****************splitParamString.length - else ");
 					if((table.equals("dist_names") || table.equals("driver") || table.equals("cars") || table.equals("car_type") || table.equals("area")) && paramString != null && !paramString.equals("")){
 						String[] spString=paramString.split(",");
 						if(table.equals("driver") || table.equals("cars")){

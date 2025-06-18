@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -72,7 +73,6 @@ import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
 import com._4s_.restServices.model.AttendanceStatus;
-import com.ibm.icu.util.Calendar;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
 
@@ -1197,6 +1197,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					loggedInGroupAcc = loggedInAcc.getGroup_id();
 					log.debug("loggedInGroupAcc " + loggedInGroupAcc);
 					log.debug("loggedInGroupAcc " + loggedInGroupAcc.getId());
+					initializeCollection(loggedInGroupAcc.getAccessLevel());
 					loggedInEmpGroupAccessLevels = loggedInGroupAcc.getAccessLevel();
 				}
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1877,7 +1878,10 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 //		log.debug("will loop on levels");
 		while(itr.hasNext()) {
 			AccessLevels level = (AccessLevels)itr.next();
+			log.debug("will loop on levels " + level);
+			log.debug("will loop on levels " + level.getLevel_id());
 			log.debug("will loop on levels " + level.getLevel_id().getId());
+			
 			accessLevels.add(level.getLevel_id().getId());
 		}
 		log.debug("access levels " + accessLevels.size());

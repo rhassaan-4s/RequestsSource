@@ -52,7 +52,7 @@ public class Queries  extends CommonQueries{
 	
 	
 	private BasicDataSource basicDataSource;
-	
+	private Session session;
 	private SessionFactory sessionFactory;
 	
 	
@@ -72,14 +72,24 @@ public class Queries  extends CommonQueries{
 	
 	@Transactional
 	public Session getCurrentSession(){
-		Session session = null;
+		session = null;
     	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
+    	System.out.println("$$$$$$$$$$$$$$$$$$getting current session");
     	log.debug("session factory " + sessionFactory);
+    	System.out.println("$$$$$$$$$$$$$$$$$$session factory " + sessionFactory);
     	try {
     	    session = sessionFactory.getCurrentSession();
+    	    log.debug("***session available " + session);
+    	    if (session == null || session.isOpen()==false) {
+    	    	session = sessionFactory.openSession();
+    	    	System.out.println("session " + session);
+    	    }
     	} catch (HibernateException e) {
+    		log.debug("###Exception#### session not available, will open new session");
     	    session = sessionFactory.openSession();
+    	    log.debug("***********new session opened****************");
     	}
+    	System.out.println("$$$$$$$$$$$$$$$$$$session " +session);
 	      return session;
 	}
 	
@@ -302,14 +312,15 @@ public class Queries  extends CommonQueries{
 			}
 		}
 		
-		
-		
+		if (session == null || session.isOpen()==false)  {
+			session=getCurrentSession();
+		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> sql1"+sql1);
 //		List records = getJdbcTemplate().queryForList(sql1);
 		
-		NativeQuery sqlQuery = getCurrentSession().createNativeQuery(sql1.toString());
+		NativeQuery sqlQuery = session.createNativeQuery(sql1.toString());
 //		List records = sqlQuery.list();
-		List records = getResultList(sqlQuery,SearchWrapper.class);
+		List records = getResultList(session,sqlQuery,SearchWrapper.class);
 		log.debug(">>>>>>>>>>>>>>>>>>>>records "+records);
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -450,9 +461,14 @@ public class Queries  extends CommonQueries{
 		int count;
 		try{
 			Query q = getCurrentSession().createNativeQuery(sql2.toString());
-			count = ((Integer)q.getSingleResult()).intValue();
+			Object result = q.getSingleResult();
+			log.debug("@@@@@@@@@@@@@count " + result);
+			log.debug("@@@@@@@@@@@@@count " + result.getClass());
+			count = ((BigDecimal)result).intValue();
+			log.debug("*************count " + result);
 //			cc2=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
 		}catch (Exception e) {
+			e.printStackTrace();
 			count=new Integer(0);
 		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>count "+count);

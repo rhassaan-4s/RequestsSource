@@ -374,7 +374,7 @@ public class AttendanceRequestsForm extends BaseSimpleFormController{
 				loginUsersRequests.setLocationAddress(address);
 			}
 
-			if (accuracy!=null && !accuracy.isEmpty()) {
+			if (accuracy!=null && !accuracy.isEmpty() && settings.getDistAllowedFromCompany()!=null) {
 				double distance = requestsApprovalManager.distance(new Double(latitude),new Double(longitude),new Double(settings.getCompanyLat()),new Double(settings.getCompanyLong()));
 				if (distance>settings.getDistAllowedFromCompany()) {
 					loginUsersRequests.setIsInsideCompany(false);

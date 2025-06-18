@@ -3,10 +3,6 @@
 
 <abc:security property="1021"/>
 
-<SCRIPT LANGUAGE="JavaScript">
-
-
-</SCRIPT>
 
 <form:form method="POST" modelAttribute="settings"
 	action="/Requests/common/settingsForm.html">	
@@ -48,7 +44,7 @@
 					<fmt:message key="commons.caption.settings" />
 				</td>
 			</tr>
-			
+		
 			<tr>
 				<td nowrap class="formBodControl" >
 					<abc:i18n property="commons.caption.company" />
@@ -201,7 +197,8 @@
 				</td>
 			</tr>
 			
-			<td nowrap class="formBodControl" >
+			<tr>
+				<td nowrap class="formBodControl">
 					<abc:i18n property="requestsApproval.header.sqlServerConnectionEnabled" />
 					<fmt:message key="requestsApproval.header.sqlServerConnectionEnabled" />
 				</td>
@@ -212,18 +209,19 @@
 				</td>
 			</tr>
 			
-			<td nowrap class="formBodControl" >
+			<tr>
+				<td nowrap class="formBodControl" >
 					<abc:i18n property="requestsApproval.header.desktopHrApplication" />
 					<fmt:message key="requestsApproval.header.desktopHrApplication" />
 				</td>
 				<td  class="formBod">
-				<spring:bind path="settings.desktopHrApplication">
+					<spring:bind path="settings.desktopHrApplication">
 						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} />
 					</spring:bind> 
 				</td>
 			</tr>
 			
-	<tr>
+			<tr>
 				<td class="tableHeader" height="20"></td>
 			</tr>
 			<tr id="head_1_ep">
@@ -303,7 +301,6 @@
 				</td>
 				<TD width="50%">&nbsp;</TD>
 			</tr>
-			
 			
 			<tr>
 				<td class="tableHeader" height="20"></td>
@@ -421,10 +418,6 @@
 				</td>
 				<TD width="50%">&nbsp;</TD>
 			</tr>
-			
-	<tr>
-	
-			
 			
 			<tr>
 				<td class="tableHeader" height="20"></td>

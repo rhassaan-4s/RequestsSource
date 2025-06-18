@@ -15,6 +15,7 @@ import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -42,7 +43,14 @@ public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO
 		Root<Object> root = queryCriteria.from(MyLocale.class);
 		Predicate restrictions = getBuilder().equal(root.get("language"), myLocale.getLanguage());
 		queryCriteria.select(root).where(restrictions).distinct(true);
-		TypedQuery<Object> query = getCurrentSession().createQuery(queryCriteria);
+		
+		Session session = getSession();
+    	if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    		session = getSession();
+    	}
+    	
+		TypedQuery<Object> query = session.createQuery(queryCriteria);
 		List myLocales =  query.getResultList();
 
 
@@ -97,7 +105,7 @@ public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO
 		queryCriteria.multiselect(message.alias("message"),key.alias("name")).where(restrictions).distinct(true);
 		log.debug("query created");
 //		List list =  query.getResultList();
-		List<Tuple> tuples = getCurrentSession().createQuery(queryCriteria).getResultList();
+		List<Tuple> tuples = getSession().createQuery(queryCriteria).getResultList();
 		log.debug("msgs for arabic locale list size " + tuples.size());
 		if ((tuples.size() == 0)&&(log.isDebugEnabled())) {
 			log.debug("******************No objects found");
@@ -212,7 +220,7 @@ public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO
 			final MyLocale myLocale) 
 	{
 
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(MyMessage.class);
 		criteria.createCriteria("key").add(
 				Restrictions.eq("name", keyName));
@@ -225,7 +233,7 @@ public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO
 	// Returns key using key name
 	public Key getKeyByName(final String keyName)
 	{
-		Criteria criteria = getCurrentSession().createCriteria(Key.class).add(
+		Criteria criteria = getSession().createCriteria(Key.class).add(
 				Restrictions.eq("name", keyName));
 		return (Key)criteria.uniqueResult();
 	}
@@ -233,7 +241,7 @@ public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO
 	// Returns all msgs for a local
 	public List getMessagesByLocale(final MyLocale myLocale)
 	{
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(MyMessage.class);
 		criteria.createCriteria("myLocale").add(
 				Restrictions.eq("id", myLocale.getId()));

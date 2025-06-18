@@ -33,7 +33,7 @@ public class AttendanceDAOHibernate extends BaseDAOHibernate implements Attendan
 	
 	public Integer getNumberOfAttendees(Date from, Date to) {
 		try{
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(LoginUsersRequests.class);
 			criteria.add(Restrictions.between("from_date", from, to));
 			criteria.add(Restrictions.eq("request_id", new Long(10)));
@@ -51,7 +51,7 @@ public class AttendanceDAOHibernate extends BaseDAOHibernate implements Attendan
 
 	@Override
 	public WorkPeriodMaster getWorkPeriodMaster(String workperiodCode) {
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(WorkPeriodMaster.class);
 		criteria.createCriteria("workperiods").add(Restrictions.eq("workperiods", workperiodCode));
 		criteria
@@ -66,7 +66,7 @@ public class AttendanceDAOHibernate extends BaseDAOHibernate implements Attendan
 
 	@Override
 	public List getActiveEmpBasic() {
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(EmpBasic.class);
 		criteria.add(Restrictions.isNull("end_serv"));
 		criteria

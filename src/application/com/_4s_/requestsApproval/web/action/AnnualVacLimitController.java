@@ -6,24 +6,32 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.requestsApproval.model.AccessLevels;
 import com._4s_.requestsApproval.model.AnnualVacLimit;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 
+@Controller
+@RequestMapping("/annualVacLimitSetting.html")
 public class AnnualVacLimitController  extends BaseSimpleFormController{
-	
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
 
 	public RequestsApprovalManager getRequestsApprovalManager() {
@@ -92,12 +100,13 @@ public class AnnualVacLimitController  extends BaseSimpleFormController{
 		}
 	}
 	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{
+	@RequestMapping(method = RequestMethod.POST) // ,consumes=MediaType.APPLICATION_FORM_URLENCODED
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("annualVacLimit") AnnualVacLimit command, BindingResult errors,
+			SessionStatus status, Map model) {
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		AnnualVacLimit annualVacLimit=(AnnualVacLimit) command;
+		AnnualVacLimit annualVacLimit= command;
 		log.debug("annualVacLimit.getId()__________>>>>>>>>>>>>>>>"+annualVacLimit.getId());
 		List objects=(List) requestsApprovalManager.getObjectsByParameter(AnnualVacLimit.class, "vac_period", annualVacLimit.getVac_period());
 		if(objects.size()>0){

@@ -75,48 +75,6 @@
 			<li><a href="/Requests/timesheet/timesheetTrans.html"><fmt:message
 						key="timesheet.header.timesheetTrans" /></a></li>
 			
-	<authz:authorize access="hasAuthority('CAN_VIEW_page_requestsApproval')" >
-	<li><a href="#"><fmt:message key="requestsApproval.menu.reports" /></a>
-		<ul>
-	        <li>
-	        	<abc:i18n property="requestsApproval.header.empRequestsReportsForm3" />
-	        	<a href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=3"> &nbsp;&nbsp;
-	        	<fmt:message key="requestsApproval.header.empRequestsReportsForm3" />
-	        	</a>
-			</li>
-			 
-	         <li>
-	        	<abc:i18n property="requestsApproval.header.empAnnualVacationsReportsForm" />
-	        	<a href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=2"> &nbsp;&nbsp;
-	        	<fmt:message key="requestsApproval.header.empAnnualVacationsReportsForm" />
-	        	</a>
-			</li>
-	        
-			<li>
-	        	<abc:i18n property="requestsApproval.header.empSpecialVacationsReportsForm" />
-	        	<a href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=1"> &nbsp;&nbsp;
-	        	<fmt:message key="requestsApproval.header.empSpecialVacationsReportsForm" />
-	        	</a>
-			</li>
-			
-	         <li>
-	        	<abc:i18n property="requestsApproval.header.empErrandsReportsForm" />
-	        	<a href="/Requests/requestsApproval/empRequestsReportsForm.html?requestType=7"> &nbsp;&nbsp;
-	        	<fmt:message key="requestsApproval.header.empErrandsReportsForm" />
-	        	</a>
-			</li>
-			
-			
-				<li>
-		        	<abc:i18n property="requestsApproval.header.attendanceRequestsReports" />
-		        	<a href="/Requests/requestsApproval/attendanceRequestsReports.html"> &nbsp;&nbsp;
-		        	<fmt:message key="requestsApproval.header.attendanceRequestsReports" />
-		        	</a>
-				</li>
-			
-		</ul>		
-	</li>
-	</authz:authorize>
 	 
 		<li><a href="/Requests/security/logout.html"><fmt:message
 					key="commons.menu.logout" /></a></li>

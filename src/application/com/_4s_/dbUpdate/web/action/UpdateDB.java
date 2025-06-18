@@ -142,7 +142,7 @@ public class UpdateDB {
         					log.debug("commit sequence");
         					currentIndex++;
         				}else{
-        					jt.execute("rollback transaction");
+        					jt.execute("rollback");
         					currentIndex--;
         					break; // this will terminate the run of the script
         				}

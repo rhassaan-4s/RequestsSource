@@ -50,10 +50,10 @@ AuditLogDAO {
 	public void saveLogEvent(AuditLogRecord auditLogRecord) {
 
 		log.debug("save audit auditLogRecord object");
-		getCurrentSession().saveOrUpdate(auditLogRecord);
+		getSession().saveOrUpdate(auditLogRecord);
 
 		log.debug("After saveOrUpdate auditLogRecord object ...");
-		getCurrentSession().flush();
+		getSession().flush();
 
 	}
 
@@ -69,7 +69,7 @@ AuditLogDAO {
 
 		log
 		.info(">>>>>>>>>>>>>>>>>>>>. entered doInHibernate()");
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(AuditLogRecord.class);
 		if (user != null && !user.equals("")) {
 			log.debug(">>>>>>>>>>>>>>>>1 not ");
@@ -109,7 +109,7 @@ AuditLogDAO {
 			log.debug("Getting objects of class :" + User.class
 					+ ", by criteria");
 		}
-		Criteria criteria = getCurrentSession().createCriteria(User.class);
+		Criteria criteria = getSession().createCriteria(User.class);
 		criteria.add(Restrictions.eq("username", userName));
 		criteria.uniqueResult();
 		List list =  criteria.list();

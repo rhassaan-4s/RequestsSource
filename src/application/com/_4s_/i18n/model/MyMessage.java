@@ -35,7 +35,7 @@ public class MyMessage implements Serializable,Auditable{
 	@JoinColumn (name="myLocale")
 	private MyLocale myLocale;
 
-	private String message;
+	private String message = null;
 
 	public MyMessage() {
 	}

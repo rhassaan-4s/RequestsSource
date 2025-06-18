@@ -77,7 +77,7 @@ public class LogoutController{// implements ApplicationContextAware{//Controller
 		request.getSession().invalidate();
 		
 		
-		return new ModelAndView(new RedirectView("login.html"));
+		return new ModelAndView(new RedirectView("clients.html"));
 		//return new ModelAndView("index");
 	}
 }

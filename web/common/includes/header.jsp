@@ -120,7 +120,6 @@
 		    
 		   	$( ".MM_from_vac" ).datetimepicker({
 				onSelect: function( selectedDate ) {
-					alert(selectedDate);
 				$('input.MM_to[title="'+this.title+'"]').datepicker( "option", "minDate", selectedDate );}});
 			
 		    $( ".MM_to_vac" ).datetimepicker({		
@@ -392,34 +391,30 @@ menuItems:[
 	["<b><fmt:message key="commons.caption.applications" /></b>"]
 <%System.out.println("header.jsp: application " + activeApplications);
 			SecurityApplication securityApplication = null;
-			System.out.println("header.jsp: activeApplications.size() " + activeApplications.size());
 			if (activeApplications != null) {
 				for (int i = 0; i < activeApplications.size(); i++) {
 					System.out.println("header.jsp: i " + i);
 					securityApplication = (SecurityApplication) activeApplications
 							.get(i);
 					System.out.println("header.jsp: active app "+i+" - "+ securityApplication.getName());%>
-,[
-<%if (securityApplication.getName().equals("ASSETS")) {%>
-	"<b><fmt:message key='assets.caption.applicationName' /></b>"
-<%} else if (securityApplication.getName().equals("ADMINISTRATION")) {%>
-	"<b><fmt:message key='administration.caption.applicationName' /></b>"
-<%} else if (securityApplication.getName().equals("requestsApproval")) {%>
-	"<b><fmt:message key='requestsApproval.caption.applicationName' /></b>"
-<%} else if (securityApplication.getName().equals("HR")) {%>
-	"<b><fmt:message key='hr.caption.applicationName' /></b>"
-<%} else if (securityApplication.getName().equals("timesheet")) {
-						if (settings.getIsTimesheetEnabled().equals(
-								new Boolean(true))) {%>
-									"<b><fmt:message key='timesheet.caption.applicationName' /></b>"
-						<%}
-  }else if (securityApplication.getName().equals("attendance")) {
-						if (settings.getWebAttendanceAppEnabled().equals(
-								new Boolean(true))) {%>
-	"<b><fmt:message key='attendance.caption.applicationName' /></b>"
-						<%}
-	}%>, "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
-<%}
+					
+					<%if (securityApplication.getName().equals("ASSETS")) {%>
+					,["<b><fmt:message key='assets.caption.applicationName'/></b>", "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
+					<%} else if (securityApplication.getName().equals("ADMINISTRATION")) {%>
+					,["<b><fmt:message key='administration.caption.applicationName' /></b>", "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
+					<%} else if (securityApplication.getName().equals("requestsApproval")) {%>
+					,["<b><fmt:message key='requestsApproval.caption.applicationName' /></b>", "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
+					<%} else if (securityApplication.getName().equals("HR")) {%>
+					,["<b><fmt:message key='hr.caption.applicationName' /></b>", "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
+					<%} else if (securityApplication.getName().equals("timesheet") && settings.getIsTimesheetEnabled().equals(new Boolean(true))) {%>
+					,["<b><fmt:message key='timesheet.caption.applicationName'/></b>", "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
+					<% }else if (securityApplication.getName().equals("attendance") && settings.getWebAttendanceAppEnabled()!=null && settings.getWebAttendanceAppEnabled().equals(new Boolean(true))) {
+						  %>
+						  ,["<b><fmt:message key='attendance.caption.applicationName' /></b>", "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
+					<%	}else {
+						 // break;
+						}%>
+				<%}
 			}%>
 ]}; // REQUIRED!! do not edit or remove
 

@@ -43,6 +43,7 @@ import com._4s_.requestsApproval.web.util.RequestStatusWrapper;
 import com._4s_.requestsApproval.web.util.TimeAttendanceLocationWrapper;
 import com._4s_.requestsApproval.web.util.TimeAttendanceReportResultWrapper;
 import com._4s_.requestsApproval.web.util.TimeAttendanceWrapper;
+import com._4s_.requestsApproval.web.util.UserRequestsWrapper;
 import com._4s_.requestsApproval.web.util.VacationsResultWrapper;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -54,7 +55,10 @@ public class ExternalQueries extends CommonQueries{
 	
 	private HikariDataSource dataSource;
 	
-	private Session session;
+	private static Session session = null;
+	public static Session getSession() {
+		return session;
+	}
 	
 	public HikariDataSource getDataSource() {
 		return dataSource;
@@ -77,16 +81,26 @@ public class ExternalQueries extends CommonQueries{
 	}
 
 	@Transactional
-	public Session getCurrentSession(){
-		Session session = null;
+	public void getCurrentSession(){
+		session = null;
     	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
+    	System.out.println("$$$$$$$$$$$$$$$$$$getting current session");
     	log.debug("session factory " + sessionFactory);
+    	System.out.println("$$$$$$$$$$$$$$$$$$session factory " + sessionFactory);
     	try {
     	    session = sessionFactory.getCurrentSession();
+    	    log.debug("***session available " + session);
+    	    if (session == null || session.isOpen()==false) {
+    	    	session = sessionFactory.openSession();
+    	    	System.out.println("session " + session);
+    	    }
     	} catch (HibernateException e) {
+    		log.debug("###Exception#### session not available, will open new session");
     	    session = sessionFactory.openSession();
+    	    log.debug("***********new session opened****************");
     	}
-	      return session;
+    	System.out.println("$$$$$$$$$$$$$$$$$$session " +session);
+//	      return session;
 	}
 	
 	public int insertTimeAttend (String emp_code, Date date_, Date time_, String trans_type) {
@@ -105,8 +119,10 @@ public class ExternalQueries extends CommonQueries{
 		log.debug(sql.toString());
 		try {
 //			getJdbcTemplate().update(sql.toString());
-
-			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			if (session == null || session.isOpen()==false)  {
+				getCurrentSession();
+			}
+			Query q = session.createNativeQuery(sql.toString());
 			q.executeUpdate();
 			log.debug("will commit");
 			getPlatformTransactionManager().commit(status);
@@ -170,8 +186,11 @@ public class ExternalQueries extends CommonQueries{
 				+ year+"'");
 
 		log.debug("----sql1---"+sql);
+		if (session == null || session.isOpen()==false)  {
+			getCurrentSession();
+		}
 		try{
-			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			Query q = session.createNativeQuery(sql.toString());
 			cc1 = ((BigDecimal)q.getSingleResult()).longValue();
 //			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
 			log.debug("----cc1---"+cc1);
@@ -235,7 +254,7 @@ public class ExternalQueries extends CommonQueries{
 		log.debug("----sql1---"+sql);
 		try{
 //			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
-			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			Query q = session.createNativeQuery(sql.toString());
 			cc1 = ((BigDecimal)q.getSingleResult()).longValue();
 			log.debug("----cc1---"+cc1);
 		}catch (Exception e) {
@@ -304,7 +323,7 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("----sql---"+sql);
 		try{
-			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			Query q = session.createNativeQuery(sql.toString());
 			cc2 = ((BigDecimal)q.getSingleResult()).longValue();
 //			cc2=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
 		}catch (Exception e) {
@@ -379,7 +398,7 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("----sql---"+sql);
 		try{
-			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			Query q = session.createNativeQuery(sql.toString());
 			cc2 = ((BigDecimal)q.getSingleResult()).longValue();
 //			cc2=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
 		}catch (Exception e) {
@@ -444,7 +463,7 @@ public class ExternalQueries extends CommonQueries{
 		log.debug("getVacationCredit----sql1---"+sql);
 		try{
 //			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class
-			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			Query q = session.createNativeQuery(sql.toString());
 			cc1 = ((BigDecimal)q.getSingleResult()).longValue();
 			log.debug("----cc1---"+cc1);
 		}catch (Exception e) {
@@ -475,7 +494,7 @@ public class ExternalQueries extends CommonQueries{
 		log.debug("----sql2---"+sql);
 		try{
 //			cc2=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
-			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			Query q = session.createNativeQuery(sql.toString());
 			cc2 = ((BigDecimal)q.getSingleResult()).longValue();
 		}catch (Exception e) {
 			cc2=new Long(0);
@@ -549,8 +568,11 @@ public class ExternalQueries extends CommonQueries{
 		//		log.debug("----sql 1---"+sql);
 
 
-		Query q = getCurrentSession().createNativeQuery(sql.toString());
-		List in = getResultList(q,TimeAttendanceWrapper.class);
+		if (session == null || session.isOpen()==false) {
+    		session = session;
+    	}
+		Query q = session.createNativeQuery(sql.toString());
+		List in = getResultList(session,q,TimeAttendanceWrapper.class);
 //		List in=(List) getJdbcTemplate().queryForList(sql.toString());
 
 
@@ -746,9 +768,12 @@ public class ExternalQueries extends CommonQueries{
 		
 //		LinkedCaseInsensitiveMap inMap ;
 //		LinkedCaseInsensitiveMap inMap2 ;
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
 
-		Query q = getCurrentSession().createNativeQuery(sql.toString());
-		List in = getResultList(q,TimeAttendanceWrapper.class);
+		Query q = session.createNativeQuery(sql.toString());
+		List in = getResultList(session,q,TimeAttendanceWrapper.class);
 		TimeAttendanceWrapper inMap ;
 		TimeAttendanceWrapper inMap2 ;
 
@@ -1022,11 +1047,14 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("----sql 1---"+sql);
 
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
 		log.debug("sql statement " + sql.toString());
 //		List in=(List) getJdbcTemplate().queryForList(sql.toString());
-		Query q = getCurrentSession().createNativeQuery(sql.toString());
+		Query q = session.createNativeQuery(sql.toString());
 //		List in  = q.getResultList()
-		List in = getResultList(q,TimeAttendanceReportResultWrapper.class);
+		List in = getResultList(session,q,TimeAttendanceReportResultWrapper.class);
 		TimeAttendanceReportResultWrapper inMap ;
 		TimeAttendanceReportResultWrapper inMap2 ;
 
@@ -1806,10 +1834,13 @@ public class ExternalQueries extends CommonQueries{
 		log.debug("----sql 1---"+sql);
 
 
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
 //		List in=(List) getJdbcTemplate().queryForList(sql.toString());
 
-		Query q = getCurrentSession().createNativeQuery(sql.toString());
-		List in = getResultList(q,TimeAttendanceLocationWrapper.class);
+		Query q = session.createNativeQuery(sql.toString());
+		List in = getResultList(session,q,TimeAttendanceLocationWrapper.class);
 		TimeAttendanceLocationWrapper inMap ;
 //		TimeAttendanceLocationWrapper inMap2 ;
 
@@ -2042,10 +2073,17 @@ public class ExternalQueries extends CommonQueries{
 						+ dateCondition);
 
 		log.debug("----sql1---"+sql);
-
+		if (session!=null) {
+			session.close();
+		}
+		if (session == null || session.isOpen()==false) {
+			log.debug("session "+ session);
+    		getCurrentSession();
+    	} 
+		log.debug("session opened?"+ session.isOpen());
 //		result=(List) getJdbcTemplate().queryForList(sql.toString());
-		Query q = getCurrentSession().createNativeQuery(sql.toString());
-		result = getResultList(q, VacationsResultWrapper.class);
+		Query<VacationsResultWrapper> q = session.createNativeQuery(sql.toString());
+		result = getResultList(session,q, VacationsResultWrapper.class);
 		Iterator itr = result.iterator();
 		while(itr.hasNext()) {
 			Object o = itr.next();
@@ -2116,14 +2154,13 @@ public class ExternalQueries extends CommonQueries{
 		log.debug("----sql1---"+sql);
 
 //		result=(List) getJdbcTemplate().queryForList(sql.toString());
-		try {
-		    session = sessionFactory.getCurrentSession();
-		} catch (HibernateException e) {
-		    session = sessionFactory.openSession();
-		}
-
+		log.debug("session opened?"+ session.isOpen());
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		log.debug("session opened?"+ session.isOpen());
 		NativeQuery q = session.createNativeQuery(sql.toString());
-		result = getResultList(q,VacationsResultWrapper.class);
+		result = getResultList(session,q,VacationsResultWrapper.class);
 		return result;
 	}
 
@@ -2142,7 +2179,7 @@ public class ExternalQueries extends CommonQueries{
 //			day = ((BigDecimal)m.getValue(0)).intValue();
 //			log.debug("day " + day);
 //		}
-		Query q = getCurrentSession().createNativeQuery(sql.toString());
+		Query q = session.createNativeQuery(sql.toString());
 		day = ((BigDecimal)q.getSingleResult()).intValue();
 		return day;
 	}
@@ -2531,15 +2568,13 @@ public class ExternalQueries extends CommonQueries{
 
 
 //		List in=(List) getJdbcTemplate().queryForList(sql.toString());
-		try {
-		    session = sessionFactory.getCurrentSession();
-		} catch (HibernateException e) {
-		    session = sessionFactory.openSession();
-		}
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
 
 		NativeQuery sqlQuery = session.createNativeQuery(sql.toString());
 //		List in = sqlQuery.list();
-		List in = getResultList(sqlQuery,PageRequestsWrapper.class);
+		List in = getResultList(session,sqlQuery,PageRequestsWrapper.class);
 
 		String listSizeQuery = "select count (*) count from ("+outerSelectStart+ " ("+select+where
 				//+orderBy
@@ -3360,10 +3395,22 @@ public class ExternalQueries extends CommonQueries{
 
 	log.debug("----sql 1---"+sql);
 
+	if (session !=null) {
+		 session.close();
+		 log.debug("####closed session");
+	 }
+	 if (session == null || session.isOpen()==false) {
+   		getCurrentSession();
+   		log.debug("####opened new session");
+   }
 
 //	List in=(List) getJdbcTemplate().queryForList(sql.toString());
-	NativeQuery sql1Query = session.createNativeQuery(sql.toString());
-	List in = sql1Query.list();
+//	NativeQuery sql1Query = session.createNativeQuery(sql.toString());
+//	List in = sql1Query.list();
+	 
+	 NativeQuery sql1Query = session.createNativeQuery(sql.toString());
+
+	List in = getResultList(session,sql1Query, UserRequestsWrapper.class);
 
 	String listSizeQuery = "select count (*) count from ("+outerSelectStart+ " ("+select+where
 			+outerSelectEnd + outerSelectWhere+") q";
@@ -3390,9 +3437,9 @@ public class ExternalQueries extends CommonQueries{
 	if (in2.size()>0) {
 		int size = 0;
 		if (settings.getSqlServerConnectionEnabled()) {
-			size = ((Integer)((LinkedCaseInsensitiveMap)in2.get(0)).get("count")).intValue();
+			size = ((Integer)in2.get(0)).intValue();
 		} else {
-			size = ((BigDecimal)((LinkedCaseInsensitiveMap)in2.get(0)).get("count")).intValue();
+			size = ((BigDecimal)in2.get(0)).intValue();
 		}
 		log.debug("listSize " + size);
 		map.put("listSize", size);
@@ -3779,15 +3826,13 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("----sql 1---"+sql);
 
-		try {
-			session = sessionFactory.getCurrentSession();
-		} catch (HibernateException e) {
-			session = sessionFactory.openSession();
-		}
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
 
 		NativeQuery sqlQuery = session.createNativeQuery(sql.toString());
 
-		List in = getResultList(sqlQuery, RequestStatusWrapper.class);
+		List in = getResultList(session,sqlQuery, RequestStatusWrapper.class);
 
 		String listSizeQuery = "select count (*) count from (" + outerSelectStart + " (" + select + where
 //				+orderBy

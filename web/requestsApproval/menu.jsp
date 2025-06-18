@@ -144,6 +144,18 @@
 				</a></li>
 			</ul></li>
 
+<li><a href="#"><fmt:message
+		key="requestsApproval.menu.settings" /></a>
+		<ul>
+			<li><a href="/Requests/requestsApproval/changeProfileForm.html"><abc:i18n
+				property="requestsApproval.header.changePassword" /> <fmt:message
+				key="requestsApproval.header.changePassword" /></a></li>		
+		
+			<li><a href="/Requests/requestsApproval/annualVacLimitSetting.html"><fmt:message
+				key="requestsApproval.header.annualVacLimitSetting" /></a>
+			</li>
+		</ul>
+	</li>
 
 		<%if(settings.getCompanyRulesEn().equals(new Boolean(true))){ %>
 		<li><a href="#"><fmt:message key="commons.menu.help" /></a>

@@ -44,7 +44,7 @@ import com._4s_.timesheet.web.util.TimesheetTransWrapper;
 public class TimesheetExternalQueries extends CommonQueries {
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	
+	private Session session;
 private SessionFactory sessionFactory;
 	
 	
@@ -59,14 +59,24 @@ private SessionFactory sessionFactory;
 
 	@Transactional
 	public Session getCurrentSession(){
-		Session session = null;
+		session = null;
     	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
+    	System.out.println("$$$$$$$$$$$$$$$$$$getting current session");
     	log.debug("session factory " + sessionFactory);
+    	System.out.println("$$$$$$$$$$$$$$$$$$session factory " + sessionFactory);
     	try {
     	    session = sessionFactory.getCurrentSession();
+    	    log.debug("***session available " + session);
+    	    if (session == null || session.isOpen()==false) {
+    	    	session = sessionFactory.openSession();
+    	    	System.out.println("session " + session);
+    	    }
     	} catch (HibernateException e) {
+    		log.debug("###Exception#### session not available, will open new session");
     	    session = sessionFactory.openSession();
+    	    log.debug("***********new session opened****************");
     	}
+    	System.out.println("$$$$$$$$$$$$$$$$$$session " +session);
 	      return session;
 	}
 
@@ -217,10 +227,13 @@ private SessionFactory sessionFactory;
 		StringBuilder sqlListSize = new StringBuilder(listSizeQuery);
 //		List in2=(List) getJdbcTemplate().queryForList(sqlListSize.toString());
 		List in2;
+		if (session == null || session.isOpen()==false)  {
+			session=getCurrentSession();
+		}
 		try{
-			Query q = getCurrentSession().createNativeQuery(listSizeQuery.toString());
+			Query q = session.createNativeQuery(listSizeQuery.toString());
 //			in2 = q.getResultList();
-			in2 = getResultList(q,TimesheetTransWrapper.class);
+			in2 = getResultList(session,q,TimesheetTransWrapper.class);
 			log.debug("----cc1---"+in.size());
 		}catch (Exception e) {
 			in2= new ArrayList();

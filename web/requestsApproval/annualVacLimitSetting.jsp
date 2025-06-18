@@ -36,19 +36,15 @@ function fillLimit(){
 	</tr>
 	<tr>
 		<td colspan="2">
-			<spring:bind path="annualVacLimit.*">
-				<c:if test="${not empty status.errorMessages}">
-					<div><c:forEach var="error" items="${status.errorMessages}">
-						<font color="red"> <c:out value="${error}" escapeXml="false" /><br />
-						</font>
-					</c:forEach></div>
-				</c:if>
-			</spring:bind>
+		
+			<h2 style="color: red;">
+					<form:errors path="annualVacLimit.*" />
+			</h2>
 		</td>
 	</tr>
 	<tr>
 		<td>
-			<c:if test="${done==true}"><font color="blue" size="5"> 
+			<c:if test="${model.done==true}"><font color="blue" size="5"> 
 	        <abc:i18n	property="requestsApproval.loginUsersRequests.saveSuccess" /><fmt:message
 					key="requestsApproval.loginUsersRequests.saveSuccess" />
 	 		</font>
@@ -57,7 +53,8 @@ function fillLimit(){
 	</tr>	
 	<tr>
 		<td>
-			<form id="annualVacLimitSetting" name="annualVacLimitSetting"	method="POST" action="<c:url value="/requestsApproval/annualVacLimitSetting.html"/>">
+			<form:form method="POST" modelAttribute="annualVacLimit"
+					action="/Requests/requestsApproval/annualVacLimitSetting.html">
 					
 					<table border=0 cellspacing=1 cellpadding=0 id="ep" style="margin-right:40px">
 						<tr id="head_1_ep">
@@ -72,7 +69,7 @@ function fillLimit(){
 							</td>						
 							<td  class="formBodControl"> 
 								<spring:bind path="annualVacLimit.vac_id">
-									<input type="text" name="${status.expression}" id="${status.expression}" value="${vac_id}" readonly="readonly" />
+									<input type="text" name="${status.expression}" id="${status.expression}" value="${model.vac_id}" readonly="readonly" />
 								</spring:bind>
 							</td>
 						</tr>
@@ -114,7 +111,7 @@ function fillLimit(){
 						</tr>
 												
 					</table>
-			</form>
+			</form:form>
 		</td>
 	</tr>
 </table>

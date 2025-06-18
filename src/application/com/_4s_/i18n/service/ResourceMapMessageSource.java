@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.AbstractMessageSource;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
 import com._4s_.i18n.dao.MessageDAO;
 import com._4s_.i18n.model.MyLocale;
@@ -29,6 +30,7 @@ import com._4s_.security.service.UsersMap;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
+@Component
 public class ResourceMapMessageSource extends AbstractMessageSource  
 {
 

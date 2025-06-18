@@ -1,12 +1,18 @@
 package com._4s_.security.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequestWrapper;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Order;
+import javax.persistence.criteria.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +82,7 @@ MySecurityDAO {
 	public List getFields() {
 		// TODO Auto-generated method stub
 
-		Criteria criteria = getCurrentSession().createCriteria(
+		Criteria criteria = getSession().createCriteria(
 				Fields.class)
 				.add(Restrictions.eq("flag",new Boolean(true)));
 		return criteria.list();
@@ -84,7 +90,7 @@ MySecurityDAO {
 	}
 
 	public List getUsers() {
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(User.class)
 				.setResultTransformer(
 						CriteriaSpecification.DISTINCT_ROOT_ENTITY);
@@ -93,7 +99,7 @@ MySecurityDAO {
 
 
 	public User getUserByUserName(final String username) {
-		Criteria criteria = getCurrentSession().createCriteria(User.class);
+		Criteria criteria = getSession().createCriteria(User.class);
 		criteria.add(Restrictions.eq("username",username));
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		List list = criteria.list();
@@ -106,7 +112,7 @@ MySecurityDAO {
 	}
 
 	public List getListOfRoles() {
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(Roles.class)
 				.setResultTransformer(
 						CriteriaSpecification.DISTINCT_ROOT_ENTITY);
@@ -115,7 +121,7 @@ MySecurityDAO {
 
 
 	public List getApplicationEmployees(final Long applicationId) {
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(Employee.class)
 				.setResultTransformer(
 						CriteriaSpecification.DISTINCT_ROOT_ENTITY);
@@ -128,7 +134,7 @@ MySecurityDAO {
 
 
 	public List getEmployeesByBranchAndDepartmentAndStatus(final String branchId, final String departmentId, final String status) {
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(User.class);
 		criteria.add(Restrictions.eq("isActive", true));
 		Criteria cr1 = criteria.createCriteria("employee");
@@ -150,7 +156,7 @@ MySecurityDAO {
 	}
 
 	public List getUserByEmail(final String email) {
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(User.class);
 		Criteria cr1 = criteria.createCriteria("employee");
 
@@ -162,12 +168,36 @@ MySecurityDAO {
 	}
 
 	public List getActiveApplications() {
-		Criteria criteria = getCurrentSession()
-				.createCriteria(SecurityApplication.class);
-		criteria.add(Restrictions.eq("is_active", new Boolean(true)));
-		criteria.addOrder(Order.asc("position"));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
+//		Criteria criteria = getSession()
+//				.createCriteria(SecurityApplication.class);
+//		criteria.add(Restrictions.eq("is_active", new Boolean(true)));
+//		criteria.addOrder(Order.asc("position"));
+//		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//		return criteria.list();
+    	Session	session = super.getSession();
+    	
+    	System.out.println("%%%%%%%%%%%% Current Session "+session);
+//    	Object object = session.get(clazz, id);
+    	CriteriaBuilder builder = super.getBuilder();
+    	if (builder ==null) {
+    		builder = session.getCriteriaBuilder();
+    	}
+    	System.out.println("%%%%%%%%%%%% Current builder "+builder);
+    	CriteriaQuery<SecurityApplication> queryCriteria = builder.createQuery(SecurityApplication.class);
+    	Root<SecurityApplication> root = queryCriteria.from(SecurityApplication.class);
+    	Predicate restrictions = builder.equal(root.get("is_active"), new Boolean(true));
+    	queryCriteria.select(root);
+    	queryCriteria.where(restrictions);
+    	queryCriteria.orderBy(builder.asc(root.get("position")));
+    	queryCriteria.distinct(true);
+    	
+    	System.out.println("%%%%%%%%%%%% Current Session "+session);
+    	
+		TypedQuery<SecurityApplication> query = session.createQuery(queryCriteria);
+		
+		System.out.println("%%%%%%%%%%%% Created Query "+query);
+		List result =  query.getResultList();
+		return result;
 	}
 
 	public User login() {
@@ -215,7 +245,7 @@ MySecurityDAO {
 
 	public User getUser(String username) {
 		log.debug("token details " + username);
-	    Criteria criteria = getCurrentSession().createCriteria(User.class);
+	    Criteria criteria = getSession().createCriteria(User.class);
 		criteria.add(Restrictions.eq("username", username));
 		criteria.add(Restrictions.eq("isActive", new Boolean(true)));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -228,7 +258,7 @@ MySecurityDAO {
 	}
 
 	public Imei checkImei(String imei, User user) {
-		Criteria criteria = getCurrentSession().createCriteria(Imei.class);
+		Criteria criteria = getSession().createCriteria(Imei.class);
 		criteria.add(Restrictions.eq("users", user));
 		criteria.add(Restrictions.eq("imei", imei));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -242,7 +272,7 @@ MySecurityDAO {
 	
 	
 	public IPAddress checkIP(String currentIP, User user){
-		Criteria criteria = getCurrentSession().createCriteria(IPAddress.class);
+		Criteria criteria = getSession().createCriteria(IPAddress.class);
 		criteria.add(Restrictions.eq("users", user));
 		criteria.add(Restrictions.eq("ip", currentIP));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -334,7 +364,7 @@ MySecurityDAO {
 //	public List getFields() {
 //		// TODO Auto-generated method stub
 //
-//		Criteria criteria = getCurrentSession().createCriteria(
+//		Criteria criteria = getSession().createCriteria(
 //				Fields.class)
 //				.add(Restrictions.eq("flag",new Boolean(true)));
 //		return criteria.list();
@@ -342,7 +372,7 @@ MySecurityDAO {
 //	}
 //
 //	public List getUsers() {
-//		Criteria criteria = getCurrentSession()
+//		Criteria criteria = getSession()
 //				.createCriteria(User.class)
 //				.setResultTransformer(
 //						CriteriaSpecification.DISTINCT_ROOT_ENTITY);
@@ -351,7 +381,7 @@ MySecurityDAO {
 //
 //
 //	public User getUserByUserName(final String username) {
-//		Criteria criteria = getCurrentSession().createCriteria(User.class);
+//		Criteria criteria = getSession().createCriteria(User.class);
 //		criteria.add(Restrictions.eq("username",username));
 //		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 //		List list = criteria.list();
@@ -364,7 +394,7 @@ MySecurityDAO {
 //	}
 //
 //	public List getListOfRoles() {
-//		Criteria criteria = getCurrentSession()
+//		Criteria criteria = getSession()
 //				.createCriteria(Roles.class)
 //				.setResultTransformer(
 //						CriteriaSpecification.DISTINCT_ROOT_ENTITY);
@@ -373,7 +403,7 @@ MySecurityDAO {
 //
 //
 //	public List getApplicationEmployees(final Long applicationId) {
-//		Criteria criteria = getCurrentSession()
+//		Criteria criteria = getSession()
 //				.createCriteria(Employee.class)
 //				.setResultTransformer(
 //						CriteriaSpecification.DISTINCT_ROOT_ENTITY);
@@ -386,7 +416,7 @@ MySecurityDAO {
 //
 //
 //	public List getEmployeesByBranchAndDepartmentAndStatus(final String branchId, final String departmentId, final String status) {
-//		Criteria criteria = getCurrentSession()
+//		Criteria criteria = getSession()
 //				.createCriteria(User.class);
 //		criteria.add(Restrictions.eq("isActive", true));
 //		Criteria cr1 = criteria.createCriteria("employee");
@@ -408,7 +438,7 @@ MySecurityDAO {
 //	}
 //
 //	public List getUserByEmail(final String email) {
-//		Criteria criteria = getCurrentSession()
+//		Criteria criteria = getSession()
 //				.createCriteria(User.class);
 //		Criteria cr1 = criteria.createCriteria("employee");
 //
@@ -420,7 +450,7 @@ MySecurityDAO {
 //	}
 //
 //	public List getActiveApplications() {
-//		Criteria criteria = getCurrentSession()
+//		Criteria criteria = getSession()
 //				.createCriteria(SecurityApplication.class);
 //		criteria.add(Restrictions.eq("is_active", new Boolean(true)));
 //		criteria.addOrder(Order.asc("position"));
@@ -472,7 +502,7 @@ MySecurityDAO {
 //
 //	public User getUser(String username) {
 //		log.debug("token details " + username);
-//	    Criteria criteria = getCurrentSession().createCriteria(User.class);
+//	    Criteria criteria = getSession().createCriteria(User.class);
 //		criteria.add(Restrictions.eq("username", username));
 //		criteria.add(Restrictions.eq("isActive", new Boolean(true)));
 //		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -485,7 +515,7 @@ MySecurityDAO {
 //	}
 //
 //	public Imei checkImei(String imei, User user) {
-//		Criteria criteria = getCurrentSession().createCriteria(Imei.class);
+//		Criteria criteria = getSession().createCriteria(Imei.class);
 //		criteria.add(Restrictions.eq("users", user));
 //		criteria.add(Restrictions.eq("imei", imei));
 //		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -497,7 +527,7 @@ MySecurityDAO {
 //		}
 //	}
 //	public IPAddress checkIP(String currentIP, User user){
-//		Criteria criteria = getCurrentSession().createCriteria(IPAddress.class);
+//		Criteria criteria = getSession().createCriteria(IPAddress.class);
 //		criteria.add(Restrictions.eq("users", user));
 //		criteria.add(Restrictions.eq("ip", currentIP));
 //		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);

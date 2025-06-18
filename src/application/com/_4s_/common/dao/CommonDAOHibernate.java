@@ -3,11 +3,16 @@ package com._4s_.common.dao;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import com._4s_.common.model.Branch;
@@ -42,7 +47,7 @@ public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 	}
 
 	public List getCitiesByCountry(final Long countryId){
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(City.class);
 		criteria.createCriteria("country")
 		.add(Restrictions.eq("id",countryId));
@@ -52,15 +57,28 @@ public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 	}
 
 	public Employee getEmployeeByUser(final Long userId) {
-
-
-
-		Criteria criteria = getCurrentSession()
-				.createCriteria(Employee.class);
-		criteria.createCriteria("users").add(Restrictions.eq("id",userId));
-		criteria.setMaxResults(1);
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		List list = criteria.list();
+		CriteriaQuery queryCriteria = getBuilder().createQuery(Employee.class);
+    	Root<Object> root = queryCriteria.from(Employee.class);
+    	Predicate restrictions = getBuilder().equal(root.get("users").get("id"), userId);
+    	queryCriteria.select(root).where(restrictions).distinct(true);
+    	
+    	Session session = getSession();
+    	
+    	if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		
+    	TypedQuery<Object> query = session.createQuery(queryCriteria);
+		query.setMaxResults(1);
+		System.out.println("#### query "+query);
+		List list = query.getResultList();
+		
+//		Criteria criteria = getCurrentSession
+//		criteria.createCriteria(Employee.class);
+//    	criteria.createCriteria("users").add(Restrictions.eq("id",userId));
+//		criteria.setMaxResults(1);
+//		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//		List list = criteria.list();
 
 		if ((list.size() == 0) && (log.isDebugEnabled())) {
 			log.debug("No objects found");
@@ -74,7 +92,7 @@ public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 
 
 
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(Employee.class);
 		criteria.add(Restrictions.eq("isInternalCommunicator",new Boolean(false)));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -83,7 +101,7 @@ public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 
 	public  List getBranchesRelatedByCompany(final Long companyId)
 	{
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(Branch.class);
 		criteria.createCriteria("company").add(Restrictions.eq("id", companyId));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -91,7 +109,7 @@ public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 	}
 
 	public List getDataByTypes(final Types type){
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(TypesData.class);
 		criteria.createCriteria("type")
 		.add(Restrictions.eq("id",type.getId()));
@@ -100,7 +118,7 @@ public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 	}
 
 	public List getEmployeesByFirstName(final String namePart){
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(Employee.class);
 		criteria.add(Restrictions.like("firstName",namePart,MatchMode.START));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -116,7 +134,7 @@ public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 
 
 
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(className);
 		if (searchCommandId != null && !searchCommandId.equals("")){
 			criteria.add(Restrictions.like(firstParam,searchCommandId));
@@ -129,7 +147,7 @@ public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 	}
 
 	public List getCitiesByDescription(final String namePart){
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(City.class);
 		criteria.add(Restrictions.like("description",namePart,MatchMode.START));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -137,7 +155,7 @@ public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 	}
 
 	public List getCountriesByDescription(final String namePart){
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(Country.class);
 		criteria.add(Restrictions.like("description",namePart,MatchMode.START));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -145,7 +163,7 @@ public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 	}
 
 	public List getCountries(){
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(Country.class);
 		criteria.addOrder(Property.forName("description").asc());
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -155,7 +173,7 @@ public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 	public HijriDateAdjustment getHijriDateAdjustment(final Date date) {
 		log.error(">>>>>>>>>>HijriDateAdjustment ");
 
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(HijriDateAdjustment.class);
 		criteria.add(Restrictions.ge("miladiDate",date));
 		List list = criteria.list();
@@ -176,7 +194,7 @@ public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 
 
 
-						Criteria criteria = getCurrentSession()
+						Criteria criteria = getSession
 								.createCriteria(TrialDestination.class);
 						criteria.add(Restrictions.eq("id",id));
 						criteria.uniqueResult();
@@ -191,7 +209,7 @@ public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 
 
 
-						Criteria criteria = getCurrentSession()
+						Criteria criteria = getSession
 								.createCriteria(TrialDestination.class);
 						return criteria.list();
 					}
@@ -201,7 +219,7 @@ public class CommonDAOHibernate extends BaseDAOHibernate implements CommonDAO{
 
 
 	public List getEmployeesByBranchAndDepartment(final String branchId,final String departmentId) {
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(Employee.class);
 
 		if(branchId != null && !branchId.equals("")){

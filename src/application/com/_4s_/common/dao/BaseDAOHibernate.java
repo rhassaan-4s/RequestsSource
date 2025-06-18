@@ -57,30 +57,44 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-
-	private CriteriaBuilder builder;
+	private static Session session = null;
+	public static Session getSession() {
+		return session;
+	}
+	private static CriteriaBuilder builder;
 
 	public CriteriaBuilder getBuilder() {
 		return builder;
 	}
 
 	@Transactional
-	public Session getCurrentSession(){
-		Session session = null;
+	public void getCurrentSession(){
+		session = null;
     	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
+    	System.out.println("$$$$$$$$$$$$$$$$$$getting current session");
     	log.debug("session factory " + sessionFactory);
+    	System.out.println("$$$$$$$$$$$$$$$$$$session factory " + sessionFactory);
     	try {
     	    session = sessionFactory.getCurrentSession();
+    	    log.debug("***session available " + session);
+    	    if (session == null || session.isOpen()==false) {
+    	    	session = sessionFactory.openSession();
+    	    	System.out.println("session " + session);
+    	    }
     	} catch (HibernateException e) {
+    		log.debug("###Exception#### session not available, will open new session");
     	    session = sessionFactory.openSession();
+    	    log.debug("***********new session opened****************");
     	}
-	      return session;
+    	System.out.println("$$$$$$$$$$$$$$$$$$session " +session);
+//	      return session;
 	}
     
 	@Transactional
     public void init() {
     	log.debug("###########################initiallizing#####################");
-    	builder = getCurrentSession().getCriteriaBuilder();
+    	getCurrentSession();
+    	builder = session.getCriteriaBuilder();
     	log.debug("builder " + builder);
     }
     
@@ -124,21 +138,27 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 //        checkFlushMode();
        
         Transaction tx = null;
-        Session sess = getCurrentSession();
+        if (session == null) {
+        	getCurrentSession();
+        }
+        Session sess = session;
         log.debug("flush mode " + sess.getFlushMode());
         try {
 			tx= sess.beginTransaction();
 			sess.saveOrUpdate(o);
 			tx.commit();
+			session.flush();
+			log.debug("$$$$$$$$$$$$$$$$committed");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			log.debug("$$$$$$$$$$$$$$$$$will rollback");
 			e.printStackTrace();
 			if (tx!=null) {
 				tx.rollback();
 			}
 		 }
 		 finally {
-			 sess.close();
+//			 sess.close();
 		 }
     }
   
@@ -151,7 +171,10 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 		}
 
 		checkFlushMode();
-		getCurrentSession().update(o);
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		session.update(o);
 	}
 
 	/* (non-Javadoc)
@@ -163,7 +186,10 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 		}
 
 		checkFlushMode();
-		getCurrentSession().save(o);
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		session.save(o);
 	}
 
 	/* (non-Javadoc)
@@ -174,7 +200,28 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
             log.debug("Getting object of class :"+ clazz +", with id :"+ id);
         }
         try {
-        	Object object = getCurrentSession().get(clazz, id);
+//        	Session s = getCurrentSession();
+        	if (session == null || session.isOpen()==false) {
+        		getCurrentSession();
+        	}
+        	System.out.println("%%%%%%%%%%%% Current Session "+session);
+//        	Object object = session.get(clazz, id);
+        	CriteriaQuery queryCriteria = builder.createQuery(clazz);
+        	Root<Object> root = queryCriteria.from(clazz);
+        	Predicate restrictions = builder.equal(root.get("id"), id);
+        	queryCriteria.select(root).where(restrictions).distinct(true);
+        	
+        	System.out.println("%%%%%%%%%%%% Current Session "+session);
+        	
+    		TypedQuery<Object> query = session.createQuery(queryCriteria);
+    		System.out.println("%%%%%%%%%%%% Created Query "+query);
+        	Object object = query.getSingleResult();
+            if ((object == null)&&(log.isDebugEnabled())) {
+                log.debug("No object found");
+            }
+            else if (log.isDebugEnabled()) {
+                log.debug("Got object :"+ object);
+            }
         	log.debug("Getting object of class :"+ clazz +" 2");
         	if (object == null) {
         		//            throw new ObjectRetrievalFailureException(clazz, id);
@@ -206,7 +253,7 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 				e1.printStackTrace();
 			}
 			return null;
-		}
+		} 
 	}
 
 	/* (non-Javadoc)
@@ -222,7 +269,18 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
     	Predicate restrictions = builder.equal(root.get(parameter), value);
     	queryCriteria.select(root).where(restrictions).distinct(true);
     	
-		TypedQuery<Object> query = getCurrentSession().createQuery(queryCriteria);
+//    	if (session !=null) {
+//			 session.close();
+//			 log.debug("####closed session");
+//		 }
+//		 if (session == null || session.isOpen()==false) {
+//	    		getCurrentSession();
+//	    		log.debug("####opened new session");
+//	    }
+    	System.out.println("%%%%%%%%%%%% Current Session "+session);
+    	
+		TypedQuery<Object> query = session.createQuery(queryCriteria);
+		System.out.println("%%%%%%%%%%%% Created Query "+query);
     	Object object = query.getSingleResult();
         if ((object == null)&&(log.isDebugEnabled())) {
             log.debug("No object found");
@@ -242,11 +300,14 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
         if (log.isDebugEnabled()) {
             log.debug("Getting objects of class :"+ clazz +", with "+parameter+" :"+ value);
         }
+        if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
         CriteriaQuery queryCriteria = builder.createQuery(clazz);
     	Root<Object> root = queryCriteria.from(clazz);
     	Predicate restrictions = builder.equal(root.get(parameter), value);
     	queryCriteria.select(root).where(restrictions).distinct(true);
-    	TypedQuery<Object> query = getCurrentSession().createQuery(queryCriteria);
+    	TypedQuery<Object> query = session.createQuery(queryCriteria);
         List list =  query.getResultList();
 		
         if ((list.size() == 0)&&(log.isDebugEnabled())) {
@@ -262,12 +323,14 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
         if (log.isDebugEnabled()) {
             log.debug("Getting objects of class :"+ clazz +", with null "+parameter);
         }
-        
+        if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
         CriteriaQuery queryCriteria = builder.createQuery(clazz);
     	Root<Object> root = queryCriteria.from(clazz);
     	Predicate restrictions = builder.isNull(root.get(parameter));
     	queryCriteria.select(root).where(restrictions).distinct(true);
-    	TypedQuery<Object> query = getCurrentSession().createQuery(queryCriteria);
+    	TypedQuery<Object> query = session.createQuery(queryCriteria);
         List list =  query.getResultList();
         
 //		List list = (List)queryCriteria
@@ -306,11 +369,13 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
     	queryCriteria.distinct(true);
     	
     	TypedQuery<Object> query = null;
-    	
+    	if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
     	if ((maxResults != null) && (maxResults.intValue() > 0)) {
-    		query = getCurrentSession().createQuery(queryCriteria).setMaxResults(maxResults.intValue());
+    		query = session.createQuery(queryCriteria).setMaxResults(maxResults.intValue());
     	} else {
-    		query = getCurrentSession().createQuery(queryCriteria);
+    		query = session.createQuery(queryCriteria);
     	}
         List list =  query.getResultList();
         
@@ -357,7 +422,12 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
     	 CriteriaQuery queryCriteria = builder.createQuery(clazz);
      	Root<Object> root = queryCriteria.from(clazz);
      	queryCriteria.select(root).distinct(true);
-     	TypedQuery<Object> query = getCurrentSession().createQuery(queryCriteria);
+     	if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+    	System.out.println("%%%%%%%%%%%% Current Session "+session);
+     	TypedQuery<Object> query = session.createQuery(queryCriteria);
+     	System.out.println("%%%%%%%%%%%% query "+query);
          List list =  query.getResultList();
  		
          if ((list.size() == 0)&&(log.isDebugEnabled())) {
@@ -376,8 +446,35 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
       	queryCriteria.select(root);
       	queryCriteria.orderBy(builder.asc(root.get(field)));
       	queryCriteria.distinct(true);
-      	TypedQuery<Object> query = getCurrentSession().createQuery(queryCriteria);
-        List list =  query.getResultList();
+//      	Session s = getCurrentSession();
+      	System.out.println("%%%%%%%%%%%%session " + session);
+      	System.out.println("%%%%%%%%%%%%is open session? " + session.isOpen());
+      	 log.debug("$$$session " + session);
+		 log.debug("$$$session " + session.isOpen());
+		 if (session !=null) {
+			 session.close();
+			 log.debug("####closed session");
+		 }
+		 if (session == null || session.isOpen()==false) {
+	    		getCurrentSession();
+	    		log.debug("####opened new session");
+	    }
+		
+    	System.out.println("%%%%%%%%%%%% Current Session "+session);
+      	List list = new ArrayList();
+      	TypedQuery<Object> query = null;
+		try {
+			query = session.createQuery(queryCriteria);
+			
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			sessionFactory.openSession();
+			query = session.createQuery(queryCriteria);
+		} finally {
+			System.out.println("%%%%%%%%%%%% query "+query);
+			list = query.getResultList();
+		}
         return list;
     }
 	public void removeObject(Object obj) {
@@ -387,7 +484,12 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 
 		checkFlushMode();
 
-		getCurrentSession().delete(obj);
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		session.beginTransaction();
+		session.delete(obj);
+		 session.getTransaction().commit();
 		if (log.isDebugEnabled()) {
 			log.debug("Object removed from database");
 		}
@@ -407,7 +509,10 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
         
         checkFlushMode();
 
-        getCurrentSession().delete(obj);
+        if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		session.delete(obj);
         if (log.isDebugEnabled()) {
             log.debug("Object removed from database");
         }
@@ -427,7 +532,10 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
         
         checkFlushMode();
 
-        getCurrentSession().delete(obj);
+        if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		session.delete(obj);
         if (log.isDebugEnabled()) {
             log.debug("Object removed from database");
         }
@@ -465,27 +573,46 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 	}
 
 	public void flush() {
-		getCurrentSession().flush();
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		session.flush();
 	}
 
 	public void setFlushModeNever() {
 //		getCurrentSession().setFlushMode(FlushMode.NEVER);
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		session.setHibernateFlushMode(FlushMode.MANUAL);
 	}
 
 	public void setFlushModeAuto() {
-		getCurrentSession().setFlushMode(FlushMode.AUTO);
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		session.setHibernateFlushMode(FlushMode.AUTO);
 	}
 
 	public void setFlushModeAlways() {
-		getCurrentSession().setFlushMode(FlushMode.ALWAYS);
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		session.setHibernateFlushMode(FlushMode.ALWAYS);
 	}
 
 	public void setFlushModeCommit() {
-		getCurrentSession().setFlushMode(FlushMode.COMMIT);
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		session.setHibernateFlushMode(FlushMode.COMMIT);
 	}
 
 	public FlushMode getFlushMode() {
-		Object object = getCurrentSession().getFlushMode();
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		Object object = session.getFlushMode();
 
 		FlushMode flushMode = (FlushMode) object;
 		return flushMode;
@@ -498,7 +625,10 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 	}
 
 	public void detachObject(Object o) {
-		getCurrentSession().evict(o);
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		session.evict(o);
 	}
 
 	public void initializeCollection(Object o) {
@@ -506,7 +636,10 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 	}
 
 	public void lock(final Object o){
-		getCurrentSession().lock(o,LockMode.NONE);
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		session.lock(o,LockMode.NONE);
 	}
 
 	public Object getDefaultObject(Class clazz) {
@@ -515,7 +648,10 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
     	Root<Object> root = queryCriteria.from(clazz);
     	Predicate restrictions = builder.equal(root.get("isDefault"), new Boolean(true));
     	queryCriteria.select(root).where(restrictions).distinct(true);
-    	TypedQuery<Object> query = getCurrentSession().createQuery(queryCriteria);
+    	if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+    	TypedQuery<Object> query = session.createQuery(queryCriteria);
     	Object object = query.getSingleResult();
         if ((object == null)&&(log.isDebugEnabled())) {
             log.debug("No object found");
@@ -536,8 +672,11 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
     	predicates.add(restriction1);
     	predicates.add(restriction2);
     	
+    	if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
     	queryCriteria.select(root).where(predicates.toArray(new Predicate[]{})).distinct(true);
-    	TypedQuery<Object> query = getCurrentSession().createQuery(queryCriteria);
+    	TypedQuery<Object> query = session.createQuery(queryCriteria);
     	Object object = query.getSingleResult();
         if ((object == null)&&(log.isDebugEnabled())) {
             log.debug("No object found");
@@ -562,8 +701,12 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
     	predicates.add(restriction1);
     	predicates.add(restriction2);
     	
+    	if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+
     	queryCriteria.select(root).where(predicates.toArray(new Predicate[]{})).distinct(true);
-    	TypedQuery<Object> query = getCurrentSession().createQuery(queryCriteria);
+    	TypedQuery<Object> query = session.createQuery(queryCriteria);
     	Object object = query.getSingleResult();
         if ((object == null)&&(log.isDebugEnabled())) {
             log.debug("No object found");
@@ -594,8 +737,12 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 		queryCriteria.distinct(true);
 		queryCriteria.orderBy(builder.asc(root.get("id")));
 
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+
 		TypedQuery<Object> query = null;
-		query = getCurrentSession().createQuery(queryCriteria).setMaxResults(pageSize).setFirstResult(pageNumber * pageSize);
+		query = session.createQuery(queryCriteria).setMaxResults(pageSize).setFirstResult(pageNumber * pageSize);
 
 		List list =  query.getResultList();
 		return page.getPage(map, pageNumber, pageSize);
@@ -632,8 +779,12 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 		queryCriteria.distinct(true);
 		queryCriteria.orderBy(builder.asc(root.get(field)));
 
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		
 		TypedQuery<Object> query = null;
-		query = getCurrentSession().createQuery(queryCriteria).setMaxResults(pageSize).setFirstResult(pageNumber * pageSize);
+		query = session.createQuery(queryCriteria).setMaxResults(pageSize).setFirstResult(pageNumber * pageSize);
 
 		List list =  query.getResultList();
 		return page.getPage(map, pageNumber, pageSize);
@@ -657,6 +808,11 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 			final String parameter, final Object value,
 			final List<String> fieldList) {
 
+		 if (session == null || session.isOpen()==false) {
+	    		getCurrentSession();
+	    		log.debug("####opened new session");
+	    }
+		
 		CriteriaQuery queryCriteria = builder.createQuery(clazz);
 		Root<Object> root = queryCriteria.from(clazz);
 		Predicate restrictions = null;
@@ -669,7 +825,7 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 		}
 
 		TypedQuery<Object> query = null;
-		query = getCurrentSession().createQuery(queryCriteria);
+		query = session.createQuery(queryCriteria);
 
 		List list =  query.getResultList();
 		return list;
@@ -686,7 +842,7 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 	public List getObjectsOrderedByFieldASC(Class clazz, final String field) {
 		CriteriaQuery queryCriteria = builder.createQuery(clazz);
 		Root<Object> root = queryCriteria.from(clazz);
-		Predicate restrictions = null;
+//		Predicate restrictions = null;
 //		restrictions = builder.equal(root.<Object>get(parameter), value);
 		queryCriteria.select(root);
 //		queryCriteria.where(restrictions);
@@ -694,7 +850,10 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 		queryCriteria.orderBy(builder.asc(root.get(field)));
 
 		TypedQuery<Object> query = null;
-		query = getCurrentSession().createQuery(queryCriteria);
+		if (session == null || session.isOpen()==false) {
+    		getCurrentSession();
+    	}
+		query = session.createQuery(queryCriteria);
 
 		List list =  query.getResultList();
 		return list;
@@ -734,8 +893,12 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 			}
 			queryCriteria.distinct(true);
 			
+			if (session == null || session.isOpen()==false) {
+	    		getCurrentSession();
+	    	}
+
 			queryCriteria.select(root).where(predicates.toArray(new Predicate[]{})).distinct(true);
-			Query<Long> query = getCurrentSession().createQuery(queryCriteria);
+			Query<Long> query = session.createQuery(queryCriteria);
 	        long count = query.getSingleResult();
 	        System.out.println("Count = " + count); 
 			
@@ -745,7 +908,7 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 			queryCriteria.orderBy(builder.asc(root.get("id")));
 
 			TypedQuery<Object> query2 = null;
-			query2 = getCurrentSession().createQuery(queryCriteria).setMaxResults(pageSize).setFirstResult(pageNumber * pageSize);
+			query2 = session.createQuery(queryCriteria).setMaxResults(pageSize).setFirstResult(pageNumber * pageSize);
 
 			List list =  query2.getResultList();
 			map.put("listSize", count);
@@ -810,7 +973,10 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 	 public Map getObjectsByParameterLikeForPage(Class clazz, final String parameterLike,final String filter, final int pageNumber,
 				final int pageSize) {
 			Page page = new Page();
-					Criteria cri = getCurrentSession().createCriteria(clazz);
+			if (session == null || session.isOpen()==false) {
+	    		getCurrentSession();
+	    	}
+					Criteria cri = session.createCriteria(clazz);
 					if(filter !=null && !filter.equals("")){
 					cri.add(Expression.ilike(parameterLike, '%'+filter+'%')).setResultTransformer(
 							Criteria.DISTINCT_ROOT_ENTITY).setProjection(
@@ -824,7 +990,7 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 					}
 					Map map = new HashMap();
 					map.put("listSize", cri.list().iterator().next());
-					Criteria cri2 = getCurrentSession().createCriteria(clazz);
+					Criteria cri2 = session.createCriteria(clazz);
 					if(filter !=null && !filter.equals("")){
 					cri2.add(Expression.ilike(parameterLike, '%'+filter+'%')).setResultTransformer(
 							Criteria.DISTINCT_ROOT_ENTITY);
@@ -842,7 +1008,10 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 				final String secondParameterLike,final String secondFilter, final int pageNumber,
 				final int pageSize) {
 			Page page = new Page();
-					Criteria cri = getCurrentSession().createCriteria(clazz);
+			if (session == null || session.isOpen()==false) {
+	    		getCurrentSession();
+	    	}
+					Criteria cri = session.createCriteria(clazz);
 					cri.add(Expression.eq(parameter, value));
 					cri.add(Expression.ilike(firstParameterLike, '%'+firstFilter+'%'));
 					cri.add(Expression.ilike(secondParameterLike, '%'+secondFilter+'%')).setResultTransformer(
@@ -851,7 +1020,7 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 									.add(Projections.rowCount()));
 					Map map = new HashMap();
 					map.put("listSize", cri.list().iterator().next());
-					Criteria cri2 = getCurrentSession().createCriteria(clazz);
+					Criteria cri2 = session.createCriteria(clazz);
 					cri2.add(Expression.eq(parameter, value));
 					cri2.add(Expression.ilike(firstParameterLike, '%'+firstFilter+'%'));
 					cri2.add(Expression.ilike(secondParameterLike, '%'+secondFilter+'%')).setResultTransformer(
@@ -875,9 +1044,11 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 	    	Predicate restriction2 = builder.equal(root.get(parameter2), value2);
 	    	predicates.add(restriction1);
 	    	predicates.add(restriction2);
-	    	
+	    	if (session == null || session.isOpen()==false) {
+	    		getCurrentSession();
+	    	}
 	    	queryCriteria.select(root).where(predicates.toArray(new Predicate[]{})).distinct(true);
-	    	TypedQuery<Object> query = getCurrentSession().createQuery(queryCriteria);
+	    	TypedQuery<Object> query = session.createQuery(queryCriteria);
 	    	Object object = query.getSingleResult();
 	        if ((object == null)&&(log.isDebugEnabled())) {
 	            log.debug("No object found");
@@ -886,24 +1057,11 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 	            log.debug("Got object :"+ object);
 	        }
 	        return object;
-	        
-//			Object object =  getCurrentSession().createCriteria(clazz)
-//					.add(Expression.eq(parameter1,value1))
-//					.add(Expression.eq(parameter2,value2))
-//					.uniqueResult();
-//				
-//	        if ((object == null)&&(log.isDebugEnabled())) {
-//	            log.debug("No object found");
-//	        }
-//	        else if (log.isDebugEnabled()) {
-//	            log.debug("Got object :"+ object);
-//	        }
-//	        return object;
 	    }
 	 
 	 public List getObjectsByParameterOrderedDescByFieldList(Class clazz, final String parameter, final Object value,
 			 final List<String> fieldList) {
-		 Criteria criteria = getCurrentSession().createCriteria(clazz).add(
+		 Criteria criteria = session.createCriteria(clazz).add(
 				 Expression.eq(parameter, value));
 		 criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		 for (int i = 0; i < fieldList.size(); i++) {
@@ -917,14 +1075,40 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 				final String parameter1, final Object value1,
 				final String parameter2, final Object value2,
 				final List<String> fieldList) {
-		 Criteria criteria = getCurrentSession().createCriteria(clazz).add(
-				 Expression.eq(parameter1, value1));
-		 criteria.add (Expression.eq(parameter2, value2));
-		 criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		 for (int i = 0; i < fieldList.size(); i++) {
-			 criteria.addOrder(Property.forName(fieldList.get(i)).asc());
+		 log.debug("$$$session " + session);
+		 log.debug("$$$session " + session.isOpen());
+		 if (session !=null) {
+			 session.close();
+			 log.debug("####closed session");
 		 }
-		 List list = (List) criteria.list();
+		 if (session == null || session.isOpen()==false) {
+	    		getCurrentSession();
+	    		log.debug("####opened new session");
+	    }
+		
+		 CriteriaQuery queryCriteria = builder.createQuery(clazz);
+	    	Root<Object> root = queryCriteria.from(clazz);
+	    	Predicate restrictions = builder.equal(root.get(parameter1), value1);
+	    	restrictions = builder.and(restrictions,builder.equal(root.get(parameter2), value2));
+	    	queryCriteria.select(root).where(restrictions).distinct(true);
+	    	TypedQuery<Object> query = session.createQuery(queryCriteria);
+	        List list =  query.getResultList();
+			
+	        if ((list.size() == 0)&&(log.isDebugEnabled())) {
+	            log.debug("No objects found");
+	        }
+	        else if (log.isDebugEnabled()) {
+	            log.debug("Got "+list.size()+" objects");
+	        }
+	        
+//		 Criteria criteria = getCurrentSession().createCriteria(clazz).add(
+//				 Expression.eq(parameter1, value1))
+//		 criteria.add (Expression.eq(parameter2, value2));
+//		 criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//		 for (int i = 0; i < fieldList.size(); i++) {
+//			 criteria.addOrder(Property.forName(fieldList.get(i)).asc());
+//		 }
+//		 List list = (List) criteria.list();
 		 return list;
 		}
 	 
@@ -934,17 +1118,44 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 				final String parameter3, final Object value3,
 				final List<String> fieldList) {
 
-		 Criteria criteria = getCurrentSession().createCriteria(clazz).add(
-				 Expression.eq(parameter1, value1));
-		 criteria.add (Expression.eq(parameter2, value2));
-		 criteria.add (Expression.eq(parameter3, value3));
-		 criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		 for (int i = 0; i < fieldList.size(); i++) {
-			 criteria.addOrder(Property.forName(fieldList.get(i)).asc());
+		 log.debug("$$$session " + session);
+		 log.debug("$$$session " + session.isOpen());
+		 if (session !=null) {
+			 session.close();
+			 log.debug("####closed session");
 		 }
-		 List list = (List) criteria.list();
-		 return list;
-		}
+		 if (session == null || session.isOpen()==false) {
+	    		getCurrentSession();
+	    		log.debug("####opened new session");
+	    }
+		
+		 CriteriaQuery queryCriteria = builder.createQuery(clazz);
+	    	Root<Object> root = queryCriteria.from(clazz);
+	    	Predicate restrictions = builder.equal(root.get(parameter1), value1);
+	    	restrictions = builder.and(restrictions,builder.equal(root.get(parameter2), value2));
+	    	restrictions = builder.and(restrictions,builder.equal(root.get(parameter3), value3));
+	    	queryCriteria.select(root).where(restrictions).distinct(true);
+	    	
+	    	TypedQuery<Object> query = session.createQuery(queryCriteria);
+	        List list =  query.getResultList();
+	        if ((list.size() == 0)&&(log.isDebugEnabled())) {
+	            log.debug("No objects found");
+	        }
+	        else if (log.isDebugEnabled()) {
+	            log.debug("Got "+list.size()+" objects");
+	        }
+	    return list;
+//		 Criteria criteria = session.createCriteria(clazz).add(
+//				 Expression.eq(parameter1, value1));
+//		 criteria.add (Expression.eq(parameter2, value2));
+//		 criteria.add (Expression.eq(parameter3, value3));
+//		 criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//		 for (int i = 0; i < fieldList.size(); i++) {
+//			 criteria.addOrder(Property.forName(fieldList.get(i)).asc());
+//		 }
+//		 List list = (List) criteria.list();
+//		 return list;
+	}
 	 
 	 public List getObjectsByThreeParametersThirdNotNullOrderedByFieldList(Class clazz, 
 				final String parameter1, final Object value1,
@@ -952,16 +1163,44 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 				final String parameter3, 
 				final List<String> fieldList) {
 
-		 Criteria criteria = getCurrentSession().createCriteria(clazz).add(
-				 Expression.eq(parameter1, value1));
-		 criteria.add (Expression.eq(parameter2, value2));
-		 criteria.add (Expression.isNotNull(parameter3));
-		 criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		 for (int i = 0; i < fieldList.size(); i++) {
-			 criteria.addOrder(Property.forName(fieldList.get(i)).asc());
+//		 Criteria criteria = session.createCriteria(clazz).add(
+//				 Expression.eq(parameter1, value1));
+//		 criteria.add (Expression.eq(parameter2, value2));
+//		 criteria.add (Expression.isNotNull(parameter3));
+//		 criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//		 for (int i = 0; i < fieldList.size(); i++) {
+//			 criteria.addOrder(Property.forName(fieldList.get(i)).asc());
+//		 }
+//		 List list = (List) criteria.list();
+//		 return list;
+		 
+		 log.debug("$$$session " + session);
+		 log.debug("$$$session " + session.isOpen());
+		 if (session !=null) {
+			 session.close();
+			 log.debug("####closed session");
 		 }
-		 List list = (List) criteria.list();
-		 return list;
+		 if (session == null || session.isOpen()==false) {
+	    		getCurrentSession();
+	    		log.debug("####opened new session");
+	    }
+		
+		 CriteriaQuery queryCriteria = builder.createQuery(clazz);
+	    	Root<Object> root = queryCriteria.from(clazz);
+	    	Predicate restrictions = builder.equal(root.get(parameter1), value1);
+	    	restrictions = builder.and(restrictions,builder.equal(root.get(parameter2), value2));
+	    	restrictions = builder.and(restrictions,builder.isNotNull(root.get(parameter3)));
+	    	queryCriteria.select(root).where(restrictions).distinct(true);
+	    	TypedQuery<Object> query = session.createQuery(queryCriteria);
+	        List list =  query.getResultList();
+			
+	        if ((list.size() == 0)&&(log.isDebugEnabled())) {
+	            log.debug("No objects found");
+	        }
+	        else if (log.isDebugEnabled()) {
+	            log.debug("Got "+list.size()+" objects");
+	        }
+	    return list;
 		}
 	 
 	 public Object getObjectByTwoObjects(Class clazz, final String parameter1, final Object value1,final String parameter2, final Object value2) {
@@ -977,9 +1216,11 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 	    	Predicate restriction2 = builder.equal(root.get(parameter2), value2);
 	    	predicates.add(restriction1);
 	    	predicates.add(restriction2);
-	    	
+	    	if (session == null || session.isOpen()==false) {
+	    		getCurrentSession();
+	    	}
 	    	queryCriteria.select(root).where(predicates.toArray(new Predicate[]{})).distinct(true);
-	    	TypedQuery<Object> query = getCurrentSession().createQuery(queryCriteria);
+	    	TypedQuery<Object> query = session.createQuery(queryCriteria);
 	    	Object object = query.getSingleResult();
 	        if ((object == null)&&(log.isDebugEnabled())) {
 	            log.debug("No object found");
@@ -989,7 +1230,7 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 	        }
 	        return object;
 	        
-//			Object object = getCurrentSession().createCriteria(clazz)
+//			Object object = session.createCriteria(clazz)
 //					.add(Expression.eq(parameter1,value1))
 //					.add(Expression.eq(parameter2,value2))
 //					.uniqueResult();
@@ -1004,20 +1245,37 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 	    }
 	 
 	 public List getObjectsByTwoObjects(Class clazz,final String parameter1, final Object value1,final String parameter2, final Object value2) {
-	        if (log.isDebugEnabled()) {
-	            log.debug("Getting object of class :"+ clazz +", with "+parameter1+" :"+ value1);
-	            log.debug("Getting object of class :"+ clazz +", with "+parameter2+" :"+ value2);
-	        }
-			List list = getCurrentSession().createCriteria(clazz)
-					.add(Expression.eq(parameter1,value1))
-					.add(Expression.eq(parameter2,value2)).list();
-				
-	        if ((list == null)&&(log.isDebugEnabled())) {
-	            log.debug("No list found");
-	        }
-	        else if (log.isDebugEnabled()) {
-	            log.debug("Got list :"+ list.size());
-	        }
+		 CriteriaQuery queryCriteria = builder.createQuery(clazz);
+	    	Root<Object> root = queryCriteria.from(clazz);
+	    	List<Predicate> predicates = new ArrayList<Predicate>();
+	    	Predicate restriction1 = builder.equal(root.get(parameter1), value1);
+	    	Predicate restriction2 = builder.equal(root.get(parameter2), value2);
+	    	predicates.add(restriction1);
+	    	predicates.add(restriction2);
+	    	if (session == null || session.isOpen()==false) {
+	    		getCurrentSession();
+	    	}
+	    	queryCriteria.select(root).where(predicates.toArray(new Predicate[]{})).distinct(true);
+	    	TypedQuery<Object> query = session.createQuery(queryCriteria);
+	    	List list = query.getResultList();
+	    	 log.debug("Got list :"+ list.size());
+//	        if (log.isDebugEnabled()) {
+//	            log.debug("Getting object of class :"+ clazz +", with "+parameter1+" :"+ value1);
+//	            log.debug("Getting object of class :"+ clazz +", with "+parameter2+" :"+ value2);
+//	        }
+//	        if (session == null || session.isOpen()==false) {
+//	    		getCurrentSession();
+//	    	}
+//			List list = session.createCriteria(clazz)
+//					.add(Expression.eq(parameter1,value1))
+//					.add(Expression.eq(parameter2,value2)).list();
+//				
+//	        if ((list == null)&&(log.isDebugEnabled())) {
+//	            log.debug("No list found");
+//	        }
+//	        else if (log.isDebugEnabled()) {
+//	            log.debug("Got list :"+ list.size());
+//	        }
 	        return list;
 	    }
 	 

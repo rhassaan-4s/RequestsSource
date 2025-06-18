@@ -2,8 +2,8 @@ package com._4s_.common.model;
 
 import java.io.Serializable;
 import java.sql.Blob;
-import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,13 +24,13 @@ public class Settings  implements Serializable,Auditable {
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
 	
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn (name="company")
 	private Company company;
 	
-	private Boolean accessLevelsCheckDate;
+	private Boolean accessLevelsCheckDate=false;
 	private Boolean attendanceRequestEn;
-	private Boolean empRequestCheckDate;
+	private Boolean empRequestCheckDate=false;
 	private Boolean annualVacBalDaysEnabled;
 //	private String server;//
 //	private String service;//
@@ -39,7 +39,7 @@ public class Settings  implements Serializable,Auditable {
 	private Boolean addNewData;
 	private Boolean checkPostedRequests;
 	private Boolean empRequestTypeException;
-	private Boolean tAttRepWithHrsMin;
+	private Boolean tAttRepWithHrsMin=false;
 	private Boolean specialVacExcep;
 	private Boolean creatingMail;
 	private String loginUrl;//
@@ -83,7 +83,11 @@ public class Settings  implements Serializable,Auditable {
 	////////////////Android Settings////////////////////
 	
 	public Boolean getDesktopHrApplication() {
-		return desktopHrApplication;
+		if (desktopHrApplication==null) {
+			return false;
+		} else {
+			return desktopHrApplication;
+		}
 	}
 
 	public void setDesktopHrApplication(Boolean desktopHrApplication) {
@@ -91,7 +95,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getSqlServerConnectionEnabled() {
-		return sqlServerConnectionEnabled;
+		if (sqlServerConnectionEnabled==null) {
+			return false;
+		} else {
+			return sqlServerConnectionEnabled;
+		}
 	}
 
 	public void setSqlServerConnectionEnabled(Boolean sqlServerConnectionEnabled) {
@@ -107,7 +115,11 @@ public class Settings  implements Serializable,Auditable {
 //	}
 
 	public Boolean getWebAttendanceAppEnabled() {
-		return webAttendanceAppEnabled;
+		if (webAttendanceAppEnabled==null) {
+			return false;
+		} else {
+			return webAttendanceAppEnabled;
+		}
 	}
 
 	public void setWebAttendanceAppEnabled(Boolean webAttendanceAppEnabled) {
@@ -125,7 +137,11 @@ public class Settings  implements Serializable,Auditable {
 	private Boolean isTimesheetEnabled;
 	
 	public Boolean getIsTimesheetEnabled() {
-		return isTimesheetEnabled;
+		if (isTimesheetEnabled==null) {
+			return false;
+		} else {
+			return isTimesheetEnabled;
+		}
 	}
 
 	public void setIsTimesheetEnabled(Boolean isTimesheetEnabled) {
@@ -133,7 +149,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getManagerCanModifyAttendance() {
-		return managerCanModifyAttendance;
+		if (managerCanModifyAttendance==null) {
+			return false;
+		} else {
+			return managerCanModifyAttendance;
+		}
 	}
 
 	public void setManagerCanModifyAttendance(Boolean managerCanModifyAttendance) {
@@ -165,7 +185,11 @@ public class Settings  implements Serializable,Auditable {
 	private Boolean ipAddressEnabled;
 	
 	public Boolean getIpAddressEnabled() {
-		return ipAddressEnabled;
+		if (ipAddressEnabled==null) {
+			return false;
+		} else {
+			return ipAddressEnabled;
+		}
 	}
 
 	public void setIpAddressEnabled(Boolean ipAddressEnabled) {
@@ -173,7 +197,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getAndroidAttAutomaticApproval() {
-		return androidAttAutomaticApproval;
+		if (androidAttAutomaticApproval==null) {
+			return false;
+		} else {
+			return androidAttAutomaticApproval;
+		}
 	}
 
 	public void setAndroidAttAutomaticApproval(
@@ -182,7 +210,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getSignoutBeforePermissionErrand() {
-		return signoutBeforePermissionErrand;
+		if (signoutBeforePermissionErrand==null) {
+			return false;
+		} else {
+			return signoutBeforePermissionErrand;
+		}
 	}
 
 	public void setSignoutBeforePermissionErrand(
@@ -228,7 +260,7 @@ public class Settings  implements Serializable,Auditable {
 //	tAttRepWithHrsMin: Lehaa=true, Lotus=false
 //	specialVacExcep: Lehaaa = false, Lotus = true
 //	creatingMail: Lehaa = true, Lotus=false
-//	loginUrl: Lehaa=http://10.8.2.46:28000/Requests/security/login.html, Lotus=””
+//	loginUrl: Lehaa=http://10.8.2.46:28000/Requests/security/login.html, Lotus=ï¿½ï¿½
 //	vacLimitProblem: Lehaa=false, Lotus=true
 //	vacationRequestExcep: Lehaa=true, Lotus=false
 //	reqPeriodDate: Lehaa=false,Lotus=true
@@ -254,7 +286,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Float getCompanyLat() {
-		return companyLat;
+		if (companyLat== null) {
+			return new Float(0);
+		} else {
+			return companyLat;
+		}
 	}
 
 	public void setCompanyLat(Float companyLat) {
@@ -262,7 +298,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Float getCompanyLong() {
-		return companyLong;
+		if (companyLong== null) {
+			return new Float(0);
+		} else {
+			return companyLong;
+		}
 	}
 
 	public void setCompanyLong(Float companyLong) {
@@ -286,7 +326,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getAutomaticSignInOut() {
-		return automaticSignInOut;
+		if (automaticSignInOut==null) {
+			return false;
+		} else {
+			return automaticSignInOut;
+		}
 	}
 
 	public Company getCompany() {
@@ -306,7 +350,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getIsLocationAccuracyEnabled() {
-		return isLocationAccuracyEnabled;
+		if (isLocationAccuracyEnabled==null) {
+			return false;
+		} else {
+			return isLocationAccuracyEnabled;
+		}
 	}
 
 	public void setIsLocationAccuracyEnabled(Boolean isLocationAccuracyEnabled) {
@@ -314,7 +362,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getShowAddressOnForm() {
-		return showAddressOnForm;
+		if (showAddressOnForm==null) {
+			return false;
+		} else {
+			return showAddressOnForm;
+		}
 	}
 
 	public void setShowAddressOnForm(Boolean showAddressOnForm) {
@@ -322,7 +374,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getShowRequestsOnCalendar() {
-		return showRequestsOnCalendar;
+		if (showRequestsOnCalendar==null) {
+			return false;
+		} else {
+			return showRequestsOnCalendar;
+		}
 	}
 
 	public void setShowRequestsOnCalendar(Boolean showRequestsOnCalendar) {
@@ -330,7 +386,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getErrandTimeFromSystem() {
-		return errandTimeFromSystem;
+		if (errandTimeFromSystem==null) {
+			return false;
+		} else {
+			return errandTimeFromSystem;
+		}
 	}
 
 	public void setErrandTimeFromSystem(Boolean errandTimeFromSystem) {
@@ -338,7 +398,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getObligateNotes() {
-		return obligateNotes;
+		if (obligateNotes==null) {
+			return false;
+		} else {
+			return obligateNotes;
+		}
 	}
 
 	public void setObligateNotes(Boolean obligateNotes) {
@@ -358,7 +422,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getAccessLevelsCheckDate() {
-		return accessLevelsCheckDate;
+		if (accessLevelsCheckDate==null) {
+			return false;
+		} else {
+			return accessLevelsCheckDate;
+		}
 	}
 
 	public void setAccessLevelsCheckDate(Boolean accessLevelsCheckDate) {
@@ -366,7 +434,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 	
 	public Boolean getCompanyRulesEn() {
-		return companyRulesEn;
+		if (companyRulesEn==null) {
+			return false;
+		} else {
+			return companyRulesEn;
+		}
 	}
 
 	public void setCompanyRulesEn(Boolean companyRulesEn) {
@@ -375,15 +447,15 @@ public class Settings  implements Serializable,Auditable {
 	
 
 	public Boolean getAttendanceRequestEn() {
-		return attendanceRequestEn;
+		if (attendanceRequestEn==null) {
+			return false;
+		} else {
+			return attendanceRequestEn;
+		}
 	}
 
 	public void setAttendanceRequestEn(Boolean attendanceRequestEn) {
 		this.attendanceRequestEn = attendanceRequestEn;
-	}
-
-	public Boolean gettAttRepWithHrsMin() {
-		return tAttRepWithHrsMin;
 	}
 
 	public void settAttRepWithHrsMin(Boolean tAttRepWithHrsMin) {
@@ -391,7 +463,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getEmpRequestCheckDate() {
-		return empRequestCheckDate;
+		if (empRequestCheckDate==null) {
+			return false;
+		} else {
+			return empRequestCheckDate;
+		}
 	}
 
 	public void setEmpRequestCheckDate(Boolean empRequestCheckDate) {
@@ -401,7 +477,11 @@ public class Settings  implements Serializable,Auditable {
 	
 
 	public Boolean getAnnualVacBalDaysEnabled() {
-		return annualVacBalDaysEnabled;
+		if (annualVacBalDaysEnabled==null) {
+			return false;
+		} else {
+			return annualVacBalDaysEnabled;
+		}
 	}
 
 	public void setAnnualVacBalDaysEnabled(Boolean annualVacBalDaysEnabled) {
@@ -441,7 +521,11 @@ public class Settings  implements Serializable,Auditable {
 //	}
 
 	public Boolean getAddNewData() {
-		return addNewData;
+		if (addNewData==null) {
+			return false;
+		} else {
+			return addNewData;
+		}
 	}
 
 	public void setAddNewData(Boolean addNewData) {
@@ -449,7 +533,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getCheckPostedRequests() {
-		return checkPostedRequests;
+		if (checkPostedRequests==null) {
+			return false;
+		} else {
+			return checkPostedRequests;
+		}
 	}
 
 	public void setCheckPostedRequests(Boolean checkPostedRequests) {
@@ -457,7 +545,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getEmpRequestTypeException() {
-		return empRequestTypeException;
+		if (empRequestTypeException==null) {
+			return false;
+		} else {
+			return empRequestTypeException;
+		}
 	}
 
 	public void setEmpRequestTypeException(Boolean empRequestTypeException) {
@@ -465,7 +557,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getTAttRepWithHrsMin() {
-		return tAttRepWithHrsMin;
+		if (tAttRepWithHrsMin==null) {
+			return false;
+		} else {
+			return tAttRepWithHrsMin;
+		}
 	}
 
 	public void setTAttRepWithHrsMin(Boolean attRepWithHrsMin) {
@@ -473,13 +569,21 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getSpecialVacExcep() {
-		return specialVacExcep;
+		if (specialVacExcep==null) {
+			return false;
+		} else {
+			return specialVacExcep;
+		}
 	}
 
 	
 	
 	public Boolean getExecuseEnabled() {
-		return execuseEnabled;
+		if (execuseEnabled==null) {
+			return false;
+		} else {
+			return execuseEnabled;
+		}
 	}
 
 	public void setExecuseEnabled(Boolean execuseEnabled) {
@@ -491,7 +595,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getCreatingMail() {
-		return creatingMail;
+		if (creatingMail==null) {
+			return false;
+		} else {
+			return creatingMail;
+		}
 	}
 
 	public void setCreatingMail(Boolean creatingMail) {
@@ -507,7 +615,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getVacLimitProblem() {
-		return vacLimitProblem;
+		if (vacLimitProblem==null) {
+			return false;
+		} else {
+			return vacLimitProblem;
+		}
 	}
 
 	public void setVacLimitProblem(Boolean vacLimitProblem) {
@@ -515,7 +627,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getVacationRequestExcep() {
-		return vacationRequestExcep;
+		if (vacationRequestExcep==null) {
+			return false;
+		} else {
+			return vacationRequestExcep;
+		}
 	}
 
 	public void setVacationRequestExcep(Boolean vacationRequestExcep) {
@@ -523,7 +639,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getReqPeriodDate() {
-		return reqPeriodDate;
+		if (reqPeriodDate==null) {
+			return false;
+		} else {
+			return reqPeriodDate;
+		}
 	}
 
 	public void setReqPeriodDate(Boolean reqPeriodDate) {
@@ -531,7 +651,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getWithdrawDaysQuartPolicy() {
-		return withdrawDaysQuartPolicy;
+		if (withdrawDaysQuartPolicy==null) {
+			return false;
+		} else {
+			return withdrawDaysQuartPolicy;
+		}
 	}
 
 	public void setWithdrawDaysQuartPolicy(Boolean withdrawDaysQuartPolicy) {
@@ -539,7 +663,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getNotesValidation() {
-		return notesValidation;
+		if (notesValidation==null) {
+			return false;
+		} else {
+			return notesValidation;
+		}
 	}
 
 	public void setNotesValidation(Boolean notesValidation) {
@@ -547,7 +675,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getWithoutSalPeriodValidation() {
-		return withoutSalPeriodValidation;
+		if (withoutSalPeriodValidation==null) {
+			return false;
+		} else {
+			return withoutSalPeriodValidation;
+		}
 	}
 
 	public void setWithoutSalPeriodValidation(Boolean withoutSalPeriodValidation) {
@@ -555,7 +687,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getFromToRequestVald() {
-		return fromToRequestVald;
+		if (fromToRequestVald==null) {
+			return false;
+		} else {
+			return fromToRequestVald;
+		}
 	}
 
 	public void setFromToRequestVald(Boolean fromToRequestVald) {
@@ -563,7 +699,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getWithoutSalaryVacEnabled() {
-		return withoutSalaryVacEnabled;
+		if (withoutSalaryVacEnabled==null) {
+			return false;
+		} else {
+			return withoutSalaryVacEnabled;
+		}
 	}
 
 	public void setWithoutSalaryVacEnabled(Boolean withoutSalaryVacEnabled) {
@@ -571,7 +711,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getPeriodFromToEnabled() {
-		return periodFromToEnabled;
+		if (periodFromToEnabled==null) {
+			return false;
+		} else {
+			return periodFromToEnabled;
+		}
 	}
 
 	public void setPeriodFromToEnabled(Boolean periodFromToEnabled) {
@@ -579,7 +723,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getFooterCopyrightsEnabled() {
-		return footerCopyrightsEnabled;
+		if (footerCopyrightsEnabled==null) {
+			return false;
+		} else {
+			return footerCopyrightsEnabled;
+		}
 	}
 
 	public void setFooterCopyrightsEnabled(Boolean footerCopyrightsEnabled) {
@@ -683,7 +831,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getAutomaticRequestsValidation() {
-		return automaticRequestsValidation;
+		if (automaticRequestsValidation==null) {
+			return false;
+		} else {
+			return automaticRequestsValidation;
+		}
 	}
 
 	public void setAutomaticRequestsValidation(Boolean automaticRequestsValidation) {
@@ -691,7 +843,11 @@ public class Settings  implements Serializable,Auditable {
 	}
 
 	public Boolean getFingerprintEnabled() {
-		return fingerprintEnabled;
+		if (fingerprintEnabled==null) {
+			return false;
+		} else {
+			return fingerprintEnabled;
+		}
 	}
 
 	public void setFingerprintEnabled(Boolean fingerprintEnabled) {

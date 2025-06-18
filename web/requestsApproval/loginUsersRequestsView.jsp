@@ -294,7 +294,7 @@ function printSelection(node){
 								${record.requestNumber}
 							</td>
 							<c:choose>
-							<c:when test="${record.request_id.id==1 && record.vacation=='999'}">
+							<c:when test="${record.request_type==1 && record.vacation=='999'}">
 							<td  nowrap>
 						         مأموريه
 							</td>
@@ -372,7 +372,7 @@ function printSelection(node){
 									<c:choose>
 								<c:when test="${record.approved==0}">	
 									<c:choose>
-										<c:when test="${record.request_id.id==10 || record.request_id.id==11}">								
+										<c:when test="${record.request_type==10 || record.request_type==11}">								
 											<td  nowrap id="btnPrint"><abc:i18n
 											property="commons.button.edit" /><a
 											href="attendanceRequestForm.html?request_date=${record.request_date }&empRequestTypeId=${record.id}"><fmt:message

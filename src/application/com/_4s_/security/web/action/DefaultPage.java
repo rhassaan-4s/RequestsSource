@@ -179,13 +179,14 @@ public class DefaultPage {
 		//		int salary_from_day =  requestsApprovalManager.getSalaryFromDay();
 		int salary_from_day = settings.getSalaryFromDay();
 		log.fatal("salary_from_day " + salary_from_day);
+		List activeApps = securityManager.getApplicationsByUser(user);
 		int requestsDeadline = settings.getRequestsDeadline();
 		//		glManager.setEmployee(employee);
 		request.getSession().setAttribute("employee",employee);
 		request.getSession().setAttribute("appName",user.getDefaultApplication().getName());
 		request.getSession().setAttribute("currentApplication", user.getDefaultApplication());
 		request.getSession().setAttribute("locale", user.getLanguage().getCode());
-		request.getSession().setAttribute("activeApplications", securityManager.getApplicationsByUser(user));
+		request.getSession().setAttribute("activeApplications", activeApps);
 
 		System.out.println("settings - default page controller "+settings);
 		request.getSession().setAttribute("settings",settings);

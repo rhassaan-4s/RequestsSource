@@ -1,12 +1,17 @@
 package com._4s_.common.dao;
 
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,16 +29,14 @@ public class SchemaMultiTenantConnectionProvider extends AbstractMultiTenantConn
 	public static final String hibernate_multiTenancy = "SCHEMA";
 	public static final boolean allowAggressiveRelease = true;
 	
-//	private static C3P0ConnectionProvider defaultProvider = null;
 	private static HikariCPConnectionProvider defaultProvider = null;
 	private static String defaultProviderSchemaUser = null;
 	
     Log logger = LogFactory.getLog(getClass());
     private static final long serialVersionUID = 14535345L;
     
-//    private Map<String, C3P0ConnectionProvider> connectionProviderMap = new HashMap<>();
-    private Map<String, HikariCPConnectionProvider> connectionProviderMap = new HashMap<>();
-    private Map<String,String> clientSchemaMap = new HashMap<String,String>();
+    private static Map<String, HikariCPConnectionProvider> connectionProviderMap = new HashMap<>();
+    private static Map<String,String> clientSchemaMap = new HashMap<String,String>();
     
     private ServiceRegistryImplementor serviceRegistry;
     private static Properties properties = null;
@@ -43,18 +46,6 @@ public class SchemaMultiTenantConnectionProvider extends AbstractMultiTenantConn
     Map<String, HikariCPConnectionProvider> getConnectionProviderMap() {
         return connectionProviderMap;
     }
-    
-//    private ConnectionProvider connectionProvider;
-//    
-//    
-//
-//	public ConnectionProvider getConnectionProvider() {
-//		return connectionProvider;
-//	}
-//
-//	public void setConnectionProvider(ConnectionProvider connectionProvider) {
-//		this.connectionProvider = connectionProvider;
-//	}
 
     @Override
     public void injectServices(ServiceRegistryImplementor serviceRegistry) {
@@ -73,15 +64,6 @@ public class SchemaMultiTenantConnectionProvider extends AbstractMultiTenantConn
 							"com._4s_.common.dao.SchemaMultiTenantConnectionProvider");
 					properties.put("hibernate.tenant_identifier_resolver",
 							"com._4s_.common.dao.CurrentTenantIdentifierResolverImpl");
-//					properties.put("hibernate.c3p0.min_size", 10);
-//					properties.put("hibernate.c3p0.max_size", 100);
-//					properties.put("hibernate.c3p0.acquire_increment", 5);
-//					properties.put("hibernate.c3p0.timeout", 300);
-//					properties.put("hibernate.c3p0.max_statements", 50);
-//					properties.put("hibernate.c3p0.idle_test_period", 3000);
-//					properties.put("hibernate.c3p0.debugUnreturnedConnectionStackTraces", true);
-//					properties.put("hibernate.c3p0.unreturnedConnectionTimeout", 240);
-//					properties.put("hibernate.c3p0.show_sql", true);
 				}
 				defaultProvider = new HikariCPConnectionProvider() {
 					public boolean supportsAggressiveRelease() {
@@ -114,18 +96,29 @@ public class SchemaMultiTenantConnectionProvider extends AbstractMultiTenantConn
 				c = defaultProvider.getConnection();
 				logger.debug("connection " + c);
 				String statement = String
-						.format("SELECT clientname, schema\r\n" + "		FROM COMMON_CLIENTS where server='%s'", server);
+						.format("SELECT clientname, schema\r\n" + "		FROM COMMON_CLIENTS where schema is not null and server='%s'", server);
+				
 				logger.debug("statement " + statement);
 				ResultSet rs = c.createStatement().executeQuery(statement);
-//    			logger.debug("resultset size " + rs.getFetchSize());
-				while (rs.next()) {
-					String clientName = rs.getString("clientname");
-					String schema = rs.getString("schema");
-					clientSchemaMap.put(schema, clientName);
+				defaultProvider.closeConnection(c);
+				if (rs != null) {
+//					logger.debug("resultset size " + rs.getFetchSize() + " - ROW NUMBER " + rs.getRow());
+					logger.debug("############ Will try clients loop########");
+					while (rs.next()) {
+						logger.debug("ROW NUMBER " + rs.getRow());
+						logger.debug("############clients loop########");
+						String clientName = rs.getString("clientname");
+						String schema = rs.getString("schema");
+						clientSchemaMap.put(schema, clientName);
+						logger.debug("***clientSchemaMap***" + clientName + "-" + schema);
+					}
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
+				logger.debug("***## exception client ##***");
 				e.printStackTrace();
+			} finally {
+				logger.debug("############ After clients resultset loop########");
 			}
 		}
         logger.debug("*********SchemaProvider: finished injectServices***********");
@@ -251,35 +244,39 @@ public class SchemaMultiTenantConnectionProvider extends AbstractMultiTenantConn
 	@Override
 	protected ConnectionProvider selectConnectionProvider(String tenantIdentifier) {
 		logger.debug("SchemaProvider: getting provider from map");
+		Object[] schemas = clientSchemaMap.keySet().toArray();
+		Object[] clients = clientSchemaMap.values().toArray();
+
 		String client = clientSchemaMap.get(tenantIdentifier);
 		logger.debug("SchemaProvider: getting client of schema " + tenantIdentifier + " ==>" + client);
-		HikariCPConnectionProvider prov =  connectionProviderMap.get(client);
+//		logger.debug("clients map length " + schemas.length + "-" + clients.length);
+		for (int i = 0; i<clients.length; i++) {
+			logger.debug("########"+schemas[i] + " - " +  clients[i]);
+		}
+		HikariCPConnectionProvider prov = null;
+		if (client !=null) {
+			prov = connectionProviderMap.get(client);
+		} 
 		logger.debug("SchemaProvider: selecting connection provider from map ###" + prov +"###");
 		
-		
 		if (prov==null) {
-			logger.debug("SchemaProvider: provider is null");
-//			Iterator<String> itr = connectionProviderMap.keySet().iterator();
-//			while(itr.hasNext()) {
-//				String key = itr.next();
-//				ConnectionProvider p = connectionProviderMap.get(key);
-//				logger.debug("SchemaProvider: key-"+key + " provider " + p);
-//			}
-			logger.debug("tenantIdentifier " + tenantIdentifier);
-			logger.debug("defaultProviderSchemaUser " + defaultProviderSchemaUser);
+			logger.debug("@@@@SchemaProvider: provider is null");
+			logger.debug("@@@@tenantIdentifier " + tenantIdentifier);
+			logger.debug("@@@@defaultProviderSchemaUser " + defaultProviderSchemaUser);
 			if (tenantIdentifier.equals(defaultProviderSchemaUser)) {
 				logger.debug("SchemaProvider: provider is the default provider");
 				prov = defaultProvider;
+				logger.debug("SchemaProvider: ****** default provider " + prov);
+				connectionProviderMap.put(client, defaultProvider);
 			} else {
-
 				prov = new HikariCPConnectionProvider() {
 					public boolean supportsAggressiveRelease() {
-						logger.debug("select connection provider:  supportsAggressiveRelease" );
+						logger.debug("^^^^^^^select connection provider:  supportsAggressiveRelease" );
 						return allowAggressiveRelease;
 					}
 				};
-				logger.debug("SchemaProvider: new provider " + prov);
-				logger.debug("will inject services " + serviceRegistry);
+				logger.debug("^^^^^^SchemaProvider: new provider " + prov);
+				logger.debug("^^^^^^will inject services " + serviceRegistry);
 //				prov.injectServices(serviceRegistry);
 
 				properties.replace("hibernate.connection.username", tenantIdentifier);
@@ -290,8 +287,12 @@ public class SchemaMultiTenantConnectionProvider extends AbstractMultiTenantConn
 
 				logger.debug("will configure properties");
 				prov.configure(properties);
+				if (client != null && prov !=null) {
+					connectionProviderMap.put(client, prov);
+				}
 			}
-			connectionProviderMap.put(tenantIdentifier, prov);
+			
+			logger.debug("$%$%$%$%***placed the following in providers map " + client + " - " + prov);
 			
 		} else {
 			logger.debug("SchemaProvider: provider $$$$");
@@ -310,6 +311,7 @@ public class SchemaMultiTenantConnectionProvider extends AbstractMultiTenantConn
 			if (!connectionProviderMap.isEmpty()) {
 				ConnectionProvider p = selectConnectionProvider(tenantIdentifier);
 				logger.debug("SchemaProvider: provider " + p);
+				p.supportsAggressiveRelease();
 				connection = p.getConnection();
 			} else {
 				connection = super.getConnection(tenantIdentifier);
@@ -319,17 +321,25 @@ public class SchemaMultiTenantConnectionProvider extends AbstractMultiTenantConn
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			logger.debug("exception while getting connection");
+			logger.debug("mafish fayda");
 			e.printStackTrace();
+			
+//			try {
+//				if (!connectionProviderMap.isEmpty()) {
+//					ConnectionProvider p = selectConnectionProvider(tenantIdentifier);
+//					logger.debug("SchemaProvider: provider " + p);
+//					connection = p.getConnection();
+//				} else {
+//					connection = super.getConnection(tenantIdentifier);
+//					String statement = String.format("ALTER SESSION SET CURRENT_SCHEMA= %S", tenantIdentifier);
+//					logger.debug("SchemaProvider: statement " + statement);
+//					connection.createStatement().execute(statement);
+//				}
+//			} catch (SQLException ex) {
+//				logger.debug("mafish fayda");
+//			}
 		}
-//		try {
-//			connection = super.getConnection(tenantIdentifier);
-//			String statement = String.format("ALTER SESSION SET CURRENT_SCHEMA= %S", tenantIdentifier);
-//			log.debug("statement " + statement);
-//			connection.createStatement().execute(statement);
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		logger.debug("SchemaProvider: will return connection");
 		return connection;
 	}

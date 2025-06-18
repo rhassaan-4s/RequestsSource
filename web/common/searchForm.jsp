@@ -8,14 +8,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title><fmt:message key="commons.caption.client" /></title>
 <link rel="stylesheet" href="/Requests/web/common/css/all.css">
-<script type="text/javascript" src="/Requests/dwr/interface/qry.js"></script>
 <script language="JavaScript" type="text/javascript"
 	src="/Requests/web/common/js/toolTipContent.js"></script>
 <SCRIPT LANGUAGE="JavaScript" SRC="/Requests/web/common/js/popup.js"></SCRIPT>
 <script type="text/javascript"
 	src="/Requests/web/common/js/myLiveSearch.js"></script>
-<script type='text/javascript'
-	src='/Requests/dwr/interface/commonManager.js'></script>
 <script type="text/javascript"
 	src="/Requests/web/common/js/sorttable.js"></script>
 <link rel="stylesheet" type="text/css"
@@ -30,7 +27,10 @@ window.onload = function () {
 }
 	function removeAttributes(){
 		alert("bye 1");
-		commonManager.removeSearchAttributesFromSession(removeAttributesCallBack,'<%=session%>');
+	//	commonManager.removeSearchAttributesFromSession(removeAttributesCallBack,'<%=session%>');
+		
+		
+		
 		alert("bye 2");
 	}
 

@@ -11,10 +11,23 @@
         <Root level="ERROR">
             <AppenderRef ref="LogToConsole"/>
         </Root>
-        
+      
+      <Logger name="com._4s_.i18n" additivity="false" level="FATAL">
+            <AppenderRef ref="LogToConsole"/>
+      </Logger>
+      
       <Logger name="com.zaxxer" additivity="false" level="FATAL">
             <AppenderRef ref="LogToConsole"/>
-        </Logger>
+      </Logger>
+      
+     <Logger name="org.springframework.security.web.util.matcher.AntPathRequestMatcher" additivity="false" level="FATAL">
+            <AppenderRef ref="LogToConsole"/>
+      </Logger>
+        
+     <Logger name="org.springframework.security.web.FilterChainProxy" additivity="false" level="FATAL">
+            <AppenderRef ref="LogToConsole"/>
+      </Logger>
+         
      </Loggers>  
 
 </Configuration>

@@ -14,7 +14,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -65,8 +72,6 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	
 	private ExternalQueries externalQueries = null;
 	
-	
-
 	public ExternalQueries getExternalQueries() {
 		return externalQueries;
 	}
@@ -80,7 +85,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	public List getAllLeafs(final Class clazz){
 		log.debug("inside getAllLeafs");
 		Criteria criteria = null;
-		criteria = getCurrentSession().createCriteria(clazz);
+		criteria = getSession().createCriteria(clazz);
 		criteria.createCriteria("parent").add(Restrictions.eq("isLast",new Boolean(true)));
 		criteria.addOrder(Order.asc("longCode"));
 		log.debug("===========================end getAllLeafs()===============");
@@ -89,7 +94,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 
 	public List getAllLeafsOfCategory(final String catCode, final Class clazz) {
-		Criteria criteria = getCurrentSession().createCriteria(clazz);
+		Criteria criteria = getSession().createCriteria(clazz);
 		criteria.add( Restrictions.like("longCode",catCode , MatchMode.START ) );
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
@@ -104,28 +109,28 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		log.debug("inside getRoot ");
 		Criteria criteria=null;
 		if(className.equals("HRInternalDivision"))
-		{ criteria = getCurrentSession()
+		{ criteria = getSession()
 		.createCriteria(HRInternalDivision.class);
 		criteria.add(Restrictions.isNull("parent"));
 		criteria.addOrder(Order.asc("longCode"));
 		}
 
 		if(className.equals("HRGeographicalDivision"))
-		{ criteria = getCurrentSession()
+		{ criteria = getSession()
 		.createCriteria(HRGeographicalDivision.class);
 		criteria.add(Restrictions.isNull("parent"));
 		criteria.addOrder(Order.asc("longCode"));
 		}
 
 		if(className.equals("HRQualificationDivision"))
-		{ criteria = getCurrentSession()
+		{ criteria = getSession()
 		.createCriteria(HRQualificationDivision.class);
 		criteria.add(Restrictions.isNull("parent"));
 		criteria.addOrder(Order.asc("longCode"));
 		}
 
 		if(className.equals("HRSpecialtyDivision"))
-		{ criteria = getCurrentSession()
+		{ criteria = getSession()
 		.createCriteria(HRSpecialtyDivision.class);
 		criteria.add(Restrictions.isNull("parent"));
 		criteria.addOrder(Order.asc("longCode"));
@@ -136,7 +141,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 	public HRInternalLevel getLastLevel() {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..start getLastLevel()");
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(HRInternalLevel.class);
 		criteria.add(Restrictions.eq("isLastLevel", true));
 		HRInternalLevel list = (HRInternalLevel) criteria.uniqueResult();
@@ -144,7 +149,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 	public HRInternalLevel getLevelByLevelNo(final Integer levelNo){
-		Criteria criteria = getCurrentSession().createCriteria(HRInternalLevel.class);
+		Criteria criteria = getSession().createCriteria(HRInternalLevel.class);
 		criteria.add(Restrictions.eq("levelNo",levelNo));
 		criteria.setMaxResults(1);
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -155,7 +160,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	public HRGeographicalLevel getGeoLastLevel() {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..start getLastLevel()");
 
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(HRGeographicalLevel.class);
 		criteria.add(Restrictions.eq("isLastLevel", true));
 		HRGeographicalLevel list = (HRGeographicalLevel)  criteria.uniqueResult();
@@ -164,7 +169,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 	public HRGeographicalLevel getGeoLevelByLevelNo(final Integer levelNo){
-		Criteria criteria = getCurrentSession().createCriteria(HRGeographicalLevel.class);
+		Criteria criteria = getSession().createCriteria(HRGeographicalLevel.class);
 		criteria.add(Restrictions.eq("levelNo",levelNo));
 		criteria.setMaxResults(1);
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -174,7 +179,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 	public HRQualificationLevel getQualLastLevel() {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..start getLastLevel()");
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(HRQualificationLevel.class);
 		criteria.add(Restrictions.eq("isLastLevel", true));
 		HRQualificationLevel list = (HRQualificationLevel)  criteria.uniqueResult();
@@ -183,7 +188,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 	public HRQualificationLevel getQualLevelByLevelNo(final Integer levelNo){
-		Criteria criteria = getCurrentSession().createCriteria(HRQualificationLevel.class);
+		Criteria criteria = getSession().createCriteria(HRQualificationLevel.class);
 		criteria.add(Restrictions.eq("levelNo",levelNo));
 		criteria.setMaxResults(1);
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -192,7 +197,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 	public HRSpecialtyLevel getSpecialtyLastLevel() {
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(HRSpecialtyLevel.class);
 		criteria.add(Restrictions.eq("isLastLevel", true));
 		HRSpecialtyLevel list = (HRSpecialtyLevel) criteria.uniqueResult();
@@ -201,7 +206,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 	public HRSpecialtyLevel getSpecialtyLevelByLevelNo(final Integer levelNo){
-		Criteria criteria = getCurrentSession().createCriteria(HRSpecialtyLevel.class);
+		Criteria criteria = getSession().createCriteria(HRSpecialtyLevel.class);
 		criteria.add(Restrictions.eq("levelNo",levelNo));
 		criteria.setMaxResults(1);
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -212,7 +217,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	public List getChilderenByParent(final Long parentId,final Class clazz){
 		Criteria criteria = null;
 
-		criteria = getCurrentSession().createCriteria(clazz);
+		criteria = getSession().createCriteria(clazz);
 		criteria.createCriteria("parent").add(Restrictions.eq("id",parentId));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
@@ -222,7 +227,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		log.debug("inside getParents ");
 		Criteria criteria = null;
 
-		criteria = getCurrentSession().createCriteria(clazz);
+		criteria = getSession().createCriteria(clazz);
 		criteria.add(Restrictions.isNull("parent"));
 
 
@@ -235,7 +240,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		log.debug("inside getChildrenAndGrandChildrenByParentLongCode ");
 		Criteria criteria = null;
 
-		criteria = getCurrentSession().createCriteria(clazz);
+		criteria = getSession().createCriteria(clazz);
 		criteria.add(Restrictions.like("longCode",parentLongCode+"%"));
 
 
@@ -245,7 +250,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 
 	public List getAllByCode(final String code,final Class clazz){
-		Criteria criteria = criteria = getCurrentSession().createCriteria(clazz);
+		Criteria criteria =  getSession().createCriteria(clazz);
 		criteria.add(Restrictions.eq("longCode",code));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
@@ -257,22 +262,22 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		Criteria criteria=null;
 		if(className.equals("HRInternalDivision"))
 		{
-			criteria = getCurrentSession().createCriteria(HRInternalDivision.class);
+			criteria = getSession().createCriteria(HRInternalDivision.class);
 		}
 
 		else if(className.equals("HRQualificationDivision"))
 		{
-			criteria = getCurrentSession().createCriteria(HRQualificationDivision.class);
+			criteria = getSession().createCriteria(HRQualificationDivision.class);
 		}
 
 		else if(className.equals("HRGeographicalDivision"))
 		{
-			criteria = getCurrentSession().createCriteria(HRGeographicalDivision.class);
+			criteria = getSession().createCriteria(HRGeographicalDivision.class);
 		}
 
 		else if(className.equals("HRSpecialtyDivision"))
 		{
-			criteria = getCurrentSession().createCriteria(HRSpecialtyDivision.class);
+			criteria = getSession().createCriteria(HRSpecialtyDivision.class);
 		}
 		criteria.createCriteria("parent").add(Restrictions.eq("id",parentId));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -283,7 +288,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	public List getLevelsByDivisionParentId(final Integer levelNo,final Class clazz){
 		log.debug("inside LevelsByDivisionParentId");
 		Criteria criteria = null;
-		criteria = getCurrentSession().createCriteria(clazz);
+		criteria = getSession().createCriteria(clazz);
 		criteria.add(Restrictions.ge("levelNo",levelNo));
 		criteria.addOrder(Order.asc("levelNo"));
 		return criteria.list();
@@ -292,7 +297,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	public List getExistingDivisionsForparent(final Class clazz,final String parentCode){
 		log.debug("inside getExistingDivisionsForparent");  
 		log.debug("parentCode>>>>>>>>>>"+parentCode);
-		Criteria criteria = getCurrentSession().createCriteria(clazz);
+		Criteria criteria = getSession().createCriteria(clazz);
 		criteria.add(Restrictions.isNull("divisionLevel"));
 		criteria.add(Restrictions.eq("code",parentCode));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -303,7 +308,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		log.debug("inside getExistingDivisionsForparentforcopy");  
 		log.debug("parentId>>>>>>>>>>"+parentId);
 		log.debug("code>>>>>>>>>>>>>>>>>>>"+code);
-		Criteria criteria = getCurrentSession().createCriteria(clazz);
+		Criteria criteria = getSession().createCriteria(clazz);
 		criteria.add(Restrictions.isNull("divisionLevel"));
 		criteria.add(Restrictions.eq("code", code));
 		criteria.add(Restrictions.eq("id",parentId));
@@ -315,7 +320,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		log.debug("inside getExistingDivisionsForparent");  
 		log.debug("id>>>>>>>>>>"+id);
 		log.debug("levelID>>>>>>>>>>>>>>>>>>>>>>>>"+code);
-		Criteria criteria = getCurrentSession().createCriteria(clazz);
+		Criteria criteria = getSession().createCriteria(clazz);
 		criteria.add(Restrictions.isNull("divisionLevel"));
 		criteria.add(Restrictions.eq("code", code));
 		criteria.createCriteria("parent").add(Restrictions.eq("id",id));
@@ -327,7 +332,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		log.debug("inside getExistingDivisionsForNullDivLevelParent");  
 		log.debug("id>>>>>>>>>>"+id);
 		log.debug("levelID>>>>>>>>>>>>>>>>>>>>>>>>"+code);
-		Criteria criteria = getCurrentSession().createCriteria(clazz);
+		Criteria criteria = getSession().createCriteria(clazz);
 		criteria.add(Restrictions.isNull("divisionLevel"));
 		criteria.add(Restrictions.eq("code", code));
 		criteria.add(Restrictions.eq("id",id));
@@ -340,7 +345,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	{
 		log.debug("inside getHigherDivisions");  
 		log.debug("Id>>>>>>>>>>"+id);
-		Criteria criteria = getCurrentSession().createCriteria(clazz);
+		Criteria criteria = getSession().createCriteria(clazz);
 		criteria.add(Restrictions.isNotNull("divisionLevel"));
 		criteria.add(Restrictions.ne("id", id));
 		criteria.createCriteria("divisionLevel").add(Restrictions.lt("levelNo", levelNo));
@@ -353,7 +358,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	{
 		log.debug("inside getCountriesForNationality");  
 
-		Criteria criteria = getCurrentSession().createCriteria(HRGeographicalDivision.class);
+		Criteria criteria = getSession().createCriteria(HRGeographicalDivision.class);
 		criteria.add(Restrictions.isNotNull("divisionLevel"));
 		criteria.createCriteria("divisionLevel").add(Restrictions.eq("isNationalityCountry", new Boolean(true)));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -365,7 +370,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		log.debug("inside getDivisionChildren");  
 		log.debug("longCode>>>>>>>>>>"+longCode);
 
-		Criteria criteria = getCurrentSession().createCriteria(clazz);
+		Criteria criteria = getSession().createCriteria(clazz);
 		criteria.add(Restrictions.like("longCode", longCode,MatchMode.START));
 		criteria.addOrder(Order.asc("longCode"));	
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -373,7 +378,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 	public HRSpecialtyDivision getSpecialtyDivisionForTransaction(){
-		Criteria criteria = getCurrentSession().createCriteria(HRSpecialtyDivision.class);
+		Criteria criteria = getSession().createCriteria(HRSpecialtyDivision.class);
 		criteria.createCriteria("divisionLevel").addOrder(Order.desc("levelNo"));
 		criteria.setMaxResults(1);
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -382,7 +387,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 	public HRQualificationDivision getQualificationDivisionForTransaction(){
-		Criteria criteria = getCurrentSession().createCriteria(HRQualificationDivision.class);
+		Criteria criteria = getSession().createCriteria(HRQualificationDivision.class);
 		criteria.createCriteria("divisionLevel").addOrder(Order.desc("levelNo"));
 		criteria.setMaxResults(1);
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -391,7 +396,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 	public HRInternalDivision getInternalDivisionForTransaction(){
-		Criteria criteria = getCurrentSession().createCriteria(HRInternalDivision.class);
+		Criteria criteria = getSession().createCriteria(HRInternalDivision.class);
 		criteria.createCriteria("divisionLevel").addOrder(Order.desc("levelNo"));
 		criteria.setMaxResults(1);
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -402,7 +407,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 	public List getEmployeesForEmployeeVacationAtInstallation(final String empCode,final String empName,final HRInternalDivision division)
 	{
-		Criteria criteria = getCurrentSession().createCriteria(HREmployee.class);
+		Criteria criteria = getSession().createCriteria(HREmployee.class);
 		if(empCode!=null && !empCode.equals(""))
 		{
 			criteria.add(Restrictions.eq("empCode",empCode));
@@ -419,7 +424,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 	public List getEmployeeVacationAtInstall(final HREmployee employee,final HRVacation vacation)
 	{
-		Criteria criteria = getCurrentSession().createCriteria(HREmployeeVacationInstall.class);
+		Criteria criteria = getSession().createCriteria(HREmployeeVacationInstall.class);
 		if(employee!=null)
 		{
 			criteria.add(Restrictions.eq("employee",employee));
@@ -434,7 +439,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 	public List getEmployeesForEmployeeServiceLength(final String empCode,final String empName)
 	{
-		Criteria criteria = getCurrentSession().createCriteria(HREmployee.class);
+		Criteria criteria = getSession().createCriteria(HREmployee.class);
 		if(empCode!=null && !empCode.equals(""))
 		{
 			criteria.add(Restrictions.eq("empCode",empCode));
@@ -449,7 +454,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 	public List getEmployeeServiceLength(final HREmployee employee)
 	{
-		Criteria criteria = getCurrentSession().createCriteria(HRServiceLengthCalculation.class);
+		Criteria criteria = getSession().createCriteria(HRServiceLengthCalculation.class);
 		if(employee!=null)
 		{
 			criteria.add(Restrictions.eq("employee",employee));
@@ -462,7 +467,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 	public List getEmployeesForEmployeeVacation(final String empCode,final String empName,final HRInternalDivision division)
 	{
-		Criteria criteria = getCurrentSession().createCriteria(HREmployee.class);
+		Criteria criteria = getSession().createCriteria(HREmployee.class);
 		if(empCode!=null && !empCode.equals(""))
 		{
 			criteria.add(Restrictions.eq("empCode",empCode));
@@ -478,7 +483,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 	public List getEmployeeVacation(final HREmployee employee,final HRVacation vacation)
 	{
-		Criteria criteria = getCurrentSession().createCriteria(HREmployeeVacation.class);
+		Criteria criteria = getSession().createCriteria(HREmployeeVacation.class);
 		if(employee!=null)
 		{
 			criteria.add(Restrictions.eq("employee",employee));
@@ -509,7 +514,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 	public List getEmployeesByCodeAndName(final String codeFrom,final String codeTo,final String empName)
 	{
-		Criteria criteria = getCurrentSession().createCriteria(HREmployee.class);
+		Criteria criteria = getSession().createCriteria(HREmployee.class);
 		if(empName!=null && !empName.equals(""))
 		{
 			criteria.add(Restrictions.eq("name",empName));
@@ -536,7 +541,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 		if((insurance != null && !insurance.equals(""))||(emp_code!=null && !emp_code.equals(""))
 				||(empName!=null && !empName.equals(""))||(insuranceNo!=null && !insuranceNo.equals(""))){
-			Criteria criteria = getCurrentSession().createCriteria(HREmployee.class);
+			Criteria criteria = getSession().createCriteria(HREmployee.class);
 			if(insurance != null && !insurance.equals("")){
 				log.debug("HR_DAO>> Insurance_Code != Null: "+insurance);
 				criteria.add(Restrictions.eq("insuranceCode",Long.parseLong(insurance)));
@@ -743,7 +748,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			final Date startDate =(Date) format.parse(format.format(dateFrom));
 			final Date endDate = (Date)format.parse(format.format(dateTo));
 
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(LoginUsersRequests.class);
 			criteria.add(Expression.ge("request_date", startDate));
 			criteria.add(Expression.le("request_date", endDate));
@@ -846,7 +851,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		
 		try {
 
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(LoginUsersRequests.class);
 			
 			///////////////////////////////////////////////////////////////////////
@@ -1051,7 +1056,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 //		List list =new ArrayList();
 //		try {
 //
-//			Criteria criteria = getCurrentSession()
+//			Criteria criteria = getSession()
 //					.createCriteria(LoginUsersRequests.class);
 //			
 //			///////////////////////////////////////////////////////////////////////
@@ -1201,7 +1206,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 //		
 //		try {
 //
-//			Criteria criteria = getCurrentSession()
+//			Criteria criteria = getSession()
 //					.createCriteria(LoginUsersRequests.class);
 //			
 //			///////////////////////////////////////////////////////////////////////
@@ -1443,7 +1448,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			final Date startDate =(Date) format.parse(format.format(dateFrom));
 			final Date endDate = (Date)format.parse(format.format(dateTo));
 
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(LoginUsersRequests.class);
 			criteria.add(Expression.ge("from_date", startDate));
 			criteria.add(Expression.le("from_date", endDate));
@@ -1473,7 +1478,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 		DateFormat format =	new SimpleDateFormat("yyyy/MM/dd");// HH:mm:ss
 
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(LoginUsersRequests.class);
 		criteria.add(Expression.ge("request_date", fromDate));
 		criteria.add(Expression.le("request_date", toDate));
@@ -1491,7 +1496,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 		DateFormat format =	new SimpleDateFormat("yyyy/MM/dd");// HH:mm:ss
 
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(LoginUsersRequests.class);
 		criteria.add(Expression.ge("from_date", fromDate));
 		criteria.add(Expression.le("from_date", toDate));
@@ -1526,7 +1531,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			final Date startDate =(Date) format.parse(format.format(dateFrom));
 			final Date endDate = (Date)format.parse(format.format(dateTo));
 
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(LoginUsersRequests.class);
 			criteria.add(Expression.ge("request_date", startDate));
 			criteria.add(Expression.le("request_date", endDate));
@@ -1576,7 +1581,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			final Date startDate =(Date) format.parse(format.format(dateFrom));
 			final Date endDate = (Date)format.parse(format.format(dateTo));
 
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(LoginUsersRequests.class);
 			criteria.add(Expression.ge("from_date", startDate));
 			criteria.add(Expression.le("from_date", endDate));
@@ -1627,7 +1632,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			final Date startDate =(Date) format.parse(format.format(dateFrom));
 			final Date endDate = (Date)format.parse(format.format(dateTo));
 
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(LoginUsersRequests.class);
 			criteria.add(Expression.ge("request_date", startDate));
 			criteria.add(Expression.le("request_date", endDate));
@@ -1671,7 +1676,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			final Date startDate =(Date) format.parse(format.format(dateFrom));
 			final Date endDate = (Date)format.parse(format.format(dateTo));
 
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(LoginUsersRequests.class);
 			criteria.add(Expression.ge("from_date", startDate));
 			if (toDate!=null) {
@@ -1715,7 +1720,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			final Date startDate =(Date) format.parse(format.format(dateFrom));
 			final Date endDate = (Date)format.parse(format.format(dateTo));
 
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(LoginUsersRequests.class);
 			criteria.add(Expression.ge("request_date", startDate));
 			criteria.add(Expression.le("request_date", endDate));
@@ -1757,7 +1762,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		try {
 			final Date startDate =(Date) format.parse(format.format(dateFrom));
 			final Date endDate = (Date)format.parse(format.format(dateTo));
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(LoginUsersRequests.class);
 			criteria.add(Expression.ge("from_date", startDate));
 			criteria.add(Expression.le("from_date", endDate));
@@ -1800,7 +1805,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			final Date startDate =(Date) format.parse(format.format(dateFrom));
 			final Date endDate = (Date)format.parse(format.format(dateTo));
 
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(LoginUsersRequests.class);
 			criteria.add(Expression.ge("request_date", startDate));
 			criteria.add(Expression.le("request_date", endDate));
@@ -1841,7 +1846,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			final Date startDate =(Date) format.parse(format.format(dateFrom));
 			final Date endDate = (Date)format.parse(format.format(dateTo));
 
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(LoginUsersRequests.class);
 			criteria.add(Expression.ge("from_date", startDate));
 			criteria.add(Expression.le("from_date", endDate));
@@ -1858,7 +1863,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 	public List getEmployeesByCodes(final String codeFrom,final String codeTo){
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(LoginUsersRequests.class);
 		criteria.add(Restrictions.between("empCode", codeFrom, codeTo));
 //		criteria.addOrder(Property.forName("period_from").asc());
@@ -1896,7 +1901,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			final Date startDate =(Date) format.parse(format.format(dateFrom));
 			final Date endDate = (Date)format.parse(format.format(dateTo));
 
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(LoginUsersRequests.class);
 			criteria.add(Expression.ge("request_date", startDate));
 			criteria.add(Expression.le("request_date", endDate));
@@ -1914,7 +1919,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 	public List getEmployeesByCodesAndRequestType(final String codeFrom,final String codeTo , final Long requestType){
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(LoginUsersRequests.class);
 		criteria.add(Restrictions.between("empCode", codeFrom, codeTo));
 		criteria.add(Restrictions.eq("request_id.id", requestType));
@@ -1950,7 +1955,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			final Date startDate =(Date) format.parse(format.format(dateFrom));
 			final Date endDate = (Date)format.parse(format.format(dateTo));
 
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(LoginUsersRequests.class);
 			criteria.add(Expression.ge("request_date", startDate));
 			criteria.add(Expression.le("request_date", endDate));
@@ -1971,7 +1976,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 	public List getRequestStatus(final Long req_id){
 		try{
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(EmpReqApproval.class);
 			log.debug("request id " + req_id);
 			criteria.add(Restrictions.eq("req_id.id", req_id));
@@ -1991,7 +1996,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	
 	public List getRequestStatus(final Long req_id,final Long emp_id){
 		try{
-			Criteria criteria = getCurrentSession()
+			Criteria criteria = getSession()
 					.createCriteria(EmpReqApproval.class);
 			log.debug("request id " + req_id);
 			criteria.add(Restrictions.eq("req_id.id", req_id));
@@ -2030,7 +2035,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	public List getEmpReqTypeAccs(List accessLevels,Long requestType) {
 		try{
 			if (accessLevels.size()>0) {
-				Criteria criteria = getCurrentSession()
+				Criteria criteria = getSession()
 						.createCriteria(EmpReqTypeAcc.class);
 				log.debug("request type " + requestType);
 				if (requestType == null) {
@@ -2175,67 +2180,132 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 		log.debug("sDate " + sDate);
 		log.debug("eDate " + eDate);
+
+
+		Session session = getSession();
+		CriteriaBuilder builder = getBuilder();
+		 if (session == null || session.isOpen()==false) {
+	    		session = getSession();
+	    }
+		CriteriaQuery queryCriteria = builder.createQuery(LoginUsersRequests.class);
+	    	Root<Object> root = queryCriteria.from(LoginUsersRequests.class);
+	    	Predicate restrictions = null;
+	    	log.debug("*************request type " + requestType);
+	    	if (requestType== null){
+	    		restrictions = builder.and(builder.notEqual(root.get("request_id").get("id"),  new Long(10)),builder.notEqual(root.get("request_id").get("id"),  new Long(11)));
+	    		if (sDate !=null && eDate != null) {
+	    			restrictions = builder.and(restrictions,	    					
+	    					builder.or(
+	    								builder.and(builder.isNull(root.<Date>get("period_to")),builder.between(root.<Date>get("period_from"), sDate, eDate)),
+				    					builder.or(
+				    							builder.or(builder.between(root.<Date>get("period_to"), sDate, eDate),builder.between(root.<Date>get("period_from"), sDate, eDate)),
+				    							builder.and(builder.greaterThanOrEqualTo(root.<Date>get("period_to"), sDate),builder.lessThanOrEqualTo(root.<Date>get("period_from"), sDate))
+				    							)
+	    					));
+	    		}
+	    	} else if (requestType.equals(new Long(1))){
+	    		restrictions = builder.and(builder.equal(root.get("request_id").get("id"), new Long(3)),
+	    									builder.and(builder.notEqual(root.get("request_id").get("id"),new Long(10)),
+	    											builder.notEqual(root.get("request_id").get("id"), new Long(11))));
+	    		if (sDate !=null) {
+	    			restrictions = builder.and(restrictions,builder.greaterThanOrEqualTo(root.<Date>get("period_from"), sDate));
+	    		}
+	    		if (eDate != null) {
+	    			restrictions = builder.and(restrictions,builder.lessThanOrEqualTo(root.<Date>get("period_from"), eDate));
+	    		}
+	    	}  else if (requestType.equals(new Long(2))){
+	    		restrictions = builder.and(builder.and(builder.isNull(root.<Date>get("period_to")),
+	    												builder.equal(root.get("request_id").get("id"), new Long(5))),
+						    				builder.and(builder.notEqual(root.get("request_id").get("id"),new Long(10)),
+													builder.notEqual(root.get("request_id").get("id"), new Long(11))));
+	    		if (sDate !=null) {
+	    			restrictions = builder.and(restrictions,builder.greaterThanOrEqualTo(root.<Date>get("period_from"), sDate));
+	    		}
+	    		if (eDate != null) {
+	    			restrictions = builder.and(restrictions,builder.lessThanOrEqualTo(root.<Date>get("period_from"), eDate));
+	    		}
+	    	}
+	    		
+	    	restrictions = builder.and(restrictions,builder.equal(root.get("empCode"), emp.getEmpCode()));
+
+	    	CriteriaQuery c = queryCriteria.select(root);
+	    	c = c.where(restrictions);
+	    	c.orderBy(builder.desc(root.get("period_from"))).distinct(true);
+	    	log.debug("checkStartedRequests - there is an error in the query not yet found");
+	    	TypedQuery<Object> query = session.createQuery(queryCriteria);
+	    	log.debug("querycriteria " + queryCriteria);
+	    	log.debug("query " + query);
+	    	
+	        List list =  query.getResultList();
+			log.debug("list size " + list.size());
+	        if ((list.size() == 0)&&(log.isDebugEnabled())) {
+	            log.debug("No objects found");
+	        }
+	        else if (log.isDebugEnabled()) {
+	            log.debug("Got "+list.size()+" objects");
+	        }
 		
-		List list =new ArrayList();
-		Criteria criteria = getCurrentSession()
-				.createCriteria(LoginUsersRequests.class);
-	
-		
-		
-		log.debug("request type " + requestType);
-		if (requestType== null){
-			criteria.add(Restrictions.and(Restrictions.ne("request_id.id", new Long(10)), Restrictions.ne("request_id.id", new Long(11))));
-			if (sDate !=null && eDate != null) {
-				final Date startDate =sDate;
-				final Date endDate = eDate;
-				criteria.add(Restrictions.or(
-												Restrictions.and(Expression.isNull("period_to"),Expression.between("period_from", startDate, endDate)),
-												Restrictions.or(Restrictions.or(Expression.between("period_to", startDate,endDate),Expression.between("period_from",startDate,endDate)),
-																Restrictions.and(Expression.ge("period_to", startDate),Expression.le("period_from", startDate))
-												)
-											)
-							);
-			}					
-		} else if (requestType.equals(new Long(1))){
-			
-			log.debug("request type " + requestType);
-			
-			criteria.add(Expression.isNull("period_to"));
-			
-			criteria.add(Restrictions.eq("request_id.id", new Long(3)));
-			criteria.add(Restrictions.and(Restrictions.ne("request_id.id", new Long(10)), Restrictions.ne("request_id.id", new Long(11))));
-			if (sDate !=null) {
-				final Date startDate =sDate;
-				criteria.add(Expression.ge("period_from", startDate));
-			}
-			if (eDate != null) {
-				final Date endDate = eDate;
-				criteria.add(Expression.le("period_from", endDate));
-			}
-		} else if (requestType.equals(new Long(2))){
-			log.debug("request type " + requestType);
-			
-			criteria.add(Restrictions.and(Restrictions.isNull("period_to"), Restrictions.eq("request_id.id", new Long(5))));
+//		List list =new ArrayList();
+//		Criteria criteria = getSession()
+//				.createCriteria(LoginUsersRequests.class);
+//	
+//		
+//		
+//		log.debug("request type " + requestType);
+//		if (requestType== null){
+//			criteria.add(Restrictions.and(Restrictions.ne("request_id.id", new Long(10)), Restrictions.ne("request_id.id", new Long(11))));
+//			if (sDate !=null && eDate != null) {
+//				final Date startDate =sDate;
+//				final Date endDate = eDate;
+//				criteria.add(Restrictions.or(
+//												Restrictions.and(Expression.isNull("period_to"),Expression.between("period_from", startDate, endDate)),
+//												Restrictions.or(Restrictions.or(Expression.between("period_to", startDate,endDate),Expression.between("period_from",startDate,endDate)),
+//																Restrictions.and(Expression.ge("period_to", startDate),Expression.le("period_from", startDate))
+//												)
+//											)
+//							);
+//			}					
+//		} else if (requestType.equals(new Long(1))){
+//			
+//			log.debug("request type " + requestType);
+//			
 //			criteria.add(Expression.isNull("period_to"));
-			
-//			criteria.add(Restrictions.or(Restrictions.eq("request_id.id", new Long(4)),));
-			criteria.add(Restrictions.and(Restrictions.ne("request_id.id", new Long(10)), Restrictions.ne("request_id.id", new Long(11))));
-			
-			if (sDate !=null) {
-				final Date startDate =sDate;
-				criteria.add(Expression.ge("period_from", startDate));
-			}
-			if (eDate != null) {
-				final Date endDate = eDate;
-				criteria.add(Expression.le("period_from", endDate));
-			}
-		} 
+//			
+//			criteria.add(Restrictions.eq("request_id.id", new Long(3)));
+//			criteria.add(Restrictions.and(Restrictions.ne("request_id.id", new Long(10)), Restrictions.ne("request_id.id", new Long(11))));
+//			if (sDate !=null) {
+//				final Date startDate =sDate;
+//				criteria.add(Expression.ge("period_from", startDate));
+//			}
+//			if (eDate != null) {
+//				final Date endDate = eDate;
+//				criteria.add(Expression.le("period_from", endDate));
+//			}
+//		} else if (requestType.equals(new Long(2))){
+//			log.debug("request type " + requestType);
+//			
+//			criteria.add(Restrictions.and(Restrictions.isNull("period_to"), Restrictions.eq("request_id.id", new Long(5))));
+////			criteria.add(Expression.isNull("period_to"));
+//			
+////			criteria.add(Restrictions.or(Restrictions.eq("request_id.id", new Long(4)),));
+//			criteria.add(Restrictions.and(Restrictions.ne("request_id.id", new Long(10)), Restrictions.ne("request_id.id", new Long(11))));
+//			
+//			if (sDate !=null) {
+//				final Date startDate =sDate;
+//				criteria.add(Expression.ge("period_from", startDate));
+//			}
+//			if (eDate != null) {
+//				final Date endDate = eDate;
+//				criteria.add(Expression.le("period_from", endDate));
+//			}
+//		} 
+//		
+//		criteria.add(Restrictions.eq("empCode", emp.getEmpCode()));
+//		criteria.addOrder(Property.forName("period_from").desc());
+//		criteria
+//		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//		list = criteria.list();
 		
-		criteria.add(Restrictions.eq("empCode", emp.getEmpCode()));
-		criteria.addOrder(Property.forName("period_from").desc());
-		criteria
-		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		list = criteria.list();
 		log.debug("check started requests list size " + list.size());
 		status.setCode("200");
 		status.setMessage("Successful Transaction");
@@ -2331,7 +2401,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		log.debug("eDate " + eDate);
 		
 		List list =new ArrayList();
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(LoginUsersRequests.class);
 	
 		
@@ -2414,26 +2484,48 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		log.debug("sDate " + sDate);
 		log.debug("eDate " + eDate);
 		
-		List list =new ArrayList();
-		Criteria criteria = getCurrentSession()
-				.createCriteria(LoginUsersRequests.class);
-
-		criteria.add(Restrictions.eq("request_id.id", new Long(10)));
-		criteria.add(Restrictions.eq("empCode", empCode));
+//		List list =new ArrayList();
+//
+//		Criteria criteria = getSession()
+//				.createCriteria(LoginUsersRequests.class);
+//
+//		criteria.add(Restrictions.eq("request_id.id", new Long(10)));
+//		criteria.add(Restrictions.eq("empCode", empCode));
+//		
+////		if (sDate !=null) {
+//			final Date startDate =sDate;
+//			criteria.add(Expression.ge("period_from", startDate));
+////		}
+////		if (eDate != null) {
+//			final Date endDate = eDate;
+//			criteria.add(Expression.le("period_from", endDate));
+////			}
+//		criteria.addOrder(Property.forName("period_from").desc());
+//		criteria
+//		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		Session session = getSession();
+		CriteriaBuilder builder = getBuilder();
+		log.debug("*^*^*^*^ session " + session);
+		log.debug("*^*^*^*^ session is open " + session.isOpen());
+		 if (session == null || session.isOpen()==false) {
+	    		session = getSession();
+	    }
+		CriteriaQuery queryCriteria = builder.createQuery(LoginUsersRequests.class);
+	    	Root<Object> root = queryCriteria.from(LoginUsersRequests.class);
+	    	Predicate restrictions = builder.and(builder.equal(root.get("request_id").get("id"),  new Long(10)),builder.equal(root.get("empCode"), empCode));
+	    	restrictions = builder.and(restrictions, builder.and(builder.greaterThanOrEqualTo(root.<Date>get("period_from"), sDate),builder.lessThanOrEqualTo(root.<Date>get("period_from"), eDate)));
+	    	queryCriteria.select(root).where(restrictions).orderBy(builder.desc(root.get("period_from"))).distinct(true);
+	    	TypedQuery<Object> query = session.createQuery(queryCriteria);
+	        List list =  query.getResultList();
+			
+	        if ((list.size() == 0)&&(log.isDebugEnabled())) {
+	            log.debug("No objects found");
+	        }
+	        else if (log.isDebugEnabled()) {
+	            log.debug("Got "+list.size()+" objects");
+	        }
 		
-//		if (sDate !=null) {
-			final Date startDate =sDate;
-			criteria.add(Expression.ge("period_from", startDate));
-//		}
-//		if (eDate != null) {
-			final Date endDate = eDate;
-			criteria.add(Expression.le("period_from", endDate));
-//			}
-		criteria.addOrder(Property.forName("period_from").desc());
-		criteria
-		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		
-		list = criteria.list();
+//		list = criteria.list();
 		log.debug("list size " + list.size());
 		
 		if (list.size()>0) {
@@ -2451,21 +2543,29 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 		//////////////////////////////////////
 		
-		List list2 =new ArrayList();
-		criteria = getCurrentSession()
-				.createCriteria(LoginUsersRequests.class);
-	
-		criteria.add(Restrictions.eq("request_id.id", new Long(11)));
-		criteria.add(Restrictions.eq("empCode", empCode));
+//		List list2 =new ArrayList();
+//		criteria = getSession()
+//				.createCriteria(LoginUsersRequests.class);
+//	
+//		criteria.add(Restrictions.eq("request_id.id", new Long(11)));
+//		criteria.add(Restrictions.eq("empCode", empCode));
+//		
+//			
+////		final Date startDate2 =sDate;
+//		criteria.add(Expression.ge("period_from", startDate));
+////		final Date endDate2 = eDate;
+//		criteria.add(Expression.le("period_from", endDate));
+//		criteria.addOrder(Property.forName("period_from").desc());
+//		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//		list2 = criteria.list();
 		
-			
-//		final Date startDate2 =sDate;
-		criteria.add(Expression.ge("period_from", startDate));
-//		final Date endDate2 = eDate;
-		criteria.add(Expression.le("period_from", endDate));
-		criteria.addOrder(Property.forName("period_from").desc());
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		list2 = criteria.list();
+		queryCriteria = builder.createQuery(LoginUsersRequests.class);
+    	root = queryCriteria.from(LoginUsersRequests.class);
+    	restrictions = builder.and(builder.equal(root.get("request_id").get("id"),  new Long(11)),builder.equal(root.get("empCode"), empCode));
+    	restrictions = builder.and(restrictions,builder.and(builder.greaterThanOrEqualTo(root.<Date>get("period_from"), sDate),builder.lessThanOrEqualTo(root.<Date>get("period_from"), eDate)));
+    	queryCriteria.select(root).where(restrictions).orderBy(builder.desc(root.get("period_from"))).distinct(true);
+    	TypedQuery<Object> query2 = session.createQuery(queryCriteria);
+        List list2 =  query2.getResultList();
 
 		if (list2.size()>0) {
 			if (list2.size()==list.size()) {
@@ -2500,7 +2600,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 	
 	public List getLoginUsersByCodes(final String codeFrom,final String codeTo){
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(LoginUsers.class);
 		criteria.add(Restrictions.between("empCode", codeFrom, codeTo));
 		criteria
@@ -2511,7 +2611,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 	public List getAccessLevelsBetweenCodes(GroupAcc groupId,
 			String codeFrom, String codeTo) {
-//		Criteria criteria = getCurrentSession()
+//		Criteria criteria = getSession()
 //				.createCriteria(AccessLevels.class);
 //		if (codeFrom!= null && !codeFrom.isEmpty() && codeTo!= null && !codeTo.isEmpty() ) {
 //			criteria.createCriteria("emp_id").add(Restrictions.between("empCode", codeFrom, codeTo));
@@ -2520,7 +2620,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 //		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 //		return criteria.list();
 		
-		Criteria criteria = getCurrentSession()
+		Criteria criteria = getSession()
 				.createCriteria(EmpReqTypeAcc.class);
 		if (codeFrom!= null && !codeFrom.isEmpty() && codeTo!= null && !codeTo.isEmpty() ) {
 			criteria.createCriteria("emp_id").createCriteria("empCode").add(Restrictions.between("empCode", codeFrom, codeTo));
@@ -2534,31 +2634,72 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 	public List<LoginUsers > getEmployeesByGroup(Long groupId) {
 		log.debug("DAO: groupid " + groupId);
-		Criteria criteria = getCurrentSession().createCriteria(EmpReqTypeAcc.class);
-		criteria.createCriteria("emp_id").add(Restrictions.isNull("endServ"));
-		criteria.setProjection(Projections.projectionList()
-                .add(Projections.groupProperty("emp_id")));
-		criteria.createCriteria("group_id")
-		.add(Restrictions.eq("id", groupId));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
-	}
-	
-	public List<LoginUsers > getMgrsByGroup(Long groupId) {
-		log.debug("DAO: groupid " + groupId);
-		Criteria criteria = getCurrentSession().createCriteria(AccessLevels.class);
-		criteria.createCriteria("level_id").add(Restrictions.eq("id", groupId));
-		criteria.setProjection(Projections.projectionList()
-                .add(Projections.groupProperty("emp_id")));
+//		Criteria criteria = getSession().createCriteria(EmpReqTypeAcc.class);
+//		criteria.createCriteria("emp_id").add(Restrictions.isNull("endServ"));
+//		criteria.setProjection(Projections.projectionList()
+//                .add(Projections.groupProperty("emp_id")));
 //		criteria.createCriteria("group_id")
 //		.add(Restrictions.eq("id", groupId));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
+//		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//		return criteria.list();
+		
+		Session session = getSession();
+		CriteriaBuilder builder = getBuilder();
+		log.debug("*^*^*^*^ session " + session);
+		log.debug("*^*^*^*^ session is open " + session.isOpen());
+		
+		CriteriaQuery queryCriteria = builder.createQuery(LoginUsers.class);
+      	Root<Object> root = queryCriteria.from(EmpReqTypeAcc.class);
+      	Predicate restriction = builder.and(builder.isNull(root.get("emp_id").get("endServ")),
+      										builder.equal(root.get("group_id").get("id"), groupId));
+      	
+      	
+      	queryCriteria.where(restriction);
+      
+//      	List groupBy = new ArrayList();
+//      	groupBy.add(root.get("emp_id"));
+      	queryCriteria.select(root.get("emp_id"));//.groupBy(groupBy);
+//      	queryCriteria.select(root);
+      	queryCriteria.distinct(true);
+      	TypedQuery<Object> query = null;
+		query = session.createQuery(queryCriteria);
+		List list = query.getResultList();
+		return list;
+	}
+	
+	public List<LoginUsers> getMgrsByGroup(Long groupId) {
+		log.debug("DAO: groupid " + groupId);
+		
+		Session session = getSession();
+		CriteriaBuilder builder = getBuilder();
+		
+		CriteriaQuery queryCriteria = builder.createQuery(LoginUsers.class);
+		Root<Object> root = queryCriteria.from(AccessLevels.class);
+//		List groupBy = new ArrayList();
+//		groupBy.add(root.get("emp_id"));
+		Predicate restrictions = null;
+		restrictions = builder.equal(root.get("level_id").get("id"), groupId);
+		
+		
+		queryCriteria.select(root.get("emp_id")).where(restrictions);//.groupBy(groupBy);
+      	queryCriteria.distinct(true);
+      	TypedQuery<Object> query = null;
+		query = session.createQuery(queryCriteria);
+		List list = query.getResultList();
+		return list;
+//		Criteria criteria = getSession().createCriteria(AccessLevels.class);
+//		criteria.createCriteria("level_id").add(Restrictions.eq("id", groupId));
+//		criteria.setProjection(Projections.projectionList()
+//                .add(Projections.groupProperty("emp_id")));
+////		criteria.createCriteria("group_id")
+////		.add(Restrictions.eq("id", groupId));
+//		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//		return criteria.list();
 	}
 
 //	public List getAttendanceRequests(Date date, String empCode,RequestTypes reqType) {
 //		try{
-//			Criteria criteria = getCurrentSession()
+//			Criteria criteria = getSession()
 //					.createCriteria(LoginUsersRequests.class);
 //			criteria.add(Restrictions.eq("request_id", reqType));
 //			criteria.add(Restrictions.eq("empCode", empCode));
@@ -2591,7 +2732,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	//					
 	//						
 	//							
-	//							Criteria criteria = getCurrentSession()
+	//							Criteria criteria = getSession()
 	//							.createCriteria(TimeAttend.class);
 	//							ProjectionList projectionList = Projections.projectionList();
 	//							criteria.add(Restrictions.between("date", fromDate,toDate));

@@ -150,7 +150,7 @@ public class EmpBasicController extends BaseSimpleFormController {
 		if (empCode == null || empCode.equals("")) {
 			emp = new EmpBasic();
 		} else {
-			emp = (EmpBasic) baseManager.getObject(EmpBasic.class, empCode);
+			emp = (EmpBasic) baseManager.getObjectByParameter(EmpBasic.class,"empCode", empCode);
 		}
 
 		log.debug("emp " + emp);

@@ -34,7 +34,7 @@ public class TimesheetDAOHibernate extends BaseDAOHibernate implements Timesheet
 			Date inDate, TimesheetCostCenter costcenter,
 			TimesheetTransactionParts part1, TimesheetTransactionParts part2,
 			TimesheetTransactionParts part3) {
-		Criteria criteria = getCurrentSession().createCriteria(TimesheetTransaction.class);
+		Criteria criteria = getSession().createCriteria(TimesheetTransaction.class);
 		criteria.add(Restrictions.eq("empCode", empCode));
 		criteria.add(Restrictions.eq("inDate", inDate));
 		criteria.add(Restrictions.eq("costCode", costcenter));

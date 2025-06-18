@@ -12,9 +12,8 @@ import java.util.Properties;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Session;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 public class CommonQueries {
@@ -161,13 +160,13 @@ public class CommonQueries {
 		   return result;
 	}
 
-	public <T> List<T> getResultList(Query query, Class<T> type){
-		  @SuppressWarnings("unchecked")
-		  List l = query.getResultList();
-//		  log.debug("####First item in list " + l.get(0));
-		  log.debug("####class type " + type);
-		  List<Object[]> records = l;
-		  return map(type, records);
+	public <T> List<T> getResultList(Session session, Query query, Class<T> type){
+		log.debug("####session " + session);
+		List l = query.getResultList();
+	//	log.debug("####First item in list " + l.get(0));
+		log.debug("####class type " + type);
+		List<Object[]> records = l;
+		return map(type, records);
 	}
 	
 	public <T> T map(Class<T> type, Object[] tuple){

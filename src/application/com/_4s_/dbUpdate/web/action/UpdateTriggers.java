@@ -148,7 +148,10 @@ public class UpdateTriggers {//implements Controller {
     					}
     					log.debug("qry " +qry);
 
-    					jt.execute("start transaction");
+//    					jt.execute("start transaction");
+    					if (settings!=null && settings.getSqlServerConnectionEnabled()) {
+            				jt.execute("begin transaction");
+            			}
     					try{
     						if (qry != null && qry.length() != 0){
     							jt.execute(qry);
@@ -191,19 +194,16 @@ public class UpdateTriggers {//implements Controller {
 
 
 
-    				//        			}
-
-    				//    				if(noErrors) {
-    				//    					String updateSQL="update  common_last_sequence set classSequence="+blockIndex+" where className='QueryIndex'";
-    				//    					jt.execute(updateSQL);
-    				jt.execute("commit;");
-    				//    				}else{
-    				//    					jt.execute("rollback");
-    				//    					currentIndex--;
-    				//    					break; // this will terminater the run of the script
-    				//    				}
-
-    				//        		}
+//    				jt.execute("commit;");
+    				if (settings!=null && !settings.getSqlServerConnectionEnabled()) {
+        				if(noErrors) {
+        					jt.execute("commit");
+        					log.debug("commit sequence");
+        				}else{
+//        					jt.execute("rollback transaction");
+        					break; // this will terminate the run of the script
+        				}
+        			}
     			}
     			witer.close();
 //    			HashMap model=new HashMap();

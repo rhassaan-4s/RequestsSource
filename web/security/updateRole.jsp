@@ -39,7 +39,10 @@
 		<td colspan="2">
 		<form id="fields" name="fields" method="POST"
 			action="<c:url value="/security/updateRole.html"/>">
-
+	<!-- /////////////////START to enable authentication with tokens with spring security 5//////////////////// -->
+				<input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}"/>
+				<!-- /////////////////END to enable authentication with tokens with spring security 5  //////////////////// -->
+				
 		<table rules="all" align="center" width="70%" class="sofT" >
 			<tr id="head_1_ep">
 				<td class="helpTitle" colspan="2" nowrap><abc:i18n

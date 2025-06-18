@@ -268,10 +268,16 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController {
 					//					} 
 				} else {
 					result.reject("requestsApproval.errors.locationIsNotSet");
+					model.addAttribute("done",false);
+					return "attendanceSignInOutForm";
 				}
 
-				if (longitude == null || latitude == null || Double.parseDouble(longitude)==0 || Double.parseDouble(latitude)==0) {
+				if (longitude == null || latitude == null || longitude.isEmpty() || latitude.isEmpty()
+						|| (longitude!=null && !longitude.isEmpty() && Double.parseDouble(longitude)==0) 
+						|| (latitude!=null && !latitude.isEmpty() && Double.parseDouble(latitude)==0)) {
 					result.reject("requestsApproval.errors.locationIsNotSet");
+					model.addAttribute("done",false);
+					return "attendanceSignInOutForm";
 				}
 			}
 		}

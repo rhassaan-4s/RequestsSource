@@ -41,6 +41,7 @@ import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
+import com._4s_.requestsApproval.web.util.PageRequestsWrapper;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RestStatus;
 
@@ -407,7 +408,7 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 //					}
 					///////////////////////////////////////////////////////////////////
 					
-					LinkedCaseInsensitiveMap requestMap = (LinkedCaseInsensitiveMap)results.get(i);
+					PageRequestsWrapper  requestMap = (PageRequestsWrapper)results.get(i);
 					String approve = request.getParameter("approve"+i);
 					
 					if(approve!=null && !approve.equals(""))
@@ -416,7 +417,7 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 						log.debug("approveCounter"+approveCounter);
 						RequestApproval approval = new RequestApproval();
 						approval.setApprove("1");
-						BigDecimal requestId = (BigDecimal)requestMap.get("id");
+						Long requestId = requestMap.getId();//get("id");
 						LoginUsersRequests loginUserRequest = (LoginUsersRequests)requestsApprovalManager.getObject(LoginUsersRequests.class, new Long(requestId.longValue()));
 						log.debug("approve>>>>>>>>>>"+approve);
 						log.debug("request number " + loginUserRequest.getRequestNumber());

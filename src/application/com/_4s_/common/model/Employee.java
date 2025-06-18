@@ -383,7 +383,11 @@ public class Employee implements Serializable,Auditable,Searchable {
 	}
 	
 	public Boolean getCanSeeAllStore() {
+		if (canSeeAllStore==null) {
+			return false;
+		} else {
 		return canSeeAllStore;
+		}
 	}
 	public void setEmpCode(String empCode) {
 		this.empCode = empCode;

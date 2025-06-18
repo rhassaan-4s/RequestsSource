@@ -30,6 +30,7 @@ import com._4s_.requestsApproval.web.util.TimeAttendanceWrapper;
 public class AttendanceExternalQueries extends CommonQueries{
 	protected final Log log = LogFactory.getLog(getClass());
 	
+	private Session session;
 	private SessionFactory sessionFactory;
 	
 	
@@ -44,14 +45,24 @@ public class AttendanceExternalQueries extends CommonQueries{
 
 	@Transactional
 	public Session getCurrentSession(){
-		Session session = null;
+		session = null;
     	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
+    	System.out.println("$$$$$$$$$$$$$$$$$$getting current session");
     	log.debug("session factory " + sessionFactory);
+    	System.out.println("$$$$$$$$$$$$$$$$$$session factory " + sessionFactory);
     	try {
     	    session = sessionFactory.getCurrentSession();
+    	    log.debug("***session available " + session);
+    	    if (session == null || session.isOpen()==false) {
+    	    	session = sessionFactory.openSession();
+    	    	System.out.println("session " + session);
+    	    }
     	} catch (HibernateException e) {
+    		log.debug("###Exception#### session not available, will open new session");
     	    session = sessionFactory.openSession();
+    	    log.debug("***********new session opened****************");
     	}
+    	System.out.println("$$$$$$$$$$$$$$$$$$session " +session);
 	      return session;
 	}
 
@@ -98,9 +109,11 @@ public Integer getNumberOfAttendees(Date fromDate, Date toDate,Settings settings
 //		List in=(List) getJdbcTemplate().queryForList(query);
 		
 		List in;
-		
+		if (session == null || session.isOpen()==false)  {
+			session=getCurrentSession();
+		}
 		try{
-			Query q = getCurrentSession().createNativeQuery(query.toString());
+			Query q = session.createNativeQuery(query.toString());
 			in = q.getResultList();
 //			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
 			log.debug("----cc1---"+in.size());
@@ -174,11 +187,14 @@ public Integer getNumberOfAttendees(Date fromDate, Date toDate,Settings settings
 				+ ") attendees ON allWorkers.loc1=attendees.loc2 ORDER BY locationCode";
 		log.debug("query " + query);
 //		List in=(List) getJdbcTemplate().queryForList(query);
+		if (session == null || session.isOpen()==false) {
+    		session = getCurrentSession();
+    	}
 		List in;
 		try{
-			Query q = getCurrentSession().createNativeQuery(query.toString());
+			Query q = session.createNativeQuery(query.toString());
 //			in = q.getResultList();
-			in = getResultList(q,DashboardAttendeesCountByDepWrapper.class);
+			in = getResultList(session,q,DashboardAttendeesCountByDepWrapper.class);
 //			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
 			log.debug("----cc1---"+in.size());
 		}catch (Exception e) {
@@ -280,10 +296,13 @@ public List getDashboardRequests(Date fromDate, Date toDate,Settings settings) {
 		
 		
 //		List in=(List) getJdbcTemplate().queryForList(query);
+		if (session == null || session.isOpen()==false)  {
+			session=getCurrentSession();
+		}
 		List in;
 		try{
-			Query q = getCurrentSession().createNativeQuery(query.toString());
-			in = getResultList(q,DashboardReqTypeCountsWrapper.class);
+			Query q = session.createNativeQuery(query.toString());
+			in = getResultList(session,q,DashboardReqTypeCountsWrapper.class);
 //			in = q.getResultList();
 //			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
 			log.debug("----cc1---"+in.size());
