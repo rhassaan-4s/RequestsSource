@@ -38,10 +38,6 @@ public class EmpBasicController extends BaseSimpleFormController {
 		this.baseManager = baseManager;
 	}
 
-//	public ModelAndView onSubmit(HttpServletRequest request,
-//			HttpServletResponse response, Object command, BindException errors)
-//			throws Exception {
-//		
 		@RequestMapping(method = RequestMethod.POST)
 		public ModelAndView processSubmit(HttpServletRequest request,
 				@Valid @ModelAttribute("empBasic") EmpBasic command,
@@ -137,8 +133,6 @@ public class EmpBasicController extends BaseSimpleFormController {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> end of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
 
-//	protected Object formBackingObject(HttpServletRequest request)
-//			throws ServletException {
 	@RequestMapping(method = RequestMethod.GET)
 	public String initForm(ModelMap model,HttpServletRequest request){
 		log
@@ -162,8 +156,6 @@ public class EmpBasicController extends BaseSimpleFormController {
 	
 	
 	
-//	protected Map referenceData(HttpServletRequest request, Object command,
-//			Errors errors) throws ServletException {
 	@ModelAttribute("model")
 	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,
 			HttpServletRequest request,@ModelAttribute("empBasic") EmpBasic command)

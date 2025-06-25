@@ -568,9 +568,13 @@ public class ExternalQueries extends CommonQueries{
 		//		log.debug("----sql 1---"+sql);
 
 
+		if (session!=null) {
+			session.close();
+		}
 		if (session == null || session.isOpen()==false) {
-    		session = session;
-    	}
+			log.debug("session "+ session);
+    		getCurrentSession();
+    	} 
 		Query q = session.createNativeQuery(sql.toString());
 		List in = getResultList(session,q,TimeAttendanceWrapper.class);
 //		List in=(List) getJdbcTemplate().queryForList(sql.toString());
@@ -768,9 +772,13 @@ public class ExternalQueries extends CommonQueries{
 		
 //		LinkedCaseInsensitiveMap inMap ;
 //		LinkedCaseInsensitiveMap inMap2 ;
+		if (session!=null) {
+			session.close();
+		}
 		if (session == null || session.isOpen()==false) {
+			log.debug("session "+ session);
     		getCurrentSession();
-    	}
+    	} 
 
 		Query q = session.createNativeQuery(sql.toString());
 		List in = getResultList(session,q,TimeAttendanceWrapper.class);
@@ -996,7 +1004,7 @@ public class ExternalQueries extends CommonQueries{
 					 "ON  ta.EMP_CODE=empDays.EMPCODE AND " +joinDateUnionCondition1+
 					"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
 					"where\n" + 
-					"empdays.EMPCODE in ("+empCode+")\n" + 
+					"empdays.EMPCODE in ('"+empCode+"')\n" + 
 					"AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n" + 
 					")\n" ;
 		}
@@ -1036,7 +1044,7 @@ public class ExternalQueries extends CommonQueries{
 				")\n" + 
 				"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
 				"where\n" + 
-				"empdays.EMPCODE in ("+empCode+")\n" + 
+				"empdays.EMPCODE in ('"+empCode+"')\n" + 
 				joinDateCondition2 + 
 				" AND req.APPROVED !=99 "+
 				")\n" + 
@@ -1047,9 +1055,14 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("----sql 1---"+sql);
 
+		if (session!=null) {
+			session.close();
+		}
 		if (session == null || session.isOpen()==false) {
+			log.debug("session "+ session);
     		getCurrentSession();
-    	}
+    	} 
+		
 		log.debug("sql statement " + sql.toString());
 //		List in=(List) getJdbcTemplate().queryForList(sql.toString());
 		Query q = session.createNativeQuery(sql.toString());
@@ -1645,10 +1658,10 @@ public class ExternalQueries extends CommonQueries{
 		String to_dateString=df.format(to_date);
 		log.debug("----to_dateString- after formatting--"+to_dateString);
 		try {
-			log.debug("----xxxxxxxxxxxxxxxx-----");
+			log.debug("----********************-----");
 			to_date=df.parse(to_dateString);
 			log.debug("----to_dateString- after formatting--"+to_date);
-			log.debug("----xxxxxxxxxxxxxxxx-----");
+			log.debug("----************************-----");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1793,7 +1806,7 @@ public class ExternalQueries extends CommonQueries{
 				") \n" + 
 				"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
 				"where\n" + 
-				"empdays.EMPCODE in ("+empCode+")\n" + 
+				"empdays.EMPCODE in ('"+empCode+"')\n" + 
 				joinDateCondition2 + 
 				")  \n" + 
 				"UNION ALL\n" + 
@@ -1815,7 +1828,7 @@ public class ExternalQueries extends CommonQueries{
 				"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
 
 			"where\n" + 
-			"empdays.EMPCODE in ("+empCode+")\n" + 
+			"empdays.EMPCODE in ('"+empCode+"')\n" + 
 			joinDateUnionCondition2 +
 			")\n "+
 //////			"ORDER BY DD" +
@@ -1831,14 +1844,17 @@ public class ExternalQueries extends CommonQueries{
 
 
 
-		log.debug("----sql 1---"+sql);
+		log.debug("----sql of getTimeAttendAll() --- "+sql);
 
 
+		if (session!=null) {
+			session.close();
+		}
 		if (session == null || session.isOpen()==false) {
+			log.debug("session "+ session);
     		getCurrentSession();
-    	}
+    	} 
 //		List in=(List) getJdbcTemplate().queryForList(sql.toString());
-
 		Query q = session.createNativeQuery(sql.toString());
 		List in = getResultList(session,q,TimeAttendanceLocationWrapper.class);
 		TimeAttendanceLocationWrapper inMap ;
@@ -2155,9 +2171,13 @@ public class ExternalQueries extends CommonQueries{
 
 //		result=(List) getJdbcTemplate().queryForList(sql.toString());
 		log.debug("session opened?"+ session.isOpen());
+		if (session!=null) {
+			session.close();
+		}
 		if (session == null || session.isOpen()==false) {
+			log.debug("session "+ session);
     		getCurrentSession();
-    	}
+    	} 
 		log.debug("session opened?"+ session.isOpen());
 		NativeQuery q = session.createNativeQuery(sql.toString());
 		result = getResultList(session,q,VacationsResultWrapper.class);
@@ -2568,10 +2588,13 @@ public class ExternalQueries extends CommonQueries{
 
 
 //		List in=(List) getJdbcTemplate().queryForList(sql.toString());
+		if (session!=null) {
+			session.close();
+		}
 		if (session == null || session.isOpen()==false) {
+			log.debug("session "+ session);
     		getCurrentSession();
-    	}
-
+    	} 
 		NativeQuery sqlQuery = session.createNativeQuery(sql.toString());
 //		List in = sqlQuery.list();
 		List in = getResultList(session,sqlQuery,PageRequestsWrapper.class);
@@ -3826,9 +3849,13 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("----sql 1---"+sql);
 
+		if (session!=null) {
+			session.close();
+		}
 		if (session == null || session.isOpen()==false) {
+			log.debug("session "+ session);
     		getCurrentSession();
-    	}
+    	} 
 
 		NativeQuery sqlQuery = session.createNativeQuery(sql.toString());
 

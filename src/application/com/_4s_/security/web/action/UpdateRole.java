@@ -38,16 +38,13 @@ import com._4s_.security.model.User;
 @RequestMapping("/updateRole.html")
 public class UpdateRole extends BaseSimpleFormController {
 
-	//	@RequestMapping(value = "/updateRole.html", method = RequestMethod.POST)
-	//	protected ModelAndView onSubmit(HttpServletRequest request,
-	//			HttpServletResponse response,@ModelAttribute("role") final Roles command, BindException arg3)
-	//			throws Exception {
+	
 	@RequestMapping(method = RequestMethod.POST)
 	public String processSubmit(HttpServletRequest request,
 			@Valid @ModelAttribute("role") Roles command,
 			BindingResult result, SessionStatus status,Model model) {
 		// TODO Auto-generated method stub
-		log.debug(">>>>>>>>>>>>>>>>>>>>>>>Update Role Start onSubmit()");
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>Update Role Start process submit");
 		Roles role = (Roles) command;
 		////////////////////////////////////////////////////
 		Set<Permissions> permissions=new HashSet<Permissions>();
@@ -73,13 +70,11 @@ public class UpdateRole extends BaseSimpleFormController {
 		//		PrintWriter out = response.getWriter();
 		//		out.println("<script>window.opener.location.reload();window.close();</script>");
 		//		out.close();
-		log.debug(">>>>>>>>>>>>>>>>>>>.........End onSubmit()");
+		log.debug(">>>>>>>>>>>>>>>>>>>.........End process submit");
 		//		return new ModelAndView();
 		return "updateRole";
 	}
 
-	//	protected Map referenceData(HttpServletRequest request, Object arg1,
-	//			Errors arg2) throws Exception {
 	@ModelAttribute("model")
 	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,
 			HttpServletRequest request,@ModelAttribute("role") Roles command)
@@ -112,9 +107,6 @@ public class UpdateRole extends BaseSimpleFormController {
 		return model;
 	}
 
-	//	@RequestMapping(value = "/updateRole.html", method = RequestMethod.GET)
-	//	protected Object formBackingObject(HttpServletRequest request)
-	//			throws Exception {
 	@RequestMapping(method = RequestMethod.GET)
 	public String initForm(ModelMap model,HttpServletRequest request){
 		// TODO Auto-generated method stub

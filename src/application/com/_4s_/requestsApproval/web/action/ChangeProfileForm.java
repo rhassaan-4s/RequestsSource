@@ -114,10 +114,6 @@ public class ChangeProfileForm extends BaseSimpleFormController{
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-//	public ModelAndView onSubmit(HttpServletRequest request,
-//			HttpServletResponse response, Object command, BindException errors)throws Exception 
-//	{
-	
 	@RequestMapping(method = RequestMethod.POST) // ,consumes=MediaType.APPLICATION_FORM_URLENCODED
 	public ModelAndView processSubmit(HttpServletRequest request,
 			@Valid @ModelAttribute("accessLevel") AccessLevels command, BindingResult errors,

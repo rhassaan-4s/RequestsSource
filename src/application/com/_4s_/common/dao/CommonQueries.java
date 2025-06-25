@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
 
 public class CommonQueries {
 
@@ -160,6 +161,7 @@ public class CommonQueries {
 		   return result;
 	}
 
+	@Transactional
 	public <T> List<T> getResultList(Session session, Query query, Class<T> type){
 		log.debug("####session " + session);
 		List l = query.getResultList();

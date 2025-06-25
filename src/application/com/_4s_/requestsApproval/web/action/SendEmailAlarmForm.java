@@ -9,14 +9,24 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com._4s_.common.model.Company;
 import com._4s_.common.model.Employee;
 import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
@@ -43,8 +53,10 @@ public class SendEmailAlarmForm extends BaseSimpleFormController{
 		this.mailSender = mailSender;
 	}
 
-	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command, BindException errors) throws Exception 
-	{
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("employee") Employee command,
+			BindingResult result, SessionStatus status,Model model) {
 		
 		//Span span = (Span) command;
 		
@@ -219,13 +231,16 @@ public class SendEmailAlarmForm extends BaseSimpleFormController{
 		Employee employee = ( Employee )command;
 	}
 	
-	protected Object formBackingObject(HttpServletRequest request) throws Exception {
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request){
 		//String spanId = request.getParameter("spanId");
 		Employee employee = new Employee();
-		return employee;
+		model.addAttribute("employee", employee);
+		return "sendEmailAlarm";
 	}
 	
-	protected Map referenceData(HttpServletRequest request, Object command, Errors errors) throws Exception {
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) {
 		Employee employee = new Employee();
 		Map model = new HashMap();
 		

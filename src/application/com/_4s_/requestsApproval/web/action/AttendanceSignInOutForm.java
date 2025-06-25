@@ -32,8 +32,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com._4s_.attendance.web.binders.EmpBasicBinder;
-import com._4s_.attendance.web.binders.WorkPeriodMasterBinder;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
@@ -327,7 +325,7 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController {
 
 		if (accuracy!=null && !accuracy.isEmpty()) {
 			double distance = requestsApprovalManager.distance(new Double(latitude),new Double(longitude),new Double(settings.getCompanyLat()),new Double(settings.getCompanyLong()));
-			if (distance>settings.getDistAllowedFromCompany()) {
+			if (settings.getDistAllowedFromCompany()!= null && distance>settings.getDistAllowedFromCompany()) {
 				loginUsersRequests.setIsInsideCompany(false);
 			} else {
 				loginUsersRequests.setIsInsideCompany(true);

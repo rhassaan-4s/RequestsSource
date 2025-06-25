@@ -43,9 +43,6 @@ public class AddNewQueryForm extends BaseSimpleFormController {
 		this.mgr = mgr;
 	}
 
-//	public ModelAndView onSubmit(HttpServletRequest request,
-//			HttpServletResponse response, Object command, BindException errors)
-//			throws Exception {
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView processSubmit(HttpServletRequest request,
 			SessionStatus sessStatus,Map model) throws Exception {
@@ -115,8 +112,6 @@ public class AddNewQueryForm extends BaseSimpleFormController {
 
 	}
 
-//	protected Object formBackingObject(HttpServletRequest request)
-//			throws ServletException {
 	@RequestMapping(method = RequestMethod.GET)  
 	public String initForm(ModelMap model,HttpServletRequest request){
 		log

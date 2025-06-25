@@ -8,16 +8,21 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com._4s_.common.model.Company;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
@@ -195,9 +200,11 @@ public class DeleteLoginUsersRequestsForm extends BaseSimpleFormController{
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{	
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("loginUsersRequests") LoginUsersRequests command,
+			BindingResult result, SessionStatus status,Model model) {
+		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
 		

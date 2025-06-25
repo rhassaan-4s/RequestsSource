@@ -74,8 +74,6 @@ public class AttendanceRequestsApprovalForm extends BaseSimpleFormController {
 	
 	// **************************************** referenceData
 	// ***********************************************\\
-//	protected Map referenceData(HttpServletRequest request, Object command,
-//			Errors errors) throws ServletException {
 	@ModelAttribute("model")	
 	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");

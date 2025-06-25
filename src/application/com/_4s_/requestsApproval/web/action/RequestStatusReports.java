@@ -260,9 +260,6 @@ public class RequestStatusReports extends BaseSimpleFormController {
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-//	public ModelAndView onSubmit(HttpServletRequest request,
-//			HttpServletResponse response, Object command, BindException errors)throws Exception 
-//	{	
 	@RequestMapping(method = RequestMethod.POST)
 	public String processSubmit(HttpServletRequest request,
 			@Valid @ModelAttribute("loginUsersRequests") LoginUsersRequests command,

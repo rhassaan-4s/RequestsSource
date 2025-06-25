@@ -64,9 +64,6 @@ public class AddUserToRole extends BaseSimpleFormController {
 		this.mgr = mgr;
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//	protected ModelAndView onSubmit(HttpServletRequest request,
-	//			HttpServletResponse response, Object command, BindException error)
-	//	throws Exception {
 
 	@RequestMapping(method = RequestMethod.POST)
 		public String processSubmit(HttpServletRequest request,
@@ -143,8 +140,6 @@ public class AddUserToRole extends BaseSimpleFormController {
 		return "addUserToRole";
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
-//	protected Map referenceData(HttpServletRequest request, Object command,
-//			Errors error) throws Exception {
 	@ModelAttribute("model")
 	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,
 			HttpServletRequest request,@ModelAttribute("user") User command)
@@ -205,8 +200,6 @@ public class AddUserToRole extends BaseSimpleFormController {
 		return model;
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
-//	protected Object formBackingObject(HttpServletRequest request)
-//	throws Exception {
 	@RequestMapping(method = RequestMethod.GET)
 	public String initForm(ModelMap model,HttpServletRequest request){
 		// TODO Auto-generated method stub

@@ -49,7 +49,7 @@ public class AddNewEmpGroup extends BaseSimpleFormController {
 	public ModelAndView processSubmit(HttpServletRequest request,
 			@Valid @ModelAttribute("empGroup") EmpReqTypeAcc command, BindingResult errors,
 			SessionStatus status, Map model) {
-		log.debug(">>>>>>>>>>>>>>>.start onSubmit()>>>>>>>>>>>");
+		log.debug(">>>>>>>>>>>>>>>.start processsubmit>>>>>>>>>>>");
 //		List fieldOrderList= new ArrayList();
 //		fieldOrderList.add("emp_id");
 		String empId = request.getParameter("empIdHidden");

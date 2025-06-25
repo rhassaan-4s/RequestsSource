@@ -7,23 +7,31 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.attendance.model.Religion;
 import com._4s_.attendance.service.AttendanceManager;
 import com._4s_.common.web.action.BaseSimpleFormController;
-import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.timesheet.web.validate.ValidationStatus;
 
+@Controller
+@RequestMapping("/religionForm.html")
 public class ReligionForm extends BaseSimpleFormController{
+	@Autowired
 	AttendanceManager attendanceManager;
 
 
@@ -97,9 +105,11 @@ public class ReligionForm extends BaseSimpleFormController{
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{	
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("religion") Religion command,
+			BindingResult result, SessionStatus status,Model model) {
+		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		Religion religion= (Religion) command;
 		log.debug("----activity code -onsubmit-----"+religion.getReligion());

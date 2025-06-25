@@ -5,13 +5,22 @@ import java.io.BufferedWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.dbUpdate.service.SQLManager;
+import com._4s_.security.web.command.ChangePasswordCommand;
 
 public class FileWriter extends BaseSimpleFormController {
 
@@ -25,8 +34,10 @@ public class FileWriter extends BaseSimpleFormController {
 		this.mgr = mgr;
 	}
 
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("object") Object command, BindingResult result,
+			SessionStatus status, Model model) 
 			throws Exception {
 
 		if (log.isDebugEnabled()) {
@@ -52,14 +63,14 @@ public class FileWriter extends BaseSimpleFormController {
 
 	}
 
-	protected Object formBackingObject(HttpServletRequest request)
-			throws ServletException {
-
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log
 				.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		Object object = new Object();
 		log
 				.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		return object;
+		model.addAttribute("object", object);
+		return "fileWriter";
 	}
 }

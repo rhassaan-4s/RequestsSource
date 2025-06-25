@@ -9,21 +9,26 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com._4s_.common.model.Company;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
@@ -205,9 +210,11 @@ public class AttendanceRequestsApprovalEdit extends BaseSimpleFormController{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
 	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("loginUsersRequests") LoginUsersRequests command,
+			BindingResult result, SessionStatus status,Model model) {
+		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests)command;
 
@@ -257,17 +264,17 @@ public class AttendanceRequestsApprovalEdit extends BaseSimpleFormController{
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<  End onSubmit : <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 //		String url="/attendanceRequestsReports.html";
 //		log.debug(url);
-		Map model = new HashMap();
-		model.put("empCodeQ", emp_code);
-		model.put("status", statusId);
-		model.put("request_date_from", request_date_from);
-		model.put("request_date_to", request_date_to);
-		model.put("codeFrom", codeFrom);
-		model.put("codeTo", codeTo);
+//		Map model = new HashMap();
+		model.addAttribute("empCodeQ", emp_code);
+		model.addAttribute("status", statusId);
+		model.addAttribute("request_date_from", request_date_from);
+		model.addAttribute("request_date_to", request_date_to);
+		model.addAttribute("codeFrom", codeFrom);
+		model.addAttribute("codeTo", codeTo);
 		String reqId = request.getParameter("reqId");
-		model.put("reqId",reqId);
+		model.addAttribute("reqId",reqId);
 		
-		return new ModelAndView(new RedirectView("attendanceRequestsReports.html"),model);
+		return new ModelAndView(new RedirectView("attendanceRequestsReports.html"));
 	}
 
 }

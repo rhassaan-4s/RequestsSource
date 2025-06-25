@@ -6,17 +6,32 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com._4s_.common.model.Company;
 import com._4s_.common.model.Types;
 import com._4s_.common.model.TypesData;
 import com._4s_.common.service.BaseManager;
 
+@Controller
+@RequestMapping("/typesDataForm.html")
 public class TypesDataFormController extends BaseSimpleFormController {
+	@Autowired
 	private BaseManager baseManager = null;
 
 	public BaseManager getBaseManager() {
@@ -27,9 +42,10 @@ public class TypesDataFormController extends BaseSimpleFormController {
 		this.baseManager = baseManager;
 	}
 
-	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException error)
-			throws Exception {
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("typesData") TypesData command,
+			BindingResult result, SessionStatus status,Model model) {
 		// TODO Auto-generated method stub
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
@@ -46,7 +62,8 @@ public class TypesDataFormController extends BaseSimpleFormController {
 	}
 
 	
-	protected Map referenceData(HttpServletRequest request, Object arg1, Errors arg2) throws Exception {
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) {
 		// TODO Auto-generated method stub
 		Map model = new HashMap();
 		String typeId = request.getParameter("typeId");
@@ -59,8 +76,8 @@ public class TypesDataFormController extends BaseSimpleFormController {
 		return model;
 	}
 
-	protected Object formBackingObject(HttpServletRequest request)
-			throws Exception {
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request){
 		// TODO Auto-generated method stub
 		String typeDataId = request.getParameter("typeDataId");
 		
@@ -78,8 +95,8 @@ public class TypesDataFormController extends BaseSimpleFormController {
 			log.debug("typesData: "+ typesData.toString());
 		}
 		
-		
-		return typesData;
+		model.addAttribute("typesData", typesData);
+		return "typesDataFormController";
 	}
 
 }

@@ -8,18 +8,26 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.model.City;
+import com._4s_.common.model.Company;
 import com._4s_.common.model.Country;
 import com._4s_.common.model.Region;
 import com._4s_.common.service.CommonManager;
@@ -87,8 +95,8 @@ public class EditRegionFormController extends BaseSimpleFormController
 		return region;
 	}
 	
-	protected Map referenceData(HttpServletRequest request, Object command, Errors errors) throws Exception
-	{
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request,@ModelAttribute("region") Region command) {
 		log.debug(">>>>>>>>>> Start of referenceData >>>>>>>>>>");
 		Map model = new HashMap();
 		Region region = (Region)command;
@@ -160,8 +168,11 @@ public class EditRegionFormController extends BaseSimpleFormController
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
 	
-	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command, BindException errors) throws Exception 
-	{
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("region") Region command,
+			BindingResult result, SessionStatus status,Model model) {
+		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Start of onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>");
 		Region region = (Region)command;
 		

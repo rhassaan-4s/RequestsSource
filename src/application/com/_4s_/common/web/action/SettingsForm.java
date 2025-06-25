@@ -129,7 +129,7 @@ public class SettingsForm extends BaseSimpleFormController{
 			@Valid @ModelAttribute("settings") Settings command,
 			BindingResult result, SessionStatus status,Model model) {
 		Settings  settings = (Settings)command;
-		log.error(">>>> start of onSubmit() ");
+		log.error(">>>> start of processSubmit");
 		
 		String ipAddressEnabled = request.getParameter("ipAddressEnabled");
 		if(ipAddressEnabled == null || ipAddressEnabled.equals("")){
@@ -223,7 +223,7 @@ public class SettingsForm extends BaseSimpleFormController{
 				
 		request.getSession().removeAttribute("settings");
 		request.getSession().setAttribute("settings", settings);
-		log.error(">>>> end of onSubmit() ");
+		log.error(">>>> end of processSubmit");
 		return new ModelAndView(new RedirectView("settingsForm.html"));
 		
 	}

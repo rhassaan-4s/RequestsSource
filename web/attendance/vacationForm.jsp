@@ -36,26 +36,6 @@
 							key="attendance.header.vacation" /></td>
 				</tr>
 
-			<!-- 	<tr>
-
-					<c:set var="check" value="" />
-					<c:if test="${code!=null && code!=''}">
-						<c:set var="check" value="disabled" />
-					</c:if>
-
-						<td nowrap class="formReq" width="30%"><abc:i18n
-								property="attendance.caption.vacationCode" /> <fmt:message
-								key="attendance.caption.vacationCode" /></td>
-
-
-						<td class="formBodControl">
-								<input size="8" maxlength="8" type="text"
-									value="${vacation.vacation}"
-									readonly="readonly" />
-							</td>
-				</tr>
- -->
-
 				<tr>
 
 					<td nowrap class="formReq" width="30%"><abc:i18n

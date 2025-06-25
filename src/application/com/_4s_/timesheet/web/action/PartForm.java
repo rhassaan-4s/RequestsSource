@@ -131,9 +131,6 @@ public class PartForm extends BaseSimpleFormController{
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-//	public ModelAndView onSubmit(HttpServletRequest request,
-//			HttpServletResponse response, Object command, BindException errors)throws Exception 
-//	{
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView processSubmit(HttpServletRequest request,
 			@Valid @ModelAttribute("part") TimesheetTransactionParts command,
