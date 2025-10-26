@@ -14,6 +14,9 @@
 	
 	<bean id="timesheetExternalQueries" class="com._4s_.timesheet.dao.TimesheetExternalQueries"
 		singleton="false">
+		<property name="jdbcTemplate">
+			<ref bean="jdbcTemplate"/>
+		</property>
 		<property name="platformTransactionManager">
 			<ref bean="transactionManager" />
 		</property>

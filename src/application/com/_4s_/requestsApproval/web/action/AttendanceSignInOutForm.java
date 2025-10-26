@@ -252,6 +252,15 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		
 		Calendar c = Calendar.getInstance();
 //		c.setTimeZone(TimeZone.getTimeZone("EST"));
+        TimeZone tz = TimeZone.getDefault();
+        System.out.println("OS time: " + new Date());
+        System.out.println("Java TimeZone ID: " + tz.getID());
+        System.out.println("Raw offset (hours): " + (tz.getRawOffset()/3600000));
+        System.out.println("DST in effect? " + tz.inDaylightTime(new Date()));
+        System.out.println("*****************");
+        System.out.println(System.getProperty("java.home"));
+        System.out.println(System.getProperty("java.version"));
+        System.out.println("*****************");
 		Date now = c.getTime();
 		log.debug("Time now " + now);
 		loginUsersRequests.setPeriod_from(now);
@@ -267,13 +276,15 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController{
 		String latitude =  (String)request.getParameter("latitude");
 		String accuracy =  (String)request.getParameter("accuracy");
 		String address = "";
-		log.debug("accuracy " + accuracy);
+//		log.debug("accuracy " + accuracy);
+		log.debug("***************accuracy " + accuracy);
 		if (accuracy!=null && !accuracy.isEmpty()) {
 			Long acc = Math.round(Double.parseDouble(accuracy));
+			
 			if (settings.getLocationAccuracy()>= acc.intValue()) {
 				address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
 			} else {
-				address = "Address is not accurate to be saved";
+				address = "***Address is not accurate***" + requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
 			}
 		}
 		

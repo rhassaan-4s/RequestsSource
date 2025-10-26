@@ -1676,7 +1676,8 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 			int count = 0;
 			while(empItr.hasNext()) {
 				EmpReqTypeAcc empReq = ((EmpReqTypeAcc)(empItr.next()));
-//				log.debug("empReq " + empReq);
+				log.debug("empReq " + empReq);
+				log.debug("***********empcode " + empReq.getEmp_id().getEmpCode().getEmpCode());
 				if (count==0) {
 //					empArray = empReq.getEmp_id().getEmpCode();
 					empArray =  "'" + empReq.getEmp_id().getEmpCode().getEmpCode() +  "'";
@@ -1692,7 +1693,9 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 //			totalObjects=requestsApprovalManager.getTimeAttend(empArray, fromDate, toDate);
 //			totalObjects=requestsApprovalManager.getTimeAttendFromView(empArray, fromDate, toDate);
 			if (empArray == null || empArray.isEmpty()) {
+				
 				empArray = "'" + emp.getEmpCode() +  "'";
+				log.debug("*******empArray " + empArray);
 			}
 			totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId,settings);
 			
@@ -1791,10 +1794,10 @@ if (dateFrom != null && dateTo != null && !dateFrom.equals("") && !dateTo.equals
 //				log.debug("empReq " + empReq);
 				if (count==0) {
 //					empArray = empReq.getEmp_id().getEmpCode();
-					empArray =  "'" + empReq.getEmp_id().getEmpCode() +  "'";
+					empArray =  "'" + empReq.getEmp_id().getEmpCode().getEmpCode() +  "'";
 				} else {
 //					empArray += "," + empReq.getEmp_id().getEmpCode();
-					empArray += ",'" + empReq.getEmp_id().getEmpCode() + "'";
+					empArray += ",'" + empReq.getEmp_id().getEmpCode().getEmpCode() + "'";
 				}
 				count++;
 			}

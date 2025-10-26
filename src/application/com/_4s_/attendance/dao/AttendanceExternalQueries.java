@@ -42,7 +42,7 @@ public Integer getNumberOfAttendees(Date fromDate, Date toDate,Settings settings
 
 		Map map = new HashMap();
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		String query = "";
 		String select = "";
 		String from = "";
@@ -95,7 +95,7 @@ public Integer getNumberOfAttendees(Date fromDate, Date toDate,Settings settings
 
 		Map map = new HashMap();
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		String query = "";
 		String select = "";
 		String from = "";
@@ -200,7 +200,7 @@ public List getDashboardRequests(Date fromDate, Date toDate,Settings settings) {
 
 		Map map = new HashMap();
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		String query = "";
 		String select = "";
 		String from = "";

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -97,6 +98,12 @@ public class DefaultPage extends BaseController {
 	public ModelAndView handleRequest(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
+		
+		System.out.println("Server OS time: " + new java.util.Date());
+		System.out.println("Java TimeZone ID: " + TimeZone.getDefault().getID());
+		System.out.println("Java raw offset (hours): " + (TimeZone.getDefault().getRawOffset() / 3600000) );
+		System.out.println("Java DST in effect? " + TimeZone.getDefault().inDaylightTime(new Date()));
+		System.out.println("Server OS time After offset change: " + new java.util.Date());
 		SecurityContext sc = (SecurityContext) (SecurityContextHolder.getContext());
 		log.debug("------------------------------------------username:--- "
 				+ sc.getAuthentication().getName());

@@ -17,6 +17,9 @@
 		<property name="platformTransactionManager">
 			<ref bean="transactionManager" />
 		</property>
+		<property name="jdbcTemplate">
+			<ref bean="jdbcTemplate"/>
+		</property>
 		<property name="driverClass">
 		      <value>${hibernate.connection.driver_class}</value>
 		</property>

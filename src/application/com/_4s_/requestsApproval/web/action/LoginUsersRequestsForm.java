@@ -309,9 +309,9 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 //						mm+="<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head>";
 //						mm+="<body>";
 
-						mm+="\nÃÓÊÇÐ/ "+mgr.getEmp_id().getName();
-						mm+="\náÏíß ØáÈÇÊ ááãæÇÝÞå ÚáíåÇ ÈÑÌÇÁ ÇáÇØáÇÚ ÚáíåÇ ãä: \n"+loginUrl+"?requestId="+reqId+"&requestNumber="+requestNumber;
-						mm+="\nãÚ ÎÇáÕ ÇáÔßÑ";
+						mm+="\nï¿½ï¿½ï¿½ï¿½ï¿½/ "+mgr.getEmp_id().getName();
+						mm+="\nï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½: \n"+loginUrl+"?requestId="+reqId+"&requestNumber="+requestNumber;
+						mm+="\nï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½";
 
 						try
 						{
@@ -1043,13 +1043,20 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 		String longitude = (String)request.getParameter("longitude");
 		String latitude =  (String)request.getParameter("latitude");
 		String accuracy =  (String)request.getParameter("accuracy");
+		log.debug("***************accuracy " + accuracy);
 		String address = "";
+		log.debug("***accuracy***"+accuracy);
 		if (accuracy!=null && !accuracy.isEmpty()) {
 			Long acc = Math.round(Double.parseDouble(accuracy));
-			if (settings.getLocationAccuracy()>= acc.intValue()) {
+//			if (settings.getLocationAccuracy()>= acc.intValue()) {
 				address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
-			}
+//			}
 		}
+		log.debug("***address***"+address);
+		if (address == null) {
+			address = requestsApprovalManager.getShortAddressByGpsCoordinates(longitude,latitude);
+		}
+		log.debug("***address2***"+address);
 		if (loginUsersRequests.getFrom_date()!=null) {
 			loginUsersRequests.setPeriod_from(loginUsersRequests.getFrom_date());
 		}
@@ -1093,12 +1100,11 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 //						loginUsersRequests.setVacation(vac);
 						loginUsersRequests.setPayed(new Long(1));
 					}
+					log.debug("accuracy " + accuracy);
 					if (accuracy!=null && !accuracy.isEmpty()) {
 						if (settings.getLocationAccuracy()>= Double.parseDouble(accuracy)) {
 							loginUsersRequests.setLatitude(Double.parseDouble(latitude));
 							loginUsersRequests.setLongitude(Double.parseDouble(longitude));
-							loginUsersRequests.setLocationAddress(address);
-
 
 							double distance = requestsApprovalManager.distance(new Double(latitude),new Double(longitude),new Double(settings.getCompanyLat()),new Double(settings.getCompanyLong()));
 							if (distance>settings.getDistAllowedFromCompany()) {
@@ -1110,6 +1116,7 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 					} else {
 						loginUsersRequests.setIsInsideCompany(true);
 					}
+					
 				}
 				
 				log.debug("loginUsersRequests.getPeriod_to() " + loginUsersRequests.getPeriod_to());
@@ -1151,6 +1158,9 @@ public class LoginUsersRequestsForm extends BaseSimpleFormController{
 					}
 				}
 				
+			}
+			if (address!=null && !address.isEmpty()) {
+				loginUsersRequests.setLocationAddress(address);
 			}
 			
 			log.debug("loginUsersRequests.getPeriod_to() " + loginUsersRequests.getPeriod_to());

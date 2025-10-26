@@ -80,7 +80,7 @@ public class TimesheetExternalQueries extends CommonQueries {
 
 		Map map = new HashMap();
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		String query = "";
 		String select = "";
 		String where = "";

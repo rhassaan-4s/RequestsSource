@@ -1,7 +1,6 @@
 package com._4s_.requestsApproval.dao;
 
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,12 +15,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -2516,29 +2517,94 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 	}
 
 
-	public List<LoginUsers > getEmployeesByGroup(Long groupId) {
-		log.debug("DAO: groupid " + groupId);
-		Criteria criteria = getCurrentSession().createCriteria(EmpReqTypeAcc.class);
-		criteria.createCriteria("emp_id").add(Restrictions.isNull("endServ"));
-		criteria.setProjection(Projections.projectionList()
-                .add(Projections.groupProperty("emp_id")));
-		criteria.createCriteria("group_id")
-		.add(Restrictions.eq("id", groupId));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
-	}
-	
-	public List<LoginUsers > getMgrsByGroup(Long groupId) {
-		log.debug("DAO: groupid " + groupId);
-		Criteria criteria = getCurrentSession().createCriteria(AccessLevels.class);
-		criteria.createCriteria("level_id").add(Restrictions.eq("id", groupId));
-		criteria.setProjection(Projections.projectionList()
-                .add(Projections.groupProperty("emp_id")));
+//	public List<LoginUsers > getEmployeesByGroup(Long groupId) {
+//		log.debug("DAO: groupid " + groupId);
+//		Criteria criteria = getCurrentSession().createCriteria(EmpReqTypeAcc.class);
+//		criteria.createCriteria("emp_id").add(Restrictions.isNull("endServ"));
+//		criteria.setProjection(Projections.projectionList()
+//                .add(Projections.groupProperty("emp_id")));
 //		criteria.createCriteria("group_id")
 //		.add(Restrictions.eq("id", groupId));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
+//		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//		return criteria.list();
+//	}
+	
+	//////////////testing it to improve performance of this method
+//	public List<LoginUsers> getEmployeesByGroup(Long groupId) {
+//	    log.debug("DAO: groupid " + groupId);
+//	    Criteria criteria = getCurrentSession().createCriteria(EmpReqTypeAcc.class, "empReqTypeAcc");
+//
+//	    // Use a JOIN to filter by group and employee status
+//	    criteria.createAlias("empReqTypeAcc.emp_id", "emp");
+//	    criteria.createAlias("emp.empCode", "employee");
+//	    criteria.createAlias("employee.users", "user");
+//
+//	    criteria.add(Restrictions.eq("empReqTypeAcc.group_id.id", groupId));
+//	    criteria.add(Restrictions.isNull("emp.endServ"));
+//	    
+//	    // Explicitly fetch the associated objects to avoid N+1 selects.
+//	    // This tells Hibernate to eagerly load these associations in the main query.
+//	    criteria.setFetchMode("empReqTypeAcc.emp_id", FetchMode.JOIN);
+//	    criteria.setFetchMode("emp.empCode", FetchMode.JOIN);
+//	    criteria.setFetchMode("employee.users", FetchMode.JOIN);
+//	    
+//	    // Use DISTINCT_ROOT_ENTITY to get a list of unique LoginUsers objects.
+//	    criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+//
+//	    return criteria.list();
+//	}
+	
+	public List<LoginUsers> getEmployeesByGroup(Long groupId) {
+	    log.debug("DAO: groupid " + groupId);
+
+	    // Step 1: Create a subquery to get the list of unique employee IDs
+	    DetachedCriteria subQuery = DetachedCriteria.forClass(EmpReqTypeAcc.class, "empReq");
+	    subQuery.setProjection(Projections.property("empReq.emp_id.id"));
+	    subQuery.add(Restrictions.eq("empReq.group_id.id", groupId));
+
+	    // Step 2: Create the main criteria to select LoginUsers based on the IDs
+	    Criteria mainCriteria = getCurrentSession().createCriteria(LoginUsers.class, "user");
+	    mainCriteria.add(Restrictions.isNull("user.endServ"));
+	    
+	    // Corrected: Use Subqueries.propertyIn() to connect the main query to the subquery
+	    mainCriteria.add(Subqueries.propertyIn("user.id", subQuery));
+
+	    // Ensure a distinct list of users is returned
+	    mainCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+	    return mainCriteria.list();
 	}
+//	public List<LoginUsers > getMgrsByGroup(Long groupId) {
+//		log.debug("DAO: groupid " + groupId);
+//		Criteria criteria = getCurrentSession().createCriteria(AccessLevels.class);
+//		criteria.createCriteria("level_id").add(Restrictions.eq("id", groupId));
+//		criteria.setProjection(Projections.projectionList()
+//                .add(Projections.groupProperty("emp_id")));
+////		criteria.createCriteria("group_id")
+////		.add(Restrictions.eq("id", groupId));
+//		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//		return criteria.list();
+//	}
+	
+	/////////testing to improve performance
+	
+	public List<LoginUsers> getMgrsByGroup(Long groupId) {
+	    log.debug("DAO: groupid " + groupId);
+	    Criteria criteria = getCurrentSession().createCriteria(AccessLevels.class);
+
+	    // Create an alias for the emp_id association
+	    criteria.createAlias("emp_id", "emp");
+	    // Add a restriction on the level_id
+	    criteria.add(Restrictions.eq("level_id.id", groupId));
+	    // Project the entire 'emp' object (the LoginUsers entity)
+	    criteria.setProjection(Projections.property("emp_id"));
+	    // Ensure only distinct LoginUsers are returned
+	    criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+	    return criteria.list();
+	}
+	
+	
 
 //	public List getAttendanceRequests(Date date, String empCode,RequestTypes reqType) {
 //		try{

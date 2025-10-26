@@ -40,7 +40,7 @@ public class ExternalQueries extends CommonQueries{
 		log.debug("date_ " + date_);
 		log.debug("simpleDateFormat.format(date_) " + simpleDateFormat.format(date_));
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		StringBuilder sql = new StringBuilder(
 				" insert into time_attend (emp_code,date_,time_,trans_type) values ('" +emp_code
 				+ "',to_date('" + simpleDateFormat.format(date_) + "','dd-MM-YYYY hh:mi:ss'),to_date('" + simpleDateFormat.format(time_) + "','dd-MM-YYYY hh:mi:ss'),'" + trans_type+"')");
@@ -49,14 +49,14 @@ public class ExternalQueries extends CommonQueries{
 			getJdbcTemplate().update(sql.toString());
 
 			log.debug("will commit");
-			getPlatformTransactionManager().commit(status);
+//			getPlatformTransactionManager().commit(status);
 			return 1;
 			//			getJdbcTemplate().getDataSource().getConnection().commit();
 		} catch (DataAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			log.debug("will rollback " + e.getMessage());
-			getPlatformTransactionManager().rollback(status);
+//			getPlatformTransactionManager().rollback(status);
 			return -1;
 		}
 	}
@@ -102,7 +102,7 @@ public class ExternalQueries extends CommonQueries{
 
 
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		StringBuilder sql = new StringBuilder(
 				" select entitled+previous from vac_limit where empcode = '" +empCode
 				+ "' and vacation = '" + vacId + "' and year = '"
@@ -162,7 +162,7 @@ public class ExternalQueries extends CommonQueries{
 
 
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		StringBuilder sql = new StringBuilder(
 				" select entitled+previous from vac_limit where empcode = '" +empCode
 				+ "' and vacation = '" + vacId + "' and year = '"
@@ -364,7 +364,7 @@ public class ExternalQueries extends CommonQueries{
 		//            System.out.println("Day = " + c.get(Calendar.DAY_OF_MONTH));
 
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		StringBuilder sql = new StringBuilder(
 				" select entitled+previous from vac_limit where empcode = '" +empCode
 				+ "' and vacation = '" + vacId + "' and year = '"
@@ -449,7 +449,7 @@ public class ExternalQueries extends CommonQueries{
 		if (empCode!= null && !empCode.equals("")){
 			emp = " emp_code in (" +empCode+ ") and ";
 		}
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		StringBuilder sql = new StringBuilder(
 				" select min(time_) as minDate, max(time_) as maxDate, emp_code as emp , e.firstName fName, e.lastName lName " 
 						+" from time_attend t, common_employee e where " + emp
@@ -647,7 +647,7 @@ public class ExternalQueries extends CommonQueries{
 		if (empCode!= null && !empCode.equals("")){
 			emp = " t.empcode='" +empCode+ "' and ";
 		}
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		StringBuilder sql = new StringBuilder(
 				" select min(t.period_from) as minDate, max(t.period_from) as maxDate, t.empcode as emp , e.firstName fName, e.lastName lName " 
 						+" from LOGIN_USERS_REQUESTS t, common_employee e where " + emp
@@ -845,7 +845,7 @@ public class ExternalQueries extends CommonQueries{
 		if (empCode.contains(",")) {
 			empCodeOrder = " empCode, ";
 		}
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 
 
 		String unionAll = "";
@@ -871,7 +871,7 @@ public class ExternalQueries extends CommonQueries{
 					"(CASE WHEN ta.TRANS_TYPE='I' THEN 'IN' WHEN ta.TRANS_TYPE='O' THEN 'OUT' END ) AS ATTENDANCE_Type,\n" + 
 					"(CASE WHEN ta.date_ IS NOT NULL THEN 'Approved' END) AS approval,\n" + 
 					"(CASE WHEN ta.INPUTTYPE=0 THEN 'Web_Attendance' WHEN ta.INPUTTYPE=1 THEN 'Request_Attendance' WHEN ta.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Fingerprint_Attendance' END) AS input_type,\n" +
-					"longitude as longitude, latitude as latitude \n"+
+					"longitude as longitude, latitude as latitude, locationAddress AS address \n"+
 					"FROM ALL_EMP_DAYS empdays JOIN TIME_ATTEND ta\n" + 
 					 "ON  ta.EMP_CODE=empDays.EMPCODE AND " +joinDateUnionCondition1+
 					"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
@@ -907,7 +907,7 @@ public class ExternalQueries extends CommonQueries{
 				"(CASE WHEN req.REQUEST_TYPE=10 THEN 'IN' WHEN req.REQUEST_TYPE=11 THEN 'OUT' END ) AS ATTENDANCE_Type,\n" + 
 				"(CASE WHEN req.APPROVED =1 THEN 'Approved' WHEN req.APPROVED =99 THEN 'Rejected' WHEN (req.PERIOD_FROM IS NOT NULL AND req.approved IS NULL) THEN  'Incomplete' END) AS approval ,\n" + 
 				"(CASE WHEN req.INPUTTYPE=0 THEN 'Web_Attendance' WHEN req.INPUTTYPE=1 THEN 'Request_Attendance' WHEN req.INPUTTYPE=2 THEN 'Android_Attendance' ELSE 'Absent' END) AS input_type,\n" +
-				"longitude as longitude, latitude as latitude \n"+
+				"longitude as longitude, latitude as latitude, locationAddress AS address \n"+
 				"FROM ALL_EMP_DAYS empdays join LOGIN_USERS_REQUESTS req\n" + 
 				"on req.EMPCODE=empdays.EMPCODE  AND (\n" + 
 				"(req.REQUEST_TYPE=10 OR req.REQUEST_TYPE=11)\n" + 
@@ -925,7 +925,7 @@ public class ExternalQueries extends CommonQueries{
 
 
 
-		log.debug("----sql 1---"+sql);
+//		log.debug("----sql 1---"+sql);
 
 		log.debug("sql statement " + sql.toString());
 		List in=(List) getJdbcTemplate().queryForList(sql.toString());
@@ -966,6 +966,7 @@ public class ExternalQueries extends CommonQueries{
 		String inputType1 = null;
 		String latitude1 = null;
 		String longitude1 = null;
+		String address1 = null;
 
 		while(i<in.size()){
 			timeAttend=new TimeAttend();
@@ -979,6 +980,7 @@ public class ExternalQueries extends CommonQueries{
 			String inputType2 = null;
 			String latitude2 = null;
 			String longitude2 = null;
+			String address2 = null;
 			
 			String empCode1 = null;
 			String empCode2 = null;
@@ -1006,6 +1008,11 @@ public class ExternalQueries extends CommonQueries{
 				} else {
 					longitude1 = null;
 				}
+				if (inMap.get("address")!=null) {
+					address1 = inMap.get("address").toString();
+				} else {
+					address1 = null;
+				}
 				log.debug("longitude " + longitude1 + " latitude " + latitude1);
 				log.debug("attendanceType.equals(\"IN\") " + attendanceType.equals("IN") + " attendanceType.equals(\"OUT\") " + attendanceType.equals("OUT") + " inDate "+inDate + " outDate "+outDate);
 				if (attendanceType.equals("IN")) {
@@ -1024,6 +1031,7 @@ public class ExternalQueries extends CommonQueries{
 						timeAttend.setTimeOut(attendanceTime.substring(10));
 						timeAttend.setLatitude2(latitude1);
 						timeAttend.setLongitude2(longitude1);
+						timeAttend.setAddress2(address1);
 						log.debug("outDate  = "+outDate);
 						log.debug("timeAttend (out without in) " + timeAttend);
 					} catch (ParseException e) {
@@ -1040,7 +1048,7 @@ public class ExternalQueries extends CommonQueries{
 				
 				empCode2 = inMap2.get("empCode").toString();	
 				Object atimeObj2 = inMap2.get("attendance_time");
-				if (atimeObj2!=null) {
+				if (atimeObj2!=null && empCode2.equals(empCode1)) {
 					attendanceTime2 = atimeObj2.toString();
 					log.debug("out time " + attendanceTime2);
 					try {
@@ -1057,6 +1065,7 @@ public class ExternalQueries extends CommonQueries{
 
 					log.debug("inMap2.get(latitude) " + inMap2.get("latitude"));
 					log.debug("inMap2.get(longitude) " + inMap2.get("longitude"));
+					log.debug("inMap2.get(address) " + inMap2.get("address"));
 					if (inMap2.get("latitude")!=null) {
 						latitude2 = inMap2.get("latitude").toString();
 					} else {
@@ -1070,10 +1079,16 @@ public class ExternalQueries extends CommonQueries{
 					if(attendanceType2!= null && attendanceType2.equals("OUT")) {
 						i++;
 					}
+					if (inMap2.get("address")!=null) {
+						address2 = inMap2.get("address").toString();
+					} else {
+						address2 = null;
+					}
 					log.debug("i " + i);
 				} else {
 					latitude2 = null;
 					longitude2 = null;
+					address2 = null;
 				}
 				log.debug("longitude " + longitude2 + " latitude " + latitude2);
 			}
@@ -1095,6 +1110,12 @@ public class ExternalQueries extends CommonQueries{
 			}
 			if (timeAttend.getLongitude2()==null) {
 				timeAttend.setLongitude2(longitude2);
+			}
+			if (timeAttend.getAddress1()==null) {
+				timeAttend.setAddress1(address1);
+			}
+			if (timeAttend.getAddress2()==null) {
+				timeAttend.setAddress2(address2);
 			}
 			if (timeAttend.getInputType1()==null) {
 				timeAttend.setInputType1(inputType1);
@@ -1130,11 +1151,11 @@ public class ExternalQueries extends CommonQueries{
 			log.debug(timeAttend);
 			result.add(timeAttend);
 			log.debug("timeAttend added to list");
-			Iterator itRes = result.iterator();
-			while(itRes.hasNext()) {
-				TimeAttend ta = (TimeAttend)itRes.next();
-				log.debug(ta);
-			}
+//			Iterator itRes = result.iterator();
+//			while(itRes.hasNext()) {
+//				TimeAttend ta = (TimeAttend)itRes.next();
+//				log.debug(ta);
+//			}
 
 
 			log.debug("attendanceType2 " + attendanceType2);
@@ -1178,8 +1199,10 @@ public class ExternalQueries extends CommonQueries{
 						timeAttend.setTimeOut(null);
 						longitude2=null;
 						latitude2=null;
+						address2=null;
 						timeAttend.setLongitude2(longitude2);
 						timeAttend.setLatitude2(latitude2);
+						timeAttend.setAddress2(address2);
 					}
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
@@ -1255,7 +1278,7 @@ public class ExternalQueries extends CommonQueries{
 	//	if (empCode.contains(",")) {
 	//		empCodeOrder = " empCode, ";
 	//	}
-	//	setJdbcTemplate(new JdbcTemplate(createDataSource()));
+	//	//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 	//	
 	//	
 	//	String unionAll = "";
@@ -1527,7 +1550,7 @@ public class ExternalQueries extends CommonQueries{
 
 		List result = new ArrayList();
 		List totalList = new ArrayList();
-
+		log.debug("***********settings***********:" + settings);
 		log.debug("----fromdate---"+from_date);
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -1547,6 +1570,7 @@ public class ExternalQueries extends CommonQueries{
 		}
 
 
+		
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
 		if(from_dateString!=null){
 			log.debug("-----date entered---"+from_dateString);
@@ -1571,30 +1595,30 @@ public class ExternalQueries extends CommonQueries{
 				status = " where approval like 'Rejected' ";
 			}
 		}
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 
 		String selectDate = "";
 		String joinDateCondition1 = "";
 		String joinDateCondition2 = "";
-		if (settings.getSqlServerConnectionEnabled()) {
-			selectDate = "convert(varchar, PERIOD_FROM,20) AS attendance_time,\n";
-		} else {
-			selectDate = "TO_CHAR(req.PERIOD_FROM,'YYYY-MM-DD hh24:MI:ss') AS attendance_time,\n";
-		}
-		
-		if (settings.getSqlServerConnectionEnabled()) {
-			joinDateCondition1 = " and  convert(varchar, req.FROM_DATE,23)=convert(varchar, empdays.DD,23)\n" ;
-		} else {
-			joinDateCondition1 = "and TO_CHAR(req.FROM_DATE,'YYYY-MM-DD')=TO_CHAR(empdays.DD,'YYYY-MM-DD')\n";
-		}
-		
-		if (settings.getSqlServerConnectionEnabled()) {
-			joinDateCondition2 = "AND empdays.DD >= CONVERT(datetime,'"+from_dateString+"',103) AND empdays.DD <= CONVERT(datetime,'"+to_dateString+"',103)\n";
-		} else {
-			joinDateCondition2 = "AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n";
-		}
-		
-		/////////////////////////////////////////////////////////////////////////////////////
+			if (settings != null && settings.getSqlServerConnectionEnabled()) {
+				selectDate = "convert(varchar, PERIOD_FROM,20) AS attendance_time,\n";
+			} else {
+				selectDate = "TO_CHAR(req.PERIOD_FROM,'YYYY-MM-DD hh24:MI:ss') AS attendance_time,\n";
+			}
+
+			if (settings != null && settings.getSqlServerConnectionEnabled()) {
+				joinDateCondition1 = " and  convert(varchar, req.FROM_DATE,23)=convert(varchar, empdays.DD,23)\n";
+			} else {
+				joinDateCondition1 = "and TO_CHAR(req.FROM_DATE,'YYYY-MM-DD')=TO_CHAR(empdays.DD,'YYYY-MM-DD')\n";
+			}
+
+			if (settings != null && settings.getSqlServerConnectionEnabled()) {
+				joinDateCondition2 = "AND empdays.DD >= CONVERT(datetime,'" + from_dateString
+						+ "',103) AND empdays.DD <= CONVERT(datetime,'" + to_dateString + "',103)\n";
+			} else {
+				joinDateCondition2 = "AND empdays.DD >= TO_DATE('" + from_dateString
+						+ "','DD/MM/YYYY') AND empdays.DD <= TO_DATE('" + to_dateString + "','DD/MM/YYYY')\n";
+			}
 		////////////////////////////////////////////////////////////////////////////////////
 		String selectUnionDate = "";
 		String joinDateUnionCondition1 = "";
@@ -1604,44 +1628,44 @@ public class ExternalQueries extends CommonQueries{
 		String joinCondition5 = "";
 		String joinCondition6 = "";
 		
-		if (settings.getSqlServerConnectionEnabled()) {
+		if (settings != null && settings.getSqlServerConnectionEnabled()) {
 			selectUnionDate = "convert(varchar, ta.TIME_,20) AS attendance_time,\n";
 		} else {
 			selectUnionDate = "TO_CHAR(ta.TIME_,'YYYY-MM-DD hh24:MI:ss')  AS attendance_time,\n";
 		}
 		
-		if (settings.getSqlServerConnectionEnabled()) {
+		if (settings != null && settings.getSqlServerConnectionEnabled()) {
 			joinDateUnionCondition1 = "  convert(varchar, ta.DATE_,23)=convert(varchar, empdays.DD,23)\n" ;
 		} else {
 			joinDateUnionCondition1 =  " TO_CHAR(ta.DATE_,'YYYY-MM-DD')=TO_CHAR(EMPDAYS.DD,'YYYY-MM-DD')\n";
 		}
 		
-		if (settings.getSqlServerConnectionEnabled()) {
+		if (settings != null && settings.getSqlServerConnectionEnabled()) {
 			joinDateUnionCondition2 = "AND empdays.DD >= CONVERT(datetime,'"+from_dateString+"',103) AND empdays.DD <= CONVERT(datetime,'"+to_dateString+"',103)\n";
 		} else {
 			joinDateUnionCondition2 = "AND empdays.DD >= TO_DATE('"+from_dateString+"','DD/MM/YYYY') AND empdays.DD <= TO_DATE('"+to_dateString+"','DD/MM/YYYY')\n";
 		}
 		
 		
-		if (settings.getSqlServerConnectionEnabled()) {
+		if (settings != null && settings.getSqlServerConnectionEnabled()) {
 			joinCondition3 = " (r.PERIOD_FROM=convert(varchar,q.mindate,20)) \n";;
 		} else {
 			joinCondition3 = " (r.PERIOD_FROM=TO_DATE(q.mindate,'yyyy-mm-dd HH24:MI:SS')) \n";
 		}
 		
-		if (settings.getSqlServerConnectionEnabled()) {
+		if (settings != null && settings.getSqlServerConnectionEnabled()) {
 			joinCondition4 = " tt.DATE_=convert(varchar,q.mindate,20)\n";
 		} else {
 			joinCondition4 = " tt.DATE_=TO_DATE(q.mindate,'yyyy-mm-dd HH24:MI:SS')\n";
 		}
 		
-		if (settings.getSqlServerConnectionEnabled()) {
+		if (settings != null && settings.getSqlServerConnectionEnabled()) {
 			joinCondition5 = " (r2.FROM_DATE=convert(varchar,maxdate,20)\n";
 		} else {
 			joinCondition5 = " (r2.FROM_DATE=TO_DATE(maxdate,'yyyy-mm-dd HH24:MI:SS')\n";
 		}
 		
-		if (settings.getSqlServerConnectionEnabled()) {
+		if (settings != null && settings.getSqlServerConnectionEnabled()) {
 			joinCondition6 = " tt2.DATE_=convert(varchar,q.maxdate,20) ";
 		} else {
 			joinCondition6 = " tt2.DATE_=TO_DATE(q.maxdate,'yyyy-mm-dd HH24:MI:SS') ";
@@ -1932,7 +1956,7 @@ public class ExternalQueries extends CommonQueries{
 		}
 		dd1 = mCalDate.getDate();
 		log.debug("----dd1- after formatting--"+dd1);
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		String dateCondition = "";
 		if (settings.getSqlServerConnectionEnabled()) {
 			dateCondition = "CONVERT(datetime,'"+ dd1String+"', 103) and  CONVERT(datetime,'" +from_dateString +"', 103)";
@@ -1996,7 +2020,7 @@ public class ExternalQueries extends CommonQueries{
 		} else {
 			dateCondition =  " empvac.fr_date >= to_date ('"+ from_dateString+"', 'DD-MM-YYYY') and empvac.fr_date <= to_date('" +	to_dateString+"', 'DD-MM-YYYY')";
 		}
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		StringBuilder sql = new StringBuilder(
 				" select empvac.fr_date as fr_date, empvac.to_date as to_date, empvac.withdr as withdr, empvac.vacation as vacation, "
 						+ "empvac.empcode as empCode, e.firstName as fName "
@@ -2014,7 +2038,7 @@ public class ExternalQueries extends CommonQueries{
 	}
 
 	public int getSalaryFromDay(){
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		StringBuilder sql = new StringBuilder(
 				" select salary_from_day from system ");
 
@@ -2129,7 +2153,7 @@ public class ExternalQueries extends CommonQueries{
 
 		Map map = new HashMap();
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		String query = "";
 		String outerSelectStart = "SELECT a.*, emp.ID empId,emp.EMPCODE employeeCode, emp.FIRSTNAME name, acc1.GROUP_ID,lev.ID levId, lev.EMP_ID mgrId"
 				+ ",APPROVALS.APPROVAL, APPROVALS.APPROVAL_DATE , APPROVALS.USER_ID , APPROVALS.NOTE "
@@ -2549,7 +2573,7 @@ public class ExternalQueries extends CommonQueries{
 
 		Map map = new HashMap();
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		String query = "";
 		String outerSelectStart = "SELECT a.*, emp.ID empId,emp.EMPCODE employeeCode, emp.FIRSTNAME name "
 				//				+ ", acc1.GROUP_ID,lev.ID levId, lev.EMP_ID mgrId"
@@ -2960,7 +2984,7 @@ public class ExternalQueries extends CommonQueries{
 
 		Map map = new HashMap();
 
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		String query = "";
 		String outerSelectStart = "SELECT a.*,mgr.FIRSTNAME mgrName, emp.ID empId,emp.EMPCODE employeeCode, emp.FIRSTNAME name, acc1.GROUP_ID,lev.ID levId, lev.EMP_ID mgrId"
 				+ ",APPROVALS.APPROVAL, APPROVALS.APPROVAL_DATE , APPROVALS.USER_ID , APPROVALS.NOTE approvalNote "
