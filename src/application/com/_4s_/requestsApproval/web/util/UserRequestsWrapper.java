@@ -4,46 +4,46 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class UserRequestsWrapper {
-	private Integer rnum;
-	private long id;
+	private Integer rnum = null;
+	private long id ;
 	private long request_type;
 	private long login_user;
-	private String empCode;
-	private Timestamp request_date;
-	private Timestamp from_date;
-	private Timestamp to_date;
-	private Timestamp period_from;
-	private Timestamp period_to;
-	private String notes;
-	private String leave_type;
-	private String leave_effect;
-	private Long payed;
-	private Long approved;
-	private Long posted;
-	private Long applicable;
-	private String vacation;
-	private String reply;
-	private String requestNumber;
-	private Long withdrawDays;
-	private Long vacCredit;
-	private String str_request_date;
-	private String str_from_date;
-	private String str_to_date;
-	private String str_period_from;
-	private String str_period_to;
-	private String altDate;
-	private Double longitude;
-	private Double latitude;
-	private Long inputType;
-	private String locationAddress;
-	private String isInsideCompany;
-	private Timestamp from_date_history;
-	private Long managerModifiedDat;
-	private String description;
-	private String vacName;
-	private Long empId;
-	private String employeeCode;
-	private String name;
+	private String empCode = null;
+	private Timestamp request_date = null;
+	private Timestamp from_date = null;
+	private Timestamp to_date = null;
+	private Timestamp period_from = null;
+	private Timestamp period_to = null;
+	private String notes = null;
+	private String leave_type = null;
+	private String leave_effect = null;
+	private Long payed = null;
+	private Long approved = null;
+	private Long posted = null;
+	private Long applicable = null;
+	private String vacation = null;
+	private String reply = null;
+	private String requestNumber = null;
+	private Long withdrawDays = null;
+	private Long vacCredit = null;
+	private String str_request_date = null;
+	private String str_from_date = null;
+	private String str_to_date = null;
+	private String str_period_from = null;
+	private String str_period_to = null;
+	private String altDate = null;
+	private Double longitude = null;
+	private Double latitude = null;
+	private Long inputType = null;
+	private String locationAddress = null;
+	private String isInsideCompany = null;
+	private Timestamp from_date_history = null;
+	private Long managerModifiedDat = null;
+	private String description = null;
+	private String vacName = null;
+	private Long empId = null;
+	private String employeeCode = null;
+	private String name = null;
 	
 	public UserRequestsWrapper(Object rnum, Object id, Object request_type, Object login_user, Object empcode,
 			Object request_date, Object from_date, Object to_date, Object period_from, Object period_to, Object notes,
@@ -93,7 +93,10 @@ public class UserRequestsWrapper {
 			this.vacCredit = null;
 		}
 		this.str_request_date = (String) str_request_date;
-		this.str_from_date = (String) str_from_date;
+		System.out.println("*********str_from_date in wrapper is: "+str_from_date + "**********");
+		if (str_from_date != null) {
+			this.str_from_date = (String) str_from_date;
+		}
 		this.str_to_date = (String) str_to_date;
 		this.str_period_from = (String) str_period_from;
 		this.str_period_to = (String) str_period_to;

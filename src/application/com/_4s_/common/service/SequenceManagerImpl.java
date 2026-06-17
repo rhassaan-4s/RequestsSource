@@ -7,14 +7,20 @@ import java.sql.Statement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.common.dao.CommonDAO;
 import com._4s_.common.model.LastSequence;
 import com._4s_.common.util.DBUtils;
 
+@Service("sequenceManager")
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class SequenceManagerImpl extends BaseManagerImpl implements
 		SequenceManager {
 	protected final Log log = LogFactory.getLog(getClass());
+	@Autowired
 	private CommonDAO commonDAO;
 
 	

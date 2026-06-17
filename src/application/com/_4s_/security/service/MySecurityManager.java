@@ -1,10 +1,14 @@
 package com._4s_.security.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com._4s_.common.service.BaseManager;
 import com._4s_.security.model.Fields;
 import com._4s_.security.model.IPAddress;
+import com._4s_.security.model.Imei;
+import com._4s_.security.model.SecurityApplication;
 import com._4s_.security.model.User;
 
 
@@ -12,7 +16,7 @@ public interface MySecurityManager extends BaseManager{
  public List getUsers();
  public List getListOfRoles();
  public List getFields();
- public void compareLists(Fields field,List allRoles, List selectedRoles);
+ public void compareLists(Fields field,Set allRoles, List selectedRoles);
  public String getApplicationDefaultPage(Long applicationId);
  public User getUserByUserName(String username);
  
@@ -24,4 +28,11 @@ public interface MySecurityManager extends BaseManager{
  public List getActiveApplications();
 public abstract List getApplicationsByUser(User user);
 public IPAddress checkIP(String currentIP, User user);
+public User getUser(String username);
+public Imei checkImei(String imei, User user);
+public Map<String, Object> login(String tenantId);
+
+public User getUserWithApplicationsAndRoles(String username);
+public SecurityApplication getApplicationById(Long id);
+
 }

@@ -29,7 +29,7 @@ public class DBUtils {
 		DBUtils.dataSource = dataSource;
 		DBUtils.jdbcTemplate = new JdbcTemplate(dataSource);
 
-		System.out.println("datasource " + dataSource);
+//		System.out.println("datasource " + dataSource);
 		try {
 			DBUtils.cachedConnection = dataSource.getConnection();
 		} catch (SQLException e) {

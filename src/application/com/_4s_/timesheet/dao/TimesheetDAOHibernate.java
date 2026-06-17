@@ -1,10 +1,17 @@
 package com._4s_.timesheet.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,19 +41,51 @@ public class TimesheetDAOHibernate extends BaseDAOHibernate implements Timesheet
 			Date inDate, TimesheetCostCenter costcenter,
 			TimesheetTransactionParts part1, TimesheetTransactionParts part2,
 			TimesheetTransactionParts part3) {
-		Criteria criteria = getSession().createCriteria(TimesheetTransaction.class);
-		criteria.add(Restrictions.eq("empCode", empCode));
-		criteria.add(Restrictions.eq("inDate", inDate));
-		criteria.add(Restrictions.eq("costCode", costcenter));
-		criteria.add(Restrictions.eq("part1", part1));
-		criteria.add(Restrictions.eq("part2", part2));
-		criteria.add(Restrictions.eq("part3", part3));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		if (criteria.list()!=null && criteria.list().size()>0) {
-			return (TimesheetTransaction)criteria.list().get(0);
-		} else {
-			return null;
-		}
+//		Criteria criteria = getCurrentSession().createCriteria(TimesheetTransaction.class);
+//		criteria.add(Restrictions.eq("empCode", empCode));
+//		criteria.add(Restrictions.eq("inDate", inDate));
+//		criteria.add(Restrictions.eq("costCode", costcenter));
+//		criteria.add(Restrictions.eq("part1", part1));
+//		criteria.add(Restrictions.eq("part2", part2));
+//		criteria.add(Restrictions.eq("part3", part3));
+//		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//		if (criteria.list()!=null && criteria.list().size()>0) {
+//			return (TimesheetTransaction)criteria.list().get(0);
+//		} else {
+//			return null;
+//		}
+		
+		CriteriaBuilder builder = super.getBuilder();
+		Session session = super.getCurrentSession();
+
+		CriteriaQuery<TimesheetTransaction> query =
+		        builder.createQuery(TimesheetTransaction.class);
+
+		Root<TimesheetTransaction> root =
+		        query.from(TimesheetTransaction.class);
+
+		List<Predicate> predicates = new ArrayList<>();
+
+		predicates.add(builder.equal(root.get("empCode"), empCode));
+		predicates.add(builder.equal(root.get("inDate"), inDate));
+		predicates.add(builder.equal(root.get("costCode"), costcenter));
+		predicates.add(builder.equal(root.get("part1"), part1));
+		predicates.add(builder.equal(root.get("part2"), part2));
+		predicates.add(builder.equal(root.get("part3"), part3));
+
+		query.select(root)
+		     .where(predicates.toArray(new Predicate[0]))
+		     .distinct(true);
+
+		TypedQuery<TimesheetTransaction> typedQuery =
+		        session.createQuery(query);
+
+		typedQuery.setMaxResults(1);
+
+		List<TimesheetTransaction> result =
+		        typedQuery.getResultList();
+
+		return result.isEmpty() ? null : result.get(0);
 	}
 	
 	public Map getTimesheetTransactions(String empCode, Date fromDate, Date toDate, TimesheetCostCenter costcenter, TimesheetActivity activity, TimesheetTransactionParts part1, TimesheetTransactionParts part2, TimesheetTransactionParts part3, int pageNo, int pageSize, String sort) {

@@ -211,7 +211,7 @@ function initMap(latitude,longitude) {
 									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${model.firstDay}" />
 								</td>
 								</c:when>
-								<c:when test="${request_date_from !=null || request_date_from!=''}">
+								<c:when test="${model.request_date_from !=null || model.request_date_from!=''}">
 								<td  class="formBodControl" >
 									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${model.request_date_from}" />
 								</td>

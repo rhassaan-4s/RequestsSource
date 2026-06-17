@@ -1,5 +1,6 @@
 package com._4s_.i18n.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Map;
 
 import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
@@ -30,11 +32,10 @@ import com._4s_.i18n.model.MyMessage;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-@Transactional
 @Repository
+@Transactional
 public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO 
 {
-
 	private MyLocale myLocaleFromDB = null;
 
 	private MyLocale getMyLocale(MyLocale myLocale) 
@@ -44,11 +45,11 @@ public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO
 		Predicate restrictions = getBuilder().equal(root.get("language"), myLocale.getLanguage());
 		queryCriteria.select(root).where(restrictions).distinct(true);
 		
-		Session session = getSession();
-    	if (session == null || session.isOpen()==false) {
-    		getCurrentSession();
-    		session = getSession();
-    	}
+		Session session = getCurrentSession();
+//    	if (session == null || session.isOpen()==false) {
+//    		getCurrentSession();
+//    		session = getSession();
+//    	}
     	
 		TypedQuery<Object> query = session.createQuery(queryCriteria);
 		List myLocales =  query.getResultList();
@@ -105,7 +106,7 @@ public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO
 		queryCriteria.multiselect(message.alias("message"),key.alias("name")).where(restrictions).distinct(true);
 		log.debug("query created");
 //		List list =  query.getResultList();
-		List<Tuple> tuples = getSession().createQuery(queryCriteria).getResultList();
+		List<Tuple> tuples = getCurrentSession().createQuery(queryCriteria).getResultList();
 		log.debug("msgs for arabic locale list size " + tuples.size());
 		if ((tuples.size() == 0)&&(log.isDebugEnabled())) {
 			log.debug("******************No objects found");
@@ -220,32 +221,123 @@ public class MessageDAOHibernate extends BaseDAOHibernate implements MessageDAO
 			final MyLocale myLocale) 
 	{
 
-		Criteria criteria = getSession()
-				.createCriteria(MyMessage.class);
-		criteria.createCriteria("key").add(
-				Restrictions.eq("name", keyName));
-		criteria.createCriteria("myLocale").add(
-				Restrictions.eq("id", myLocale.getId()));
+//		Criteria criteria = getCurrentSession()
+//				.createCriteria(MyMessage.class);
+//		criteria.createCriteria("key").add(
+//				Restrictions.eq("name", keyName));
+//		criteria.createCriteria("myLocale").add(
+//				Restrictions.eq("id", myLocale.getId()));
+//
+//		return (MyMessage)criteria.uniqueResult();
+		
+		CriteriaBuilder builder = super.getBuilder();
+		Session session = super.getCurrentSession();
 
-		return (MyMessage)criteria.uniqueResult();
+		CriteriaQuery<MyMessage> query =
+		        builder.createQuery(MyMessage.class);
+
+		Root<MyMessage> root =
+		        query.from(MyMessage.class);
+
+		List<Predicate> predicates = new ArrayList<>();
+
+		/*
+		 * key.name = keyName
+		 */
+		predicates.add(
+		        builder.equal(
+		                root.get("key").get("name"),
+		                keyName
+		        )
+		);
+
+		/*
+		 * myLocale.id = myLocale.getId()
+		 */
+		predicates.add(
+		        builder.equal(
+		                root.get("myLocale").get("id"),
+		                myLocale.getId()
+		        )
+		);
+
+		query.select(root)
+		     .where(predicates.toArray(new Predicate[0]));
+
+		TypedQuery<MyMessage> typedQuery =
+		        session.createQuery(query);
+
+		typedQuery.setMaxResults(1);
+
+		List<MyMessage> result = typedQuery.getResultList();
+
+		return result.isEmpty() ? null : result.get(0);
 	}
 
 	// Returns key using key name
 	public Key getKeyByName(final String keyName)
 	{
-		Criteria criteria = getSession().createCriteria(Key.class).add(
-				Restrictions.eq("name", keyName));
-		return (Key)criteria.uniqueResult();
+//		Criteria criteria = getCurrentSession().createCriteria(Key.class).add(
+//				Restrictions.eq("name", keyName));
+//		return (Key)criteria.uniqueResult();
+		
+		CriteriaBuilder builder = super.getBuilder();
+		Session session = super.getCurrentSession();
+
+		CriteriaQuery<Key> query =
+		        builder.createQuery(Key.class);
+
+		Root<Key> root =
+		        query.from(Key.class);
+
+		query.select(root)
+		     .where(
+		             builder.equal(root.get("name"), keyName)
+		     );
+
+		TypedQuery<Key> typedQuery =
+		        session.createQuery(query);
+
+		typedQuery.setMaxResults(1);
+
+		List<Key> result = typedQuery.getResultList();
+
+		return result.isEmpty() ? null : result.get(0);
 	}
 
 	// Returns all msgs for a local
 	public List getMessagesByLocale(final MyLocale myLocale)
 	{
-		Criteria criteria = getSession()
-				.createCriteria(MyMessage.class);
-		criteria.createCriteria("myLocale").add(
-				Restrictions.eq("id", myLocale.getId()));
+//		Criteria criteria = getCurrentSession()
+//				.createCriteria(MyMessage.class);
+//		criteria.createCriteria("myLocale").add(
+//				Restrictions.eq("id", myLocale.getId()));
+//
+//		return (List)criteria.list();
+		
+		CriteriaBuilder builder = super.getBuilder();
+		Session session = super.getCurrentSession();
 
-		return (List)criteria.list();
+		CriteriaQuery<MyMessage> query =
+		        builder.createQuery(MyMessage.class);
+
+		Root<MyMessage> root =
+		        query.from(MyMessage.class);
+
+		/*
+		 * myLocale.id = ?
+		 */
+		query.select(root)
+		     .where(
+		             builder.equal(
+		                     root.get("myLocale").get("id"),
+		                     myLocale.getId()
+		             )
+		     );
+
+		TypedQuery<MyMessage> typedQuery =
+		        session.createQuery(query);
+
+		return typedQuery.getResultList();
 	}
 }

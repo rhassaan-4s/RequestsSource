@@ -30,16 +30,16 @@ import com._4s_.security.service.MySecurityManager;
 public class UserController implements Comparator{//extends BaseController
 	protected final Log log = LogFactory.getLog(getClass());
 	@Autowired
-	private MySecurityManager mgr = null;
+	private MySecurityManager securityManager = null;
 	@Autowired
 	public CommonManager commonManager;
 
-	public MySecurityManager getMgr() {
-		return mgr;
+	public MySecurityManager getSecurityManager() {
+		return securityManager;
 	}
 
-	public void setMgr(MySecurityManager mgr) {
-		this.mgr = mgr;
+	public void setSecurityManager(MySecurityManager mgr) {
+		this.securityManager = mgr;
 	}
 	
 	public CommonManager getCommonManager() {
@@ -95,25 +95,25 @@ public class UserController implements Comparator{//extends BaseController
 		String deleteId = request.getParameter("deleteId");
 		if(deleteId != null && !deleteId.equals("")) {
 			Long deleteIdLong = Long.parseLong(deleteId);
-			Object o = mgr.getObjectByParameter(User.class, "id", deleteIdLong);
+			Object o = securityManager.getObjectByParameter(User.class, "id", deleteIdLong);
 			if(o != null) {
 				User u = (User)o;
 				u.setIsActive(false);
-				mgr.saveObject(u);
+				securityManager.saveObject(u);
 			}
 		}
 		
 		String confirmDeleteImei = request.getParameter("confirmDeleteImei");
-		List users = mgr.getEmployeesByBranchAndDepartmentAndStatus(request.getParameter("councilBranch"), request.getParameter("department"), request.getParameter("isEmployee"));
+		List users = securityManager.getEmployeesByBranchAndDepartmentAndStatus(request.getParameter("councilBranch"), request.getParameter("department"), request.getParameter("isEmployee"));
 		if (confirmDeleteImei!= null && confirmDeleteImei.equals("true")) {
 //			Iterator itr = users.iterator();
 //			while(itr.hasNext()) {
 //				User user = (User)itr.next();
-				List imeis = mgr.getObjects(Imei.class);
+				List imeis = securityManager.getObjects(Imei.class);
 				Iterator imeiItr = imeis.iterator();
 				while (imeiItr.hasNext()) {
 					Imei imei = (Imei)imeiItr.next();
-					mgr.removeObject(imei);
+					securityManager.removeObject(imei);
 				}
 					
 //			}
@@ -121,18 +121,18 @@ public class UserController implements Comparator{//extends BaseController
 		
 		String confirmDeleteIP = request.getParameter("confirmDeleteIP");
 		if (confirmDeleteIP!= null && confirmDeleteIP.equals("true")) {
-				List ips = mgr.getObjects(IPAddress.class);
+				List ips = securityManager.getObjects(IPAddress.class);
 				Iterator ipItr = ips.iterator();
 				while (ipItr.hasNext()) {
 					IPAddress ip = (IPAddress)ipItr.next();
-					mgr.removeObject(ip);
+					securityManager.removeObject(ip);
 				}
 					
 //			}
 		}
 		
 		
-		List departments = mgr.getObjects(Department.class);		
+		List departments = securityManager.getObjects(Department.class);		
 //		List branches = commonManager.getBranchesRelatedByCompany(new Long(1)); // SCFHS
 		List branches= commonManager.getObjects(Branch.class);
 		model.addAttribute("users", users);

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com._4s_.clients.model.Tenant;
 
-@Repository
+@Repository(value = "tenantRepository")
 public interface TenantRepository extends JpaRepository<Tenant, Long> {
     Optional<Tenant> findBySlug(String slug);
 }

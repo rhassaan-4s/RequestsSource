@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,7 +42,7 @@ public class Roles implements Serializable,Auditable {
 	@ManyToOne
 	@JoinColumn (name="application")
 	private SecurityApplication application;
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name= "security_role_permissions",
 			joinColumns={@JoinColumn(name="role")},
 			inverseJoinColumns={@JoinColumn(name="permission")})

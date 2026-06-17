@@ -7,12 +7,11 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.common.dao.BaseDAO;
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 /**
  * Base class for Business Services - use this class for utility methods and
@@ -21,8 +20,11 @@ import com.microsoft.sqlserver.jdbc.SQLServerException;
  * <p><a href="BaseManager.java.html"><i>View Source</i></a></p>
  *
  */
+@Service("baseManager")
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class BaseManagerImpl implements BaseManager {
     protected final Log log = LogFactory.getLog(getClass());
+    @Autowired
     protected BaseDAO baseDAO;
     
     public void setBaseDAO(BaseDAO baseDAO) {

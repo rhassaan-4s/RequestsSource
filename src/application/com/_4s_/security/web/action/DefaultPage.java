@@ -3,6 +3,7 @@ package com._4s_.security.web.action;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -133,7 +134,8 @@ public class DefaultPage {
 			log.debug("-----default not null-----");
 			//defaultPage = user.getDefaultApplication().getDefaultPage();
 			List userRoles = user.getRoles();
-			List defaultApplicationRoles = user.getDefaultApplication().getRoles();
+			User u = securityManager.getUserWithApplicationsAndRoles(user.getUsername());
+			Set<Roles> defaultApplicationRoles = u.getDefaultApplication().getRoles();
 			Iterator itr = defaultApplicationRoles.iterator();
 			while(itr.hasNext()){
 				Roles role = (Roles)itr.next();
@@ -228,7 +230,7 @@ public class DefaultPage {
 						log.debug("-----default not null-----");
 						//defaultPage = user.getDefaultApplication().getDefaultPage();
 						List userRoles = user.getRoles();
-						List defaultApplicationRoles = user.getDefaultApplication().getRoles();
+						Set<Roles> defaultApplicationRoles = user.getDefaultApplication().getRoles();
 						Iterator itr = defaultApplicationRoles.iterator();
 						while(itr.hasNext()){
 							Roles role = (Roles)itr.next();
@@ -377,7 +379,7 @@ public class DefaultPage {
 				log.debug("-----default not null-----");
 				//defaultPage = user.getDefaultApplication().getDefaultPage();
 				List userRoles = user.getRoles();
-				List defaultApplicationRoles = user.getDefaultApplication().getRoles();
+				Set<Roles> defaultApplicationRoles = user.getDefaultApplication().getRoles();
 				Iterator itr = defaultApplicationRoles.iterator();
 				while(itr.hasNext()){
 					Roles role = (Roles)itr.next();

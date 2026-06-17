@@ -10,9 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.LinkedCaseInsensitiveMap;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,13 +27,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
-import com._4s_.common.web.action.CommonController;
 import com._4s_.common.web.binders.DateTimeBinder;
 import com._4s_.common.web.binders.DomainObjectBinder;
 import com._4s_.requestsApproval.model.LoginUsers;
@@ -97,7 +91,7 @@ public class RequestStatusReports extends BaseSimpleFormController {
 	//**************************************** referenceData ***********************************************\\
 //	@ModelAttribute("model")	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) 
 //	{
-	@ModelAttribute("model")
+	@ModelAttribute("results")
 	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
@@ -399,9 +393,29 @@ public class RequestStatusReports extends BaseSimpleFormController {
 		log.debug("exactDateTo " + exactDateTo);
 		Map results = requestsApprovalManager.getRequestsStatus(requestNumber, emp_code, dateFrom, dateTo, exactDateFrom, exactDateTo, requestType, codeFrom, codeTo, statusId, sort, loggedInUser, empReqTypeAccs, true,null, pageNumber, 20);
 		
-		model.addAttribute("Results",results);
-		model.addAttribute("pageNumber", pageNumber);
-		model.addAttribute("requestType", requestType);
+		List orderBy = new ArrayList();
+		orderBy.add("id");
+		List requests=requestsApprovalManager.getObjectsByParameterOrderedByFieldList(RequestTypes.class,"hidden" , new Integer(0), orderBy);
+		requests.addAll(requestsApprovalManager.getObjectsByParameterOrderedByFieldList(RequestTypes.class,"hidden" , new Integer(1), orderBy));
+		
+		results.put("pageNumber", pageNumber);
+		results.put("requestType", requestType);
+		
+		results.put("firstDay", formattedDate);
+		results.put("empCode", emp_code);
+		results.put("status", statusId);
+		results.put("codeFrom", codeFrom);
+		results.put("codeTo", codeTo);
+		results.put("today", formatedToday);
+		results.put("request_date_from", request_date_from);
+		results.put("request_date_to", request_date_to);
+//		results.put("dateFrom", dateFrom);
+//		results.put("dateTo", dateTo);
+		
+		results.put("requestTypeList",requests);
+		
+		model.addAttribute("results",results);
+		
 		
 //		///////////////////////////////////////////////////////////
 //		List results2 = (List)model.get("results");
@@ -592,25 +606,7 @@ public class RequestStatusReports extends BaseSimpleFormController {
 					
 				}
 			
-			////////////////////////////////////////////
 				
-				List orderBy = new ArrayList();
-				orderBy.add("id");
-				List requests=requestsApprovalManager.getObjectsByParameterOrderedByFieldList(RequestTypes.class,"hidden" , new Integer(0), orderBy);
-				requests.addAll(requestsApprovalManager.getObjectsByParameterOrderedByFieldList(RequestTypes.class,"hidden" , new Integer(1), orderBy));
-				
-				model.addAttribute("firstDay", formattedDate);
-				model.addAttribute("empCode", emp_code);
-				model.addAttribute("status", statusId);
-				model.addAttribute("codeFrom", codeFrom);
-				model.addAttribute("codeTo", codeTo);
-				model.addAttribute("today", formatedToday);
-				model.addAttribute("request_date_from", request_date_from);
-				model.addAttribute("request_date_to", request_date_to);
-//				model.addAttribute("dateFrom", dateFrom);
-//				model.addAttribute("dateTo", dateTo);
-				
-				model.addAttribute("requestTypeList",requests);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 //		return new ModelAndView("requestStatusReports",model);
 		return "requestStatusReports";

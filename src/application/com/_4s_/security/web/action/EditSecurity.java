@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,9 +26,7 @@ import com._4s_.security.model.Fields;
 import com._4s_.security.model.Permissions;
 import com._4s_.security.model.Roles;
 import com._4s_.security.model.SecurityApplication;
-import com._4s_.security.model.User;
 import com._4s_.security.service.MySecurityManager;
-import com._4s_.security.web.command.ChangePasswordCommand;
 
 public class EditSecurity extends BaseSimpleFormController {
 	private MySecurityManager mgr = null;
@@ -115,7 +112,7 @@ public class EditSecurity extends BaseSimpleFormController {
 		SecurityApplication application = field.getApplication();
 /*		SecurityApplication app = (SecurityApplication) baseManager.getObject(
 				SecurityApplication.class, new Long(7));
-*/		List role = application.getRoles();
+*/		Set<Roles> role = application.getRoles();
 //		List appRole = app.getRoles();
 //		role.addAll(appRole);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..request ");
@@ -161,10 +158,10 @@ public class EditSecurity extends BaseSimpleFormController {
 /*		SecurityApplication app = (SecurityApplication) baseManager.getObject(
 				SecurityApplication.class, new Long(7));
 */
-		List role = application.getRoles();
+		Set role = application.getRoles();
 //		List appRole = app.getRoles();
 //		role.addAll(appRole);
-		List roles = role;
+		Set roles = role;
 		Map model = new HashMap();
 		model.put("fieldId", fieldId);
 		model.put("option", y);

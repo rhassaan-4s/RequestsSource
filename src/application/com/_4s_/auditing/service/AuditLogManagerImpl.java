@@ -6,13 +6,20 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com._4s_.auditing.dao.AuditLogDAO;
 import com._4s_.auditing.model.Auditable;
 import com._4s_.auditing.model.ExternalClass;
 import com._4s_.common.service.BaseManagerImpl;
 
+@Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRED, readOnly = false)
+@Service("auditLogManager")
 public class AuditLogManagerImpl extends BaseManagerImpl implements
 		AuditLogManager {
+	@Autowired
 	private AuditLogDAO auditDAO = null;
 
 	public AuditLogDAO getAuditDAO() {

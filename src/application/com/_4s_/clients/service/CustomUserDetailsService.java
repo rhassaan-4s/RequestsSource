@@ -15,8 +15,9 @@ import org.springframework.stereotype.Service;
 
 import com._4s_.clients.dao.UserRepository;
 import com._4s_.clients.model.CustomUserDetails;
+import com._4s_.clients.model.Role;
 import com._4s_.clients.model.User;
-import com._4s_.clients.web.util.TenantContext;
+import com._4s_.common.dao.TenantContext;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -29,12 +30,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        String tenant = TenantContext.getCurrentTenant();
+        String tenant = TenantContext.getTenant();
 
         if (tenant != null) {
             return loadUser(email, tenant);
         } else {
-            return loadGeneralAdmin(email);
+        	Role role = ADMINISTRATOR;
+            return loadGeneralAdmin(email,role);
         }
     }
 
@@ -52,8 +54,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getTenant().getId(), auths);
     }
 
-    private UserDetails loadGeneralAdmin(String email) {
-        User admin = userRepository.findGeneralAdmin(email).orElseThrow(
+    private UserDetails loadGeneralAdmin(String email, Role role) {
+        User admin = userRepository.findGeneralAdmin(email,role).orElseThrow(
                 () -> new UsernameNotFoundException(
                         "'" + email + "' was not found as a general admin."));
         List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();

@@ -37,20 +37,22 @@ import com._4s_.security.model.UserPrivilege;
 public class AddAuthority extends BaseSimpleFormController implements BaseFormControllerInterface{
 
 	@Autowired
-	private MessageManager mgr;
+	private MessageManager messageManager;
 	@Autowired
 	public CommonManager commonManager;
 	
 	@Autowired
 	public DomainObjectBinder userBinder;
 	
-	public MessageManager getMgr() {
-		return mgr;
+	
+	public MessageManager getMessageManager() {
+		return messageManager;
 	}
 
-	public void setMgr(MessageManager mgr) {
-		this.mgr = mgr;
+	public void setMessageManager(MessageManager messageManager) {
+		this.messageManager = messageManager;
 	}
+
 	public CommonManager getCommonManager() {
 		return commonManager;
 	}
@@ -130,7 +132,7 @@ public class AddAuthority extends BaseSimpleFormController implements BaseFormCo
 		}
 		
 		List branchList = new ArrayList();
-		branchList = mgr.getObjects(Branch.class);
+		branchList = messageManager.getObjects(Branch.class);
 		model.put("branchList",(List<Branch>)branchList);
 		model.put("usedId", userId);
 		return model;

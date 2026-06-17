@@ -170,7 +170,7 @@ public class ReportsController extends BaseSimpleFormController{
 		model.put("request_date_to", dateTo);
 		model.put("requestType", requestType);
 		
-		model.put("pageNumber", pageNumber);
+		model.put("page", pageNumber);
 		
 		log.debug("requestType " + requestType);
 		log.debug("request date from " + dateFrom);

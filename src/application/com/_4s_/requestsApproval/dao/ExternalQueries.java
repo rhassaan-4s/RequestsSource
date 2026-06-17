@@ -1,6 +1,5 @@
 package com._4s_.requestsApproval.dao;
 
-import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
@@ -22,22 +20,19 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-//import org.hibernate.hql.ast.tree.DeleteStatement;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import org.springframework.util.LinkedCaseInsensitiveMap;
 
 import com._4s_.common.dao.CommonQueries;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.requestsApproval.web.action.TimeAttend;
-import com._4s_.requestsApproval.web.util.AnnualVacationBalanceResultWrapper;
 import com._4s_.requestsApproval.web.util.PageRequestsWrapper;
 import com._4s_.requestsApproval.web.util.RequestStatusWrapper;
 import com._4s_.requestsApproval.web.util.TimeAttendanceLocationWrapper;
@@ -67,7 +62,7 @@ public class ExternalQueries extends CommonQueries{
 	public void setDataSource(HikariDataSource dataSource) {
 		this.dataSource = dataSource;
 	}
-	
+	@Autowired
 	private SessionFactory sessionFactory;
 	
 	
@@ -79,28 +74,25 @@ public class ExternalQueries extends CommonQueries{
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-
-	@Transactional
-	public void getCurrentSession(){
+	
+	public Session getCurrentSession(){
 		session = null;
     	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
-    	System.out.println("$$$$$$$$$$$$$$$$$$getting current session");
     	log.debug("session factory " + sessionFactory);
-    	System.out.println("$$$$$$$$$$$$$$$$$$session factory " + sessionFactory);
     	try {
     	    session = sessionFactory.getCurrentSession();
     	    log.debug("***session available " + session);
     	    if (session == null || session.isOpen()==false) {
     	    	session = sessionFactory.openSession();
-    	    	System.out.println("session " + session);
+    	    	log.debug("session " + session);
     	    }
     	} catch (HibernateException e) {
     		log.debug("###Exception#### session not available, will open new session");
     	    session = sessionFactory.openSession();
     	    log.debug("***********new session opened****************");
     	}
-    	System.out.println("$$$$$$$$$$$$$$$$$$session " +session);
-//	      return session;
+    	log.debug("$$$$$$$$$$$$$$$$$$session " +session);
+    	return session;
 	}
 	
 	public int insertTimeAttend (String emp_code, Date date_, Date time_, String trans_type) {
@@ -1044,7 +1036,7 @@ public class ExternalQueries extends CommonQueries{
 				")\n" + 
 				"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
 				"where\n" + 
-				"empdays.EMPCODE in ('"+empCode+"')\n" + 
+				"empdays.EMPCODE in ("+empCode+")\n" + 
 				joinDateCondition2 + 
 				" AND req.APPROVED !=99 "+
 				")\n" + 
@@ -1667,6 +1659,11 @@ public class ExternalQueries extends CommonQueries{
 			e.printStackTrace();
 		}
 
+		log.debug("empCode " + empCode);
+		if (!empCode.contains("'")) {
+			empCode = "'" + empCode + "'";
+		}
+		log.debug("empCode adjusting single quotes " + empCode);
 
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
 		if(from_dateString!=null){
@@ -1806,7 +1803,7 @@ public class ExternalQueries extends CommonQueries{
 				") \n" + 
 				"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
 				"where\n" + 
-				"empdays.EMPCODE in ('"+empCode+"')\n" + 
+				"empdays.EMPCODE in ("+empCode+")\n" + 
 				joinDateCondition2 + 
 				")  \n" + 
 				"UNION ALL\n" + 
@@ -1828,7 +1825,7 @@ public class ExternalQueries extends CommonQueries{
 				"JOIN COMMON_EMPLOYEE emp ON emp.EMPCODE=empdays.EMPCODE \n" +
 
 			"where\n" + 
-			"empdays.EMPCODE in ('"+empCode+"')\n" + 
+			"empdays.EMPCODE in ("+empCode+")\n" + 
 			joinDateUnionCondition2 +
 			")\n "+
 //////			"ORDER BY DD" +
@@ -1847,13 +1844,13 @@ public class ExternalQueries extends CommonQueries{
 		log.debug("----sql of getTimeAttendAll() --- "+sql);
 
 
-		if (session!=null) {
-			session.close();
-		}
-		if (session == null || session.isOpen()==false) {
-			log.debug("session "+ session);
+//		if (session!=null) {
+//			session.close();
+//		}
+//		if (session == null || session.isOpen()==false) {
+//			log.debug("session "+ session);
     		getCurrentSession();
-    	} 
+//    	} 
 //		List in=(List) getJdbcTemplate().queryForList(sql.toString());
 		Query q = session.createNativeQuery(sql.toString());
 		List in = getResultList(session,q,TimeAttendanceLocationWrapper.class);
@@ -2307,7 +2304,10 @@ public class ExternalQueries extends CommonQueries{
 //		setJdbcTemplate(new JdbcTemplate(createDataSource()));
 //		setJdbcTemplate(new JdbcTemplate(dataSource));
 		String query = "";
-		String outerSelectStart = "SELECT a.*, emp.ID empId,emp.EMPCODE employeeCode, emp.FIRSTNAME name, acc1.GROUP_ID,lev.ID levId, lev.EMP_ID mgrId"
+		String outerSelectStart = "SELECT "
+//				+ "a.*"
+				+ "a.ID,a.REQUEST_TYPE,a.LOGIN_USER,a.EMPCODE,a.REQUEST_DATE,a.FROM_DATE,a.TO_DATE,a.PERIOD_FROM,a.PERIOD_TO,a.NOTES,a.LEAVE_TYPE,a.LEAVE_EFFECT,a.PAYED,a.APPROVED,a.POSTED,a.APPLICABLE,a.VACATION,a.REPLY,a.REQUESTNUMBER,a.WITHDRAWDAYS,a.VACCREDIT,a.STR_REQUEST_DATE,a.STR_FROM_DATE,a.STR_TO_DATE,a.STR_PERIOD_FROM,a.STR_PERIOD_TO,a.ALTDATE,a.LONGITUDE,a.LATITUDE,a.INPUTTYPE,a.LOCATIONADDRESS,a.ISINSIDECOMPANY,a.FROM_DATE_HISTORY,a.MANAGERMODIFIEDDATE,a.DESCRIPTION, a.vacName "
+				+ ", emp.ID empId,emp.EMPCODE employeeCode, emp.FIRSTNAME name, acc1.GROUP_ID,lev.ID levId, lev.EMP_ID mgrId"
 				+ ",APPROVALS.APPROVAL, APPROVALS.APPROVAL_DATE , APPROVALS.USER_ID , APPROVALS.NOTE "
 				+ "FROM ";
 		String select = "select loginUsersReq.*, reqType.DESCRIPTION, vac.name vacName "
@@ -2588,13 +2588,20 @@ public class ExternalQueries extends CommonQueries{
 
 
 //		List in=(List) getJdbcTemplate().queryForList(sql.toString());
-		if (session!=null) {
-			session.close();
-		}
-		if (session == null || session.isOpen()==false) {
-			log.debug("session "+ session);
-    		getCurrentSession();
-    	} 
+		
+		
+		
+//		if (session!=null) {
+//			session.close();
+//		}
+//		if (session == null || session.isOpen()==false) {
+//			log.debug("session "+ session);
+//    		getCurrentSession();
+//    	} 
+		
+		
+		getCurrentSession();
+    	System.out.println("%%%%%%%%%%%% Current Session "+session);
 		NativeQuery sqlQuery = session.createNativeQuery(sql.toString());
 //		List in = sqlQuery.list();
 		List in = getResultList(session,sqlQuery,PageRequestsWrapper.class);
@@ -3148,7 +3155,9 @@ public class ExternalQueries extends CommonQueries{
 //	setJdbcTemplate(new JdbcTemplate(createDataSource()));
 //	setJdbcTemplate(new JdbcTemplate(dataSource));
 	String query = "";
-	String outerSelectStart = "SELECT a.*, emp.ID empId,emp.EMPCODE employeeCode, emp.FIRSTNAME name "
+	String outerSelectStart = "SELECT "
+			+ " a.ID,a.REQUEST_TYPE,a.LOGIN_USER,a.EMPCODE,a.REQUEST_DATE,a.FROM_DATE,a.TO_DATE,a.PERIOD_FROM,a.PERIOD_TO,a.NOTES,a.LEAVE_TYPE,a.LEAVE_EFFECT,a.PAYED,a.APPROVED,a.POSTED,a.APPLICABLE,a.VACATION,a.REPLY,a.REQUESTNUMBER,a.WITHDRAWDAYS,a.VACCREDIT,a.STR_REQUEST_DATE,a.STR_FROM_DATE,a.STR_TO_DATE,a.STR_PERIOD_FROM,a.STR_PERIOD_TO,a.ALTDATE,a.LONGITUDE,a.LATITUDE,a.INPUTTYPE,a.LOCATIONADDRESS,a.ISINSIDECOMPANY,a.FROM_DATE_HISTORY,a.MANAGERMODIFIEDDATE,a.DESCRIPTION, a.vacName "
+			+ ", emp.ID empId,emp.EMPCODE employeeCode, emp.FIRSTNAME name "
 			//				+ ", acc1.GROUP_ID,lev.ID levId, lev.EMP_ID mgrId"
 			//				+ ",APPROVALS.APPROVAL, APPROVALS.APPROVAL_DATE , APPROVALS.USER_ID , APPROVALS.NOTE "
 			+ "FROM ";
@@ -3577,7 +3586,8 @@ public class ExternalQueries extends CommonQueries{
 //		setJdbcTemplate(new JdbcTemplate(createDataSource()));
 //		setJdbcTemplate(new JdbcTemplate(dataSource));
 		String query = "";
-		String outerSelectStart = "SELECT a.*,mgr.FIRSTNAME mgrName, emp.ID empId,emp.EMPCODE employeeCode, emp.FIRSTNAME name, acc1.GROUP_ID,lev.ID levId, lev.EMP_ID mgrId"
+		String outerSelectStart = "SELECT a.ID,a.REQUEST_TYPE,a.LOGIN_USER,a.EMPCODE,a.REQUEST_DATE,a.FROM_DATE,a.TO_DATE,a.PERIOD_FROM,a.PERIOD_TO,a.NOTES,a.LEAVE_TYPE,a.LEAVE_EFFECT,a.PAYED,a.APPROVED,a.POSTED,a.APPLICABLE,a.VACATION,a.REPLY,a.REQUESTNUMBER,a.WITHDRAWDAYS,a.VACCREDIT,a.STR_REQUEST_DATE,a.STR_FROM_DATE,a.STR_TO_DATE,a.STR_PERIOD_FROM,a.STR_PERIOD_TO,a.ALTDATE,a.LONGITUDE,a.LATITUDE,a.INPUTTYPE,a.LOCATIONADDRESS,a.ISINSIDECOMPANY,a.FROM_DATE_HISTORY,a.MANAGERMODIFIEDDATE,a.DESCRIPTION, a.vacName "
+				+ ",mgr.FIRSTNAME mgrName, emp.ID empId,emp.EMPCODE employeeCode, emp.FIRSTNAME name, acc1.GROUP_ID,lev.ID levId, lev.EMP_ID mgrId"
 				+ ",APPROVALS.APPROVAL, APPROVALS.APPROVAL_DATE , APPROVALS.USER_ID , APPROVALS.NOTE approvalNote "
 				+ "FROM ";
 		String select = "select loginUsersReq.*, reqType.DESCRIPTION, vac.name vacName FROM login_users_requests loginUsersReq  "

@@ -16,8 +16,12 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 //import org.hibernate.hql.ast.tree.DeleteStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
@@ -27,44 +31,46 @@ import com._4s_.common.dao.CommonQueries;
 import com._4s_.common.model.Settings;
 import com._4s_.requestsApproval.web.util.TimeAttendanceWrapper;
 
+@EnableTransactionManagement(proxyTargetClass = true)
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+@Repository
 public class AttendanceExternalQueries extends CommonQueries{
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	private Session session;
-	private SessionFactory sessionFactory;
+//	private Session session;
+//	@Autowired
+//	private SessionFactory sessionFactory;
 	
 	
 
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
+//	public SessionFactory getSessionFactory() {
+//		return sessionFactory;
+//	}
+//
+//	public void setSessionFactory(SessionFactory sessionFactory) {
+//		this.sessionFactory = sessionFactory;
+//	}
 
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-
-	@Transactional
-	public Session getCurrentSession(){
-		session = null;
-    	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
-    	System.out.println("$$$$$$$$$$$$$$$$$$getting current session");
-    	log.debug("session factory " + sessionFactory);
-    	System.out.println("$$$$$$$$$$$$$$$$$$session factory " + sessionFactory);
-    	try {
-    	    session = sessionFactory.getCurrentSession();
-    	    log.debug("***session available " + session);
-    	    if (session == null || session.isOpen()==false) {
-    	    	session = sessionFactory.openSession();
-    	    	System.out.println("session " + session);
-    	    }
-    	} catch (HibernateException e) {
-    		log.debug("###Exception#### session not available, will open new session");
-    	    session = sessionFactory.openSession();
-    	    log.debug("***********new session opened****************");
-    	}
-    	System.out.println("$$$$$$$$$$$$$$$$$$session " +session);
-	      return session;
-	}
+//	@Transactional
+//	public Session getCurrentSession(){
+//		session = null;
+//    	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
+//    	log.debug("$$$$$$$$$$$$$$$$$$session factory " + sessionFactory);
+//    	try {
+//    	    session = sessionFactory.getCurrentSession();
+//    	    log.debug("***session available " + session);
+//    	    if (session == null || session.isOpen()==false) {
+//    	    	session = sessionFactory.openSession();
+//    	    	log.debug("session " + session);
+//    	    }
+//    	} catch (HibernateException e) {
+//    		log.debug("###Exception#### session not available, will open new session");
+//    	    session = sessionFactory.openSession();
+//    	    log.debug("***********new session opened****************");
+//    	}
+//    	log.debug("$$$$$$$$$$$$$$$$$$session " +session);
+//	      return session;
+//	}
 
 public Integer getNumberOfAttendees(Date fromDate, Date toDate,Settings settings) {
 		

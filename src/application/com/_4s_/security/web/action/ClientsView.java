@@ -54,18 +54,23 @@ public class ClientsView {
 	public ModelAndView processSubmit(HttpServletRequest request,
 			SessionStatus sessStatus,Map model) throws Exception {
 		String client = request.getParameter("client");
-		System.out.println("client SCHEMA " + client);
+		System.out.println("****Clients Form*******client SCHEMA " + client);
 		if (client!=null && !client.isEmpty()) {
 			Clients c = (Clients)commonManager.getObjectByParameter(Clients.class, "id", client);
-			System.out.println("client " + c.getClientName());
+			System.out.println("****Clients Form*******client " + c.getClientName());
 			if (c!=null) {
+				
 				model.put("tenantID", c.getSchema());
 				model.put("client", c.getClientName());
+				request.getSession().setAttribute("tenantID", c.getSchema());
+				request.getSession().setAttribute("client", c.getClientName());
+				
 				ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 				attr.getRequest().getSession().setAttribute("tenantID",  c.getSchema());
 				attr.getRequest().getSession().setAttribute("client", c.getClientName());
-				
+				System.out.println("****Clients Form*******setting tenantID in session to " + c.getSchema());
 				String url="login.html";
+				System.out.println("****Clients Form*******redirecting to " + url);
 				return new ModelAndView("login",model);
 			} else {
 				return new ModelAndView("clients",model);	

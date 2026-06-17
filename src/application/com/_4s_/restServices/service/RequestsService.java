@@ -26,10 +26,9 @@ import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
 
 
-@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public interface RequestsService {// extends BaseManager {
 
-	public User login();
+	public Map<String, Object> login(String tenantId);
 	
 	public RequestsApprovalManager getRequestsApprovalManager();
 
@@ -61,6 +60,8 @@ public interface RequestsService {// extends BaseManager {
 	public Map getSettings();
 
 	public Map getPortNo(String clientName);
+	
+	public Map getTenantId(String clientName);
 
 	public Boolean checkImei(String imei, User user);
 

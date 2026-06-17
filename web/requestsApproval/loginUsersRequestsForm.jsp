@@ -145,11 +145,17 @@
 			document.getElementById("errandDuration").className = 'hideClass';
 			document.getElementById("leavePermission").className = 'hideClass';
 			document.getElementById("vacationDates").className = 'hideClass';
+			disableSection("errandDuration");
+			disableSection("leavePermission");
+			disableSection("vacationDates");
 			var altD = document.getElementById("alternativeDate");
-			if (altD!=null) { altD.className = 'hideClass';}
+			if (altD!=null) { altD.className = 'hideClass';disableSection("alternativeDate");}
 			document.getElementById("annualVacationTypes").className = 'hideClass';
 			document.getElementById("specialVacationTypes").className = 'hideClass';
 			document.getElementById("vacWithoutSal").className = 'hideClass';
+			disableSection("annualVacationTypes");
+			disableSection("specialVacationTypes");
+			disableSection("vacWithoutSal");
 
 			var request_id = document.getElementById("request_id");
 
@@ -165,13 +171,21 @@
 					//alert('---1.hi');
 					document.getElementById("errandDuration").className = 'hideClass';
 					document.getElementById("leavePermission").className = 'hideClass';
+					
+					enableSection("specialVacationTypes");
+					disableSection("annualVacationTypes");
+					disableSection("errandDuration");
+					disableSection("leavePermission");
+					
 					//alert('---1.hi');
 	<%Settings settings = (Settings) session.getAttribute("settings");
 if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 		//alert("bedoon moratab disabled");
 					document.getElementById("vacWithoutSal").className = 'hideClass';
 					document.getElementById("vacationDates").className = 'showClass';
-					if (altD!=null) { altD.className = 'hideClass';}
+					disableSection("vacWithoutSal");
+					enableSection("vacationDates");
+					if (altD!=null) { altD.className = 'hideClass';disableSection("alternativeDate");}
 	<%} else {%>
 		//alert("bedoon moratab enabled");
 		
@@ -184,16 +198,24 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 						if (vac_id.value == '008') {
 							document.getElementById("vacWithoutSal").className = 'showClass';
 							document.getElementById("vacationDates").className = 'hideClass';
-							if (altD!=null) { altD.className = 'hideClass';}
+							enableSection("vacWithoutSal");
+							disableSection("vacationDates");
+							if (altD!=null) { altD.className = 'hideClass'; disableSection("alternativeDate");}
 						} else if (vac_id.value == '010') {
 							//		alert("ra7aa esboo3eya");
 							document.getElementById("vacWithoutSal").className = 'hideClass';
 							document.getElementById("vacationDates").className = 'showClass';
 							document.getElementById("alternativeDate").className = 'showClass';
+							enableSection("vacationDates");
+							enableSection("alternativeDate");
+							disableSection("vacWithoutSal");
+							
 						} else {
 							document.getElementById("vacationDates").className = 'showClass';
 							document.getElementById("vacWithoutSal").className = 'hideClass';
-							if (altD!=null) { altD.className = 'hideClass';}
+							enableSection("vacationDates");
+							disableSection("vacWithoutSal");
+							if (altD!=null) { altD.className = 'hideClass'; disableSection("alternativeDate");}
 						}
 					}
 	<%}%>
@@ -204,6 +226,11 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 					document.getElementById("annualVacationTypes").className = 'showClass';
 					document.getElementById("errandDuration").className = 'hideClass';
 					document.getElementById("leavePermission").className = 'hideClass';
+					
+					disableSection("specialVacationTypes");
+					enableSection("annualVacationTypes");
+					disableSection("errandDuration");
+					disableSection("leavePermission");
 
 					var vac_id = document.getElementById("annualVacation");
 					//alert('vac_id....='+vac_id.value);
@@ -213,11 +240,15 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 							//alert("showing vac without sal#########");
 							document.getElementById("vacWithoutSal").className = 'showClass';
 							document.getElementById("vacationDates").className = 'hideClass';
-							if (altD!=null) { altD.className = 'hideClass';};
+							disableSection("vacationDates");
+							enableSection("vacWithoutSal");
+							if (altD!=null) { altD.className = 'hideClass'; disableSection("alternativeDate");};
 						} else {
 							document.getElementById("vacationDates").className = 'showClass';
 							document.getElementById("vacWithoutSal").className = 'hideClass';
-							if (altD!=null) { altD.className = 'hideClass';};
+							enableSection("vacationDates");
+							disableSection("vacWithoutSal");
+							if (altD!=null) { altD.className = 'hideClass'; disableSection("alternativeDate");};
 						}
 					}
 	<%} else {%>
@@ -227,7 +258,13 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 					document.getElementById("leavePermission").className = 'hideClass';
 					document.getElementById("vacationDates").className = 'showClass';
 					document.getElementById("vacWithoutSal").className = 'hideClass';
-					if (altD!=null) { altD.className = 'hideClass';};
+					disableSection("specialVacationTypes");
+					disableSection("annualVacationTypes");
+					disableSection("errandDuration");
+					disableSection("leavePermission");
+					enableSection("vacationDates");
+					disableSection("vacWithoutSal");
+					if (altD!=null) { altD.className = 'hideClass';disableSection("alternativeDate");};
 	<%}%>
 		} else if (request_id.value == "3") {
 					document.getElementById("specialVacationTypes").className = 'hideClass';
@@ -236,15 +273,34 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 					document.getElementById("leavePermission").className = 'showClass';
 					document.getElementById("vacationDates").className = 'hideClass';
 					document.getElementById("vacWithoutSal").className = 'hideClass';
-					if (altD!=null) { altD.className = 'hideClass';};
+					disableSection("specialVacationTypes");
+					disableSection("annualVacationTypes");
+					enableSection("errandDuration");
+					enableSection("leavePermission");
+					disableSection("vacationDates");
+					disableSection("vacWithoutSal");
+					if (altD!=null) { altD.className = 'hideClass';disableSection("alternativeDate");};
 				} else if (request_id.value == "4") {
-					document.getElementById("specialVacationTypes").className = 'hideClass';
-					document.getElementById("annualVacationTypes").className = 'hideClass';
-					document.getElementById("errandDuration").className = 'hideClass';
-					document.getElementById("leavePermission").className = 'hideClass';
-					document.getElementById("vacationDates").className = 'showClass';
-					document.getElementById("vacWithoutSal").className = 'hideClass';
-					if (altD!=null) { altD.className = 'hideClass';};
+			//		document.getElementById("specialVacationTypes").className = 'hideClass';
+				//	document.getElementById("annualVacationTypes").className = 'hideClass';
+				//	document.getElementById("errandDuration").className = 'hideClass';
+			//		document.getElementById("leavePermission").className = 'hideClass';
+			//		document.getElementById("vacationDates").className = 'showClass';
+			//		document.getElementById("vacWithoutSal").className = 'hideClass';
+					disableSection("specialVacationTypes");
+					disableSection("annualVacationTypes");
+					disableSection("errandDuration");
+					disableSection("leavePermission");
+					enableSection("vacationDates");
+		/*			$('#vacationDates').find(':input').each(function () {
+					    alert(
+					        'Name: ' + $(this).attr('name') +
+					        ' | Disabled: ' + $(this).prop('disabled')
+					    );
+					});
+				*/        
+					disableSection("vacWithoutSal");
+					if (altD!=null) { altD.className = 'hideClass';disableSection("alternativeDate");};
 				} else if (request_id.value == "5") {
 					document.getElementById("specialVacationTypes").className = 'hideClass';
 					document.getElementById("annualVacationTypes").className = 'hideClass';
@@ -252,7 +308,13 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 					document.getElementById("errandDuration").className = 'showClass';
 					document.getElementById("vacationDates").className = 'hideClass';
 					document.getElementById("vacWithoutSal").className = 'hideClass';
-					if (altD!=null) { altD.className = 'hideClass';};
+					disableSection("specialVacationTypes");
+					disableSection("annualVacationTypes");
+					enableSection("errandDuration");
+					disableSection("leavePermission");
+					disableSection("vacationDates");
+					disableSection("vacWithoutSal");
+					if (altD!=null) { altD.className = 'hideClass';disableSection("alternativeDate");};
 				} else {
 					document.getElementById("specialVacationTypes").className = 'hideClass';
 					document.getElementById("annualVacationTypes").className = 'hideClass';
@@ -260,9 +322,26 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 					document.getElementById("leavePermission").className = 'hideClass';
 					document.getElementById("vacationDates").className = 'hideClass';
 					document.getElementById("vacWithoutSal").className = 'hideClass';
-					if (altD!=null) { altD.className = 'hideClass';};
+					disableSection("specialVacationTypes");
+					disableSection("annualVacationTypes");
+					disableSection("errandDuration");
+					disableSection("leavePermission");
+					disableSection("vacationDates");
+					disableSection("vacWithoutSal");
+                     
+                     
+                     
+					if (altD!=null) { altD.className = 'hideClass';disableSection("alternativeDate");};
 				}
 			}
+			
+		/*	$('#vacationDates').find(':input').each(function () {
+			    alert(
+			        '***Name: ' + $(this).attr('name') +
+			        ' | Disabled: ' + $(this).prop('disabled')
+			    );
+			});
+		    */    
 		}
 
 		function getVacCredit() {
@@ -454,6 +533,20 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 			//alert(err.code + " - " + err.message);
 		}
 
+		function disableSection(sectionId) {
+		    $('#' + sectionId)
+		        .hide()
+		        .find(':input')
+		        .prop('disabled', true);
+		}
+
+		function enableSection(sectionId) {
+		    $('#' + sectionId)
+		        .show()
+		        .find(':input')
+		        .prop('disabled', false);
+		}
+		
 		navigator.geolocation.getCurrentPosition(success, error, options);
 	</script>
 	<%
@@ -640,7 +733,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 								<td nowrap class="formReq"><abc:i18n
 										property="commons.caption.toDate" /> <fmt:message
 										key="commons.caption.toDate" /></td>
-								<td class="formBodControl"><form:input type="text"
+								<td class="formBodControl"><form:input id="to_date" type="text"
 										class="calendar" readonly="readonly" autocomplete="off"
 										dir="ltr" path="to_date" /></td>
 
@@ -1078,7 +1171,7 @@ if (settings.getWithoutSalaryVacEnabled().booleanValue() == false) {%>
 														key="commons.caption.toDate" /></td>
 												<td class="formBodControl"><form:input type="text"
 														title="cc" class="calendar" readonly="readonly"
-														autocomplete="off" dir="ltr" path="toDate" /></td>
+														autocomplete="off" dir="ltr" path="to_date" /></td>
 
 												<td nowrap class="formReq"><abc:i18n
 														property="requestsApproval.requestsApprovalForm.reqPeriod" />

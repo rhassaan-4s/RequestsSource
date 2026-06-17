@@ -69,7 +69,8 @@
 				action="perform_login">
 
 				<input type="hidden" name="activeLink" value="linkOne"/>
-				
+				<input type="hidden" name="client" value="${client}"/>
+				<input type="hidden" name="tenantID" value="${tenantID}"/>
 				<!-- /////////////////START to enable authentication with tokens with spring security 5//////////////////// -->
 				<input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}"/>
 				<!-- /////////////////END to enable authentication with tokens with spring security 5  //////////////////// -->

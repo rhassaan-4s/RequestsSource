@@ -36,7 +36,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	public List getAllLeafs(final Class clazz){
 		log.debug("inside getAllLeafs");
 						Criteria criteria = null;
-						criteria = getSession().createCriteria(clazz);
+						criteria = getCurrentSession().createCriteria(clazz);
 						criteria.createCriteria("parent").add(Restrictions.eq("isLast",new Boolean(true)));
 						criteria.addOrder(Order.asc("longCode"));
 						log
@@ -46,7 +46,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 
 
 	public List getAllLeafsOfCategory(final String catCode, final Class clazz) {
-						Criteria criteria = criteria = getSession().createCriteria(clazz);
+						Criteria criteria = criteria = getCurrentSession().createCriteria(clazz);
 						criteria.add( Restrictions.like("longCode",catCode , MatchMode.START ) );
 						criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 						return criteria.list();
@@ -62,28 +62,28 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 					
 						Criteria criteria=null;
 						if(className.equals("HRInternalDivision"))
-						{ criteria = getSession()
+						{ criteria = getCurrentSession()
 						.createCriteria(HRInternalDivision.class);
 						criteria.add(Restrictions.isNull("parent"));
 						criteria.addOrder(Order.asc("longCode"));
 						}
 						
 						if(className.equals("HRGeographicalDivision"))
-						{ criteria = getSession()
+						{ criteria = getCurrentSession()
 						.createCriteria(HRGeographicalDivision.class);
 						criteria.add(Restrictions.isNull("parent"));
 						criteria.addOrder(Order.asc("longCode"));
 						}
 						
 						if(className.equals("HRQualificationDivision"))
-						{ criteria = getSession()
+						{ criteria = getCurrentSession()
 						.createCriteria(HRQualificationDivision.class);
 						criteria.add(Restrictions.isNull("parent"));
 						criteria.addOrder(Order.asc("longCode"));
 						}
 						
 						if(className.equals("HRSpecialtyDivision"))
-						{ criteria = getSession()
+						{ criteria = getCurrentSession()
 						.createCriteria(HRSpecialtyDivision.class);
 						criteria.add(Restrictions.isNull("parent"));
 						criteria.addOrder(Order.asc("longCode"));
@@ -95,7 +95,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	public HRInternalLevel getLastLevel() {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..start getLastLevel()");
 		
-						Criteria criteria = getSession()
+						Criteria criteria = getCurrentSession()
 						.createCriteria(HRInternalLevel.class);
 						criteria.add(Restrictions.eq("isLastLevel", true));
 						HRInternalLevel list = (HRInternalLevel)  criteria.uniqueResult();
@@ -104,7 +104,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	}
 	
 	public HRInternalLevel getLevelByLevelNo(final Integer levelNo){
-						Criteria criteria = getSession().createCriteria(HRInternalLevel.class);
+						Criteria criteria = getCurrentSession().createCriteria(HRInternalLevel.class);
 						criteria.add(Restrictions.eq("levelNo",levelNo));
 						criteria.setMaxResults(1);
 						criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -115,7 +115,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	public HRGeographicalLevel getGeoLastLevel() {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..start getLastLevel()");
 		
-						Criteria criteria = getSession()
+						Criteria criteria = getCurrentSession()
 						.createCriteria(HRGeographicalLevel.class);
 						criteria.add(Restrictions.eq("isLastLevel", true));
 						HRGeographicalLevel list = (HRGeographicalLevel)criteria.uniqueResult();
@@ -124,7 +124,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	}
 	
 	public HRGeographicalLevel getGeoLevelByLevelNo(final Integer levelNo){
-						Criteria criteria = getSession().createCriteria(HRGeographicalLevel.class);
+						Criteria criteria = getCurrentSession().createCriteria(HRGeographicalLevel.class);
 						criteria.add(Restrictions.eq("levelNo",levelNo));
 						criteria.setMaxResults(1);
 						criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -135,7 +135,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	public HRQualificationLevel getQualLastLevel() {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..start getLastLevel()");
 		
-						Criteria criteria = getSession()
+						Criteria criteria = getCurrentSession()
 						.createCriteria(HRQualificationLevel.class);
 						criteria.add(Restrictions.eq("isLastLevel", true));
 						HRQualificationLevel list = (HRQualificationLevel)  criteria.uniqueResult();
@@ -144,7 +144,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	}
 	
 	public HRQualificationLevel getQualLevelByLevelNo(final Integer levelNo){
-						Criteria criteria = getSession().createCriteria(HRQualificationLevel.class);
+						Criteria criteria = getCurrentSession().createCriteria(HRQualificationLevel.class);
 						criteria.add(Restrictions.eq("levelNo",levelNo));
 						criteria.setMaxResults(1);
 						criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -155,7 +155,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	public HRSpecialtyLevel getSpecialtyLastLevel() {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..start getLastLevel()");
 		
-						Criteria criteria = getSession()
+						Criteria criteria = getCurrentSession()
 						.createCriteria(HRSpecialtyLevel.class);
 						criteria.add(Restrictions.eq("isLastLevel", true));
 						HRSpecialtyLevel list = (HRSpecialtyLevel) criteria.uniqueResult();
@@ -164,7 +164,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	}
 	
 	public HRSpecialtyLevel getSpecialtyLevelByLevelNo(final Integer levelNo){
-						Criteria criteria = getSession().createCriteria(HRSpecialtyLevel.class);
+						Criteria criteria = getCurrentSession().createCriteria(HRSpecialtyLevel.class);
 						criteria.add(Restrictions.eq("levelNo",levelNo));
 						criteria.setMaxResults(1);
 						criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -175,7 +175,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	public List getChilderenByParent(final Long parentId,final Class clazz){
 						Criteria criteria = null;
 						
-							criteria = getSession().createCriteria(clazz);
+							criteria = getCurrentSession().createCriteria(clazz);
 							criteria.createCriteria("parent").add(Restrictions.eq("id",parentId));
 						
 						
@@ -187,7 +187,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 		log.debug("inside getParents ");
 						Criteria criteria = null;
 						
-							criteria = getSession().createCriteria(clazz);
+							criteria = getCurrentSession().createCriteria(clazz);
 							criteria.add(Restrictions.isNull("parent"));
 					
 						
@@ -200,7 +200,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 		log.debug("inside getChildrenAndGrandChildrenByParentLongCode ");
 						Criteria criteria = null;
 						
-							criteria = getSession().createCriteria(clazz);
+							criteria = getCurrentSession().createCriteria(clazz);
 							criteria.add(Restrictions.like("longCode",parentLongCode+"%"));
 						
 						
@@ -210,7 +210,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	
 	
 	public List getAllByCode(final String code,final Class clazz){
-						Criteria criteria = criteria = getSession().createCriteria(clazz);
+						Criteria criteria = criteria = getCurrentSession().createCriteria(clazz);
 						criteria.add(Restrictions.eq("longCode",code));
 						criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 						return criteria.list();
@@ -223,22 +223,22 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 						Criteria criteria=null;
 						if(className.equals("HRInternalDivision"))
 						{
-						  criteria = getSession().createCriteria(HRInternalDivision.class);
+						  criteria = getCurrentSession().createCriteria(HRInternalDivision.class);
 						}
 						
 						else if(className.equals("HRQualificationDivision"))
 						{
-						  criteria = getSession().createCriteria(HRQualificationDivision.class);
+						  criteria = getCurrentSession().createCriteria(HRQualificationDivision.class);
 						}
 						
 						else if(className.equals("HRGeographicalDivision"))
 						{
-						  criteria = getSession().createCriteria(HRGeographicalDivision.class);
+						  criteria = getCurrentSession().createCriteria(HRGeographicalDivision.class);
 						}
 						
 						else if(className.equals("HRSpecialtyDivision"))
 						{
-						  criteria = getSession().createCriteria(HRSpecialtyDivision.class);
+						  criteria = getCurrentSession().createCriteria(HRSpecialtyDivision.class);
 						}
 						criteria.createCriteria("parent").add(Restrictions.eq("id",parentId));
 						criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -249,7 +249,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	public List getLevelsByDivisionParentId(final Integer levelNo,final Class clazz){
 		log.debug("inside LevelsByDivisionParentId");
 						Criteria criteria = null;
-						criteria = getSession().createCriteria(clazz);
+						criteria = getCurrentSession().createCriteria(clazz);
 						criteria.add(Restrictions.ge("levelNo",levelNo));
 						criteria.addOrder(Order.asc("levelNo"));
 						log
@@ -261,7 +261,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 		log.debug("inside getExistingDivisionsForparent");  
 		log.debug("parentCode>>>>>>>>>>"+parentCode);
 		
-						Criteria criteria = getSession().createCriteria(clazz);
+						Criteria criteria = getCurrentSession().createCriteria(clazz);
 						criteria.add(Restrictions.isNull("divisionLevel"));
 						criteria.add(Restrictions.eq("code",parentCode));
 						criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -273,7 +273,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 		log.debug("parentId>>>>>>>>>>"+parentId);
 		log.debug("code>>>>>>>>>>>>>>>>>>>"+code);
                     
-						Criteria criteria = getSession().createCriteria(clazz);
+						Criteria criteria = getCurrentSession().createCriteria(clazz);
 						criteria.add(Restrictions.isNull("divisionLevel"));
 						criteria.add(Restrictions.eq("code", code));
 						criteria.add(Restrictions.eq("id",parentId));
@@ -286,7 +286,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 		log.debug("id>>>>>>>>>>"+id);
 		log.debug("levelID>>>>>>>>>>>>>>>>>>>>>>>>"+code);
                     
-						Criteria criteria = getSession().createCriteria(clazz);
+						Criteria criteria = getCurrentSession().createCriteria(clazz);
 						criteria.add(Restrictions.isNull("divisionLevel"));
 						criteria.add(Restrictions.eq("code", code));
 						criteria.createCriteria("parent").add(Restrictions.eq("id",id));
@@ -299,7 +299,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 		log.debug("id>>>>>>>>>>"+id);
 		log.debug("levelID>>>>>>>>>>>>>>>>>>>>>>>>"+code);
                     
-						Criteria criteria = getSession().createCriteria(clazz);
+						Criteria criteria = getCurrentSession().createCriteria(clazz);
 						criteria.add(Restrictions.isNull("divisionLevel"));
 						criteria.add(Restrictions.eq("code", code));
 						criteria.add(Restrictions.eq("id",id));
@@ -313,7 +313,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 		log.debug("inside getHigherDivisions");  
 		log.debug("Id>>>>>>>>>>"+id);
                     
-						Criteria criteria = getSession().createCriteria(clazz);
+						Criteria criteria = getCurrentSession().createCriteria(clazz);
 						criteria.add(Restrictions.isNotNull("divisionLevel"));
 						criteria.add(Restrictions.ne("id", id));
 						criteria.createCriteria("divisionLevel").add(Restrictions.lt("levelNo", levelNo));
@@ -326,7 +326,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	{
 		log.debug("inside getCountriesForNationality");  
 		
-						Criteria criteria = getSession().createCriteria(HRGeographicalDivision.class);
+						Criteria criteria = getCurrentSession().createCriteria(HRGeographicalDivision.class);
 						criteria.add(Restrictions.isNotNull("divisionLevel"));
 						criteria.createCriteria("divisionLevel").add(Restrictions.eq("isNationalityCountry", new Boolean(true)));
 						criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -338,7 +338,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 		log.debug("inside getDivisionChildren");  
 		log.debug("longCode>>>>>>>>>>"+longCode);
 		
-						Criteria criteria = getSession().createCriteria(clazz);
+						Criteria criteria = getCurrentSession().createCriteria(clazz);
 						criteria.add(Restrictions.like("longCode", longCode,MatchMode.START));
 						criteria.addOrder(Order.asc("longCode"));	
 						criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -346,7 +346,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	}
 
 	public HRSpecialtyDivision getSpecialtyDivisionForTransaction(){
-						Criteria criteria = getSession().createCriteria(HRSpecialtyDivision.class);
+						Criteria criteria = getCurrentSession().createCriteria(HRSpecialtyDivision.class);
 						criteria.createCriteria("divisionLevel").addOrder(Order.desc("levelNo"));
 						criteria.setMaxResults(1);
 						criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -355,7 +355,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	}
 	
 	public HRQualificationDivision getQualificationDivisionForTransaction(){
-						Criteria criteria = getSession().createCriteria(HRQualificationDivision.class);
+						Criteria criteria = getCurrentSession().createCriteria(HRQualificationDivision.class);
 						criteria.createCriteria("divisionLevel").addOrder(Order.desc("levelNo"));
 						criteria.setMaxResults(1);
 						criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -364,7 +364,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	}
 	
 	public HRInternalDivision getInternalDivisionForTransaction(){
-						Criteria criteria = getSession().createCriteria(HRInternalDivision.class);
+						Criteria criteria = getCurrentSession().createCriteria(HRInternalDivision.class);
 						criteria.createCriteria("divisionLevel").addOrder(Order.desc("levelNo"));
 						criteria.setMaxResults(1);
 						criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -375,7 +375,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	
 	public List getEmployeesForEmployeeVacationAtInstallation(final String empCode,final String empName,final HRInternalDivision division)
 	{
-						Criteria criteria = getSession().createCriteria(HREmployee.class);
+						Criteria criteria = getCurrentSession().createCriteria(HREmployee.class);
 						if(empCode!=null && !empCode.equals(""))
 						{
 						 criteria.add(Restrictions.eq("empCode",empCode));
@@ -392,7 +392,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	
 	public List getEmployeeVacationAtInstall(final HREmployee employee,final HRVacation vacation)
 	{
-						Criteria criteria = getSession().createCriteria(HREmployeeVacationInstall.class);
+						Criteria criteria = getCurrentSession().createCriteria(HREmployeeVacationInstall.class);
 						if(employee!=null)
 						{
 						 criteria.add(Restrictions.eq("employee",employee));
@@ -407,7 +407,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	
 	public List getEmployeesForEmployeeServiceLength(final String empCode,final String empName)
 	{
-						Criteria criteria = getSession().createCriteria(HREmployee.class);
+						Criteria criteria = getCurrentSession().createCriteria(HREmployee.class);
 						if(empCode!=null && !empCode.equals(""))
 						{
 						 criteria.add(Restrictions.eq("empCode",empCode));
@@ -422,7 +422,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	
 	public List getEmployeeServiceLength(final HREmployee employee)
 	{
-						Criteria criteria = getSession().createCriteria(HRServiceLengthCalculation.class);
+						Criteria criteria = getCurrentSession().createCriteria(HRServiceLengthCalculation.class);
 						if(employee!=null)
 						{
 						 criteria.add(Restrictions.eq("employee",employee));
@@ -435,7 +435,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	
 	public List getEmployeesForEmployeeVacation(final String empCode,final String empName,final HRInternalDivision division)
 	{
-						Criteria criteria = getSession().createCriteria(HREmployee.class);
+						Criteria criteria = getCurrentSession().createCriteria(HREmployee.class);
 						if(empCode!=null && !empCode.equals(""))
 						{
 						 criteria.add(Restrictions.eq("empCode",empCode));
@@ -451,7 +451,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	
 	public List getEmployeeVacation(final HREmployee employee,final HRVacation vacation)
 	{
-						Criteria criteria = getSession().createCriteria(HREmployeeVacation.class);
+						Criteria criteria = getCurrentSession().createCriteria(HREmployeeVacation.class);
 						if(employee!=null)
 						{
 						 criteria.add(Restrictions.eq("employee",employee));
@@ -487,7 +487,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	}
 	public List getEmployeesByCodeAndName(final String codeFrom,final String codeTo,final String empName)
 	{
-						Criteria criteria = getSession().createCriteria(HREmployee.class);
+						Criteria criteria = getCurrentSession().createCriteria(HREmployee.class);
 						if(empName!=null && !empName.equals(""))
 						{
 						 criteria.add(Restrictions.eq("name",empName));
@@ -514,7 +514,7 @@ public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 		
 		if((insurance != null && !insurance.equals(""))||(emp_code!=null && !emp_code.equals(""))||(empName!=null && !empName.equals(""))||(insuranceNo!=null && !insuranceNo.equals(""))){
 					
-						Criteria criteria = getSession().createCriteria(HREmployee.class);
+						Criteria criteria = getCurrentSession().createCriteria(HREmployee.class);
 						if(insurance != null && !insurance.equals("")){
 							log.debug("HR_DAO>> Insurance_Code != Null: "+insurance);
 							criteria.add(Restrictions.eq("insuranceCode",Long.parseLong(insurance)));

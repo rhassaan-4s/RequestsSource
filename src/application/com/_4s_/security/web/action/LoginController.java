@@ -36,32 +36,35 @@ public class LoginController {
 
 	@RequestMapping(value = "/login.html")
     public String login(@RequestParam(value = "error", required = false) String error, 
+//    		@RequestParam(value="tenantID", required = false) String tenantID,
+//    		@RequestParam(value="client", required = false) String client,
+//    		@RequestParam("requestId") String reqId,
           @RequestParam(value = "logout", required = false) String logout,
           Model model,
         HttpServletRequest request) {
-		System.out.println("get login");
+		System.out.println("#########Login Controller##########: get login");
 		
-		String tenantID = request.getParameter("tenantID");
-		System.out.println("tenantID " + tenantID);
+		String tenantID = (String)request.getSession(false).getAttribute("tenantID");
+		System.out.println("#########Login Controller##########: tenantID " + tenantID);
 		request.getSession().setAttribute("tenantID", tenantID);
 		
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		attr.getRequest().getSession().setAttribute("tenantID", tenantID);
 		
-		String client = request.getParameter("client");
-		log.debug("client " + client);
+		String client = (String)request.getSession(false).getAttribute("client");
+		log.debug("#########Login Controller##########: client " + client);
 		model.addAttribute("client", client);
 		
 		
-		String reqId = request.getParameter("requestId");
-		String requestNumber = request.getParameter("requestNumber");
-		log.debug("reqId " + reqId);
-		request.getSession().setAttribute("requestId", reqId);
-		request.getSession().setAttribute("requestNumber", requestNumber);
+//		String reqId = request.getParameter("requestId");
+//		String requestNumber = request.getParameter("requestNumber");
+//		log.debug("#########Login Controller##########: reqId " + reqId);
+//		request.getSession().setAttribute("requestId", reqId);
+//		request.getSession().setAttribute("requestNumber", requestNumber);
 		
 		Exception lastException = (Exception) request.getSession().getAttribute("ACEGI_SECURITY_LAST_EXCEPTION");
 		if(lastException != null ){
-			log.debug("exception " + lastException.getClass().getCanonicalName());
+			log.debug("#########Login Controller##########: exception " + lastException.getClass().getCanonicalName());
 			if (lastException instanceof AuthenticationException ) {//concurrent login exception
 				model.addAttribute("concurrentLoginException" , "true");
 			}else {
@@ -69,10 +72,10 @@ public class LoginController {
 			}
 		}
 		
-		log.debug("request.getSession().getAttribute(ACEGI_SECURITY_LAST_EXCEPTION): "+lastException);
+		log.debug("#########Login Controller##########: request.getSession().getAttribute(ACEGI_SECURITY_LAST_EXCEPTION): "+lastException);
 		
 		
-		log.debug("Charset.defaultCharset().displayName(); " + Charset.defaultCharset().displayName());
+		log.debug("#########Login Controller##########: Charset.defaultCharset().displayName(); " + Charset.defaultCharset().displayName());
 		request.getSession().removeAttribute("ACEGI_SECURITY_LAST_EXCEPTION");
 		request.getSession().removeAttribute("ACEGI_SECURITY_LAST_USERNAME");
 		

@@ -76,7 +76,7 @@ public class AccessLevelsForm extends BaseSimpleFormController{
 		String requestTypeId=request.getParameter("requestTypeId");
 		log.debug("--------requestTypeId------"+requestTypeId);
 		
-		AccessLevels accessLevel=new AccessLevels();;
+		AccessLevels accessLevel=new AccessLevels();
 		model.put("accessLevel", accessLevel);
 		return "accessLevelsForm";
 	}
@@ -122,7 +122,7 @@ public class AccessLevelsForm extends BaseSimpleFormController{
 			
 		}
 		log.debug("-------currentEmps.size---after"+currentEmps.size());
-		List tempList=requestsApprovalManager.getObjects(GroupAcc.class);
+		List tempList=requestsApprovalManager.getAccessLevels();
 		List <GroupAcc> groupList= new ArrayList();
 		
 		for(int i=0;i<tempList.size();i++){

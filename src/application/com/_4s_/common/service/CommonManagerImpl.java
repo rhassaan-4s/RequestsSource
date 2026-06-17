@@ -9,6 +9,8 @@ import javax.servlet.http.HttpSession;
 
 import org.hibernate.criterion.MatchMode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.common.dao.CommonDAO;
 import com._4s_.common.model.Employee;
@@ -17,7 +19,10 @@ import com._4s_.common.model.LastSequence;
 import com._4s_.common.model.Types;
 import com._4s_.common.util.MultiCalendarDate;
 
+@Transactional
+@Service("commonManager")
 public class CommonManagerImpl extends BaseManagerImpl implements CommonManager {
+	@Autowired
 	private CommonDAO commonDAO;
 
 	public void setCommonDAO(CommonDAO commonDAO) {

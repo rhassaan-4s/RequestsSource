@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -49,6 +50,7 @@ public class EditMessage extends BaseSimpleFormController {
 
 
 	@Autowired
+	@Qualifier("messageSource")
 	private ResourceMapMessageSource messageSource = null;
 
 	private MyLocale myLocale = null;

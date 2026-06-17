@@ -4,31 +4,55 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 //
 //import org.acegisecurity.GrantedAuthority;
 //import org.acegisecurity.context.SecurityContext;
 //import org.acegisecurity.context.SecurityContextHolder;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.common.service.BaseManager;
 import com._4s_.common.service.BaseManagerImpl;
 import com._4s_.security.dao.MySecurityDAO;
 import com._4s_.security.model.Fields;
 import com._4s_.security.model.IPAddress;
+import com._4s_.security.model.Imei;
 import com._4s_.security.model.Permissions;
 import com._4s_.security.model.Roles;
 import com._4s_.security.model.SecurityApplication;
 import com._4s_.security.model.User;
 
+@Service("securityManager")
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class MySecurityManagerImpl extends BaseManagerImpl implements
 		MySecurityManager {
+	@Autowired
 	private MySecurityDAO securityDAO = null;
-
+	@Autowired
 	private BaseManager baseManager = null;
+	
+	@PostConstruct
+	public void whereAmI() {
+	    System.out.println(
+	        "#############MySecurityManagerImpl loaded by: " +
+	        this.getClass().getClassLoader()
+	    );
+	}
+	
+	@PostConstruct
+	public void init() {
+	    System.out.println(">>>********** MySecurityManagerImpl loaded");
+	}
 
 	public BaseManager getBaseManager() {
 		return baseManager;
@@ -51,6 +75,24 @@ public class MySecurityManagerImpl extends BaseManagerImpl implements
 		this.securityDAO = securityDAO;
 	}
 
+	
+	@Override
+	public User getUser(String username) {
+		System.out.println("Dao : " + securityDAO);
+		System.out.println("Username : " + username);
+		return securityDAO.getUser(username);
+	}
+
+	@Override
+	public Imei checkImei(String imei, User user) {
+		return securityDAO.checkImei(imei, user);
+	}
+
+	@Override
+	public Map<String, Object> login(String tenantId) {
+		return securityDAO.login(tenantId);
+	}
+
 	public List getUsers() {
 		// TODO Auto-generated method stub
 		return securityDAO.getUsers();
@@ -61,7 +103,7 @@ public class MySecurityManagerImpl extends BaseManagerImpl implements
 		return securityDAO.getFields();
 	}
 
-	public void compareLists(Fields field, List allRoles, List selectedRoles) {
+	public void compareLists(Fields field, Set allRoles, List selectedRoles) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>.start compareLists()");
 		String flag = "unassign";
 		Iterator itr = allRoles.iterator();
@@ -297,29 +339,56 @@ public class MySecurityManagerImpl extends BaseManagerImpl implements
 	}
 
 	
-	public List getApplicationsByUser(User user) {
-		List activeApp = getActiveApplications();
-		List app = new ArrayList();
-		Set appSet = new HashSet();
-		Iterator itr = activeApp.iterator();
-		while (itr.hasNext()) {
-			SecurityApplication ap = (SecurityApplication)itr.next();
-			Iterator inner_itr = user.getRoles().iterator();
-			while(inner_itr.hasNext()) {
-				Roles role = (Roles)inner_itr.next();
-				if(ap.getRoles().contains(role)) {
-					if(app.contains(role.getApplication())==false) {
-						app.add(role.getApplication());
-					}
-				}
-			}
-		}
-		return app;
-	}
+//	public List getApplicationsByUser(User user) {
+//		List activeApp = getActiveApplications();
+//		List app = new ArrayList();
+//		Set appSet = new HashSet();
+//		Iterator itr = activeApp.iterator();
+//		while (itr.hasNext()) {
+//			SecurityApplication ap = (SecurityApplication)itr.next();
+//			Iterator inner_itr = user.getRoles().iterator();
+//			while(inner_itr.hasNext()) {
+//				Roles role = (Roles)inner_itr.next();
+//				if(ap.getRoles().contains(role)) {
+//					if(app.contains(role.getApplication())==false) {
+//						app.add(role.getApplication());
+//					}
+//				}
+//			}
+//		}
+//		return app;
+//	}
 
+	public List<SecurityApplication> getApplicationsByUser(User user) {
+
+	    Set<SecurityApplication> appSet = new HashSet<>();
+
+	    for (Roles role : user.getRoles()) {
+	        SecurityApplication app = role.getApplication();
+	        if (app != null && Boolean.TRUE.equals(app.getIs_active())) {
+	            appSet.add(app);
+	        }
+	    }
+
+	    return new ArrayList<>(appSet);
+	}
+	
 	public IPAddress checkIP(String currentIP, User user) {
 		// TODO Auto-generated method stub
 		return securityDAO.checkIP(currentIP, user);
 	}
+
+	@Override
+	public User getUserWithApplicationsAndRoles(String username) {
+		return securityDAO.getUserWithApplicationsAndRoles(username);
+	}
+
+	@Override
+	public SecurityApplication getApplicationById(Long id) {
+		return securityDAO.getApplicationById(id);
+	}
+	
+	
+	
 }
 

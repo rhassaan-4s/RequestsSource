@@ -23,6 +23,9 @@ import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.common.model.Settings;
@@ -30,12 +33,15 @@ import com._4s_.common.util.DBUtils;
 import com._4s_.common.util.Page;
 import com._4s_.common.web.util.SearchWrapper;
 import com._4s_.requestsApproval.web.util.TimeAttendanceWrapper;
-    
+import com.zaxxer.hikari.HikariDataSource;
+   
+@EnableTransactionManagement(proxyTargetClass = true)
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+@Repository
 public class Queries  extends CommonQueries{
 	protected final Log log = LogFactory.getLog(getClass());
 	
 	private JdbcTemplate exjt;
-	private DataSource dataSource;
 	private Connection conn;
 	public String sql1;
 	public String where1;
@@ -52,7 +58,22 @@ public class Queries  extends CommonQueries{
 	
 	
 	private BasicDataSource basicDataSource;
-	private Session session;
+
+	private HikariDataSource dataSource;
+	
+	private static Session session = null;
+	public static Session getSession() {
+		return session;
+	}
+	
+	public HikariDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(HikariDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	@Autowired
 	private SessionFactory sessionFactory;
 	
 	
@@ -65,46 +86,39 @@ public class Queries  extends CommonQueries{
 		this.sessionFactory = sessionFactory;
 	}
 	
-	public void setDataSource(DataSource dataSource) {
-	    this.dataSource = dataSource;
-	}
 	
-	
-	@Transactional
 	public Session getCurrentSession(){
 		session = null;
     	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
-    	System.out.println("$$$$$$$$$$$$$$$$$$getting current session");
     	log.debug("session factory " + sessionFactory);
-    	System.out.println("$$$$$$$$$$$$$$$$$$session factory " + sessionFactory);
     	try {
     	    session = sessionFactory.getCurrentSession();
     	    log.debug("***session available " + session);
     	    if (session == null || session.isOpen()==false) {
     	    	session = sessionFactory.openSession();
-    	    	System.out.println("session " + session);
+    	    	log.debug("session " + session);
     	    }
     	} catch (HibernateException e) {
     		log.debug("###Exception#### session not available, will open new session");
     	    session = sessionFactory.openSession();
     	    log.debug("***********new session opened****************");
     	}
-    	System.out.println("$$$$$$$$$$$$$$$$$$session " +session);
-	      return session;
+    	log.debug("$$$$$$$$$$$$$$$$$$session " +session);
+    	return session;
 	}
 	
-	private BasicDataSource createDataSource(String hostName,String serviceName,String userName,String password) {
-		if(basicDataSource == null){
-			basicDataSource = new BasicDataSource();
-			basicDataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
-			basicDataSource.setUrl("jdbc:oracle:thin:@"
-					+ hostName + ":1521:"
-					+ serviceName);
-			basicDataSource.setUsername(userName);
-			basicDataSource.setPassword(password);
-		}
-		return basicDataSource;
-	}
+//	private BasicDataSource createDataSource(String hostName,String serviceName,String userName,String password) {
+//		if(basicDataSource == null){
+//			basicDataSource = new BasicDataSource();
+//			basicDataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+//			basicDataSource.setUrl("jdbc:oracle:thin:@"
+//					+ hostName + ":1521:"
+//					+ serviceName);
+//			basicDataSource.setUsername(userName);
+//			basicDataSource.setPassword(password);
+//		}
+//		return basicDataSource;
+//	}
 
 	public Map search(String code,String description,String table,String firstParam,String secondParam,String paramString,String match1,String match2,String level,Settings settings,int pageNumber,int pageSize,String branchId){
 		sql1= null;
@@ -634,7 +648,7 @@ public class Queries  extends CommonQueries{
 		
 		ListOrderedMap dbConnection ;
 		dbConnection = (ListOrderedMap) list.get(0);
-		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
+//		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
 		
 		log.debug("value "+value);
 		log.debug("table "+table);
@@ -719,7 +733,7 @@ public class Queries  extends CommonQueries{
 		
 		ListOrderedMap dbConnection ;
 		dbConnection = (ListOrderedMap) list.get(0);
-		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
+//		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
 
 		value = value.replaceAll("'","");
 		value = value.replaceAll("\\\\","");
@@ -2050,7 +2064,7 @@ public class Queries  extends CommonQueries{
 		
 		ListOrderedMap dbConnection ;
 		dbConnection = (ListOrderedMap) list.get(0);
-		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
+//		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
 		
 		
 		
@@ -2364,7 +2378,7 @@ public class Queries  extends CommonQueries{
 		
 		ListOrderedMap dbConnection ;
 		dbConnection = (ListOrderedMap) list.get(0);
-		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
+//		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
 		
 		if (paramString != null && paramString.length() > 0) {
 			paramString = paramString.replaceAll("\\{sq\\}","'");

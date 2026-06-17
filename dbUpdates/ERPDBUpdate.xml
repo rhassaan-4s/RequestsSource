@@ -18167,7 +18167,7 @@ maxvalue 999999999999999999999999999&#xD;
 start with 20&#xD;
 increment by 1&#xD;
 cache 20;</statment></query><query><sqlindex>278</sqlindex><statment>ALTER TABLE  WEB_BRANCH MODIFY BRANCH NUMBER;&#xD;
-</statment></query><query><sqlindex>279</sqlindex><statment>ALTER TABLE COMMON_EMPLOYEE ADD WEBBRANCH NUMBER;</statment></query><query><sqlindex>280</sqlindex><statment>ALTER TABLE COMMON_CLIENTS ADD "schema" VARCHAR2(30);</statment></query><query><sqlindex>281</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101611, 'commons.caption.clients', NULL);&#xD; 
+</statment></query><query><sqlindex>279</sqlindex><statment>ALTER TABLE COMMON_EMPLOYEE ADD WEBBRANCH NUMBER;</statment></query><query><sqlindex>280</sqlindex><statment>ALTER TABLE COMMON_CLIENTS ADD "SCHEMA" VARCHAR2(30);</statment></query><query><sqlindex>281</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101611, 'commons.caption.clients', NULL);&#xD; 
 INSERT INTO i18n_message VALUES (202116734,'العميل', 101611, 1);&#xD;
 INSERT INTO i18n_message VALUES (202116735, 'Client', 101611, 3);&#xD;
 INSERT INTO I18N_KEY VALUES (101612, 'commons.caption.next', NULL);&#xD;
@@ -18179,4 +18179,12 @@ start with 10&#xD;
 increment by 1&#xD;
 cache 20;</statment></query><query><sqlindex>284</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101613, 'requestsApproval.header.newEmpGroup', NULL);&#xD;
 INSERT INTO i18n_message VALUES (202116738,'اضافة اولويات موافقة', 101613, 1);&#xD;
-INSERT INTO i18n_message VALUES (202116739, 'Add new Access Group', 101613, 3);</statment></query></SQL>
+INSERT INTO i18n_message VALUES (202116739, 'Add new Access Group', 101613, 3);</statment></query><query><sqlindex>285</sqlindex><statment>ALTER TABLE LOGIN_USERS_REQUESTS ADD (&#xD;
+         STR_REQUEST_DATE VARCHAR2(20),&#xD;
+         STR_FROM_DATE    VARCHAR2(20),&#xD;
+         STR_TO_DATE      VARCHAR2(20),&#xD;
+         STR_PERIOD_FROM  VARCHAR2(20),&#xD;
+         STR_PERIOD_TO    VARCHAR2(20)&#xD;
+      )&#xD;
+   ;</statment></query><query><sqlindex>286</sqlindex><statment>ALTER TABLE LOGIN_USERS_REQUESTS MODIFY LEAVE_EFFECT VARCHAR2(2);&#xD;
+</statment></query></SQL>

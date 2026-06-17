@@ -3,6 +3,7 @@ package com._4s_.dbUpdate.web.action;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -126,12 +127,20 @@ public class UpdateDB {
         						log.debug("will execute sql server query");
         						jt.execute(qry);
         					}
-        				}catch (Exception ec) {
-        					log.debug(ec.getMessage());
-                    		noErrors=false;
-//                    		TransactionInterceptor.currentTransactionStatus().setRollbackOnly();
-            	        	String BadLine="Error in line" + "\n"+qry+"   with index : "+blockIndex+"\n";
-            				witer.append(BadLine+"\n \t"+ec.getCause()+"\n\n\n\n\n the block:\n"+queryBlock);
+        				} catch (Exception ec) {
+        					
+        					// 1430 is the exact numeric vendor code for ORA-01430
+        				    if (ec.getMessage().contains("1430") || ec.getMessage().contains("ORA-01430")) {
+        				        System.out.println("Safe bypass: One or more columns already exist in the table. Moving on...");
+        				    } else {
+        				        // It's a different error (e.g., connection issue, permissions), so rethrow or log it
+        				    	log.debug("Database error occurred: " + ec.getMessage());
+        				    	log.debug(ec.getMessage());
+        				    	noErrors=false;
+	//                    		TransactionInterceptor.currentTransactionStatus().setRollbackOnly();
+	            	        	String BadLine="Error in line" + "\n"+qry+"   with index : "+blockIndex+"\n";
+	            				witer.append(BadLine+"\n \t"+ec.getCause()+"\n\n\n\n\n the block:\n"+queryBlock);
+        				    }
             	       }
         			}
         			if (settings!=null && !settings.getSqlServerConnectionEnabled()) {

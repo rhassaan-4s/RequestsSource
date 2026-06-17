@@ -287,8 +287,12 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 						<tr height="10">
 						</tr>
 					</table>	
-					
+				
 					<abc:paging url="reports.html" 
+					 page="${model.page}"
+				    numberOfPages="${model.numberOfPages}"
+				    next="${model.next}"
+				    previous="${model.previous}" 
 					parametersString="requestType=${model.requestType}&request_date_from=${model.request_date_from}&request_date_to=${model.request_date_to}&codeFrom=${model.codeFrom}&codeTo=${model.codeTo}"/>		
 					<table rules="all" align="center" width="70%" class="sofT">
 								

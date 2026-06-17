@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
@@ -46,7 +47,7 @@ public class AttendanceVacationReport extends CommonController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String handleRequest(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception {
+	public ModelAndView handleRequest(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
 		log.debug("---ref-emp from session---"+request.getSession().getAttribute("employee"));
@@ -65,9 +66,12 @@ public class AttendanceVacationReport extends CommonController {
 		String empCode = request.getParameter("empCode");
 		if (empCode!=null && !empCode.equals("")){
 			emp = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", empCode);
-			model.addAttribute("emp", emp);
+		} else {
+			empCode = emp.getEmpCode();
 		}
-		model.addAttribute("empCode", empCode);
+		
+		model.addAttribute("emp",emp);
+		model.addAttribute("empCode", emp.getEmpCode());
 		
 		log.debug("--dateTo--"+dateTo);
 		model.addAttribute("toDate", dateTo);
@@ -104,7 +108,10 @@ public class AttendanceVacationReport extends CommonController {
 		
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
 
-
+		if ((dateFrom == null || dateFrom.isEmpty()) && (dateTo == null || dateTo.isEmpty())) {
+			dateFrom = formattedDate;
+			dateTo = formatedToday;
+		}
 		if (dateFrom != null && dateTo != null){
 			if (!dateFrom.equals("") && !dateTo.equals("") ) {
 				Date fromDate = null;
@@ -148,7 +155,7 @@ public class AttendanceVacationReport extends CommonController {
 				} else {
 //					totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
 //					totalObjects=requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
-					totalObjects=requestsApprovalManager.getTimeAttendAll(empCode, fromDate, toDate,null,settings);
+					totalObjects=requestsApprovalManager.getTimeAttendAll("'"+empCode+"'", fromDate, toDate,null,settings);
 				}
 				
 				objects=(List) totalObjects.get(0);
@@ -327,7 +334,7 @@ public class AttendanceVacationReport extends CommonController {
 		}
 		
 //		return new ModelAndView("attendanceVacationReport",model)
-		return "attendanceVacationReport";
+		return new ModelAndView("attendanceVacationReport");
 	}
 	
 }

@@ -8,9 +8,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,16 +32,18 @@ public class ChangeDefaultLocale extends BaseSimpleFormController {
 
 	private LocaleSource localeSource = null;
 
+	@Autowired
+	@Qualifier("messageSource")
 	private ResourceMapMessageSource cacheMap = null;
 
-	private DefaultLocale defaultOne;
+	private DefaultLocale defaultLocale;
 
-	public DefaultLocale getDefaultOne() {
-		return defaultOne;
+	public DefaultLocale getDefaultLocale() {
+		return defaultLocale;
 	}
 
-	public void setDefaultOne(DefaultLocale defaultOne) {
-		this.defaultOne = defaultOne;
+	public void setDefaultLocale(DefaultLocale defaultLocale) {
+		this.defaultLocale = defaultLocale;
 	}
 
 	public ResourceMapMessageSource getCacheMap() {
@@ -103,7 +106,7 @@ public class ChangeDefaultLocale extends BaseSimpleFormController {
 					.debug(">>>>>>>>>>>>>>>>>>>>>>>cacheMap.getCachedResourceMaps() "
 							+ cacheMap.getCachedResourceMaps());
 			// locale=defaultOne.getDefaultMyLocale();
-			defaultOne.setDefaultMyLocale(locale);
+			defaultLocale.setDefaultMyLocale(locale);
 			Map resource = (Map) (cacheMap.getCachedResourceMaps().get(locale));
 		}
 		request.getSession().setAttribute("locale", locale.getCode());

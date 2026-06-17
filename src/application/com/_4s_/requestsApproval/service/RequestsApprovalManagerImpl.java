@@ -33,6 +33,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,17 +80,18 @@ import com.jenkov.prizetags.tree.itf.ITreeNode;
 //import sun.net.www.protocol.https.HttpsURLConnectionImpl;
 
 
-@Service
+@Service("requestsApprovalManager")
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class RequestsApprovalManagerImpl extends BaseManagerImpl implements RequestsApprovalManager{
 
 	private static final Object geoCodeLock = new Object ();
+	@Autowired
 	private RequestsApprovalDAO requestsApprovalDAO;	
-	
+	@Autowired
 	private ExternalQueries externalQueries = null;
-	
+	@Autowired
 	private MessageManager messageManager;
-	
+	@Autowired
 	private SequenceManager sequenceManager ;
 	public RequestsApprovalDAO getRequestsApprovalDAO() {
 		return requestsApprovalDAO;
@@ -1078,6 +1080,8 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
 	public List getEmpReqTypeAccs(List accessLevels,Long requestType) {
 		// TODO Auto-generated method stub
+		System.out.println("accessLevels size " + accessLevels.size() + " requestType " + requestType);
+		System.out.println("requestsApprovalDAO " + requestsApprovalDAO);
 		return requestsApprovalDAO.getEmpReqTypeAccs(accessLevels,requestType);
 	}
 
@@ -1591,7 +1595,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
 					try {
 						saveObject(empReqApproval);
-						flush();
+//						flush();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -2582,6 +2586,13 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
 		    return difference;
 		}
+
+		@Override
+		public List getAccessLevels() {
+			return requestsApprovalDAO.getAccessLevels();
+		}
+		
+		
 //	public List getAttendanceRequests(Date date, String empCode) {
 //		return requestsApprovalDAO.getAttendanceRequests(date,empCode);
 //	}

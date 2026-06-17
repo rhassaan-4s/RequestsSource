@@ -29,31 +29,31 @@ public class Settings  implements Serializable,Auditable {
 	private Company company;
 	
 	private Boolean accessLevelsCheckDate=false;
-	private Boolean attendanceRequestEn;
+	private Boolean attendanceRequestEn=true;
 	private Boolean empRequestCheckDate=false;
-	private Boolean annualVacBalDaysEnabled;
+	private Boolean annualVacBalDaysEnabled=true;
 //	private String server;//
 //	private String service;//
 //	private String username;//
 //	private String password;//
-	private Boolean addNewData;
-	private Boolean checkPostedRequests;
-	private Boolean empRequestTypeException;
+	private Boolean addNewData=false;
+	private Boolean checkPostedRequests=false;
+	private Boolean empRequestTypeException=false;
 	private Boolean tAttRepWithHrsMin=false;
-	private Boolean specialVacExcep;
-	private Boolean creatingMail;
+	private Boolean specialVacExcep=false;
+	private Boolean creatingMail=true;
 	private String loginUrl;//
-	private Boolean vacLimitProblem;
-	private Boolean vacationRequestExcep;
-	private Boolean reqPeriodDate;
-	private Boolean withdrawDaysQuartPolicy;
-	private Boolean notesValidation;
-	private Boolean withoutSalPeriodValidation;
-	private Boolean fromToRequestVald;
-	private Boolean withoutSalaryVacEnabled;
-	private Boolean periodFromToEnabled;
-	private Boolean footerCopyrightsEnabled;
-	private Boolean companyRulesEn;
+	private Boolean vacLimitProblem=false;
+	private Boolean vacationRequestExcep=true;
+	private Boolean reqPeriodDate=false;
+	private Boolean withdrawDaysQuartPolicy=false;
+	private Boolean notesValidation=true;
+	private Boolean withoutSalPeriodValidation=true;
+	private Boolean fromToRequestVald=false;
+	private Boolean withoutSalaryVacEnabled=false;
+	private Boolean periodFromToEnabled=true;
+	private Boolean footerCopyrightsEnabled=true;
+	private Boolean companyRulesEn=false;
 	private Blob companyLogoHeader;
 	private String companyLogoHeaderName;
 	private Integer maxEmp;//
@@ -63,19 +63,19 @@ public class Settings  implements Serializable,Auditable {
 	private String SMTPServer;//
 	private String portServer;//
 	
-	private Boolean execuseEnabled;
+	private Boolean execuseEnabled=false;
 
 	private Integer salaryFromDay;//
 	
 	private Integer requestsDeadline;//
 	
-	private Boolean automaticSignInOut;
+	private Boolean automaticSignInOut=false;
 	
-	private Boolean webAttendanceAppEnabled;
+	private Boolean webAttendanceAppEnabled=true;
 	
-	private Boolean sqlServerConnectionEnabled;
+	private Boolean sqlServerConnectionEnabled=false;
 	
-	private Boolean desktopHrApplication;
+	private Boolean desktopHrApplication=false;
 	
 //	private String dbPortNo;
 	

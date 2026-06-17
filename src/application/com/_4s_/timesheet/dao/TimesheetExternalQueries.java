@@ -61,22 +61,20 @@ private SessionFactory sessionFactory;
 	public Session getCurrentSession(){
 		session = null;
     	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
-    	System.out.println("$$$$$$$$$$$$$$$$$$getting current session");
     	log.debug("session factory " + sessionFactory);
-    	System.out.println("$$$$$$$$$$$$$$$$$$session factory " + sessionFactory);
     	try {
     	    session = sessionFactory.getCurrentSession();
     	    log.debug("***session available " + session);
     	    if (session == null || session.isOpen()==false) {
     	    	session = sessionFactory.openSession();
-    	    	System.out.println("session " + session);
+    	    	log.debug("session " + session);
     	    }
     	} catch (HibernateException e) {
     		log.debug("###Exception#### session not available, will open new session");
     	    session = sessionFactory.openSession();
     	    log.debug("***********new session opened****************");
     	}
-    	System.out.println("$$$$$$$$$$$$$$$$$$session " +session);
+    	log.debug("$$$$$$$$$$$$$$$$$$session " +session);
 	      return session;
 	}
 

@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -90,13 +91,13 @@ public class EmpBasic  implements Serializable,Auditable {//extends EmpBasicPare
 	@ManyToOne
 	@JoinColumn (name="martial")
 	private MaritalStatus maritalStatus;
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn (name="location")
 	private AttendanceDepartment department;
-	@ManyToOne
+	@ManyToOne 
 	@JoinColumn (name="qual_specific")
 	private QualificationSpeciality qual_specific;
-	@ManyToOne
+	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn (name="qual")
 	private Qualification qual;
 	@Column(name="qual_year")

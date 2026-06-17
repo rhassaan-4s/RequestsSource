@@ -101,11 +101,31 @@ public class PageRequestsWrapper {
 		} else {
 			this.vacCredit = null;
 		}
-		this.str_request_date = (String) str_request_date;
-		this.str_from_date = (String) str_from_date;
-		this.str_to_date = (String) str_to_date;
-		this.str_period_from = (String) str_period_from;
-		this.str_period_to = (String) str_period_to;
+		if (str_request_date != null) {
+			this.str_request_date = (String) str_request_date;
+		} else {
+			this.str_request_date = null;
+		}
+		if (str_from_date != null) {
+			this.str_from_date = (String) str_from_date;
+		} else {
+			this.str_from_date = null;
+		}
+		if (str_to_date != null) {
+			 this.str_to_date = (String) str_to_date;
+		} else {
+			this.str_to_date = null;
+		}	
+		if (str_period_from != null) { 
+			this.str_period_from = (String) str_period_from;
+		} else {
+			this.str_period_from = null;
+		}
+		if (str_period_to != null) {
+			this.str_period_to = (String) str_period_to;
+		} else {
+			this.str_period_to = null;
+		}			
 		this.altDate = (String) altdate;
 		if (longitude != null) {
 			this.longitude = ((BigDecimal) longitude).doubleValue();
@@ -130,8 +150,16 @@ public class PageRequestsWrapper {
 		} else {
 			this.managerModifiedDat = null;
 		}
+		if (description!=null) {
 		this.description = (String) description;
+		} else {
+			this.description = null;
+		}
+		if (vacname!=null) {
 		this.vacName = (String) vacname;
+		} else {
+			this.vacName = null;
+		}
 		this.empId = ((BigDecimal) empid).longValue();
 		this.employeeCode = (String) employeecode;
 		this.name = (String) name;

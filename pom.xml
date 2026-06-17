@@ -400,13 +400,12 @@
     <version>20070405</version>
 </dependency>
 		
-				<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
-		<dependency>
+<!--		<dependency>
 		    <groupId>commons-logging</groupId>
 		    <artifactId>commons-logging</artifactId>
 		    <version>1.2</version>
 		</dependency>
-
+-->
 		<!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
 		<dependency>
 			<groupId>commons-beanutils</groupId>
@@ -502,30 +501,43 @@
 			<artifactId>jdom</artifactId>
 			<version>1.1</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
-		<!--<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.7.32</version>
-		</dependency>-->
-		<!--For and sfl4j Bridge maintenance -->
-		<!--<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId>
-			<version>2.12.0</version>
-		</dependency>-->
-		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-		<!--<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.32</version>
-		</dependency>-->
-		<dependency>
+		
+		
+<!--		<dependency>
 		    <groupId>org.slf4j</groupId>
 		    <artifactId>slf4j-simple</artifactId>
 		    <version>1.7.21</version>
-		</dependency>
-		<dependency>
+		</dependency>-->
+		
+		<!-- Route Commons Logging (org.apache.commons.logging.LogFactory) to SLF4J -->
+<dependency>
+  <groupId>org.slf4j</groupId>
+  <artifactId>jcl-over-slf4j</artifactId>
+  <version>1.7.36</version> <!-- use a recent 1.7.x compatible with logback 1.2.x -->
+</dependency>
+
+<!-- SLF4J API (logback pulls a version transitively, but it's OK to be explicit) -->
+<dependency>
+  <groupId>org.slf4j</groupId>
+  <artifactId>slf4j-api</artifactId>
+  <version>1.7.36</version>
+</dependency>
+
+<!-- Keep Logback as the single logging implementation -->
+<dependency>
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-classic</artifactId>
+  <version>1.2.3</version>
+</dependency>
+<!-- logback-core is transitive, you can keep explicit if you like -->
+<dependency>
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-core</artifactId>
+  <version>1.2.3</version>
+</dependency>
+
+
+<!--		<dependency>
 		    <groupId>ch.qos.logback</groupId>
 		    <artifactId>logback-classic</artifactId>
 		    <version>1.2.3</version>
@@ -535,22 +547,18 @@
 		    <artifactId>logback-core</artifactId>
 		    <version>1.2.3</version>
 		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
-		<dependency>
+-->
+<!--	<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>2.12.0</version>
-			<!-- <exclusions> <exclusion> <groupId>xerces</groupId> <artifactId>xercesImpl</artifactId> 
-				</exclusion> </exclusions> -->
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
 			<version>2.12.0</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/xerces/xercesImpl -->
+-->
 		<dependency>
 			<groupId>xerces</groupId>
 			<artifactId>xercesImpl</artifactId>
@@ -586,6 +594,31 @@
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-jsp-api</artifactId>
 			<version>8.5.37</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>5.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.11.5</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.11.5</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if you prefer -->
+			<version>0.11.5</version>
+			<scope>runtime</scope>
 		</dependency>
 
 	</dependencies>

@@ -99,9 +99,11 @@ public class EmpGroupsView {// implements Controller{
 		
 		String empReqTypeAccId = request.getParameter("empReqTypeAcc");
 		
-		if((empId!=null&&!empId.equals(""))){
+		if((empCode!=null&&!empCode.equals(""))){
 		 
-			loginUsers=(LoginUsers) requestsApprovalManager.getObject(LoginUsers.class, new Long(empId));
+			Employee emp = (Employee) requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", empCode)	;
+//			loginUsers=(LoginUsers) requestsApprovalManager.getObject(LoginUsers.class, new Long(empId));
+			loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 			if (saveParam!=null && saveParam.equals("true")){
 				EmpReqTypeAcc empAccess = null;
 				log.debug("empReqTypeAccId " + empReqTypeAccId);
@@ -119,7 +121,7 @@ public class EmpGroupsView {// implements Controller{
 				userdata=new HashMap();
 				RequestTypes requestTypes=(RequestTypes)requeststy.get(i);		
 				if (((deleteParam == null || deleteParam.isEmpty() || deleteParam.equals("false")) && (editParam == null || editParam.isEmpty() || editParam.equals("false"))) || saveParam!=null && saveParam.equals("true")) {
-					
+					log.debug("****getting list of access for user " + loginUsers.getId() + " and request type " + requestTypes.getId());
 					List empReqTypeAcc = requestsApprovalManager.getObjectsByTwoParametersOrderedByFieldList(
 							EmpReqTypeAcc.class, "emp_id", loginUsers, "req_id", requestTypes, requList);
 					log.debug("****new list size " + empReqTypeAcc.size());

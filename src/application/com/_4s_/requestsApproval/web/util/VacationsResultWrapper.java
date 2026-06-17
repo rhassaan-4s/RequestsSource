@@ -12,6 +12,25 @@ public class VacationsResultWrapper {
 	private String empCode;
 	private String fName;
 	
+	public VacationsResultWrapper(Object fr_date, Object to_date, Object withdr,Object vacation) {
+		super();
+		
+		if (vacation!=null) {
+			this.vacation = (String)vacation;
+		}
+		if (fr_date !=null) {
+			this.fr_date = (Timestamp)fr_date;
+		}
+		if (to_date !=null) {
+			this.to_date = (Timestamp)to_date;
+		}
+		if (withdr!=null) {
+			this.withdr = (BigDecimal)withdr;
+		}
+		
+	}
+
+	
 	public VacationsResultWrapper(Object fr_date, Object to_date, Object withdr,Object vacation,Object empCode,Object fName) {
 		super();
 		if (empCode!=null) {

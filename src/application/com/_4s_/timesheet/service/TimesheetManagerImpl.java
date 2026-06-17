@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hibernate.HibernateException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,13 +34,13 @@ import com._4s_.timesheet.web.validate.ValidationStatus;
 @Service
 @Transactional
 public class TimesheetManagerImpl extends BaseManagerImpl implements TimesheetManager{
-
+	@Autowired
 	private TimesheetDAO timesheetDAO;	
 	
 	private TimesheetExternalQueries externalQueries = null;
-	
+	@Autowired
 	private MessageManager messageManager;
-	
+	@Autowired
 	private SequenceManager sequenceManager ;
 
 

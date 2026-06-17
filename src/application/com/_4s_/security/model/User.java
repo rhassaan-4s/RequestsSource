@@ -159,7 +159,7 @@ public class User implements  Serializable,Auditable,UserDetails {
 	 * @hibernate.collection-many-to-many class ="com._4s_.security.model.Roles" column="roles" 
 	 */
 	
-	public List getRoles() {
+	public List<Roles> getRoles() {
 		return roles;
 	}
 

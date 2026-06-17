@@ -245,15 +245,16 @@ public class TimeAttendanceReport extends CommonController {
 				String empArray = "";
 				Iterator empItr = empReqTypeAccs.iterator();
 				int count = 0;
-				while(empItr.hasNext()) {
-					String empReq = ((String)(empItr.next()));
-					//					System.out.println("empReq " + empReq);
-					if (count==0) {
-						//						empArray = empReq.getEmp_id().getEmpCode();
-						empArray =  "'" + empReq +  "'";
+				while (empItr.hasNext()) {
+					String empReq = ((String) (empItr.next()));
+					System.out.println("empReq " + empReq);
+
+					if (count == 0) {
+						// empArray = empReq.getEmp_id().getEmpCode();
+						empArray = "" + empReq + "";
 					} else {
-						//						empArray += "," + empReq.getEmp_id().getEmpCode();
-						empArray += ",'" + empReq + "'";
+						// empArray += "," + empReq.getEmp_id().getEmpCode();
+						empArray += "," + empReq + "";
 					}
 					count++;
 				}

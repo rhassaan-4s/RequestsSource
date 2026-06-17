@@ -63,6 +63,7 @@ public class EmpReqTypeGroupForm extends BaseSimpleFormController{
 		this.requestsApprovalManager = requestsApprovalManager;
 	}
 	
+	@RequestMapping(method = RequestMethod.GET)
 	public String initForm(ModelMap model,HttpServletRequest request) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		

@@ -1,6 +1,7 @@
 package com._4s_.security.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com._4s_.common.dao.BaseDAO;
 import com._4s_.security.model.IPAddress;
 import com._4s_.security.model.Imei;
+import com._4s_.security.model.SecurityApplication;
 import com._4s_.security.model.User;
 
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -21,10 +23,12 @@ public List getApplicationEmployees(final Long applicationId);
 public abstract List getEmployeesByBranchAndDepartmentAndStatus(String branchId, String departmentId, String status);
 public abstract List getUserByEmail(String email);
 public List getActiveApplications();
-public User login();
+public Map<String, Object> login(String tenantId);
 public User getUser(String username);
 public Imei checkImei(String imei, User user);
 public IPAddress checkIP(String currentIP, User user);
+public User getUserWithApplicationsAndRoles(String username);
+public SecurityApplication getApplicationById(Long id);
 }
 //=======
 //package com._4s_.security.dao;

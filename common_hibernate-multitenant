@@ -156,23 +156,6 @@
 		</property>
 	</bean>
 
-	<!-- Open Session in View Interceptor -->
-
-	<bean id="openSessionInViewInterceptor"
-		class="org.springframework.orm.hibernate4.support.OpenSessionInViewInterceptor">
-		
-		 <property name="sessionFactory">
-	        <ref bean="sessionFactory" />
-	    </property>
-		<!-- ><property name="singleSession">
-			<value>true</value>
-		</property>
-		<property name="sessionFactory">
-			<ref local="sessionFactory" />
-		</property>
-		<property name="flushModeName">
-			<value>FLUSH_AUTO</value>
-		</property>-->
-	</bean>
+	
 
 </beans>

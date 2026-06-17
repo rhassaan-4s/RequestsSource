@@ -1,10 +1,12 @@
 package com._4s_.i18n.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com._4s_.i18n.dao.MessageDAO;
 import com._4s_.i18n.model.MyLocale;
 
+@Service("defaultLocale")
 public class DefaultLocale implements LocaleSource {
 
 	private MyLocale defaultMyLocale = null;

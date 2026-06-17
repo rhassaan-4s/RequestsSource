@@ -107,7 +107,6 @@ function printthis(which) {
 									<fmt:message
 										key="requestsApproval.header.attendanceVacationReport" /></td>
 							</tr>
-
 							<tr>
 								<td nowrap class="formBodControl"><abc:i18n
 										property="requestsApproval.caption.userCode" /> <fmt:message
