@@ -184,6 +184,7 @@ public Map changePassword(PasswordWrapper passwordWrapper, User user) {
 
 public Boolean checkImei(String imei, User user) {
 	// TODO Auto-generated method stub
+	log.debug("will check imei " + imei + " with user " + user.getId());
 	Imei im = securityDao.checkImei(imei,user);
 	log.debug("imei " + im);
 	if (im != null) {

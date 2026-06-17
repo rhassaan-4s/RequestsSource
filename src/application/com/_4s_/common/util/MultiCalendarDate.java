@@ -188,16 +188,42 @@ public class MultiCalendarDate implements ApplicationContextAware{
 		Calendar miladiCalendar = Calendar.getInstance();
 		miladiCalendar.setLenient(false);
 		try {
-			Date date1 = new SimpleDateFormat("yy/MM/dd HH:mm:ss:SSS").parse(dateString+" 00:00:00:000");
-			miladiCalendar.set(year,month-1,day,0,0,0);
-			Date newDate=new Date();
-			newDate.setYear(year);
-			newDate.setMonth(month-1);
-			newDate.setDate(day);
+//			Date date1 = new SimpleDateFormat("yy/MM/dd HH:mm:ss:SSS").parse(dateString+" 00:00:00:000");
+//			miladiCalendar.set(year,month-1,day,0,0,0);
+//			Date newDate=new Date();
+//			newDate.setYear(year);
+//			newDate.setMonth(month-1);
+//			newDate.setDate(day);
+//
+//			this.millis = miladiCalendar.getTimeInMillis();
+//			//this.millis = date1.getTime();
+//			this.dateCalendarType = MILADI ;
+			
+//			Calendar miladiCalendar = Calendar.getInstance();
 
-			this.millis = miladiCalendar.getTimeInMillis();
-			//this.millis = date1.getTime();
-			this.dateCalendarType = MILADI ;
+			miladiCalendar.set(Calendar.YEAR, year);
+			System.out.println("*****1********");
+			miladiCalendar.set(Calendar.MONTH, month - 1);
+			System.out.println("*****2********");
+			miladiCalendar.set(Calendar.DAY_OF_MONTH, day);
+			System.out.println("*****3********");
+			miladiCalendar.set(Calendar.HOUR_OF_DAY, 0);
+			System.out.println("*****4********");
+			miladiCalendar.set(Calendar.MINUTE, 0);
+			System.out.println("*****5********");
+			miladiCalendar.set(Calendar.SECOND, 0);
+			System.out.println("*****6********");
+			miladiCalendar.set(Calendar.MILLISECOND, 0);
+			System.out.println("*****7********");
+			try {
+				this.millis = miladiCalendar.getTimeInMillis();
+			} catch (java.lang.IllegalArgumentException e) {
+				miladiCalendar.set(Calendar.HOUR_OF_DAY, 12);
+				this.millis = miladiCalendar.getTimeInMillis();
+				System.out.println("*****8********");
+			}
+			System.out.println("*****9********");
+			this.dateCalendarType = MILADI;
 		} catch (Exception ex) {
 			
 			log.debug(">>>>>>>>>>>>>>>>>>>> ERROR "+ex.getMessage());

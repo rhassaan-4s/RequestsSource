@@ -1,5 +1,6 @@
 package com._4s_.security.web.action;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -99,11 +100,25 @@ public class DefaultPage extends BaseController {
 			HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		
-		System.out.println("Server OS time: " + new java.util.Date());
+//		System.out.println("Server OS time: " + new java.util.Date());
 		System.out.println("Java TimeZone ID: " + TimeZone.getDefault().getID());
 		System.out.println("Java raw offset (hours): " + (TimeZone.getDefault().getRawOffset() / 3600000) );
 		System.out.println("Java DST in effect? " + TimeZone.getDefault().inDaylightTime(new Date()));
-		System.out.println("Server OS time After offset change: " + new java.util.Date());
+//		System.out.println("Server OS time After offset change: " + new java.util.Date());
+		System.out.println("JVM -Duser.timezone config " + System.getProperty("user.timezone"));
+		TimeZone.setDefault(TimeZone.getTimeZone("Africa/Cairo"));
+		System.out.println("AFTER SETTING TIMEZONE MANUALY");
+		System.out.println("Server OS time: " + new java.util.Date());
+		System.out.println("Cairo time zone as identified in jvm " + TimeZone.getTimeZone("Africa/Cairo").getID());
+		System.out.println("Java TimeZone ID: " + TimeZone.getDefault().getID());
+		System.out.println("Java raw offset (hours): " + (TimeZone.getDefault().getRawOffset() / 3600000) );
+		System.out.println("Java DST in effect? " + TimeZone.getDefault().inDaylightTime(new Date()));
+//		System.out.println("Server OS time After offset change: " + new java.util.Date());
+		System.out.println("JVM -Duser.timezone config " + System.getProperty("user.timezone"));
+		System.out.println("TimeZone.getAvailableIDs().length " + java.util.TimeZone.getAvailableIDs().length);
+		
+		System.out.println("Arrays.toString(TimeZone.getAvailableIDs()) " + Arrays.toString(TimeZone.getAvailableIDs()));
+		
 		SecurityContext sc = (SecurityContext) (SecurityContextHolder.getContext());
 		log.debug("------------------------------------------username:--- "
 				+ sc.getAuthentication().getName());
