@@ -1,0 +1,215 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+	http://www.springframework.org/schema/jee
+    http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
+	
+<tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager" />
+<context:component-scan base-package="com._4s_.timesheet.*" />
+
+	<!-- <bean id="timesheetTransForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.timesheet.web.action.TimesheetTransForm">
+				<property name="commandName">
+					<value>trans</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.timesheet.model.Requests</value>
+				</property>
+				<property name="formView">
+					<value>timesheetTransForm</value>
+				</property>
+				<property name="successView">
+					<value>timesheetTrans.html</value>
+				</property>
+				<property name="timesheetManager">
+					<ref bean="timesheetManager" />
+				</property>
+
+				<property name="binders">
+					<list>
+						<ref bean="" />
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean> -->
+
+	<bean id="timesheetTrans" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.timesheet.web.action.TimesheetTrans">
+				<property name="timesheetManager">
+					<ref bean="timesheetManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="activityForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.timesheet.web.action.ActivityForm">
+				<property name="commandName">
+					<value>activity</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.timesheet.model.TimesheetActivity</value>
+				</property>
+				<property name="formView">
+					<value>activityForm</value>
+				</property>
+				<property name="successView">
+					<value>activityView</value>
+				</property>
+				<property name="timesheetManager">
+					<ref bean="timesheetManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="activityView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.timesheet.web.action.ActivityView">
+				<property name="timesheetManager">
+					<ref bean="timesheetManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+
+<bean id="partForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.timesheet.web.action.PartForm">
+				<property name="commandName">
+					<value>part</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.timesheet.model.TimesheetTransactionParts</value>
+				</property>
+				<property name="formView">
+					<value>partForm</value>
+				</property>
+				<property name="successView">
+					<value>partView</value>
+				</property>
+				<property name="timesheetManager">
+					<ref bean="timesheetManager" />
+				</property>
+
+				<!-- <property name="binders">
+					<list>
+						<ref bean="specsBinder" />
+					</list>
+				</property>
+				 -->
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="partView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.timesheet.web.action.PartView">
+				<property name="timesheetManager">
+					<ref bean="timesheetManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="timesheetSpecs" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.timesheet.web.action.TimesheetSpecsForm">
+				<property name="commandName">
+					<value>specs</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.timesheet.model.TimesheetSpecs</value>
+				</property>
+				<property name="formView">
+					<value>timesheetSpecs</value>
+				</property>
+				<property name="successView">
+					<value>timesheetSpecs</value>
+				</property>
+				<property name="timesheetManager">
+					<ref bean="timesheetManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	<!--
+		_____________________________________________________________________
+	-->
+	<!--
+		_________________________________ url Mapping _______________________
+	-->
+	<!--
+		_____________________________________________________________________
+	-->
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="openSessionInViewInterceptor" />
+			</list>
+		</property>
+		<property name="mappings">
+			<props>
+				<prop key="/timesheetTrans.html">timesheetTrans</prop>
+				<prop key="/activityView.html">activityView</prop>
+				<prop key="/activityForm.html">activityForm</prop>
+				<prop key="/partView.html">partView</prop>
+				<prop key="/partForm.html">partForm</prop>
+				
+				<prop key="/timesheetSpecs.html">timesheetSpecs</prop>
+			</props>
+		</property>
+	</bean>
+
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize">
+			<value>100000000</value>
+		</property>
+	</bean>
+
+	<!--
+		_____________________________________________________________________
+	-->
+	<!--
+		______________________________ view Resolver ________________________
+	-->
+	<!--
+		_____________________________________________________________________
+	-->
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="requestContextAttribute">
+			<value>rc</value>
+		</property>
+		<property name="viewClass">
+			<value>org.springframework.web.servlet.view.JstlView</value>
+		</property>
+		<property name="prefix">
+			<value>/web/timesheet/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+
+</beans>
+
+
+	
+			

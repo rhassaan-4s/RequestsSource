@@ -1,0 +1,452 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+	http://www.springframework.org/schema/jee
+    http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
+	
+<tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager" />
+<context:component-scan base-package="com._4s_.attendance.*" />
+	
+	<bean id="departmentForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.DepartmentForm">
+				<property name="commandName">
+					<value>department</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.attendance.model.AttendanceDepartment</value>
+				</property>
+				<property name="formView">
+					<value>departmentForm</value>
+				</property>
+				<property name="successView">
+					<value>departmentView</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="departmentView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.DepartmentView">
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="titleForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.TitleForm">
+				<property name="commandName">
+					<value>title</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.attendance.model.Title</value>
+				</property>
+				<property name="formView">
+					<value>titleForm</value>
+				</property>
+				<property name="successView">
+					<value>titleView</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="titleView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.TitleView">
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="qualificationForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.QualificationForm">
+				<property name="commandName">
+					<value>qualification</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.attendance.model.Qualification</value>
+				</property>
+				<property name="formView">
+					<value>qualificationForm</value>
+				</property>
+				<property name="successView">
+					<value>qualificationView</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="qualificationView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.QualificationView">
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+<bean id="religionForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.ReligionForm">
+				<property name="commandName">
+					<value>religion</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.attendance.model.Religion</value>
+				</property>
+				<property name="formView">
+					<value>religionForm</value>
+				</property>
+				<property name="successView">
+					<value>religionView</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="religionView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.ReligionView">
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="empBasicForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.EmpBasicForm">
+				<property name="commandName">
+					<value>empBasic</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.common.model.EmpBasic</value>
+				</property>
+				<property name="formView">
+					<value>empBasicForm</value>
+				</property>
+				<property name="successView">
+					<value>empBasicView</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+				<property name="binders">
+					<list>
+						<ref bean="religionBinder" />
+						<ref bean="maritalStatusBinder" />
+						<ref bean="qualificationBinder" />
+						<ref bean="departmentBinder" />
+						<ref bean="titleBinder" />
+						<ref bean="timestampBinder" />
+						<!--<ref bean="formattedDateBinder"/>-->
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="empBasicView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.EmpBasicView">
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="dashboardView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.Dashboard">
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="vacRuleForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.VacRuleForm">
+				<property name="commandName">
+					<value>rules</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.attendance.model.VacRulesListWrapper</value>
+				</property>
+				<property name="formView">
+					<value>vacRuleForm</value>
+				</property>
+				<property name="successView">
+					<value>vacRuleForm</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+				<property name="binders">
+					<list>
+						<ref bean="vacBinder" />
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="publicLeavesForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.PublicLeavesForm">
+				<property name="commandName">
+					<value>leaves</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.attendance.model.PublicLeavesListWrapper</value>
+				</property>
+				<property name="formView">
+					<value>publicLeavesForm</value>
+				</property>
+				<property name="successView">
+					<value>publicLeavesForm</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+				<property name="binders">
+					<list>
+					<ref bean="dateBinder" />
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="vacationForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.VacationForm">
+				<property name="commandName">
+					<value>vacation</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.requestsApproval.model.Vacation</value>
+				</property>
+				<property name="formView">
+					<value>vacationForm</value>
+				</property>
+				<property name="successView">
+					<value>vacationView</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="vacationView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.VacationView">
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="workperiodForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.WorkPeriodForm">
+				<property name="commandName">
+					<value>period</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.attendance.model.WorkPeriod</value>
+				</property>
+				<property name="formView">
+					<value>workperiodForm</value>
+				</property>
+				<property name="successView">
+					<value>workperiodView</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+				<property name="customBinders">
+					<list>
+						<ref bean="timestampBinder" />
+						<ref bean="timestampTimeBinder" />
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="workperiodView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.WorkPeriodView">
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="triggerVacBalanceView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.TriggerVacBalanceView">
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="triggerAttendAnalysisView" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.TriggerAttendAnalysisView">
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="empWorkPeriodForm" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="com._4s_.attendance.web.action.EmpWorkPeriodForm">
+				<property name="commandName">
+					<value>periods</value>
+				</property>
+				<property name="commandClass">
+					<value>com._4s_.attendance.model.EmpWorkPeriodListWrapper</value>
+				</property>
+				<property name="formView">
+					<value>empWorkPeriodForm</value>
+				</property>
+				<property name="successView">
+					<value>empWorkPeriodForm</value>
+				</property>
+				<property name="attendanceManager">
+					<ref bean="attendanceManager" />
+				</property>
+				<property name="binders">
+					<list>
+						<ref bean="timestampBinder" />
+						<ref bean="workPeriodMasterBinder"/>
+						<ref bean="empBasicBinder"/>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	<!--
+		_____________________________________________________________________
+	-->
+	<!--
+		_________________________________ url Mapping _______________________
+	-->
+	<!--
+		_____________________________________________________________________
+	-->
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="openSessionInViewInterceptor" />
+			</list>
+		</property>
+		<property name="mappings">
+			<props>
+				<prop key="/departmentView.html">departmentView</prop>
+				<prop key="/departmentForm.html">departmentForm</prop>
+				<prop key="/titleView.html">titleView</prop>
+				<prop key="/titleForm.html">titleForm</prop>
+				<prop key="/qualificationView.html">qualificationView</prop>
+				<prop key="/qualificationForm.html">qualificationForm</prop>
+				<prop key="/religionView.html">religionView</prop>
+				<prop key="/religionForm.html">religionForm</prop>
+				<prop key="/empBasicView.html">empBasicView</prop>
+				<prop key="/empBasicForm.html">empBasicForm</prop>
+				<prop key="dashboard.html">dashboardView</prop>
+				<prop key="/vacRuleForm.html">vacRuleForm</prop>
+				<prop key="/publicLeavesForm.html">publicLeavesForm</prop>
+				<prop key="/vacationView.html">vacationView</prop>
+				<prop key="/vacationForm.html">vacationForm</prop>
+				<prop key="/triggerVacBalanceView.html">triggerVacBalanceView</prop>
+				<prop key="/triggerAttendAnalysisView.html">triggerAttendAnalysisView</prop>
+				<prop key="/workperiodView.html">workperiodView</prop>
+				<prop key="/workperiodForm.html">workperiodForm</prop>
+				<prop key="/empWorkPeriodForm.html">empWorkPeriodForm</prop>
+			</props>
+		</property>
+	</bean>
+
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize">
+			<value>100000000</value>
+		</property>
+	</bean>
+
+	<!--
+		_____________________________________________________________________
+	-->
+	<!--
+		______________________________ view Resolver ________________________
+	-->
+	<!--
+		_____________________________________________________________________
+	-->
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="requestContextAttribute">
+			<value>rc</value>
+		</property>
+		<property name="viewClass">
+			<value>org.springframework.web.servlet.view.JstlView</value>
+		</property>
+		<property name="prefix">
+			<value>/web/attendance/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+
+</beans>
+
+
+	
+			

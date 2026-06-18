@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           https://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           https://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/tx
+           https://www.springframework.org/schema/tx/spring-tx.xsd" default-autowire="no" default-lazy-init="false">
+
+<beans>
+
+    <!-- Transaction declarations for business services.  To apply a generic transaction proxy to
+         all managers, you might look into using the BeanNameAutoProxyCreator -->
+
+    
+	<bean id="requestsApprovalManager" parent="baseManager" class="com._4s_.requestsApproval.service.RequestsApprovalManagerImpl" >
+		<property name="requestsApprovalDAO" ref ="requestsApprovalDAO"/>
+		<property name="sequenceManager" ref ="sequenceManager"/>
+		<property name="externalQueries" ref ="requestsApprovalExternalQueries" />
+		<property name="messageManager" ref ="messageManager"/>
+	</bean>
+	 
+	 
+</beans>

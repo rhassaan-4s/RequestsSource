@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+               http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+               http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- load application.properties for jwt.secret -->
+    
+
+    <!-- ============ HTTP Security for REST APIs ============ -->
+    <http pattern="/api/workflow/**"
+          use-expressions="true"
+          auto-config="true"
+          disable-url-rewriting="false"
+          entry-point-ref="restAuthenticationEntryPoint"
+          access-decision-manager-ref="accessDecisionManager">
+
+        <!-- disable CSRF for stateless REST APIs -->
+        <csrf disabled="true"/>
+
+        <!-- Remember-me for API -->
+        <remember-me key="jsfspring-sec" services-ref="rememberMeServices"/>
+
+        <!-- Login + Logout -->
+        <form-login login-page="/api/workflow/login*"
+                    username-parameter="username"
+                    password-parameter="password"
+                    authentication-success-handler-ref="mySuccessHandler"
+                    authentication-failure-handler-ref="myFailureHandler"/>
+        
+        <logout logout-url="/api/workflow/logout"
+                invalidate-session="true"
+                delete-cookies="JSESSIONID,SPRING_SECURITY_REMEMBER_ME_COOKIE"
+                success-handler-ref="myLogoutHandler"/>
+
+        <!-- Filters order -->
+        <custom-filter ref="authenticationFilter" before="PRE_AUTH_FILTER"/>
+        <custom-filter ref="rememberMeFilter" before="REMEMBER_ME_FILTER"/>
+        <custom-filter ref="jwtTenantFilter" before="CHANNEL_FILTER"/>
+
+        <!-- Access rules -->
+        <access-denied-handler ref="exceptionControllerAdvice"/>
+
+        <!-- Public API endpoints -->
+        <intercept-url pattern="/api/workflow/getPortNo" access="permitAll"/>
+        <intercept-url pattern="/api/workflow/getTenantId" access="permitAll"/>
+
+        <!-- Secure API endpoints -->
+      <!-- <intercept-url pattern="/api/workflow/signInOut"
+                       access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')"/>--> 
+        <intercept-url pattern="/api/workflow/signInOut"
+               access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+        <intercept-url pattern="/api/workflow/userRequest"
+                       access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')"/>
+        <intercept-url pattern="/api/workflow/requestsForApproval"
+                       access="hasAuthority('CAN_VIEW_page_requestsApproval')"/>
+        <!-- ... keep the rest of your API rules here ... -->
+
+    </http>
+
+    <!-- ============ HTTP Security for Web UI ============ -->
+    <http auto-config="true">
+
+        <form-login login-page="/security/login.html"
+                    login-processing-url="/security/perform_login"
+                    default-target-url="/security/defaultPage.html"
+                    username-parameter="username"
+                    password-parameter="password"
+                    authentication-failure-url="/security/login.html?failed=true"/>
+
+        <logout logout-url="/security/logout.html"
+                invalidate-session="true"
+                delete-cookies="JSESSIONID,SPRING_SECURITY_REMEMBER_ME_COOKIE"
+                success-handler-ref="myLogoutHandler"/>
+
+        <csrf disabled="true"/>
+
+        <session-management>
+            <concurrency-control max-sessions="50"
+                                 error-if-maximum-exceeded="true"/>
+        </session-management>
+
+        <!-- Filters -->
+        <custom-filter ref="authenticationFilter" before="PRE_AUTH_FILTER"/>
+        <custom-filter ref="jwtTenantFilter" before="CHANNEL_FILTER"/>
+
+        <!-- Page access rules -->
+        <intercept-url pattern="\A/common/commonAdminCountryCities.html.*\Z"
+                       access="CAN_VIEW_page_common_commonAdminCountryCities"/>
+        <intercept-url pattern="\A/security/userDetails.html.*\Z"
+                       access="CAN_VIEW_page_security_userDetails"/>
+        <!-- ... keep the rest of your UI rules here ... -->
+
+    </http>
+
+    <!-- ============ Beans ============ -->
+
+    <!-- JWT filter -->
+    <beans:bean id="jwtTenantFilter"
+                class="com._4s_.security.util.JwtTenantFilter">
+                <beans:property name="jwtUtil" ref="jwtUtil"/>
+                <beans:property name="sessionFactory" ref="sessionFactory"/>
+    </beans:bean>
+
+    <!-- Remember-me services -->
+    <beans:bean id="rememberMeServices"
+                class="org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices">
+        <beans:constructor-arg name="key" value="jsfspring-sec"/>
+        <beans:constructor-arg name="userDetailsService" ref="requestsService"/>
+        <beans:constructor-arg name="tokenRepository" ref="tokenRepository"/>
+        <beans:property name="alwaysRemember" value="true"/>
+        <beans:property name="tokenValiditySeconds" value="8640000"/>
+    </beans:bean>
+
+    <beans:bean id="tokenRepository"
+                class="org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl">
+        <beans:property name="dataSource" ref="dataSource"/>
+    </beans:bean>
+
+    <beans:bean id="rememberMeAuthenticationProvider"
+                class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
+        <beans:constructor-arg value="jsfspring-sec"/>
+    </beans:bean>
+
+    <beans:bean id="rememberMeFilter"
+                class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
+        <beans:constructor-arg ref="authenticationManager"/>
+        <beans:constructor-arg ref="rememberMeServices"/>
+    </beans:bean>
+    
+    
+	<beans:bean name="jacksonObjectMapper"
+		class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+	</beans:bean>
+	<beans:bean id="jsonConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<beans:property name="prefixJson" value="false" />
+		<beans:property name="supportedMediaTypes" value="application/json" />
+		<beans:property name="objectMapper">
+			<beans:bean class="com.fasterxml.jackson.databind.ObjectMapper">
+				<beans:property name="serializationInclusion" value="NON_NULL" />
+			<!-- 	<beans:property name="adjust_dates_to_context_time_zone" value="false"/> -->
+			</beans:bean>
+		</beans:property>
+	</beans:bean>
+
+
+    <beans:bean id="restAuthenticationEntryPoint"
+		class="com._4s_.restServices.entrypoint.RestAuthenticationEntryPoint">
+		<beans:property name="jsonConverter" ref="jsonConverter" />
+	</beans:bean>
+
+
+	<beans:bean id="exceptionControllerAdvice"
+		class="com._4s_.restServices.endpoint.ExceptionControllerAdvice">
+		<beans:property name="jsonConverter" ref="jsonConverter" />
+	</beans:bean>
+    
+    <beans:bean id="mySuccessHandler"
+		class="com._4s_.restServices.entrypoint.MySavedRequestAwareAuthenticationSuccessHandler" />
+	<beans:bean id="myFailureHandler"
+		class="com._4s_.restServices.entrypoint.AuthFailureHandler" />
+	<beans:bean id="myLogoutHandler"
+		class="com._4s_.restServices.entrypoint.CustomLogoutSuccessHandler" />
+	
+	
+	<beans:bean id="authenticationFilter"
+		class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
+		<beans:constructor-arg ref="authenticationManager" />
+		<beans:constructor-arg ref="restAuthenticationEntryPoint" />
+		<beans:property name="rememberMeServices" ref="rememberMeServices" />
+		<!-- <beans:property name="authenticationSuccessHandler" ref="mySuccessHandler" 
+			/> -->
+	</beans:bean>
+
+
+	<authentication-manager alias="authenticationManager">
+		 <authentication-provider ref="rememberMeAuthenticationProvider">
+        </authentication-provider>
+		<authentication-provider>
+			<jdbc-user-service data-source-ref="dataSource"
+				users-by-username-query="SELECT userName, password,1 as enabled FROM security_users WHERE userName=?"
+				authorities-by-username-query="select distinct userName,permessionname from
+				security_users,security_user_roles,security_role_permissions,
+				security_permissions,security_roles
+				where security_users.id=security_user_roles.users and
+				security_user_roles.role=security_roles.id and
+				security_role_permissions.role=security_roles.id and
+				security_role_permissions.permission=security_permissions.id
+				and selected=1 and security_users.isActive=1 and (end_serv is null or (END_SERV >= ${hibernate.systemDate})) and userName=?" />
+			<password-encoder ref="encoder" />
+		</authentication-provider>
+	</authentication-manager>
+
+
+<beans:bean id="encoder" 
+  class="org.springframework.security.crypto.password.NoOpPasswordEncoder">
+</beans:bean>
+	<beans:bean id="filterChainProxy"
+	class="org.springframework.security.web.FilterChainProxy">
+	<filter-chain-map>
+		<filter-chain pattern="\A/security/login.html.*\Z"
+			filters="authenticationFilter" />
+	</filter-chain-map>
+</beans:bean> 
+
+
+	<beans:bean id="myVoter" class="com._4s_.security.service.MyVoter">
+		<beans:property name="rolePrefix">
+			<beans:value>My_</beans:value>
+		</beans:property>
+	</beans:bean>
+	<beans:bean id="roleVoter"
+		class="org.springframework.security.access.vote.RoleVoter">
+		<beans:property name="rolePrefix" value="CAN_" />
+	</beans:bean>
+
+	<beans:bean id="accessDecisionManager"
+		class="org.springframework.security.access.vote.AffirmativeBased">
+		<beans:constructor-arg>
+			<beans:list>
+				<beans:bean
+					class="org.springframework.security.access.vote.AuthenticatedVoter" />
+				<beans:bean class="org.springframework.security.access.vote.RoleVoter">
+					<beans:property name="rolePrefix" value="CAN_" />
+				</beans:bean>
+				<beans:bean
+					class="org.springframework.security.web.access.expression.WebExpressionVoter" />
+			</beans:list>
+		</beans:constructor-arg>
+		<beans:property name="allowIfAllAbstainDecisions">
+			<beans:value>true</beans:value>
+		</beans:property>
+	</beans:bean>
+	<beans:bean id="myAccessDecisionManager"
+		class="org.springframework.security.access.vote.AffirmativeBased">
+		<beans:constructor-arg name="decisionVoters">
+			<beans:list>
+				<beans:ref bean="myVoter" />
+			</beans:list>
+		</beans:constructor-arg>
+		<beans:property name="allowIfAllAbstainDecisions">
+			<beans:value>true</beans:value>
+		</beans:property>
+	</beans:bean>
+
+
+</beans:beans>
