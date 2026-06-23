@@ -11,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.HR.model.HRFunctionalGroup;
-import com._4s_.HR.model.HRTitle;
 import com._4s_.HR.service.HRManager;
 
 public class FunctionalGroupsView implements Controller{

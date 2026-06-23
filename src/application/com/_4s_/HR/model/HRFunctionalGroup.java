@@ -2,26 +2,29 @@ package com._4s_.HR.model;
 
 	import java.io.Serializable;
 
-	import javax.persistence.Entity;
-	import javax.persistence.GeneratedValue;
-	import javax.persistence.GenerationType;
-	import javax.persistence.Id;
-	import javax.persistence.SequenceGenerator;
-	import javax.persistence.Table;
-	import javax.persistence.Transient;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
-	import org.apache.commons.lang.builder.EqualsBuilder;
-	import org.apache.commons.lang.builder.HashCodeBuilder;
-	import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
-	import com._4s_.auditing.model.Auditable;
-	import com._4s_.common.util.LocaleUtil;
+import com._4s_.auditing.model.Auditable;
+import com._4s_.common.util.LocaleUtil;
 
 
 @Entity//(access=AccessType.FIELD)
 @Table(name="hr_functional_group")
 public class HRFunctionalGroup  implements Auditable,Serializable {
 		
+		public HRFunctionalGroup() {
+		// TODO Auto-generated constructor stub
+	}
 		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_functional_group_seq")
 		@SequenceGenerator(name="hr_functional_group_seq",sequenceName="hr_functional_group_seq")
 		private Long id;

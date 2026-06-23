@@ -25,9 +25,12 @@ public class MultiTenantDataSourceLookup extends MapDataSourceLookup {
 	private String tenantDbConfigs = "classpath:Requests/WEB-INF/classes/database.properties";// For testing
 	private String tenantDbConfigsOverride = "classpath:Requests/WEB-INF/classes/*.properties";
 	private String tenantRegex = "database.*.properties";
-	private String DEFAULT_TENANTID = "4s";
+	private String DEFAULT_TENANTID = "fours_payroll";
+	
+	public MultiTenantDataSourceLookup() {
+		logger.debug("creating multitenant datasource lookup");
+	}
 
-	@Autowired
 	public MultiTenantDataSourceLookup(BoneCPDataSource defaultDataSource) {
 		super();
 		System.out.println("##########################MultiTenantDataSourceLookup#################################");

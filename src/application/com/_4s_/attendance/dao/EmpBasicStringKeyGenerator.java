@@ -8,13 +8,15 @@ import java.sql.SQLException;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
 
 public class EmpBasicStringKeyGenerator implements IdentifierGenerator {
 
 	private String fieldName = "empCode";
 	private String tableSeq = "empBasic_seq";
-    public Serializable generate(SessionImplementor session, Object collection) throws HibernateException {
+	@Override
+    public Serializable generate(SharedSessionContractImplementor session, Object collection) throws HibernateException {
         Connection connection = session.connection();
         PreparedStatement ps = null;
         String result = "";

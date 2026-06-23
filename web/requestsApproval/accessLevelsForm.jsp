@@ -170,7 +170,7 @@ function adddata(id){
 			<td class="formBodControl" width="70%">
 				<select name="employee"
 					id="employee" multiple="multiple" >
-					<c:forEach items="${loginUsers}" var="user">
+					<c:forEach items="${model.loginUsers}" var="user">
 						<c:if test="${not empty user}">
 							<option value="${user.id}">${user.name}</option>
 						</c:if>

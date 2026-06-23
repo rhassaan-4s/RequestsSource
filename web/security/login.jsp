@@ -2,14 +2,11 @@
 <%@ page import="org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter" %>
 <%@ page import="org.springframework.security.core.AuthenticationException" %>
 
-
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html dir="<fmt:message key="commons.language.dir"/>" xml:lang="<fmt:message key="commons.language.code"/>" lang="<fmt:message key="commons.language.code"/>" >
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>
-			<abc:i18n property="commons.caption.client"/>
 			<fmt:message key="commons.caption.client"/>
 		</title>
 		<link rel="stylesheet" href="/Requests/web/common/css/all.css">
@@ -24,24 +21,31 @@
 	<script type="text/javascript">
 	function getError(){
 		urlp=[];
+		//alert("before split 1 " + location);
 		urlp=location.toString().split('?');
 		params = urlp[1];
-		var error = params.split('=');
+		//alert("before split 2 " + params);
+		var error=null;
+		if (params!=null) {
+			error = params.toString().split('=');
+		}
 		//alert(error[1]);
 		
 		//var er = error[1];
 		//alert(er);
-		document.getElementById("errorMsg").value= error[1];
-		if ( error[1].valueOf()==='wrongIPAdd'.valueOf()) {
-			//alert("1"+er);
-			document.getElementById("display").innerHTML="<fmt:message key='commons.caption.wrongIpAdd'/>";
-		} else if ( error[1].trim()==='NoIPAddFound'.trim()) {
-			//alert("2"+er);
-			document.getElementById("display").innerHTML="<fmt:message key='commons.caption.NoIPAddFound'/>";	
-		} else if ( error[1].trim()==='') {
-			
-		}else {
-			document.getElementById("display").innerHTML="<fmt:message key='commons.errors.invalidUsernameOrPassword'/>";
+		if (error!= null && error[1]!=null) {
+			document.getElementById("errorMsg").value= error[1];
+			if ( error[1].valueOf()==='wrongIPAdd'.valueOf()) {
+				//alert("1"+er);
+				document.getElementById("display").innerHTML="<fmt:message key='commons.caption.wrongIpAdd'/>";
+			} else if ( error[1].trim()==='NoIPAddFound'.trim()) {
+				//alert("2"+er);
+				document.getElementById("display").innerHTML="<fmt:message key='commons.caption.NoIPAddFound'/>";	
+			} else if ( error[1].trim()==='') {
+				
+			}else {
+				document.getElementById("display").innerHTML="<fmt:message key='commons.errors.invalidUsernameOrPassword'/>";
+			}
 		}
 	}
 	</script>
@@ -62,9 +66,16 @@
 		<form 	id="login"
 				name="login"
 				method="POST" 
-				action="<c:url value="/j_spring_security_check"></c:url>">
+				action="perform_login">
 
 				<input type="hidden" name="activeLink" value="linkOne"/>
+				<input type="hidden" name="client" value="${client}"/>
+				<input type="hidden" name="tenantID" value="${tenantID}"/>
+				<!-- /////////////////START to enable authentication with tokens with spring security 5//////////////////// -->
+				<input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}"/>
+				<!-- /////////////////END to enable authentication with tokens with spring security 5  //////////////////// -->
+				
+				
 				<input type="hidden" name="errorMsg" id="errorMsg" value=""/>
 
 				<table rules="all" align="center" width="400" class="sofT" >
@@ -73,7 +84,7 @@
 					</tr-->
 
 					<tr>
-						<td class="formBodControl"><img src="/Requests/wRequestscommon/images/login-keys2.gif"></td>
+						<td class="formBodControl"><img src="/Requests/web/common/images/login-keys2.gif"></td>
 						<td>
 							<table width="100%"  cellpadding="2" cellspacing="0" border="0">
 								<tr>
@@ -140,7 +151,7 @@
 										<fmt:message key="commons.caption.userCode"/>
 										</div>
 									</td>
-									<td class="formBodControl"><input   size="30" class="flat" type='text' name='j_username'></td>
+									<td class="formBodControl"><input   size="30" class="flat" type='text' name='username'></td>
 								</tr>
 								<tr>
 									<td class="formReq">
@@ -149,7 +160,7 @@
 										<fmt:message key="commons.caption.password"/>
 										</div>
 									</td>
-									<td class="formBodControl"><input type='password' name='j_password'  size="30" class="flat"></td>
+									<td class="formBodControl"><input type='password' name='password'  size="30" class="flat"></td>
 								</tr>
 								<tr>
 									<td colspan="2" align="center" class="formBodControl">

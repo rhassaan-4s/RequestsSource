@@ -7,8 +7,6 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com._4s_.common.util.MultiCalendarDate;
-
 public class StringTrimmer extends TagSupport{
 	private String value = "";
 	private String name = "";

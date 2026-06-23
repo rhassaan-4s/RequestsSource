@@ -10,6 +10,7 @@ import java.util.StringTokenizer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspFactory;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -21,11 +22,12 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+//import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.springframework.web.util.ExpressionEvaluationUtils;
+//import org.springframework.web.util.ExpressionEvaluationUtils;
 
 /**
  * An implementation of {@link javax.servlet.jsp.tagext.Tag} that allows it's
@@ -45,7 +47,7 @@ public class DefinedAuthorizeTag extends TagSupport {
 	private String ifAnyGranted = "";
 
 	private String ifNotGranted = "";
-
+	
 	// ~ Methods
 	// ================================================================
 
@@ -92,8 +94,8 @@ public class DefinedAuthorizeTag extends TagSupport {
 
 		final Collection granted = getPrincipalAuthorities();
 
-		final String evaledIfNotGranted = ExpressionEvaluationUtils
-				.evaluateString("ifNotGranted", ifNotGranted, pageContext);
+		
+		final String evaledIfNotGranted = (String) ExpressionEvaluationUtils.evaluate(ifNotGranted, String.class, pageContext);
 		if ((null != evaledIfNotGranted) && !"".equals(evaledIfNotGranted)) {
 			Set grantedCopy = retainAll(granted,
 					parseAuthoritiesString(evaledIfNotGranted));
@@ -103,8 +105,9 @@ public class DefinedAuthorizeTag extends TagSupport {
 			}
 		}
 
-		final String evaledIfAllGranted = ExpressionEvaluationUtils
-				.evaluateString("ifAllGranted", ifAllGranted, pageContext);
+		final String evaledIfAllGranted = (String) ExpressionEvaluationUtils.evaluate(ifAllGranted, String.class, pageContext);
+//				ExpressionEvaluationUtils
+//				.evaluateString("ifAllGranted", ifAllGranted, pageContext);
 		if ((null != evaledIfAllGranted) && !"".equals(evaledIfAllGranted)) {
 			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>skip body");
 			final StringTokenizer tokenizer;
@@ -137,8 +140,8 @@ public class DefinedAuthorizeTag extends TagSupport {
 
 		}
 
-		final String evaledIfAnyGranted = ExpressionEvaluationUtils
-				.evaluateString("ifAnyGranted", ifAnyGranted, pageContext);
+		final String evaledIfAnyGranted = (String) ExpressionEvaluationUtils.evaluate(ifAnyGranted, String.class, pageContext);
+//				.evaluateString("ifAnyGranted", ifAnyGranted, pageContext);
 		log
 				.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>inside my class");
 		if ((null != evaledIfAnyGranted) && !"".equals(evaledIfAnyGranted)) {
@@ -178,7 +181,7 @@ public class DefinedAuthorizeTag extends TagSupport {
 
 		while (tokenizer.hasMoreTokens()) {
 			String role = tokenizer.nextToken();
-			requiredAuthorities.add(new GrantedAuthorityImpl(role.trim()));
+			requiredAuthorities.add(new SimpleGrantedAuthority(role.trim()));
 		}
 
 		return requiredAuthorities;

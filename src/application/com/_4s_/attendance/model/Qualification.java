@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -12,8 +11,11 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com._4s_.auditing.model.Auditable;
+import com._4s_.common.web.validators.Mandatory;
+import com._4s_.common.web.validators.Unique;
 
 @Entity
 @Table (name = "qual")
@@ -22,7 +24,11 @@ public class Qualification implements Serializable,Auditable {
 	@GenericGenerator(name="qual_seq",strategy="com._4s_.attendance.dao.QualStringKeyGenerator")
 	@GeneratedValue(generator="qual_seq")
 	private String qual;
+	@Mandatory(value=Qualification.class,property="name")
+	@Unique(value=Qualification.class,property = "name")
 	private String name;
+	@Mandatory(value=Qualification.class,property="ename")
+	@Unique(value=Qualification.class,property = "ename")
 	private String ename;
 	private String form = "1";
 	private String lang = "A";

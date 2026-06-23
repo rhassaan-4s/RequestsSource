@@ -8,13 +8,14 @@ import java.sql.SQLException;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
 
 public class ReligionStringKeyGenerator implements IdentifierGenerator {
 
 	private String fieldName = "religion";
 	private String tableSeq = "religion_seq";
-    public Serializable generate(SessionImplementor session, Object collection) throws HibernateException {
+    public Serializable generate(SharedSessionContractImplementor session, Object collection) throws HibernateException {
         Connection connection = session.connection();
         PreparedStatement ps = null;
         String result = "";

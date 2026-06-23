@@ -1,21 +1,24 @@
 package com._4s_.HR.web.action;
 
 	import java.util.HashMap;
-		import java.util.List;
-		import java.util.Map;
+import java.util.List;
+import java.util.Map;
 
-		import javax.servlet.ServletException;
-		import javax.servlet.http.HttpServletRequest;
-		import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-		import org.springframework.validation.BindException;
-		import org.springframework.validation.Errors;
-		import org.springframework.web.servlet.ModelAndView;
-		import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
-	import com._4s_.HR.model.HRQualification;
-		import com._4s_.HR.service.HRManager;
-	import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.HR.model.HRQualification;
+import com._4s_.HR.service.HRManager;
+import com._4s_.common.web.action.BaseSimpleFormController;
 
 
 
@@ -32,8 +35,8 @@ public class QualificationForm   extends  BaseSimpleFormController{
 			
 			
 			//**************************************** formBackingObject ***********************************************\\
-			protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-			{
+			@RequestMapping(method = RequestMethod.GET)  
+			public String initForm(ModelMap model,HttpServletRequest request){
 				log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 				String qualificationId=request.getParameter("qualificationId");
 				log.debug("qualificationId"+qualificationId);
@@ -49,10 +52,12 @@ public class QualificationForm   extends  BaseSimpleFormController{
 				}
 				log.debug("qualification"+qualification);
 				log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-			   return qualification;
+				model.addAttribute(qualification);
+			   return "qualificationForm";
 			}
 		//**************************************** referenceData ***********************************************\\
-			protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+			@ModelAttribute("model")	
+			public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) 
 			{
 				log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 				Map model=new HashMap();
@@ -159,7 +164,7 @@ public class QualificationForm   extends  BaseSimpleFormController{
 			
 				hrManager.saveObject(qualification);
 				log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-				return new ModelAndView(new RedirectView(getSuccessView()));
+				return new ModelAndView(new RedirectView("qualificationsView.html"));
 			}
 			
 

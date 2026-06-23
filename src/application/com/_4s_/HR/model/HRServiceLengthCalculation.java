@@ -22,6 +22,9 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="HR_SERVICELENGTH_CALCULATION")
 public class HRServiceLengthCalculation implements Auditable,Serializable {
 	
+	public HRServiceLengthCalculation() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HR_SERLENGTH_CALC_SEQ")
 	@SequenceGenerator(name="HR_SERLENGTH_CALC_SEQ",sequenceName="HR_SERLENGTH_CALC_SEQ")
 	private Long id;

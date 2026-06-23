@@ -12,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.HR.model.HREmployee;
-import com._4s_.HR.model.HREmployeeJob;
 import com._4s_.HR.model.HREmployeeMaritalStatus;
 import com._4s_.HR.service.HRManager;
 import com._4s_.common.web.action.BaseController;

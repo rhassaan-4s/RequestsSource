@@ -1,6 +1,5 @@
 package com._4s_.restServices.json;
 
-import java.sql.Blob;
 
 public class UserWrapper {
 	private String mobileNo;

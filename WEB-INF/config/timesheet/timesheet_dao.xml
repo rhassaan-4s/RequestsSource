@@ -12,13 +12,24 @@
 		</property>
 	</bean>
 	
-	<bean id="timesheetExternalQueries" class="com._4s_.timesheet.dao.TimesheetExternalQueries"
-		singleton="false">
-		<property name="jdbcTemplate">
-			<ref bean="jdbcTemplate"/>
+	<bean id="timesheetExternalQueries" class="com._4s_.timesheet.dao.TimesheetExternalQueries">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="platformTransactionManager" ref ="transactionManager" />
+		
+		<property name="driverClass">
+		      <value>${hibernate.connection.driver_class}</value>
 		</property>
-		<property name="platformTransactionManager">
-			<ref bean="transactionManager" />
+		<property name="url">
+			<value>${hibernate.connection.url}</value>
+		</property>
+		<property name="username">
+			<value>${hibernate.connection.username}</value>
+		</property>
+		<property name="password">
+			<value>${hibernate.connection.password}</value>
+		</property>
+		<property name="schema">
+			<value>${hibernate.defaultSchema}</value>
 		</property>
 	</bean>
 </beans>

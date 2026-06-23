@@ -20,8 +20,6 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="hr_center")
 public class Center implements Auditable,Serializable {
 	
-	
-	
 			@Id 
 			@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_center_seq")
 			@SequenceGenerator(name="hr_center_seq",sequenceName="hr_center_seq")

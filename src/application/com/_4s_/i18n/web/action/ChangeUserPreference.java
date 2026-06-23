@@ -10,8 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -64,8 +69,8 @@ public class ChangeUserPreference extends BaseSimpleFormController {
 		return new ModelAndView(new RedirectView("changeUserLanguage.html"));
 	}
 
-	protected Map referenceData(HttpServletRequest request, Object command,
-			Errors error) throws Exception {
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>.......start referenceData.......");
 		// TODO Auto-generated method stub
 		List languages = new ArrayList();
@@ -76,8 +81,8 @@ public class ChangeUserPreference extends BaseSimpleFormController {
 		return model;
 	}
 
-	protected Object formBackingObject(HttpServletRequest request)
-			throws Exception {
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log
 				.debug(">>>>>>>>>>>>>>>>>>>>>>.......start fromBackingObject............<<<<<<<<<<<<<<<<<<<<<");
 
@@ -92,6 +97,7 @@ public class ChangeUserPreference extends BaseSimpleFormController {
 		log.debug(">>>>>>>>>>>>>...user " + user);
 		log
 				.debug(">>>>>>>>>>>>>>>>>>>>>>.......end fromBackingObject............<<<<<<<<<<<<<<<<<<<<<");
-		return user;
+		model.addAttribute("user", user);
+		return "changeUserLanguage";
 	}
 }

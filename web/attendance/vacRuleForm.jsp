@@ -87,9 +87,10 @@ function vacationChanged(index){
 }
 </style>
 
-<form id="vacRuleForm" name="vacRuleForm" method="POST"
-	action="<c:url value="/attendance/vacRuleForm.html"/>">
-
+<form:form method="POST"
+					action="/Requests/attendance/vacRuleForm.html"
+					modelAttribute="rules">
+	
 
 	<table width="90%" border="0" cellspacing="0" cellpadding="0"
 		style="padding-right: 10px">
@@ -148,7 +149,7 @@ function vacationChanged(index){
 												<select name="${status.expression}" id="${status.expression}" onchange="vacationChanged(${loop.index});">
 													<option value=""><fmt:message
 															key="commons.caption.select" /></option>
-													<c:forEach items="${vacList}" var="vac">
+													<c:forEach items="${model.vacList}" var="vac">
 														<option value="${vac.vacation}"
 															${vac.vacation== rules.rules[loop.index].vacation.vacation?'selected':''}>${vac.name}</option>
 													</c:forEach>
@@ -190,7 +191,8 @@ function vacationChanged(index){
 				</table>
 			</td>
 		</tr>
-</form>
+</table>
+</form:form>
 
 
 <%@ include file="/web/common/includes/footer.jsp"%>

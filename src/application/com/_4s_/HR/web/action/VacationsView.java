@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
-import com._4s_.HR.model.HRSponsor;
 import com._4s_.HR.model.HRVacation;
 import com._4s_.HR.service.HRManager;
 

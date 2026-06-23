@@ -149,8 +149,11 @@ window.onload=getLocation();
 	<tr>
 		<td colspan="2">
 
-		<form  method="POST"
-			action="<c:url value="/common/webBranchForm.html"/>"><spring:bind
+		<form:form method="POST"
+					action="/Requests/common/webBranchForm.html"
+					modelAttribute="branch">
+			
+		<spring:bind
 			path="branch.*">
 			<c:if test="${not empty status.errorMessages}">
 				<div><c:forEach var="error" items="${status.errorMessages}">
@@ -233,10 +236,8 @@ window.onload=getLocation();
 					class="button" /></td>
 			</tr>
 			
-		</td>
-	</tr>
 </table>
-</form>
+</form:form>
 </td>
 </tr>
 </table>

@@ -98,8 +98,10 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 	</tr>
 	<tr>
 		<td>
-			<form id="requestStatusReports" name="requestStatusReports"	method="POST" action="<c:url value="/requestsApproval/requestStatusReports.html"/>">
+			<form:form method="POST" modelAttribute="results"
+					action="/Requests/requestsApproval/requestStatusReports.html">
 				    <input type="hidden"  id="errand" name="errand" value="${errand}"/>
+				    <input type="hidden" name="${_csrf.parameterName}" id="token" value="${_csrf.token}"/>
 				    
 					<div id="result">
 					<table border=0 cellspacing=1 cellpadding=0 id="ep" style="margin-right:40px">
@@ -126,7 +128,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 									firstParam="empCode"
 									secondParam="name"
 									bindById="true"
-									valueString="${empCode}"
+									valueString="${results.empCode}"
 									valueId=""/>
 							</td>
 							
@@ -151,7 +153,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 							<td  class="formBodControl" >
 									<select name="requestType" id="requestType">
 										<option value=""><fmt:message key="commons.caption.select" /></option>						
-											<c:forEach items="${requestTypeList}" var="request">
+											<c:forEach items="${results.requestTypeList}" var="request">
 												<option value="${request.id}" ${request.id == requestType ?'selected':''}>${request.description}</option>
 											</c:forEach>
 									</select>
@@ -172,7 +174,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 									class="calendar" class="MM_from_d" title="ccc"
 									readonly="readonly" autocomplete="off" dir="ltr"
 									name="request_date_from" id="request_date_from"
-									value="${request_date_from}" /></td>
+									value="${results.request_date_from}" /></td>
 								<td nowrap class="formBodControl"><abc:i18n
 										property="commons.caption.to" /> <fmt:message
 										key="commons.caption.to" /></td>
@@ -181,7 +183,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 									class="calendar" title="ccc" class="MM_to_d"
 									readonly="readonly" autocomplete="off" dir="ltr"
 									name="request_date_to" id="request_date_to"
-									value="${request_date_to}" /></td>
+									value="${results.request_date_to}" /></td>
 
 
 							</tr>
@@ -289,7 +291,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 									</tr>
 									
 									<c:set var="reqNo" value=""/>
-								<c:forEach varStatus="loop" var="record" items="${results}">
+								<c:forEach varStatus="loop" var="record" items="${results.results}">
 									<tr height=20 bgcolor="#F8F8F8">
 
 									<c:choose>
@@ -365,7 +367,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											
 										(${record.mgrName})	
 										</td>
-										<td nowrap>${record.approvalNote}</td>
+										<td nowrap>${record.note}</td>
 								</tr>
 								</c:forEach>									
 								</table>
@@ -378,7 +380,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										</td>
 									</tr>
 								</table>								
-			</form>
+			</form:form>
 		</td>
 	</tr>
 </table>

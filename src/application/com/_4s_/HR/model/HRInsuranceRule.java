@@ -23,7 +23,6 @@ public class HRInsuranceRule implements Auditable,Serializable {
 	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HR_insurance_rule_SEQ")
 	@SequenceGenerator(name="HR_insurance_rule_SEQ",sequenceName="HR_insurance_rule_SEQ")
-
 	private Long id;
 	private String name;
 	private String ename;

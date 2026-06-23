@@ -19,6 +19,9 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="tax")
 public class HRTax implements Auditable,Serializable {
 	
+	public HRTax() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_tax_seq")
 	@SequenceGenerator(name="hr_tax_seq",sequenceName="hr_tax_seq")
      private Long id ;

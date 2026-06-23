@@ -1,53 +1,55 @@
 package com._4s_.requestsApproval.web.action;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-import java.util.TimeZone;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
-import org.springframework.mail.MailSendException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import sun.util.logging.resources.logging;
-
-import com._4s_.requestsApproval.model.AccessLevels;
-import com._4s_.requestsApproval.model.AnnualVacLimit;
-import com._4s_.requestsApproval.model.EmpReqTypeAcc;
-import com._4s_.requestsApproval.model.LoginUsers;
-import com._4s_.requestsApproval.model.LoginUsersRequests;
-import com._4s_.requestsApproval.model.RequestTypes;
-import com._4s_.requestsApproval.model.Requests;
-import com._4s_.requestsApproval.model.Vacation;
-import com._4s_.requestsApproval.service.RequestsApprovalManager;
-import com._4s_.restServices.json.RequestApproval;
-import com._4s_.restServices.json.RestStatus;
-import com._4s_.auditing.validators.ValidateSearch;
+import com._4s_.common.model.Company;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.common.web.binders.DomainObjectBinder;
+import com._4s_.requestsApproval.model.LoginUsers;
+import com._4s_.requestsApproval.model.LoginUsersRequests;
+import com._4s_.requestsApproval.service.RequestsApprovalManager;
+import com._4s_.restServices.json.RequestApproval;
 
+@Controller
+@RequestMapping("/attendanceRequestsApprovalEdit.html")
 public class AttendanceRequestsApprovalEdit extends BaseSimpleFormController{
 
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
+	
+	@Autowired
+	@Qualifier("loginUsersBinder")
+	private DomainObjectBinder loginUsersBinder;
+
 	
 	public static Date tempDate = null;
 
@@ -69,8 +71,15 @@ public class AttendanceRequestsApprovalEdit extends BaseSimpleFormController{
 		this.mailSender = mailSender;
 	}
 	
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{	
+	@Override
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		super.initBinder(request,binder);
+		binder.registerCustomEditor(LoginUsers.class, loginUsersBinder);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET)  
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
 		DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
@@ -100,11 +109,12 @@ public class AttendanceRequestsApprovalEdit extends BaseSimpleFormController{
 		}
 		log.debug("temp date " + tempDate);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		
-	   return loginUsersRequests ;
+		model.addAttribute("loginUsersRequests", loginUsersRequests);
+	   return "attendanceRequestsApprovalEdit";
 	}
 	
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+	@ModelAttribute("model")	
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,@ModelAttribute LoginUsersRequests command,HttpServletRequest request) 
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
@@ -200,9 +210,11 @@ public class AttendanceRequestsApprovalEdit extends BaseSimpleFormController{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
 	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("loginUsersRequests") LoginUsersRequests command,
+			BindingResult result, SessionStatus status,Model model) {
+		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests)command;
 
@@ -252,17 +264,17 @@ public class AttendanceRequestsApprovalEdit extends BaseSimpleFormController{
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<  End onSubmit : <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 //		String url="/attendanceRequestsReports.html";
 //		log.debug(url);
-		Map model = new HashMap();
-		model.put("empCodeQ", emp_code);
-		model.put("status", statusId);
-		model.put("request_date_from", request_date_from);
-		model.put("request_date_to", request_date_to);
-		model.put("codeFrom", codeFrom);
-		model.put("codeTo", codeTo);
+//		Map model = new HashMap();
+		model.addAttribute("empCodeQ", emp_code);
+		model.addAttribute("status", statusId);
+		model.addAttribute("request_date_from", request_date_from);
+		model.addAttribute("request_date_to", request_date_to);
+		model.addAttribute("codeFrom", codeFrom);
+		model.addAttribute("codeTo", codeTo);
 		String reqId = request.getParameter("reqId");
-		model.put("reqId",reqId);
+		model.addAttribute("reqId",reqId);
 		
-		return new ModelAndView(new RedirectView(getSuccessView()),model);
+		return new ModelAndView(new RedirectView("attendanceRequestsReports.html"));
 	}
 
 }

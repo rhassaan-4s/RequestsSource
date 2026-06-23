@@ -7,6 +7,8 @@ import java.beans.PropertyEditorSupport;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com._4s_.auditing.model.Auditable;
 import com._4s_.common.service.BaseManager;
@@ -57,19 +59,17 @@ public class DomainObjectBinder extends PropertyEditorSupport implements BaseBin
 	public String getAsText() {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>bindedClass "+bindedClass);
 		log.debug("GetAsText >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		log.debug(">>>>>>>>>>>>>>>>>getValue() "+getValue());
 		Auditable auditable = ((Auditable)getValue());
 		Object id = null;
 		String text = "";
-		log.debug("auditable " + auditable);
+		
 		if (auditable!=null) {
 			id = auditable.getId();
 		}
-		log.debug("id " + id);
 		if (id!=null) {
 			text = id.toString();
 		}
-		log.debug("text " + text);
+		
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< GetAsText");
 		
 		return text;

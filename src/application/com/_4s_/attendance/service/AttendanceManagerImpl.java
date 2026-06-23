@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,12 +33,14 @@ import com._4s_.timesheet.web.validate.ValidationStatus;
 @Transactional
 public class AttendanceManagerImpl extends BaseManagerImpl implements AttendanceManager{
 
+	@Autowired
 	private AttendanceDAO attendanceDAO;	
 
 	private AttendanceExternalQueries externalQueries = null;
 
+	@Autowired
 	private MessageManager messageManager;
-
+	@Autowired
 	private SequenceManager sequenceManager ;
 
 	private String contextPath="";

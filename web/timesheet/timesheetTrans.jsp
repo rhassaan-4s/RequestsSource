@@ -88,9 +88,10 @@ function printSelection(node){
 
 <table width="90%" border="0" cellspacing="0" cellpadding="0"
 	style="padding-right: 10px">
-	<form id="timesheetTrans" name="timesheetTrans" method="POST"
-		action="<c:url value="/timesheet/timesheetTrans.html"/>">
 
+<form:form method="POST"
+					action="/Requests/timesheet/timesheetTrans.html"
+					modelAttribute="timesheetTrans">
 		<table border=0 cellspacing=1 cellpadding=0 id="ep"
 			style="margin-right: 40px">
 			<tr>
@@ -313,36 +314,7 @@ function printSelection(node){
 			</tr>
 
 		</table>
-		<!-- 
-		<table align="center">
-			<tr>
-				<td colspan="2" align="center"><br> <abc:i18n
-						property="commons.button.add" /> <input type="button"
-					id="btnPrint" value="<fmt:message key="commons.button.add"/>"
-					name="add" class="button"
-					onclick="window.location='loginUsersRequestsForm.html'"></input></td>
-
-				<td colspan="2" align="center"><br> <abc:i18n
-						property="commons.button.delete" /> <input type="button"
-					id="btnPrint" value="<fmt:message key="commons.button.delete"/>"
-					name="delete" class="button"
-					onclick="window.location='deleteLoginUsersRequestsForm.html?requestType=${request_id}&dateFrom=${request_date_from}&dateTo=${request_date_to}'"></input>
-				</td>
-				<td colspan="2" align="center"><br> <abc:i18n
-						property="commons.button.print" /> <input type="button"
-					id="btnPrint" class="button"
-					value="<fmt:message key="commons.button.print"/>"
-					onClick="printthis('result')"></input></td>
-				<td colspan="2" align="center"><br> <abc:i18n
-						property="commons.button.export" /> <input type="button"
-					id="btnexport" class="button"
-					value="<fmt:message key="commons.button.export"/>"
-					onClick="exportExcel();"></input></td>
-			</tr>
-		</table>
-		 -->
-	</form>
-
+</form:form>
 </table>
 
 

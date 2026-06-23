@@ -64,20 +64,16 @@
 		<td colspan="2" height="20"></td>
 	</tr>
 	<tr>
-		<td colspan="2">
-			<spring:bind path="loginUsersRequests.*">
-				<c:if test="${not empty status.errorMessages}">
-					<div><c:forEach var="error" items="${status.errorMessages}">
-						<font color="red"> <c:out value="${error}" escapeXml="false" /><br />
-						</font>
-					</c:forEach></div>
-				</c:if>
-			</spring:bind>
-		</td>
-	</tr>
+			<td colspan="2">
+
+				<h2 style="color: red;">
+					<form:errors path="loginUsersRequests.*" />
+				</h2>
+			</td>
+		</tr>
 	<tr>
 		<td>
-			<c:if test="${done==true}"><font color="blue" size="5"> 
+			<c:if test="${model.done==true}"><font color="blue" size="5"> 
 	        <abc:i18n	property="requestsApproval.loginUsersRequests.saveSuccess" /><fmt:message
 					key="requestsApproval.loginUsersRequests.saveSuccess" />
 	 		</font>
@@ -88,14 +84,21 @@
 
 	<tr>
 		<td>
-			<form id="attendanceRequestForm" name="attendanceRequestForm"	method="POST" action="<c:url value="/requestsApproval/attendanceRequestForm.html"/>">
+		
+			<form:form method="POST" modelAttribute="loginUsersRequests"
+				action="/Requests/requestsApproval/attendanceRequestForm.html">
 					 <c:set var="dateNow" value="<%=nowDate%>" />
 					 
-					 <input type="hidden"  id="empRequestTypeId" name="empRequestTypeId" value="${empRequestTypeId }"/>
+					 <input type="hidden"  id="empRequestTypeId" name="empRequestTypeId" value="${model.empRequestTypeId}"/>
 					   <input type="hidden" name="longitude" id="longitude" value=""/>
 					 <input type="hidden" name="latitude" id="latitude" value=""/>
 					 <input type="hidden" name="accuracy" id="accuracy" value=""/>
 					 
+					<!-- /////////////////START to enable authentication with tokens with spring security 5//////////////////// -->
+				<input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}"/>
+				<!-- /////////////////END to enable authentication with tokens with spring security 5  //////////////////// -->
+				
+				
 					<table border=0 cellspacing=1 cellpadding=0 id="ep" style="margin-right:40px">
 						<tr id="head_1_ep">
 							<td class="bodyBold" colspan=4 nowrap>
@@ -114,8 +117,8 @@
 								<fmt:message key="requestsApproval.caption.userCode"/>
 							</td>						
 							<td  class="formBodControl"> 
-							<input type="hidden" name="empCode" id="empCode" value="${employeeCode}"/>
-							${employeeCode}
+							<input type="hidden" name="empCode" id="empCode" value="${model.employeeCode}"/>
+							${model.employeeCode}
 							</td>
 						
 					  		<td nowrap class="formReq" >
@@ -124,7 +127,7 @@
 							</td>							
 	 						<td class="formBodControl" id="employeeName" > 
 							&nbsp;
-							${employeeName}
+							${model.employeeName}
 							</td>													
 						</tr>
 						
@@ -148,7 +151,7 @@
 								<spring:bind path="loginUsersRequests.request_id">
 									<select name="${status.expression}" id="${status.expression}">
 										<option value=""><fmt:message key="commons.caption.select" /></option>
-											<c:forEach items="${requestTypeList}" var="request">
+											<c:forEach items="${model.requestTypeList}" var="request">
 												<option value="${request.id}" ${request.id == loginUsersRequests.request_id.id ?' selected' : ''}>${request.description}</option>
 											</c:forEach>	
 <!--											
@@ -170,17 +173,7 @@
 									<input type="text"  class="MM_from" autocomplete="off" dir="ltr"  name="${status.expression}" id="${status.expression}" value="${status.value}" />
 								</spring:bind>
 							</td>
-<!--
-					  		<td nowrap class="formReq" >
-								<abc:i18n property="commons.caption.to"/>
-								<fmt:message key="commons.caption.to"/>
-							</td>
-							<td  class="formBodControl" >
-								<spring:bind path="loginUsersRequests.period_to">
-									<input type="text"  class="MM_to" title="ccc"  autocomplete="off" dir="ltr"  name="${status.expression}" id="${status.expression}" value="${status.value}" />
-								</spring:bind>
-							</td>
--->																
+											
 						</tr>															
 						<tr>
 					  		<td nowrap class="formReq" >
@@ -201,7 +194,7 @@
 							</td>
 						</tr>					
 					</table>
-			</form>
+			</form:form>
 		</td>
 	</tr>
 </table>

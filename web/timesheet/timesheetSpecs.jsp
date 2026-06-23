@@ -4,14 +4,22 @@
 	
 </script>
 
-<form id="timesheetSpecs" name="timesheetSpecs" method="POST"
-	action="<c:url value="/timesheet/timesheetSpecs.html"/>">
+	
+<form:form method="POST"
+					action="/Requests/timesheet/timesheetSpecs.html"
+					modelAttribute="specs">
 
 	<table width="90%" border="0" cellspacing="0" cellpadding="0"
 		style="padding-right: 10px">
 
 		<tr>
-			<td colspan="2"><spring:bind path="specs.*">
+			<td colspan="2">
+			
+			<h2 style="color: red;">
+					<form:errors path="specs.*" />
+				</h2>
+				
+			<spring:bind path="specs.*">
 					<c:if test="${not empty status.errorMessages}">
 						<div>
 							<c:forEach var="error" items="${status.errorMessages}">
@@ -124,7 +132,6 @@
 		</tr>
 
 	</table>
-</form>
-
+</form:form>
 
 <%@ include file="/web/common/includes/footer.jsp"%>

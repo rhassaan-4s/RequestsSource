@@ -1,4 +1,5 @@
 <%@ include file="/web/common/includes/taglibs.jsp"%>
+<%@taglib uri = "http://www.springframework.org/tags/form" prefix = "form"%>
 <%@ page import="java.util.*,java.text.SimpleDateFormat"%>
 <jsp:include page="/web/common/includes/header.jsp" flush="true"/>
 
@@ -62,35 +63,32 @@ var options = {
 	<tr>
 		<td colspan="2" height="1"></td>
 	</tr>
-	<tr>
-		<td colspan="2" height="20"></td>
-	</tr>
-	<tr>
-		<td colspan="2">
-			<spring:bind path="loginUsersRequests.*">
-				<c:if test="${not empty status.errorMessages}">
-					<div><c:forEach var="error" items="${status.errorMessages}">
-						<font color="red"> <c:out value="${error}" escapeXml="false" /><br />
-						</font>
-					</c:forEach></div>
-				</c:if>
-			</spring:bind>
-		</td>
-	</tr>
+		<tr>
+			<td colspan="2" height="20"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+
+				<h2 style="color: red;">
+					<form:errors path="loginUsersRequests.*" />
+				</h2>
+			</td>
+		</tr>
 	<tr>
 		<td>
-			<c:if test="${done==true}"><font color="blue" size="5"> 
+			<c:if test="${model.done==true||done==true}"><font color="blue" size="5"> 
 	        <abc:i18n	property="requestsApproval.loginUsersRequests.saveSuccess" /><fmt:message
 					key="requestsApproval.loginUsersRequests.saveSuccess" />
 	 		</font>
 	 		</c:if>
+	 		
 		</td>
 		
 	</tr>
 
 	<tr>
 		<td>
-			<form id="attendanceRequestForm" name="attendanceRequestForm"	method="POST" action="<c:url value="/requestsApproval/attendanceSignInOutForm.html"/>">
+			<form:form	method="POST" action="/Requests/requestsApproval/attendanceSignInOutForm.html" modelAttribute="loginUsersRequests">
 					 <c:set var="dateNow" value="<%=nowDate%>" />
 					 
 					  <input type="hidden" name="longitude" id="longitude" value=""/>
@@ -116,8 +114,8 @@ var options = {
 								<fmt:message key="requestsApproval.caption.userCode"/>
 							</td>						
 							<td  class="formBodControl"> 
-							<input type="hidden" name="empCode" id="empCode" value="${employeeCode}"/>
-							${employeeCode}
+							<input type="hidden" name="empCode" id="empCode" value="${model.employeeCode}"/>
+							${model.employeeCode}
 							</td>
 						
 					  		<td nowrap class="formReq" >
@@ -126,7 +124,7 @@ var options = {
 							</td>							
 	 						<td class="formBodControl" id="employeeName" > 
 							&nbsp;
-							${employeeName}
+							${model.employeeName}
 							</td>													
 						</tr>
 						
@@ -136,9 +134,7 @@ var options = {
 								<fmt:message key="requestsApproval.caption.requestDate"/>
 							</td>
 							<td  class="formBodControl">
-								<spring:bind path="loginUsersRequests.request_date">
-									<input type="text"  readonly="readonly"  dir="ltr"  name="${status.expression}" id="${status.expression}"  value="${dateNow}" />
-								</spring:bind>
+									<input type="text"  readonly="readonly"  dir="ltr"  value="${dateNow}" />
 							</td>
 						</tr>								
 						<tr>
@@ -150,7 +146,7 @@ var options = {
 								<spring:bind path="loginUsersRequests.request_id">
 									<select name="${status.expression}" id="${status.expression}">
 										<option value=""><fmt:message key="commons.caption.select" /></option>
-											<c:forEach items="${requestTypeList}" var="request">
+											<c:forEach items="${model.requestTypeList}" var="request">
 												<option value="${request.id}" ${request.id == loginUsersRequests.request_id.id ?' selected' : ''}>${request.description}</option>
 											</c:forEach>	
 <!--											
@@ -170,7 +166,7 @@ var options = {
 							</td>
 						</tr>					
 					</table>
-			</form>
+			</form:form>
 		</td>
 	</tr>
 </table>

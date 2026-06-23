@@ -18,7 +18,6 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="hr_violation_reason")
 public class HRViolationReason implements Auditable,Serializable {
-	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_violation_reason_seq")
 	@SequenceGenerator(name="hr_violation_reason_seq",sequenceName="hr_violation_reason_seq")
 	private Long id;

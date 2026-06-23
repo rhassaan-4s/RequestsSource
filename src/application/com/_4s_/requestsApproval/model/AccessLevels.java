@@ -2,7 +2,6 @@ package com._4s_.requestsApproval.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,14 +12,16 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.hibernate.annotations.ManyToAny;
 
 import com._4s_.auditing.model.Auditable;
 
 @Entity//(access=AccessType.FIELD)
 @Table(name="access_levels")
 public class AccessLevels implements Auditable,Serializable {
+	public AccessLevels() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="access_levels_seq")
 	@SequenceGenerator(name="access_levels_seq",sequenceName="access_levels_seq")
 	private Long id;
@@ -85,4 +86,20 @@ public class AccessLevels implements Auditable,Serializable {
 	public GroupAcc getLevel_id() {
 		return level_id;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		AccessLevels lev = (AccessLevels)obj;
+		boolean eq = this.emp_id.equals(lev.getEmp_id())&&this.level_id.equals(lev.getLevel_id());
+		System.out.println(" this id " + id + "level id " + lev.getId() + " equals? " + eq);
+		return eq;
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return super.toString();
+	}
+	
+	
 }

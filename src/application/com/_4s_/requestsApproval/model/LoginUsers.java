@@ -25,8 +25,11 @@ import com._4s_.common.model.Employee;
 @Table(name="login_users")
 public class LoginUsers  implements Auditable,Serializable {
 		
+		public LoginUsers() {
+		// TODO Auto-generated constructor stub
+	}
 		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="login_users_seq")
-		@SequenceGenerator(name="login_users_seq",sequenceName="login_users_seq")
+		@SequenceGenerator(name="login_users_seq",sequenceName="login_users_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 		private Long id;
 		
 		@OneToOne 
@@ -46,10 +49,8 @@ public class LoginUsers  implements Auditable,Serializable {
 		}
 		@Override
 		public String toString() {
-			 return new ToStringBuilder(this)
-			 .append("name", this.name)
-			 .append("ename", this.ename)
-			 .toString();
+			 return "name "+ this.name+
+			 " ename "+ this.ename;
 		}
 		@Override
 		public boolean equals(Object o) {

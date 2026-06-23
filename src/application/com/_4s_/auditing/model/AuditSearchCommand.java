@@ -1,8 +1,6 @@
 package com._4s_.auditing.model;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import com._4s_.security.model.User;
 
@@ -20,6 +18,11 @@ public class AuditSearchCommand {
 	private String className;
 
 	private String classDetail;
+
+	
+	public AuditSearchCommand() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public String getAction() {
 		return action;

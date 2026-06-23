@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
-import com._4s_.HR.model.Degree;
 import com._4s_.HR.model.Grade;
 import com._4s_.HR.service.HRManager;
 

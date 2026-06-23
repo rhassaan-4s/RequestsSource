@@ -1,62 +1,171 @@
 package com._4s_.security.web.action;
 
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.Charset;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.bind.annotation.ResponseBody;
+//import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com._4s_.security.dao.MySecurityDAO;
 
-public class LoginController implements Controller {
+@Controller
+public class LoginController {
 	private final Log log = LogFactory.getLog(getClass());
 	
+	@Autowired
+	private MySecurityDAO securityDAO;
 	
-	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public MySecurityDAO getSecurityDAO() {
+		return securityDAO;
+	}
 
-		Map model = new HashMap();
+	public void setSecurityDAO(MySecurityDAO securityDAO) {
+		this.securityDAO = securityDAO;
+	}
 
-		log.debug("param: "+request.getParameter("param"));
-		log.debug("login_error: "+request.getParameter("login_error"));
-		log.debug("failed: "+request.getParameter("failed"));
-		log.debug("ParameterMap: "+request.getParameterMap());
-		log.debug("request.getAttributeNames(): "+request.getAttributeNames());
-		log.debug("request.getSession().getAttribute(ACEGI_SECURITY_LAST_USERNAME): "+request.getSession().getAttribute("ACEGI_SECURITY_LAST_USERNAME"));
+	@RequestMapping(value = "/login.html")
+    public String login(@RequestParam(value = "error", required = false) String error, 
+//    		@RequestParam(value="tenantID", required = false) String tenantID,
+//    		@RequestParam(value="client", required = false) String client,
+//    		@RequestParam("requestId") String reqId,
+          @RequestParam(value = "logout", required = false) String logout,
+          Model model,
+        HttpServletRequest request) {
+		System.out.println("#########Login Controller##########: get login");
 		
-		String reqId = request.getParameter("requestId");
-		String requestNumber = request.getParameter("requestNumber");
-		log.debug("reqId " + reqId);
-		request.getSession().setAttribute("requestId", reqId);
-		request.getSession().setAttribute("requestNumber", requestNumber);
+		String tenantID = (String)request.getSession(false).getAttribute("tenantID");
+		System.out.println("#########Login Controller##########: tenantID " + tenantID);
+		request.getSession().setAttribute("tenantID", tenantID);
+		
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		attr.getRequest().getSession().setAttribute("tenantID", tenantID);
+		
+		String client = (String)request.getSession(false).getAttribute("client");
+		log.debug("#########Login Controller##########: client " + client);
+		model.addAttribute("client", client);
+		
+		
+//		String reqId = request.getParameter("requestId");
+//		String requestNumber = request.getParameter("requestNumber");
+//		log.debug("#########Login Controller##########: reqId " + reqId);
+//		request.getSession().setAttribute("requestId", reqId);
+//		request.getSession().setAttribute("requestNumber", requestNumber);
 		
 		Exception lastException = (Exception) request.getSession().getAttribute("ACEGI_SECURITY_LAST_EXCEPTION");
 		if(lastException != null ){
-			log.debug("exception " + lastException.getClass().getCanonicalName());
+			log.debug("#########Login Controller##########: exception " + lastException.getClass().getCanonicalName());
 			if (lastException instanceof AuthenticationException ) {//concurrent login exception
-				model.put("concurrentLoginException" , "true");
+				model.addAttribute("concurrentLoginException" , "true");
 			}else {
-				model.put("invalidUsernameOrPassword" , "true");
+				model.addAttribute("invalidUsernameOrPassword" , "true");
 			}
 		}
 		
-		log.debug("request.getSession().getAttribute(ACEGI_SECURITY_LAST_EXCEPTION): "+lastException);
-		Enumeration<Object> attrib = request.getSession().getAttributeNames();
-		while(attrib.hasMoreElements()) {
-			Object obj = attrib.nextElement();
-			log.debug("obj class " + obj.getClass());
-			log.debug(obj.toString());
-		}
+		log.debug("#########Login Controller##########: request.getSession().getAttribute(ACEGI_SECURITY_LAST_EXCEPTION): "+lastException);
 		
+		
+		log.debug("#########Login Controller##########: Charset.defaultCharset().displayName(); " + Charset.defaultCharset().displayName());
 		request.getSession().removeAttribute("ACEGI_SECURITY_LAST_EXCEPTION");
 		request.getSession().removeAttribute("ACEGI_SECURITY_LAST_USERNAME");
 		
-		return new ModelAndView("login" , model);
+		return "login";
 	}
+	
+//	@PostMapping(value = "/login.html")//, method = RequestMethod.POST
+//    public String loginPage(@RequestParam(value = "error", required = false) String error, 
+//                            @RequestParam(value = "logout", required = false) String logout,
+//                            Model model,
+//                            HttpServletRequest request) {
+//		
+//		
+//		log.debug("post login");
+//		Map model = new HashMap();
+
+//		log.debug("param: "+request.getParameter("param"));
+//		log.debug("login_error: "+request.getParameter("login_error"));
+//		log.debug("failed: "+request.getParameter("failed"));
+//		log.debug("ParameterMap: "+request.getParameterMap());
+//		log.debug("request.getAttributeNames(): "+request.getAttributeNames());
+//		log.debug("request.getSession().getAttribute(ACEGI_SECURITY_LAST_USERNAME): "+request.getSession().getAttribute("ACEGI_SECURITY_LAST_USERNAME"));
+//		
+///////////////		securityDAO.login();
+//		UsernamePasswordAuthenticationToken authReq
+//	      = new UsernamePasswordAuthenticationToken(user, pass);
+//	    Authentication auth = authManager.authenticate(authReq);
+//	    
+//	    SecurityContext sc = SecurityContextHolder.getContext();
+//	    sc.setAuthentication(auth);
+//	    HttpSession session = request.getSession(true);
+//	    session.setAttribute("SPRING_SECURITY_CONTEXT_KEY", sc);
+	    
+//		String reqId = request.getParameter("requestId");
+//		String requestNumber = request.getParameter("requestNumber");
+//		log.debug("reqId " + reqId);
+//		request.getSession().setAttribute("requestId", reqId);
+//		request.getSession().setAttribute("requestNumber", requestNumber);
+//		
+//		Exception lastException = (Exception) request.getSession().getAttribute("ACEGI_SECURITY_LAST_EXCEPTION");
+//		if(lastException != null ){
+//			log.debug("exception " + lastException.getClass().getCanonicalName());
+//			if (lastException instanceof AuthenticationException ) {//concurrent login exception
+//				model.addAttribute("concurrentLoginException" , "true");
+//			}else {
+//				model.addAttribute("invalidUsernameOrPassword" , "true");
+//			}
+//		}
+//		
+//		log.debug("request.getSession().getAttribute(ACEGI_SECURITY_LAST_EXCEPTION): "+lastException);
+//		
+//		request.getSession().removeAttribute("ACEGI_SECURITY_LAST_EXCEPTION");
+//		request.getSession().removeAttribute("ACEGI_SECURITY_LAST_USERNAME");
+//		
+//		return "defaultPage";
+//	}
+	
+//	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//
+//		Map model = new HashMap();
+//
+//		log.debug("param: "+request.getParameter("param"));
+//		log.debug("login_error: "+request.getParameter("login_error"));
+//		log.debug("failed: "+request.getParameter("failed"));
+//		log.debug("ParameterMap: "+request.getParameterMap());
+//		log.debug("request.getAttributeNames(): "+request.getAttributeNames());
+//		log.debug("request.getSession().getAttribute(ACEGI_SECURITY_LAST_USERNAME): "+request.getSession().getAttribute("ACEGI_SECURITY_LAST_USERNAME"));
+//		
+//		String reqId = request.getParameter("requestId");
+//		String requestNumber = request.getParameter("requestNumber");
+//		log.debug("reqId " + reqId);
+//		request.getSession().setAttribute("requestId", reqId);
+//		request.getSession().setAttribute("requestNumber", requestNumber);
+//		
+//		Exception lastException = (Exception) request.getSession().getAttribute("ACEGI_SECURITY_LAST_EXCEPTION");
+//		if(lastException != null ){
+//			log.debug("exception " + lastException.getClass().getCanonicalName());
+//			if (lastException instanceof AuthenticationException ) {//concurrent login exception
+//				model.put("concurrentLoginException" , "true");
+//			}else {
+//				model.put("invalidUsernameOrPassword" , "true");
+//			}
+//		}
+//		
+//		log.debug("request.getSession().getAttribute(ACEGI_SECURITY_LAST_EXCEPTION): "+lastException);
+//		
+//		request.getSession().removeAttribute("ACEGI_SECURITY_LAST_EXCEPTION");
+//		request.getSession().removeAttribute("ACEGI_SECURITY_LAST_USERNAME");
+//		
+//		return new ModelAndView("login" , model);
+//	}
 }
 

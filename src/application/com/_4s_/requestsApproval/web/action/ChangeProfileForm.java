@@ -1,36 +1,45 @@
 package com._4s_.requestsApproval.web.action;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
-import net.sf.antcontrib.logic.ForEach;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com._4s_.requestsApproval.model.AccessLevels;
-import com._4s_.requestsApproval.model.GroupAcc;
-import com._4s_.requestsApproval.model.LoginUsers;
-import com._4s_.requestsApproval.model.LoginUsersRequests;
-import com._4s_.requestsApproval.model.RequestTypes;
-import com._4s_.requestsApproval.model.Requests;
-import com._4s_.requestsApproval.service.RequestsApprovalManager;
-import com._4s_.security.model.User;
 import com._4s_.common.model.Employee;
 import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.common.web.binders.DomainObjectBinder;
+import com._4s_.requestsApproval.model.AccessLevels;
+import com._4s_.requestsApproval.model.LoginUsers;
+import com._4s_.requestsApproval.model.LoginUsersRequests;
+import com._4s_.requestsApproval.service.RequestsApprovalManager;
+import com._4s_.security.model.User;
 
+@Controller
+@RequestMapping("/changeProfileForm.html")
 public class ChangeProfileForm extends BaseSimpleFormController{
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
+	@Autowired
+	@Qualifier("loginUsersBinder")
+	private DomainObjectBinder loginUsersBinder;
 
 	public RequestsApprovalManager getRequestsApprovalManager() {
 		return requestsApprovalManager;
@@ -41,19 +50,26 @@ public class ChangeProfileForm extends BaseSimpleFormController{
 		this.requestsApprovalManager = requestsApprovalManager;
 	}
 	
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		super.initBinder(request,binder);
+		binder.registerCustomEditor(LoginUsers.class, loginUsersBinder);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET)  
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		String requestTypeId=request.getParameter("requestTypeId");
 		log.debug("--------requestTypeId------"+requestTypeId);
 		
 		AccessLevels accessLevel=new AccessLevels();;
-		
-		return accessLevel;
+		model.addAttribute(accessLevel);
+		return "changeProfileForm";
 	}
 	
 	//**************************************** referenceData ***********************************************\\
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+	@ModelAttribute("model")	
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) 
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
@@ -98,9 +114,10 @@ public class ChangeProfileForm extends BaseSimpleFormController{
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{	
+	@RequestMapping(method = RequestMethod.POST) // ,consumes=MediaType.APPLICATION_FORM_URLENCODED
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("accessLevel") AccessLevels command, BindingResult errors,
+			SessionStatus status, Map model) {
 		
 		AccessLevels accessLevel=(AccessLevels) command;
 		String currentpass=request.getParameter("currentPassword");
@@ -122,9 +139,9 @@ public class ChangeProfileForm extends BaseSimpleFormController{
 			}
 		
 		}
-		else
-		messageNo="2";
-		
+		else {
+			messageNo="2";
+		}
 		
 		
 		String url="changeProfileForm.html?messagNo="+messageNo;

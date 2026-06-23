@@ -17,9 +17,9 @@
 	}
 </script>
 
-<form id="workperiodForm" name="workperiodForm" method="POST"
-	action="<c:url value="/attendance/workperiodForm.html"/>">
-
+<form:form method="POST"
+					action="/Requests/attendance/workperiodForm.html"
+					modelAttribute="period">
 	<input type="hidden" id="workperiodCode" name="workperiodCode"
 		value="${workperiodCode}" />
 
@@ -48,26 +48,7 @@
 							key="attendance.header.workperiods" /></td>
 				</tr>
 
-				<!-- 	<tr>
-
-					<c:set var="check" value="" />
-					<c:if test="${code!=null && code!=''}">
-						<c:set var="check" value="disabled" />
-					</c:if>
-
-						<td nowrap class="formReq" width="30%"><abc:i18n
-								property="attendance.caption.vacationCode" /> <fmt:message
-								key="attendance.caption.vacationCode" /></td>
-
-
-						<td class="formBodControl">
-								<input size="8" maxlength="8" type="text"
-									value="${vacation.vacation}"
-									readonly="readonly" />
-							</td>
-				</tr>
- -->
-
+			
 				<tr>
 
 					<td nowrap class="formReq" width="30%" colspan="2"><abc:i18n
@@ -226,7 +207,6 @@
 		</tr>
 
 	</table>
-</form>
-
+</form:form>
 
 <%@ include file="/web/common/includes/footer.jsp"%>

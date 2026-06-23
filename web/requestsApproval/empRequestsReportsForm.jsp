@@ -125,6 +125,7 @@
 </script>
 
 
+<<<<<<< HEAD
 
 	<table width="90%" border="0" cellspacing="0" cellpadding="0"
 		style="padding-right: 10px">
@@ -170,6 +171,27 @@
 						value="${requestType}" /> <input type="hidden" id="errand"
 						name="errand" value="${errand}" />
 
+=======
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+				<c:if test="${not empty errors}">
+					<div><c:forEach var="error" items="${errors}">
+						<font color="red"> <c:out value="${error}" escapeXml="false" /><br />
+						</font>
+					</c:forEach></div>
+				</c:if>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<form:form method="POST" modelAttribute="loginUsersRequests"
+				action="/Requests/requestsApproval/empRequestsReportsForm.html">
+				    <input type="hidden"  id="requestType" name="requestType" value="${model.requestType}"/>
+				    <input type="hidden"  id="errand" name="errand" value="${model.errand}"/>
+				   
+>>>>>>> refs/heads/UpgradeSpringHibernate
 					<div id="result">
 						<table border=0 cellspacing=1 cellpadding=0 id="ep"
 							style="margin-right: 40px">
@@ -206,7 +228,85 @@
 											key="commons.caption.requiredInformation" /></span></td>
 							</tr>
 
+<<<<<<< HEAD
+=======
+		
+						<tr id="btnPrint">
+					  		<td nowrap class="formBodControl">
+								<abc:i18n property="requestsApproval.caption.userCode"/>
+								<fmt:message key="requestsApproval.caption.userCode"/>
+							</td>						
+							<td  class="formBod"> 
+								<abc:autocomplete 
+									inputId="empCode" 
+									inputName="empCode" 
+									table="login_users" 
+									firstKey="commons.caption.code"
+									secondKey="commons.caption.name"
+									firstParam="empCode"
+									secondParam="name"
+									bindById="true"
+									valueString="${employeeCode}"
+									valueId=""/>
+							</td>
+							
+							<td nowrap class="formBodControl" >
+								<abc:i18n property="requestsApproval.requestsApprovalForm.reqStatus"/>
+								<fmt:message key="requestsApproval.requestsApprovalForm.reqStatus"/>
+							</td>
+							<td  class="formBodControl" >
+								<select name="statusId" id="statusId">
+									<option value="" ${status==null||status==-1?'selected':''}><fmt:message key="commons.caption.select" /></option>
+									<option value="0" ${status==0?'selected':''}>لم تكتمل</option>
+									<option value="1" ${status==1?'selected':''}>موافق</option>
+									<option value="99" ${status==99?'selected' : ''}>مرفوض</option>
+								</select>
+							</td>		
+							
+						</tr>
+						
+						<tr id="btnPrint">
+							<td nowrap class="formBodControl" >
+								<abc:i18n property="requestsApproval.caption.requestDate"/>
+								<fmt:message key="requestsApproval.caption.requestDate"/>
+							</td>
+						</tr>
+						<tr id="btnPrint">
+					  		<td nowrap class="formBodControl" >
+								<abc:i18n property="commons.caption.from"/>
+								<fmt:message key="commons.caption.from"/>
+							</td>
+							<c:choose>
+								<c:when  test="${model.request_date_from ==null || model.request_date_from==''}">
+								<td  class="formBodControl" >
+									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${model.firstDay}" />
+								</td>
+								</c:when>
+								<c:when test="${model.request_date_from !=null || model.request_date_from!=''}">
+								<td  class="formBodControl" >
+									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${model.request_date_from}" />
+								</td>
+								</c:when>
+							</c:choose>
+					  		<td nowrap class="formBodControl" >
+								<abc:i18n property="commons.caption.to"/>
+								<fmt:message key="commons.caption.to"/>
+							</td>
+							<c:choose>
+								<c:when  test="${model.request_date_to ==null || model.request_date_to==''}">
+								<td  class="formBodControl" >
+									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_to" id="request_date_to" value="${model.today}" />
+								</td>
+								</c:when>
+								<c:when test="${model.request_date_to !=null || model.request_date_to!=''}">
+								<td  class="formBodControl">
+									<input type="text"  class="calendar" title="ccc" class="MM_to_d" readonly="readonly" autocomplete="off" dir="ltr" name="request_date_to" id="request_date_to" value="${model.request_date_to}"/>
+								</td>
+								</c:when>
+							</c:choose>
+>>>>>>> refs/heads/UpgradeSpringHibernate
 
+<<<<<<< HEAD
 							<tr id="btnPrint">
 								<td nowrap class="formBodControl"><abc:i18n
 										property="requestsApproval.caption.userCode" /> <fmt:message
@@ -217,6 +317,48 @@
 										secondKey="commons.caption.name" firstParam="empCode"
 										secondParam="name" bindById="true"
 										valueString="${employeeCode}" valueId="" /></td>
+=======
+						</tr>
+						<tr id="btnPrint">
+							<td nowrap class="formBodControl" >
+								<abc:i18n property="requestsApproval.caption.exactRequestDate"/>
+								<fmt:message key="requestsApproval.caption.exactRequestDate"/>
+							</td>
+						</tr>
+						<tr id="btnPrint">
+					  		<td nowrap class="formBodControl" >
+								<abc:i18n property="commons.caption.from"/>
+								<fmt:message key="commons.caption.from"/>
+							</td>
+							<c:choose>
+								<c:when  test="${model.exact_request_date_from ==null || modelexact_request_date_from==''}">
+								<td  class="formBodControl" >
+									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="exact_request_date_from" id="exact_request_date_from" value="" />
+								</td>
+								</c:when>
+								<c:when test="${model.exact_request_date_from !=null || model.exact_request_date_from!=''}">
+								<td  class="formBodControl" >
+									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="exact_request_date_from" id="exact_request_date_from" value="${model.exact_request_date_from}" />
+								</td>
+								</c:when>
+							</c:choose>
+					  		<td nowrap class="formBodControl" >
+								<abc:i18n property="commons.caption.to"/>
+								<fmt:message key="commons.caption.to"/>
+							</td>
+							<c:choose>
+								<c:when  test="${model.exact_request_date_to ==null || model.exact_request_date_to==''}">
+								<td  class="formBodControl" >
+									<input type="text"  class="calendar"  class="MM_from_d" title="ccc" readonly="readonly" autocomplete="off" dir="ltr" name="exact_request_date_to" id="exact_request_date_to" value="" />
+								</td>
+								</c:when>
+								<c:when test="${model.exact_request_date_to !=null || model.exact_request_date_to!=''}">
+								<td  class="formBodControl">
+									<input type="text"  class="calendar" title="ccc" class="MM_to_d" readonly="readonly" autocomplete="off" dir="ltr" name="exact_request_date_to" id="exact_request_date_to" value="${model.exact_request_date_to}"/>
+								</td>
+								</c:when>
+							</c:choose>
+>>>>>>> refs/heads/UpgradeSpringHibernate
 
 								<td nowrap class="formBodControl"><abc:i18n
 										property="requestsApproval.requestsApprovalForm.reqStatus" />
@@ -233,6 +375,7 @@
 
 							</tr>
 
+<<<<<<< HEAD
 							<tr id="btnPrint">
 								<td nowrap class="formBodControl"><abc:i18n
 										property="requestsApproval.caption.requestDate" /> <fmt:message
@@ -269,7 +412,22 @@
 											class="calendar" class="MM_from_d" title="ccc"
 											readonly="readonly" autocomplete="off" dir="ltr"
 											name="request_date_to" id="request_date_to" value="${today}" />
+=======
+						<tr>
+						</tr>										
+					</table>
+					
+					<abc:paging url="empRequestsReportsForm.html" 
+					parametersString="requestType=${model.requestType}&empCode=${model.empCode}&statusId=${model.status}&request_date_from=${model.request_date_from}&request_date_to=${model.request_date_to}&exact_request_date_from=${model.exact_request_date_from}&exact_request_date_to=${model.exact_request_date_to}&codeFrom=${model.codeFrom}&codeTo=${model.codeTo}"/>
+					<table rules="all" align="center" class="sofT">
+									<tr>
+									<c:if test="${model.requestType=='1' && model.errand!='true'}">
+										<td colspan="16" class="helpTitle">
+											<abc:i18n property="requestsApproval.header.empSpecialVacationsReportsForm" />
+											<fmt:message key="requestsApproval.header.empSpecialVacationsReportsForm" />
+>>>>>>> refs/heads/UpgradeSpringHibernate
 										</td>
+<<<<<<< HEAD
 									</c:when>
 									<c:when test="${request_date_to !=null || request_date_to!=''}">
 										<td class="formBodControl"><input type="text"
@@ -429,7 +587,21 @@
 										<td nowrap class="helpHed" nowrap="nowrap"><abc:i18n
 												property="commons.button.getVacCredit" /> <fmt:message
 												key="commons.button.getVacCredit" /></td>
+=======
 									</c:if>
+									<c:if test="${model.requestType=='1' && model.errand=='true'}">
+										<td colspan="16" class="helpTitle">
+										<abc:i18n property="requestsApproval.header.empErrandsReportsForm"/><fmt:message key="requestsApproval.header.empErrandsReportsForm"/>
+										</td>
+									</c:if>
+									<c:if test="${model.requestType=='2'}">
+										<td colspan="16" class="helpTitle">
+											<abc:i18n property="requestsApproval.header.empAnnualVacationsReportsForm" />
+											<fmt:message key="requestsApproval.header.empAnnualVacationsReportsForm" />
+										</td>
+>>>>>>> refs/heads/UpgradeSpringHibernate
+									</c:if>
+<<<<<<< HEAD
 								</c:if>
 								<c:if test="${requestType=='3'}">
 									<td class="helpHed" nowrap="nowrap"><abc:i18n
@@ -477,6 +649,121 @@
 												test="${(record.approval==null || record.approval=='')  && (record.approved==1 || record.approved==0)}">
 												<a
 													href="requestsApprovalForm.html?reqId=${record.id}&requestType=${requestType}&errand=${errand}">${record.requestNumber}</a>
+=======
+									<c:if test="${model.requestType=='3'}">
+										<td colspan="16" class="helpTitle">
+											<abc:i18n property="requestsApproval.header.empRequestsReportsForm3" />
+											<fmt:message key="requestsApproval.header.empRequestsReportsForm3" />
+										</td>
+									</c:if>									
+									</tr>
+									
+									<tr>									
+										<td class="helpHed" nowrap="nowrap">
+											<abc:i18n property="requestsApproval.caption.userCode" />
+											<fmt:message key="requestsApproval.caption.userCode" />
+										</td>
+										<td class="helpHed" nowrap="nowrap">
+											<abc:i18n property="requestsApproval.caption.userName" />
+											<fmt:message key="requestsApproval.caption.userName" />
+										</td>
+										<td class="helpHed" nowrap="nowrap">
+											<abc:i18n property="requestsApproval.caption.requestNumber"/>
+											<fmt:message key="requestsApproval.caption.requestNumber"/>
+										</td>
+										<td class="helpHed" nowrap="nowrap">
+											<abc:i18n property="requestsApproval.caption.requestType" />
+											<fmt:message key="requestsApproval.caption.requestType" />
+										</td>
+										<td class="helpHed" nowrap="nowrap">
+											<abc:i18n property="requestsApproval.caption.requestDate" />
+										 	<fmt:message key="requestsApproval.caption.requestDate" />
+										</td>
+										<c:if test="${model.requestType=='1'||model.requestType=='2'}">
+								  		<td nowrap class="helpHed" nowrap="nowrap">
+											<abc:i18n property="commons.caption.fromDate"/>
+											<fmt:message key="commons.caption.fromDate"/>
+										</td>										
+								  		<td nowrap class="helpHed" nowrap="nowrap">
+											<abc:i18n property="commons.caption.toDate"/>
+											<fmt:message key="commons.caption.toDate"/>
+										</td>
+										<td nowrap class="helpHed" nowrap="nowrap">
+											<abc:i18n property="requestsApproval.requestsApprovalForm.reqPeriod"/>
+											<fmt:message key="requestsApproval.requestsApprovalForm.reqPeriod"/>
+										</td>
+										<c:if test="${model.requestType=='2'}">
+										<td nowrap class="helpHed" nowrap="nowrap">
+											<abc:i18n property="commons.button.getVacCredit"/>
+											<fmt:message key="commons.button.getVacCredit"/>
+										</td>	
+										</c:if>									
+										</c:if>
+										<c:if test="${model.requestType=='3'}">
+										<td class="helpHed" nowrap="nowrap">
+											<abc:i18n property="commons.caption.from" />
+										 	<fmt:message key="commons.caption.from" />
+										</td>
+											
+										<td class="helpHed" nowrap="nowrap">
+											<abc:i18n property="commons.caption.to" />
+										 	<fmt:message key="commons.caption.to" />
+										</td>
+										</c:if>
+										
+										<td class="helpHed" nowrap="nowrap"><abc:i18n
+											property="commons.caption.address" /> <fmt:message
+											key="commons.caption.address" /></td>
+											
+										<td class="helpHed" nowrap="nowrap">
+										<abc:i18n
+										property="requestsApproval.requestsApprovalForm.reqStatus" /> <fmt:message
+										key="requestsApproval.requestsApprovalForm.reqStatus" /> 
+										</td>
+										<td class="helpHed" nowrap="nowrap">
+											<abc:i18n property="requestsApproval.caption.reply" />
+										 	<fmt:message key="requestsApproval.caption.reply" />
+										</td>
+										
+										<c:if test="${model.requestType=='1'}">
+											<td class="helpHed" nowrap>
+											<abc:i18n property="commons.caption.altDate"/><fmt:message key="commons.caption.altDate"/>
+											</td>
+										</c:if>	
+										
+										<td class="helpHed" nowrap>
+											<abc:i18n property="commons.caption.notes"/><fmt:message key="commons.caption.notes"/>
+										</td>
+										
+										<td class="helpHed" nowrap>
+										&nbsp;
+										</td>
+										
+									</tr>
+								<c:forEach varStatus="loop" var="record" items="${results}">
+									<tr height=20 bgcolor="#F8F8F8">
+										<td  nowrap>
+											${record.empCode}
+										</td>
+										<td  nowrap>
+											${record.name}
+										</td>
+										<td  nowrap>
+										<c:choose>
+										<c:when test="${(record.approval==null || record.approval=='')  && (record.approved==1 || record.approved==0)}">
+											<a href="requestsApprovalForm.html?reqId=${record.id}&requestType=${requestType}&errand=${errand}">${record.requestNumber}</a>
+										</c:when>
+										<c:otherwise>
+											${record.requestNumber}
+										</c:otherwise>
+										</c:choose>									
+										</td>										
+										<c:choose>
+											<c:when test="${errand=='true'}">
+											<td  nowrap>
+												مأموريه
+											</td>
+>>>>>>> refs/heads/UpgradeSpringHibernate
 											</c:when>
 											<c:otherwise>
 											${record.requestNumber}
@@ -563,6 +850,7 @@
 												href="requestsApprovalForm.html?reqId=${record.id}&requestType=${requestType}"><fmt:message
 														key="commons.button.approve" /></a></td>
 										</c:otherwise>
+<<<<<<< HEAD
 									</c:choose>
 
 								</tr>
@@ -589,5 +877,31 @@
 	</table>
 
 	<%@ include file="/web/common/includes/footer.jsp"%>
+=======
+										</c:choose>
+										
+									</tr>
+								</c:forEach>									
+								</table>
+								</div>
+								<table align="center">
+									<tr>
+										<td colspan="2" align="center">
+											<abc:i18n property="commons.button.print"/>
+											<input type="button" id="btnPrint" class="button" value="<fmt:message key="commons.button.print"/>" onClick="printthis('result')"></input>
+										</td>
+										<td colspan="2" align="center">
+											<abc:i18n property="requestsApproval.button.approveAll"/>
+											<input type="submit" id="approveAll" name="approveAll" class="button" value="<fmt:message key="requestsApproval.button.approveAll"/>" onClick="approveAll()"></input>
+										</td>
+									</tr>
+								</table>								
+			</form:form>
+		</td>
+	</tr>
+</table>
+<script language="JavaScript" type="text/javascript" src="/Orders/web/common/js/wz_tooltip.js"></script>
+<%@ include file="/web/common/includes/footer.jsp" %>
+>>>>>>> refs/heads/UpgradeSpringHibernate
 </body>
 </html>

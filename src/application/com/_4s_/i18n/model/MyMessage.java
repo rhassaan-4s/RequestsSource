@@ -3,6 +3,7 @@ package com._4s_.i18n.model;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,13 +29,13 @@ public class MyMessage implements Serializable,Auditable{
 	@Id
 	private Long id;
 	@ManyToOne
-	//@JoinColumn (name="key")
+	@JoinColumn (name="key_id")
 	private Key key;
 	@ManyToOne
 	@JoinColumn (name="myLocale")
 	private MyLocale myLocale;
 
-	private String message;
+	private String message = null;
 
 	public MyMessage() {
 	}

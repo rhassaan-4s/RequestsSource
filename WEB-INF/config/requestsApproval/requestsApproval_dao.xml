@@ -2,24 +2,16 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
     "http://www.springframework.org/dtd/spring-beans.dtd">
 
-<beans >
-	<bean id="requestsApprovalDAO" class="com._4s_.requestsApproval.dao.RequestsApprovalDAOHibernate" >
-		<property name="sessionFactory">
-		      <ref bean="sessionFactory"/>
-		</property>
-		<property name="externalQueries">
-			<ref bean="requestsApprovalExternalQueries" />
-		</property>
+<beans>
+	<bean id="requestsApprovalDAO" class="com._4s_.requestsApproval.dao.RequestsApprovalDAOHibernate"  init-method="init">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="externalQueries" ref="requestsApprovalExternalQueries" />
 	</bean>
 	
-	<bean id="requestsApprovalExternalQueries" class="com._4s_.requestsApproval.dao.ExternalQueries"
-		singleton="false">
-		<property name="platformTransactionManager">
-			<ref bean="transactionManager" />
-		</property>
-		<property name="jdbcTemplate">
-			<ref bean="jdbcTemplate"/>
-		</property>
+	<bean id="requestsApprovalExternalQueries" class="com._4s_.requestsApproval.dao.ExternalQueries">
+		<property name="platformTransactionManager" ref ="transactionManager" />
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="dataSource" ref="dataSource"/>
 		<property name="driverClass">
 		      <value>${hibernate.connection.driver_class}</value>
 		</property>
@@ -31,6 +23,9 @@
 		</property>
 		<property name="password">
 			<value>${hibernate.connection.password}</value>
+		</property>
+		<property name="schema">
+			<value>${hibernate.defaultSchema}</value>
 		</property>
 	</bean>
 </beans>

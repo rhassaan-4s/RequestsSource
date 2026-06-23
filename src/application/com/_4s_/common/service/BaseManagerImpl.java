@@ -6,10 +6,12 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.common.dao.BaseDAO;
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 /**
  * Base class for Business Services - use this class for utility methods and
@@ -17,22 +19,19 @@ import com.microsoft.sqlserver.jdbc.SQLServerException;
  * 
  * <p><a href="BaseManager.java.html"><i>View Source</i></a></p>
  *
- * @author <a href="mailto:matt@raibledesigns.com">Matt Raible</a>
  */
+@Service("baseManager")
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class BaseManagerImpl implements BaseManager {
     protected final Log log = LogFactory.getLog(getClass());
-    protected BaseDAO baseDAO = null;
+    @Autowired
+    protected BaseDAO baseDAO;
     
-    /* (non-Javadoc)
-	 * @see com._4s_.commons.service.BaseManager2#setDAO(com._4s_.commons.dao.BaseDAO)
-	 */
     public void setBaseDAO(BaseDAO baseDAO) {
         this.baseDAO = baseDAO;
     }
+
     
-    /* (non-Javadoc)
-	 * @see com._4s_.commons.service.BaseManager2#getObject(java.lang.Class, java.io.Serializable)
-	 */
     public Object getObject(Class clazz, Serializable id) {
         return baseDAO.getObject(clazz, id);
     }
@@ -65,7 +64,7 @@ public class BaseManagerImpl implements BaseManager {
     /* (non-Javadoc)
 	 * @see com._4s_.commons.service.BaseManager2#saveObject(java.lang.Object)
 	 */
-    public void saveObject(Object o) {
+    public void saveObject(Object o){
         baseDAO.saveObject(o);
     }
     

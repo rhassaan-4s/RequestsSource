@@ -4,12 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -32,9 +35,9 @@ public class TestForm  extends  BaseSimpleFormController{
 	
 	
 	//**************************************** formBackingObject ***********************************************\\
-	@Override
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{
+	
+	@RequestMapping(method = RequestMethod.GET)  
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		String testId=request.getParameter("testId");
 		log.debug("testId"+testId);
@@ -50,11 +53,13 @@ public class TestForm  extends  BaseSimpleFormController{
 		}
 		log.debug("test"+test);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	   return test;
+		model.addAttribute(test);
+	   return "testForm";
 	}
 //**************************************** referenceData ***********************************************\\
-	@Override
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+	
+	@ModelAttribute("model")	
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) 
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		Map model=new HashMap();
@@ -68,7 +73,7 @@ public class TestForm  extends  BaseSimpleFormController{
 	}
 	
 	//**************************************** onBind ***********************************************\\	
-	@Override
+	
 	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws Exception
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBind >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -78,7 +83,7 @@ public class TestForm  extends  BaseSimpleFormController{
 	}
 	
 //**************************************** onBindAndValidate ***********************************************\\		
-	@Override
+	
 	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -103,7 +108,7 @@ public class TestForm  extends  BaseSimpleFormController{
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-	@Override
+	
 	public ModelAndView onSubmit(HttpServletRequest request,
 			HttpServletResponse response, Object command, BindException errors)throws Exception 
 	{
@@ -113,7 +118,7 @@ public class TestForm  extends  BaseSimpleFormController{
 		
 		hrManager.saveObject(test);
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("test.html"));
 	}
 	
 

@@ -7,13 +7,10 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.orm.hibernate3.HibernateCallback;
 
 import com._4s_.HR.model.AInsuranceCala;
 import com._4s_.HR.model.HREmployee;
@@ -24,19 +21,15 @@ import com._4s_.HR.model.HRGeographicalDivision;
 import com._4s_.HR.model.HRGeographicalLevel;
 import com._4s_.HR.model.HRInternalDivision;
 import com._4s_.HR.model.HRInternalLevel;
-import com._4s_.HR.model.HRMonth;
 import com._4s_.HR.model.HRQualificationDivision;
 import com._4s_.HR.model.HRQualificationLevel;
 import com._4s_.HR.model.HRServiceLengthCalculation;
 import com._4s_.HR.model.HRSpecialtyDivision;
 import com._4s_.HR.model.HRSpecialtyLevel;
 import com._4s_.HR.model.HRVacation;
-import com._4s_.HR.model.HRYear;
-import com._4s_.HR.service.HRManager;
 import com._4s_.common.dao.BaseDAOHibernate;
 import com._4s_.common.util.DBUtils;
 //import com._4s_.stores.model.ViewStoreCardItem;
-import com.crystaldecisions.proxy.remoteagent.ai;
 
 public class HRDAOHibernate extends BaseDAOHibernate implements HRDAO {
 	

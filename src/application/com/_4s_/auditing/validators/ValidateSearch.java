@@ -5,12 +5,10 @@ import java.util.Date;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import com._4s_.auditing.model.AuditSearchCommand;
 //import com._4s_.banks.model.Bank;
-import com._4s_.common.util.DateUtil;
 
 public class ValidateSearch implements Validator {
 	protected final Log log = LogFactory.getLog(getClass());

@@ -14,6 +14,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 import com._4s_.auditing.model.Auditable;
+import com._4s_.common.web.validators.Mandatory;
+import com._4s_.common.web.validators.Unique;
 
 @Entity
 @Table (name = "title")
@@ -23,7 +25,11 @@ public class Title implements Serializable,Auditable {
 	@GenericGenerator(name="title_seq",strategy="com._4s_.attendance.dao.TitleStringKeyGenerator")
 	@GeneratedValue(generator="title_seq")
 	private String title;
+	@Mandatory(value=Title.class,property="name")
+	@Unique(value=Title.class,property = "name")
 	private String name;
+	@Mandatory(value=Title.class,property="ename")
+	@Unique(value=Title.class,property = "ename")
 	private String ename;
 	private String lang = "A";
 	

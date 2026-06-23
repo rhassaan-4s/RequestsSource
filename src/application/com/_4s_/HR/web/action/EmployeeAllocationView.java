@@ -8,13 +8,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.HR.model.HREmployee;
 import com._4s_.HR.model.HREmployeeJob;
-import com._4s_.HR.model.HREmployeeQualification;
 import com._4s_.HR.service.HRManager;
 import com._4s_.common.web.action.BaseController;
 

@@ -12,13 +12,10 @@
 		</property>
 	</bean>
 	
-	<bean id="attendanceExternalQueries" class="com._4s_.attendance.dao.AttendanceExternalQueries"
-		singleton="false">
+	<bean id="attendanceExternalQueries" class="com._4s_.attendance.dao.AttendanceExternalQueries">
+		<property name="sessionFactory" ref="sessionFactory"/>
 		<property name="platformTransactionManager">
 			<ref bean="transactionManager" />
-		</property>
-		<property name="jdbcTemplate">
-			<ref bean="jdbcTemplate"/>
 		</property>
 		<property name="driverClass">
 		      <value>${hibernate.connection.driver_class}</value>

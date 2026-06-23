@@ -1,6 +1,5 @@
 package com._4s_.requestsApproval.web.action;
 
-import java.util.Date;
 
 public class TimeAttend {
 	

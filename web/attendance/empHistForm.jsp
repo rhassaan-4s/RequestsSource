@@ -12,8 +12,9 @@
 	src="/Requests/web/common/timepicker/jquery.multiselect.min.js"></script>
 <script type="text/javascript"
 	src="/Requests/web/common/timepicker/jquery.multiselect.filter.min.js"></script>
-<form id="empHistForm" name="empHistForm" method="POST"
-	action="<c:url value="/attendance/empHistForm.html"/>">
+	
+<form:form method="POST" modelAttribute="empHist"
+	action="/Requests/attendance/empHistForm.html">
 
 <input type="hidden" id="empCode" name="empCode"
 			value="${empCode}" />
@@ -157,7 +158,7 @@
 		</tr>
 
 	</table>
-</form>
+</form:form>
 <script type="text/javascript">
 $("select").multiselect({
 	  header: "",

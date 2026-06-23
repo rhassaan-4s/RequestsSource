@@ -8,8 +8,6 @@
 <head>
 
 <title>Insert title here</title>
-<script type='text/javascript' src='/Requests/dwr/interface/requestsDwr.js'></script>
-<script type='text/javascript' src='/Requests/dwr/engine.js'></script>
 </head>
 <body>
 <script type="text/javascript">
@@ -30,25 +28,68 @@ function exportExcel() {
 	//window.open(link);
 }
 
-function getRequestStatus(id){
+function getRequestStatus(id,emp){
 	//alert('entered');
+	//alert('--id value---'+id);
 	//alert('--id value---'+id.id);
-	var req_id =id.id;
-		//document.getElementById('empRequestTypeId').value;
-	//alert('req_id= '+req_id);
-	requestsDwr.getRequestStatus(returnedData,req_id);	
+	var id = id.id;
+	var reqId = {reqId: id,empId: emp};
+//alert(id.id);
+	$.ajax({
+		type : "GET",
+		url : "../requestsApproval/ajax/requestStatus",
+		datatype : "application/json; charset=utf-8",
+		contentType: "application/json; charset=utf-8",
+		data : reqId,
+		success : function(data) {
+			//alert(data);
+			$.each(data, function(key, value) {
+				
+			///	alert(key);
+			//	alert(value);
+				if (key == 'Response') {
+					//alert("VALUE " + value);
+					var st = '';
+					var result = '';
+					$.each(value, function(k, v) {
+					//	alert("k " + k + " v " + v);
+						var ob = v;
+						//alert(ob.approval);
+						if (ob.approval == 1 || ob.approval == 2) {
+							st = 'موافق';
+						} else if (ob.approval == 0) {
+							st = 'مرفوض\n سبب الرفض: ' + ob.note;
+						}
+						result += "\n" + ob.level_id + " . "
+								+ ob.user_id + " -- " + st;
+
+					//	alert(ob.user_id.name + "--" + st);
+					});
+					//alert('-----out----');
+					if (st == '' && result == '') {
+						result = 'لم يتم الموافقه عليه';
+					}
+					alert(result);
+				}
+			});
+		},
+		error: function(data, status){ alert(status); }
+	});
+
 }
 
 function  returnedData(data){
 	//alert('entered after');
 	 if (data!=null){
 		 //alert('not null');
+		 alert(data);
 		 var st='';
 
 		// alert('---- i< data.length---'+data.length);
 		 for ( var i= 0; i < data.length; i++) {
 			 //alert('---for- i< data.length---'+data.length);
 			var ob=data[i];
+			alert(ob.approval);
 			if(ob.approval==1){
 				st='موافق';
 			}else if(ob.approval==0){
@@ -144,8 +185,10 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 	</tr>
 	<tr>
 		<td>
-			<form id="reports" name="reports"	method="POST" action="<c:url value="/requestsApproval/reports.html"/>">
-				     <input type="hidden"  id="export" name="export" value="${export}"/>
+			<form:form method="POST" 
+				action="/Requests/requestsApproval/reports.html">
+				     <input type="hidden"  id="export" name="export" value="${model.export}"/>
+				     <input type="hidden"  id="empId" name="empId" value="${model.empId}"/>
 					<div id="result">
 
 					<table>
@@ -164,8 +207,8 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 							<td  class="formBodControl" >
 									<select name="requestType" id="requestType">
 										<option value=""><fmt:message key="commons.caption.select" /></option>						
-											<c:forEach items="${requestTypeList}" var="request">
-												<option value="${request.id}" ${request.id == requestType ?'selected':''}>${request.description}</option>
+											<c:forEach items="${model.requestTypeList}" var="request">
+												<option value="${request.id}" ${request.id == model.requestType ?'selected':''}>${request.description}</option>
 											</c:forEach>
 									</select>
 							</td>													
@@ -183,7 +226,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 								<fmt:message key="commons.caption.from"/>
 							</td>
 							<td  class="formBodControl" >
-								<input type="text"  class="calendar"   readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${request_date_from}"/>
+								<input type="text"  class="calendar"   readonly="readonly" autocomplete="off" dir="ltr" name="request_date_from" id="request_date_from" value="${model.request_date_from}"/>
 							</td>
 		
 					  		<td nowrap class="formBodControl" >
@@ -191,7 +234,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 								<fmt:message key="commons.caption.to"/>
 							</td>
 							<td  class="formBodControl" >
-								<input type="text"  class="calendar"  title="ccc"  readonly="readonly" autocomplete="off" dir="ltr" name="request_date_to" id="request_date_to" value="${request_date_to}"/>
+								<input type="text"  class="calendar"  title="ccc"  readonly="readonly" autocomplete="off" dir="ltr" name="request_date_to" id="request_date_to" value="${model.request_date_to}"/>
 							</td>
 						</tr>
 						
@@ -210,8 +253,8 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 									firstParam="empCode"
 									secondParam="name"
 									bindById="true"
-									valueString="${codeFrom}"
-									valueId="${empId}" />
+									valueString="${model.codeFrom}"
+									valueId="${model.empId}" />
 							</td>
 								
 		
@@ -229,8 +272,8 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 									firstParam="empCode"
 									secondParam="name"
 									bindById="true"
-									valueString="${codeTo}"
-									valueId="${empId}" />
+									valueString="${model.codeTo}"
+									valueId="${model.empId}" />
 							</td>
 						</tr>
 												
@@ -244,9 +287,13 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 						<tr height="10">
 						</tr>
 					</table>	
-					
+				
 					<abc:paging url="reports.html" 
-					parametersString="requestType=${requestType}&request_date_from=${request_date_from}&request_date_to=${request_date_to}&codeFrom=${codeFrom}&codeTo=${codeTo}"/>		
+					 page="${model.page}"
+				    numberOfPages="${model.numberOfPages}"
+				    next="${model.next}"
+				    previous="${model.previous}" 
+					parametersString="requestType=${model.requestType}&request_date_from=${model.request_date_from}&request_date_to=${model.request_date_to}&codeFrom=${model.codeFrom}&codeTo=${model.codeTo}"/>		
 					<table rules="all" align="center" width="70%" class="sofT">
 								
 						<tr>						
@@ -295,7 +342,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 								&nbsp;
 							</td>																														
 						</tr>
-					<c:forEach items="${results}" var="record">
+					<c:forEach items="${model.results}" var="record">
 						<tr height=20 bgcolor="#F8F8F8"> 							        
 							<td  nowrap>
 						         ${record.empCode }
@@ -380,7 +427,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 							</td>
 							
 							<td  nowrap id="btnPrint">
-								<input type="button" id="${record.id}" value="<fmt:message key="requestsApproval.button.requestStatus"/>" name="requestStatus" class="button"	onclick="getRequestStatus(this)"></input>
+								<input type="button" id="${record.id}" value="<fmt:message key="requestsApproval.button.requestStatus"/>" name="requestStatus" class="button"	onclick="getRequestStatus(this,${empId})"></input>
 							</td>
 						</tr>
 						
@@ -401,7 +448,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 					</td>
 				</tr>
 			</table>								
-			</form>
+			</form:form>
 		</td>
 	</tr>
 </table>

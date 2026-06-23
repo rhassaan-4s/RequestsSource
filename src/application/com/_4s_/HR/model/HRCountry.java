@@ -27,6 +27,9 @@ public class HRCountry implements Auditable,Serializable {
 	private String ename;
 
 	
+	public HRCountry() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getEntityDisplayName() {
 		return "country Addition";
 	}

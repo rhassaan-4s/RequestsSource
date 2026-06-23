@@ -2,7 +2,9 @@ package com._4s_.security.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,7 +14,6 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 import com._4s_.auditing.model.Auditable;
 
@@ -22,12 +23,16 @@ import com._4s_.auditing.model.Auditable;
 @Entity
 @Table (name = "security_applications")
 public class SecurityApplication implements Serializable ,Auditable{
+	public SecurityApplication() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id
 	private Long id;
 
 	private String name;
 	@OneToMany (mappedBy ="application")
-	private List<Roles>roles = new ArrayList<Roles>();
+	private Set<Roles>roles = new HashSet<>();
 
 	@OneToMany (mappedBy ="application")
 	private List<Fields>fields = new ArrayList<Fields>();
@@ -71,11 +76,11 @@ public class SecurityApplication implements Serializable ,Auditable{
 		this.fields = fields;
 	}
 
-	public List getRoles() {
+	public Set getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List roles) {
+	public void setRoles(Set roles) {
 		this.roles = roles;
 	}
 
@@ -127,7 +132,7 @@ public class SecurityApplication implements Serializable ,Auditable{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return new ToStringBuilder(this).append("name", this.name).toString();
+		return "Application Name: " + this.name;
 	}
 
 	public String getEntityDisplayName() {

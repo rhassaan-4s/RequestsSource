@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -26,6 +25,10 @@ public class HRClosedMonthes implements Auditable,Serializable {
 	@SequenceGenerator(name="hr_closed_monthes_seq",sequenceName="hr_closed_monthes_seq")
 	private Long id;
 	
+	public HRClosedMonthes() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@ManyToOne
 	@JoinColumn(name="month_id")
 	private HRMonth month_id;

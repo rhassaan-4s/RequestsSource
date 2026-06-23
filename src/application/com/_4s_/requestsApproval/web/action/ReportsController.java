@@ -11,30 +11,52 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
-import com._4s_.requestsApproval.model.EmpReqTypeAcc;
-import com._4s_.requestsApproval.model.AccessLevels;
-import com._4s_.requestsApproval.model.LoginUsers;
-import com._4s_.requestsApproval.model.LoginUsersRequests;
-import com._4s_.requestsApproval.model.RequestTypes;
-import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
 import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.common.web.binders.DomainObjectBinder;
+import com._4s_.common.web.binders.TimestampBinder;
+import com._4s_.requestsApproval.model.LoginUsers;
+import com._4s_.requestsApproval.model.LoginUsersRequests;
+import com._4s_.requestsApproval.model.RequestTypes;
+import com._4s_.requestsApproval.service.RequestsApprovalManager;
 
-
+@Controller
+@RequestMapping("/reports.html")
 public class ReportsController extends BaseSimpleFormController{
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
+	
+	@Autowired
+	@Qualifier("requestTypesBinder")
+	private DomainObjectBinder requestTypesBinder;
+	@Autowired
+	@Qualifier("loginUsersBinder")
+	private DomainObjectBinder loginUsersBinder;
+	@Autowired
+	@Qualifier("timestampBinder")
+	private TimestampBinder timestampBinder;
+	
 	List<String> ordered1= new ArrayList<String>();
 	
 	
@@ -47,19 +69,28 @@ public class ReportsController extends BaseSimpleFormController{
 		this.requestsApprovalManager = requestsApprovalManager;
 	}
 	
-	protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-	{
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		super.initBinder(request,binder);
+		binder.registerCustomEditor(RequestTypes.class, requestTypesBinder);
+		binder.registerCustomEditor(LoginUsers.class, loginUsersBinder);
+		binder.registerCustomEditor(TimestampBinder.class, timestampBinder);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET)  
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
 		LoginUsersRequests loginUsersRequests=new LoginUsersRequests();
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	  
-		return loginUsersRequests;
+		model.addAttribute(loginUsersRequests);
+		return "reports";
 	}
 	
 	//**************************************** referenceData ***********************************************\\
-	protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+	@ModelAttribute("model")	
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) 
 	{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		Map model=new HashMap();
@@ -88,6 +119,7 @@ public class ReportsController extends BaseSimpleFormController{
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
 		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 //		RequestTypes requestTypeObject = null;
+		model.put("empId", loginUsers.getId());
 		if (requestType==null || requestType.isEmpty()) {
 			requestType = null;
 		}
@@ -138,7 +170,7 @@ public class ReportsController extends BaseSimpleFormController{
 		model.put("request_date_to", dateTo);
 		model.put("requestType", requestType);
 		
-		model.put("pageNumber", pageNumber);
+		model.put("page", pageNumber);
 		
 		log.debug("requestType " + requestType);
 		log.debug("request date from " + dateFrom);
@@ -191,9 +223,11 @@ public class ReportsController extends BaseSimpleFormController{
 	}
 	
 	//**************************************** onSubmit ***********************************************\\	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)throws Exception 
-	{	
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,HttpServletResponse response,
+			@Valid @ModelAttribute("loginUsersRequests") LoginUsersRequests command,
+			BindingResult result,
+			SessionStatus sessStatus,Map model) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		LoginUsersRequests loginUsersRequests=(LoginUsersRequests) command;
 
@@ -203,7 +237,6 @@ public class ReportsController extends BaseSimpleFormController{
 		List tableTitle = new ArrayList();
 		List results = new ArrayList();
 		
-		Map model=new HashMap();		
 		
 		String dateFrom = request.getParameter("request_date_from");
 		log.debug("--dateFrom--"+dateFrom);
@@ -425,9 +458,9 @@ public class ReportsController extends BaseSimpleFormController{
 			log.debug("results size " + results.size());
 			log.debug("table title " + tableTitle);
 			
-			Map result = requestsApprovalManager.exportToExcelSheet("requestsApproval.menu.allReports", tableTitle, results);
+			Map resultMap = requestsApprovalManager.exportToExcelSheet("requestsApproval.menu.allReports", tableTitle, results);
 			String title = "EmployeesRequests";
-			HSSFWorkbook workBook = (HSSFWorkbook)result.get("workbook");
+			HSSFWorkbook workBook = (HSSFWorkbook)resultMap.get("workbook");
 			try {
 		    	   response.setHeader("Content-Disposition",
 		    			   "attachment; filename=\""+title+".xls\"");

@@ -15,8 +15,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.usermodel.contrib.HSSFCellUtil;
 import org.apache.poi.hssf.util.Region;
 
-import com._4s_.i18n.model.MyLocale;
-
 public class ExcelCreator {
 	
 	public static final int NORMAL_FONT = 0;

@@ -8,13 +8,16 @@ import java.sql.SQLException;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class DepartmentStringKeyGenerator implements IdentifierGenerator {
 
 	private String fieldName = "location";
 	private String tableSeq = "location_seq";
-    public Serializable generate(SessionImplementor session, Object collection) throws HibernateException {
+	@Override
+    public Serializable generate(SharedSessionContractImplementor session, Object collection) throws HibernateException {
         Connection connection = session.connection();
         PreparedStatement ps = null;
         String result = "";
@@ -59,4 +62,9 @@ public class DepartmentStringKeyGenerator implements IdentifierGenerator {
 
         return result;
     }
+//	@Override
+//	public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 }

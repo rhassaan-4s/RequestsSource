@@ -16,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -37,13 +36,17 @@ import com._4s_.i18n.model.MyLocale;
 @Entity
 @Table (name = "security_users")
 public class User implements  Serializable,Auditable,UserDetails {
+	public User() {
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "userID", sequenceName = "USER_ID")
+	@SequenceGenerator(name = "userID", sequenceName = "USER_ID", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userID")
 	private Long id;
 
@@ -156,7 +159,7 @@ public class User implements  Serializable,Auditable,UserDetails {
 	 * @hibernate.collection-many-to-many class ="com._4s_.security.model.Roles" column="roles" 
 	 */
 	
-	public List getRoles() {
+	public List<Roles> getRoles() {
 		return roles;
 	}
 
@@ -204,8 +207,7 @@ public class User implements  Serializable,Auditable,UserDetails {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return new ToStringBuilder(this).append("username", this.username)
-				.append("password", this.password).toString();
+		return "username: " + this.username + " password: " + this.password;
 	}
 
 	public String getEntityDisplayName() {

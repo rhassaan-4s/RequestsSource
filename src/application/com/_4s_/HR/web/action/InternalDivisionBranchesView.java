@@ -10,9 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
-import sun.util.logging.resources.logging;
-
-import com._4s_.HR.model.Grade;
 import com._4s_.HR.model.HRInternalDivision;
 import com._4s_.HR.model.HRInternalDivisionBranch;
 import com._4s_.HR.service.HRManager;

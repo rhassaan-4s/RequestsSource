@@ -9,14 +9,19 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com._4s_.common.model.Branch;
 import com._4s_.common.model.Department;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.WebBranch;
@@ -27,18 +32,23 @@ import com._4s_.i18n.service.MessageManager;
 import com._4s_.security.model.Roles;
 import com._4s_.security.model.SecurityApplication;
 import com._4s_.security.model.User;
+import com._4s_.security.service.MySecurityManager;
 
+@Controller
+@RequestMapping("/addUserToRole.html")
 public class AddUserToRole extends BaseSimpleFormController {
-
+	@Autowired
 	private MessageManager mgr;
 
 	public MessageManager getMgr() {
 		return mgr;
 	}
-
-	//	public CommunicationManager communicationManager;
-
+	@Autowired
 	public CommonManager commonManager;
+	
+	@Autowired
+	public MySecurityManager securityManager;
+	
 	//	public CommunicationManager getCommunicationManager() {
 	//		return communicationManager;
 	//	}
@@ -50,17 +60,31 @@ public class AddUserToRole extends BaseSimpleFormController {
 	public void setMgr(MessageManager mgr) {
 		this.mgr = mgr;
 	}
+	
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
-	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException error)
-	throws Exception {
+
+	public MySecurityManager getSecurityManager() {
+		return securityManager;
+	}
+
+
+	public void setSecurityManager(MySecurityManager securityManager) {
+		this.securityManager = securityManager;
+	}
+
+
+	@RequestMapping(method = RequestMethod.POST)
+		public String processSubmit(HttpServletRequest request,
+				@Valid@ModelAttribute("user") User command,
+				BindingResult result, Model model) throws Exception {
 		// TODO Auto-generated method stub
 		log
 		.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		User user = (User) command;
-		
+
 		log.debug(user.getEmployee());
-		
+
 		String webBranchSelect = request.getParameter("webBranchSelect");
 		log.debug(" web branch select " + webBranchSelect);
 		if (user.getEmployee()!=null) {
@@ -72,12 +96,13 @@ public class AddUserToRole extends BaseSimpleFormController {
 		}
 
 		String my = request.getParameter("my");
-		String option = request.getParameter("option");
+		String option = request.getParameter("defaultApp");
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>option " + option);
 		if(my == null || my.equals("")){
 			my = option;
 		}
-
-		SecurityApplication application = (SecurityApplication) baseManager.getObject(SecurityApplication.class, new Long(my));
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>my " + my);
+		SecurityApplication application = securityManager.getApplicationById(new Long(my));
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>application " + application);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>my " + my);
 		
@@ -103,12 +128,12 @@ public class AddUserToRole extends BaseSimpleFormController {
 		if(request.getParameter("myDefaultApplication") != null && !request.getParameter("myDefaultApplication").equals("")){
 			user.setDefaultApplication(application);
 		}
-		log.debug("................"+request.getParameter("canSeeAllStore"));
-		if(request.getParameter("canSeeAllStore") != null && !request.getParameter("canSeeAllStore").equals("") && request.getParameter("canSeeAllStore").equals("true")){
-			user.getEmployee().setCanSeeAllStore(true);
-		}else{
-			user.getEmployee().setCanSeeAllStore(false);
-		}
+//		log.debug("................"+request.getParameter("canSeeAllStore"));
+//		if(request.getParameter("canSeeAllStore") != null && !request.getParameter("canSeeAllStore").equals("") && request.getParameter("canSeeAllStore").equals("true")){
+//			user.getEmployee().setCanSeeAllStore(true);
+//		}else{
+//			user.getEmployee().setCanSeeAllStore(false);
+//		}
 		//user.setDefaultApplication(application);
 		if(user.getLanguage() == null){
 			user.setLanguage(myLocale);
@@ -117,11 +142,17 @@ public class AddUserToRole extends BaseSimpleFormController {
 		user.getEmployee().setUser(user);
 
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		return new ModelAndView(new RedirectView("addUserToRole.html?userId="+ userId+"&option="+option));
+		
+		model.addAttribute("userId", userId);
+		model.addAttribute("option", option);
+//		return new ModelAndView(new RedirectView("addUserToRole.html?userId="+ userId+"&option="+option));
+		return "addUserToRole";
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
-	protected Map referenceData(HttpServletRequest request, Object command,
-			Errors error) throws Exception {
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,
+			HttpServletRequest request,@ModelAttribute("user") User command)
+	{
 		// TODO Auto-generated method stub
 		log
 		.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< Start referenceData: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
@@ -129,14 +160,15 @@ public class AddUserToRole extends BaseSimpleFormController {
 
 		String userId=request.getParameter("userId");
 		List applications = new ArrayList();
-		applications = baseManager.getObjectsByParameter(SecurityApplication.class, "is_active", new Boolean(true));
-		List roles = new ArrayList();
+		applications = securityManager.getActiveApplications();
+		Set roles = new HashSet();
 		String option = request.getParameter("option");
 
 		SecurityApplication application;
-
+		log.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@option " + option);
 		if (option == null || option.equals("")) {
 			if(user.getDefaultApplication() == null) {
+			
 				application = (SecurityApplication)(applications.get(0));
 				option = application.getId().toString();
 			}
@@ -146,8 +178,7 @@ public class AddUserToRole extends BaseSimpleFormController {
 			}
 		}
 		else {
-			application = (SecurityApplication) baseManager.getObject(
-					SecurityApplication.class, new Long(option));
+			application = securityManager.getApplicationById(new Long(option));
 		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>application " + application);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>option " + option);
@@ -178,8 +209,8 @@ public class AddUserToRole extends BaseSimpleFormController {
 		return model;
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
-	protected Object formBackingObject(HttpServletRequest request)
-	throws Exception {
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request){
 		// TODO Auto-generated method stub
 		log
 		.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -198,10 +229,10 @@ public class AddUserToRole extends BaseSimpleFormController {
 		while (itr.hasNext()) {
 			log.debug(itr.next());
 		}
-		log
-		
-		.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> end formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		return user;
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> end formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//		return user;
+		model.put("user",user);
+		return "addUserToRole";
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	protected void onBind(HttpServletRequest request, Object command,
@@ -215,8 +246,7 @@ public class AddUserToRole extends BaseSimpleFormController {
 		}
 		Roles role;
 		String option = request.getParameter("option");
-		SecurityApplication application = (SecurityApplication) baseManager.getObject(
-				SecurityApplication.class, new Long(new Long(option)));
+		SecurityApplication application = securityManager.getApplicationById(new Long(option));
 		log.debug(">>>>>>>>>>>>>>>>>>>> application " + application);
 
 		Iterator itr = user.getRoles().iterator();

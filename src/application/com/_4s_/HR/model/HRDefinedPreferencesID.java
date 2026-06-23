@@ -11,6 +11,9 @@ public class HRDefinedPreferencesID implements Serializable {
 	private String pvalue;
 	private String user_type;
 
+	public HRDefinedPreferencesID() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getProperty() {
 		return property;
 	}

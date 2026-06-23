@@ -21,6 +21,9 @@ import com._4s_.common.util.LocaleUtil;
 @Table(name="hr_kinship")
 public class HRKinship implements Auditable,Serializable {
 	
+	public HRKinship() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_kinship_seq")
 	@SequenceGenerator(name="hr_kinship_seq",sequenceName="hr_kinship_seq")
 	private Long id;

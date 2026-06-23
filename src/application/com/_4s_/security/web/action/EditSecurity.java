@@ -4,12 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -80,9 +88,11 @@ public class EditSecurity extends BaseSimpleFormController {
 		log.debug(">>>>>>>>>>>>>>>> end bind");
 	}
 
-	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException arg3)
-			throws Exception {
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("fields") Fields command, BindingResult result,
+			SessionStatus status, Model model) {
+		
 		// TODO Auto-generated method stub
 		Roles selectedRole;
 		String permissionString = request.getParameter("zeft");
@@ -102,7 +112,7 @@ public class EditSecurity extends BaseSimpleFormController {
 		SecurityApplication application = field.getApplication();
 /*		SecurityApplication app = (SecurityApplication) baseManager.getObject(
 				SecurityApplication.class, new Long(7));
-*/		List role = application.getRoles();
+*/		Set<Roles> role = application.getRoles();
 //		List appRole = app.getRoles();
 //		role.addAll(appRole);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..request ");
@@ -131,9 +141,10 @@ public class EditSecurity extends BaseSimpleFormController {
 
 	}
 
-	protected Map referenceData(HttpServletRequest request, Object command,
-			Errors error) throws Exception {
-
+//	protected Map referenceData(HttpServletRequest request, Object command,
+//			Errors error) throws Exception {
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request,@ModelAttribute("field")Fields command) {
 		// TODO Auto-generated method stub
 		String fieldId = request.getParameter("fieldId");
 		Fields field = (Fields) command;
@@ -147,10 +158,10 @@ public class EditSecurity extends BaseSimpleFormController {
 /*		SecurityApplication app = (SecurityApplication) baseManager.getObject(
 				SecurityApplication.class, new Long(7));
 */
-		List role = application.getRoles();
+		Set role = application.getRoles();
 //		List appRole = app.getRoles();
 //		role.addAll(appRole);
-		List roles = role;
+		Set roles = role;
 		Map model = new HashMap();
 		model.put("fieldId", fieldId);
 		model.put("option", y);
@@ -158,8 +169,8 @@ public class EditSecurity extends BaseSimpleFormController {
 		return model;
 	}
 
-	protected Object formBackingObject(HttpServletRequest request)
-			throws Exception {
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request){
 		// TODO Auto-generated method stub
 		log
 				.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -182,8 +193,8 @@ public class EditSecurity extends BaseSimpleFormController {
 		} else {
 			field = new Fields();
 		}
-
-		return field;
+		model.addAttribute("field", field);
+		return "editSecurity";
 	}
 
 	// function recursive(Fields field){

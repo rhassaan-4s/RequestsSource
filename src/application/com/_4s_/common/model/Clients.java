@@ -22,6 +22,21 @@ public class Clients implements Serializable,Auditable {
 	private String clientName;
 	
 	private String portNo;
+	
+	private String schema;
+
+	
+	public String getSchema() {
+		return schema;
+	}
+
+	public void setSchema(String schema) {
+		this.schema = schema;
+	}
+
+	public Clients() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public Long getId() {
 		return id;

@@ -107,14 +107,10 @@ function printthis(which) {
 									<fmt:message
 										key="requestsApproval.header.attendanceVacationReport" /></td>
 							</tr>
-
 							<tr>
 								<td nowrap class="formBodControl"><abc:i18n
 										property="requestsApproval.caption.userCode" /> <fmt:message
 										key="requestsApproval.caption.userCode" /></td>
-								<!-- <td  class="formBod"> 
-								<input type="text" name="empCode" id="empCode" value="${empCode}"  />
-							</td>-->
 								<td class="formBod"><abc:autocomplete inputId="empCode"
 										inputName="empCode" table="login_users"
 										firstKey="commons.caption.code"
@@ -123,13 +119,6 @@ function printthis(which) {
 										valueId="" /></td>
 
 
-								<!-- <td nowrap class="formBodControl" >
-								<abc:i18n property="requestsApproval.caption.userName"/>
-								<fmt:message key="requestsApproval.caption.userName"/>
-							</td>						
-							<td  class="formBod"> 
-								<input type="text" name="userName" id="userName" value="${emp.firstName}" readonly="readonly" />
-							</td> -->
 							</tr>
 
 
@@ -256,10 +245,9 @@ function printthis(which) {
 
 							</tr>
 
-
 							<c:forEach varStatus="loop" var="record" items="${days1}">
 								<tr height="30">
-									<td class="helpBod" nowrap>${record.empCode }</td>
+									<td class="helpBod" nowrap>${record.empCode}</td>
 									<td class="helpBod" nowrap>${record.fName}</td>
 									<td class="helpBod" nowrap><_4s_:formatMiladiDate
 											value="${record.fr_date }" /></td>

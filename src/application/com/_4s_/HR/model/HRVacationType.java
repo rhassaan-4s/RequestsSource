@@ -18,7 +18,6 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="hr_vacation_type")
 public class HRVacationType implements Auditable,Serializable {
-	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_vacation_type_seq")
 	@SequenceGenerator(name="hr_vacation_type_seq",sequenceName="hr_vacation_type_seq")
 	private Long id;

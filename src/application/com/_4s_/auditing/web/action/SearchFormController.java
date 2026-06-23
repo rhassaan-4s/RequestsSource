@@ -10,12 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 
 import com._4s_.auditing.model.AuditLogRecord;
-import com._4s_.auditing.model.AuditSearchCommand;
 import com._4s_.auditing.model.Auditable;
 import com._4s_.auditing.model.ClassName;
 import com._4s_.auditing.service.AuditLogManager;
 import com._4s_.common.web.action.BaseController;
-import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.security.model.User;
 
 public class SearchFormController extends BaseController {

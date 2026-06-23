@@ -60,9 +60,8 @@ public class BiCalendarDateBinder extends PropertyEditorSupport implements
 			mCalDate.setCalendarType(MultiCalendarDate.MILADI);
 			mCalDate.setDateString(text);
 			date = mCalDate.getDate();
+			log.debug(date);
 			setValue(date);
-			
-
 		} else {
 			log.debug(">>>>>>> set as text else");
 			setValue(null);

@@ -9,10 +9,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.model.Country;
 import com._4s_.common.web.action.BaseSimpleFormController;
@@ -79,8 +83,8 @@ public class AddNewLocale extends BaseSimpleFormController {
 		return new ModelAndView();
 	}
 
-	protected Map referenceData(HttpServletRequest request, Object command,
-			Errors error) throws Exception {
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) {
 		// TODO Auto-generated method stub
 		Map model = new HashMap();
 		List countries = baseManager.getObjects(Country.class);
@@ -90,8 +94,8 @@ public class AddNewLocale extends BaseSimpleFormController {
 		return model;
 	}
 
-	protected Object formBackingObject(HttpServletRequest request)
-			throws Exception {
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request){
 		// TODO Auto-generated method stub
 		log.debug(">>>>>>>>>>>>>>>.start formBackingObject()>>>>>>>>>>>");
 		MyLocale myLocale;
@@ -109,7 +113,8 @@ public class AddNewLocale extends BaseSimpleFormController {
 			
 		}
 		log.debug(">>>>>>>>>>>>>>>.end formBackingObject()>>>>>>>>>>>");
-		return myLocale;
+		model.addAttribute("myLocale", myLocale);
+		return "addNewLocale";
 	}
 
 }

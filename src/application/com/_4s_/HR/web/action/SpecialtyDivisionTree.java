@@ -1,9 +1,6 @@
 package com._4s_.HR.web.action;
 import java.math.BigInteger;
-import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,12 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import com._4s_.HR.model.HRInternalDivision;
 import com._4s_.HR.model.HRSpecialtyDivision;
 import com._4s_.HR.model.HRSpecialtyLevel;
-import com._4s_.HR.model.HRSpecialtyLevel;
-import com._4s_.HR.service.HRManager;
-import com._4s_.common.web.action.BaseController;
 //import com._4s_.gl.model.Account;
 //import com._4s_.gl.model.AccountLevel;
 //import com._4s_.gl.model.AnalysisCategoryAccount;

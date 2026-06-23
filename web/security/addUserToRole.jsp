@@ -130,8 +130,12 @@
 
 	<tr>
 		<td colspan="2">
-			<form id="fields" name="fields" method="POST"
-				action="<c:url value="/security/addUserToRole.html"/>">
+		
+		<form:form method="POST"
+					action="/Requests/security/addUserToRole.html"
+					modelAttribute="user">
+					
+			
 				<input type="hidden" size=20 maxlength=40 name="option"
 					value="${option}" /> <br /> <br /> <br />
 				<table rules="all" align="center" width="70%" class="sofT">
@@ -193,9 +197,9 @@
 								property="security.caption.application" /> <fmt:message
 								key="security.caption.application" /></td>
 
-						<td class="formBodControl" ><select name="zeft"
+						<td class="formBodControl" ><select name="defaultApp"
 							onchange="return reload();">
-								<c:forEach items="${applications}" var="app" varStatus="loop">
+								<c:forEach items="${model.applications}" var="app" varStatus="loop">
 									<option value="${app.id}" ${option==app.id?' selected' : ''}>${app.name}</option>
 
 								</c:forEach>
@@ -207,7 +211,7 @@
 
 						<td class="formBodControl" ><select
 							name="userRoles" size="3" multiple>
-								<c:forEach items="${roles}" var="role">
+								<c:forEach items="${model.roles}" var="role">
 
 									<c:if test="${role.id!=6}">
 										<!-- Hiding 4s Administration  -->
@@ -232,7 +236,7 @@
 						<td class="formBodControl"><select name="webBranchSelect">
 						<option value=""><fmt:message
 							key="commons.caption.select" /></option>
-								<c:forEach items="${branches}" var="branch" varStatus="loop">
+								<c:forEach items="${model.branches}" var="branch" varStatus="loop">
 									<option value="${branch.branch}" ${user.employee.webBranch.branch==branch.branch?' selected' : ''}>${branch.descr}</option>
 
 								</c:forEach>
@@ -258,7 +262,7 @@
 					</tr>
 
 				</table>
-			</form>
+			</form:form>
 		</td>
 	</tr>
 </table>

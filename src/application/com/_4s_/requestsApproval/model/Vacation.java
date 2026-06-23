@@ -18,7 +18,6 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com._4s_.auditing.model.Auditable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-//import javax.persistence.SequenceGenerator;
 
 
 
@@ -29,6 +28,9 @@ public class Vacation implements Auditable,Serializable  {
 //	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="vacation_seq")
 //	@SequenceGenerator(name="vacation_seq",sequenceName="vacation_seq")
 	
+	public Vacation() {
+		// TODO Auto-generated constructor stub
+	}
 	/**
 	 * 
 	 */

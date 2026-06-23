@@ -48,7 +48,7 @@
 			var link = 'timeAttendanceReport.html?groupId=' + groupId;
 			window.location.href = link;
 		}
-		function fillEmp(data) {
+	/*	function fillEmp(data) {
 			var el;
 			el = document.getElementById("loginUser");
 
@@ -56,7 +56,7 @@
 
 			DWRUtil.addOptions(el, data, "id", "name");
 		}
-		
+		*/
 		
 		
 		function exportExcel() {
@@ -220,7 +220,7 @@
 										property="commons.caption.fromDate" /> <fmt:message
 										key="commons.caption.fromDate" /></td>
 								<c:choose>
-									<c:when test="${fromDate ==null || fromDate==''}">
+									<c:when test="${model.fromDate ==null || model.fromDate==''}">
 										<td class="formBodControl"><input type="text"
 											class="calendar" readonly="readonly" autocomplete="off"
 											name="fromDate" id="fromDate" value="${firstDay}" /></td>

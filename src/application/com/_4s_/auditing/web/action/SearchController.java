@@ -9,24 +9,40 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
+import com._4s_.attendance.web.binders.EmpBasicBinder;
 import com._4s_.auditing.model.AuditLogRecord;
 import com._4s_.auditing.model.AuditSearchCommand;
 import com._4s_.auditing.model.Auditable;
 import com._4s_.auditing.model.ClassName;
-
 import com._4s_.auditing.service.AuditLogManager;
-import com._4s_.common.util.DateUtil;
-import com._4s_.common.web.action.BaseController;
 import com._4s_.common.web.action.BaseSimpleFormController;
+import com._4s_.common.web.binders.DomainObjectBinder;
+import com._4s_.common.web.binders.TimestampBinder;
 import com._4s_.security.model.User;
+import com._4s_.security.web.command.ChangePasswordCommand;
 
+@Controller
+@RequestMapping("/searchController.html")
 public class SearchController extends BaseSimpleFormController {
+	@Autowired
 	private AuditLogManager mgr = null;
 
 	public AuditLogManager getMgr() {
@@ -37,11 +53,28 @@ public class SearchController extends BaseSimpleFormController {
 		this.mgr = mgr;
 	}
 
-	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException error)
-			throws Exception {
+	@Autowired
+	@Qualifier("timestampBinder")
+	private TimestampBinder timestampBinder;
+	
+	@Autowired
+	@Qualifier("userBinder")
+	private DomainObjectBinder userBinder;
+	
+	@Override
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		super.initBinder(request,binder);
+		binder.registerCustomEditor(Date.class, timestampBinder);
+		binder.registerCustomEditor(User.class, userBinder);
+	}
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("cmd") AuditSearchCommand command, BindingResult result,
+			SessionStatus status, Model model) {
 		// TODO Auto-generated method stub
-		log.debug(">>>>>>>>>>>>>>>>>>start onSubmit()..........");
+		log.debug(">>>>>>>>>>>>>>>>>>start submission..........");
 
 		AuditSearchCommand cmd = (AuditSearchCommand) command;
 		Long userId = null;
@@ -71,15 +104,23 @@ public class SearchController extends BaseSimpleFormController {
 		if ((classDetail != null && !classDetail.equals(""))
 				&& !classDetail.equals("0")) {
 			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.not equal null");
-			o = (Auditable) baseManager.getObject(Class.forName(s), new Long(
-					classDetail));
+			try {
+				o = (Auditable) baseManager.getObject(Class.forName(s), new Long(
+						classDetail));
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			display = o.getEntityDisplayName();
 		}
 		List audits = mgr.search(userId, action, fromDate, toDate, s, display);
 
 		audits = adjustAudits(audits);
 
-		log.debug(">...............end onSubmit()...............");
+		log.debug(">...............end submission...............");
 		return new ModelAndView("searchForm", "search", audits);
 	}
 
@@ -115,8 +156,8 @@ public class SearchController extends BaseSimpleFormController {
 		return audits;
 	}
 
-	protected Map referenceData(HttpServletRequest request, Object command,
-			Errors error) throws Exception {
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) {
 		// TODO Auto-generated method stub
 		List users = new ArrayList();
 		List classNames = new ArrayList();
@@ -135,15 +176,16 @@ public class SearchController extends BaseSimpleFormController {
 		return model;
 	}
 
-	protected Object formBackingObject(HttpServletRequest request)
-			throws Exception {
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request){
 		// TODO Auto-generated method stub
 		log
 				.debug(">>>>>>>>>>>>>>>>.start formBackingObject>>>>>>>>>>>>>>>>>>>");
 		AuditSearchCommand cmd = new AuditSearchCommand();
 
 		log.debug(">>>>>>>>>>>>>>>end formBackingObject>>>>>>>>>>>>>>>>>>>>>>");
-		return cmd;
+		model.addAttribute("cmd", cmd);
+		return "searchForm";
 
 	}
 

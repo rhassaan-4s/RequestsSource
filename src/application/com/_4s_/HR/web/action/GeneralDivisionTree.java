@@ -1,8 +1,6 @@
 package com._4s_.HR.web.action;
 
-import java.math.BigInteger;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,11 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import com._4s_.HR.model.HRInternalDivision;
-import com._4s_.HR.model.HRInternalLevel;
 import com._4s_.HR.service.HRManager;
 import com._4s_.common.web.action.BaseController;
-import com.jenkov.prizetags.tree.itf.ITree;
 
 public class GeneralDivisionTree  extends BaseController {
 

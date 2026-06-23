@@ -6,13 +6,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -26,28 +25,63 @@ import com._4s_.attendance.model.QualificationSpeciality;
 import com._4s_.attendance.model.Religion;
 import com._4s_.attendance.model.Title;
 import com._4s_.auditing.model.Auditable;
+import com._4s_.common.web.validators.Mandatory;
+import com._4s_.common.web.validators.MandatoryDate;
+import com._4s_.common.web.validators.Unique;
 
 @Entity
 @Table (name = "EMPBASIC")
-public class EmpBasic extends EmpBasicParent implements Serializable,Auditable {
+//<<<<<<< HEAD
+//public class EmpBasic implements Serializable,Auditable {
+	
+	/**
+	 * 
+	 */
+	//private static final long serialVersionUID = 9030836215327821538L;
+//	@Id
+	//@GenericGenerator(name="empBasic_seq",strategy="com._4s_.attendance.dao.EmpBasicStringKeyGenerator")
+	//@GeneratedValue(generator="empBasic_seq")
+	//private String empCode;
+	//@Mandatory(value=EmpBasic.class,property="empName")
+	//@Unique(value=EmpBasic.class,property = "empName")
+//=======
+public class EmpBasic  implements Serializable,Auditable {//extends EmpBasicParent
+	@Id
+	@GenericGenerator(name="empBasic_seq",strategy="com._4s_.attendance.dao.EmpBasicStringKeyGenerator")
+	@GeneratedValue(generator="empBasic_seq")
+	private String empCode;
+	@Mandatory(value=EmpBasic.class,property="empName")
+	@Unique(value=EmpBasic.class,property = "empName")
 	private String empName;
+	@Mandatory(value=EmpBasic.class,property="e_emp_name")
+	@Unique(value=EmpBasic.class,property = "e_emp_name")
 	private String e_emp_name;
 	private String permenant="T";
 	@ManyToOne
 	@JoinColumn (name="title")
 	private Title title;
+//	@Mandatory(value=EmpBasic.class,property="address")
 	private String address;
 	private String eAddress;
 	private String should_sign="1";
-	
+
+//	@Mandatory(value=EmpBasic.class,property="natnl_no")
+	@Unique(value=EmpBasic.class,property = "natnl_no")
+	private String natnl_no;
+
 //	@Temporal(TemporalType.DATE)
+//	@MandatoryDate(value=EmpBasic.class,property="emplDate")
 	private Timestamp emplDate;
 //	@Temporal(TemporalType.DATE)
-	
+//	@MandatoryDate(value=EmpBasic.class,property="birthdate")
+	private Timestamp birthdate;
+
 //	@Temporal(TemporalType.DATE)
 	private Timestamp job_join;
 	private String phone;
 	private String mobile;
+	
+	private String sex;
 	
 //	@Temporal(TemporalType.DATE)
 	private Timestamp end_serv;
@@ -57,13 +91,13 @@ public class EmpBasic extends EmpBasicParent implements Serializable,Auditable {
 	@ManyToOne
 	@JoinColumn (name="martial")
 	private MaritalStatus maritalStatus;
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn (name="location")
 	private AttendanceDepartment department;
-	@ManyToOne
+	@ManyToOne 
 	@JoinColumn (name="qual_specific")
 	private QualificationSpeciality qual_specific;
-	@ManyToOne
+	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn (name="qual")
 	private Qualification qual;
 	@Column(name="qual_year")
@@ -95,6 +129,25 @@ public class EmpBasic extends EmpBasicParent implements Serializable,Auditable {
 	public Long getId() {
 		return null;
 	}
+
+	public Date getBirthdate() {
+		return birthdate;
+	}
+
+
+
+	public void setBirthdate(Timestamp birthdate) {
+		this.birthdate = birthdate;
+	}
+
+
+
+//	public String getEmpCode() {
+//		return empCode;
+//	}
+//	public void setEmpCode(String empCode) {
+//		this.empCode = empCode;
+//	}
 
 	public String getEmpName() {
 		return empName;
@@ -373,6 +426,31 @@ public class EmpBasic extends EmpBasicParent implements Serializable,Auditable {
 
 	public void setCurrency(String currency) {
 		this.currency = currency;
+	}
+
+	
+	public String getEmpCode() {
+		return empCode;
+	}
+
+	public void setEmpCode(String empCode) {
+		this.empCode = empCode;
+	}
+
+	public String getNatnl_no() {
+		return natnl_no;
+	}
+
+	public void setNatnl_no(String natnl_no) {
+		this.natnl_no = natnl_no;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
 	}
 
 	public String toString() {

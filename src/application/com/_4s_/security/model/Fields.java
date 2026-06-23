@@ -23,6 +23,10 @@ import com._4s_.auditing.model.Auditable;
 @Entity
 @Table(name = "security_fields")
 public class Fields implements Serializable, Auditable {
+	public Fields() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id
 	private Long id;
 

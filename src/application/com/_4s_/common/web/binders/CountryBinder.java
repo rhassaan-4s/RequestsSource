@@ -7,8 +7,9 @@ import org.apache.commons.logging.LogFactory;
 
 import com._4s_.common.model.Country;
 import com._4s_.common.service.BaseManager;
+import com._4s_.requestsApproval.model.Vacation;
 
-public class CountryBinder extends PropertyEditorSupport {
+public class CountryBinder extends PropertyEditorSupport implements BaseBinder{
 	private final Log log = LogFactory.getLog(getClass());
 
 	BaseManager baseManager;
@@ -19,6 +20,11 @@ public class CountryBinder extends PropertyEditorSupport {
 
 	public void setBaseManager(BaseManager baseManager) {
 		this.baseManager = baseManager;
+	}
+	
+	public Class getBindedClass() {
+		// TODO Auto-generated method stub
+		return Country.class;
 	}
 
 	public String getAsText() {

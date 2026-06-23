@@ -5,8 +5,8 @@
 	
 </script>
 
-<form id="vacationForm" name="vacationForm" method="POST"
-	action="<c:url value="/attendance/vacationForm.html"/>">
+<form:form method="POST" modelAttribute="vacation"
+	action="/Requests/attendance/vacationForm.html">
 
 <input type="hidden" id="vacationCode" name="vacationCode"
 			value="${vacationCode}" />
@@ -35,26 +35,6 @@
 							property="attendance.header.vacation" /> <fmt:message
 							key="attendance.header.vacation" /></td>
 				</tr>
-
-			<!-- 	<tr>
-
-					<c:set var="check" value="" />
-					<c:if test="${code!=null && code!=''}">
-						<c:set var="check" value="disabled" />
-					</c:if>
-
-						<td nowrap class="formReq" width="30%"><abc:i18n
-								property="attendance.caption.vacationCode" /> <fmt:message
-								key="attendance.caption.vacationCode" /></td>
-
-
-						<td class="formBodControl">
-								<input size="8" maxlength="8" type="text"
-									value="${vacation.vacation}"
-									readonly="readonly" />
-							</td>
-				</tr>
- -->
 
 				<tr>
 
@@ -133,7 +113,5 @@
 		</tr>
 
 	</table>
-</form>
-
-
+</form:form>
 <%@ include file="/web/common/includes/footer.jsp"%>

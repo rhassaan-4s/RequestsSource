@@ -21,6 +21,9 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="hr_employee_vacation_decrease")
 public class HREmployeeVacationDecrease implements Auditable,Serializable {
 	
+	public HREmployeeVacationDecrease() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_emp_vac_decrease_seq")
 	@SequenceGenerator(name="hr_emp_vac_decrease_seq",sequenceName="hr_emp_vac_decrease_seq")
 	private Long id;

@@ -115,7 +115,7 @@ $(ele).parent().remove();
 				    <div id="group_div">
 				    <div class="group_choose">
 				    <select name="group1" id="group1" >														
-						<c:forEach items="${groups}" var="group">
+						<c:forEach items="${model.groups}" var="group">
 							<option value="${group.id}">${group.title}</option>
 						</c:forEach>
 					</select>
@@ -136,7 +136,7 @@ $(ele).parent().remove();
 				
 				<td class="formBodControl" width="70%">						
 					<select name="request" class="multi"id="request" multiple="multiple">
-						<c:forEach items="${requests}" var="request">
+						<c:forEach items="${model.requests}" var="request">
 							<option value="${request.id}">${request.description}</option>
 						</c:forEach>
 					</select>	
@@ -151,7 +151,7 @@ $(ele).parent().remove();
 				
 				<td class="formBodControl" width="70%">						
 					<select name="loginUser" class="multi" id="loginUser" multiple="multiple">													
-						<c:forEach items="${loginUsers}" var="loginUser">
+						<c:forEach items="${model.loginUsers}" var="loginUser">
 							<option value="${loginUser.id}">${loginUser.name}</option>
 						</c:forEach>
 					</select>	

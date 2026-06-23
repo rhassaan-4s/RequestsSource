@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -15,14 +16,15 @@ import com._4s_.security.service.MySecurityManager;
 public class ValidateUser implements Validator {
 	protected final Log log = LogFactory.getLog(getClass());
 
-	private MySecurityManager mgr = null;
+	@Autowired
+	private MySecurityManager securityManager = null;
 
-	public MySecurityManager getMgr() {
-		return mgr;
+	public MySecurityManager getSecurityManager() {
+		return securityManager;
 	}
 
-	public void setMgr(MySecurityManager mgr) {
-		this.mgr = mgr;
+	public void setSecurityManager(MySecurityManager securityManager) {
+		this.securityManager = securityManager;
 	}
 
 	public boolean supports(Class clazz) {
@@ -138,7 +140,7 @@ public class ValidateUser implements Validator {
 
 	public void validateDuplicate(User user, Errors errors)
 		{		
-			List duplicatedUsers=mgr.getObjectsByParameter(User.class,"username",user.getUsername());
+			List duplicatedUsers=securityManager.getObjectsByParameter(User.class,"username",user.getUsername());
 			if (duplicatedUsers.size() >0){
 				if(user.getId() == null){
 					errors.rejectValue("username","commons.errors.duplicateUser","This username already exists");
@@ -170,7 +172,7 @@ public class ValidateUser implements Validator {
 	
 	public void validateDuplicateCode(User user, Errors errors)
 	{
-		List duplicatedCodes=mgr.getObjectsByParameter(Employee.class,"employeeCode",user.getEmployee().getEmployeeCode());
+		List duplicatedCodes=securityManager.getObjectsByParameter(Employee.class,"employeeCode",user.getEmployee().getEmployeeCode());
 		for(int i=0;i<duplicatedCodes.size();i++)
 		{
 			Employee duplicatedEmp=(Employee) duplicatedCodes.get(i);
@@ -185,7 +187,7 @@ public class ValidateUser implements Validator {
 	
 	public void validateDuplicateAttendanceCode(User user, Errors errors)
 	{
-		List duplicatedCodes=mgr.getObjectsByParameter(Employee.class,"attendanceCode",user.getEmployee().getAttendanceCode());
+		List duplicatedCodes=securityManager.getObjectsByParameter(Employee.class,"attendanceCode",user.getEmployee().getAttendanceCode());
 		for(int i=0;i<duplicatedCodes.size();i++)
 		{
 			Employee duplicatedEmp=(Employee) duplicatedCodes.get(i);

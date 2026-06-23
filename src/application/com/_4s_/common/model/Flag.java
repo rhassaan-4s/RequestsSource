@@ -89,11 +89,3 @@ public class Flag implements Serializable, Auditable{
 	}
 
 }
-
-
-
-
-	
-
-
-

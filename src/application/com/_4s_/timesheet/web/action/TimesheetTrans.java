@@ -14,8 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
@@ -27,8 +29,10 @@ import com._4s_.timesheet.model.TimesheetSpecs;
 import com._4s_.timesheet.model.TimesheetTransactionParts;
 import com._4s_.timesheet.service.TimesheetManager;
 
-public class TimesheetTrans implements Controller{
+@Controller
+public class TimesheetTrans {// implements Controller{
 	protected final Log log = LogFactory.getLog(getClass());
+	@Autowired
 	TimesheetManager timesheetManager;
 	List<String> fields=new ArrayList<String>();
 	
@@ -40,7 +44,7 @@ public class TimesheetTrans implements Controller{
 		this.timesheetManager = timesheetManager;
 	}
 
-
+	@RequestMapping("/timesheetTrans.html")
 	public ModelAndView handleRequest(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub

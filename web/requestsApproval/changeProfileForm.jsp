@@ -16,8 +16,6 @@
 				key="requestsApproval.loginUsersRequests.saveSuccess" />
  </font>
  </c:if>
-<form id="accessLevelsForm" name="accessLevelsForm" method="POST"
-	action="<c:url value="/requestsApproval/changeProfileForm.html"/>">
 	
 <table width="90%" border="0" cellspacing="0" cellpadding="0"
 	style="padding-right: 10px">
@@ -25,17 +23,13 @@
 	<tr>
 		<td colspan="2">
 
-		<spring:bind path="accessLevel.*">
-			<c:if test="${not empty status.errorMessages}">
-				<div><c:forEach var="error" items="${status.errorMessages}">
-					<font color="red"> <c:out value="${error}" escapeXml="false" /><br />
-					</font>
-				  </c:forEach>
-				</div>
-			</c:if>
-		</spring:bind></td>
+		<h2 style="color: red;">
+					<form:errors path="accessLevel.*" />
+		</h2>
 	</tr>
-
+<tr><td>
+	<form:form method="POST" modelAttribute="accessLevel"
+					action="/Requests/requestsApproval/changeProfileForm.html">
 	<table align="center" width="66%" class="sofT">
 		<tr id="head_1_ep">
 			<td class="helpTitle" colspan="3" nowrap><abc:i18n
@@ -74,9 +68,10 @@
 		</tr>
 
 	</table>
-
+</form:form>
+</td>
+</tr>
 
 
 </table>
-</form>
 <%@ include file="/web/common/includes/footer.jsp"%>

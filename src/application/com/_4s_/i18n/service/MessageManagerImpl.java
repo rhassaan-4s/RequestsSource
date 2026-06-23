@@ -2,20 +2,29 @@ package com._4s_.i18n.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com._4s_.common.service.BaseManagerImpl;
 import com._4s_.i18n.dao.MessageDAO;
 import com._4s_.i18n.model.Key;
 import com._4s_.i18n.model.MyLocale;
 import com._4s_.i18n.model.MyMessage;
 
+@Service("messageManager")
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class MessageManagerImpl extends BaseManagerImpl implements MessageManager{
-	private MessageDAO messageDAO = null;
+	@Autowired
+	private MessageDAO messageDAO;
 
 	public MessageDAO getMessageDAO() {
 		return messageDAO;
 	}
 
 	public void setMessageDAO(MessageDAO messageDAO) {
+		log.debug("test " + messageDAO);
 		this.messageDAO = messageDAO;
 	}
 

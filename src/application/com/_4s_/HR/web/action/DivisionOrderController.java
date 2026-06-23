@@ -1,24 +1,21 @@
 package com._4s_.HR.web.action;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.HR.model.HRInternalDivision;
-import com._4s_.HR.model.HRInternalLevel;
 import com._4s_.HR.service.HRManager;
 import com._4s_.HR.web.command.ChildrenOrderCommand;
 import com._4s_.common.web.action.BaseSimpleFormController;
@@ -37,8 +34,8 @@ public class DivisionOrderController  extends BaseSimpleFormController {
 		}
 
 		
-		protected Object formBackingObject(HttpServletRequest request) throws ServletException 
-		{
+		@RequestMapping(method = RequestMethod.GET)  
+		public String initForm(ModelMap model,HttpServletRequest request) {
 			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
 			HRInternalDivision result = null;
@@ -60,10 +57,11 @@ public class DivisionOrderController  extends BaseSimpleFormController {
 				
 			}
 			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		   return orderCommand;
+			model.addAttribute(orderCommand);
+		   return "divisionOrder";
 		}
 	//**************************************** referenceData ***********************************************\\
-		protected Map referenceData(HttpServletRequest request,Object command,Errors errors)throws ServletException
+		@ModelAttribute("model")	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) 
 		{
 			log.debug(">>>>>>>>>>>>>>>>>>>>>>> Starting referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		   //	HRInternalDivision result=(HRInternalDivision)command;
@@ -156,7 +154,7 @@ public class DivisionOrderController  extends BaseSimpleFormController {
 				
 			}
 			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> end onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-			return new ModelAndView(new RedirectView(getSuccessView()));
+			return new ModelAndView(new RedirectView("internalDivisionTree.html"));
 		}
 		
 

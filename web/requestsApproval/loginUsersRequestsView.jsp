@@ -3,9 +3,6 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <abc:security property="106"/>
 
-<script type='text/javascript' src='/Requests/dwr/interface/requestsDwr.js'></script>
-<script type='text/javascript' src='/Requests/dwr/engine.js'></script>
-
 <script type="text/javascript">
 function searchForm (){
 	//alert('from---'+document.getElementById("from").value);
@@ -33,51 +30,97 @@ function printthis(which) {
 	tds.item(i).style.display = "block";
 }
 
-function getRequestStatus(id){
-	//alert('entered');
-	//alert('--id value---'+id.id);
-	var req_id =id.id;
-		//document.getElementById('empRequestTypeId').value;
-	//alert('req_id= '+req_id);
-	requestsDwr.getRequestStatus(returnedData,req_id);	
-}
+function getRequestStatus(id,emp){
+	// for client name 
+		var id = id.id;
+		var reqId = {reqId: id,empId: emp};
 
-function returnedData(data){
-	//alert('entered after');
-	if (data!=null){
-		 //alert('not null');
-		var st='';
-		var result='';
-		 //<form action="file.php" method="post" target="foo" onSubmit="window.open('', 'foo', 'width=450,height=300,status=yes,resizable=yes,scrollbars=yes')">
-		// alert('---- i< data.length---'+data.length);
-		for ( var i= 0; i < data.length; i++) {
-			 //alert('---for- i< data.length---'+data.length);
-			var ob=data[i];
-			if(ob.approval==1){
-				st='موافق';
-			}else if(ob.approval==0){
-				st='مرفوض\n سبب الرفض: '+ob.note;
+		$.ajax({
+			type : "GET",
+			url : "../requestsApproval/ajax/requestStatus",
+			datatype : "application/json; charset=utf-8",
+			contentType: "application/json; charset=utf-8",
+			data : reqId,
+
+			success : function(data) {
+
+				$.each(data, function(key, value) {
+					//alert(key);
+					//alert(value);
+					if (key == 'Response') {
+						var st = '';
+						var result = '';
+						$.each(value, function(k, v) {
+							var ob = v;
+							if (ob.approval == 1) {
+								st = 'موافق';
+							} else if (ob.approval == 0) {
+								st = 'مرفوض\n سبب الرفض: ' + ob.note;
+							}
+							result += "\n" + ob.level_id + " . "
+									+ ob.user_id + " -- " + st;
+
+							//alert(ob.user_id.name + "--" + st);
+						});
+						//alert('-----out----');
+						if (st == '' && result == '') {
+							result = 'لم يتم الموافقه عليه';
+						}
+						alert(result);
+						document.getElementById("resultList").value = result;
+					}
+				});
 			}
-			result +="\n"+ob.level_id.order+" . "+ob.user_id.name+" -- "+st;
-			
-			//alert(ob.user_id.name+"--"+st);
-		}
-			//alert('-----out----');
-		if(st=='' && result==''){
-			result='لم يتم الموافقه عليه';
-		}
-		alert(result);
-		document.getElementById("resultList").value=result;
-	 }
-}
+		});
+	}
 
-function exportExcel() {
-	var fromDate = document.getElementById('request_date_from').value;
-	var toDate = document.getElementById('request_date_to').value;
-	var requestId = document.getElementById('request_id').value;
-	var link = '/Requests/requestsApproval/loginUsersRequestsView.html?export=true&dateFrom='+fromDate+'&dateTo='+toDate+'&requestType='+requestId;
-	window.open(link);
-}
+	function getRequestStatusOLD(id) {
+		//alert('entered');
+		//alert('--id value---'+id.id);
+		var req_id = id.id;
+		//document.getElementById('empRequestTypeId').value;
+		//alert('req_id= '+req_id);
+		requestsDwr.getRequestStatus(returnedData, req_id);
+	}
+
+	function returnedData(data) {
+		//alert('entered after');
+		if (data != null) {
+			//alert('not null');
+			var st = '';
+			var result = '';
+			//<form action="file.php" method="post" target="foo" onSubmit="window.open('', 'foo', 'width=450,height=300,status=yes,resizable=yes,scrollbars=yes')">
+			// alert('---- i< data.length---'+data.length);
+			for (var i = 0; i < data.length; i++) {
+				//alert('---for- i< data.length---'+data.length);
+				var ob = data[i];
+				if (ob.approval == 1) {
+					st = 'موافق';
+				} else if (ob.approval == 0) {
+					st = 'مرفوض\n سبب الرفض: ' + ob.note;
+				}
+				result += "\n" + ob.level_id.order + " . " + ob.user_id.name
+						+ " -- " + st;
+
+				//alert(ob.user_id.name+"--"+st);
+			}
+			//alert('-----out----');
+			if (st == '' && result == '') {
+				result = 'لم يتم الموافقه عليه';
+			}
+			alert(result);
+			document.getElementById("resultList").value = result;
+		}
+	}
+
+	function exportExcel() {
+		var fromDate = document.getElementById('request_date_from').value;
+		var toDate = document.getElementById('request_date_to').value;
+		var requestId = document.getElementById('request_id').value;
+		var link = '/Requests/requestsApproval/loginUsersRequestsView.html?export=true&dateFrom='
+				+ fromDate + '&dateTo=' + toDate + '&requestType=' + requestId;
+		window.open(link);
+	}
 </script>
 <script type="text/javascript">
 
@@ -110,9 +153,14 @@ function printSelection(node){
 </style> 
 
 <table width="90%" border="0" cellspacing="0" cellpadding="0" style="padding-right:10px ">
-   <form id="loginUsersRequestsView" name="loginUsersRequestsView" method="POST"  action="<c:url value="/requestsApproval/loginUsersRequestsView.html"/>">
+   
+   <form:form method="POST"
+					action="/Requests/requestsApproval/loginUsersRequestsView.html"
+					modelAttribute="loginUsersRequests">
 		 <input type="hidden"  id="empRequestTypeId" name="empRequestTypeId" value="${empRequestTypeId }"/>
 		 <input type="hidden"  id="resultList" name="resultList" value=""/>
+		 <input type="hidden"  id="empId" name="empId" value="${model.empId}"/>
+		 <input type="hidden" name="${_csrf.parameterName}" id="token" value="${_csrf.token}"/>
  
 		<table border=0 cellspacing=1 cellpadding=0 id="ep" style="margin-right:40px">
 			<tr>
@@ -178,7 +226,6 @@ function printSelection(node){
 					</table>			
 				</td>
 			</tr>
-
 			<tr>
 				<td>
 				<div id="result">
@@ -233,10 +280,11 @@ function printSelection(node){
 							<td class="helpHed">
 							</td>
 						</tr>
-					<c:forEach items="${results}" var="record">
+						
+					<c:forEach var="record" items="${records.results}">
 						<tr height=20 bgcolor="#F8F8F8"> 							        
 							<td  nowrap>
-						         ${record.empCode }
+						         ${record.empCode}
 							</td>
 							  
 							<td  nowrap>
@@ -246,7 +294,7 @@ function printSelection(node){
 								${record.requestNumber}
 							</td>
 							<c:choose>
-							<c:when test="${record.request_id.id==1 && record.vacation=='999'}">
+							<c:when test="${record.request_type==1 && record.vacation=='999'}">
 							<td  nowrap>
 						         مأموريه
 							</td>
@@ -324,7 +372,7 @@ function printSelection(node){
 									<c:choose>
 								<c:when test="${record.approved==0}">	
 									<c:choose>
-										<c:when test="${record.request_id.id==10 || record.request_id.id==11}">								
+										<c:when test="${record.request_type==10 || record.request_type==11}">								
 											<td  nowrap id="btnPrint"><abc:i18n
 											property="commons.button.edit" /><a
 											href="attendanceRequestForm.html?request_date=${record.request_date }&empRequestTypeId=${record.id}"><fmt:message
@@ -347,7 +395,7 @@ function printSelection(node){
 								</c:otherwise>
 							</c:choose>														
 							<td  nowrap id="btnPrint">
-							<input type="button" id="${record.id}" value="<fmt:message key="requestsApproval.button.requestStatus"/>" name="requestStatus" class="button"	onclick="getRequestStatus(this)"></input>
+							<input type="button" id="${record.id}" value="<fmt:message key="requestsApproval.button.requestStatus"/>" name="requestStatus" class="button"	onclick="getRequestStatus(this,${empId})"></input>
 							</td>
 						</tr>
 						
@@ -385,8 +433,7 @@ function printSelection(node){
 			</td>
 		</tr>
 	</table>
-   </form>
-
+</form:form>
 </table>
 
 	

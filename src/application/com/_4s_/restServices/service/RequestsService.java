@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.common.model.Employee;
@@ -25,10 +26,9 @@ import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
 
 
-@Transactional
 public interface RequestsService {// extends BaseManager {
 
-	public User login();
+	public Map<String, Object> login(String tenantId);
 	
 	public RequestsApprovalManager getRequestsApprovalManager();
 
@@ -43,6 +43,8 @@ public interface RequestsService {// extends BaseManager {
 	public Map getSubmittedRequestsForApproval(RequestsApprovalQuery approvalQuery, List empReqTypeAccs, Employee emp);
 
 	public Map approveRequest(RequestApproval requestApproval,Employee emp);
+	public Map getRequestStatus(final Long req_id);
+	public Map getRequestStatus(Long req_id,Long emp_id);
 	
 	public Map getVacInfo(RequestApproval requestApproval);
 	
@@ -58,6 +60,8 @@ public interface RequestsService {// extends BaseManager {
 	public Map getSettings();
 
 	public Map getPortNo(String clientName);
+	
+	public Map getTenantId(String clientName);
 
 	public Boolean checkImei(String imei, User user);
 

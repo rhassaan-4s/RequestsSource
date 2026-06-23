@@ -22,6 +22,10 @@ import com._4s_.auditing.model.Auditable;
 @Entity
 @Table (name = "security_permissions")
 public class Permissions implements Serializable,Auditable,GrantedAuthority{
+	public Permissions() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id
 	private Long id;
 

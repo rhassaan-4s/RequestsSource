@@ -12,78 +12,64 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
-
-
-//import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.common.dao.Queries;
 import com._4s_.common.model.Branch;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
-import com._4s_.common.service.CommonManager;
-import com._4s_.requestsApproval.model.EmpReqTypeAcc;
+import com._4s_.common.service.BaseManager;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
-import com._4s_.requestsApproval.service.RequestsApprovalManagerImpl;
+
+@Controller
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+public class SearchFormController  extends BaseSimpleFormController {
+//	@Autowired
+//	CommonManager mgr;
+	@Autowired
+	private BaseManager baseManager;
+	@Autowired
+	private RequestsApprovalManager requestsApprovalManager;
+	
+	
+	public RequestsApprovalManager getRequestsApprovalManager() {
+		return requestsApprovalManager;
+	}
 
 
+	public void setRequestsApprovalManager(RequestsApprovalManager requestsApprovalManager) {
+		this.requestsApprovalManager = requestsApprovalManager;
+	}
 
 
-//import com._4s_.stores.model.DBConnection;
-//import com._4s_.stores.model.Destination;
-//import com._4s_.stores.model.Groupf;
-//import com._4s_.stores.model.StoreTransactionM;
-//import com._4s_.stores.model.StoreTransactionMDep;
-//import com._4s_.stores.model.StoreTransactionO;
-//import com._4s_.stores.model.StoreTrnsDef;
-//import com._4s_.stores.model.StoreTrnsDep;
-//import com._4s_.stores.model.StoreTrnsDepBranch;
-//import com._4s_.stores.model.Stores;
-//import com._4s_.stores.service.StoresManager;
-//import com._4s_.stores.web.action.ExternalTypeAndCode;
-import java.util.Date;
-
-public class SearchFormController implements Controller {
-	CommonManager mgr;
-//	private StoresManager storesManager;
-//	
-//	public void setStoresManager(StoresManager storesManager) {
-//		this.storesManager = storesManager;
+//	public CommonManager getMgr() {
+//		return mgr;
 //	}
 //
 //
-//	public StoresManager getStoresManager() {
-//		return storesManager;
+//	public void setMgr(CommonManager mgr) {
+//		this.mgr = mgr;
 //	}
-	
-	private RequestsApprovalManager reqMgr;
-	
-	
-	public RequestsApprovalManager getReqMgr() {
-		return reqMgr;
+
+	public BaseManager getBaseManager() {
+		return baseManager;
 	}
 
 
-	public void setReqMgr(RequestsApprovalManager reqMgr) {
-		this.reqMgr = reqMgr;
+	public void setBaseManager(BaseManager mgr) {
+		this.baseManager = mgr;
 	}
 
 
-	public CommonManager getMgr() {
-		return mgr;
-	}
-
-
-	public void setMgr(CommonManager mgr) {
-		this.mgr = mgr;
-	}
-
-	Queries qry ;
+	@Autowired
+	private Queries qry ;
 	
 	public Queries getQry() {
 		return qry;
@@ -95,17 +81,17 @@ public class SearchFormController implements Controller {
 	}  
 	
 	protected final Log log = LogFactory.getLog(getClass());
+	
+	@RequestMapping("/searchForm.html")
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse respons) throws Exception {
-		
+		log.warn("BaseMgr class = " + baseManager.getClass());
 		Map model = new HashMap();
-//		DBConnection dbConnection = (DBConnection) mgr.getObjectByParameter(
-//				DBConnection.class, "isActive", new String("1"));
 		List transList = new ArrayList();
 		List destCodeList = new ArrayList();
-//		StoreTransactionM storeTrans = new StoreTransactionM();
 		List transMapList = new ArrayList();
-		List branchList = (List) mgr.getObjects(Branch.class);
+		List branchList = (List) baseManager.getObjects(Branch.class);
 		model.put("branchList",branchList);
+		
 		
 		
 		Employee employee = (Employee)request.getSession().getAttribute("employee");
@@ -113,17 +99,18 @@ public class SearchFormController implements Controller {
 		String branchId = (String) request.getParameter("branchId");
 
 		String paramString = request.getParameter("paramString");
-//		String transTypeId = (String) request.getParameter("transTypeId");
-//		String storeTransDefId = (String) request.getParameter("storeTransDefId");
 		String branchForValidRoom = (String) request.getParameter("branchForValidRoom");
 		model.put("branchForValidRoom",branchForValidRoom);
+		log.debug("^@@@@@@@@@@@@@@@@@@@@@@@@@@@@@^");
+		
+		
 		if(branchId!=null && !branchId.equals("")){
-			
+			log.debug("^^^^^^^^^%%%%%%%%%%%%%%%%%%%%%%^^^^^^^^^^^");
 			model.put("branchId",branchId);
 			
 		}else{
 			if(employee.getCanSeeAllStore()){
-
+				log.debug("^^^^^^^^^^^^^^^^^^^^");
 				branchId = null;
 			}else{
 				log.debug("branchId4 ... " + branchId);
@@ -145,20 +132,16 @@ public class SearchFormController implements Controller {
 //						log.debug("branchId6............. "+branchId);
 //						model.put("branchId",branchId);
 //					}
-					
 				}
-				
 			}
 			
 		}
-		
 		
 		model.put("canSeeAllStore", employee.getCanSeeAllStore());
 		model.put("employee", employee);
 		
 		List roomList = new ArrayList();
 		List roomMapList = new ArrayList();
-//		Destination room = new Destination();
 		
 		log.debug("paramString............. "+request.getParameter("paramString"));
 		
@@ -257,22 +240,24 @@ public class SearchFormController implements Controller {
 		model.put("transTableFlag",transTableFlag);
 		
 		if (searchCommandId != null || searchCommandName != null){
-			log.debug(">>>>>>>>>>>>> before query");
+			log.debug(">>>>>>>>>>>>>SearchForm: before query");
+			log.debug("searchCommandId " + searchCommandId);
 			//// Check Filter Method for Store or Cooling room by Branch  ///////
 			if(paramString != null && !paramString.equals("")){
 				splitParamString =  paramString.split("@@");
 			}
-			log.debug("splitParamString.....  "+splitParamString);
+			log.debug("*****************splitParamString.....  "+splitParamString);
 //			log.error(">>>>>>>>>>>splitParamString...  "+splitParamString.length);
 //			log.error(">>>>0...&"+splitParamString[0]+"&.........1...."+splitParamString[1]);
 			if(splitParamString != null && !splitParamString.equals("")){
 				if(splitParamString.length ==3){
-					log.debug("true  ");
+					log.debug("*************splitParamString.length 3");
 					 map = qry.searchByTypeAndBranch(searchCommandId,searchCommandName,table,firstParam,secondParam,paramString,match1,match2,pageNumber,10);
 				}else if(splitParamString.length ==2){
-					log.debug("true  ");
+					log.debug("**************splitParamString.length 2");
 					 map = qry.searchByBranch(searchCommandId,searchCommandName,table,firstParam,secondParam,paramString,match1,match2,pageNumber,10);
 				}else{
+					log.debug("****************splitParamString.length - else ");
 					if((table.equals("dist_names") || table.equals("driver") || table.equals("cars") || table.equals("car_type") || table.equals("area")) && paramString != null && !paramString.equals("")){
 						String[] spString=paramString.split(",");
 						if(table.equals("driver") || table.equals("cars")){
@@ -308,7 +293,7 @@ public class SearchFormController implements Controller {
 						String level = "";
 						List empReqTypeAcc = new ArrayList();
 						if (!table.equals("")) {
-							empReqTypeAcc = reqMgr.getEmpReqTypeAcc(employee, null);
+							empReqTypeAcc = requestsApprovalManager.getEmpReqTypeAcc(employee, null);
 						}
 						Iterator itr = empReqTypeAcc.iterator();
 						while(itr.hasNext()) {
@@ -325,7 +310,7 @@ public class SearchFormController implements Controller {
 							level += ","+employee.getEmpCode();
 						}
 						log.debug("level " + level);
-						Settings settings = (Settings)mgr.getObject(Settings.class, new Long(1));
+						Settings settings = (Settings)baseManager.getObject(Settings.class, new Long(1));
 						map = qry.search(searchCommandId,searchCommandName,table,firstParam,secondParam,paramString,match1,match2,level,settings,pageNumber,10,branchId);	
 					}else {
 						log.debug("Null Result  ");
@@ -340,6 +325,7 @@ public class SearchFormController implements Controller {
 			model.putAll(map);
 		}
 		return new ModelAndView("searchForm",model);
+//		return "searchForm";
 	}
 
 

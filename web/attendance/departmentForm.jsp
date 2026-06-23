@@ -1,12 +1,14 @@
 <jsp:include page="/web/common/includes/header.jsp" flush="true" />
 <%@ include file="/web/common/includes/taglibs.jsp"%>
+
 <abc:security property="1025"/>
+
 <script type="text/javascript">
 	
 </script>
-
-<form id="departmentForm" name="departmentForm" method="POST"
-	action="<c:url value="/attendance/departmentForm.html"/>">
+	
+<form:form method="POST" modelAttribute="department"
+	action="/Requests/attendance/departmentForm.html">
 
 <input type="hidden" id="departmentCode" name="departmentCode"
 			value="${departmentCode}" />
@@ -36,36 +38,15 @@
 							key="attendance.header.department" /></td>
 				</tr>
 
-<!-- 				<tr>
-
-					<c:set var="check" value="" />
-					<c:if test="${departmentCode!=null && departmentCode!=''}">
-						<c:set var="check" value="disabled" />
-					</c:if>
-
-						<td nowrap class="formReq" width="30%"><abc:i18n
-								property="attendance.caption.departmentCode" /> <fmt:message
-								key="attendance.caption.departmentCode" /></td>
-
-
-						<td class="formBodControl">
-								<input size="8" maxlength="8" type="text"
-									 value="${department.location}"
-									readonly="readonly" />
-						</td>
-				</tr> -->
-
 				<tr>
 
 					<td nowrap class="formReq" width="30%"><abc:i18n
 							property="commons.caption.arName" /> <fmt:message
 							key="commons.caption.arName" /></td>
 
-					<td class="formBodControl" width="70%"><spring:bind
-							path="department.name">
-							<input size="40" type="text" name="${status.expression}"
-								value="${status.value}" />
-						</spring:bind></td>
+					<td class="formBodControl" width="70%">
+						<form:input size="40" type="text" path="name" />
+						</td>
 				</tr>
 
 
@@ -74,11 +55,9 @@
 							property="commons.caption.enName" /> <fmt:message
 							key="commons.caption.enName" /></td>
 
-					<td class="formBodControl" width="70%"><spring:bind
-							path="department.ename">
-							<input size="40" type="text" name="${status.expression}"
-								value="${status.value}" />
-						</spring:bind></td>
+					<td class="formBodControl" width="70%">
+							<form:input size="40" type="text" path="ename"/>
+						</td>
 				</tr>
 
 				<tr id="btn">
@@ -94,7 +73,7 @@
 		</tr>
 
 	</table>
-</form>
+</form:form>
 
 
 <%@ include file="/web/common/includes/footer.jsp"%>

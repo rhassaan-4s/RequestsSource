@@ -34,6 +34,9 @@ public class HRBank implements Auditable,Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	public HRBank() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getCode() {
 		return code;
 	}

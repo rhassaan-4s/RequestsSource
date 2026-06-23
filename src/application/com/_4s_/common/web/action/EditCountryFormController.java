@@ -3,27 +3,134 @@
  */
 package com._4s_.common.web.action;
 
+import java.util.Date;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com._4s_.attendance.web.binders.EmployeeBinder;
+import com._4s_.common.model.City;
+import com._4s_.common.model.Company;
 import com._4s_.common.model.Country;
+import com._4s_.common.model.Department;
+import com._4s_.common.model.Employee;
+import com._4s_.common.web.binders.BaseBinder;
+import com._4s_.common.web.binders.CityBinder;
+import com._4s_.common.web.binders.CountryBinder;
+import com._4s_.common.web.binders.DomainObjectBinder;
+import com._4s_.common.web.binders.TimestampBinder;
 
 /**
  * @author mragab
  *
  */
+@Controller
+@RequestMapping("/commonAdminEditCountry.html")
 public class EditCountryFormController extends BaseSimpleFormController {
 	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response,
-			Object command, BindException errors)
-	throws Exception{
-		
+	@Autowired
+	@Qualifier("timestampBinder")
+	private TimestampBinder timestampBinder;
+	
+	@Autowired
+	@Qualifier("departmentBinder")
+	private BaseBinder departmentBinder;
+	
+	@Autowired
+	@Qualifier("cityBinder")
+	private BaseBinder cityBinder;
+	
+	@Autowired
+	@Qualifier("countryBinder")
+	private BaseBinder countryBinder;
+	
+	@Autowired
+	@Qualifier("employeeBinder")
+	private BaseBinder employeeBinder;
+	
+	
+	public TimestampBinder getTimestampBinder() {
+		return timestampBinder;
+	}
+
+
+	public void setTimestampBinder(TimestampBinder timestampBinder) {
+		this.timestampBinder = timestampBinder;
+	}
+
+
+	public BaseBinder getDepartmentBinder() {
+		return departmentBinder;
+	}
+
+
+	public void setDepartmentBinder(BaseBinder departmentBinder) {
+		this.departmentBinder = departmentBinder;
+	}
+
+
+	public BaseBinder getCityBinder() {
+		return cityBinder;
+	}
+
+
+	public void setCityBinder(BaseBinder cityBinder) {
+		this.cityBinder = cityBinder;
+	}
+
+
+	public BaseBinder getCountryBinder() {
+		return countryBinder;
+	}
+
+
+	public void setCountryBinder(BaseBinder countryBinder) {
+		this.countryBinder = countryBinder;
+	}
+
+
+	public BaseBinder getEmployeeBinder() {
+		return employeeBinder;
+	}
+
+
+	public void setEmployeeBinder(BaseBinder employeeBinder) {
+		this.employeeBinder = employeeBinder;
+	}
+
+
+	@Override
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		super.initBinder(request,binder);
+		binder.registerCustomEditor(Date.class, timestampBinder);
+		binder.registerCustomEditor(Department.class, departmentBinder);
+		binder.registerCustomEditor(City.class, cityBinder);
+		binder.registerCustomEditor(Country.class, countryBinder);
+		binder.registerCustomEditor(Employee.class, employeeBinder);
+	}
+	
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("country") Country command,
+			BindingResult result, SessionStatus status,Model model) {
 		log.debug("Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
 		String deleteButton = request.getParameter("delete");
@@ -54,7 +161,7 @@ public class EditCountryFormController extends BaseSimpleFormController {
 		
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit");
 		
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("commonAdminCountries.html"));
 	
 	}
 

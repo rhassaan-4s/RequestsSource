@@ -16,6 +16,10 @@ import com._4s_.auditing.model.Auditable;
 @Table(name = "security_branches")
 public class Branches implements Auditable, Serializable {
 
+	public Branches() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id
 	private Long id;
 

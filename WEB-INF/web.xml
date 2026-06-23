@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
-	version="2.4">
+<web-app version="3.0"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
 	<display-name>Requests</display-name>
-
+	<absolute-ordering />
+	<!-- work around for the error javax.naming.NameNotFoundException: Name 
+		[spring.liveBeansView.mbeanDomain] is not bound in this Context -->
+	<context-param>
+		<param-name>spring.profiles.active</param-name>
+		<param-value>dev</param-value>
+	</context-param>
+	<context-param>
+		<param-name>spring.profiles.default</param-name>
+		<param-value>dev</param-value>
+	</context-param>
+	<context-param>
+		<param-name>spring.liveBeansView.mbeanDomain</param-name>
+		<param-value>dev</param-value>
+	</context-param>
+	<!-- ///////////////////////////////////////////////////////// -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
@@ -14,11 +29,11 @@
 			/WEB-INF/config/i18n/i18n*.xml,
 			/WEB-INF/config/auditing/auditing*.xml,
 			/WEB-INF/config/dbUpdate/dbUpdate*.xml,
-			/WEB-INF/config/hr/hr*.xml,
 			/WEB-INF/config/requestsApproval/requestsApproval*.xml
 			/WEB-INF/config/timesheet/timesheet*.xml
 			/WEB-INF/config/attendance/attendance*.xml
 			/WEB-INF/config/rest/rest*.xml
+			/WEB-INF/config/clients/clients*.xml
 		</param-value>
 	</context-param>
 	
@@ -80,11 +95,39 @@
         <param-name>start</param-name>
         <param-value>off</param-value>
     </context-param>
+   
 	<listener>
         <listener-class>
             com._4s_.requestsApproval.web.action.CreateDatabase
         </listener-class>
     </listener>
+    
+    <!-- Force Encoding to UTF-8 -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>
+			org.springframework.web.filter.CharacterEncodingFilter
+		</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+    
+    
 	<!-- ========================Security Filters ======================== -->
 	<!-- <filter>
 		<filter-name>Acegi-Integration</filter-name>
@@ -142,14 +185,27 @@
  -->
 
 	<!-- Spring Security 3.1.7 -->
-	<filter>
+	<!-- <filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
+	</filter-mapping> -->
+
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>
+			org.springframework.web.filter.DelegatingFilterProxy
+		</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
 
 	<!-- ///////////////////// -->
 	
@@ -365,45 +421,7 @@
 		 <url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 
-	<servlet>
-		<servlet-name>dwr</servlet-name>
-		<servlet-class>uk.ltd.getahead.dwr.DWRServlet</servlet-class>
-		<init-param>
-			<param-name>debug</param-name>
-			<param-value>true</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>dwr</servlet-name>
-		<url-pattern>/dwr/*</url-pattern>
-	</servlet-mapping>
-
-	<!-- Force Encoding to UTF-8 -->
-	<filter>
-		<filter-name>encodingFilter</filter-name>
-		<filter-class>
-			org.springframework.web.filter.CharacterEncodingFilter
-		</filter-class>
-		<init-param>
-			<param-name>encoding</param-name>
-			<param-value>UTF-8</param-value>
-		</init-param>
-		<init-param>
-			<param-name>forceEncoding</param-name>
-			<param-value>true</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>encodingFilter</filter-name>
-		<url-pattern>*.html</url-pattern>
-	</filter-mapping>
-
-	<filter-mapping>
-		<filter-name>encodingFilter</filter-name>
-		<url-pattern>*.jsp</url-pattern>
-	</filter-mapping>
-
+	<!--  common servlet -->
 
 	<welcome-file-list>
 		<!-- Redirects to "login.jsp" for dispatcher handling -->

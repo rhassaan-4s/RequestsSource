@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.HR.model.HREmployee;
@@ -31,7 +32,7 @@ import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public interface RequestsApprovalManager extends BaseManager {
 	
 	public List getRoot(final String className);
@@ -110,8 +111,8 @@ public interface RequestsApprovalManager extends BaseManager {
 	public List getEmployeesByCodesAndDatePeriod(final String codeFrom,final String codeTo,final Date fromDate, final Date toDate);
 	public List getEmployeesByCodesAndRequestType(final String codeFrom,final String codeTo, final Long requestType);
 	public List getEmployeesByCodesAndDatePeriodAndRequestType(final String codeFrom,final String codeTo,final Date fromDate, final Date toDate, final Long requestType);
-	
 	public List getRequestStatus(final Long req_id);
+	public List getRequestStatus(final Long req_id,final Long emp_id);
 	public String CreateRequestNumber();
 	
 	public Long getEmpVacation (String empCode, String vacId, Date from_date);
@@ -165,5 +166,7 @@ public interface RequestsApprovalManager extends BaseManager {
 	public Map getRequestsStatus(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
 			String requestType, String codeFrom, String codeTo, String statusId, String sort,LoginUsers loggedInUser, List empReqTypeAccs, boolean isWeb, String isInsideCompany, int pageNumber, int pageSize);
 	public List<LoginUsers> getEmployeesByGroup(Long groupId);
+	public int calculateDateDifference(Date a, Date b);
+	public List getAccessLevels();
 }
 

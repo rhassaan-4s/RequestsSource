@@ -18,6 +18,7 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="hr_employee_group_by")
 public class HREmployeeGroupBy implements Auditable,Serializable {
+		
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_employee_groupby_seq")
 	@SequenceGenerator(name="hr_employee_groupby_seq",sequenceName="hr_employee_groupby_seq")
 	private Long id;

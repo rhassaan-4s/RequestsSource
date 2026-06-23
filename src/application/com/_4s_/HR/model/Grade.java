@@ -28,6 +28,10 @@ public class Grade {
 	private  String ename ;                                           
 	private  Long min_val ;
 	
+	public Grade() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getEntityDisplayName() {
 		return "degree Addition";
 	}

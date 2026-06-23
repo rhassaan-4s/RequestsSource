@@ -1,6 +1,5 @@
 package com._4s_.requestsApproval.service;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,7 +42,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.HR.model.HREmployee;
@@ -82,23 +84,24 @@ import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
 import com._4s_.restServices.model.AttendanceStatus;
-import com.ibm.icu.util.Calendar;
 import com.jenkov.prizetags.tree.itf.ITree;
 import com.jenkov.prizetags.tree.itf.ITreeNode;
 
-import sun.net.www.protocol.https.HttpsURLConnectionImpl;
+//import sun.net.www.protocol.https.HttpsURLConnectionImpl;
 
-@Service
-@Transactional
+
+@Service("requestsApprovalManager")
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class RequestsApprovalManagerImpl extends BaseManagerImpl implements RequestsApprovalManager{
 
 	private static final Object geoCodeLock = new Object ();
+	@Autowired
 	private RequestsApprovalDAO requestsApprovalDAO;	
-	
+	@Autowired
 	private ExternalQueries externalQueries = null;
-	
+	@Autowired
 	private MessageManager messageManager;
-	
+	@Autowired
 	private SequenceManager sequenceManager ;
 	public RequestsApprovalDAO getRequestsApprovalDAO() {
 		return requestsApprovalDAO;
@@ -591,6 +594,9 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	public List getRequestStatus(final Long req_id){
 		return requestsApprovalDAO.getRequestStatus(req_id);
 	}
+	public List getRequestStatus(final Long req_id,final Long emp_id){
+		return requestsApprovalDAO.getRequestStatus(req_id,emp_id);
+	}
 	
 	
 	public List getEmployeesByCodesAndRequestType(final String codeFrom,final String codeTo, final Long requestType){
@@ -654,9 +660,11 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	}
 	
 	public List getVacations (String empCode, Long reqId, String vacId, Date from_date, Settings settings){
+		log.debug("getvacations 1");
 		return externalQueries.getVacations(empCode, reqId, vacId, from_date, settings);
 	}
 	public List getVacations (String empCode, Long reqId, Date from_date,Date to_date,Settings settings){
+		log.debug("getvacations 2");
 		return externalQueries.getVacations(empCode, reqId, from_date,to_date,settings);
 	}
 	public List getTimeAttend (String empCode, Date from_date, Date to_date){
@@ -1082,6 +1090,8 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
 	public List getEmpReqTypeAccs(List accessLevels,Long requestType) {
 		// TODO Auto-generated method stub
+		System.out.println("accessLevels size " + accessLevels.size() + " requestType " + requestType);
+		System.out.println("requestsApprovalDAO " + requestsApprovalDAO);
 		return requestsApprovalDAO.getEmpReqTypeAccs(accessLevels,requestType);
 	}
 
@@ -1147,6 +1157,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			loginUsers=(LoginUsers) getObjectByParameter(LoginUsers.class, "empCode", emp);
 			
 			List loggedInLevels = getObjectsByParameter(AccessLevels.class, "emp_id", loginUsers);
+//<<<<<<< HEAD
 			
 //			 
 //			AccessLevels loggedInAccessLevel = null;
@@ -1166,7 +1177,12 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 //			}
 			
 			
+//=======
+			log.debug("loggedInLevels size " +loggedInLevels.size());
+			 
+//>>>>>>> refs/heads/UpgradeSpringHibernate
 			AccessLevels loggedInAccessLevel = null;
+//<<<<<<< HEAD
 			levelFind: for (int j=0;j<empReqAcc.size();j++) {
 				EmpReqTypeAcc tempLoggedInAccessLevel = (EmpReqTypeAcc)empReqAcc.get(j);
 				log.debug("tempLoggedInAccessLevel " +tempLoggedInAccessLevel.getId() + "***** level id " +  tempLoggedInAccessLevel.getGroup_id().getId());
@@ -1176,15 +1192,25 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					
 					if (tempLoggedInAccessLevel.getGroup_id().equals(tempAcc.getLevel_id())) {
 						loggedInAccessLevel = tempAcc;
+//=======
+//			levelFind: for (int j=0;j<loggedInLevels.size();j++) {
+//				AccessLevels tempLoggedInAccessLevel = (AccessLevels)loggedInLevels.get(j);
+//				for(int k = 0; k<empReqAcc.size(); k++) {
+//					EmpReqTypeAcc tempAcc =(EmpReqTypeAcc)empReqAcc.get(k); 
+//					log.debug("Group_id " + tempAcc.getGroup_id().getId() + " level_id "+ tempLoggedInAccessLevel.getLevel_id().getId() + " equal? "+tempAcc.getGroup_id().getId().equals(tempLoggedInAccessLevel.getLevel_id().getId()));
+//					if (tempAcc.getGroup_id().getId().equals(tempLoggedInAccessLevel.getLevel_id().getId())) {
+//						loggedInAccessLevel = tempLoggedInAccessLevel;
+//>>>>>>> refs/heads/UpgradeSpringHibernate
 						log.debug("breaking- got logged in level "+ loggedInAccessLevel.getLevel_id().getId());
 						break levelFind;
 					}
 				}
 			}
 			
-			log.debug("loggedInAccessLevel.getLevel_id() " + loggedInAccessLevel.getLevel_id().getId());
-			log.debug("req_id " + requestInfo.getRequest_id().getId());
-			log.debug("emp_id " + requestInfo.getLogin_user().getId());
+//			log.debug("loggedInAccessLevel.getLevel_id() " + loggedInAccessLevel.getLevel_id().getId());
+//			log.debug("req_id " + requestInfo.getRequest_id().getId());
+//			log.debug("emp_id " + requestInfo.getLogin_user().getId());
+			log.debug("loggedInAccessLevel " + loggedInAccessLevel);
 			List loggedInEmpReqAcc = getObjectsByThreeParametersOrderedByFieldList(
 					EmpReqTypeAcc.class, "req_id", requestInfo.getRequest_id(), 
 					"emp_id", requestInfo.getLogin_user(),
@@ -1221,6 +1247,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					loggedInGroupAcc = loggedInAcc.getGroup_id();
 					log.debug("loggedInGroupAcc " + loggedInGroupAcc);
 					log.debug("loggedInGroupAcc " + loggedInGroupAcc.getId());
+					initializeCollection(loggedInGroupAcc.getAccessLevel());
 					loggedInEmpGroupAccessLevels = loggedInGroupAcc.getAccessLevel();
 				}
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1260,7 +1287,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 						log.debug(" loggedInGroupAcc " + loggedInGroupAcc);
 						log.debug("temp " + temp);
 						log.debug("temp.groupId " + temp.getGroup_id());
-						if (i==0 && !loggedInGroupAcc.equals(temp.getGroup_id())) {
+						if (i==0 && !loggedInGroupAcc.getId().equals(temp.getGroup_id().getId())) {
 							//first priority didn't approve - and first priority isn't the one approving now
 							log.debug("first priority didn't approve - and first priority isn't the one approving now");
 							throw new ApprovalFirstPriorityNullException("1st Priority Manager should approve first (The logged in employee isn't privileged to approve request "+requestInfo.getRequestNumber()+")");
@@ -1614,7 +1641,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
 					try {
 						saveObject(empReqApproval);
-						flush();
+//						flush();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -1830,6 +1857,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	
 	public Map getVacInfo(Vacation vac, Date from_date, String empCode) {
 		Map model = new HashMap();
+		log.debug("vac " + vac);
 		if (vac !=null){
 			String vacId =  vac.getVacation();
 			
@@ -1846,6 +1874,12 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			
 			Long vacLimit = getVacationLimit(empCode, vacId, from_date);
 			Long vacConsumed = getEmpVacation(empCode, vacId, from_date);
+			if (vacLimit == null) {
+				vacLimit = 0L;
+			}
+			if (vacConsumed == null) {
+				vacConsumed = 0L;
+			}
 			Long vacCredit = vacLimit - vacConsumed;
 			
 			Map output = new HashMap();
@@ -1894,7 +1928,10 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 //		log.debug("will loop on levels");
 		while(itr.hasNext()) {
 			AccessLevels level = (AccessLevels)itr.next();
+			log.debug("will loop on levels " + level);
+			log.debug("will loop on levels " + level.getLevel_id());
 			log.debug("will loop on levels " + level.getLevel_id().getId());
+			
 			accessLevels.add(level.getLevel_id().getId());
 		}
 		log.debug("access levels " + accessLevels.size());
@@ -2268,8 +2305,56 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 
 	
 
-	 public String getAddressByGpsCoordinates(String lng, String lat)
-			 throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
+	 
+//<<<<<<< HEAD
+//	            throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
+//	         String key = "65c8b9e1c9c01804850676ribdd12fa";
+//	         LocaleUtil localeUtil = LocaleUtil.getInstance();
+////		        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
+//		         System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+//		        URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "&api_key="+key);
+//	        log.debug("url " + url);
+////	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
+//	        String formattedAddress = "";
+//	 
+//	        
+//
+//	        InputStream in=null;
+//	        BufferedReader reader=null;
+//	        try {
+//	            in = url.openStream();
+//	            reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+//	            String result, line = reader.readLine();
+//	            result = line;
+//	            while ((line = reader.readLine()) != null) {
+//	                result += line;
+//	            }
+//	 
+//	            JSONParser parser = new JSONParser();
+//	            JSONObject rsp = (JSONObject) parser.parse(result);
+//	 
+//	            if (rsp.containsKey("display_name")) {
+//	                String matches = (String) rsp.get("display_name");
+//	                String error = (String)rsp.get("error_message");
+//	                log.debug("error string  " + error);
+////	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
+//	                formattedAddress = matches;//(String) data.get("formatted_address");
+//	                log.debug("formatted address " + formattedAddress);
+//	            }
+//	 
+//	            return formattedAddress;
+//	        } catch (Exception e) {
+//	        	log.debug("exception to get address from location " + e);
+//	        	e.printStackTrace();
+//	        } finally {
+////	            urlConnection.disconnect();
+//	        	reader.close();
+//	        	in.close();
+//	            return formattedAddress;
+//	        }
+//	    }
+//=======
+	public String getAddressByGpsCoordinates(String lng, String lat) throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
 		 synchronized (geoCodeLock) {
 
 			 String key = "AIzaSyBeCCPQ7VdCQiJxjXGfVO98LyirL1-hC74";
@@ -2278,6 +2363,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			 System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
 			 URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "&api_key=65c8b9e1c9c01804850676ribdd12fa");
 			 log.debug("url " + url);
+//<<<<<<< HEAD
 			 
 			 System.setProperty("javax.net.ssl.trustStoreType"    , "jks"); // corresponds to `.trustStore`
 			 System.setProperty("javax.net.ssl.trustStore"        , "C:\\keystore"); // path to server truststore, when the server cert is imported into
@@ -2322,8 +2408,9 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
 	        //////////////////////////////////////////////////////////////////////////////////////////////////
 	        
-			 HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
-			 String formattedAddress = "";
+//			 HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
+
+	        String formattedAddress = "";
 
 
 			 InputStream in=null;
@@ -2366,9 +2453,84 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			 }
 		 }
 	 }
+//>>>>>>> refs/remotes/origin/master
 	 
-	 public String getShortAddressByGpsCoordinates(String lng, String lat)
-			 throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
+//	 public String getShortAddressByGpsCoordinates(String lng, String lat)
+//<<<<<<< HEAD
+//	public String getShortAddressByGpsCoordinates(String lng, String lat)
+//	            throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
+//	         String key = "65c8b9e1c9c01804850676ribdd12fa";
+//	         LocaleUtil localeUtil = LocaleUtil.getInstance();
+////	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
+//	         System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+//	        URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "&api_key="+key);
+//	        log.debug("url " + url);
+//
+////	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
+//	        
+//	        
+//	        String formattedAddress = null;
+//	 
+//	        InputStream in=null;
+//	        BufferedReader reader=null;
+//	        try {
+//	            in = url.openStream();
+//	            reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+//	            log.debug("reader " + reader);
+//	            String result, line = reader.readLine();
+//	            result = line;
+//	            while ((line = reader.readLine()) != null) {
+//	                result += line;
+//	            }
+//	 
+//	            JSONParser parser = new JSONParser();
+//	            JSONObject rsp = (JSONObject) parser.parse(result);
+//	 
+//	            
+//	            if (rsp.containsKey("display_name")) {
+//	                String matches = (String) rsp.get("display_name");
+//	                String error = (String)rsp.get("error_message");
+//	                log.debug("error string  " + error);
+////	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
+//	                formattedAddress = matches;//(String) data.get("formatted_address");
+//	                log.debug("formatted address " + formattedAddress);
+//	            }
+////	            if (rsp.containsKey("results")) {
+////	                JSONArray matches = (JSONArray) rsp.get("results");
+////	                String error = (String)rsp.get("error_message");
+////	                log.debug("error string  " + error);
+////	                JSONObject data = (JSONObject) matches.get(0); //TODO: check if idx=0 exists
+////	                formattedAddress =  (JSONArray)data.get("address_components");
+////	                for (int i=0; i<formattedAddress.size()-2; i++) {
+////	                	if (i!=0) {
+////	                		longName+=((JSONObject)formattedAddress.get(i)).get("long_name")+",";
+////	                	} else {
+////	                		longName+=((JSONObject)formattedAddress.get(i)).get("long_name");
+////	                	}
+////	                }
+////	                log.debug("formattedAddress[0] " + formattedAddress.get(0).getClass());
+////	                log.debug("formatted address " + formattedAddress);
+////	            }
+//	 
+//	            return formattedAddress;
+//	        } catch (IOException ie) {
+//	        	log.debug("exception to get address from location " + ie);
+//	        	ie.printStackTrace();
+//	        } catch (Exception e) {
+//	        	log.debug("exception to get address from location " + e);
+//	        	e.printStackTrace();
+//	        } finally {
+//	        	if (reader!=null) {
+//	        		reader.close();
+//	        		in.close();
+//	        	}
+////	            urlConnection.disconnect();
+//	        	
+//	            return formattedAddress;
+//	        }
+//	    }
+//=======
+	public String getShortAddressByGpsCoordinates(String lng, String lat) throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
 		 synchronized (geoCodeLock) {
 			 String key = "65c8b9e1c9c01804850676ribdd12fa";
 			 LocaleUtil localeUtil = LocaleUtil.getInstance();
@@ -2480,6 +2642,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			 }
 		 }
 	 }
+//>>>>>>> refs/remotes/origin/master
 	
 	 public double distance(double lat1, double lon1, double lat2, double lon2) {//, char unit
 		 //unit M
@@ -2522,6 +2685,49 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			mgrs.addAll(emps);
 			return mgrs;
 		}		
+		
+		
+		public int calculateDateDifference(Date a, Date b) {
+		    int tempDifference = 0;
+		    int difference = 0;
+		    Calendar earlier = Calendar.getInstance();
+		    Calendar later = Calendar.getInstance();
+		    System.out.println("-------a.compareTo(b)---"+a.compareTo(b));
+		    if (a.compareTo(b) < 0)
+		    {
+		        earlier.setTime(b);
+		        later.setTime(a);
+		    }
+		    else
+		    {
+		        earlier.setTime(b);
+		        later.setTime(a);
+		    }
+
+		    while (earlier.get(Calendar.YEAR) != later.get(Calendar.YEAR))
+		    {
+		        tempDifference = 365 * (later.get(Calendar.YEAR) - earlier.get(Calendar.YEAR));
+		        difference += tempDifference;
+
+		        earlier.add(Calendar.DAY_OF_YEAR, tempDifference);
+		    }
+
+		    if (earlier.get(Calendar.DAY_OF_YEAR) != later.get(Calendar.DAY_OF_YEAR))
+		    {
+		        tempDifference = later.get(Calendar.DAY_OF_YEAR) - earlier.get(Calendar.DAY_OF_YEAR);
+		        difference += tempDifference;
+
+		        earlier.add(Calendar.DAY_OF_YEAR, tempDifference);
+		    }
+
+		    return difference;
+		}
+
+		@Override
+		public List getAccessLevels() {
+			return requestsApprovalDAO.getAccessLevels();
+		}
+		
 		
 //	public List getAttendanceRequests(Date date, String empCode) {
 //		return requestsApprovalDAO.getAttendanceRequests(date,empCode);

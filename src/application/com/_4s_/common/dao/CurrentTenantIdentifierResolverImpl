@@ -1,0 +1,230 @@
+package com._4s_.common.dao;
+
+import java.io.IOException;
+import java.util.Properties;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+/**
+ * Resolves the current tenant identifier for Hibernate sessions.
+ * Can resolve from ThreadLocal or HTTP session, or fall back to default.
+ */
+public class CurrentTenantIdentifierResolverImpl implements CurrentTenantIdentifierResolver {
+
+    private static final String KEY_TENANTID_SESSION = "tenantID";
+    private static final ThreadLocal<String> CURRENT_TENANT = new ThreadLocal<>();
+
+    private String defaultTenant;
+
+    private final Log logger = LogFactory.getLog(getClass());
+
+    public CurrentTenantIdentifierResolverImpl() {
+        try {
+            // Load properties to get default tenant from hibernate.properties
+            Properties props = new Properties();
+            props.load(getClass().getResourceAsStream("/hibernate.properties"));
+
+            String defaultUser = props.getProperty("hibernate.connection.username");
+            if (defaultUser == null) {
+                throw new RuntimeException("Default tenant not configured in hibernate.properties");
+            }
+            this.defaultTenant = defaultUser;
+            logger.debug("Default tenant loaded: " + defaultTenant);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load hibernate.properties", e);
+        }
+    }
+
+    /** Set tenant for current thread */
+    public static void setTenant(String tenantId) {
+        CURRENT_TENANT.set(tenantId);
+    }
+
+    /** Get tenant for current thread */
+    public static String getTenant() {
+        return CURRENT_TENANT.get();
+    }
+
+    /** Clear tenant for current thread */
+    public static void clear() {
+        CURRENT_TENANT.remove();
+    }
+
+    @Override
+    public String resolveCurrentTenantIdentifier() {
+        String tenant = CURRENT_TENANT.get();
+        logger.debug("*****************Resolving tenant. ThreadLocal tenant: " + tenant);
+        if (tenant != null) {
+            logger.debug("*****************Tenant resolved from ThreadLocal: " + tenant);
+            return tenant;
+        } else {
+			logger.debug("*****************No tenant in ThreadLocal, checking HTTP session...");
+		}
+
+        // Attempt to resolve tenant from HTTP session
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attr != null) {
+            HttpSession session = attr.getRequest().getSession(false);
+            if (session != null) {
+                Object sessionTenant = session.getAttribute(KEY_TENANTID_SESSION);
+                if (sessionTenant != null) {
+                    tenant = sessionTenant.toString();
+                    logger.debug("Tenant resolved from HTTP session: " + tenant);
+                    return tenant;
+                }
+            }
+        }
+
+        // Fallback to default tenant
+        logger.debug("No tenant found in ThreadLocal or session, using default: " + defaultTenant);
+        return defaultTenant;
+    }
+
+    @Override
+    public boolean validateExistingCurrentSessions() {
+        return true;
+    }
+}
+
+//package com._4s_.common.dao;
+//
+//import java.io.IOException;
+//import java.util.Enumeration;
+//import java.util.Properties;
+//
+//import javax.servlet.http.HttpSession;
+//
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
+//import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
+//import org.springframework.stereotype.Component;
+//import org.springframework.web.context.request.RequestContextHolder;
+//import org.springframework.web.context.request.ServletRequestAttributes;
+//
+///* It specify what Tenant should be use when the hibernate session is created.
+//* @author jm
+//*/
+//@Component
+//public class CurrentTenantIdentifierResolverImpl implements CurrentTenantIdentifierResolver {
+//	
+//	private static final String KEY_TENANTID_SESSION = "tenantID";
+//    private static String DEFAULT_TENANTID;
+//    private static final ThreadLocal<String> CURRENT_TENANT = new ThreadLocal<>();
+//    
+//    public static void setTenant(String tenantId) {
+//        CURRENT_TENANT.set(tenantId);
+//    }
+//
+//    public static String getTenant() {
+//        return CURRENT_TENANT.get();
+//    }
+//    
+//    public static void clear() {
+//        CURRENT_TENANT.remove();
+//    }
+//
+//	Log logger = LogFactory.getLog(getClass());
+//	
+//	public CurrentTenantIdentifierResolverImpl() throws IOException {
+//		Properties properties = new Properties();
+//		properties.load(getClass().getResourceAsStream("/hibernate.properties"));
+////		while (properties.elements().hasMoreElements()) {
+////			logger.debug(properties.elements().nextElement());
+////		}
+//		properties.put("hibernate.multi_tenant_connection_provider", SchemaMultiTenantConnectionProvider.hibernate_multi_tenant_connection_provider);
+//		properties.put("hibernate.tenant_identifier_resolver", SchemaMultiTenantConnectionProvider.hibernate_tenant_identifier_resolver);
+//		properties.put("hibernate.multiTenancy", SchemaMultiTenantConnectionProvider.hibernate_multiTenancy);
+//		logger.debug("***loaded Properties***");
+//		DEFAULT_TENANTID = (String)properties.getProperty("hibernate.connection.username");
+//		logger.debug("****DEFAULT_TENANTID " + DEFAULT_TENANTID);
+//	}
+//
+//////   @Override
+////   public String resolveCurrentTenantIdentifier() {
+////	   logger.debug("*************************CurrentTenantIdentifierResolverImpl*****************************");
+////       String tenant = resolveTenantByHttpSession();
+////       logger.debug("####Tenant resolved: " + tenant);
+////       return tenant;
+////   }
+//	
+//	@Override
+//    public String resolveCurrentTenantIdentifier() {
+////        String tenant = TenantContext.getTenant();
+////        logger.debug("### Tenant resolved from TenantContext: " + tenant);
+////        return tenant != null ? tenant : DEFAULT_TENANTID;
+//		
+////		String tenant = CURRENT_TENANT.get();
+////		 logger.debug("### Resolving tenant from ThreadLocal..." + tenant);
+////		 if (tenant == null) {
+////			 logger.debug("No tenant in ThreadLocal, using DEFAULT_TENANTID: " + DEFAULT_TENANTID);
+////			 tenant = DEFAULT_TENANTID;
+////		 } else {
+////			 logger.debug("Resolved tenant from ThreadLocal: " + tenant);
+////		 }
+////		 return tenant;
+//		 
+//		 
+//		 String tenant = CURRENT_TENANT.get();
+//		    logger.warn(">>> resolveCurrentTenantIdentifier() called. ThreadLocal tenant = " + tenant
+//		                + " , DEFAULT=" + DEFAULT_TENANTID
+//		                + " , Thread=" + Thread.currentThread().getName());
+//		    // print short stack trace to see caller
+//		    StackTraceElement[] st = Thread.currentThread().getStackTrace();
+//		    for (int i = 2; i < Math.min(st.length, 8); i++) {
+////		        logger.warn("   caller: " + st[i]);
+//		    }
+//		    if (tenant == null) {
+//		        tenant = DEFAULT_TENANTID;
+//		        logger.warn("Using DEFAULT tenant: " + tenant);
+//		    } else {
+//		        logger.warn("Using tenant from ThreadLocal: " + tenant);
+//		    }
+//		    return tenant;
+//    }
+//
+//   
+//
+//   /**
+//    * Get tenantId in the session attribute KEY_TENANTID_SESSION
+//    * @return TenantId on KEY_TENANTID_SESSION
+//    */
+//   public String resolveTenantByHttpSession()
+//   {
+//       ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//       //If session attribute exists returns tenantId saved on the session
+//      
+//       if(attr != null){
+////    	   logger.debug("ServletRequestAttributes " + attr.getRequest());
+//    	   
+//           HttpSession session = attr.getRequest().getSession(false); // true == allow create
+//           if(session != null){
+////        	   logger.debug("session id " + session.getId());
+//        	   Enumeration<String> attributes = session.getAttributeNames();
+//        	   while (attributes.hasMoreElements()) {
+//        		   String att = attributes.nextElement();
+////        		   logger.debug("attribute " +att + "%%%%%"+ session.getValue(att));
+//        	   }
+//               String tenant = (String) session.getAttribute(KEY_TENANTID_SESSION);
+//               logger.debug("### tenant added to session " + tenant);
+//               if(tenant != null){
+//                   return tenant;
+//               }
+//           }
+//       }
+//       //otherwise return default tenant
+//       logger.trace("Tenant resolved in session is: " + DEFAULT_TENANTID);
+//       return DEFAULT_TENANTID;
+//   }
+//
+////   @Override
+//   public boolean validateExistingCurrentSessions() {
+////	   logger.debug("*************************CurrentTenantIdentifierResolverImpl2*****************************");
+//       return true;
+//   }
+//}

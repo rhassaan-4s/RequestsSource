@@ -18,6 +18,10 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="hr_install")
 public class HRInstall implements Auditable,Serializable {
 	
+	public HRInstall() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_install_seq")
 	@SequenceGenerator(name="hr_install_seq",sequenceName="hr_install_seq")
 	private Long id;

@@ -1,6 +1,5 @@
 package com._4s_.HR.model;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,20 +12,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
-import com._4s_.auditing.model.Auditable;
 import com._4s_.common.model.TreeDivisions;
-import com._4s_.common.util.LocaleUtil;
 
 @Entity//(access=AccessType.FIELD)
 @Table(name="hr_internal_division")
 public class HRInternalDivision extends TreeDivisions {
 		
+		public HRInternalDivision() {
+		// TODO Auto-generated constructor stub
+	}
 		@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_internal_division_seq")
 		@SequenceGenerator(name="hr_internal_division_seq",sequenceName="hr_internal_division_seq")
 		private Long id;

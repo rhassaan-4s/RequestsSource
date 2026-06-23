@@ -14,6 +14,10 @@ import com._4s_.common.model.Branch;
 
 
 public class UserRolesBranch {
+	public UserRolesBranch() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@OneToMany
 	@JoinColumn(name = "users")
 	private List<User> users = new ArrayList<User>();

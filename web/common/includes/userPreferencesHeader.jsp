@@ -1,9 +1,12 @@
+<%@page import="com._4s_.common.model.Settings"%>
 <%@ include file="/web/common/includes/taglibs.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 
 <%@page import="java.util.List"%>
-<%@page import="com._4s_.security.model.SecurityApplication"%><html dir="<fmt:message key="commons.language.dir"/>"
+<%@page  contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@page import="com._4s_.security.model.SecurityApplication"%>
+<html dir="<fmt:message key="commons.language.dir"/>"
 	xml:lang="<fmt:message key="commons.language.code"/>"
 	lang="<fmt:message key="commons.language.code"/>">
 <head>
@@ -23,20 +26,55 @@
 	src="/Requests/web/common/js/toolTipContent.js"></script>
 <SCRIPT LANGUAGE="JavaScript" SRC="/Requests/web/common/js/popup.js"></SCRIPT>
 <script type="text/javascript" src="/Requests/web/common/js/myLiveSearch.js"></script>
-<script type="text/javascript" src="/Requests/dwr/interface/qry.js"></script>
+<!-- <script type="text/javascript" src="/Requests/dwr/interface/qry.js"></script>
 <script type="text/javascript" src="/Requests/dwr/engine.js"></script>
-<script type="text/javascript" src="/Requests/dwr/util.js"></script>
+<script type="text/javascript" src="/Requests/dwr/util.js"></script> -->
 <script type="text/javascript" src="/Requests/web/common/js/Tokenizer.js"></script>
 <script type="text/javascript" src="/Requests/web/common/js/jquery.min.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/jquery.calendars.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/jquery.calendars.plus.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="/Requests/web/common/css/jquery.calendars.picker.css" />
+<script type="text/javascript"
+	src="/Requests/web/common/js/jquery.calendars.picker.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/jquery.calendars.islamic.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/js/calendarDate.js"></script>
+
+<link type="text/css" rel="stylesheet"
+	href="/Requests/web/common/timepicker/ui-lightness/jquery-ui-1.8.21.custom.css" />
+<link type="text/css" rel="stylesheet"
+	href="/Requests/web/common/timepicker/jquery-ui-timepicker-addon.css" />
+<script type="text/javascript"
+	src="/Requests/web/common/timepicker/jquery-1.8.3.min.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/timepicker/jquery-ui.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/timepicker/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript"
+	src="/Requests/web/common/timepicker/jquery-ui-sliderAccess.js"></script>
+
+<link type="text/css" rel="stylesheet"
+	href="/Requests/web/common/clockpicker/clockpicker.css" />
+<link type="text/css" rel="stylesheet"
+	href="/Requests/web/common/clockpicker/standalone.css" />
+<script type="text/javascript"
+	src="/Requests/web/common/clockpicker/clockpicker.js"></script>
 <%
 	String applicationName = (String) session.getAttribute("appName");
 	List activeApplications = (List) request.getSession().getAttribute(
-			"activeApplications");
-	String locale = ((String) request.getSession().getAttribute(
-			"locale"));
-	String align = "";
-	if (locale != null && locale.equalsIgnoreCase("en")) {
-		align = "left";
+		"activeApplications");
+String locale = ((String) request.getSession().getAttribute(
+		"locale"));
+Settings settings = (Settings) request.getSession().getAttribute(
+		"settings");
+System.out.println("settings in header" + settings);
+String align = "";
+if (locale != null && locale.equalsIgnoreCase("en")) {
+align = "left";
 %>
 <link href="/Requests/web/common/css/tables_en.css" rel="stylesheet"	type="text/css" />
 <link rel="stylesheet" type="text/css" href="/Requests/web/common/css/ddsmoothmenu_en.css" />
@@ -85,6 +123,9 @@ color:black;background-color:#FFFF99;
                            /*End Menu Links*/
 </style>
 <script src="/Requests/web/common/js/mmenu.js" type="text/javascript"></script>
+
+
+
 <script type="text/javascript">
 
 /***********************************************
@@ -159,26 +200,40 @@ bartext:'MAIN MENU',       // bar text (the vertical cell) use text or img tag
 menuItems:[
 //[name, link, target, colspan, endrow?] - leave 'link' and 'target' blank to make a header
 	["<b><fmt:message key="commons.caption.multiItemGroups" /></b>"],
+	["<b><fmt:message key="commons.button.editUserPreferences" /></b>", "/Requests/security/changeUserApplication.html", "_new"],
 	["<b><fmt:message key="commons.caption.date" /></b>", "javascript:createWindow('<c:url value="/common/commonAdminDateConverter.html"/>')", "_new"],
 	["<b><fmt:message key="commons.caption.applications" /></b>"]
-<% if (activeApplications != null) {
-		for (int i = 0; i < activeApplications.size(); i++) {
-	  		SecurityApplication securityApplication = (SecurityApplication) activeApplications.get(i);
-%>
+<%System.out.println("application " + activeApplications);
+			SecurityApplication securityApplication = null;
+			System.out.println("activeApplications.size() " + activeApplications.size());
+			if (activeApplications != null) {
+				for (int i = 0; i < activeApplications.size(); i++) {
+					System.out.println("i " + i);
+					securityApplication = (SecurityApplication) activeApplications
+							.get(i);
+					System.out.println("active app "+i+" - "+ securityApplication.getName());%>
 ,[
-<%
-	 if (securityApplication.getName().equals("ASSETS")) {
-%>"<b><fmt:message key='assets.caption.applicationName' /></b>"<%
-	} else if (securityApplication.getName().equals("ADMINISTRATION")) {
-%>"<b><fmt:message key='administration.caption.applicationName' /></b>"<%
-	} if (applicationName.equals("requestsApproval")) {
-%>"<b><fmt:message key='requestsApproval.caption.applicationName' /></b>"<%
-	}
-%>, "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
-<%
-	}
-}
-%>
+<%if (securityApplication.getName().equals("ASSETS")) {%>
+	"<b><fmt:message key='assets.caption.applicationName' /></b>"
+<%} else if (securityApplication.getName().equals("ADMINISTRATION")) {%>
+	"<b><fmt:message key='administration.caption.applicationName' /></b>"
+<%} else if (securityApplication.getName().equals("requestsApproval")) {%>
+	"<b><fmt:message key='requestsApproval.caption.applicationName' /></b>"
+<%} else if (securityApplication.getName().equals("HR")) {%>
+	"<b><fmt:message key='hr.caption.applicationName' /></b>"
+<%} else if (securityApplication.getName().equals("timesheet")) {
+						if (settings.getIsTimesheetEnabled().equals(
+								new Boolean(true))) {%>
+									"<b><fmt:message key='timesheet.caption.applicationName' /></b>"
+						<%}
+  }else if (securityApplication.getName().equals("attendance")) {
+						if (settings.getWebAttendanceAppEnabled().equals(
+								new Boolean(true))) {%>
+	"<b><fmt:message key='attendance.caption.applicationName' /></b>"
+						<%}
+	}%>, "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
+<%}
+			}%>
 ]}; // REQUIRED!! do not edit or remove
 
 
@@ -186,7 +241,7 @@ make_menus();
 </script>
 </head>
 <body leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0"
-	marginwidth="0" marginheight="0" onload="liveSearchInit();">
+	marginwidth="0" marginheight="0" onload="liveSearchInit();"> 
 <_4s_:changeLocale value='<%=(String) request.getSession().getAttribute(
 									"locale")%>'/>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -197,32 +252,43 @@ make_menus();
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<td height="80" colspan="7" valign="top" align="center"><img
-					src="/Requests/web/common/images/Requests_header.jpg" width="100%"
+					src="/Requests/web/common/images/erp_header.jpg" width="100%"
 					height="80" /></td>
 			</tr>
 
-			<tr>
-				<td class="appName">
-				<%
-					applicationName = (String) session.getAttribute("appName");
-					String applicationNameString = "";
-					if (applicationName.equals("ASSETS")) {
-						applicationNameString = "gl.caption.applicationName";
-					} else if (applicationName.equals("ADMINISTRATION")) {
-						applicationNameString = "administration.caption.applicationName";
-					} else if (applicationName.equals("requestsApproval")) {
-						applicationNameString = "requestsApproval.caption.applicationName";
-					}
-					session.setAttribute("applicationNameString",
-									applicationNameString);
-				%>
-				
-			</tr>
-		</table>
+						<tr>
+							<td class="appName">
+								<%
+								String applicationNameString = "";
+									/* if (applicationName.equals("ASSETS")) {
+										applicationNameString = "gl.caption.applicationName";
+									 }else */
+									if (applicationName != null
+											&& applicationName.equals("ADMINISTRATION")) {
+										applicationNameString = "administration.caption.applicationName";
+									} else if (applicationName != null
+											&& applicationName.equals("requestsApproval")) {
+										applicationNameString = "requestsApproval.caption.applicationName";
+									} else if (applicationName != null
+											&& applicationName.equals("timesheet")) {
+										applicationNameString = "timesheet.caption.applicationName";
+									} else if (applicationName != null
+											&& applicationName.equals("attendance")) {
+										applicationNameString = "attendance.caption.applicationName";
+									} else if (applicationName != null
+											&& applicationName.equals("HR")) {
+										applicationNameString = "hr.caption.applicationName";
+									}
+									session.setAttribute("applicationNameString", applicationNameString);
+								%>
+							
+						</tr>
+					</table>
 		<!-- Top Header End------------------------------------------------ -->
 		</div>
 		</td>
 	</tr>
+	<tr>
 	<td><!-- Menu Begin------------------------------------------------ -->
 
 

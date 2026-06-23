@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.HR.model.HREmployee;
@@ -22,7 +23,7 @@ import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public interface RequestsApprovalDAO extends BaseDAO {
 	
 	public List getRoot(final String className);
@@ -92,6 +93,7 @@ public interface RequestsApprovalDAO extends BaseDAO {
 	public List getEmployeesByCodesAndRequestType(final String codeFrom,final String codeTo, final Long requestType);
 	public List getEmployeesByCodesAndDatePeriodAndRequestType(final String codeFrom,final String codeTo,final Date fromDate, final Date toDate, final Long requestType);
 	public List getRequestStatus(final Long req_id);
+	public List getRequestStatus(final Long req_id,final Long emp_id);
 	public void signInOut(AttendanceRequest userRequest);
 	public List getEmpReqTypeAccs(List accessLevels,Long requestType);
 	public int insertTimeAttend(String emp_code, Date date_,
@@ -108,4 +110,5 @@ public interface RequestsApprovalDAO extends BaseDAO {
 			String codeFrom, String codeTo);
 	public List<LoginUsers> getEmployeesByGroup(Long groupId);
 	public List<LoginUsers> getMgrsByGroup(Long groupId);
+	public List getAccessLevels();
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -34,8 +35,8 @@ public class Key implements Serializable,Auditable {
 	private String name;
 
 	private String description;
-	@OneToMany (mappedBy ="key",cascade=CascadeType.ALL)
-	private List<MyMessage> messages = new ArrayList<MyMessage>();
+//	@OneToMany (fetch = FetchType.LAZY, mappedBy ="key",cascade=CascadeType.ALL)
+//	private List<MyMessage> messages = new ArrayList<MyMessage>();
 
 	public Key() {
 	}
@@ -94,13 +95,13 @@ public class Key implements Serializable,Auditable {
 	 * @hibernate.collection-key column = "messageKey"
 	 * @hibernate.collection-one-to-many class = "com._4s_.i18n.model.MyMessage" 
 	 */
-	public List getMessages() {
-		return messages;
-	}
-
-	public void setMessages(List messages) {
-		this.messages = messages;
-	}
+//	public List getMessages() {
+//		return messages;
+//	}
+//
+//	public void setMessages(List messages) {
+//		this.messages = messages;
+//	}
 /**
 	 * @see java.lang.Object#equals(Object)
 	 */

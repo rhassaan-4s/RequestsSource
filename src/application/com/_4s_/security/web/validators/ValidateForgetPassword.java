@@ -3,6 +3,7 @@ package com._4s_.security.web.validators;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.oro.text.perl.Perl5Util;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -13,14 +14,15 @@ import com._4s_.security.service.MySecurityManager;
 public class ValidateForgetPassword implements Validator {
 	protected final Log log = LogFactory.getLog(getClass());
 
-	private MySecurityManager mgr = null;
+	@Autowired
+	private MySecurityManager securityManager = null;
 
-	public MySecurityManager getMgr() {
-		return mgr;
+	public MySecurityManager getSecurityManager() {
+		return securityManager;
 	}
 
-	public void setMgr(MySecurityManager mgr) {
-		this.mgr = mgr;
+	public void setSecurityManager(MySecurityManager mgr) {
+		this.securityManager = mgr;
 	}
 
 	public boolean supports(Class clazz) {

@@ -18,7 +18,6 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="hr_period_type")
 public class HRPeriodType implements Auditable,Serializable {
-	
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_periodtype_seq")
 	@SequenceGenerator(name="hr_periodtype_seq",sequenceName="hr_periodtype_seq")
 	private Long id;

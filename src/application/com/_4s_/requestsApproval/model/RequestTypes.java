@@ -11,7 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -20,8 +19,12 @@ import com._4s_.auditing.model.Auditable;
 @Entity//(access=AccessType.FIELD)
 @Table(name="request_types")
 public class RequestTypes implements Auditable,Serializable {
+	public RequestTypes() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="request_types_seq")
-	@SequenceGenerator(name="request_types_seq",sequenceName="request_types_seq")
+	@SequenceGenerator(name="request_types_seq",sequenceName="request_types_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	
 	private String description;
@@ -62,18 +65,26 @@ public class RequestTypes implements Auditable,Serializable {
 		return "Request Types " + description;
 	}
 	
-	@Override
-	public String toString() {
-		 return new ToStringBuilder(this)
-		 .append("name", this.description)
-		 .toString();
-	}
+//	@Override
+//	public String toString() {
+//		 return new ToStringBuilder(this)
+//		 .append("name", this.description)
+//		 .toString();
+//	}
+	
+	
 
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(991383961, 1226766147)
 		.append(this.getId())
 		.toHashCode();
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return super.toString();
 	}
 
 	public void setParentId(RequestTypes parentId) {

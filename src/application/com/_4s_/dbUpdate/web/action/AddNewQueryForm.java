@@ -4,9 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import javax.servlet.Servlet;
-import javax.servlet.GenericServlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,18 +15,26 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.web.util.WebUtils;
 
 import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.dbUpdate.service.SQLManager;
 
+@Controller
+@RequestMapping("/newQueryForm.html")
 public class AddNewQueryForm extends BaseSimpleFormController {
 
 	SQLManager mgr = null;
 
+	@Autowired
 	public SQLManager getMgr() {
 		return mgr;
 	}
@@ -36,10 +43,10 @@ public class AddNewQueryForm extends BaseSimpleFormController {
 		this.mgr = mgr;
 	}
 
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-			throws Exception {
-
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			SessionStatus sessStatus,Map model) throws Exception {
+		
 		if (log.isDebugEnabled()) {
 			log.debug("entering 'onSubmit' method....");
 		}
@@ -54,7 +61,7 @@ public class AddNewQueryForm extends BaseSimpleFormController {
 		
 		String fileName = contextPath+"/dbUpdates/ERPDBUpdate.xml";
 
-		Object object = (Object) command;
+//		Object object = (Object) command;
 
 		SAXBuilder builder = new SAXBuilder();
 
@@ -101,18 +108,19 @@ public class AddNewQueryForm extends BaseSimpleFormController {
 		log
 				.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 
-		return new ModelAndView(new RedirectView(getSuccessView()));
+		return new ModelAndView(new RedirectView("newQueryForm.html"));
 
 	}
 
-	protected Object formBackingObject(HttpServletRequest request)
-			throws ServletException {
-
+	@RequestMapping(method = RequestMethod.GET)  
+	public String initForm(ModelMap model,HttpServletRequest request){
 		log
 				.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		Object object = new Object();
+		model.addAttribute(object);
+		
 		log
 				.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End formBackingObject: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		return object;
+		return "newQueryForm";
 	}
 }

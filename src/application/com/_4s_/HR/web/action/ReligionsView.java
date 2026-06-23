@@ -11,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.HR.model.HRReligion;
-import com._4s_.HR.model.HRSchool;
 import com._4s_.HR.service.HRManager;
 
 public class ReligionsView  implements Controller{

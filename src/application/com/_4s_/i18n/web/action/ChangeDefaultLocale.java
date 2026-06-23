@@ -8,8 +8,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -26,16 +32,18 @@ public class ChangeDefaultLocale extends BaseSimpleFormController {
 
 	private LocaleSource localeSource = null;
 
+	@Autowired
+	@Qualifier("messageSource")
 	private ResourceMapMessageSource cacheMap = null;
 
-	private DefaultLocale defaultOne;
+	private DefaultLocale defaultLocale;
 
-	public DefaultLocale getDefaultOne() {
-		return defaultOne;
+	public DefaultLocale getDefaultLocale() {
+		return defaultLocale;
 	}
 
-	public void setDefaultOne(DefaultLocale defaultOne) {
-		this.defaultOne = defaultOne;
+	public void setDefaultLocale(DefaultLocale defaultLocale) {
+		this.defaultLocale = defaultLocale;
 	}
 
 	public ResourceMapMessageSource getCacheMap() {
@@ -64,8 +72,8 @@ public class ChangeDefaultLocale extends BaseSimpleFormController {
 
 	
 	
-	protected Map referenceData(HttpServletRequest arg0, Object arg1,
-			Errors arg2) throws Exception {
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request) {
 		// TODO Auto-generated method stub
 		List languages = new ArrayList();
 		languages = mgr.getObjects(MyLocale.class);
@@ -98,7 +106,7 @@ public class ChangeDefaultLocale extends BaseSimpleFormController {
 					.debug(">>>>>>>>>>>>>>>>>>>>>>>cacheMap.getCachedResourceMaps() "
 							+ cacheMap.getCachedResourceMaps());
 			// locale=defaultOne.getDefaultMyLocale();
-			defaultOne.setDefaultMyLocale(locale);
+			defaultLocale.setDefaultMyLocale(locale);
 			Map resource = (Map) (cacheMap.getCachedResourceMaps().get(locale));
 		}
 		request.getSession().setAttribute("locale", locale.getCode());
@@ -106,14 +114,16 @@ public class ChangeDefaultLocale extends BaseSimpleFormController {
 
 	}
 
-	protected Object formBackingObject(HttpServletRequest request)
-			throws Exception {
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request){
+		
 		// TODO Auto-generated method stub
 
 		MyLocale myLocale = mgr.getDefault();
 		log.debug(">>>>>>>>>>>>>>>.......My locale in formbackingobject"
 				+ myLocale);
-		return myLocale;
+		model.addAttribute("myLocale", myLocale);
+		return "changeDefaultLocale";
 	}
 
 }

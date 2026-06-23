@@ -19,6 +19,9 @@ public class SQL implements Auditable, Serializable {
 	@Basic
 	private String Location;
 
+	public SQL() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getLocation() {
 		return Location;
 	}

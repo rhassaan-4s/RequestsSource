@@ -32,16 +32,17 @@ function cancelApp(){
 }
 </style>
 
-<c:if test="${data==1}"><form id="attendanceRequestsApprovalForm" name="attendanceRequestsApprovalForm" method="POST"
-			action="<c:url value="/requestsApproval/attendanceRequestsApprovalForm.html?reqId="/>${requestInfo.id}">
+<c:if test="${model.data==1}">
+<form:form method="POST" 
+				action="/Requests/requestsApproval/attendanceRequestsApprovalForm.html?reqId=${model.requestInfo.id}">
 	<table width="100%" border="0" cellspacing="0" cellpadding="7"
 		style="padding-right: 10px">
 		
 		<tr>
 			<td colspan="2">
 <!--			<input type="text" name="done" id="done" value="" >-->
-			<input type="hidden" name="reqId" id="reqId" value="${requestInfo.id}" >
-			<input type="hidden" name="last" value="${last}" >
+			<input type="hidden" name="reqId" id="reqId" value="${model.requestInfo.id}" >
+			<input type="hidden" name="last" value="${model.last}" >
 		
 			<c:if test="${not empty status.errorMessages}">
 				<div><c:forEach var="error" items="${status.errorMessages}">
@@ -99,21 +100,21 @@ function cancelApp(){
 				</tr>
 				<tr>
 					
-					<td nowrap class="formBodControl" >${requestInfo.request_id.description}</td>
+					<td nowrap class="formBodControl" >${model.requestInfo.request_id.description}</td>
 		
-					<td nowrap class="formBodControl" ><_4s_:formatMiladiDate value="${requestInfo.request_date}"/></td>
+					<td nowrap class="formBodControl" ><_4s_:formatMiladiDate value="${model.requestInfo.request_date}"/></td>
 	
 					<td nowrap class="formBodControl" >
-						${requestInfo.period_from}
+						${model.requestInfo.period_from}
 					</td>	
 					
-					<td nowrap class="formBodControl" >${requestInfo.notes}</td>
+					<td nowrap class="formBodControl" >${model.requestInfo.notes}</td>
 				</tr>
 				
 				<tr>
 					<td class="formBodControl" colspan="7">
 						<iframe id="latlongmape" width="450" height="250" style="border:0;width:98%" class="shadow"
-						        src='https://www.google.com/maps/embed/v1/place?key=AIzaSyBeCCPQ7VdCQiJxjXGfVO98LyirL1-hC74&maptype=roadmap&q=${requestInfo.latitude},${requestInfo.longitude}' allowfullscreen>
+						        src='https://www.google.com/maps/embed/v1/place?key=AIzaSyBeCCPQ7VdCQiJxjXGfVO98LyirL1-hC74&maptype=roadmap&q=${model.requestInfo.latitude},${model.requestInfo.longitude}' allowfullscreen>
 						</iframe>
 					</td>
 				</tr>
@@ -149,7 +150,7 @@ function cancelApp(){
 	
 	
 						</tr>
-						<c:forEach items="${approvalList}" var="record">
+						<c:forEach items="${model.approvalList}" var="record">
 						<tr>
 								<td width="120" class="formBodControl">${record.title}</td>
 										<c:if test="${(record.status==null || record.status=='') && posted!=1}">
@@ -214,7 +215,7 @@ function cancelApp(){
 										</c:choose>	
 										
 										<c:choose>			
-											<c:when test="${record.status==1 && lastOne=='true'&& record.user==emp && done!='true' && posted!=1 && approvedBy==operator && approvedBy!='' &&operator!='' && approvedBy!=null &&operator!=null}">
+											<c:when test="${record.status==1 && lastOne=='true'&& record.user==emp && model.done!='true' && model.posted!=1 && model.approvedBy==operator && model.approvedBy!='' && model.operator!='' && model.approvedBy!=null &&model.operator!=null}">
 												<td colspan="2"><abc:i18n
 													property="requestsApproval.requestsApprovalForm.reqApproval" />
 												<fmt:message
@@ -312,7 +313,7 @@ function cancelApp(){
 					<tr>
 						<c:choose>
 		
-							<c:when test="${showbSubmit==1}">
+							<c:when test="${model.showbSubmit==1}">
 								<td colspan="6"><abc:i18n property="commons.button.save" /><input
 									type="submit" name="save"
 									value="<fmt:message key="commons.button.save"/>" class="button" />&nbsp;&nbsp;&nbsp;
@@ -321,21 +322,21 @@ function cancelApp(){
 									class="button" /></td>
 							</c:when>
 							
-							<c:when test="${showbSubmit==0}">
+							<c:when test="${model.showbSubmit==0}">
 							
 								<td colspan="6">
 								<font size="+2" color="green">
 								<abc:i18n
 									property="requestsApproval.requestsApprovalForm.reqStatus" /> <fmt:message
 									key="requestsApproval.requestsApprovalForm.reqStatus" /> : 
-								<c:if test="${requestInfo.approved==1}">					
+								<c:if test="${model.requestInfo.approved==1}">					
 								
 								<abc:i18n
 									property="requestsApproval.requestsApprovalForm.reqApproval" />
 								<fmt:message
 									key="requestsApproval.requestsApprovalForm.reqApproval" />
 								</c:if>
-								<c:if test="${requestInfo.approved==99}">					
+								<c:if test="${model.requestInfo.approved==99}">					
 								
 								<abc:i18n
 									property="requestsApproval.requestsApprovalForm.reqRejected" />
@@ -343,7 +344,7 @@ function cancelApp(){
 									key="requestsApproval.requestsApprovalForm.reqRejected" />
 								</c:if>
 								
-								<c:if test="${requestInfo.approved==0}">					
+								<c:if test="${model.requestInfo.approved==0}">					
 									لم يكتمل	
 								</c:if>
 								
@@ -362,7 +363,7 @@ function cancelApp(){
 			</td>
 		</tr>
 
-	</table>	</form>
+	</table>	</form:form>
 </c:if>
 
 

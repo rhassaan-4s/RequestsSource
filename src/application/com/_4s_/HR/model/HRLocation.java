@@ -2,7 +2,6 @@ package com._4s_.HR.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +19,10 @@ import com._4s_.auditing.model.Auditable;
 @Table(name="hr_location")
 public class HRLocation implements Auditable,Serializable{
 	
+	public HRLocation() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="hr_location_seq")
 	@SequenceGenerator(name="hr_location_seq",sequenceName="hr_location_seq")
 	private  Long id ;

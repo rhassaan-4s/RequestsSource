@@ -11,10 +11,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com._4s_.auditing.model.Auditable;
 import com._4s_.common.model.Employee;
@@ -22,23 +26,32 @@ import com._4s_.common.model.Employee;
 @Entity//(access=AccessType.FIELD)
 @Table(name="login_users_requests" ,uniqueConstraints= {@UniqueConstraint(columnNames= {"empCode","request_date","from_date","request_type"})})
 public class LoginUsersRequests implements Auditable,Serializable  {
+	public LoginUsersRequests() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="loginUsersRequests_seq")
-	@SequenceGenerator(name="loginUsersRequests_seq",sequenceName="loginUsersRequests_seq")
+	@SequenceGenerator(name="loginUsersRequests_seq",sequenceName="loginUsersRequests_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;
-	
+
 	@ManyToOne
 	@JoinColumn(name="login_user")
 	private LoginUsers login_user;
-	
+
 	@ManyToOne
 	@JoinColumn(name="request_type")
 	private RequestTypes request_id;
-	
 	private String empCode;
+//	private Date request_date;
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+//	@Temporal(TemporalType.DATE)
 	private Date request_date;
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
 	private Date from_date;
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
 	private Date to_date;
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
 	private Date period_from;
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
 	private Date period_to;
 	private Long approved;
 	private Long posted;
@@ -50,34 +63,40 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	private String requestNumber;
 	private Double withdrawDays;
 	private Long vacCredit;
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
 	private Date altDate;
 	@ManyToOne
 	@JoinColumn(name="vacation")
 	private Vacation vacation;
-	
+
 	@Transient
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
 	private Date vac_period_from;
-	
+
 	@Transient
+	@DateTimeFormat(pattern = "yyyy/MM/dd hh:mm")
 	private Date vac_period_to;
-	
+	private Double longitude = new Double(0);
+
+	private String reply;
 	private Double latitude = new Double(0);
-	
+
 	private Integer inputType = 0; //0: attendance from application sign in and out
-								   //1: attendance request (for those who forgot to attend)
-								   //2: Mobile attendance
-	
+	//1: attendance request (for those who forgot to attend)
+	//2: Mobile attendance
+
 	private String locationAddress = null;
-	
+
 	private Boolean isInsideCompany = true;
-	
+
 	private Date from_date_history;
-	
+
 	@ManyToOne
 	@JoinColumn (name="managerModifiedDate")
 	private Employee managerModifiedDate;
-	
-    public Employee getManagerModifiedDate() {
+
+	public Employee getManagerModifiedDate() {
 		return managerModifiedDate;
 	}
 	public void setManagerModifiedDate(Employee managerModifiedDate) {
@@ -119,9 +138,6 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
-	private Double longitude = new Double(0);
-	
-	private String reply;
 	public Long getId() {
 		return id;
 	}
@@ -139,15 +155,16 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	}
 	public void setRequest_id(RequestTypes request_id) {
 		this.request_id = request_id;
+	}	
+	
+	public Date getPeriod_from() {
+		return period_from;
 	}
 	public Date getRequest_date() {
 		return request_date;
 	}
 	public void setRequest_date(Date request_date) {
 		this.request_date = request_date;
-	}
-	public Date getPeriod_from() {
-		return period_from;
 	}
 	public void setPeriod_from(Date period_from) {
 		this.period_from = period_from;
@@ -158,7 +175,7 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	public void setPeriod_to(Date period_to) {
 		this.period_to = period_to;
 	}
-	
+
 	public String getNotes() {
 		return notes;
 	}
@@ -238,19 +255,19 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 
 	@Override
 	public boolean equals(Object o) {
-		 if (o == this) {
-		 return true;
-		 }
-		 if (!(o instanceof LoginUsersRequests)) {
-		 return false;
-		 }
-		 LoginUsersRequests rhs = (LoginUsersRequests) o;
-		 return new EqualsBuilder()
-		 .append(this.request_date, rhs.getRequest_date())
-		 .append(this.from_date, rhs.getFrom_date())
-		 .append(this.request_id, rhs.getRequest_id())
-		 .append(this.empCode, rhs.getEmpCode())
-		 .isEquals();
+		if (o == this) {
+			return true;
+		}
+		if (!(o instanceof LoginUsersRequests)) {
+			return false;
+		}
+		LoginUsersRequests rhs = (LoginUsersRequests) o;
+		return new EqualsBuilder()
+				.append(this.request_date, rhs.getRequest_date())
+				.append(this.from_date, rhs.getFrom_date())
+				.append(this.request_id, rhs.getRequest_id())
+				.append(this.empCode, rhs.getEmpCode())
+				.isEquals();
 	}
 	public void setRequestNumber(String requestNumber) {
 		this.requestNumber = requestNumber;
@@ -288,7 +305,7 @@ public class LoginUsersRequests implements Auditable,Serializable  {
 	public void setAltDate(Date altDate) {
 		this.altDate = altDate;
 	}
-	
-	
-	
+
+
+
 }

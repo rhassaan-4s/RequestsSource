@@ -125,9 +125,11 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 	</tr>
 	<tr>
 		<td>
-			<form id="attendanceRequestsReports" name="attendanceRequestsReports"	method="POST" action="<c:url value="/requestsApproval/attendanceRequestsReports.html"/>">
-				    <input type="hidden"  id="requestType" name="requestType" value="${requestType}"/>
-				    <input type="hidden"  id="errand" name="errand" value="${errand}"/>
+			<form:form method="POST" 
+				action="/Requests/requestsApproval/attendanceRequestsReports.html">
+				
+				    <input type="hidden"  id="requestType" name="requestType" value="${model.requestType}"/>
+				    <input type="hidden"  id="errand" name="errand" value="${model.errand}"/>
 					<div id="result">
 					<table border=0 cellspacing=1 cellpadding=0 id="ep" style="margin-right:40px">
 						<tr id="head_1_ep">
@@ -153,7 +155,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 									firstParam="empCode"
 									secondParam="name"
 									bindById="true"
-									valueString="${empCode}"
+									valueString="${model.empCode}"
 									valueId=""/>
 							</td>
 							
@@ -163,10 +165,10 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 							</td>
 							<td  class="formBodControl" >
 								<select name="statusId" id="statusId">
-									<option value="" ${status == null?'selected':''}><fmt:message key="commons.caption.select" /></option>
-									<option value="0" ${status==0?'selected':''}>لم تكتمل</option>
-									<option value="1" ${status==1?'selected':''}>موافق</option>
-									<option value="99" ${status==99?'selected' : ''}>مرفوض</option>
+									<option value="" ${model.status == null?'selected':''}><fmt:message key="commons.caption.select" /></option>
+									<option value="0" ${model.status==0?'selected':''}>لم تكتمل</option>
+									<option value="1" ${model.status==1?'selected':''}>موافق</option>
+									<option value="99" ${model.status==99?'selected' : ''}>مرفوض</option>
 								</select>
 							</td>																				
 						</tr>
@@ -185,7 +187,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 									class="calendar" class="MM_from_d" title="ccc"
 									readonly="readonly" autocomplete="off" dir="ltr"
 									name="request_date_from" id="request_date_from"
-									value="${request_date_from}" /></td>
+									value="${model.request_date_from}" /></td>
 								<td nowrap class="formBodControl"><abc:i18n
 										property="commons.caption.to" /> <fmt:message
 										key="commons.caption.to" /></td>
@@ -194,7 +196,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 									class="calendar" title="ccc" class="MM_to_d"
 									readonly="readonly" autocomplete="off" dir="ltr"
 									name="request_date_to" id="request_date_to"
-									value="${request_date_to}" /></td>
+									value="${model.request_date_to}" /></td>
 
 
 							</tr>
@@ -204,7 +206,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 								<fmt:message key="requestsApproval.caption.codeFrom" />
 							</td>
 							<td  class="formBodControl" >
-								<input type="text"  name="codeFrom" id="codeFrom" value="${codeFrom}"/>
+								<input type="text"  name="codeFrom" id="codeFrom" value="${model.codeFrom}"/>
 							</td>
 		
 					  		<td nowrap class="formBodControl" >
@@ -212,7 +214,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 								<fmt:message key="requestsApproval.caption.codeTo"/>
 							</td>
 							<td  class="formBodControl" >
-								<input type="text"  name="codeTo" id="codeTo" value="${codeTo}"/>
+								<input type="text"  name="codeTo" id="codeTo" value="${model.codeTo}"/>
 							</td>
 						</tr>
 												
@@ -236,7 +238,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 						</tr>										
 					</table>
 					<abc:paging url="attendanceRequestsReports.html" 
-					parametersString="empCode=${empCode}&statusId=${status}&date_from=${request_date_from}&date_to=${request_date_to}&codeFrom=${codeFrom}&codeTo=${codeTo}"/>
+					parametersString="empCode=${model.empCode}&statusId=${model.status}&date_from=${model.request_date_from}&date_to=${model.request_date_to}&codeFrom=${model.codeFrom}&codeTo=${model.codeTo}"/>
 					<table rules="all" align="center" class="sofT">
 									<tr>
 										<td colspan="14" class="helpTitle">
@@ -308,7 +310,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										</td>										
 									</tr>
 									
-								<c:forEach varStatus="loop" var="record" items="${results}">
+								<c:forEach varStatus="loop" var="record" items="${model.results}">
 									<tr height=20 bgcolor="#F8F8F8">
 										<td  nowrap>
 											${record.empCode}
@@ -439,7 +441,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 										</td>
 									</tr>
 								</table>								
-			</form>
+			</form:form>
 		</td>
 	</tr>
 </table>

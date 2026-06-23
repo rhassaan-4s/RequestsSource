@@ -4,8 +4,7 @@
 	
 </script>
 
-<form id="religionForm" name="religionForm" method="POST"
-	action="<c:url value="/attendance/religionForm.html"/>">
+<form:form	method="POST" action="/Requests/attendance/religionForm.html" modelAttribute="religion">
 
 <input type="hidden" id="religionCode" name="religionCode"
 			value="${religionCode}" />
@@ -14,45 +13,22 @@
 		style="padding-right: 10px">
 
 		<tr>
-			<td colspan="2"><spring:bind path="religion.*">
-					<c:if test="${not empty status.errorMessages}">
-						<div>
-							<c:forEach var="error" items="${status.errorMessages}">
-								<font color="red"> <c:out value="${error}"
-										escapeXml="false" /><br />
-								</font>
-							</c:forEach>
-						</div>
-					</c:if>
-				</spring:bind></td>
+			<td colspan="2"><c:if test="${not empty status.errorMessages}">
+					<div>
+						<h2 style="color: red;">
+							<form:errors path="religion.*" />
+						</h2>
+					</div>
+				</c:if></td>
 		</tr>
 
-		<tr>
+		<tr><td>
 			<table align="center" width="66%" class="sofT">
 				<tr id="head_1_ep">
 					<td class="helpTitle" colspan="2" nowrap><abc:i18n
 							property="attendance.header.religion" /> <fmt:message
 							key="attendance.header.religion" /></td>
 				</tr>
-
-				<!-- <tr>
-
-					<c:set var="check" value="" />
-					<c:if test="${code!=null && code!=''}">
-						<c:set var="check" value="disabled" />
-					</c:if>
-
-						<td nowrap class="formReq" width="30%"><abc:i18n
-								property="attendance.caption.religionCode" /> <fmt:message
-								key="attendance.caption.religionCode" /></td>
-
-
-						<td class="formBodControl">
-								<input size="8" maxlength="8" type="text"
-									value="${religion.religion}"
-									readonly="readonly" />
-							</td>
-				</tr> -->
 
 				<tr>
 
@@ -90,10 +66,10 @@
 						class="button" /></td>
 				</tr>
 			</table>
+			</td>
 		</tr>
 
 	</table>
-</form>
-
+</form:form>
 
 <%@ include file="/web/common/includes/footer.jsp"%>

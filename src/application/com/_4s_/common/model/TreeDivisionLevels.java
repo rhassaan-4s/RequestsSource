@@ -2,11 +2,7 @@ package com._4s_.common.model;
 
 import java.io.Serializable;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -29,6 +25,10 @@ public class TreeDivisionLevels implements Auditable,Serializable {
 	protected String name;
 	protected String ename;
 	
+	
+	public TreeDivisionLevels() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getEntityDisplayName() {
 		return this.getName();
 	}

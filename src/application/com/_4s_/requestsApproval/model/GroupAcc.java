@@ -6,10 +6,10 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -17,15 +17,16 @@ import javax.persistence.Table;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import com._4s_.HR.model.HREmployeeRelative;
-
 import com._4s_.auditing.model.Auditable;
 
 @Entity//(access=AccessType.FIELD)
 @Table(name="group_acc")
 public class GroupAcc implements Auditable,Serializable {
+	public GroupAcc() {
+		// TODO Auto-generated constructor stub
+	}
 	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="group_acc_seq")
-	@SequenceGenerator(name="group_acc_seq",sequenceName="group_acc_seq")
+	@SequenceGenerator(name="group_acc_seq",sequenceName="group_acc_seq", allocationSize = 1)//(generate=GeneratorType.IDENTITY)
 	private Long id;
 	
 	private String title;
@@ -58,6 +59,12 @@ public class GroupAcc implements Auditable,Serializable {
 		return new HashCodeBuilder(991383961, 1226766147)
 		.append(this.getId())
 		.toHashCode();
+	}
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+		return this.title.equals(((GroupAcc)obj).getTitle());
 	}
 	public void setTitle(String title) {
 		this.title = title;

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-    "http://www.springframework.org/dtd/spring-beans.dtd" >
-
-<beans>
-
+ <beans default-autowire="no"
+ default-lazy-init="true" 
+  xmlns="http://www.springframework.org/schema/beans"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:context="http://www.springframework.org/schema/context"
+           xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+           xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+       
 	<!--Configurer that replaces ${...} placeholders with values from properties files-->
 	<bean id="myDatabase"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -29,7 +32,7 @@
 
 
 	<!-- Bean Definition DBCP -->
-	<bean id="dataSource"
+	<!--<bean id="dataSource"
 		class="org.apache.tomcat.jdbc.pool.DataSource">
 		<property name="driverClassName">
 			<value>${hibernate.connection.driver_class}</value>
@@ -43,27 +46,98 @@
 		<property name="password">
 			<value>${hibernate.connection.password}</value>
 		</property>
-		 <property name="maxActive" value="30" />
-		<property name="maxIdle" value="20" />
-		<property name="minIdle" value="2" />
-		<property name="maxWait" value="10000" />
-		<property name="removeAbandoned" value="true" />
-		<property name="removeAbandonedTimeout" value="60" /> 
+		-->
+		
+		<!--<property name="hibernate.connection.charSet">
+			<value>utf8</value>
+		</property>
+		<property name="hibernate.connection.characterEncoding">
+			<value>utf8</value>
+		</property>
+		<property name="hibernate.connection.useUnicode">
+			<value>true</value>
+		</property>
+		<property name="hibernate.connection.defaultNChar">
+		 	<value>true</value>
+		 </property>-->
+<!--	</bean>-->
+
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+	    <property name="poolName" value="springHikariCP" />
+	    <property name="connectionTestQuery" value="SELECT 1 from dual" />
+	    <property name="dataSourceClassName" value="${hibernate.connection.dataSourceClassName}" />
+	    <property name="maximumPoolSize" value="${hibernate.hikari.maximumPoolSize}" />
+	    <property name="idleTimeout" value="${hibernate.hikari.idleTimeout}" />
+	    
+	    <property name="minimumIdle" value="${hibernate.hikari.minimumIdle}" />
+	    <property name="maxLifetime" value="${hibernate.hikari.maxLifetime}" />
+	    <property name="connectionTimeout" value="${hibernate.hikari.connectionTimeout}"/>
+	    <property name="validationTimeout" value="${hibernate.hikari.validationTimeout}"/>
+	
+	    <property name="dataSourceProperties">
+	        <props>
+	            <prop key="url">${hibernate.connection.url}</prop>
+	            <prop key="user">${hibernate.connection.username}</prop>
+	            <prop key="password">${hibernate.connection.password}</prop>
+	        </props>
+	    </property>
 	</bean>
 	
-	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-	    <property name="dataSource" ref="dataSource"/>
+	<!-- HikariCP configuration -->
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+	    <constructor-arg ref="hikariConfig" />
 	</bean>
 
+	<!--<bean id="dataSource"  destroy-method="close"
+		class="com.zaxxer.hikari.HikariDataSource">
+		<property name="driverClass">
+			<value>${hibernate.connection.driver_class}</value>
+		</property>
+		<property name="jdbcUrl">
+			<value>${hibernate.connection.url}</value>
+		</property>
+		<property name="user">
+			<value>${hibernate.connection.username}</value>
+		</property>
+		<property name="password">
+			<value>${hibernate.connection.password}</value>
+		</property>
+		-->
+			<!-- pool sizing -->
+	<!--	<property name="initialPoolSize" value="9" />
+		<property name="minPoolSize" value="0" />
+		<property name="maxPoolSize" value="50" />
+		<property name="acquireIncrement" value="3" />
+		<property name="maxStatements" value="0" />
+		<property name="maxStatementsPerConnection" value="10"/>-->
+		<!-- retries -->
+		<!--<property name="acquireRetryAttempts" value="10" />
+		<property name="acquireRetryDelay" value="1000" />
+		<property name="breakAfterAcquireFailure" value="false" />-->
+		<!-- refreshing connections -->
+		<!--<property name="maxIdleTime" value="180" /> 
+		<property name="maxConnectionAge" value="3600" /> --><!-- 1h - be careful with this! -->
+		<!-- timeouts e testing -->
+	<!--	<property name="checkoutTimeout" value="5000" /> 
+		<property name="idleConnectionTestPeriod" value="60" /> 
+		<property name="testConnectionOnCheckout" value="true" />
+		<property name="preferredTestQuery" value="SELECT 1 from dual" />
+		<property name="unreturnedConnectionTimeout" value="30" />
+	
+		<property name="debugUnreturnedConnectionStackTraces" value="true" />
+	</bean>-->
+
+
+	<bean id="dataSourceLookup"
+		class="com._4s_.common.dao.MultiTenantDataSourceLookup"/>
+		
 	<!-- Hibernate SessionFactory -->
 	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"> 
-		<property name="dataSource">
-			<ref bean="dataSource" />
-		</property>
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"> 
+		<property name="dataSource" ref="dataSource" />
+		
 		<property name="packagesToScan">
 		<list>
-		<!--<value>com._4s_.HR.model</value>-->
 		<value>com._4s_.auditing.model</value>
 		<value>com._4s_.common.model</value>
 		<value>com._4s_.dbUpdate.model</value>
@@ -79,19 +153,31 @@
 
 		</list>
 		</property>
-
-		
-
 		<property name="hibernateProperties">
 			<props>
-				<prop key="hibernate.dialect">
+				<!--<prop key="hibernate.dialect">
 					${hibernate.dialect}
+				</prop>-->
+				<prop key="hibernate.multiTenancy">
+					SCHEMA
 				</prop>
+				<prop key="hibernate.multi_tenant_connection_provider">
+					com._4s_.common.dao.SchemaMultiTenantConnectionProvider
+				</prop>
+				<prop key="hibernate.tenant_identifier_resolver">
+					com._4s_.common.dao.CurrentTenantIdentifierResolverImpl
+				</prop>
+				
 				<!-- <prop key="hibernate.default_schema">
 					${hibernate.defaultSchema}
 				</prop> -->
-	<!--			<prop key="hibernate.connection.release_mode">after_statement</prop>-->
+				<!--<prop key="hibernate.connection.release_mode">AFTER_TRANSACTION </prop>-->
   				<prop key="hibernate.show_sql">true</prop>  
+  				
+    			<prop key="hibernate.connection.autocommit">false</prop>
+  				
+  				<!--<prop key="spring.jpa.properties.javax.persistence.validation.mode">none</prop>-->
+<!--		    <prop key="hibernate.hbm2ddl.auto">update</prop>  -->
 <!--				<prop key="hibernate.hbm2ddl.auto">create</prop> -->
 			</props>
 		</property>
@@ -101,35 +187,24 @@
 
 	<!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
 	<bean id="transactionManager"
-		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-		<property name="sessionFactory">
-			<ref local="sessionFactory" />
-		</property>
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager" lazy-init="true">
+		<property name="sessionFactory"  ref="sessionFactory" />
+		<property name="autodetectDataSource" value="false" />
 	</bean>
-
 
 	<!-- Transaction template for Managers, from:
 		http://blog.exis.com/colin/archives/2004/07/31/concise-transaction-definitions-spring-11/ -->
-
+ 
 	<bean id="txProxyTemplate" abstract="true"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager">
-			<ref bean="transactionManager" />
-		</property>
+		<property name="transactionManager" ref ="transactionManager" />
 		<property name="transactionAttributes">
 			<props>
 				<prop key="handleRequest">PROPAGATION_REQUIRED,ISOLATION_READ_COMMITTED</prop>
-				<!--                <prop key="onSubmit">PROPAGATION_REQUIRED</prop>  ,-org.springframework.validation.BindException -->
-				<!--                <prop key="formBackingObject">PROPAGATION_REQUIRED,readOnly</prop>-->
-				<!--                 <prop key="*">PROPAGATION_REQUIRED</prop>-->
 			</props>
 		</property>
 	</bean>
-	
-	
-
-	
-	<bean id="txProxyTemplate2" abstract="true"
+	<!--<bean id="txProxyTemplate2" abstract="true"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager">
 			<ref bean="transactionManager" />
@@ -137,9 +212,6 @@
 		<property name="transactionAttributes">
 			<props>
 				<prop key="getExamsCities">PROPAGATION_REQUIRED</prop>	
-				<!--                <prop key="onSubmit">PROPAGATION_REQUIRED</prop>  ,-org.springframework.validation.BindException -->
-				<!--                <prop key="formBackingObject">PROPAGATION_REQUIRED,readOnly</prop>-->
-				<!--                 <prop key="*">PROPAGATION_REQUIRED</prop>-->
 			</props>
 		</property>
 	</bean>
@@ -165,21 +237,16 @@
 		<property name="transactionAttributes">
 			<props>
 				<prop key="getDoctorsOfSPBetween">PROPAGATION_REQUIRED</prop>
-				<!--                <prop key="onSubmit">PROPAGATION_REQUIRED</prop>  ,-org.springframework.validation.BindException -->
-				<!--                <prop key="formBackingObject">PROPAGATION_REQUIRED,readOnly</prop>-->
-				<!--                 <prop key="*">PROPAGATION_REQUIRED</prop>-->
 			</props>
 		</property>
 	</bean>
-
+ -->
 	<!-- Open Session in View Interceptor -->
 
 	<bean id="openSessionInViewInterceptor"
-		class="org.springframework.orm.hibernate4.support.OpenSessionInViewInterceptor">
+		class="org.springframework.orm.hibernate5.support.OpenSessionInViewInterceptor">
 		
-		 <property name="sessionFactory">
-	        <ref bean="sessionFactory" />
-	    </property>
+		 <property name="sessionFactory" ref="sessionFactory" />
 		<!-- ><property name="singleSession">
 			<value>true</value>
 		</property>

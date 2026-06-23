@@ -4,23 +4,94 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.zaxxer.hikari.HikariDataSource;
+
+@EnableTransactionManagement(proxyTargetClass = true)
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+@Repository
 public class CommonQueries {
-	
-	private JdbcTemplate jdbcTemplate;
-	private BasicDataSource basicDataSource;
-	
-	private String driverClass;
-	private String url;
-	private String username;
-	private String password;
-	private String schema;
 
+	protected final Log log = LogFactory.getLog(getClass());
+	
+////	private JdbcTemplate jdbcTemplate;
+//	private BasicDataSource basicDataSource;
+////	@Autowired
+//	private String driverClass;
+////	@Autowired
+//	private String url;
+////	@Autowired
+//	private String username;
+////	@Autowired
+//	private String password;
+////	@Autowired
+//	private String schema;
+
+	public HikariDataSource dataSource;
+	public static Session session = null;
+	
+	public static Session getSession() {
+		return session;
+	}
+	
+	public HikariDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(HikariDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	@Autowired
+	public SessionFactory sessionFactory;
+	
+	
+
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+	
+	public Session getCurrentSession(){
+		session = null;
+    	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
+    	log.debug("session factory " + sessionFactory);
+    	try {
+    	    session = sessionFactory.getCurrentSession();
+    	    log.debug("***session available " + session);
+    	    if (session == null || session.isOpen()==false) {
+    	    	session = sessionFactory.openSession();
+    	    	log.debug("session " + session);
+    	    }
+    	} catch (HibernateException e) {
+    		log.debug("###Exception#### session not available, will open new session");
+    	    session = sessionFactory.openSession();
+    	    log.debug("***********new session opened****************");
+    	}
+    	log.debug("$$$$$$$$$$$$$$$$$$session " +session);
+    	return session;
+	}
+	
 	private PlatformTransactionManager platformTransactionManager;
 
 
@@ -35,105 +106,150 @@ public class CommonQueries {
 	}
 	
 	
-	public String getSchema() {
-		return schema;
+//	public String getSchema() {
+//		return schema;
+//	}
+//
+//
+//	public void setSchema(String schema) {
+//		this.schema = schema;
+//	}
+
+
+//	public JdbcTemplate getJdbcTemplate() {
+//		return jdbcTemplate;
+//	}
+
+
+//	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+//		this.jdbcTemplate = jdbcTemplate;
+//	}
+
+
+//	public BasicDataSource getBasicDataSource() {
+//		return basicDataSource;
+//	}
+//
+//
+//	public void setBasicDataSource(BasicDataSource basicDataSource) {
+//		this.basicDataSource = basicDataSource;
+//	}
+//
+//
+//	public String getDriverClass() {
+//		return driverClass;
+//	}
+//
+//
+//	public void setDriverClass(String driverClass) {
+//		this.driverClass = driverClass;
+//	}
+//
+//
+//	public String getUrl() {
+//		return url;
+//	}
+//
+//
+//	public void setUrl(String url) {
+//		this.url = url;
+//	}
+//
+//
+//	public String getUsername() {
+//		return username;
+//	}
+//
+//
+//	public void setUsername(String username) {
+//		this.username = username;
+//	}
+//
+//
+//	public String getPassword() {
+//		return password;
+//	}
+//
+//
+//	public void setPassword(String password) {
+//		this.password = password;
+//	}
+//
+//
+//	private Properties loadProperties(String contextPath) {
+//		Properties prop = null;
+//		try {
+//			InputStream input = new FileInputStream(contextPath+"/WEB-INF/classes/hibernate.properties");
+//			prop = new Properties();
+//			prop.load(input);
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return prop;
+//	}
+//	public BasicDataSource createDataSource() {
+////		Properties prop = loadProperties();
+//		if(basicDataSource == null){
+//			basicDataSource = new BasicDataSource();
+////			driverClass = prop.getProperty("hibernate.connection.driver_class");
+////			url = prop.getProperty("hibernate.connection.url");
+////			username = prop.getProperty("hibernate.connection.username");
+////			password = prop.getProperty("hibernate.connection.password");
+//			
+//			basicDataSource.setDriverClassName(driverClass);
+//			basicDataSource.setUrl(url);
+//			basicDataSource.setUsername(username);
+//			basicDataSource.setPassword(password);
+//		}
+//		return basicDataSource;
+//	}
+	
+	
+	
+	public <T> List<T> map(Class<T> type, List<Object[]> records){
+		List<T> result = new ArrayList<T>();
+		   for(Object[] record : records){
+			   T rec = map(type, record);
+			   System.out.println("record " + rec);
+		      result.add(rec);
+		   }
+		   return result;
 	}
 
-
-	public void setSchema(String schema) {
-		this.schema = schema;
+	@Transactional
+	public <T> List<T> getResultList(Session session, Query query, Class<T> type){
+		log.debug("####session " + session);
+		List l = query.getResultList();
+//		log.debug("####First item in list " + l.get(0));
+		log.debug("####class type " + type);
+		List<Object[]> records = l;
+		return map(type, records);
 	}
-
-
-	public JdbcTemplate getJdbcTemplate() {
-		return jdbcTemplate;
-	}
-
-
-	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-	}
-
-
-	public BasicDataSource getBasicDataSource() {
-		return basicDataSource;
-	}
-
-
-	public void setBasicDataSource(BasicDataSource basicDataSource) {
-		this.basicDataSource = basicDataSource;
-	}
-
-
-	public String getDriverClass() {
-		return driverClass;
-	}
-
-
-	public void setDriverClass(String driverClass) {
-		this.driverClass = driverClass;
-	}
-
-
-	public String getUrl() {
-		return url;
-	}
-
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-
-	public String getUsername() {
-		return username;
-	}
-
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-
-	public String getPassword() {
-		return password;
-	}
-
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-
-	private Properties loadProperties(String contextPath) {
-		Properties prop = null;
-		try {
-			InputStream input = new FileInputStream(contextPath+"/WEB-INF/classes/hibernate.properties");
-			prop = new Properties();
-			prop.load(input);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	
+	public <T> T map(Class<T> type, Object[] tuple){
+		   List<Class<?>> tupleTypes = new ArrayList<>();
+		   for(Object field : tuple){
+			   if (field !=null) {
+				   System.out.println("field " + field.getClass());
+			   } else {
+				   System.out.println("field is null");
+			   }
+//			   if (field==null) {
+				   tupleTypes.add(Object.class);
+//			   } else {
+//				   tupleTypes.add(field.getClass());
+//			   }
+		   }
+		   try {
+		      Constructor<T> ctor = type.getConstructor(tupleTypes.toArray(new Class<?>[tuple.length]));
+		      log.debug("constructor " + ctor);
+		      return ctor.newInstance(tuple);
+		   } catch (Exception e) {
+		      throw new RuntimeException(e);
+		   }
 		}
-		return prop;
-	}
-	public BasicDataSource createDataSource() {
-//		Properties prop = loadProperties();
-		if(basicDataSource == null){
-			basicDataSource = new BasicDataSource();
-//			driverClass = prop.getProperty("hibernate.connection.driver_class");
-//			url = prop.getProperty("hibernate.connection.url");
-//			username = prop.getProperty("hibernate.connection.username");
-//			password = prop.getProperty("hibernate.connection.password");
-			
-			basicDataSource.setDriverClassName(driverClass);
-			basicDataSource.setUrl(url);
-			basicDataSource.setUsername(username);
-			basicDataSource.setPassword(password);
-		}
-		return basicDataSource;
-	}
 }

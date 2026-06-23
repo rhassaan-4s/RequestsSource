@@ -4,16 +4,17 @@
 "http://www.w3.org/TR/html4/loose.dtd">
 
 <%@page import="java.util.List"%>
-
+<%@page  contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@page import="com._4s_.security.model.SecurityApplication"%>
 <html dir="<fmt:message key="commons.language.dir"/>"
 	xml:lang="<fmt:message key="commons.language.code"/>"
 	lang="<fmt:message key="commons.language.code"/>">
 <head>
-<!-- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> -->
-<meta http-equiv=“Content-Security-Policy” content=“default-src;‘self’;
-	gap://ready
-	file://* *; style-src ‘self’ ‘unsafe-inline’; script-src ‘self’ ‘unsafe-inline’ ‘unsafe-eval’; charset=UTF-8” />
+	<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+	<!-- 
+<meta name="_csrf" content="${_csrf.token}"/>
+<meta name="_csrf_header" content="${_csrf.headerName}"/>
+ -->
 <!-- ‘self’ gap://ready file://* *; style-src ‘self’ ‘unsafe-inline’; script-src ‘self’ ‘unsafe-inline’ ‘unsafe-eval’ -->
 <title>Requests System</title>
 <link type="text/css" rel="stylesheet"
@@ -33,9 +34,9 @@
 <SCRIPT LANGUAGE="JavaScript" SRC="/Requests/web/common/js/popup.js"></SCRIPT>
 <script type="text/javascript"
 	src="/Requests/web/common/js/myLiveSearch.js"></script>
-<script type="text/javascript" src="/Requests/dwr/interface/qry.js"></script>
+<!-- <script type="text/javascript" src="/Requests/dwr/interface/qry.js"></script>
 <script type="text/javascript" src="/Requests/dwr/engine.js"></script>
-<script type="text/javascript" src="/Requests/dwr/util.js"></script>
+<script type="text/javascript" src="/Requests/dwr/util.js"></script> -->
 <script type="text/javascript"
 	src="/Requests/web/common/js/Tokenizer.js"></script>
 <script type="text/javascript"
@@ -118,7 +119,7 @@
 
 		    
 		   	$( ".MM_from_vac" ).datetimepicker({
-				onSelect: function( selectedDate ) {			
+				onSelect: function( selectedDate ) {
 				$('input.MM_to[title="'+this.title+'"]').datepicker( "option", "minDate", selectedDate );}});
 			
 		    $( ".MM_to_vac" ).datetimepicker({		
@@ -171,7 +172,7 @@
 
 	Settings settings = (Settings) request.getSession().getAttribute(
 			"settings");
-	System.out.println("settings in header" + settings);
+	System.out.println("header.jsp: settings in header" + settings);
 	List activeApplications = (List) request.getSession().getAttribute(
 			"activeApplications");
 	String locale = ((String) request.getSession().getAttribute(
@@ -388,36 +389,32 @@ menuItems:[
 	["<b><fmt:message key="commons.button.editUserPreferences" /></b>", "/Requests/security/changeUserApplication.html", "_new"],
 	["<b><fmt:message key="commons.caption.date" /></b>", "javascript:createWindow('<c:url value="/common/commonAdminDateConverter.html"/>')", "_new"],
 	["<b><fmt:message key="commons.caption.applications" /></b>"]
-<%System.out.println("application " + activeApplications);
+<%System.out.println("header.jsp: application " + activeApplications);
 			SecurityApplication securityApplication = null;
-			System.out.println("activeApplications.size() " + activeApplications.size());
 			if (activeApplications != null) {
 				for (int i = 0; i < activeApplications.size(); i++) {
-					System.out.println("i " + i);
+					System.out.println("header.jsp: i " + i);
 					securityApplication = (SecurityApplication) activeApplications
 							.get(i);
-					System.out.println("active app "+i+" - "+ securityApplication.getName());%>
-,[
-<%if (securityApplication.getName().equals("ASSETS")) {%>
-	"<b><fmt:message key='assets.caption.applicationName' /></b>"
-<%} else if (securityApplication.getName().equals("ADMINISTRATION")) {%>
-	"<b><fmt:message key='administration.caption.applicationName' /></b>"
-<%} else if (securityApplication.getName().equals("requestsApproval")) {%>
-	"<b><fmt:message key='requestsApproval.caption.applicationName' /></b>"
-<%} else if (securityApplication.getName().equals("HR")) {%>
-	"<b><fmt:message key='hr.caption.applicationName' /></b>"
-<%} else if (securityApplication.getName().equals("timesheet")) {
-						if (settings.getIsTimesheetEnabled().equals(
-								new Boolean(true))) {%>
-									"<b><fmt:message key='timesheet.caption.applicationName' /></b>"
-						<%}
-  }else if (securityApplication.getName().equals("attendance")) {
-						if (settings.getWebAttendanceAppEnabled().equals(
-								new Boolean(true))) {%>
-	"<b><fmt:message key='attendance.caption.applicationName' /></b>"
-						<%}
-	}%>, "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
-<%}
+					System.out.println("header.jsp: active app "+i+" - "+ securityApplication.getName());%>
+					
+					<%if (securityApplication.getName().equals("ASSETS")) {%>
+					,["<b><fmt:message key='assets.caption.applicationName'/></b>", "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
+					<%} else if (securityApplication.getName().equals("ADMINISTRATION")) {%>
+					,["<b><fmt:message key='administration.caption.applicationName' /></b>", "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
+					<%} else if (securityApplication.getName().equals("requestsApproval")) {%>
+					,["<b><fmt:message key='requestsApproval.caption.applicationName' /></b>", "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
+					<%} else if (securityApplication.getName().equals("HR")) {%>
+					,["<b><fmt:message key='hr.caption.applicationName' /></b>", "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
+					<%} else if (securityApplication.getName().equals("timesheet") && settings.getIsTimesheetEnabled().equals(new Boolean(true))) {%>
+					,["<b><fmt:message key='timesheet.caption.applicationName'/></b>", "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
+					<% }else if (securityApplication.getName().equals("attendance") && settings.getWebAttendanceAppEnabled()!=null && settings.getWebAttendanceAppEnabled().equals(new Boolean(true))) {
+						  %>
+						  ,["<b><fmt:message key='attendance.caption.applicationName' /></b>", "/Requests/common/changeApplication.html?application=<%=securityApplication.getName()%>", "_new"]
+					<%	}else {
+						 // break;
+						}%>
+				<%}
 			}%>
 ]}; // REQUIRED!! do not edit or remove
 
@@ -479,7 +476,7 @@ make_menus();
 				<!-- Menu Begin------------------------------------------------ -->
 				<div class="menu">
 					<%
-						System.out.println("applicationName in header.jsp "
+						System.out.println("header.jsp: applicationName in header.jsp "
 								+ applicationName);
 						if (applicationName != null
 								&& applicationName.equals("ADMINISTRATION")) {

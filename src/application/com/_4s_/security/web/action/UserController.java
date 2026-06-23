@@ -9,6 +9,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com._4s_.common.model.Branch;
@@ -20,18 +26,20 @@ import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
 import com._4s_.security.service.MySecurityManager;
 
-public class UserController extends BaseController implements Comparator{
-	
-	private MySecurityManager mgr = null;
-	
+@Controller
+public class UserController implements Comparator{//extends BaseController
+	protected final Log log = LogFactory.getLog(getClass());
+	@Autowired
+	private MySecurityManager securityManager = null;
+	@Autowired
 	public CommonManager commonManager;
 
-	public MySecurityManager getMgr() {
-		return mgr;
+	public MySecurityManager getSecurityManager() {
+		return securityManager;
 	}
 
-	public void setMgr(MySecurityManager mgr) {
-		this.mgr = mgr;
+	public void setSecurityManager(MySecurityManager mgr) {
+		this.securityManager = mgr;
 	}
 	
 	public CommonManager getCommonManager() {
@@ -49,7 +57,8 @@ public class UserController extends BaseController implements Comparator{
 		return u1.getUsername().compareTo(u2.getUsername());
 	}
 
-	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping("/userDetails.html")
+	public String handleRequest(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>> handleRequest()<<<<<<<<<<<<<<<<<<<<<<<<<<");
 		
@@ -81,30 +90,30 @@ public class UserController extends BaseController implements Comparator{
 		mgr.saveObject(c1);	
 */		
 		/////////////////////////////////////////////////////////////////////
-		Map model = new HashMap();
+//		Map model = new HashMap();
 		
 		String deleteId = request.getParameter("deleteId");
 		if(deleteId != null && !deleteId.equals("")) {
 			Long deleteIdLong = Long.parseLong(deleteId);
-			Object o = baseManager.getObjectByParameter(User.class, "id", deleteIdLong);
+			Object o = securityManager.getObjectByParameter(User.class, "id", deleteIdLong);
 			if(o != null) {
 				User u = (User)o;
 				u.setIsActive(false);
-				baseManager.saveObject(u);
+				securityManager.saveObject(u);
 			}
 		}
 		
 		String confirmDeleteImei = request.getParameter("confirmDeleteImei");
-		List users = mgr.getEmployeesByBranchAndDepartmentAndStatus(request.getParameter("councilBranch"), request.getParameter("department"), request.getParameter("isEmployee"));
+		List users = securityManager.getEmployeesByBranchAndDepartmentAndStatus(request.getParameter("councilBranch"), request.getParameter("department"), request.getParameter("isEmployee"));
 		if (confirmDeleteImei!= null && confirmDeleteImei.equals("true")) {
 //			Iterator itr = users.iterator();
 //			while(itr.hasNext()) {
 //				User user = (User)itr.next();
-				List imeis = mgr.getObjects(Imei.class);
+				List imeis = securityManager.getObjects(Imei.class);
 				Iterator imeiItr = imeis.iterator();
 				while (imeiItr.hasNext()) {
 					Imei imei = (Imei)imeiItr.next();
-					mgr.removeObject(imei);
+					securityManager.removeObject(imei);
 				}
 					
 //			}
@@ -112,27 +121,28 @@ public class UserController extends BaseController implements Comparator{
 		
 		String confirmDeleteIP = request.getParameter("confirmDeleteIP");
 		if (confirmDeleteIP!= null && confirmDeleteIP.equals("true")) {
-				List ips = mgr.getObjects(IPAddress.class);
+				List ips = securityManager.getObjects(IPAddress.class);
 				Iterator ipItr = ips.iterator();
 				while (ipItr.hasNext()) {
 					IPAddress ip = (IPAddress)ipItr.next();
-					mgr.removeObject(ip);
+					securityManager.removeObject(ip);
 				}
 					
 //			}
 		}
 		
 		
-		List departments = baseManager.getObjects(Department.class);		
+		List departments = securityManager.getObjects(Department.class);		
 //		List branches = commonManager.getBranchesRelatedByCompany(new Long(1)); // SCFHS
 		List branches= commonManager.getObjects(Branch.class);
-		model.put("users", users);
-		model.put("branches", branches);
-		model.put("departments", departments);
-		model.put("councilBranch", request.getParameter("councilBranch"));
-		model.put("department", request.getParameter("department"));
-		model.put("isEmployee", request.getParameter("isEmployee"));
-		return new ModelAndView("userDetails", model);
+		model.addAttribute("users", users);
+		model.addAttribute("branches", branches);
+		model.addAttribute("departments", departments);
+		model.addAttribute("councilBranch", request.getParameter("councilBranch"));
+		model.addAttribute("department", request.getParameter("department"));
+		model.addAttribute("isEmployee", request.getParameter("isEmployee"));
+//		return new ModelAndView("userDetails", model);
+		return "userDetails";
 	}
 	
 }

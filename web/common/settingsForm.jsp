@@ -3,14 +3,9 @@
 
 <abc:security property="1021"/>
 
-<SCRIPT LANGUAGE="JavaScript">
 
-
-</SCRIPT>
-
-<form id="settings" name="settings" method="POST" action="<c:url value="/common/settingsForm.html"/>">
-	
-	
+<form:form method="POST" modelAttribute="settings"
+	action="/Requests/common/settingsForm.html">	
 	<table border="0" width="50%" cellspacing="0" cellpadding="0" style="padding-right:10px ">
 		<tr>
 			<td class="tableHeader" height="1"></td>
@@ -49,7 +44,7 @@
 					<fmt:message key="commons.caption.settings" />
 				</td>
 			</tr>
-			
+		
 			<tr>
 				<td nowrap class="formBodControl" >
 					<abc:i18n property="commons.caption.company" />
@@ -202,7 +197,8 @@
 				</td>
 			</tr>
 			
-			<td nowrap class="formBodControl" >
+			<tr>
+				<td nowrap class="formBodControl">
 					<abc:i18n property="requestsApproval.header.sqlServerConnectionEnabled" />
 					<fmt:message key="requestsApproval.header.sqlServerConnectionEnabled" />
 				</td>
@@ -213,18 +209,19 @@
 				</td>
 			</tr>
 			
-			<td nowrap class="formBodControl" >
+			<tr>
+				<td nowrap class="formBodControl" >
 					<abc:i18n property="requestsApproval.header.desktopHrApplication" />
 					<fmt:message key="requestsApproval.header.desktopHrApplication" />
 				</td>
 				<td  class="formBod">
-				<spring:bind path="settings.desktopHrApplication">
+					<spring:bind path="settings.desktopHrApplication">
 						<input type="checkbox" name="${status.expression}" ${status.value==	true ? 'checked' : ''} />
 					</spring:bind> 
 				</td>
 			</tr>
 			
-	<tr>
+			<tr>
 				<td class="tableHeader" height="20"></td>
 			</tr>
 			<tr id="head_1_ep">
@@ -304,7 +301,6 @@
 				</td>
 				<TD width="50%">&nbsp;</TD>
 			</tr>
-			
 			
 			<tr>
 				<td class="tableHeader" height="20"></td>
@@ -423,10 +419,6 @@
 				<TD width="50%">&nbsp;</TD>
 			</tr>
 			
-	<tr>
-	
-			
-			
 			<tr>
 				<td class="tableHeader" height="20"></td>
 			</tr>
@@ -439,8 +431,7 @@
 		
 		
 	</table>
-</form>
-
+</form:form>
 
 <script language="JavaScript" type="text/javascript" src="/4s/web/common/js/wz_tooltip.js"></script>
 <%@ include file="/web/common/includes/footer.jsp" %>

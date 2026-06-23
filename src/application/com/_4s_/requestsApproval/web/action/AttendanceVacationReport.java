@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,16 +16,25 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.MultiCalendarDate;
+import com._4s_.common.web.action.CommonController;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
+import com._4s_.requestsApproval.web.util.VacationsResultWrapper;
 
-public class AttendanceVacationReport implements Controller{
+@Controller
+@RequestMapping("/attendanceVacationReport.html")
+public class AttendanceVacationReport extends CommonController {
 	protected final Log log = LogFactory.getLog(getClass());
+	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
 
 	public RequestsApprovalManager getRequestsApprovalManager() {
@@ -38,8 +46,8 @@ public class AttendanceVacationReport implements Controller{
 		this.requestsApprovalManager = requestsApprovalManager;
 	}
 	
-	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView handleRequest(Model model,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		Employee emp =(Employee) request.getSession().getAttribute("employee");
 		log.debug("---ref-emp from session---"+request.getSession().getAttribute("employee"));
@@ -47,23 +55,26 @@ public class AttendanceVacationReport implements Controller{
 		List objects= new ArrayList();
 		List days=new ArrayList();
 		
-		Map model=new HashMap();
+//		Map model=new HashMap();
 		
 
 		String dateFrom = request.getParameter("fromDate");
 		log.debug("--dateFrom--"+dateFrom);
-		model.put("fromDate", dateFrom);
+		model.addAttribute("fromDate", dateFrom);
 		String dateTo = request.getParameter("toDate");
 		
 		String empCode = request.getParameter("empCode");
 		if (empCode!=null && !empCode.equals("")){
 			emp = (Employee)requestsApprovalManager.getObjectByParameter(Employee.class, "empCode", empCode);
-			model.put("emp", emp);
+		} else {
+			empCode = emp.getEmpCode();
 		}
-		model.put("empCode", empCode);
+		
+		model.addAttribute("emp",emp);
+		model.addAttribute("empCode", emp.getEmpCode());
 		
 		log.debug("--dateTo--"+dateTo);
-		model.put("toDate", dateTo);
+		model.addAttribute("toDate", dateTo);
 		log.debug("---xxxxxxxDatePeriod--");		
 		
 		Calendar c = Calendar.getInstance();
@@ -85,11 +96,11 @@ public class AttendanceVacationReport implements Controller{
 		String formattedDate=d.format(firstDay);
 		log.debug("----formattedDate---"+formattedDate);
 		
-		model.put("firstDay", formattedDate);
+		model.addAttribute("firstDay", formattedDate);
 		Date today=new Date();
 		String formatedToday=d.format(today);
 		log.debug("----formatedToday---"+formatedToday);
-		model.put("today", formatedToday);
+		model.addAttribute("today", formatedToday);
 		
 		Settings settings = (Settings)request.getSession().getAttribute("settings");
 		
@@ -97,7 +108,10 @@ public class AttendanceVacationReport implements Controller{
 		
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
 
-
+		if ((dateFrom == null || dateFrom.isEmpty()) && (dateTo == null || dateTo.isEmpty())) {
+			dateFrom = formattedDate;
+			dateTo = formatedToday;
+		}
 		if (dateFrom != null && dateTo != null){
 			if (!dateFrom.equals("") && !dateTo.equals("") ) {
 				Date fromDate = null;
@@ -141,7 +155,7 @@ public class AttendanceVacationReport implements Controller{
 				} else {
 //					totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
 //					totalObjects=requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
-					totalObjects=requestsApprovalManager.getTimeAttendAll(empCode, fromDate, toDate,null,settings);
+					totalObjects=requestsApprovalManager.getTimeAttendAll("'"+empCode+"'", fromDate, toDate,null,settings);
 				}
 				
 				objects=(List) totalObjects.get(0);
@@ -164,8 +178,8 @@ public class AttendanceVacationReport implements Controller{
 					
 					log.debug("sent mins=== "+mins+" && sent hrs=== "+hrs);
 					
-					model.put("totalMins", mins);
-					model.put("totalHrs", hrs);
+					model.addAttribute("totalMins", mins);
+					model.addAttribute("totalHrs", hrs);
 //				} 
 				//////////////////////////////////////////////////////////
 				
@@ -180,7 +194,7 @@ public class AttendanceVacationReport implements Controller{
 					log.debug("-------day---"+day);
 					log.debug("-------objects---"+ob.getDay()+"-------getTimeIn---"+ob.getTimeIn()+"-------getTimeOut---"+ob.getTimeOut());
 				}
-				model.put("records", objects);
+				model.addAttribute("records", objects);
 				// VIP
 				
 				if (empCode== null || empCode.isEmpty()) {
@@ -203,16 +217,24 @@ public class AttendanceVacationReport implements Controller{
 					if (empArray == null || empArray.isEmpty()) {
 						empArray = "'" + emp.getEmpCode() +  "'";
 					}
+					log.debug("will get vacations for list of employee");
 					days=requestsApprovalManager.getVacations(empArray, new Long(2), fromDate,toDate,settings);
 				} else {
 //					totalObjects=requestsApprovalManager.getTimeAttend(empCode, fromDate, toDate);
 //					totalObjects=requestsApprovalManager.getTimeAttendFromView(empCode, fromDate, toDate);
+					log.debug("will get vacations for certain employee");
 					days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate,settings);
 				}
 //				days=requestsApprovalManager.getVacations( empCode, new Long(2), fromDate,toDate);
 				log.debug("-----days 001 ---"+days.size());
-				model.put("days1", days);
-				
+				model.addAttribute("days1", days);
+				Iterator itr = days.iterator();
+				while(itr.hasNext()) {
+					Object o = itr.next();
+					log.debug("vac class" + o.getClass());
+					VacationsResultWrapper vac = (VacationsResultWrapper)o;
+					log.debug("###Vac@@@@@"+vac);
+				}
 //				days=requestsApprovalManager.getVacations(emp.getEmpCode(), new Long(2), "002", fromDate,toDate);
 //				log.debug("-----days 002 ---"+days.size());
 //				model.put("days2", days);
@@ -311,7 +333,8 @@ public class AttendanceVacationReport implements Controller{
 //			return new ModelAndView("attendanceVacationReport",model);
 		}
 		
-		return new ModelAndView("attendanceVacationReport",model);
+//		return new ModelAndView("attendanceVacationReport",model)
+		return new ModelAndView("attendanceVacationReport");
 	}
 	
 }

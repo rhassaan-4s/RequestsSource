@@ -1,5 +1,6 @@
 package com._4s_.common.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,19 +13,35 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.commons.collections.map.ListOrderedMap;
+import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.common.model.Settings;
 import com._4s_.common.util.DBUtils;
 import com._4s_.common.util.Page;
-    
-public class Queries extends CommonQueries{
+import com._4s_.common.web.util.SearchWrapper;
+import com._4s_.requestsApproval.web.util.TimeAttendanceWrapper;
+import com.zaxxer.hikari.HikariDataSource;
+   
+@EnableTransactionManagement(proxyTargetClass = true)
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+@Repository
+public class Queries  extends CommonQueries{
 	protected final Log log = LogFactory.getLog(getClass());
 	
 	private JdbcTemplate exjt;
-	private DataSource dataSource;
 	private Connection conn;
 	public String sql1;
 	public String where1;
@@ -39,13 +56,71 @@ public class Queries extends CommonQueries{
 	public String limit;
 	public String [] splitParamString;
 	
-	public void setDataSource(DataSource dataSource) {
-	    this.dataSource = dataSource;
+	
+	private BasicDataSource basicDataSource;
+
+	private HikariDataSource dataSource;
+	
+	private static Session session = null;
+	public static Session getSession() {
+		return session;
+	}
+	
+	public HikariDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(HikariDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	@Autowired
+	private SessionFactory sessionFactory;
+	
+	
+	@Autowired
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 	
 	
+	public Session getCurrentSession(){
+		session = null;
+    	log.debug("$$$$$$$$$$$$$$$$$$getting current session");
+    	log.debug("session factory " + sessionFactory);
+    	try {
+    	    session = sessionFactory.getCurrentSession();
+    	    log.debug("***session available " + session);
+    	    if (session == null || session.isOpen()==false) {
+    	    	session = sessionFactory.openSession();
+    	    	log.debug("session " + session);
+    	    }
+    	} catch (HibernateException e) {
+    		log.debug("###Exception#### session not available, will open new session");
+    	    session = sessionFactory.openSession();
+    	    log.debug("***********new session opened****************");
+    	}
+    	log.debug("$$$$$$$$$$$$$$$$$$session " +session);
+    	return session;
+	}
+	
+//	private BasicDataSource createDataSource(String hostName,String serviceName,String userName,String password) {
+//		if(basicDataSource == null){
+//			basicDataSource = new BasicDataSource();
+//			basicDataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+//			basicDataSource.setUrl("jdbc:oracle:thin:@"
+//					+ hostName + ":1521:"
+//					+ serviceName);
+//			basicDataSource.setUsername(userName);
+//			basicDataSource.setPassword(password);
+//		}
+//		return basicDataSource;
+//	}
 
-	public Map search(String code,String description,String table,String firstParam,String secondParam,String paramString,String match1,String match2,String level, Settings settings,int pageNumber,int pageSize,String branchId){
+	public Map search(String code,String description,String table,String firstParam,String secondParam,String paramString,String match1,String match2,String level,Settings settings,int pageNumber,int pageSize,String branchId){
 		sql1= null;
 		where1= null;
 		whereFirstParam1= null;
@@ -75,7 +150,7 @@ public class Queries extends CommonQueries{
 			StringBuilder sql = new StringBuilder();
 			sql.append("select distinct(palette_capacity) from store_trns_room ");
 			sql.append("where " + paramList[0]);
-			listRows = getJdbcTemplate().queryForList(sql.toString());
+			listRows = jt.queryForList(sql.toString());
 			ListOrderedMap codeMap ;
 			paramString="";
 			
@@ -96,8 +171,9 @@ public class Queries extends CommonQueries{
 		} else {
 			rownum = "rownum rnum";
 		}
+//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		
 		sql1 = "SELECT * FROM (";
 		if (table.equals("store_c_trns_m,store_trns_def ")) {
 			sql1 = sql1 +
@@ -250,10 +326,15 @@ public class Queries extends CommonQueries{
 			}
 		}
 		
-		
-		
+		if (session == null || session.isOpen()==false)  {
+			session=getCurrentSession();
+		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> sql1"+sql1);
-		List records = getJdbcTemplate().queryForList(sql1);
+//		List records = getJdbcTemplate().queryForList(sql1);
+		
+		NativeQuery sqlQuery = session.createNativeQuery(sql1.toString());
+//		List records = sqlQuery.list();
+		List records = getResultList(session,sqlQuery,SearchWrapper.class);
 		log.debug(">>>>>>>>>>>>>>>>>>>>records "+records);
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -390,17 +471,30 @@ public class Queries extends CommonQueries{
 		}
 		//sql2=sql2+" and END_SERV IS NULL";
 		log.debug(">>>>>>>>>>>>>>sql2 "+sql2);
-		int count = getJdbcTemplate().queryForInt(sql2);
+//		int count = getJdbcTemplate().queryForObject(sql2,Integer.class);
+		int count;
+		try{
+			Query q = getCurrentSession().createNativeQuery(sql2.toString());
+			Object result = q.getSingleResult();
+			log.debug("@@@@@@@@@@@@@count " + result);
+			log.debug("@@@@@@@@@@@@@count " + result.getClass());
+			count = ((BigDecimal)result).intValue();
+			log.debug("*************count " + result);
+//			cc2=getJdbcTemplate().queryForObject(sql.toString(),Long.class);
+		}catch (Exception e) {
+			e.printStackTrace();
+			count=new Integer(0);
+		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>count "+count);
 		Map map = new HashMap();
 		if(table != null && !table.equals("") && (table.equals("store_c_trns_m") || table.equals("view_store_dep_trans"))){
 			String transId = null;
-			ListOrderedMap recordMap ;
+			SearchWrapper recordMap ;
 			List transList = new ArrayList();
 			
 			for(int i=0;i<records.size();i++){
-				recordMap = (ListOrderedMap) records.get(i);
-				transId = recordMap.get("identity").toString();
+				recordMap = (SearchWrapper) records.get(i);
+				transId = recordMap.getIdent().toString();
 				transList.add(transId);
 			}
 			map.put("transList",transList);
@@ -444,11 +538,18 @@ public class Queries extends CommonQueries{
 			String[] paramList = paramString.split(",");
 			table = tableList[0];
 			List listRows = new ArrayList();
-			JdbcTemplate jt = new JdbcTemplate(DBUtils.getDataSource());
+//			setJdbcTemplate(new JdbcTemplate(DBUtils.getDataSource()));
 			StringBuilder sql = new StringBuilder();
 			sql.append("select distinct(palette_capacity) from store_trns_room ");
 			sql.append("where " + paramList[0]);
-			listRows = getJdbcTemplate().queryForList(sql.toString());
+//			listRows = getJdbcTemplate().queryForList(sql.toString());
+			try{
+				Query q = getCurrentSession().createNativeQuery(sql.toString());
+				listRows = q.getResultList();
+				log.debug("----listRows---"+listRows);
+			}catch (Exception e) {
+				listRows = new ArrayList();
+			}
 			ListOrderedMap codeMap ;
 			paramString="";
 			
@@ -467,7 +568,7 @@ public class Queries extends CommonQueries{
 		log.debug(">>>>>>>>>>>>>>>>>>>table "+table);
 		log.debug(">>>>>>>>>>>>>>>>>>>firstParam "+firstParam);
 		log.debug(">>>>>>>>>>>>>>>>>>>paramString ("+paramString+")");
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = 
 			"select row_.*, rownum from ( select id as id ," + firstParam+ " as result "+
 			" from " +table;
@@ -493,12 +594,20 @@ public class Queries extends CommonQueries{
 		}
 		
 		log.debug("sql1 "+sql1);
-		List records = getJdbcTemplate().queryForList(sql1);
+//		List records = getJdbcTemplate().queryForList(sql1);
+		List records;
+		try{
+			Query q = getCurrentSession().createNativeQuery(sql1.toString());
+			records = q.getResultList();
+			log.debug("----records---"+records);
+		}catch (Exception e) {
+			records = new ArrayList();
+		}
 		return records;
 	}
 	
 	public List getExternalDestination(String value,String table,String firstParam,String secondParam,String paramString){
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+//		//setJdbcTemplate(new JdbcTemplate(dataSource));
 		List list = new ArrayList();
 		StringBuilder sql = new StringBuilder("select * from store_db_connection " 
 			+" where is_active='1'");
@@ -528,11 +637,18 @@ public class Queries extends CommonQueries{
 			table = "dist_names";
 		}
 		
-		list =  getJdbcTemplate().queryForList(sql.toString());
+//		list =  getJdbcTemplate().queryForList(sql.toString());
+		try{
+			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			list = q.getResultList();
+			log.debug("----records---"+list.size());
+		}catch (Exception e) {
+			list = new ArrayList();
+		}
 		
 		ListOrderedMap dbConnection ;
 		dbConnection = (ListOrderedMap) list.get(0);
-		exjt =  new JdbcTemplate(createDataSource());
+//		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
 		
 		log.debug("value "+value);
 		log.debug("table "+table);
@@ -556,7 +672,7 @@ public class Queries extends CommonQueries{
 		log.debug(">>>>>>>>>>>>>>>>>>>table "+table);
 		log.debug(">>>>>>>>>>>>>>>>>>>firstParam "+firstParam);
 		log.debug(">>>>>>>>>>>>>>>>>>>paramString ("+paramString+")");
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(dataSource));
 		
 		 if(arrParamString.length==2 && arrParamString[0].equals("cars")){
 			 sql1 = 
@@ -600,16 +716,24 @@ public class Queries extends CommonQueries{
 									String secondParam,
 									String paramString	) {
 		
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(dataSource));
 		List list = new ArrayList();
 		StringBuilder sql = new StringBuilder("select * from store_db_connection " 
 											+ " where is_active='1'");
 		
-		list =  getJdbcTemplate().queryForList(sql.toString());
+//		list =  getJdbcTemplate().queryForList(sql.toString());
+		
+		try{
+			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			list = q.getResultList();
+			log.debug("----list---"+list.size());
+		}catch (Exception e) {
+			list = new ArrayList();
+		}
 		
 		ListOrderedMap dbConnection ;
 		dbConnection = (ListOrderedMap) list.get(0);
-		exjt = new JdbcTemplate(createDataSource());
+//		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
 
 		value = value.replaceAll("'","");
 		value = value.replaceAll("\\\\","");
@@ -626,7 +750,7 @@ public class Queries extends CommonQueries{
 		}
 		log.debug("<paramString-aft>----- "+paramString);	
 		
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(dataSource));
 		
 		sql1 = "select row_.*, rownum from ( select " + secondParam +
 			   " as id ," + firstParam + " as result from " + table;
@@ -680,7 +804,7 @@ public class Queries extends CommonQueries{
 			paramArr = firstParam.split(",");
 		}
 		
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = 
 			"select row_.*, rownum from ( select ";
 		if(paramArr != null){
@@ -714,7 +838,15 @@ public class Queries extends CommonQueries{
 		}
 		
 		log.debug("sql1 "+sql1);
-		List records = getJdbcTemplate().queryForList(sql1);
+//		List records = getJdbcTemplate().queryForList(sql1);
+		List records;
+		try{
+			Query q = getCurrentSession().createNativeQuery(sql1.toString());
+			records = q.getResultList();
+			log.debug("----records---"+records.size());
+		}catch (Exception e) {
+			records = new ArrayList();
+		}
 		return records;
 	}
 	public List getAutoCompleteSuggestionsItemData(String value,String table,String firstParam,String paramString, String secondParam){
@@ -745,7 +877,7 @@ public class Queries extends CommonQueries{
 			paramArr = firstParam.split(",");
 		}
 		
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = 
 			"select row_.*, rownum from ( select ";
 		if(paramArr != null){
@@ -777,7 +909,15 @@ public class Queries extends CommonQueries{
 		}
 		
 		log.debug("sql1 "+sql1);
-		List records = getJdbcTemplate().queryForList(sql1);
+//		List records = getJdbcTemplate().queryForList(sql1);
+		List records;
+		try{
+			Query q = getCurrentSession().createNativeQuery(sql1.toString());
+			records = q.getResultList();
+			log.debug("----list---"+records.size());
+		}catch (Exception e) {
+			records = new ArrayList();
+		}
 		return records;
 	}
 	
@@ -804,7 +944,7 @@ public class Queries extends CommonQueries{
 		log.debug(">>>>>>>>>>>>>>>>>>>table "+table);
 		log.debug(">>>>>>>>>>>>>>>>>>>firstParam "+firstParam);
 		log.debug(">>>>>>>>>>>>>>>>>>>paramString ("+paramString+")");
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = 
 			"select row_.*, rownum from ( select " + firstParam+ " as result "+
 			" from " +table;
@@ -830,7 +970,15 @@ public class Queries extends CommonQueries{
 		}
 		
 		log.debug("sql1 "+sql1);
-		List records = getJdbcTemplate().queryForList(sql1);
+//		List records = getJdbcTemplate().queryForList(sql1);
+		List records;
+		try{
+			Query q = getCurrentSession().createNativeQuery(sql1.toString());
+			records = q.getResultList();
+			log.debug("----records---"+records.size());
+		}catch (Exception e) {
+			records = new ArrayList();
+		}
 		return records;
 	}
 	
@@ -845,7 +993,7 @@ public class Queries extends CommonQueries{
 		log.debug(">>>>>>>>>>>>>>>> table "+table);
 		log.debug(">>>>>>>>>>>>>>>> firstParam "+firstParam);
 		log.debug(">>>>>>>>>>>>>>>> value "+value);
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(dataSource));
 	
 		//String sql = "select id as id from "+table+" where "+firstParam+" = '"+value+"'";
 //		value = StringEscapeUtils.escapeSql(value);
@@ -859,7 +1007,15 @@ public class Queries extends CommonQueries{
 			sql = sql + " and " +paramString;
 		}
 		log.debug(">>>>>>>>>>>>>>>>> sql "+sql);
-		List result = getJdbcTemplate().queryForList(sql);
+//		List result = getJdbcTemplate().queryForList(sql);
+		List result;
+		try{
+			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			result = q.getResultList();
+			log.debug("----list---"+result.size());
+		}catch (Exception e) {
+			result = new ArrayList();
+		}
 		log.debug(">>>>>>>>>>>>>>>>>result "+result);
 		if (result != null && result.size() > 0 ){
 			log.debug(">>>>>>>>>> id "+result);
@@ -967,7 +1123,7 @@ public class Queries extends CommonQueries{
 		log.debug(">>>>>>>>>>>>>>>>>>>table "+table);
 		log.debug(">>>>>>>>>>>>>>>>>>>firstParam "+firstParam);
 		log.debug(">>>>>>>>>>>>>>>>>>>paramString ("+paramString+")");
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = 
 			"select row_.*, rownum from ( select id as id ," + firstParam+ " as result , code "+
 			" from " +table;
@@ -997,7 +1153,14 @@ public class Queries extends CommonQueries{
 		log.debug("sql1 "+sql1);
 		List records = new ArrayList();
 		if (paramString != null && paramString.length() >0){
-		records = getJdbcTemplate().queryForList(sql1);
+//		records = getJdbcTemplate().queryForList(sql1);
+			try{
+				Query q = getCurrentSession().createNativeQuery(sql1.toString());
+				records = q.getResultList();
+				log.debug("----list---"+records.size());
+			}catch (Exception e) {
+				records = new ArrayList();
+			}
 		}
 		return records;
 	}
@@ -1103,7 +1266,7 @@ public class Queries extends CommonQueries{
 			paramString = paramString.replaceAll("\\{sq\\}","'");
 			log.error(">>>>>>>>>>>>>>> paramString "+paramString);
 		}
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = "SELECT * FROM (";
 		if (table.equals("store_c_trns_m,store_trns_def ")) {
 			sql1 = sql1 +
@@ -1238,7 +1401,14 @@ public class Queries extends CommonQueries{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> sql1"+sql1);
 		List records = new ArrayList();
 		if (splitParamString[0].length()>0){
-		records = getJdbcTemplate().queryForList(sql1);
+//		records = getJdbcTemplate().queryForList(sql1);
+			try{
+				Query q = getCurrentSession().createNativeQuery(sql1.toString());
+				records = q.getResultList();
+				log.debug("----records---"+records.size());
+			}catch (Exception e) {
+				records = new ArrayList();
+			}
 		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>records "+records);
 		
@@ -1359,7 +1529,14 @@ public class Queries extends CommonQueries{
 		log.debug(">>>>>>>>>>>>>>sql2 "+sql2);
 		int count = 0;
 		if (splitParamString[0].length()>0){
-		 count = getJdbcTemplate().queryForInt(sql2);
+//		 count = getJdbcTemplate().queryForObject(sql2,Integer.class);
+			try{
+				Query q = getCurrentSession().createNativeQuery(sql2.toString());
+				count = (Integer)q.getSingleResult();
+				log.debug("----count---"+count);
+			}catch (Exception e) {
+				count = 0;
+			}
 		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>count "+count);
 		Map map = new HashMap();
@@ -1425,7 +1602,7 @@ public class Queries extends CommonQueries{
 		log.debug(">>>>>>>>>>>>>>>>>>>table "+table);
 		log.debug(">>>>>>>>>>>>>>>>>>>firstParam "+firstParam);
 		log.debug(">>>>>>>>>>>>>>>>>>>paramString ("+paramString+")");
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = 
 			"select row_.*, rownum from ( select id as id ," + firstParam+ " as result , code "+
 			" from " +table;
@@ -1459,7 +1636,14 @@ public class Queries extends CommonQueries{
 		log.debug("sql1 "+sql1);
 		List records = new ArrayList();
 		if (paramString != null && paramString.length() >0){
-		records = getJdbcTemplate().queryForList(sql1);
+//		records = getJdbcTemplate().queryForList(sql1);
+			try{
+				Query q = getCurrentSession().createNativeQuery(sql1.toString());
+				records = q.getResultList();
+				log.debug("----records---"+records.size());
+			}catch (Exception e) {
+				records = new ArrayList();
+			}
 		}
 		return records;
 	}
@@ -1524,7 +1708,7 @@ public class Queries extends CommonQueries{
 			paramString = paramString.replaceAll("\\{sq\\}","'");
 			log.error(">>>>>>>>>>>>>>> paramString "+paramString);
 		}
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = "SELECT * FROM (";
 		if (table.equals("store_c_trns_m,store_trns_def ")) {
 			sql1 = sql1 +
@@ -1667,7 +1851,14 @@ public class Queries extends CommonQueries{
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> sql1"+sql1);
 		List records = new ArrayList();
 		if (splitParamString[0].length()>0){
-		records = getJdbcTemplate().queryForList(sql1);
+//		records = getJdbcTemplate().queryForList(sql1);
+			try{
+				Query q = getCurrentSession().createNativeQuery(sql1.toString());
+				records = q.getResultList();
+				log.debug("----records---"+records.size());
+			}catch (Exception e) {
+				records = new ArrayList();
+			}
 		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>records "+records);
 		
@@ -1798,7 +1989,14 @@ public class Queries extends CommonQueries{
 		log.debug(">>>>>>>>>>>>>>sql2 "+sql2);
 		int count = 0;
 		if (splitParamString[0].length()>0){
-		 count = getJdbcTemplate().queryForInt(sql2);
+//		 count = getJdbcTemplate().queryForObject(sql2,Integer.class);
+			try{
+				Query q = getCurrentSession().createNativeQuery(sql2.toString());
+				count = (Integer)q.getSingleResult();
+				log.debug("----count---"+count);
+			}catch (Exception e) {
+				count = 0;
+			}
 		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>count "+count);
 		Map map = new HashMap();
@@ -1824,7 +2022,7 @@ public class Queries extends CommonQueries{
 		limit= null;
 		
 		
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(dataSource));
 		List list = new ArrayList();
 		StringBuilder sql = new StringBuilder("select * from store_db_connection " 
 			+" where is_active='1'");
@@ -1854,12 +2052,19 @@ public class Queries extends CommonQueries{
 			table = "dist_names";
 		}
 		
-		list =  getJdbcTemplate().queryForList(sql.toString());
+//		list =  getJdbcTemplate().queryForList(sql.toString());
 		
+		try{
+			Query q = getCurrentSession().createNativeQuery(sql.toString());
+			list = q.getResultList();
+			log.debug("----list---"+list.size());
+		}catch (Exception e) {
+			list = new ArrayList();
+		}
 		
 		ListOrderedMap dbConnection ;
 		dbConnection = (ListOrderedMap) list.get(0);
-		exjt = new JdbcTemplate(createDataSource());
+//		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
 		
 		
 		
@@ -2128,7 +2333,7 @@ public class Queries extends CommonQueries{
 		log.debug(">>>>>>>>>>>>>>sql2 "+sql2);
 		int count=0;
 		
-		 count = exjt.queryForInt(sql2);
+		 count = exjt.queryForObject(sql2,Integer.class);
 		
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>count "+count);
@@ -2164,16 +2369,16 @@ public class Queries extends CommonQueries{
 		limit= null;
 		
 		
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(dataSource));
 		List list = new ArrayList();
 		StringBuilder sql = new StringBuilder("select * from store_db_connection " +
 											  " where is_active='1'");
 			
-		list =  getJdbcTemplate().queryForList(sql.toString());
+//		list =  getJdbcTemplate().queryForList(sql.toString());
 		
 		ListOrderedMap dbConnection ;
 		dbConnection = (ListOrderedMap) list.get(0);
-		exjt = new JdbcTemplate(createDataSource());
+//		exjt =  new JdbcTemplate(createDataSource(dbConnection.get("host_name").toString(),dbConnection.get("service_name").toString(),dbConnection.get("user_name").toString(),dbConnection.get("password").toString()));
 		
 		if (paramString != null && paramString.length() > 0) {
 			paramString = paramString.replaceAll("\\{sq\\}","'");
@@ -2391,7 +2596,7 @@ public class Queries extends CommonQueries{
 		
 		int count=0;
 		
-		count = exjt.queryForInt(sql2);
+		count = exjt.queryForObject(sql2,Integer.class);
 		
 		Map map = new HashMap();
 		map.put("results",records);
@@ -2428,11 +2633,20 @@ public class Queries extends CommonQueries{
 			String[] paramList = paramString.split(",");
 			table = tableList[0];
 			List listRows = new ArrayList();
-			JdbcTemplate jt = new JdbcTemplate(DBUtils.getDataSource());
+//			setJdbcTemplate(new JdbcTemplate(DBUtils.getDataSource()));
 			StringBuilder sql = new StringBuilder();
 			sql.append("select distinct(palette_capacity) from store_trns_room ");
 			sql.append("where " + paramList[0]);
-			listRows = getJdbcTemplate().queryForList(sql.toString());
+//			listRows = getJdbcTemplate().queryForList(sql.toString());
+			
+			try{
+				Query q = getCurrentSession().createNativeQuery(sql.toString());
+				listRows = q.getResultList();
+				log.debug("----list---"+listRows.size());
+			}catch (Exception e) {
+				listRows = new ArrayList();
+			}
+			
 			ListOrderedMap codeMap ;
 			paramString="";
 			
@@ -2448,7 +2662,7 @@ public class Queries extends CommonQueries{
 		}
 		
 		
-		setJdbcTemplate(new JdbcTemplate(createDataSource()));
+		//setJdbcTemplate(new JdbcTemplate(dataSource));
 		sql1 = "SELECT * FROM (";
 		if (table.equals("store_c_trns_m,store_trns_def ")) {
 			sql1 = sql1 +
@@ -2596,7 +2810,15 @@ public class Queries extends CommonQueries{
 		
 		
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> sql1"+sql1);
-		List records = getJdbcTemplate().queryForList(sql1);
+//		List records = getJdbcTemplate().queryForList(sql1);
+		List records;
+		try{
+			Query q = getCurrentSession().createNativeQuery(sql1.toString());
+			records = q.getResultList();
+			log.debug("----list---"+records.size());
+		}catch (Exception e) {
+			records = new ArrayList();
+		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>records "+records);
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2723,7 +2945,16 @@ public class Queries extends CommonQueries{
 			}
 		}
 		log.debug(">>>>>>>>>>>>>>sql2 "+sql2);
-		int count = getJdbcTemplate().queryForInt(sql2);
+//		int count = getJdbcTemplate().queryForObject(sql2,Integer.class);
+		int count;
+		
+		try{
+			Query q = getCurrentSession().createNativeQuery(sql2.toString());
+			count = (Integer)q.getSingleResult();
+			log.debug("----count---"+count);
+		}catch (Exception e) {
+			count = 0;
+		}
 		log.debug(">>>>>>>>>>>>>>>>>>>>count "+count);
 		Map map = new HashMap();
 		if(table != null && !table.equals("") && table.equals("store_c_trns_m")){

@@ -3,27 +3,65 @@
  */
 package com._4s_.common.web.action;
 
+import java.util.Date;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.model.City;
+import com._4s_.common.model.Company;
 import com._4s_.common.model.Country;
+import com._4s_.common.web.binders.BaseBinder;
+import com._4s_.common.web.binders.CountryBinder;
 
 /**
  * @author mragab
  *
  */
+@Controller
+@RequestMapping("/commonAdminEditCity.html")
 public class EditCityFormController extends BaseSimpleFormController {
 	
-	public ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response,
-			Object command, BindException errors)
-	throws Exception{
+//	@Autowired
+	@Qualifier("countryBinder")
+	private BaseBinder countryBinder;
+	
+	
+	
+	public BaseBinder getCountryBinder() {
+		return countryBinder;
+	}
+	public void setCountryBinder(BaseBinder countryBinder) {
+		this.countryBinder = countryBinder;
+	}
+	@Override
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
+
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		super.initBinder(request,binder);
+		binder.registerCustomEditor(Country.class, countryBinder);
+	}
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("city") City command,
+			BindingResult result, SessionStatus status,Model model) {
 		
 		log.debug("Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
@@ -63,12 +101,12 @@ public class EditCityFormController extends BaseSimpleFormController {
 
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit");
 		
-		return new ModelAndView(new RedirectView(getSuccessView()),"countryId",city.getCountry().getId());
+		return new ModelAndView(new RedirectView("commonAdminCountryCities.html"),"countryId",city.getCountry().getId());
 	
 	}
 
-	protected Object formBackingObject (HttpServletRequest request)
-	throws ServletException{
+	@RequestMapping(method = RequestMethod.GET)
+	public String initForm(ModelMap model,HttpServletRequest request){
 		
 		log.debug("Start formBackingObject >>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		
@@ -102,8 +140,10 @@ public class EditCityFormController extends BaseSimpleFormController {
 		
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< Ending FormBackingObject");
 		
-		return city;
+		model.addAttribute("city", city);
+		return "commonAdminEditCity";
 	}
+	
 	
 //	protected Map referenceData(HttpServletRequest request)
 //    throws ServletException {

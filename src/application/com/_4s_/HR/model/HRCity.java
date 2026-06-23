@@ -28,6 +28,9 @@ public class HRCity implements Auditable,Serializable {
 		private String name;
 		private String ename;
 		
+		public HRCity() {
+			// TODO Auto-generated constructor stub
+		}
 		@ManyToOne
 		@JoinColumn (name="hrcountry")
 		private HRCountry hrCountry;
