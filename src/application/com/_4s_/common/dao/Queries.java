@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.logging.Log;
@@ -24,7 +22,6 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,10 +29,8 @@ import com._4s_.common.model.Settings;
 import com._4s_.common.util.DBUtils;
 import com._4s_.common.util.Page;
 import com._4s_.common.web.util.SearchWrapper;
-import com._4s_.requestsApproval.web.util.TimeAttendanceWrapper;
 import com.zaxxer.hikari.HikariDataSource;
    
-@EnableTransactionManagement(proxyTargetClass = true)
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 @Repository
 public class Queries  extends CommonQueries{

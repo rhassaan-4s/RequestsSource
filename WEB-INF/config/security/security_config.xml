@@ -492,6 +492,9 @@
 			<intercept-url pattern="/security/errorCode403.html.*\Z"
 			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			
+			
+			 <intercept-url pattern="/security/clients.html" access="permitAll"/>
+			
 	</http>
 
 	<global-method-security pre-post-annotations="enabled" />

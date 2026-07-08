@@ -11,7 +11,7 @@
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <context:component-scan
-            base-package="com._4s_.dbUpdate.web.action"/>
+            base-package="com._4s_.security.web.action"/>
 
     <tx:annotation-driven
             proxy-target-class="true"

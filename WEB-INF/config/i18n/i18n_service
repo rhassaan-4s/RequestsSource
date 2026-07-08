@@ -6,7 +6,7 @@
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd">
            
-      <bean id="messageSource"
+      <bean id="resourceMessageSource"
           class="com._4s_.i18n.service.ResourceMapMessageSource"/>
 
 </beans>

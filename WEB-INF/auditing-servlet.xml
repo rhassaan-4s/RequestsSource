@@ -17,7 +17,7 @@
 
     <tx:annotation-driven
             proxy-target-class="true"
-            transaction-manager="transactionManager"/>
+            transaction-manager="auditTransactionManager"/>
 
     <mvc:annotation-driven/>
 

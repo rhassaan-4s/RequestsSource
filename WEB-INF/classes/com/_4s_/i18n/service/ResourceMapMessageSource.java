@@ -15,6 +15,7 @@ import java.util.MissingResourceException;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractMessageSource;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,7 +33,7 @@ import com._4s_.security.service.UsersMap;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-@Component("messageSource")
+@Component("resourceMessageSource")
 public class ResourceMapMessageSource extends AbstractMessageSource  
 {
 
@@ -108,11 +109,29 @@ public class ResourceMapMessageSource extends AbstractMessageSource
 	 * @see #getMessageFormat
 	 */
 	
-	@PostConstruct
-	public void init() {
-	    System.out.println(">>> ResourceMapMessageSource loaded in ROOT");
-	}
-	
+//	@Autowired
+//	private ApplicationContext applicationContext;
+//
+//	@PostConstruct
+//	public void init() {
+//	    logger.debug("Context ID      : {}"+ applicationContext.getId());
+//	    logger.debug("Context Display Name    : {}"+ applicationContext.getDisplayName());
+//
+//	    ApplicationContext parent = applicationContext.getParent();
+//
+//	    if (parent == null) {
+//	        logger.info("Parent Context  : NONE");
+//	    } else {
+//	        logger.info("Parent Context  : {}"+ parent.getDisplayName());
+//	    }
+//	    
+//
+//	    logger.info("Contains messageSource = {}"+
+//	            applicationContext.containsBean("messageSource"));
+//
+//	    logger.info("Bean class = {}"+
+//	            applicationContext.getBean("messageSource").getClass().getName());
+//	}
 	//cachedMessageFormats --> (resource map(key&msg) & messagefromatmaps(code&localemap(locale&messageformat)))
 	private final Map cachedMessageFormats = new HashMap();
 
@@ -133,16 +152,10 @@ public class ResourceMapMessageSource extends AbstractMessageSource
 			}
 		
 		}
-//		logger.debug(">>>>>>>>>>>>>>>>>>>>.......username  "+username);
-//		logger.debug(">>>>>>>>>>>>>>>> userMap "+userMap);
-//		logger.debug(">>>>>>>>>>>>>>>> userMap.getUsers() "+userMap.getUsers());
-//		logger.debug(">>>>>>>>>>>>>>>> userMap.getUsers().get(username) "+userMap.getUsers().get(username));
 		if(userMap.getUsers().get(username) != null) {
 			logger.debug(">>>>>>>>>>>>>>>>>>Username "+username);
 			// !!!!!!!!!!
 			myLocale = (MyLocale)(userMap.getUsers().get(username));
-			//(MyLocale)(userMap.getUsers().get(username));
-//			logger.debug(">>>>>>>>>>>>>>>>>>after username "+myLocale);
 		} else if (localeSource != null) {
 			myLocale = localeSource.getDefaultMyLocale();
 			
@@ -163,27 +176,6 @@ public class ResourceMapMessageSource extends AbstractMessageSource
 				logger.debug(">>>>>>>>>>>>>>>>>.myLocale from db "+myLocale);
 			}
 		}
-
-		// /**
-		// * If all the above failed to get a MyLocale object
-		// * Try to use the plain parameters
-		// */
-		// if (myLocale==null) {
-		//			
-		// if ((defaultLanguage!=null)&&(defaultLanguage.length()>0)) {
-		// myLocale = new
-		// MyLocale(defaultLanguage,defaultCountry,defaultVariant);
-		// }
-		// }
-		//
-		// /**
-		// * If all the above failed to get a MyLocale object
-		// * Use the supplied Locale (Based on Browser information)
-		// */
-		// if (myLocale==null) {
-		// myLocale = new
-		// MyLocale(locale.getDisplayLanguage(),locale.getCountry(),locale.getVariant());
-		// }
 
 		/**
 		 * If all this failed Throw an exception
@@ -214,7 +206,7 @@ public class ResourceMapMessageSource extends AbstractMessageSource
 	// return the msg of that key "code" for that local
 	protected String resolveCodeWithoutArguments(String code, Locale locale) 
 	{
-//		logger.info("Starting CodeWithoutArguments... code:" + code);
+		logger.info("Starting CodeWithoutArguments... code:" + code);
 
 		String result = null;
 		Map resourceMap = getResourceMap(getMyLocale(locale));
@@ -237,7 +229,7 @@ public class ResourceMapMessageSource extends AbstractMessageSource
 	// returns the msg format of a key "code" for that locale
 	protected MessageFormat resolveCode(String code, Locale locale) 
 	{
-//		System.out.println("*****ResolveCode********");
+		System.out.println("*****ResolveCode********");
 //		System.out.println("... code:<<<<<<<<<<<"+ code);
 //		System.out.println("... locale:<<<<<<<<<<<"+ locale);
 //		logger
@@ -275,7 +267,7 @@ public class ResourceMapMessageSource extends AbstractMessageSource
 	 */
 	protected Map getResourceMap(MyLocale locale) {
 		logger.debug(">-----------------------------------------");
-		logger.info("Starting getResourceMap... locale:" + locale.getCode()
+		logger.debug("Starting getResourceMap... locale:" + locale.getCode()
 				+ "," + locale.getCountry() + "," + locale.getVariant());
 		Map resourceMap = null;
 		//try to get it from cach

@@ -4,9 +4,9 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,7 +28,6 @@ import com._4s_.i18n.model.MyMessage;
 import com._4s_.i18n.service.LocaleSource;
 import com._4s_.i18n.service.MessageManager;
 import com._4s_.i18n.service.ResourceMapMessageSource;
-import com._4s_.requestsApproval.model.AnnualVacLimit;
 
 @Controller
 @RequestMapping("/editMessage.html")
@@ -50,7 +49,7 @@ public class EditMessage extends BaseSimpleFormController {
 
 
 	@Autowired
-	@Qualifier("messageSource")
+	@Qualifier("resourceMessageSource")
 	private ResourceMapMessageSource messageSource = null;
 
 	private MyLocale myLocale = null;
@@ -79,6 +78,28 @@ public class EditMessage extends BaseSimpleFormController {
 	public void setMessageDAO(MessageDAO messageDAO) {
 		this.messageDAO = messageDAO;
 	}
+	
+	@Autowired
+	private org.springframework.context.ApplicationContext applicationContext;
+
+//	@PostConstruct
+//	public void init() {
+//	    log.info("EditMessage Context ID      : {}"+ applicationContext.getId());
+//	    log.info("EditMessage Display Name    : {}"+ applicationContext.getDisplayName());
+//
+//	    if (applicationContext.getParent() != null) {
+//	        log.info("Parent Display Name         : {}"+
+//	                applicationContext.getParent().getDisplayName());
+//
+//	        log.info("Parent contains messageSource = {}"+
+//	                applicationContext.getParent().containsBean("messageSource"));
+//	    } else {
+//	        log.info("NO PARENT CONTEXT");
+//	    }
+//
+//	    log.info("Current contains messageSource = {}"+
+//	            applicationContext.containsBean("messageSource"));
+//	}
 
 	@RequestMapping(method = RequestMethod.POST) // ,consumes=MediaType.APPLICATION_FORM_URLENCODED
 	public ModelAndView processSubmit(HttpServletRequest request, HttpServletResponse response,

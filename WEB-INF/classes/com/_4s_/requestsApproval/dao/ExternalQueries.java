@@ -26,7 +26,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -44,7 +43,6 @@ import com._4s_.requestsApproval.web.util.UserRequestsWrapper;
 import com._4s_.requestsApproval.web.util.VacationsResultWrapper;
 import com.zaxxer.hikari.HikariDataSource;
 
-@EnableTransactionManagement(proxyTargetClass = true)
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 @Repository("requestsApprovalExternalQueries")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)

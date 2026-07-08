@@ -6,12 +6,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +26,10 @@ import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.i18n.model.MyLocale;
 import com._4s_.i18n.model.MyMessage;
 import com._4s_.i18n.service.MessageManager;
+import com._4s_.i18n.service.ResourceMapMessageSource;
 
+@Controller
+@RequestMapping("/addNewLocale.html")
 public class AddNewLocale extends BaseSimpleFormController {
 	private MessageManager mgr = null;
 
@@ -34,6 +40,32 @@ public class AddNewLocale extends BaseSimpleFormController {
 	public void setMgr(MessageManager mgr) {
 		this.mgr = mgr;
 	}
+	
+	@Autowired
+	private ApplicationContext applicationContext;
+
+//	@PostConstruct
+//	public void init() {
+//	    System.out.println("*************Current context = " + applicationContext.getDisplayName());
+//
+//	    ApplicationContext parent = applicationContext.getParent();
+//
+//	    System.out.println("**************Parent = " + parent);
+//
+//	    if (parent != null) {
+//	        System.out.println("************parent.containsBean(\"resourceMessageSource\") "+parent.containsBean("resourceMessageSource"));
+//	    }
+//	    
+//	    System.out.println("applicationContext.containsBean(\"resourceMessageSource\") " + applicationContext.containsBean("resourceMessageSource"));
+//
+//	    Object bean = applicationContext.getBean("resourceMessageSource");
+//
+//	    System.out.println("message source bean " + bean);
+//
+//	    System.out.println("class " + bean.getClass());
+//
+//	    System.out.println("is instance of resourcemap? " + (bean instanceof ResourceMapMessageSource));
+//	}
 
 	protected ModelAndView onSubmit(HttpServletRequest request,
 			HttpServletResponse response, Object command, BindException error)
