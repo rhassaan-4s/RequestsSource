@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <property name="LOG_PATTERN" value="%d{HH:mm:ss.SSS} [%thread] %-5level [tenant=%X{tenantId}] %logger - %msg%n"/>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+  	<append>true</append>
+  	<immediateFlush>true</immediateFlush>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    	<fileNamePattern>logs/app-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+      </rollingPolicy>
+    <encoder>
+      <pattern>${LOG_PATTERN}</pattern>
+    </encoder>
+  </appender>
+
+
+  <!-- Root logger -->
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+  <!-- Reduce HikariCP noise -->
+  <logger name="com.zaxxer.hikari" level="ERROR"/>
+  <logger name="com.zaxxer.hikari.pool.HikariPool" level="ERROR"/>
+
+  <!-- Keep your app debug-able -->
+  <logger name="com._4s_" level="DEBUG"/>
+
+  <!-- Spring framework logs at INFO -->
+  <logger name="org.springframework" level="ERROR"/>
+  
+  <logger name="org.hibernate.SQL" level="DEBUG"/>
+  <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="ERROR"/>
+  
+  <logger name="org.apache.catalina.core.ApplicationContext.log" level="ERROR"/>
+
+</configuration>

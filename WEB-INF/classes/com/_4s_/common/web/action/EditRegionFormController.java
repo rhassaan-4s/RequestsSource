@@ -1,0 +1,186 @@
+package com._4s_.common.web.action;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
+
+import com._4s_.common.model.City;
+import com._4s_.common.model.Company;
+import com._4s_.common.model.Country;
+import com._4s_.common.model.Region;
+import com._4s_.common.service.CommonManager;
+import com._4s_.common.web.binders.BaseBinder;
+
+@Controller
+@RequestMapping("/commonAdminEditRegion.html")
+public class EditRegionFormController extends BaseSimpleFormController
+{
+	@Autowired
+	CommonManager commonManager=null;
+	@Autowired
+	@Qualifier("countryBinder")
+	private BaseBinder countryBinder;
+	
+	
+	public CommonManager getCommonManager() {
+		return commonManager;
+	}
+	public void setCommonManager(CommonManager commonManager) {
+		this.commonManager = commonManager;
+	}
+	
+	
+	public BaseBinder getCountryBinder() {
+		return countryBinder;
+	}
+	public void setCountryBinder(BaseBinder countryBinder) {
+		this.countryBinder = countryBinder;
+	}
+	@Override
+	public void initBinder(HttpServletRequest request,WebDataBinder binder) {
+
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Starting init binder: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		super.initBinder(request,binder);
+		binder.registerCustomEditor(Country.class, countryBinder);
+	}
+
+
+	protected Object formBackingObject (HttpServletRequest request)
+	throws ServletException
+	{
+		
+		log.debug("Start formBackingObject >>>>>>>>>>>>>>>>>>>>>>>>>>>>");		
+		Region region = new Region();
+	
+		String regionId = request.getParameter("regionId");
+		log.debug(">>>>>>>>>>> regionId :" + regionId);
+
+		if ((regionId!=null)&&(regionId.length()>0)) 
+		{
+			Object obj = baseManager.getObject(Region.class,new Long(regionId));
+			if (obj!=null) 
+			{
+				region = (Region)obj;
+			}
+			else
+			{
+				log.warn("!!! No object found for regionId:"+regionId);
+			}
+		}
+		
+		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< Ending FormBackingObject");
+		
+		return region;
+	}
+	
+	@ModelAttribute("model")
+	public Map populateWebFrameworkList(@RequestParam(value = "error", required = false) String error,HttpServletRequest request,@ModelAttribute("region") Region command) {
+		log.debug(">>>>>>>>>> Start of referenceData >>>>>>>>>>");
+		Map model = new HashMap();
+		Region region = (Region)command;
+			
+		model.put("countries",baseManager.getObjects(Country.class));
+		
+		String regionId = request.getParameter("regionId");
+		/*if ((regionId!=null)&&(regionId.length()>0))
+		{
+			model.put("cities",commonManager.getCitiesByCountry(region.getCountry().getId()));
+		}*/
+		
+		if(region.getCountry()!=null)
+		{
+			model.put("cities",commonManager.getCitiesByCountry(region.getCountry().getId()));
+		}
+		
+		log.debug(">>>>>>>>>> End of referenceData >>>>>>>>>>>>");
+		return model;
+	}	
+	
+	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws Exception
+	{
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>");
+		Region region = (Region)command;
+		
+		if(errors.getErrorCount()==0)
+		{
+			if(region.getDescription()==null || region.getDescription().equals(""))
+			{
+				errors.reject("commons.errors.requiredFields");
+			}
+		}
+		
+		if(errors.getErrorCount()==0)
+		{
+			if(region.getCountry()==null || region.getCountry().equals(""))
+			{
+				errors.reject("commons.errors.requiredFields");
+			}
+		}
+		
+		if(errors.getErrorCount()==0)
+		{
+			String[] citiesString = request.getParameterValues("cities");
+			if(citiesString!=null)
+			{
+				List cities=new ArrayList();
+				for(int i=0;i<citiesString.length;i++)
+				{
+					cities.add(baseManager.getObject(City.class,new Long(citiesString[i])));
+				}
+				region.setCities(cities);
+			}
+			else
+			{
+				errors.reject("commons.errors.requiredFields");
+			}
+		}
+		
+		if(errors.getErrorCount()==0)
+		{
+			if(region.getCode()==null || region.getCode().equals(""))
+			{
+				errors.reject("commons.errors.requiredFields");
+			}
+		}
+				
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> End of onBindAndValidate >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+	}
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("region") Region command,
+			BindingResult result, SessionStatus status,Model model) {
+		
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Start of onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>");
+		Region region = (Region)command;
+		
+		baseManager.saveObject(region);
+		
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> End of onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		return new ModelAndView(new RedirectView("commonAdminRegions.html"));
+	}
+
+
+}

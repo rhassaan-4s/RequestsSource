@@ -1,0 +1,236 @@
+package com._4s_.common.dao;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl;
+import org.hibernate.engine.jdbc.connections.spi.AbstractMultiTenantConnectionProvider;
+import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
+
+public class SchemaMultiTenantConnectionProvider2 extends AbstractMultiTenantConnectionProvider
+{
+
+	public static final String hibernate_multi_tenant_connection_provider = "com._4s_.common.dao.SchemaMultiTenantConnectionProvider";
+	public static final String hibernate_tenant_identifier_resolver = "com._4s_.common.dao.CurrentTenantIdentifierResolverImpl";
+	public static final String hibernate_multiTenancy = "SCHEMA";
+	
+    Log log = LogFactory.getLog(getClass());
+    private static final long serialVersionUID = 14535345L;
+    
+    private Map<String, ConnectionProvider> connectionProviderMap = new HashMap<>();
+    private Map<String,String> clientSchemaMap = new HashMap<String,String>();
+    private ConnectionProvider defaultProvider;
+ 
+    Map<String, ConnectionProvider> getConnectionProviderMap() {
+        return connectionProviderMap;
+    }
+    
+//    private ConnectionProvider connectionProvider;
+//    
+//    
+//
+//	public ConnectionProvider getConnectionProvider() {
+//		return connectionProvider;
+//	}
+//
+//	public void setConnectionProvider(ConnectionProvider connectionProvider) {
+//		this.connectionProvider = connectionProvider;
+//	}
+
+	public SchemaMultiTenantConnectionProvider2() {
+		System.out.println("#################SchemaMultiTenantConnectionProvider constructor");
+		try {
+			System.out.println("will try initializing");
+			initConnectionProvider();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("exception " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	private Map<String, ConnectionProvider> initConnectionProvider() throws IOException{
+		System.out.println("*********initializing connection provider for multitenant project");
+		Properties properties = new Properties();
+		properties.load(getClass().getResourceAsStream("/hibernate.properties"));
+		properties.put("hibernate.multiTenancy", "SCHEMA");
+		properties.put("hibernate.multi_tenant_connection_provider","com._4s_.common.dao.SchemaMultiTenantConnectionProvider");
+		properties.put("hibernate.tenant_identifier_resolver","com._4s_.common.dao.CurrentTenantIdentifierResolverImpl");
+		properties.put("connection.pool_size", "10");
+		String DEFAULT_TENANTID = (String)properties.getProperty("hibernate.connection.username");
+		
+		DriverManagerConnectionProviderImpl pp = new DriverManagerConnectionProviderImpl();
+		pp.configure(properties);
+		this.defaultProvider=pp;
+		
+		
+		String connection_url = (String)properties.getProperty("hibernate.connection.url");
+		String server = "";
+		if (connection_url.contains("oracle")) {
+			server = "oracle";
+		} else if (connection_url.contains("sql")){
+			server = "sql";
+		}
+		Connection c = null;
+		try {
+			c = defaultProvider.getConnection();
+				String statement = String.format("SELECT clientname, schema\r\n"
+						+ "		FROM COMMON_CLIENTS where server='%s'", server);
+				log.debug("statement " + statement);
+			ResultSet rs =  c.createStatement().executeQuery(statement);
+//			System.out.println("resultset size " + rs.getFetchSize());
+			while(rs.next()) {
+				String clientName = rs.getString("clientname");
+				String schema = rs.getString("schema");
+				clientSchemaMap.put(schema,clientName);
+				DriverManagerConnectionProviderImpl connectionProvider = new DriverManagerConnectionProviderImpl();
+				properties.replace("hibernate.connection.username", schema);
+				properties.replace("hibernate.connection.password", schema);
+				System.out.println(clientName + "-"+ schema);
+				connectionProvider.configure(properties);
+				this.connectionProviderMap.put(clientName, connectionProvider);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return connectionProviderMap;
+	}
+	
+	
+	private String getDefaultTenant() {
+		Properties properties = new Properties();
+		try {
+			properties.load(getClass().getResourceAsStream("/hibernate.properties"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return (String)properties.getProperty("hibernate.connection.username");
+	}
+
+	@Override
+	protected ConnectionProvider getAnyConnectionProvider() {
+		 return defaultProvider;
+	}
+
+	@Override
+	protected ConnectionProvider selectConnectionProvider(String tenantIdentifier) {
+		System.out.println("getting provider from map");
+		String client = clientSchemaMap.get(tenantIdentifier);
+		System.out.println("getting client of schema " + tenantIdentifier + " ==>" + client);
+		return connectionProviderMap.get(
+	            client
+	        );
+	}
+	
+
+	@Override
+	public Connection getConnection(String tenantIdentifier) {// throws SQLException {
+		log.debug("tenantIdentifier " + tenantIdentifier);
+		Connection connection = null;
+		try {
+			if (!connectionProviderMap.isEmpty()) {
+				ConnectionProvider p = selectConnectionProvider(tenantIdentifier);
+				System.out.println("provider " + p);
+				connection = p.getConnection();
+			} else {
+				connection = super.getConnection(tenantIdentifier);
+				String statement = String.format("ALTER SESSION SET CURRENT_SCHEMA= %S", tenantIdentifier);
+				log.debug("statement " + statement);
+				connection.createStatement().execute(statement);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		try {
+//			connection = super.getConnection(tenantIdentifier);
+//			String statement = String.format("ALTER SESSION SET CURRENT_SCHEMA= %S", tenantIdentifier);
+//			log.debug("statement " + statement);
+//			connection.createStatement().execute(statement);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		return connection;
+	}
+
+	@Override
+	public void releaseAnyConnection(Connection connection) throws SQLException {
+		// TODO Auto-generated method stub
+		System.out.println("releasing any connection");
+		getAnyConnectionProvider().closeConnection( connection );
+	}
+
+	@Override
+	public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
+		// TODO Auto-generated method stub
+		System.out.println("releasing connection");
+		selectConnectionProvider(tenantIdentifier).closeConnection(connection);
+	}
+    
+
+//    @Override
+//	public Connection getAnyConnection() throws SQLException {
+//		// TODO Auto-generated method stub
+//		return super.getAnyConnection();
+//	}
+//
+////	@Autowired
+//    private DataSource dataSource;//defaultDataSource
+//    public DataSource getDataSource() {
+//		return dataSource;
+//	}
+//
+//	public void setDataSource(DataSource dataSource) {
+//		System.out.println("datasource setting " + dataSource);
+//		this.dataSource = dataSource;
+//	}
+
+//	@Autowired
+//    private final MultiTenantDataSourceLookup dataSourceLookup = new MultiTenantDataSourceLookup();
+//    private DataSourceLookup dataSourceLookup;
+
+//    public MultiTenantDataSourceLookup getDataSourceLookup() {
+//		return dataSourceLookup;
+//	}
+//
+//	public void setDataSourceLookup(MultiTenantDataSourceLookup dataSourceLookup) {
+//		this.dataSourceLookup = dataSourceLookup;
+//	}
+
+	/**
+     * Select datasources in situations where not tenantId is used (e.g. startup processing).
+    */
+//    @Override
+//    protected DataSource selectAnyDataSource() {
+//        logger.debug("Select any dataSource: " + dataSource);
+//        System.out.println("*************************MultiTenantConnectionProviderImpl*****************************" + dataSource+"####");
+//        if (dataSource == null) {
+//        	selectDataSource("4s");	
+//        }
+//        return dataSource;
+//    }
+//
+//    /**
+//     * Obtains a DataSource based on tenantId
+//    */
+//    @Override
+//    protected DataSource selectDataSource(String tenantIdentifier) {
+//    	 System.out.println("*************************MultiTenantConnectionProviderImpl2*********************"+dataSourceLookup+"********");
+//        DataSource ds = dataSourceLookup.getDataSource(tenantIdentifier);
+//        System.out.println("*************************MultiTenantConnectionProviderImpl3*****************************");
+//        logger.trace("Select dataSource from "+ tenantIdentifier+ ": " + ds);
+//        System.out.println("Select dataSource from "+ tenantIdentifier+ ": " + ds);
+//        return ds;
+//    }
+}

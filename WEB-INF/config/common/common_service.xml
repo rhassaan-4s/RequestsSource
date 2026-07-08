@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- ========================================================= -->
+    <!-- Mail -->
+    <!-- ========================================================= -->
+
+    <bean id="mailSender"
+          class="org.springframework.mail.javamail.JavaMailSenderImpl">
+
+        <property name="host" value="smtp.tedata.net"/>
+        <property name="username" value="ticketmanager@4s-systems.com"/>
+        <property name="password" value="mgemge"/>
+
+    </bean>
+
+    <bean id="mailMessage"
+          class="org.springframework.mail.SimpleMailMessage"/>
+
+    <!-- ========================================================= -->
+    <!-- Utilities -->
+    <!-- ========================================================= -->
+
+    <bean id="multiCalendarDate"
+          class="com._4s_.common.util.MultiCalendarDate"/>
+
+</beans>

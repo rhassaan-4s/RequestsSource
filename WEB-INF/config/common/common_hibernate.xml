@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans default-autowire="no"
+       default-lazy-init="false"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- ========================================================= -->
+    <!-- PROPERTY FILES -->
+    <!-- ========================================================= -->
+
+    <bean id="myDatabase"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <description>Database specific options</description>
+        <property name="location">
+            <value>/WEB-INF/classes/hibernate.properties</value>
+        </property>
+        <property name="ignoreUnresolvablePlaceholders">
+            <value>true</value>
+        </property>
+    </bean>
+
+    <!-- ========================================================= -->
+    <!-- COMPONENT SCAN -->
+    <!-- ========================================================= -->
+
+    <context:component-scan base-package="com._4s_">
+        <context:exclude-filter type="annotation"
+            expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- ========================================================= -->
+    <!-- TRANSACTION ANNOTATIONS -->
+    <!-- ========================================================= -->
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- ========================================================= -->
+    <!-- HIKARI CONFIG -->
+    <!-- ========================================================= -->
+
+    <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+
+        <property name="poolName" value="springHikariCP"/>
+
+        <property name="connectionTestQuery"
+                  value="SELECT 1 FROM DUAL"/>
+
+        <property name="dataSourceClassName"
+                  value="${hibernate.connection.dataSourceClassName}"/>
+
+        <property name="maximumPoolSize"
+                  value="${hibernate.hikari.maximumPoolSize}"/>
+
+        <property name="minimumIdle"
+                  value="${hibernate.hikari.minimumIdle}"/>
+
+        <property name="idleTimeout"
+                  value="${hibernate.hikari.idleTimeout}"/>
+
+        <property name="maxLifetime"
+                  value="${hibernate.hikari.maxLifetime}"/>
+
+        <property name="connectionTimeout"
+                  value="${hibernate.hikari.connectionTimeout}"/>
+
+        <property name="validationTimeout"
+                  value="${hibernate.hikari.validationTimeout}"/>
+
+        <property name="dataSourceProperties">
+            <props>
+                <prop key="url">${hibernate.connection.url}</prop>
+                <prop key="user">${hibernate.connection.username}</prop>
+                <prop key="password">${hibernate.connection.password}</prop>
+            </props>
+        </property>
+
+    </bean>
+
+    <!-- ========================================================= -->
+    <!-- DATASOURCE -->
+    <!-- ========================================================= -->
+
+    <bean id="dataSource"
+          class="com.zaxxer.hikari.HikariDataSource"
+          destroy-method="close">
+        <constructor-arg ref="hikariConfig"/>
+    </bean>
+
+    <bean id="dataSourceLookup"
+          class="com._4s_.common.dao.MultiTenantDataSourceLookup"/>
+
+    <!-- ========================================================= -->
+    <!-- SESSION FACTORY -->
+    <!-- ========================================================= -->
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+
+        <property name="dataSource" ref="dataSource"/>
+
+        <property name="packagesToScan">
+            <list>
+            	<value>com._4s_.attendance.model</value>
+                <value>com._4s_.auditing.model</value>
+                <value>com._4s_.clients.model</value>
+                <value>com._4s_.common.model</value>
+                <value>com._4s_.dbUpdate.model</value>
+                <value>com._4s_.i18n.model</value>
+                <value>com._4s_.requestsApproval.model</value>
+                <value>com._4s_.security.model</value>
+                <value>com._4s_.timesheet.model</value>
+            </list>
+        </property>
+
+        <property name="hibernateProperties">
+            <props>
+
+                <prop key="hibernate.multiTenancy">
+                    SCHEMA
+                </prop>
+
+                <prop key="hibernate.multi_tenant_connection_provider">
+                    com._4s_.common.dao.SchemaMultiTenantConnectionProvider
+                </prop>
+
+                <prop key="hibernate.tenant_identifier_resolver">
+                    com._4s_.common.dao.SchemaTenantResolver
+                </prop>
+
+                <prop key="hibernate.show_sql">
+                    true
+                </prop>
+
+                <prop key="hibernate.connection.autocommit">
+                    false
+                </prop>
+
+                <prop key="hibernate.current_session_context_class">
+                    org.springframework.orm.hibernate5.SpringSessionContext
+                </prop>
+
+            </props>
+        </property>
+
+    </bean>
+
+    <!-- ========================================================= -->
+    <!-- TRANSACTION MANAGER -->
+    <!-- ========================================================= -->
+
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate5.HibernateTransactionManager"
+          lazy-init="true">
+
+        <property name="sessionFactory"
+                  ref="sessionFactory"/>
+
+        <property name="autodetectDataSource"
+                  value="false"/>
+
+    </bean>
+
+    <!-- ========================================================= -->
+    <!-- LEGACY TX PROXY -->
+    <!-- ========================================================= -->
+
+    <bean id="txProxyTemplate"
+          abstract="true"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+
+        <property name="transactionManager"
+                  ref="transactionManager"/>
+
+        <property name="transactionAttributes">
+            <props>
+                <prop key="handleRequest">
+                    PROPAGATION_REQUIRED,ISOLATION_READ_COMMITTED
+                </prop>
+            </props>
+        </property>
+
+    </bean>
+
+    <!-- ========================================================= -->
+    <!-- OPEN SESSION IN VIEW -->
+    <!-- ========================================================= -->
+
+    <bean id="openSessionInViewInterceptor"
+          class="org.springframework.orm.hibernate5.support.OpenSessionInViewInterceptor">
+
+        <property name="sessionFactory"
+                  ref="sessionFactory"/>
+
+    </bean>
+
+</beans>

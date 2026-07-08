@@ -1,0 +1,115 @@
+package com._4s_.dbUpdate.util;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.interceptor.TransactionInterceptor;
+
+import com._4s_.common.model.LastSequence;
+
+public class UpdateDB {
+	private static final Log log = LogFactory.getLog(UpdateDB.class);
+	Connection connection;
+	
+	public void runUpdates(){
+		try{
+			connection   = DriverManager.getConnection("jdbc:mysql://localhost/4s?useUnicode=true&amp;characterEncoding=utf8","4s","4s");
+			String fileName = "/home/smagied/dev/eclipse/production/4s/"+"/dbUpdates/4sDBUpdate.xml";
+			File witeTo=new File("/home/smagied/dev/eclipse/production/4s/dbUpdates/4sDBUpdateLogs.txt");
+			FileWriter witer=new FileWriter(witeTo);
+			BufferedWriter wirter=new BufferedWriter(witer);	    
+			String Line="";
+			String BadLine="";
+	        SAXBuilder builder = new SAXBuilder();
+	        Document doc = builder.build(new File(fileName));
+	        Element webapp = doc.getRootElement();
+	        List lst=webapp.getChildren();
+	        Iterator itr=lst.iterator();
+	        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SIZE IS "+lst.size());
+	        String QueryIndex="";
+	        String Query="";
+	        String qry ="";
+	        int totalNumber=0;
+	        int errorNumber=0;
+	        LastSequence seq= comMger.getSequenceByClassName("QueryIndex");
+	        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>seq " +seq);
+	        Long Location=seq.getClassSequence();
+	        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>sequance class " +Location);
+	        boolean status=true;
+	        JdbcTemplate jt = new JdbcTemplate(dataSource);
+	        while(itr.hasNext()){
+	        	
+	        		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>TRYING");
+	        		Element elm=(Element)itr.next();
+	        		QueryIndex = elm.getChild("sqlindex").getText();
+	        		Query=elm.getChild("statment").getText();
+	        		Long currentIndex=new Long(QueryIndex);
+	             
+	        		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>currentIndex IS "+currentIndex);
+	        		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>sqlIndex IS "+Location);
+	             
+	        		Long index=Location;
+	        		if(currentIndex>Location){
+	        			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Query IS "+Query);
+	        			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>QueryIndex IS "+QueryIndex);
+	        			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>before executing");
+	        			totalNumber++;
+	        			StringTokenizer tokenizer = new StringTokenizer(Query, ";");
+	        			while (tokenizer.hasMoreTokens()) {
+	        				qry = tokenizer.nextToken();
+	        				qry = StringUtils.trim(qry);
+	        				try{
+	        					if (qry != null && qry.length() != 0){
+	        					jt.execute(qry);
+	        					}
+	        				}catch (Exception ec) {
+	                    		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EXCOPTIN HAPPENED");
+	                    		status=false;
+	                    		TransactionInterceptor.currentTransactionStatus().setRollbackOnly();
+	            	        	BadLine="Error in line" + "\n"+qry+"   with index : "+QueryIndex+"\n";
+	            				witer.append(BadLine+"\n \t"+ec.getCause()+"\n");
+	            				errorNumber++;
+	            				break;
+	            	       }
+	        				if(status)
+	        				{
+	        					String updateSQL="update  common_last_sequence set classSequence="+QueryIndex+" where className='QueryIndex';";
+	        					jt.execute(updateSQL);
+	        					log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SQL index will be = "+QueryIndex);
+	        				}
+	        			}
+	        		}
+	
+	        }
+			witer.close();
+			HashMap model=new HashMap();
+			if(status)
+			{
+				String updateSQL="update  common_last_sequence set classSequence="+QueryIndex+" where className='QueryIndex';";
+				jt.execute(updateSQL);
+				log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SQL index will be = "+QueryIndex);
+			}
+		}
+		catch(Exception ex){
+			log.debug("exception "+ex.getMessage());
+		}
+	}
+	public static void main(String[] args) {
+		UpdateDB main = new UpdateDB();
+		main.runUpdates();
+	}
+}

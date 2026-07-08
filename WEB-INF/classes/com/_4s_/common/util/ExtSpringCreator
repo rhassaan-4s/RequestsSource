@@ -1,0 +1,79 @@
+package com._4s_.communication.util;
+
+import java.lang.reflect.Method;
+import java.util.Map;
+
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
+import org.w3c.dom.Element;
+
+import uk.ltd.getahead.dwr.Creator;
+import uk.ltd.getahead.dwr.ExecutionContext;
+
+
+
+public class ExtSpringCreator implements Creator {
+	
+	private ContextLoader contextLoader;
+
+	public void init(Element config) throws IllegalArgumentException {
+		this.beanName = config.getAttribute("beanName");
+	}
+
+	
+	public Class getType() {
+		if (clazz == null) {
+			try {
+				clazz = getInstance().getClass();
+			} catch (InstantiationException ex) {
+				ex.printStackTrace();
+				return Object.class;
+			}
+		}
+
+		return clazz;
+	}
+
+	
+	public Object getInstance() throws InstantiationException {
+		try {
+			if (factory == null) {
+				contextLoader = new ContextLoader();
+				WebApplicationContext webAppContext = 
+					contextLoader.initWebApplicationContext(
+							ExecutionContext.get().getServletContext());
+				factory = (BeanFactory) webAppContext;
+			}
+
+			Method creator = factory.getClass().getMethod("getBean",
+					new Class[] { String.class }); 
+			Object reply = creator.invoke(factory, new Object[] { beanName });
+			return reply;
+		} catch (RuntimeException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new InstantiationException(ex.toString());
+		}
+	}
+
+	
+	public static void setXmlBeanFactory(Object factory) {
+		ExtSpringCreator.factory = factory;
+	}
+
+	private static Object factory = null;
+
+	private Class clazz;
+
+	private String beanName;
+
+	public void setProperties(Map arg0) throws IllegalArgumentException {	
+	}
+
+	public String getScope() {
+		return null;
+	}
+
+}

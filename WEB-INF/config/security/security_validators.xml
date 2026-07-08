@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-autowire="no"
+       default-lazy-init="false">
+
+    <bean id="validateUser"
+          class="com._4s_.security.web.validators.ValidateUser">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+    <bean id="validateForgetPassword"
+          class="com._4s_.security.web.validators.ValidateForgetPassword">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+    <bean id="validateRole"
+          class="com._4s_.security.web.validators.ValidateRole"/>
+
+</beans>

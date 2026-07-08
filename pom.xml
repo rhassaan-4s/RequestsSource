@@ -13,7 +13,6 @@
 				<directory>src/application</directory>
 			</resource>
 		</resources>
-		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -61,7 +60,6 @@
 					</executions>
 				</plugin>
 			</plugins>
-		</pluginManagement>
 	</build>
 	<properties>
 		<failOnMissingWebXml>false</failOnMissingWebXml>
@@ -113,8 +111,6 @@
 		</repository>
 
 	</repositories>
-
-
 
 	<dependencies>
 		<dependency>

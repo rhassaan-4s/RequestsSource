@@ -1,0 +1,92 @@
+/**
+ * 
+ */
+package com._4s_.common.web.action;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
+
+import com._4s_.common.model.Department;
+
+/**
+ * @author mragab
+ *
+ */
+@Controller
+@RequestMapping("/commonAdminEditDepartment.html")
+public class EditDepartmentFormController extends BaseSimpleFormController {
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(HttpServletRequest request,
+			@Valid @ModelAttribute("department") Department command,
+			BindingResult result, SessionStatus status,Model model) {
+		
+		log.debug("Start onSubmit: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+	
+		String deleteButton = request.getParameter("delete");
+		String saveButton = request.getParameter("save"); 
+		
+		if ((deleteButton!=null)&&(deleteButton.length()>0)) {
+
+			log.debug("deleting object :"+command);
+			baseManager.removeObject(command);
+		
+		} else if ((saveButton!=null)&&(saveButton.length()>0)) {
+			Department department = (Department)command;
+			String isDefault = request.getParameter("default");
+			if (isDefault != null && isDefault.equals("true")){
+				Department defaultDepartment = (Department)baseManager.getDefaultObject(Department.class);
+				log.debug(">>>>>>>>>>>>>>>>>>>defaultDepartment "+defaultDepartment);
+				if (defaultDepartment != null){
+					defaultDepartment.setIsDefault(new Boolean(false));
+				}
+				department.setIsDefault(new Boolean(true));
+			}else{
+				department.setIsDefault(new Boolean(false));
+			}
+			baseManager.saveObject(department);
+			log.debug("saving object :"+department);
+		
+		}
+		
+		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit");
+		
+		return new ModelAndView(new RedirectView("commonAdminDepartments.html"));
+	
+	}
+
+	protected Object formBackingObject (HttpServletRequest request)
+	throws ServletException{
+		
+		log.debug("Start formBackingObject >>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		
+		Department department = new Department();
+		
+		String departmentId = request.getParameter("departmentId");
+		log.debug(">>>>>>>>>>> department Id :" + departmentId);
+
+		if ((departmentId!=null)&&(departmentId.length()>0)) {
+			Object obj = baseManager.getObject(Department.class,new Long(departmentId));
+			if (obj!=null) {
+				department = (Department)obj;
+			} else {
+				log.warn("!!! No object found for departmentId:"+departmentId);
+			}
+		}
+		
+		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< Ending FormBackingObject");
+		
+		return department;
+	}
+}

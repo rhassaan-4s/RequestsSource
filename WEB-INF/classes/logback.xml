@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <!-- Log pattern -->
+  <property name="LOG_PATTERN"
+            value="%d{HH:mm:ss.SSS} [%thread] %-5level [tenant=%X{tenantId}] %logger:%L - %msg%n"/>
+
+  <!-- Console Appender -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <append>true</append>
+    <immediateFlush>true</immediateFlush>
+    <encoder>
+      <pattern>${LOG_PATTERN}</pattern>
+    </encoder>
+  </appender>
+
+  <!-- ========================= -->
+  <!-- Tenant-based File Logging -->
+  <!-- ========================= -->
+  <appender name="TENANT_FILE" class="ch.qos.logback.classic.sift.SiftingAppender">
+
+    <!-- Discriminator based on MDC -->
+    <discriminator class="ch.qos.logback.classic.sift.MDCBasedDiscriminator">
+      <key>tenantId</key>
+      <defaultValue>unknown</defaultValue>
+    </discriminator>
+
+    <sift>
+      <appender name="FILE-${tenantId}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <!-- Current log file -->
+        <file>logs/${tenantId}.log</file>
+
+        <!-- Daily rolling -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+          <fileNamePattern>logs/${tenantId}-%d{yyyy-MM-dd}.log</fileNamePattern>
+          <maxHistory>7</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+          <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+
+      </appender>
+    </sift>
+  </appender>
+
+  <!-- Root logger -->
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="TENANT_FILE"/>
+  </root>
+
+  <!-- Reduce HikariCP noise -->
+  <logger name="com.zaxxer.hikari" level="ERROR"/>
+  <logger name="com.zaxxer.hikari.pool.HikariPool" level="ERROR"/>
+  <logger name="com._4s_.i18n.service.ResourceMapMessageSource" level="FATAL"/>
+
+  <!-- Keep your app debug-able -->
+  <logger name="com._4s_" level="DEBUG"/>
+
+  <!-- Spring framework logs -->
+  <logger name="org.springframework" level="ERROR"/>
+
+  <!-- Hibernate -->
+  <logger name="org.hibernate.SQL" level="DEBUG"/>
+  <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="ERROR"/>
+
+  <!-- Tomcat -->
+  <logger name="org.apache.catalina.core.ApplicationContext.log" level="ERROR"/>
+
+</configuration>
