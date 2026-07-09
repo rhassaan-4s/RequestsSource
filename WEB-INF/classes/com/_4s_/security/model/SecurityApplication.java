@@ -16,6 +16,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import com._4s_.auditing.model.Auditable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @hibernate.class table="security_applications"
@@ -32,9 +33,11 @@ public class SecurityApplication implements Serializable ,Auditable{
 
 	private String name;
 	@OneToMany (mappedBy ="application")
+	@JsonIgnore
 	private Set<Roles>roles = new HashSet<>();
 
 	@OneToMany (mappedBy ="application")
+	@JsonIgnore
 	private List<Fields>fields = new ArrayList<Fields>();
 
 	

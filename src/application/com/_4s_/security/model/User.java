@@ -22,13 +22,13 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com._4s_.auditing.model.Auditable;
 import com._4s_.common.model.Employee;
 import com._4s_.i18n.model.MyLocale;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @hibernate.class table="security_users"
@@ -59,6 +59,7 @@ public class User implements  Serializable,Auditable,UserDetails {
 	
 	@ManyToOne
 	@JoinColumn (name="defaultApplication")
+	@JsonIgnore
 	private SecurityApplication defaultApplication;
 
 	@ManyToMany(fetch=FetchType.EAGER)

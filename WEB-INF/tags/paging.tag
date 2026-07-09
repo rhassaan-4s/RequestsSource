@@ -1,6 +1,12 @@
-<%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
-<%@ attribute name="parametersString" required="false" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <%@ attribute name="url" required="false" %>
+<%@ attribute name="page" required="false" type="java.lang.Integer" %>
+<%@ attribute name="numberOfPages" required="false" type="java.lang.Integer" %>
+<%@ attribute name="next" required="false" type="java.lang.Boolean" %>
+<%@ attribute name="previous" required="false" type="java.lang.Boolean" %>
+<%@ attribute name="parametersString" required="false" %>
+
 <c:if test="${numberOfPages > 1}">
 <table cellspacing="3" cellpadding="0" border="0" height="20" align="center">
 	<tr>

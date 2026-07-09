@@ -15,6 +15,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.springframework.security.core.GrantedAuthority;
 
 import com._4s_.auditing.model.Auditable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @hibernate.class table="security_permissions"
@@ -35,6 +36,7 @@ public class Permissions implements Serializable,Auditable,GrantedAuthority{
 
 	private Boolean selected = new Boolean(true);
 	@ManyToMany(mappedBy ="permissions")
+	@JsonIgnore
 	private Set<Roles>roles = new HashSet<Roles>();
 
 	

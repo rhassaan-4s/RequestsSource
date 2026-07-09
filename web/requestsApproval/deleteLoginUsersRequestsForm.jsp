@@ -303,7 +303,7 @@ function searchForm (){
 		</td>
 	</tr>
 </table>
-<script language="JavaScript" type="text/javascript" src="/Orders/web/common/js/wz_tooltip.js"></script>
+<script src="<c:url value='/web/common/js/wz_tooltip.js'/>"></script>
 <%@ include file="/web/common/includes/footer.jsp" %>
 </body>
 </html>
