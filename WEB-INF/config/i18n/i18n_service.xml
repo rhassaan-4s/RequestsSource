@@ -8,5 +8,7 @@
            
       <bean id="resourceMessageSource"
           class="com._4s_.i18n.service.ResourceMapMessageSource"/>
+          
+       <alias name="resourceMessageSource" alias="messageSource"/>
 
 </beans>

@@ -592,11 +592,11 @@
 			<version>8.5.37</version>
 		</dependency>
 
-		<dependency>
+		<!--<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
 			<version>5.0.0</version>
-		</dependency>
+		</dependency>-->
 
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>

@@ -109,6 +109,10 @@ public class ResourceMapMessageSource extends AbstractMessageSource
 	 * @see #getMessageFormat
 	 */
 	
+	public ResourceMapMessageSource() {
+		logger.debug("***** ResourceMapMessageSource CREATED *****");
+	}
+	
 //	@Autowired
 //	private ApplicationContext applicationContext;
 //
