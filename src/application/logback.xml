@@ -79,4 +79,5 @@
  -->
  
 <logger name="com._4s_.security" level="DEBUG"/>
+<logger name="com._4s_.i18n.service.ResourceMapMessageSource" level="ERROR"/>
 </configuration>
