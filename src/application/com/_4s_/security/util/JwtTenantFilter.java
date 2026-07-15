@@ -36,8 +36,8 @@ import com._4s_.restServices.service.RequestsServiceImpl;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.security.Keys;
 
-//@Component
-//@Order(Ordered.HIGHEST_PRECEDENCE)
+@Component
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class JwtTenantFilter extends OncePerRequestFilter {
 	Log log = LogFactory.getLog(JwtTenantFilter.class);
 //    @Value("${jwt.secret}")

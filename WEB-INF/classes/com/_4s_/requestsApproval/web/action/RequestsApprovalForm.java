@@ -467,13 +467,12 @@ public class RequestsApprovalForm extends BaseSimpleFormController {
 		}
 		System.out.println("Status " + status);
 		System.out.println("last " + last);
-		if(status!= null && status.equals("0")){
-			
+		if(status!=null && !status.equals("") && status.equals("0")){			
 			requestOb.setApproved(new Long(99));
 
 			requestsApprovalManager.saveObject(requestOb);
 			
-		}else if(last.equals("1")){
+		}else if(status==null || last.equals("1")){
 			log.debug("last approval priority");
 			requestOb.setApproved(new Long(1));
 			requestsApprovalManager.saveObject(requestOb);

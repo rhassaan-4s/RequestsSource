@@ -54,6 +54,25 @@ public class AjaxController {
 		return requestsService.getRequestStatus(reqId, empId);
 	}
 
+//=======
+//	@RequestMapping(value="/requestStatus", method=RequestMethod.GET,
+//			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_JSON)
+//	@ResponseBody
+//	public Map requestStatus(Long reqId, Long empId) {
+//		RestStatus status = new RestStatus();
+////		Map response = new HashMap();
+//		Map response = requestsService.getRequestStatus(reqId,empId);
+////		log.debug("request status size " + reqStatus.size());
+////		status.setCode("200");
+////		status.setMessage("Request Inserted Successfully");
+////		status.setStatus("true");
+////		response.put("Status", status);
+////		response.put("Response", reqStatus);
+////		log.debug("request status returned finished");
+//		return response;
+//	}
+//	
+//>>>>>>> refs/heads/Master_Final
 	@RequestMapping(value="/vacInfo", method=RequestMethod.GET,
 			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_JSON)
 	@ResponseBody

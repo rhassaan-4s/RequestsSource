@@ -123,7 +123,6 @@ private SessionFactory sessionFactory;
 
 		Map map = new HashMap();
 
-//		setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		String query = "";
 		String select = "";
 		String where = "";

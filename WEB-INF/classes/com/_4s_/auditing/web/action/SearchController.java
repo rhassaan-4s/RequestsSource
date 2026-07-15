@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com._4s_.attendance.web.binders.EmpBasicBinder;
 import com._4s_.auditing.model.AuditLogRecord;
 import com._4s_.auditing.model.AuditSearchCommand;
 import com._4s_.auditing.model.Auditable;
@@ -37,7 +33,6 @@ import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.common.web.binders.DomainObjectBinder;
 import com._4s_.common.web.binders.TimestampBinder;
 import com._4s_.security.model.User;
-import com._4s_.security.web.command.ChangePasswordCommand;
 
 @Controller
 @RequestMapping("/searchController.html")

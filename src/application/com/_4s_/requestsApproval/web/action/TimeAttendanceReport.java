@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -19,10 +18,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
@@ -106,14 +103,6 @@ public class TimeAttendanceReport extends CommonController {
 			employees.addAll(requestsApprovalManager.getEmployeesByGroup(new Long(groupId)));
 			model.addAttribute("employees", employees);			
 		} 
-		//		if (logUser!=null && !logUser.isEmpty()) {
-		//			empCode = logUser;
-		//		} else {
-		//			String luser = request.getParameter("logUser");
-		//			log.debug("luser" + luser);
-		//			empCode=luser;
-		//		}
-		//		model.put("logUser", logUser);
 		if (groups.size() > 0) {
 			if (groupId != null && !groupId.isEmpty()) {// ///////////////////all
 				// group
@@ -121,11 +110,6 @@ public class TimeAttendanceReport extends CommonController {
 				if (logUser != null && !logUser.isEmpty()) {
 					empCode = logUser;
 				} else {
-					// String luser = request.getParameter("logUser");
-					// log.debug("luser" + luser);
-					// empCode=luser;
-					// }
-					// model.put("logUser", logUser)
 					Iterator<LoginUsers> itr = employees.iterator();
 					int i = 0;
 					while (itr.hasNext()) {
@@ -261,12 +245,6 @@ public class TimeAttendanceReport extends CommonController {
 
 				// VIP
 				List totalObjects= new ArrayList();
-				//				totalObjects=requestsApprovalManager.getTimeAttend(emp.getEmpCode(), fromDate, toDate);
-				//				if (totalObjects!=null) {
-				//					totalObjects.addAll(requestsApprovalManager.getTimeAttendAndroid(emp.getEmpCode(), fromDate, toDate));
-				//				} else {
-				//					totalObjects=requestsApprovalManager.getTimeAttendAndroid(emp.getEmpCode(), fromDate, toDate);
-				//				}
 				log.debug("getting attendance from view");
 				totalObjects = requestsApprovalManager.getTimeAttendFromViewForTimeAttendanceReport(empCode, fromDate, toDate,settings);
 				objects=(List) totalObjects.get(0);
@@ -308,6 +286,43 @@ public class TimeAttendanceReport extends CommonController {
 				model.addAttribute("totalHrs", hrs);
 				//////////////////////////////////////////////////////////
 				log.debug("-------objects- size--"+objects.size());
+				
+				
+//				for (int i = 0; i < objects.size(); i++) {
+//					TimeAttend ob= (TimeAttend) objects.get(i);
+//
+//					// mCalDate.setDateString(ob.getDay());
+//					DateFormat df=new SimpleDateFormat("dd/mm/yyyy");
+//
+//					Date day=df.parse(ob.getDay());
+//					log.debug("-------day---"+day);
+//					log.debug("-------objects---"+ob.getDay()+"-------getTimeIn---"+ob.getTimeIn()+"-------getTimeOut---"+ob.getTimeOut());
+//
+////					if (ob.getAddress1()== null && ob.getLatitude1()!=null && !ob.getLatitude1().isEmpty() && ob.getLatitude1()!="0" ) {
+////						String address1 = requestsApprovalManager.getShortAddressByGpsCoordinates(ob.getLongitude1(), ob.getLatitude1());
+////						log.debug("address 1 " + address1);
+////						ob.setAddress1(address1);
+////					} else {
+////						log.debug("long1 " +ob.getLongitude1() + " lat1 " + ob.getLatitude1() + " long2 " + ob.getLongitude2() + " lat2 " + ob.getLatitude2());
+////					}
+//					log.debug("ob.getAddress2() " + ob.getAddress2());
+//					log.debug("ob.getLatitude2() " + ob.getLatitude2());
+////					if(ob.getAddress2()==null && ob.getLatitude2()!=null && !ob.getLatitude2().isEmpty()  && ob.getLatitude2()!="0") {
+////						String address2 = requestsApprovalManager.getShortAddressByGpsCoordinates(ob.getLongitude2(), ob.getLatitude2());
+////						log.debug("address 2 " + address2);
+////						ob.setAddress2(address2);
+////					}  else {
+////						log.debug("long1 " +ob.getLongitude1() + " lat1 " + ob.getLatitude1() + " long2 " + ob.getLongitude2() + " lat2 " + ob.getLatitude2());
+////					}
+//					if( ob.getLatitude1()!=null && !ob.getLatitude1().isEmpty()  && ob.getLatitude1()!="0" 
+//							&& ob.getLongitude1()!=null && !ob.getLongitude1().isEmpty() && ob.getLongitude1()!="0"
+//							&& ob.getLatitude2()!=null && !ob.getLatitude2().isEmpty() && ob.getLatitude2()!="0"  
+//							&& ob.getLongitude2()!=null && !ob.getLongitude2().isEmpty() && ob.getLongitude2()!="0") {
+//						log.debug(requestsApprovalManager.distance(new Double(ob.getLatitude1()), new Double(ob.getLongitude1()), new Double(settings.getCompanyLat()), new Double(settings.getCompanyLong())));
+//					} else {
+//						log.debug("long1 " +ob.getLongitude1() + " lat1 " + ob.getLatitude1() + " long2 " + ob.getLongitude2() + " lat2 " + ob.getLatitude2());
+//					}
+//				}
 				for (int i = 0; i < objects.size(); i++) {
 					TimeAttend ob= (TimeAttend) objects.get(i);
 

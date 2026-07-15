@@ -1843,23 +1843,99 @@ public class RequestsServiceImpl implements RequestsService, UserDetailsService 
 				List tempLevels = new ArrayList();
 
 				Iterator itrs = objectss.iterator();
-
-				while (itrs.hasNext()) {
-					Object obj = itrs.next();
-
-					if (obj != null) {
-						lev = (AccessLevels) obj;
-						log.debug("level " + lev.getLevel_id() + " emp " + lev.getEmp_id().getEmpCode().getEmpCode());
+//<<<<<<< HEAD
+//
+//				while (itrs.hasNext()) {
+//					Object obj = itrs.next();
+//
+//					if (obj != null) {
+//						lev = (AccessLevels) obj;
+//						log.debug("level " + lev.getLevel_id() + " emp " + lev.getEmp_id().getEmpCode().getEmpCode());
+//=======
+			while (itrs.hasNext()) {
+				Object obj = itrs.next();
+				
+				if (obj!= null) {
+					lev = (AccessLevels)obj;
+					log.debug("level " + lev.getLevel_id() + " emp " + lev.getEmp_id().getEmpCode().getEmpCode());
+				}
+				
+				if(lev!=null) {
+					tempLevels.addAll(requestsApprovalDAO.getAccessLevelsBetweenCodes(lev.getLevel_id(),codeFrom,codeTo));
+				}
+				log.debug("access levels size " + tempLevels.size());
+			}
+			
+			String empArray = "";
+			
+			Iterator empItr = tempLevels.iterator();
+			int count = 0;
+			while(empItr.hasNext()) {
+				EmpReqTypeAcc empReq = ((EmpReqTypeAcc)(empItr.next()));
+				log.debug("empReq " + empReq);
+				log.debug("***********empcode " + empReq.getEmp_id().getEmpCode().getEmpCode());
+				if (count==0) {
+//					empArray = empReq.getEmp_id().getEmpCode();
+					empArray =  "'" + empReq.getEmp_id().getEmpCode().getEmpCode() +  "'";
+				} else {
+//					empArray += "," + empReq.getEmp_id().getEmpCode();
+					if (!empArray.contains("'"+empReq.getEmp_id().getEmpCode().getEmpCode()+"'")) {
+						empArray += ",'" + empReq.getEmp_id().getEmpCode().getEmpCode() + "'";
+//>>>>>>> refs/heads/Master_Final
 					}
-
-					if (lev != null) {
+//<<<<<<< HEAD
+//
+//					if (lev != null) {
+//						tempLevels.addAll(
+//								requestsApprovalDAO.getAccessLevelsBetweenCodes(lev.getLevel_id(), codeFrom, codeTo));
+//					}
+//					log.debug("access levels size " + tempLevels.size());
+//=======
+//<<<<<<< HEAD
+				}
+				count++;
+			}
+			log.debug("emp array " + empArray);
+//			totalObjects=requestsApprovalManager.getTimeAttend(empArray, fromDate, toDate);
+//			totalObjects=requestsApprovalManager.getTimeAttendFromView(empArray, fromDate, toDate);
+			if (empArray == null || empArray.isEmpty()) {
+				empArray = "'" + emp.getEmpCode() +  "'";
+				log.debug("*******empArray " + empArray);
+			}
+			totalObjects=requestsApprovalManager.getTimeAttendAll(empArray, fromDate, toDate,statusId,settings);
+			
+		} else if (codeFrom!= null && !codeFrom.isEmpty() && codeTo!= null && !codeTo.isEmpty()) {
+			String empArray = "";
+			LoginUsers loggedInUser = (LoginUsers)requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
+//			List tempLevels = (List)requestsApprovalDAO.getAccessLevelsBetweenCodes(loggedInUser,codeFrom,codeTo);
+			
+			List objectss = requestsApprovalManager.getObjectsByParameter(AccessLevels.class, "emp_id", loggedInUser);
+			AccessLevels lev = null;
+			log.debug("objectss size " + objectss.size());
+//			List levs = new ArrayList();
+			List tempLevels = new ArrayList();
+			
+			Iterator itrs = objectss.iterator();
+			while (itrs.hasNext()) {
+				Object obj = itrs.next();
+				log.debug("obj " + obj);
+				if (obj != null) {
+					lev = (AccessLevels) obj;
+//>>>>>>> refs/heads/Master_Final
+				}
+//<<<<<<< HEAD
+//
+//				String empArray = "";
+//=======
+				if (lev != null) {
 						tempLevels.addAll(
 								requestsApprovalDAO.getAccessLevelsBetweenCodes(lev.getLevel_id(), codeFrom, codeTo));
 					}
 					log.debug("access levels size " + tempLevels.size());
 				}
 
-				String empArray = "";
+//				String empArray = "";
+//>>>>>>> refs/heads/Master_Final
 
 				Iterator empItr = tempLevels.iterator();
 				int count = 0;
@@ -1986,12 +2062,23 @@ public class RequestsServiceImpl implements RequestsService, UserDetailsService 
 //				log.debug("empReq " + empReq);
 					if (count == 0) {
 //					empArray = empReq.getEmp_id().getEmpCode();
-						empArray = "'" + empReq.getEmp_id().getEmpCode().getEmpCode() + "'";
-					} else {
+//<<<<<<< HEAD
+//						empArray = "'" + empReq.getEmp_id().getEmpCode().getEmpCode() + "'";
+//					} else {
+//=======
+					empArray =  "'" + empReq.getEmp_id().getEmpCode().getEmpCode() +  "'";
+				} else {
+//>>>>>>> refs/heads/Master_Final
 //					empArray += "," + empReq.getEmp_id().getEmpCode();
+//<<<<<<< HEAD
+//						empArray += ",'" + empReq.getEmp_id().getEmpCode().getEmpCode() + "'";
+//					}
+//					count++;
+//=======
 						empArray += ",'" + empReq.getEmp_id().getEmpCode().getEmpCode() + "'";
 					}
 					count++;
+//>>>>>>> refs/heads/Master_Final
 				}
 				log.debug("empArray " + empArray);
 				if (empArray == null || empArray.isEmpty()) {

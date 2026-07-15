@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,6 +29,7 @@ import com._4s_.i18n.model.MyMessage;
 import com._4s_.i18n.service.LocaleSource;
 import com._4s_.i18n.service.MessageManager;
 import com._4s_.i18n.service.ResourceMapMessageSource;
+import com._4s_.requestsApproval.model.AnnualVacLimit;
 
 @Controller
 @RequestMapping("/editMessage.html")

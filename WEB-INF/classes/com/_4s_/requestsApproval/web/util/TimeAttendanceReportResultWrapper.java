@@ -16,8 +16,10 @@ public class TimeAttendanceReportResultWrapper {
 	private String input_type;
 	private String longitude;
 	private String latitude;
+	private String address;
+	
 	public TimeAttendanceReportResultWrapper(Object dd, Object empCode, Object fName,Object attendance_date, Object attendance_time,
-			Object attendance_type, Object approval, Object input_type, Object longitude, Object latitude) {
+			Object attendance_type, Object approval, Object input_type, Object longitude, Object latitude, Object address) {
 		super();
 		this.dd = (Timestamp)dd;
 		this.empCode = (String)empCode;
@@ -34,6 +36,9 @@ public class TimeAttendanceReportResultWrapper {
 		}
 		if (latitude!=null) {
 			this.latitude = ((BigDecimal)latitude).toPlainString();
+		}
+		if (address!=null) {
+			this.address = (String)address;
 		}
 	}
 	
@@ -98,6 +103,14 @@ public class TimeAttendanceReportResultWrapper {
 	}
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	
 	

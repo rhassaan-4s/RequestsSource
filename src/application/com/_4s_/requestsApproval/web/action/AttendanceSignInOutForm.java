@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -286,7 +287,16 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController {
 		loginUsersRequests.setInputType(new Integer(0));//request to sign in
 
 		Calendar c = Calendar.getInstance();
-		//			c.setTimeZone(TimeZone.getTimeZone("EST"));
+//		c.setTimeZone(TimeZone.getTimeZone("EST"));
+        TimeZone tz = TimeZone.getDefault();
+        System.out.println("OS time: " + new Date());
+        System.out.println("Java TimeZone ID: " + tz.getID());
+        System.out.println("Raw offset (hours): " + (tz.getRawOffset()/3600000));
+        System.out.println("DST in effect? " + tz.inDaylightTime(new Date()));
+        System.out.println("*****************");
+        System.out.println(System.getProperty("java.home"));
+        System.out.println(System.getProperty("java.version"));
+        System.out.println("*****************");
 		Date now = c.getTime();
 		log.debug("Time now " + now);
 		loginUsersRequests.setPeriod_from(now);
@@ -301,8 +311,15 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController {
 		//			String accuracy =  (String)request.getParameter("accuracy");
 		//			String address = "";
 		log.debug("accuracy " + accuracy);
+//		String longitude = (String)request.getParameter("longitude");
+//		String latitude =  (String)request.getParameter("latitude");
+//		String accuracy =  (String)request.getParameter("accuracy");
+//		String address = "";
+//		log.debug("accuracy " + accuracy);
+		log.debug("***************accuracy " + accuracy);
 		if (accuracy!=null && !accuracy.isEmpty()) {
 			Long acc = Math.round(Double.parseDouble(accuracy));
+			
 			if (settings.getLocationAccuracy()>= acc.intValue()) {
 				try {
 					address = requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
@@ -317,7 +334,7 @@ public class AttendanceSignInOutForm extends BaseSimpleFormController {
 					e.printStackTrace();
 				}
 			} else {
-				address = "Address is not accurate to be saved";
+				address = "***Address is not accurate***";// + requestsApprovalManager.getAddressByGpsCoordinates(longitude, latitude);
 			}
 		}
 

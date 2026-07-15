@@ -12,10 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractMessageSource;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -136,6 +133,7 @@ public class ResourceMapMessageSource extends AbstractMessageSource
 //	    logger.info("Bean class = {}"+
 //	            applicationContext.getBean("messageSource").getClass().getName());
 //	}
+
 	//cachedMessageFormats --> (resource map(key&msg) & messagefromatmaps(code&localemap(locale&messageformat)))
 	private final Map cachedMessageFormats = new HashMap();
 
@@ -210,7 +208,7 @@ public class ResourceMapMessageSource extends AbstractMessageSource
 	// return the msg of that key "code" for that local
 	protected String resolveCodeWithoutArguments(String code, Locale locale) 
 	{
-		logger.info("Starting CodeWithoutArguments... code:" + code);
+//		logger.info("Starting CodeWithoutArguments... code:" + code);
 
 		String result = null;
 		Map resourceMap = getResourceMap(getMyLocale(locale));
@@ -234,12 +232,6 @@ public class ResourceMapMessageSource extends AbstractMessageSource
 	protected MessageFormat resolveCode(String code, Locale locale) 
 	{
 		System.out.println("*****ResolveCode********");
-//		System.out.println("... code:<<<<<<<<<<<"+ code);
-//		System.out.println("... locale:<<<<<<<<<<<"+ locale);
-//		logger
-//				.info(">>>>>>>>>>>>>>>>>>>>>>>>>>Starting Code... code:<<<<<<<<<<<"
-//						+ code);
-//		logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>locale:<<<<<<<<<<<" + locale);
 
 		MessageFormat messageFormat = null;
 		Map resourceMap = getResourceMap(getMyLocale(locale));

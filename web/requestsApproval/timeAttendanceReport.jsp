@@ -319,7 +319,6 @@
 									key="requestsApproval.caption.netTime" /></td>
 						</tr>
 
-
 						<c:forEach varStatus="loop" var="record" items="${records}">
 							<tr>
 								<c:if test="${!groups.isEmpty()}">

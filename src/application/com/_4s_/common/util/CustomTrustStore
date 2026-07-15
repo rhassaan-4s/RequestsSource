@@ -1,0 +1,95 @@
+package com._4s_.common.util;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Component;
+
+import com._4s_.common.service.CustomTrustManager;
+
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+public class CustomTrustStore {
+	protected final Log log = LogFactory.getLog(getClass());
+	private X509TrustManager jreTrustManager;
+	private X509TrustManager myTrustManager;
+	
+	public void configureTrustStore() throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException,
+			CertificateException, IOException {
+		
+		myTrustManager = getMyTrustManager();
+		jreTrustManager = getJreTrustManager();
+		X509TrustManager mergedTrustManager = createMergedTrustManager(jreTrustManager, myTrustManager);
+		X509Certificate[] issuers = mergedTrustManager.getAcceptedIssuers();
+		for (int i = 0; i<issuers.length; i++) {
+			log.fatal(issuers[i].getBasicConstraints());
+		}
+		log.fatal(mergedTrustManager);
+		setSystemTrustManager(mergedTrustManager);
+	}
+
+	
+
+	private X509TrustManager getMyTrustManager() throws FileNotFoundException, KeyStoreException, IOException,
+			NoSuchAlgorithmException, CertificateException {
+		// Adapt to load your keystore
+		try (FileInputStream myKeys = new FileInputStream("C:\\keystore")) {
+			KeyStore myTrustStore = KeyStore.getInstance("jks");
+			try {
+				myTrustStore.load(myKeys, "fours_123".toCharArray());
+			} catch (NoSuchAlgorithmException | CertificateException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return findDefaultTrustManager(myTrustStore);
+		}
+	}
+
+	private X509TrustManager getJreTrustManager() throws NoSuchAlgorithmException, KeyStoreException {
+		return findDefaultTrustManager(null);
+	}
+	
+	private X509TrustManager findDefaultTrustManager(KeyStore keyStore)
+			throws NoSuchAlgorithmException, KeyStoreException {
+		TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+		tmf.init(keyStore); // If keyStore is null, tmf will be initialized with the default trust store
+
+		for (TrustManager tm : tmf.getTrustManagers()) {
+			if (tm instanceof X509TrustManager) {
+				return (X509TrustManager) tm;
+			}
+		}
+		return null;
+	}
+
+	
+	private X509TrustManager createMergedTrustManager(final X509TrustManager jreTrustManager,
+			final X509TrustManager customTrustManager) {
+		return new CustomTrustManager(jreTrustManager, customTrustManager);
+	}
+
+	private void setSystemTrustManager(X509TrustManager mergedTrustManager)
+			throws NoSuchAlgorithmException, KeyManagementException {
+		SSLContext sslContext = SSLContext.getInstance("TLS");
+		log.fatal(sslContext);
+		sslContext.init(null, new TrustManager[] { mergedTrustManager }, null);
+		log.fatal("sslContext initialized");
+		// You don't have to set this as the default context,
+		// it depends on the library you're using.
+		SSLContext.setDefault(sslContext);
+	}
+}

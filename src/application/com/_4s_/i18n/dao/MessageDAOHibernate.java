@@ -17,6 +17,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com._4s_.common.dao.BaseDAOHibernate;

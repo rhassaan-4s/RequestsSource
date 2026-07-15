@@ -23,9 +23,12 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -4990,7 +4993,27 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 			LoginUsersRequests req = (LoginUsersRequests)list.get(0);
 			
 			attStatus.setSignIn(new Boolean(true));
-			attStatus.setSignInTime(req.getPeriod_from().getTime());
+			log.debug(req.getPeriod_from().getTime());
+			Long tsLong = req.getPeriod_from().getTime();
+//			String tsString = tsLong.toString();
+//			if (tsString.length()>10) {
+//				tsLong = new Long (tsString.substring(0, 10));
+//				log.debug(tsLong);
+//			}
+			attStatus.setSignInTime(tsLong);
+//			Timestamp ts = new Timestamp(req.getPeriod_from().getTime());
+//			log.debug(ts);
+//			Calendar fromCal= Calendar.getInstance();
+//			fromCal.setTime(req.getPeriod_from());
+//			DateFormat ff =	new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.sss");
+//			try {
+//				final Date fDate =(Date) format.parse(ff.format(req.getPeriod_from()));
+//				log.debug(fDate.getTime());
+//				attStatus.setSignInTime(fDate.getTime());
+//			} catch (ParseException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			
 			log.debug(req.getId() + " - " + req.getPeriod_from());
 //			response.put("Response",format.format(req.getPeriod_from()));
@@ -5105,16 +5128,7 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 
 
 	public List<LoginUsers > getEmployeesByGroup(Long groupId) {
-		log.debug("DAO: groupid " + groupId);
-//		Criteria criteria = getCurrentSession().createCriteria(EmpReqTypeAcc.class);
-//		criteria.createCriteria("emp_id").add(Restrictions.isNull("endServ"));
-//		criteria.setProjection(Projections.projectionList()
-//                .add(Projections.groupProperty("emp_id")));
-//		criteria.createCriteria("group_id")
-//		.add(Restrictions.eq("id", groupId));
-//		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-//		return criteria.list();
-		
+		log.debug("DAO: groupid " + groupId);		
 		Session session = getCurrentSession();
 		CriteriaBuilder builder = getBuilder();
 		log.debug("*^*^*^*^ session " + session);
@@ -5139,6 +5153,62 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		return list;
 	}
 	
+
+//<<<<<<< HEAD
+//	}
+	
+	//////////////testing it to improve performance of this method
+//	public List<LoginUsers> getEmployeesByGroup(Long groupId) {
+//	    log.debug("DAO: groupid " + groupId);
+//	    Criteria criteria = getCurrentSession().createCriteria(EmpReqTypeAcc.class, "empReqTypeAcc");
+//
+//	    // Use a JOIN to filter by group and employee status
+//	    criteria.createAlias("empReqTypeAcc.emp_id", "emp");
+//	    criteria.createAlias("emp.empCode", "employee");
+//	    criteria.createAlias("employee.users", "user");
+//
+//	    criteria.add(Restrictions.eq("empReqTypeAcc.group_id.id", groupId));
+//	    criteria.add(Restrictions.isNull("emp.endServ"));
+//	    
+//	    // Explicitly fetch the associated objects to avoid N+1 selects.
+//	    // This tells Hibernate to eagerly load these associations in the main query.
+//	    criteria.setFetchMode("empReqTypeAcc.emp_id", FetchMode.JOIN);
+//	    criteria.setFetchMode("emp.empCode", FetchMode.JOIN);
+//	    criteria.setFetchMode("employee.users", FetchMode.JOIN);
+//	    
+//	    // Use DISTINCT_ROOT_ENTITY to get a list of unique LoginUsers objects.
+//	    criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+//
+//	    return criteria.list();
+//	}
+	
+	
+//=======
+		
+//		Session session = getCurrentSession();
+//		CriteriaBuilder builder = getBuilder();
+//		log.debug("*^*^*^*^ session " + session);
+//		log.debug("*^*^*^*^ session is open " + session.isOpen());
+//		
+//		CriteriaQuery queryCriteria = builder.createQuery(LoginUsers.class);
+//      	Root<Object> root = queryCriteria.from(EmpReqTypeAcc.class);
+//      	Predicate restriction = builder.and(builder.isNull(root.get("emp_id").get("endServ")),
+//      										builder.equal(root.get("group_id").get("id"), groupId));
+//      	
+//      	
+//      	queryCriteria.where(restriction);
+//      
+////      	List groupBy = new ArrayList();
+////      	groupBy.add(root.get("emp_id"));
+//      	queryCriteria.select(root.get("emp_id"));//.groupBy(groupBy);
+////      	queryCriteria.select(root);
+//      	queryCriteria.distinct(true);
+//      	TypedQuery<Object> query = null;
+//		query = session.createQuery(queryCriteria);
+//		List list = query.getResultList();
+//		return list;
+//	}
+//	
 	public List<LoginUsers> getMgrsByGroup(Long groupId) {
 		log.debug("DAO: groupid " + groupId);
 		
@@ -5160,6 +5230,25 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		List list = query.getResultList();
 		return list;
 	}
+	/////////testing to improve performance
+	
+//	public List<LoginUsers> getMgrsByGroup(Long groupId) {
+//	    log.debug("DAO: groupid " + groupId);
+//	    Criteria criteria = getCurrentSession().createCriteria(AccessLevels.class);
+//
+//	    // Create an alias for the emp_id association
+//	    criteria.createAlias("emp_id", "emp");
+//	    // Add a restriction on the level_id
+//	    criteria.add(Restrictions.eq("level_id.id", groupId));
+//	    // Project the entire 'emp' object (the LoginUsers entity)
+//	    criteria.setProjection(Projections.property("emp_id"));
+//	    // Ensure only distinct LoginUsers are returned
+//	    criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//
+//	    return criteria.list();
+//	}
+//	
+	
 
 
 	@Override

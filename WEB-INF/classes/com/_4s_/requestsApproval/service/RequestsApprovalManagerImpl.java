@@ -6,6 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -22,6 +25,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -66,6 +75,7 @@ import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.GroupAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
+import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.web.exceptions.ApprovalFirstPriorityNullException;
 import com._4s_.requestsApproval.web.exceptions.ApprovedBeforeException;
@@ -1133,12 +1143,14 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			List<String> orderfieldList = new ArrayList();
 			orderfieldList.add(new String("order"));
 
-			log.debug("reqId " + requestInfo.getRequest_id().getId() + " emp id " + requestInfo.getLogin_user().getId());
-			empReqAcc = getObjectsByTwoParametersOrderedByFieldList(
-							EmpReqTypeAcc.class, "req_id", requestInfo
-									.getRequest_id(), "emp_id", requestInfo
-									.getLogin_user(), orderfieldList);
 			
+			RequestTypes reqTypeForEmp = requestInfo.getRequest_id();
+			LoginUsers loginUserForEmp = requestInfo.getLogin_user();
+			log.debug("reqId " + reqTypeForEmp.getId() + " emp id " + loginUserForEmp.getId());
+			empReqAcc = getObjectsByTwoParametersOrderedByFieldList(
+							EmpReqTypeAcc.class, "req_id", reqTypeForEmp , "emp_id", loginUserForEmp, orderfieldList);
+			
+			log.debug("get query before this line");
 			
 			EmpReqApproval empReqApproval = null;
 
@@ -2317,9 +2329,9 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			 System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
 			 URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "&api_key=65c8b9e1c9c01804850676ribdd12fa");
 			 log.debug("url " + url);
-//			 HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
-			 String formattedAddress = "";
 
+//		 HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
+			 String formattedAddress = "";
 
 			 InputStream in=null;
 			 BufferedReader reader=null;
@@ -2440,11 +2452,55 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 //=======
 	public String getShortAddressByGpsCoordinates(String lng, String lat) throws MalformedURLException, IOException, org.json.simple.parser.ParseException {
 		 synchronized (geoCodeLock) {
-			 String key = "AIzaSyBeCCPQ7VdCQiJxjXGfVO98LyirL1-hC74";
+			 String key = "65c8b9e1c9c01804850676ribdd12fa";
 			 LocaleUtil localeUtil = LocaleUtil.getInstance();
 			 //	        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?key="+key+"&language="+localeUtil.getLocale()+"&latlng=" + lat + "," + lng + "&sensor=true");
 			 System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
-			 URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "&api_key=65c8b9e1c9c01804850676ribdd12fa");
+			 System.setProperty("javax.net.ssl.trustStoreType"    , "jks"); // corresponds to `.trustStore`
+			 System.setProperty("javax.net.ssl.trustStore"        , "C:\\keystore"); // path to server truststore, when the server cert is imported into
+			 System.setProperty("javax.net.ssl.trustStorePassword", "fours_123");
+			 
+			 
+			 ////////////////////////////////////////////////////////////////////////////////////////////
+			 TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
+	                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+	                    return null;
+	                }
+	                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+	                }
+	                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+	                }
+	            }
+	        };
+	 
+	        // Install the all-trusting trust manager
+	        SSLContext sc;
+			try {
+				sc = SSLContext.getInstance("SSL");
+				sc.init(null, trustAllCerts, new java.security.SecureRandom());
+				HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+			} catch (NoSuchAlgorithmException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}  catch (KeyManagementException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        
+	 
+	        // Create all-trusting host name verifier
+	        HostnameVerifier allHostsValid = new HostnameVerifier() {
+	            public boolean verify(String hostname, SSLSession session) {
+	                return true;
+	            }
+	        };
+	 
+	        // Install the all-trusting host verifier
+	        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+	        //////////////////////////////////////////////////////////////////////////////////////////////////
+	        
+	        
+			 URL url = new URL("https://geocode.maps.co/reverse?lat=" + lat + "&lon=" + lng + "&api_key="+key);
 			 log.debug("url " + url);
 			 //	        HttpsURLConnectionImpl urlConnection = (HttpsURLConnectionImpl)url.openConnection();
 			 String formattedAddress = null;

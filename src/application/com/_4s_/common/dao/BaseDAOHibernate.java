@@ -41,6 +41,7 @@ import com._4s_.common.util.Page;
  *
  * @spring.property name="sessionFactory" ref="sessionFactory"
  **/
+
 @Repository("baseDAO")
 public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 	protected final Log log = LogFactory.getLog(getClass());

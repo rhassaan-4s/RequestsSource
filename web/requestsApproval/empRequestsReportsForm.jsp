@@ -9,6 +9,19 @@
 
 <title>Insert title here</title>
 </head>
+<style type="text/css">
+	@media print {
+		input#btnPrint {
+			display: none;
+		}
+		tr#btnPrint {
+			display: none;
+		}
+		td#btnPrint {
+			display: none;
+		}
+	}
+</style>
 <body>
 <script type="text/javascript">
 function searchForm (){
@@ -80,19 +93,7 @@ function initMap(latitude,longitude) {
 }
 
 </script>
-<style type="text/css">
-	@media print {
-	input#btnPrint {
-	display: none;
-	}
-	tr#btnPrint{
-	display: none;
-	}
-	td#btnPrint{
-	display: none;
-	}
-}
-</style>
+
 <table width="90%"  border="0" cellspacing="0" cellpadding="0" style="padding-right:10px ">
 	<tr>
 		<td class="tableHeader" height="1"></td>

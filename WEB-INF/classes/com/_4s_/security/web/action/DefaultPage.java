@@ -1,12 +1,13 @@
 package com._4s_.security.web.action;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,17 +16,14 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.CommonManager;
+//import com._4s_.common.util.CustomTrustStore;
 import com._4s_.common.util.HttpReqRespUtils;
-import com._4s_.common.web.action.BaseController;
 //import com._4s_.gl.model.GLSettings;
 //import com._4s_.gl.service.GlManagerImpl;
 import com._4s_.i18n.model.MyLocale;
@@ -103,9 +101,30 @@ public class DefaultPage {
 	@GetMapping(value = "/defaultPage.html")
 	public RedirectView defaultPage(HttpServletRequest request,@RequestParam(value = "error", required = false) String error) {
 		// TODO Auto-generated method stub
+		
+//		System.out.println("Server OS time: " + new java.util.Date());
+		System.out.println("Java TimeZone ID: " + TimeZone.getDefault().getID());
+		System.out.println("Java raw offset (hours): " + (TimeZone.getDefault().getRawOffset() / 3600000) );
+		System.out.println("Java DST in effect? " + TimeZone.getDefault().inDaylightTime(new Date()));
+//		System.out.println("Server OS time After offset change: " + new java.util.Date());
+		System.out.println("JVM -Duser.timezone config " + System.getProperty("user.timezone"));
+		TimeZone.setDefault(TimeZone.getTimeZone("Africa/Cairo"));
+		System.out.println("AFTER SETTING TIMEZONE MANUALY");
+		System.out.println("Server OS time: " + new java.util.Date());
+		System.out.println("Cairo time zone as identified in jvm " + TimeZone.getTimeZone("Africa/Cairo").getID());
+		System.out.println("Java TimeZone ID: " + TimeZone.getDefault().getID());
+		System.out.println("Java raw offset (hours): " + (TimeZone.getDefault().getRawOffset() / 3600000) );
+		System.out.println("Java DST in effect? " + TimeZone.getDefault().inDaylightTime(new Date()));
+//		System.out.println("Server OS time After offset change: " + new java.util.Date());
+		System.out.println("JVM -Duser.timezone config " + System.getProperty("user.timezone"));
+		System.out.println("TimeZone.getAvailableIDs().length " + java.util.TimeZone.getAvailableIDs().length);
+		
+		System.out.println("Arrays.toString(TimeZone.getAvailableIDs()) " + Arrays.toString(TimeZone.getAvailableIDs()));
+		
 		SecurityContext sc = (SecurityContext) (SecurityContextHolder.getContext());
 		log.debug("------------------------------------------username:--- "
 				+ sc.getAuthentication().getName());
+		
 		String username = sc.getAuthentication().getName();
 		log.fatal("ussssssssssssser ---------------------------- >>>>>>>>>>>>>> " + username);
 		User user = (User) commonManager.getObjectByParameter(User.class,

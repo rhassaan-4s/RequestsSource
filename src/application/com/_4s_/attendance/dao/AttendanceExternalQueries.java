@@ -16,11 +16,24 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+//import org.hibernate.hql.ast.tree.DeleteStatement;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 
 import com._4s_.attendance.web.util.DashboardAttendeesCountByDepWrapper;
 import com._4s_.attendance.web.util.DashboardReqTypeCountsWrapper;
 import com._4s_.common.dao.CommonQueries;
 import com._4s_.common.model.Settings;
+import com._4s_.requestsApproval.web.util.TimeAttendanceWrapper;
 
 @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 @Repository
@@ -82,7 +95,6 @@ public Integer getNumberOfAttendees(Date fromDate, Date toDate,Settings settings
 
 		Map map = new HashMap();
 
-		//setJdbcTemplate(new JdbcTemplate(createDataSource()));
 		String query = "";
 		String select = "";
 		String from = "";

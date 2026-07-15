@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,7 +25,6 @@ import com._4s_.common.web.action.BaseSimpleFormController;
 import com._4s_.i18n.model.MyLocale;
 import com._4s_.i18n.model.MyMessage;
 import com._4s_.i18n.service.MessageManager;
-import com._4s_.i18n.service.ResourceMapMessageSource;
 
 @Controller
 @RequestMapping("/addNewLocale.html")
