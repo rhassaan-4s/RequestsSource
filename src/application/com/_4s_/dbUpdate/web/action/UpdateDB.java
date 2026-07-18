@@ -3,7 +3,6 @@ package com._4s_.dbUpdate.web.action;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,6 +29,7 @@ import com._4s_.common.model.Flag;
 import com._4s_.common.model.LastSequence;
 import com._4s_.common.model.Settings;
 import com._4s_.common.service.CommonManager;
+import com._4s_.dbUpdate.service.DbManager;
 
 @Controller
 public class UpdateDB {
@@ -38,9 +38,11 @@ public class UpdateDB {
 	
 		
 		@Autowired
-		CommonManager comMger=null;
+		private CommonManager comMger=null;
 		@Autowired
 		private DataSource dataSource;
+		@Autowired
+		private DbManager dbManager;
 		
 		
 		public CommonManager getComMger() {
@@ -51,6 +53,15 @@ public class UpdateDB {
 			this.comMger = comMger;
 		}
 		
+		
+		public DbManager getDbManager() {
+			return dbManager;
+		}
+
+		public void setDbManager(DbManager dbManager) {
+			this.dbManager = dbManager;
+		}
+
 		public DataSource getDataSource() {
 			return dataSource;
 		}
@@ -80,7 +91,7 @@ public class UpdateDB {
             List lst=webapp.getChildren();
             Long lastDesiredIndex = new Long(((Element) lst.get(lst.size() -1 )).getChild("sqlindex").getText());
 
-            JdbcTemplate jt = new JdbcTemplate(dataSource);
+//            JdbcTemplate jt = new JdbcTemplate(dataSource);
 
             LastSequence seq= comMger.getSequenceByClassName("QueryIndex");
             Long oldIndex=seq.getClassSequence();
@@ -111,9 +122,11 @@ public class UpdateDB {
 //        			jt.execute("start transaction");
         			log.debug("settings " + settings);
 //        			log.debug("settings.getSqlServerConnectionEnabled() " + settings.getSqlServerConnectionEnabled());
-        			if (settings!=null && settings.getSqlServerConnectionEnabled()) {
-        				jt.execute("begin transaction");
-        			}
+        			
+        			
+//        			if (settings!=null && settings.getSqlServerConnectionEnabled()) {
+//        				jt.execute("begin transaction");
+//        			}
         			
         			while (tokenizer.hasMoreTokens()) { //for all statements in the Block
         				qry = tokenizer.nextToken();
@@ -125,11 +138,13 @@ public class UpdateDB {
         							qry = convertOracleToSqlScript(qry,settings);
         						}
         						log.debug("will execute sql server query");
-        						jt.execute(qry);
+//        						jt.execute(qry);
+        						dbManager.executeQuery(qry);
         					}
         				} catch (Exception ec) {
         					
         					// 1430 is the exact numeric vendor code for ORA-01430
+        					ec.printStackTrace();
         				    if (ec.getMessage().contains("1430") || ec.getMessage().contains("ORA-01430")) {
         				        System.out.println("Safe bypass: One or more columns already exist in the table. Moving on...");
         				    } else {
@@ -146,12 +161,14 @@ public class UpdateDB {
         			if (settings!=null && !settings.getSqlServerConnectionEnabled()) {
         				if(noErrors) {
         					String updateSQL="update  common_last_sequence set classSequence="+blockIndex+" where className='QueryIndex'";
-        					jt.execute(updateSQL);
-        					jt.execute("commit");
+//        					jt.execute(updateSQL);
+//        					jt.execute("commit");
+        					dbManager.executeQuery(updateSQL);
         					log.debug("commit sequence");
-        					currentIndex++;
+//        					currentIndex++;
         				}else{
-        					jt.execute("rollback");
+//        					jt.execute("rollback");
+        					log.debug("rollback sequence");
         					currentIndex--;
         					break; // this will terminate the run of the script
         				}
@@ -167,6 +184,8 @@ public class UpdateDB {
 			model.put("lastDesiredIndex" , lastDesiredIndex);
 			model.put("oldIndex" , oldIndex);
 			model.put("currentIndex" ,currentIndex );
+			
+			log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>noErrors "+noErrors);
 			if(noErrors){
 				model.put("noErrors" , "true");
 			}else{

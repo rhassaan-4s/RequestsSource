@@ -1,27 +1,45 @@
 Error in line
-CREATE OR REPLACE TRIGGER ${hibernate.defaultSchema}.TRANSEMPBASIC2
+CREATE OR REPLACE TRIGGER FOURS_PAYROLL.TRANSEMPBASIC2
 BEFORE INSERT OR UPDATE ON EMPBASIC FOR EACH ROW
 BEGIN IF INSERTING THEN INSERT INTO LOGIN_USERS (ID,EMPCODE,NAME,end_serv, email) VALUES (:NEW.EMPCODE,:NEW.EMPCODE,:NEW.EMPNAME,:NEW.end_serv,:NEW.email); insert into COMMON_EMPLOYEE (id,FIRSTNAME,LASTNAME,JOBTITLE,EMAIL,USERS,EMPCODE) VALUES (:NEW.EMPCODE,:NEW.EMPNAME,:NEW.EMPNAME,'general',:NEW.email,:NEW.EMPCODE,:NEW.EMPCODE); insert into SECURITY_USERS (id,USERNAME,PASSWORD,DEFAULTLOCALE,DEFAULTAPPLICATION,ISACTIVE,ISEMPLOYEE) VALUES (:NEW.EMPCODE,trim(leading 0 from :new.empcode),'123',1,12,1,1); insert into SECURITY_USER_ROLES (users,role) values (:NEW.EMPCODE,1); ELSE update LOGIN_USERS set name=:NEW.EMPNAME , end_serv=:new.end_serv , email=:new.email where EMPCODE=:old.EMPCODE; update COMMON_EMPLOYEE set FIRSTNAME=:NEW.EMPNAME,LASTNAME=:NEW.EMPNAME where EMPCODE=:old.EMPCODE; update security_users set end_serv=:new.end_serv where username=trim(leading 0 from :old.empcode); END IF; END;
- 	java.sql.SQLException: Non supported SQL92 token at position: 28
+ 	null
 
 
 
 
  the block:
-CREATE OR REPLACE TRIGGER ${hibernate.defaultSchema}.TRANSEMPBASIC2
+CREATE OR REPLACE TRIGGER FOURS_PAYROLL.TRANSEMPBASIC2
 BEFORE INSERT OR UPDATE ON EMPBASIC FOR EACH ROW
 BEGIN IF INSERTING THEN INSERT INTO LOGIN_USERS (ID,EMPCODE,NAME,end_serv, email) VALUES (:NEW.EMPCODE,:NEW.EMPCODE,:NEW.EMPNAME,:NEW.end_serv,:NEW.email); insert into COMMON_EMPLOYEE (id,FIRSTNAME,LASTNAME,JOBTITLE,EMAIL,USERS,EMPCODE) VALUES (:NEW.EMPCODE,:NEW.EMPNAME,:NEW.EMPNAME,'general',:NEW.email,:NEW.EMPCODE,:NEW.EMPCODE); insert into SECURITY_USERS (id,USERNAME,PASSWORD,DEFAULTLOCALE,DEFAULTAPPLICATION,ISACTIVE,ISEMPLOYEE) VALUES (:NEW.EMPCODE,trim(leading 0 from :new.empcode),'123',1,12,1,1); insert into SECURITY_USER_ROLES (users,role) values (:NEW.EMPCODE,1); ELSE update LOGIN_USERS set name=:NEW.EMPNAME , end_serv=:new.end_serv , email=:new.email where EMPCODE=:old.EMPCODE; update COMMON_EMPLOYEE set FIRSTNAME=:NEW.EMPNAME,LASTNAME=:NEW.EMPNAME where EMPCODE=:old.EMPCODE; update security_users set end_serv=:new.end_serv where username=trim(leading 0 from :old.empcode); END IF; END;
-org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:89)
-org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:81)
-org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:81)
-org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1414)
-org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:388)
-org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:418)
-com._4s_.dbUpdate.web.action.UpdateTriggers.handleRequest(UpdateTriggers.java:157)
+org.hibernate.query.internal.QueryParameterBindingsImpl.verifyParametersBound(QueryParameterBindingsImpl.java:251)
+org.hibernate.query.internal.AbstractProducedQuery.beforeQuery(AbstractProducedQuery.java:1313)
+org.hibernate.query.internal.NativeQueryImpl.beforeQuery(NativeQueryImpl.java:228)
+org.hibernate.query.internal.AbstractProducedQuery.executeUpdate(AbstractProducedQuery.java:1502)
+com._4s_.dbUpdate.dao.DbDAOHibernate.executeQuery(DbDAOHibernate.java:74)
+com._4s_.dbUpdate.dao.DbDAOHibernate$$FastClassBySpringCGLIB$$36a8f401.invoke(<generated>)
+org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)
+org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:746)
+org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:294)
+org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:98)
+org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
+org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:688)
+com._4s_.dbUpdate.dao.DbDAOHibernate$$EnhancerBySpringCGLIB$$4e95a104.executeQuery(<generated>)
+com._4s_.dbUpdate.service.DbManagerImpl.executeQuery(DbManagerImpl.java:31)
+com._4s_.dbUpdate.service.DbManagerImpl$$FastClassBySpringCGLIB$$70aa1d8f.invoke(<generated>)
+org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)
+org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:746)
+org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:294)
+org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:98)
+org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
+org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:688)
+com._4s_.dbUpdate.service.DbManagerImpl$$EnhancerBySpringCGLIB$$8e60866e.executeQuery(<generated>)
+com._4s_.dbUpdate.web.action.UpdateTriggers.handleRequest(UpdateTriggers.java:176)
 sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-java.lang.reflect.Method.invoke(Method.java:498)
+sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+java.lang.reflect.Method.invoke(Unknown Source)
 org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
 org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:137)
 org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:102)
@@ -58,6 +76,9 @@ org.springframework.security.web.authentication.www.BasicAuthenticationFilter.do
 org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
 org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
 org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:200)
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+com._4s_.security.util.JwtTenantFilter.doFilterInternal(JwtTenantFilter.java:189)
+org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
 org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
 org.springframework.security.web.authentication.www.BasicAuthenticationFilter.doFilterInternal(BasicAuthenticationFilter.java:158)
 org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
@@ -100,7 +121,7 @@ org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
 org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:806)
 org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1498)
 org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
-java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
-java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
 org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-java.lang.Thread.run(Thread.java:748)
+java.lang.Thread.run(Unknown Source)
