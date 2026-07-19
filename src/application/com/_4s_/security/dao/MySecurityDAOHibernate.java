@@ -544,6 +544,22 @@ MySecurityDAO {
 	        .uniqueResult();
 	}
 
+	@Override
+	public List getAllFieldsByApplication(SecurityApplication application) {
+		Session	session = super.getCurrentSession();
+	    return session
+	        .createQuery(
+	          "select distinct f " +
+	          "from Fields f " +
+	          "left join fetch f.application a "
+	          + "left join fetch f.permissions p " +
+	          "where a.id = :appId")
+	        .setParameter("appId", application.getId())
+	        .getResultList();
+	}
+	
+	
+
 }
 //=======
 //package com._4s_.security.dao;

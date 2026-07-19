@@ -387,6 +387,11 @@ public class MySecurityManagerImpl extends BaseManagerImpl implements
 	public SecurityApplication getApplicationById(Long id) {
 		return securityDAO.getApplicationById(id);
 	}
+
+	@Override
+	public List getAllFieldsByApplication(SecurityApplication application) {
+		return securityDAO.getAllFieldsByApplication(application);
+	}
 	
 	
 	

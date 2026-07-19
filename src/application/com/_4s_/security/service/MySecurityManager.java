@@ -35,4 +35,6 @@ public Map<String, Object> login(String tenantId);
 public User getUserWithApplicationsAndRoles(String username);
 public SecurityApplication getApplicationById(Long id);
 
+public List getAllFieldsByApplication(SecurityApplication application);
+
 }

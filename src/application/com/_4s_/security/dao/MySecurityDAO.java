@@ -29,6 +29,7 @@ public Imei checkImei(String imei, User user);
 public IPAddress checkIP(String currentIP, User user);
 public User getUserWithApplicationsAndRoles(String username);
 public SecurityApplication getApplicationById(Long id);
+public List getAllFieldsByApplication(SecurityApplication application);
 }
 //=======
 //package com._4s_.security.dao;

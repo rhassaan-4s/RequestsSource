@@ -26,7 +26,6 @@ import com._4s_.attendance.model.Religion;
 import com._4s_.attendance.model.Title;
 import com._4s_.auditing.model.Auditable;
 import com._4s_.common.web.validators.Mandatory;
-import com._4s_.common.web.validators.MandatoryDate;
 import com._4s_.common.web.validators.Unique;
 
 @Entity
@@ -88,7 +87,7 @@ public class EmpBasic  implements Serializable,Auditable {//extends EmpBasicPare
 	@ManyToOne
 	@JoinColumn (name="eldiana")
 	private Religion eldiana;
-	@ManyToOne
+	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn (name="martial")
 	private MaritalStatus maritalStatus;
 	@ManyToOne(fetch = FetchType.LAZY)
