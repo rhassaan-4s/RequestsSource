@@ -18187,4 +18187,6 @@ INSERT INTO i18n_message VALUES (202116739, 'Add new Access Group', 101613, 3);<
          STR_PERIOD_TO    VARCHAR2(20)&#xD;
       )&#xD;
    ;</statment></query><query><sqlindex>286</sqlindex><statment>ALTER TABLE LOGIN_USERS_REQUESTS MODIFY LEAVE_EFFECT VARCHAR2(2);&#xD;
-</statment></query></SQL>
+</statment></query><query><sqlindex>287</sqlindex><statment>INSERT INTO I18N_KEY VALUES (101614, 'requestsApproval.errors.duplicateGroupName', NULL);&#xD;
+INSERT INTO i18n_message VALUES (202116740,'تم تعريف لقب المسؤول من قبل', 101614, 1);&#xD;
+INSERT INTO i18n_message VALUES (202116741, 'Access Group Name has been added before', 101614, 3);</statment></query></SQL>

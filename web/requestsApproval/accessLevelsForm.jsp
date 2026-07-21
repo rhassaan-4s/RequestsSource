@@ -1,4 +1,5 @@
 <jsp:include page="/web/common/includes/header.jsp" flush="true" />
+<%@taglib uri = "http://www.springframework.org/tags/form" prefix = "form"%>
 <%@ include file="/web/common/includes/taglibs.jsp"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <abc:security property="1035"/>
@@ -124,23 +125,17 @@ function adddata(id){
 }
 </style>
 
-<form id="accessLevelsForm" name="accessLevelsForm" method="POST"
-	action="<c:url value="/requestsApproval/accessLevelsForm.html"/>">
+<form:form	method="POST" 
+action="/Requests/requestsApproval/accessLevelsForm.html" 
+modelAttribute="accessLevel">
 <table width="90%" border="0" cellspacing="0" cellpadding="0"
 	style="padding-right: 10px">
 
 	<tr>
 		<td colspan="2">
 <input type="hidden" id="groupAdd" name="groupAdd" value=""> 
-		<spring:bind path="accessLevel.*">
-			<c:if test="${not empty status.errorMessages}">
-				<div><c:forEach var="error" items="${status.errorMessages}">
-					<font color="red"> <c:out value="${error}" escapeXml="false" /><br />
-					</font>
-				  </c:forEach>
-				</div>
-			</c:if>
-		</spring:bind></td>
+		 <form:errors path="*" cssClass="error" />
+		</td>
 	</tr>
 
 	<table align="center" width="66%" class="sofT">
@@ -197,7 +192,7 @@ function adddata(id){
 				property="requestsApproval.caption.userName" /> <fmt:message
 				key="requestsApproval.caption.userName" /></td>
 		</tr>
-		<c:forEach items="${groupList}" var="group">
+		<c:forEach items="${model.groupList}" var="group">
 			<tr style="border: 2px solid #a49bfa;" >
 				<td align="center" class="formReq"
 					style="border-bottom: 1px solid #a49bfa;" id="text${group.id}" > ${group.title}</td>
@@ -232,7 +227,7 @@ function adddata(id){
 
 
 </table>
-</form>
+</form:form>
 
 <script type="text/javascript">
 $("select").multiselect({

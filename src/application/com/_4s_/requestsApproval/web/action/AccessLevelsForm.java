@@ -207,8 +207,12 @@ public class AccessLevelsForm extends BaseSimpleFormController{
 	    
 		GroupAcc req=(GroupAcc)requestsApprovalManager.getObjectByParameter(GroupAcc.class,"title",groupTitle);
 	
+		if (req!= null) {
+			result.reject("requestsApproval.errors.duplicateGroupName");
+			return new ModelAndView("accessLevelsForm");
+		}
 		String[] employee=request.getParameterValues("employee");
-		if(groupTitle!=null&&!groupTitle.trim().equals("")&&employee!=null&&!employee.equals("")&&groupAdd.equals("")){
+		if(groupTitle!=null&&!groupTitle.trim().equals("")&&employee!=null&&!employee.equals("")&&groupAdd.equals("")  && req==null){
 		
 			GroupAcc groupacc=new GroupAcc();		
 		    groupacc.setTitle(groupTitle);
@@ -267,6 +271,9 @@ public class AccessLevelsForm extends BaseSimpleFormController{
 
 		
 		log.debug("<<<<<<<<<<<<<<<<<<<<<<<<<< End onSubmit: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+		if (result.hasErrors()) {
+		    return new ModelAndView("accessLevelsForm");
+		}
 		return new ModelAndView(new RedirectView("accessLevelsForm.html"));
 	}
 }

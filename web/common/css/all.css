@@ -308,3 +308,7 @@ text-align:right;
     position:absolute;
 
 }
+.error {
+    color: #cc0000;
+    font-weight: bold;
+}
