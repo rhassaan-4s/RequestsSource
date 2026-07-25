@@ -40,12 +40,18 @@ public class LoginController {
 //    		@RequestParam(value="client", required = false) String client,
 //    		@RequestParam("requestId") String reqId,
           @RequestParam(value = "logout", required = false) String logout,
-          Model model,
-        HttpServletRequest request) {
+          Model model, HttpServletRequest request) {
 		System.out.println("#########Login Controller##########: get login");
 		
-		String tenantID = (String)request.getSession(false).getAttribute("tenantID");
+		String tenantID = (String)(request.getSession(false).getAttribute("tenantID"));
+		log.debug("#########Login Controller##########: tenantID " + tenantID);
 		System.out.println("#########Login Controller##########: tenantID " + tenantID);
+		if (tenantID == null || tenantID.isEmpty()) {
+			tenantID = request.getParameter("tenantID");
+			log.debug("#########Login Controller##########: tenantID from request parameter " + tenantID);
+			System.out.println("#########Login Controller##########: tenantID from request parameter " + tenantID);
+			return "redirect:/security/clients.html";
+		}
 		request.getSession().setAttribute("tenantID", tenantID);
 		
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
