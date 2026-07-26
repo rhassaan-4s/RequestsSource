@@ -3,6 +3,7 @@ package com._4s_.security.web.action;
 import java.nio.charset.Charset;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,8 +43,24 @@ public class LoginController {
           @RequestParam(value = "logout", required = false) String logout,
           Model model, HttpServletRequest request) {
 		System.out.println("#########Login Controller##########: get login");
-		
-		String tenantID = (String)(request.getSession(false).getAttribute("tenantID"));
+		HttpSession sess = request.getSession(false);
+		log.debug("#########Login Controller##########: session " + sess);
+		if (sess == null) {
+			log.debug("#########Login Controller##########: session is null");
+			System.out.println("#########Login Controller##########: session is null");
+			return "redirect:/security/clients.html";
+		}
+		Object tenantIDObj = sess.getAttribute("tenantID");
+		String tenantID = null;
+		if (tenantIDObj != null) {
+			log.debug("#########Login Controller##########: tenantIDObj " + tenantIDObj);
+			System.out.println("#########Login Controller##########: tenantIDObj " + tenantIDObj);
+			tenantID = (String) tenantIDObj;
+		} else {
+			log.debug("#########Login Controller##########: tenantIDObj is null");
+			System.out.println("#########Login Controller##########: tenantIDObj is null");
+			tenantID = null;
+		}
 		log.debug("#########Login Controller##########: tenantID " + tenantID);
 		System.out.println("#########Login Controller##########: tenantID " + tenantID);
 		if (tenantID == null || tenantID.isEmpty()) {
@@ -69,6 +86,7 @@ public class LoginController {
 //		request.getSession().setAttribute("requestNumber", requestNumber);
 		
 		Exception lastException = (Exception) request.getSession().getAttribute("ACEGI_SECURITY_LAST_EXCEPTION");
+		System.out.println("#########Login Controller##########: lastException " + lastException);
 		if(lastException != null ){
 			log.debug("#########Login Controller##########: exception " + lastException.getClass().getCanonicalName());
 			if (lastException instanceof AuthenticationException ) {//concurrent login exception

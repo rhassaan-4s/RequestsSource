@@ -150,6 +150,25 @@ public class JwtTenantFilter extends OncePerRequestFilter {
 	                request.getSession(false).getAttribute("tenantID");
 	            log.info("!!!!!!!!!!!!!tenant id: " + t);
 
+	         // 1.5) Restore tenant from cookie if session has expired
+	            if (tenant == null) {
+	                String tenantFromCookie = getCookieValue(request, "tenantID");
+
+	                if (tenantFromCookie != null && !tenantFromCookie.isEmpty()) {
+
+	                    tenant = tenantFromCookie;
+
+	                    request.getSession(true).setAttribute("tenantID", tenant);
+
+	                    String client = getCookieValue(request, "client");
+	                    if (client != null) {
+	                        request.getSession().setAttribute("client", client);
+	                    }
+
+	                    log.info("Tenant restored from cookie: " + tenant);
+	                }
+	            }
+	            
 	            if (t != null) {
 	                tenant = t.toString();
 	                log.info("!!!!!!!!!!!!!tenant id: " + tenant);
@@ -210,6 +229,21 @@ public class JwtTenantFilter extends OncePerRequestFilter {
                 if ("token".equals(cookie.getName())) {
                     return cookie.getValue();
                 }
+            }
+        }
+
+        return null;
+    }
+    
+    private String getCookieValue(HttpServletRequest request, String cookieName) {
+
+        if (request.getCookies() == null) {
+            return null;
+        }
+
+        for (Cookie cookie : request.getCookies()) {
+            if (cookieName.equals(cookie.getName())) {
+                return cookie.getValue();
             }
         }
 
