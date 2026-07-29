@@ -48,16 +48,16 @@ public class MySecurityDAOHibernate extends BaseDAOHibernate implements
 MySecurityDAO {
 
 	
-	@Autowired AuthenticationSuccessHandler successHandler;
+	@Autowired 
+	AuthenticationSuccessHandler successHandler;
 	@Autowired 
 	AuthenticationManager authenticationManager;  
 //	@Autowired 
 //	@Qualifier("myFailureHandler")
 //	AuthenticationFailureHandler failureHandler;
 	
-
     private String secretKey;
-    
+    @Autowired
     private JwtUtil jwtUtil;
 
 	public String getSecretKey() {
