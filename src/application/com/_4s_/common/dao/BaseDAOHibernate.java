@@ -1263,6 +1263,18 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 	    	Predicate restrictions = builder.equal(root.get(parameter1), value1);
 	    	restrictions = builder.and(restrictions,builder.equal(root.get(parameter2), value2));
 	    	queryCriteria.select(root).where(restrictions).distinct(true);
+	    	
+	    	// Build ORDER BY dynamically
+	    	if (fieldList != null && !fieldList.isEmpty()) {
+	    	    List<Order> orders = new ArrayList<>();
+
+	    	    for (String field : fieldList) {
+	    	        orders.add(builder.asc(root.get(field))); // or builder.desc(...)
+	    	    }
+
+	    	    queryCriteria.orderBy(orders);
+	    	}
+	    	////////////////////////////////////////
 	    	TypedQuery<Object> query = session.createQuery(queryCriteria);
 	        List list =  query.getResultList();
 			
@@ -1272,6 +1284,7 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
 	        else if (log.isDebugEnabled()) {
 	            log.debug("Got "+list.size()+" objects");
 	        }
+	        
 	        
 //		 Criteria criteria = getCurrentSession().createCriteria(clazz).add(
 //				 Expression.eq(parameter1, value1))

@@ -55,66 +55,66 @@
 		<!-- Rest Web Service -->
 
 		<intercept-url pattern="/api/workflow/signInOut"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 		<intercept-url pattern="/api/workflow/userRequest"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 		<intercept-url pattern="/api/workflow/submittedRequests"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 		<intercept-url pattern="/api/workflow/vacInfo"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 		<intercept-url pattern="/api/workflow/requestStatus"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 		<intercept-url pattern="/api/workflow/editUserInfo"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 
 		<intercept-url pattern="/api/workflow/requestsForApproval"
-			access="hasRole('CAN_VIEW_page_requestsApproval')" />
+			access="hasAuthority('CAN_VIEW_page_requestsApproval')" />
 			
 		<intercept-url pattern="/api/workflow/approveRequest"
-			access="hasRole('CAN_VIEW_page_requestsApproval')" />
+			access="hasAuthority('CAN_VIEW_page_requestsApproval')" />
 			
 		<intercept-url pattern="/api/workflow/vacTypes"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			
 		<intercept-url pattern="/api/workflow/checkStartedRequests"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 
 		<intercept-url pattern="/api/workflow/getSettings"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 
 		<intercept-url pattern="/api/workflow/getRequestTypes"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			
 			<intercept-url pattern="/api/workflow/getEmployeesByGroup"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			
 			<intercept-url pattern="/api/workflow/getUserGroups"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			
 			
 			<intercept-url pattern="/api/workflow/insertTimesheetActivity"
-			access="hasRole('CAN_VIEW_page_requestsApproval')" />
+			access="hasAuthority('CAN_VIEW_page_requestsApproval')" />
 			<intercept-url pattern="/api/workflow/insertTimesheetPart"
-			access="hasRole('CAN_VIEW_page_requestsApproval')" />
+			access="hasAuthority('CAN_VIEW_page_requestsApproval')" />
 			<intercept-url pattern="/api/workflow/insertTimesheetCostcenter"
-			access="hasRole('CAN_VIEW_page_requestsApproval')" />
+			access="hasAuthority('CAN_VIEW_page_requestsApproval')" />
 			<intercept-url pattern="/api/workflow/insertTimesheetSpecs"
-			access="hasRole('CAN_VIEW_page_requestsApproval')" />
+			access="hasAuthority('CAN_VIEW_page_requestsApproval')" />
 			<intercept-url pattern="/api/workflow/insertTimesheetTransDefaults"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			<intercept-url pattern="/api/workflow/insertTimesheetTrans"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 						
 			<intercept-url pattern="/api/workflow/getActivities"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			<intercept-url pattern="/api/workflow/getCostcenters"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			<intercept-url pattern="/api/workflow/getParts"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			<intercept-url pattern="/api/workflow/getTimesheetSpecs"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			<intercept-url pattern="/api/workflow/getTimesheetTrans"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 		<!--  <intercept-url pattern="/api/workflow/getPortNo" access="IS_AUTHENTICATED_ANONYMOUSLY"/> --> 
 			<intercept-url pattern="/api/workflow/login" access="permitAll"/>
 			<intercept-url pattern="/api/workflow/getTenantId" access="permitAll"/>
@@ -474,29 +474,29 @@
 			access="CAN_VIEW_page_approvement" />
 		
 		<intercept-url pattern="/requestsApproval/loginUsersRequestsForm.html/vacInfo.*\Z"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 		
 		
 		<intercept-url pattern="/requestsApproval/attendanceRequestForm.html.*\Z"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			
 		<intercept-url pattern="/common/changeApplication.html?aaplication=.*\Z"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			
 		<intercept-url pattern="/attendance/vacRuleForm.html.*\Z"
-			access="hasRole('CAN_VIEW_page_approvement')" />
+			access="hasAuthority('CAN_VIEW_page_approvement')" />
 			
 		<!-- 	<intercept-url pattern="/attendance/ajax-drawAbsenceAttendanceByDepartment"
-			access="hasRole('CAN_VIEW_page_approvement')" /> -->
+			access="hasAuthority('CAN_VIEW_page_approvement')" /> -->
 			
 			<intercept-url pattern="/attendance/qualificationForm.html.*\Z"
-			access="hasRole('CAN_VIEW_all_qualification')" />
+			access="hasAuthority('CAN_VIEW_all_qualification')" />
 			
 			<intercept-url pattern="/requestsApproval/ajax/vacInfo.html.*\Z"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			
 			<intercept-url pattern="/security/errorCode403.html.*\Z"
-			access="hasRole('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			
 			
 			 <intercept-url pattern="/security/clients.html" access="permitAll"/>

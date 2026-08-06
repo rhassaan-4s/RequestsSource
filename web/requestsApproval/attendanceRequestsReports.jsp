@@ -13,8 +13,10 @@
 <script type="text/javascript">
 
 function selectAllFn() {
+//alert('selectAllFn');
 	var sel = document.getElementById('selects');
 	var inputs = document.getElementById("attendanceRequestsReports").getElementsByTagName("input");
+	//alert('inputs.length---'+inputs.length);
 	var ele = [];
     for(var i=0, len=inputs.length; i<len; i++){
         if(inputs[i].name.match(/^approve\d+$/)){
@@ -125,7 +127,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 	</tr>
 	<tr>
 		<td>
-			<form:form method="POST" 
+			<form:form method="POST" id="attendanceRequestsReports" 
 				action="/Requests/requestsApproval/attendanceRequestsReports.html">
 				
 				    <input type="hidden"  id="requestType" name="requestType" value="${model.requestType}"/>
@@ -295,8 +297,7 @@ $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 											<abc:i18n
 											property="requestsApproval.requestsApprovalForm.reqStatus" /> <fmt:message
 											key="requestsApproval.requestsApprovalForm.reqStatus" /> 
-											<fmt:message
-										key="requestsApproval.requestsApprovalForm.reqStatus" /> <br>
+											<br>
 									<input type="checkbox" id="selects" name="selects" onclick="selectAllFn()" />
 										</td>
 										<td class="helpHed" nowrap="nowrap">

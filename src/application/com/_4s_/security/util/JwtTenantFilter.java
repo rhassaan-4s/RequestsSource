@@ -1,10 +1,6 @@
 package com._4s_.security.util;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -15,26 +11,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
-import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
-import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 //import com._4s_.common.dao.CurrentTenantIdentifierResolverImpl;
 import com._4s_.common.dao.TenantContext;
 import com._4s_.restServices.service.RequestsServiceImpl;
-
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.security.Keys;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -204,8 +192,19 @@ public class JwtTenantFilter extends OncePerRequestFilter {
 	            TenantContext.setTenant(tenant);
 	            MDC.put("tenantId", tenant); 
 	        }
-
+	        System.out.println("*********Filter: Tenant set to: " + tenant);
+	        
+	        log.debug("Request URI = " + request.getRequestURI());
+	        
 	        filterChain.doFilter(request, response);
+	        System.out.println("*********Filter: After filterChain.doFilter, tenant is: " + TenantContext.getTenant());
+	        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+	        System.out.println("*****Authentication = " + auth);
+
+	        if (auth != null) {
+	            System.out.println("****Authorities = " + auth.getAuthorities());
+	        }
 
 	    } finally {
 	        TenantContext.clear();
