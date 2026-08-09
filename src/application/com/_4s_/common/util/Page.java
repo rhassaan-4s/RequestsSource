@@ -16,6 +16,7 @@ public class Page{
 		
 		int listSize = ((Integer)map.get("listSize")).intValue();
 		int numberOfPages = (listSize / pageSize);
+		System.out.println("*******Paging: numberOfPages "+ numberOfPages);
 		if (listSize % pageSize != 0){
 			numberOfPages = numberOfPages +1;
 		}

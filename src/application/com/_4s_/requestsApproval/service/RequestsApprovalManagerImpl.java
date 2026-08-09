@@ -911,6 +911,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 	public Map getRequestsForApproval(String requestNumber, String emp_code, String dateFrom, String dateTo, String exactDateFrom, String exactDateTo, 
 			String requestType, String codeFrom, String codeTo, String statusId, String sort,LoginUsers loggedInUser, List empReqTypeAccs, boolean isWeb, String isInsideCompany, int pageNumber, int pageSize) {
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
+		log.debug("*************Page Number " + pageNumber + " Page Size " + pageSize);
 		log.debug("dateFrom " + dateFrom + " dateTo " + dateTo + " requestType " + requestType);
 		
 		Date fromDate = null;
@@ -991,7 +992,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		if (empReqTypeAccs!=null && empReqTypeAccs.size() > 0) {
 			mgrId = ((Employee)getObjectByParameter(Employee.class,"empCode",loggedInUser.getEmpCode().getEmpCode())).getId();
 		}
-		log.debug("mgr id " + mgrId);
+		log.debug("############mgr id " + mgrId);
 		loginUserReqs= getPagedRequests(fromDate, toDate,reqType,fromExact,toExact,null,null,emp_code,codeFrom,codeTo,status,sort,empReqTypeAccs,requestNumber,mgrId,isWeb,isInsideCompany,pageNumber,pageSize);
 		log.debug("--dateList.size--"+loginUserReqs.get("listSize"));
 		//model.put("loginUserReqs", loginUserReqs);
