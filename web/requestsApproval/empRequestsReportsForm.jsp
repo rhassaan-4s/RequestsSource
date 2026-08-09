@@ -25,6 +25,29 @@
 </style>
 <body>
 	<script type="text/javascript">
+	function selectAllFn() {
+		//alert('selectAllFn');
+			var sel = document.getElementById('selects');
+			var inputs = document.getElementById("empRequestsReports").getElementsByTagName("input");
+			//alert('inputs.length---'+inputs.length);
+			var ele = [];
+		    for(var i=0, len=inputs.length; i<len; i++){
+		        if(inputs[i].name.match(/^approve\d+$/)){
+		            ele.push(inputs[i]);
+		        }
+		    }
+			for (var i = 0; i < ele.length; i++) {
+				if (ele[i].type == 'checkbox') {
+					if (sel.checked == true) {
+						ele[i].checked = 'checked';
+					} else {
+						ele[i].checked = '';
+					}
+
+				}
+			}
+		}
+	
 function searchForm (){
 	//alert('search');
 	if(document.getElementById("empCode").value!=null){
@@ -131,7 +154,7 @@ function initMap(latitude,longitude) {
 				</c:if></td>
 		</tr>
 		<tr>
-			<td><form:form method="POST" modelAttribute="loginUsersRequests"
+			<td><form:form method="POST" modelAttribute="loginUsersRequests" id="empRequestsReports"
 					action="/Requests/requestsApproval/empRequestsReportsForm.html">
 					<input type="hidden" id="requestType" name="requestType"
 						value="${model.requestType}" />
@@ -421,9 +444,10 @@ function initMap(latitude,longitude) {
 										key="commons.caption.address" /></td>
 
 								<td class="helpHed" nowrap="nowrap"><abc:i18n
-										property="requestsApproval.requestsApprovalForm.reqStatus" />
-									<fmt:message
-										key="requestsApproval.requestsApprovalForm.reqStatus" /></td>
+										property="requestsApproval.requestsApprovalForm.reqStatus" /><fmt:message
+										key="requestsApproval.requestsApprovalForm.reqStatus" />
+											<br>
+									<input type="checkbox" id="selects" name="selects" onclick="selectAllFn()"/> </td>
 								<td class="helpHed" nowrap="nowrap"><abc:i18n
 										property="requestsApproval.caption.reply" /> <fmt:message
 										key="requestsApproval.caption.reply" /></td>
