@@ -47,6 +47,7 @@ import com._4s_.requestsApproval.model.RequestTypes;
 import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.requestsApproval.web.action.TimeAttend;
+import com._4s_.requestsApproval.web.util.EmployeeAccessLevelsDTO;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.EmployeeResponse;
 import com._4s_.restServices.json.EmployeeWrapper;
@@ -2810,6 +2811,24 @@ public class RequestsServiceImpl implements RequestsService, UserDetailsService 
 		return results;
 	}
 
+	@Override
+	public Map getEmployeeAccessAuthorities(List<Long> loginUserIds) {
+		RestStatus status = new RestStatus();
+		Map response = new HashMap();
+		List<EmployeeAccessLevelsDTO>  empReqTypeAccLevel = requestsApprovalManager.getEmployeeAccessAuthorities(loginUserIds);
+
+		status.setCode("200");
+		status.setMessage("Request Inserted Successfully");
+		status.setStatus("true");
+		response.put("Status", status);
+		response.put("Response", empReqTypeAccLevel);
+		log.debug("request status returned finished");
+		return response;
+	}
+
+	
+	
+	
 // @Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 // public void saveEmployee(long employeeId, String name, String surname, String jobDescription) throws Exception {
 // 

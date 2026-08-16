@@ -15,14 +15,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.JstlView;
 
 import com._4s_.common.service.BaseManager;
 import com._4s_.common.web.binders.BaseBinder;
@@ -151,6 +148,32 @@ public class BaseSimpleFormController {
 		log.debug("End:BaseSimpleFormController.initBinder <<<");
 	}
 
+	
+	@ExceptionHandler(Exception.class)
+	public ModelAndView handleException(
+	        HttpServletRequest request,
+	        Exception ex) {
+
+	    log.error("Exception caught while processing request: "
+	            + request.getRequestURI(), ex);
+
+	    JstlView errorView =
+	            new JstlView("/web/common/error.jsp");
+	    
+	    ModelAndView mav = new ModelAndView(errorView);
+
+	    String exceptionMessage = ex.getMessage();
+//	    int newLineIndex = exceptionMessage.indexOf('\n');
+//	    if (newLineIndex >= 0) {
+//	        exceptionMessage = exceptionMessage.substring(0, newLineIndex);
+//	    }
+	    mav.addObject("errorMessage",
+	            "An unexpected error occurred while processing your request.<br>["+ex.getClass().getSimpleName()+"]: " + exceptionMessage);
+	    
+	    
+	    
+	    return mav;
+	}
 	
 	
 //	public void initBinder(HttpServletRequest request,WebDataBinder binder) {

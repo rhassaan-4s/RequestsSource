@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,6 +15,7 @@ import java.util.stream.Collectors;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
@@ -23,12 +23,7 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Expression;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Subqueries;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -55,7 +50,6 @@ import com._4s_.common.util.DBUtils;
 import com._4s_.common.util.Page;
 import com._4s_.requestsApproval.model.AccessLevels;
 import com._4s_.requestsApproval.model.EmpReqApproval;
-import com._4s_.requestsApproval.model.EmpReqApprovalJSON;
 import com._4s_.requestsApproval.model.EmpReqTypeAcc;
 import com._4s_.requestsApproval.model.GroupAcc;
 import com._4s_.requestsApproval.model.LoginUsers;
@@ -5266,6 +5260,50 @@ public class RequestsApprovalDAOHibernate extends BaseDAOHibernate implements Re
 		return list;
 	}
 
+
+	@Override
+	public List<EmpReqTypeAcc> getEmployeeAccessAuthorities(List<Long> loginUserIds) {
+		Session session = getCurrentSession();
+		CriteriaBuilder builder = getBuilder();
+
+		CriteriaQuery queryCriteria = builder.createQuery(EmpReqTypeAcc.class);
+		Root<EmpReqTypeAcc> root = queryCriteria.from(EmpReqTypeAcc.class);
+		Join<EmpReqTypeAcc, LoginUsers> employeeJoin =
+		        root.join("emp_id", JoinType.INNER);
+		queryCriteria.select(root).where(employeeJoin.get("id").in(loginUserIds))
+				.orderBy(builder.asc(employeeJoin.get("name")),
+						builder.asc(root.get("order")),
+						builder.asc(root.get("req_id").get("id")));
+//		queryCriteria.distinct(true);
+		log.debug("#############Show Query ##############");
+		TypedQuery<EmpReqTypeAcc> query = null;
+		query = session.createQuery(queryCriteria);
+		List list = query.getResultList();
+		return list;
+	}
+
+
+	@Override
+	public List getCurrentEmployees() {
+		Session session = getCurrentSession();
+		CriteriaBuilder builder = getBuilder();
+
+		CriteriaQuery queryCriteria = builder.createQuery(LoginUsers.class);
+		Root<EmpReqTypeAcc> root = queryCriteria.from(LoginUsers.class);
+		Predicate restrictions =  builder.isNull(root.get("endServ"));
+		queryCriteria.select(root).where(restrictions)
+				.orderBy(builder.asc(root.get("name")));
+		queryCriteria.distinct(true);
+		TypedQuery<EmpReqTypeAcc> query = null;
+		query = session.createQuery(queryCriteria);
+		List list = query.getResultList();
+		return list;
+	}
+
+	
+
+	
+	
 	
 //	public List getAttendanceRequests(Date date, String empCode,RequestTypes reqType) {
 //		try{

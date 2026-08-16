@@ -90,24 +90,27 @@ public class EmpReqTypeGroupForm extends BaseSimpleFormController{
 		boolean empRequestCheckDate = settings.getEmpRequestCheckDate();
 		boolean empRequestTypeException = settings.getEmpRequestTypeException();
 		
-		List loginUsers=requestsApprovalManager.getObjectsOrderedByField(LoginUsers.class, "name");
-		log.debug("-------loginUsers.size---before"+loginUsers.size());
 		List currentEmps=new ArrayList();
-		Date date = new Date();
-		log.debug("date check 2  =  "+date);
-		for (int i = 0; i < loginUsers.size(); i++) {
-			LoginUsers loginUser=(LoginUsers) loginUsers.get(i);
-			log.debug("----i----"+loginUser.getEmpCode());
-			if((empRequestCheckDate == true && (loginUser.getEndServ()==null || loginUser.getEndServ().equals("") || loginUser.getEndServ().equals(date) || loginUser.getEndServ().after(date)))//Lotus
-					||
-					(empRequestCheckDate == false && (loginUser.getEndServ()==null || loginUser.getEndServ().equals("")))//Lehaa
-							){
-				log.debug("---before removing--i----"+loginUser.getEmpCode());
-				currentEmps.add(loginUser);
-//				log.debug("----login----"+loginUsers.get(i));	
-			}
-			
-		}
+		
+//		List loginUsers=requestsApprovalManager.getObjectsOrderedByField(LoginUsers.class, "name");
+//		log.debug("-------loginUsers.size---before"+loginUsers.size());
+//		Date date = new Date();
+//		log.debug("date check 2  =  "+date);
+//		for (int i = 0; i < loginUsers.size(); i++) {
+//			LoginUsers loginUser=(LoginUsers) loginUsers.get(i);
+//			log.debug("----i----"+loginUser.getEmpCode());
+//			if((empRequestCheckDate == true && (loginUser.getEndServ()==null || loginUser.getEndServ().equals("") || loginUser.getEndServ().equals(date) || loginUser.getEndServ().after(date)))//Lotus
+//					||
+//					(empRequestCheckDate == false && (loginUser.getEndServ()==null || loginUser.getEndServ().equals("")))//Lehaa
+//							){
+//				log.debug("---before removing--i----"+loginUser.getEmpCode());
+//				currentEmps.add(loginUser);
+////				log.debug("----login----"+loginUsers.get(i));	
+//			}
+//			
+//		}
+		
+		currentEmps=requestsApprovalManager.getCurrentEmployees();
 		log.debug("-------currentEmps.size---after"+currentEmps.size());
 		model.put("loginUsers", currentEmps);
 		

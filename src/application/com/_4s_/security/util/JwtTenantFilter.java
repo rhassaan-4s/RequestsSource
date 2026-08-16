@@ -19,6 +19,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.JstlView;
 
 //import com._4s_.common.dao.CurrentTenantIdentifierResolverImpl;
 import com._4s_.common.dao.TenantContext;
@@ -31,21 +33,22 @@ public class JwtTenantFilter extends OncePerRequestFilter {
 //    @Value("${jwt.secret}")
 	@Autowired
 	private JwtUtil jwtUtil;
-    private String secretKey;
-    @Autowired
-    private RequestsServiceImpl requestsService;
-    
-    @Autowired
+	private String secretKey;
+	@Autowired
+	private RequestsServiceImpl requestsService;
+
+	@Autowired
 	private SessionFactory sessionFactory;
 
 	public SessionFactory getSessionFactory() {
-		return sessionFactory;}
+		return sessionFactory;
+	}
+
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-    
 
-    public String getSecretKey() {
+	public String getSecretKey() {
 		return secretKey;
 	}
 
@@ -53,7 +56,6 @@ public class JwtTenantFilter extends OncePerRequestFilter {
 		this.secretKey = secretKey;
 	}
 
-	
 	public JwtUtil getJwtUtil() {
 		return jwtUtil;
 	}
@@ -61,11 +63,10 @@ public class JwtTenantFilter extends OncePerRequestFilter {
 	public void setJwtUtil(JwtUtil jwtUtil) {
 		this.jwtUtil = jwtUtil;
 		this.secretKey = jwtUtil.getSecretKey();
-		System.out.println("JwtTenantFilter initialized with secretKey: " + (secretKey != null ? jwtUtil.getSecretKey() : "null"));
+		System.out.println(
+				"JwtTenantFilter initialized with secretKey: " + (secretKey != null ? jwtUtil.getSecretKey() : "null"));
 	}
 
-	
-	
 	public RequestsServiceImpl getRequestsService() {
 		return requestsService;
 	}
@@ -73,36 +74,35 @@ public class JwtTenantFilter extends OncePerRequestFilter {
 	public void setRequestsService(RequestsServiceImpl requestsService) {
 		this.requestsService = requestsService;
 	}
-	
+
 	private String resolveTenant(HttpServletRequest request, String token) {
 
-	    // 1) WEB: from session (after /clients.html)
-	    try {
-	        if (request.getSession(false) != null &&
-	            request.getSession(false).getAttribute("tenantID") != null) {
+		// 1) WEB: from session (after /clients.html)
+		try {
+			if (request.getSession(false) != null && request.getSession(false).getAttribute("tenantID") != null) {
 
-	            String t = request.getSession(false).getAttribute("tenantID").toString();
-	            log.warn(">>> Tenant from SESSION = " + t);
-	            return t;
-	        }
-	    } catch (Exception e) {
-	        log.error("Error reading tenant from session", e);
-	    }
+				String t = request.getSession(false).getAttribute("tenantID").toString();
+				log.warn(">>> Tenant from SESSION = " + t);
+				return t;
+			}
+		} catch (Exception e) {
+			log.error("Error reading tenant from session", e);
+		}
 
-	    // 2) MOBILE: from JWT
-	    if (token != null) {
-	        try {
-	            String t = jwtUtil.extractTenantId(token);
-	            log.warn(">>> Tenant from JWT = " + t);
-	            return t;
-	        } catch (Exception e) {
-	            log.error("Error extracting tenant from JWT", e);
-	        }
-	    }
+		// 2) MOBILE: from JWT
+		if (token != null) {
+			try {
+				String t = jwtUtil.extractTenantId(token);
+				log.warn(">>> Tenant from JWT = " + t);
+				return t;
+			} catch (Exception e) {
+				log.error("Error extracting tenant from JWT", e);
+			}
+		}
 
-	    return null;
+		return null;
 	}
-	
+
 	@Override
 	protected void doFilterInternal(
 	        HttpServletRequest request,
@@ -205,47 +205,77 @@ public class JwtTenantFilter extends OncePerRequestFilter {
 	        if (auth != null) {
 	            System.out.println("****Authorities = " + auth.getAuthorities());
 	        }
+	    } catch (Exception e) {
+	    	 log.error("Exception caught in JwtTenantFilter for URI: " + uri, e);
 
+	    	    String exceptionMessage = e.getMessage();
+
+	    	    if (exceptionMessage == null || exceptionMessage.trim().isEmpty()) {
+	    	        exceptionMessage = e.getClass().getSimpleName();
+	    	    }
+
+	    	    // Get only the first line of the exception message
+	    	    int newLineIndex = exceptionMessage.indexOf('\n');
+
+	    	    if (newLineIndex >= 0) {
+	    	        exceptionMessage = exceptionMessage.substring(0, newLineIndex);
+	    	    }
+
+	    	    String userMessage =
+	    	            "An unexpected error occurred while processing your request."
+	    	            + "<br/>["
+	    	            + e.getClass().getSimpleName()
+	    	            + "]: "
+	    	            + exceptionMessage;
+
+	    	    request.setAttribute("errorMessage", userMessage);
+
+	    	    if (!response.isCommitted()) {
+	    	        request.getRequestDispatcher("/web/common/error.jsp")
+	    	               .forward(request, response);
+	    	    } else {
+	    	        log.error("Response already committed; cannot forward to error JSP.");
+	    	    }
 	    } finally {
 	        TenantContext.clear();
 	        MDC.remove("tenantId"); 
 	    }
 	}
 
-    private String extractToken(HttpServletRequest request) {
-        // Check Authorization header
-    	log.info("extractToken: FILTER ACTIVE: " + this.getClass().getName());
-    	System.out.println("*********Filter: Extracting token from request...");
-        String authHeader = request.getHeader("Authorization");
-        System.out.println("Filter: Authorization header: " + (authHeader != null ? authHeader : "null"));
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
-        }
+	private String extractToken(HttpServletRequest request) {
+		// Check Authorization header
+		log.info("extractToken: FILTER ACTIVE: " + this.getClass().getName());
+		System.out.println("*********Filter: Extracting token from request...");
+		String authHeader = request.getHeader("Authorization");
+		System.out.println("Filter: Authorization header: " + (authHeader != null ? authHeader : "null"));
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			return authHeader.substring(7);
+		}
 
-        // Fallback to cookies (optional)
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("token".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
+		// Fallback to cookies (optional)
+		if (request.getCookies() != null) {
+			for (Cookie cookie : request.getCookies()) {
+				if ("token".equals(cookie.getName())) {
+					return cookie.getValue();
+				}
+			}
+		}
 
-        return null;
-    }
-    
-    private String getCookieValue(HttpServletRequest request, String cookieName) {
+		return null;
+	}
 
-        if (request.getCookies() == null) {
-            return null;
-        }
+	private String getCookieValue(HttpServletRequest request, String cookieName) {
 
-        for (Cookie cookie : request.getCookies()) {
-            if (cookieName.equals(cookie.getName())) {
-                return cookie.getValue();
-            }
-        }
+		if (request.getCookies() == null) {
+			return null;
+		}
 
-        return null;
-    }
+		for (Cookie cookie : request.getCookies()) {
+			if (cookieName.equals(cookie.getName())) {
+				return cookie.getValue();
+			}
+		}
+
+		return null;
+	}
 }

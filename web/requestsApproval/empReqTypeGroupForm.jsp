@@ -1,5 +1,7 @@
-<jsp:include page="/web/common/includes/header.jsp" flush="true"/>
 <%@ include file="/web/common/includes/taglibs.jsp"%>
+<jsp:include page="/web/common/includes/header.jsp" flush="true" />
+<%@page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <abc:security property="1035"/>
 
 <style>
@@ -41,6 +43,21 @@ width: 235px;
  height: 24px;
  float: right;
 }
+	#employeeAuthorities table {
+	    border-collapse: collapse;
+	    width: 80%;
+	}
+	
+	#employeeAuthorities table,
+	#employeeAuthorities th,
+	#employeeAuthorities td {
+	    border: 2px solid black;
+	}
+	
+	#employeeAuthorities th,
+	#employeeAuthorities td {
+	    padding: 5px;
+	}
 </style>
 
 
@@ -72,6 +89,109 @@ $(ele).parent().remove();
 	});
 	
 }
+
+function loadGroupAccLevelsEmps() {
+    var selectedUsers = $("#loginUser").val();
+
+    if (!selectedUsers || selectedUsers.length === 0) {
+        $("#employeeAuthorities").html("");
+        return;
+    }
+
+    $.ajax({
+        type: "GET",
+        url: "../requestsApproval/ajax/getEmployeeAccessAuthorities",
+        traditional: true,
+        data: {
+            loginUserIds: selectedUsers
+        },
+
+        success: function(response) {
+
+            var html = "";
+
+            if (!response || response.length === 0) {
+                html = "<div>No authorities found.</div>";
+                $("#employeeAuthorities").html(html);
+                return;
+            } else {
+				html = "<br><div><b><fmt:message key="requestsApproval.header.empGroupsView"/></b></div><br>";
+            }
+            html += "<table class='listTable' style='width: 80%;'>";
+            html += "<tr>";
+            html += "<th><fmt:message key="requestsApproval.caption.userName"/></th>";
+            html += "<th><fmt:message key="requestsApproval.caption.reponsibles"/></th>";
+            html += "<th><fmt:message key="requestsApproval.caption.requestType"/></th>";
+            
+            html += "</tr>";
+
+
+            $.each(response.Response, function(index, employee) {
+            	
+				 
+				 
+                html += "<tr>";
+
+                /*
+                 * Employee
+                 */
+                html += "<td>";
+                html += employee.employeeName || "";
+                html += "</td>";
+
+                /*
+                 * Group
+                 */
+                html += "<td>";
+                html += employee.groupName || "";
+                html += "</td>";
+
+                /*
+                 * Authorities
+                 */
+                html += "<td>";
+
+                if (employee.authorities &&
+                    employee.authorities.length > 0) {
+
+                    html += "<ul style='margin:0; padding-left:20px;'>";
+
+                    $.each(employee.authorities, function(i, authority) {
+
+                        html += "<li>";
+                        html += authority || "";
+                        html += "</li>";
+
+                    });
+
+                    html += "</ul>";
+
+                } else {
+
+                    html += "No authorities";
+
+                }
+
+                html += "</td>";
+
+                html += "</tr>";
+            });
+
+            html += "</table>";
+
+            $("#employeeAuthorities").html(html);
+        },
+
+        error: function(xhr, status, error) {
+            $("#employeeAuthorities").html(
+                "<div class='error'>Error loading employee authorities.</div>"
+            );
+
+            console.log("Error:", error);
+            console.log("Response:", xhr.responseText);
+        }
+    });
+}
 </script>
 
 <link type="text/css" rel="stylesheet"	href="/Requests/web/common/timepicker/jquery.multiselect.css" />
@@ -81,7 +201,8 @@ $(ele).parent().remove();
 
 
 
-<form id="empReqTypeGroupForm" name="empReqTypeGroupForm" method="POST"	action="<c:url value="/requestsApproval/empReqTypeGroupForm.html"/>">
+<form:form method="POST" modelAttribute="loginUsersRequests" id="empReqTypeGroupForm"
+					action="/Requests/requestsApproval/empReqTypeGroupForm.html">
 <table width="90%" border="0" cellspacing="0" cellpadding="0" style="padding-right:10px ">
    
 	<tr>
@@ -150,7 +271,7 @@ $(ele).parent().remove();
 				</td>
 				
 				<td class="formBodControl" width="70%">						
-					<select name="loginUser" class="multi" id="loginUser" multiple="multiple">													
+					<select name="loginUser" class="multi" id="loginUser" multiple="multiple" onchange="loadGroupAccLevelsEmps()">													
 						<c:forEach items="${model.loginUsers}" var="loginUser">
 							<option value="${loginUser.id}">${loginUser.name}</option>
 						</c:forEach>
@@ -166,10 +287,18 @@ $(ele).parent().remove();
 			</tr>
 		</table>
 	</tr>
+	
+	<tr>
+		<td colspan="2" align="center">
+		    <div id="employeeAuthorities">
+		        <!-- AJAX result will be displayed here -->
+		    </div>
+		</td>
+	</tr>
 
 
 </table>
-</form>
+</form:form>
 	<script type="text/javascript">
 $(".multi").multiselect({
 	  header: "",

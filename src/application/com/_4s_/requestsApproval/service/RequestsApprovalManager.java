@@ -27,6 +27,7 @@ import com._4s_.common.service.BaseManager;
 import com._4s_.requestsApproval.model.LoginUsers;
 import com._4s_.requestsApproval.model.LoginUsersRequests;
 import com._4s_.requestsApproval.model.Vacation;
+import com._4s_.requestsApproval.web.util.EmployeeAccessLevelsDTO;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
@@ -168,5 +169,7 @@ public interface RequestsApprovalManager extends BaseManager {
 	public List<LoginUsers> getEmployeesByGroup(Long groupId);
 	public int calculateDateDifference(Date a, Date b);
 	public List getAccessLevels();
+	public List<EmployeeAccessLevelsDTO> getEmployeeAccessAuthorities(List<Long> loginUserIds);
+	public List getCurrentEmployees();
 }
 

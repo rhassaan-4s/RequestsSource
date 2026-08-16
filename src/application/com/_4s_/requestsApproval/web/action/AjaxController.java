@@ -1,6 +1,5 @@
 package com._4s_.requestsApproval.web.action;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
 import com._4s_.restServices.json.RequestApproval;
-import com._4s_.restServices.json.RestStatus;
 import com._4s_.restServices.service.RequestsService;
 
 @Controller
@@ -26,7 +25,7 @@ public class AjaxController {
 
 	@Autowired
 	RequestsApprovalManager requestsApprovalManager;
-	
+
 	@Autowired
 	RequestsService requestsService;
 
@@ -47,7 +46,7 @@ public class AjaxController {
 //		return response;
 //	}
 //	
-	
+
 	@RequestMapping(value = "/requestStatus", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
 	@ResponseBody
 	public Map requestStatus(Long reqId, Long empId) {
@@ -73,12 +72,25 @@ public class AjaxController {
 //	}
 //	
 //>>>>>>> refs/heads/Master_Final
-	@RequestMapping(value="/vacInfo", method=RequestMethod.GET,
-			produces=MediaType.APPLICATION_JSON, consumes=MediaType.APPLICATION_JSON)
+	@RequestMapping(value = "/vacInfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
 	@ResponseBody
-	public Map vacInfo (RequestApproval requestApproval) {
+	public Map vacInfo(RequestApproval requestApproval) {
 		log.debug("vac info " + requestApproval.getVac());
 		return requestsService.getVacInfo(requestApproval);
+	}
+
+	@RequestMapping(value = "/getEmployeeAccessAuthorities", method = RequestMethod.GET)
+	@ResponseBody
+	public Map getEmployeeAccessAuthorities(@RequestParam("loginUserIds") List<Long> loginUserIds) {
+		log.debug(loginUserIds);
+		Map response = requestsService.getEmployeeAccessAuthorities(loginUserIds);
+		return response;
+	}
+
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	@ResponseBody
+	public String test() {
+		return "AjaxController is working";
 	}
 
 }

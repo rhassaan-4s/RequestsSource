@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.requestsApproval.service.RequestsApprovalManager;
+import com._4s_.requestsApproval.web.util.EmployeeAccessLevelsDTO;
 import com._4s_.restServices.json.AttendanceRequest;
 import com._4s_.restServices.json.EmployeeWrapper;
 import com._4s_.restServices.json.PasswordWrapper;
@@ -108,4 +109,6 @@ public interface RequestsService {// extends BaseManager {
 	public Map getTimesheetSpecs();
 
 	public Map getTimesheetTransactions(TimesheetTransactionFilters search);
+
+	public Map getEmployeeAccessAuthorities(List<Long> loginUserIds);
 }

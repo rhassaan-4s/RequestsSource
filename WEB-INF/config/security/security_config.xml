@@ -495,6 +495,9 @@
 			<intercept-url pattern="/requestsApproval/ajax/vacInfo.html.*\Z"
 			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			
+			<intercept-url pattern="/requestsApproval/ajax/getEmployeeAccessAuthorities.html.*\Z"
+			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
+			
 			<intercept-url pattern="/security/errorCode403.html.*\Z"
 			access="hasAuthority('CAN_VIEW_page_RequestsAproval_generalEmployee')" />
 			

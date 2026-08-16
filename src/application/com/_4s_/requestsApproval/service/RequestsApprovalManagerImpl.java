@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -80,6 +81,7 @@ import com._4s_.requestsApproval.model.Vacation;
 import com._4s_.requestsApproval.web.exceptions.ApprovalFirstPriorityNullException;
 import com._4s_.requestsApproval.web.exceptions.ApprovedBeforeException;
 import com._4s_.requestsApproval.web.exceptions.RequestAlreadyRejectedException;
+import com._4s_.requestsApproval.web.util.EmployeeAccessLevelsDTO;
 import com._4s_.restServices.json.RequestApproval;
 import com._4s_.restServices.json.RequestsApprovalQuery;
 import com._4s_.restServices.json.RestStatus;
@@ -2648,6 +2650,56 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		public List getAccessLevels() {
 			return requestsApprovalDAO.getAccessLevels();
 		}
+
+		@Override
+		public List<EmployeeAccessLevelsDTO> getEmployeeAccessAuthorities(List<Long> loginUserIds) {
+			List<EmpReqTypeAcc> accessList = requestsApprovalDAO.getEmployeeAccessAuthorities(loginUserIds);
+			Map<String, EmployeeAccessLevelsDTO> dtoMap =
+		            new LinkedHashMap<String, EmployeeAccessLevelsDTO>();
+
+		    for (EmpReqTypeAcc access : accessList) {
+
+		    	log.debug("access " + access.getId() + " emp " + access.getEmp_id().getName() + " group " + access.getGroup_id().getTitle()+ " request type " + (access.getReq_id() != null ? access.getReq_id().getDescription() : null));
+		        LoginUsers employee = access.getEmp_id();
+		        GroupAcc group = access.getGroup_id();
+		        RequestTypes requestType = access.getReq_id();
+
+		        if (employee == null || group == null) {
+		            continue;
+		        }
+
+		        String key = employee.getId() + "_" + group.getId();
+
+		        EmployeeAccessLevelsDTO dto = dtoMap.get(key);
+
+		        if (dto == null) {
+
+		            dto = new EmployeeAccessLevelsDTO();
+
+		            dto.setEmployeeId(employee.getId());
+		            dto.setEmployeeName(employee.getName());
+
+		            dto.setGroupId(group.getId());
+		            dto.setGroupName(access.getOrder() + " - " + group.getTitle());
+
+		            log.debug("adding dto for key " + key + " emp " + employee.getName() + " group " + group.getTitle());
+		            dtoMap.put(key, dto);
+		        }
+
+		        if (requestType != null) {
+		        	log.debug("request type " + requestType.getDescription());
+		            dto.addAuthority(requestType.getDescription());
+		        }
+		    }
+
+		    return new ArrayList<EmployeeAccessLevelsDTO>(dtoMap.values());
+		}
+
+		@Override
+		public List getCurrentEmployees() {
+			return requestsApprovalDAO.getCurrentEmployees();
+		}
+		
 		
 		
 //	public List getAttendanceRequests(Date date, String empCode) {
