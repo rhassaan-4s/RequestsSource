@@ -1,6 +1,7 @@
 package com._4s_.clients.model;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -17,7 +18,13 @@ public class CustomUserDetails extends User {
         this.tenantId = tenantId;
     }
 
-    public long getUserId() {
+    public CustomUserDetails(String username, String password, Long id, List<GrantedAuthority> auths) {
+		super(username, password, auths);
+		this.userId = id;
+		this.tenantId = null;
+	}
+
+	public long getUserId() {
         return userId;
     }
 

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -285,7 +286,12 @@ public class BaseDAOHibernate implements BaseDAO {//extends HibernateDaoSupport
     	System.out.println("%%%%%%%%%%%% Current Session "+session);
     	
 		TypedQuery<Object> query = session.createQuery(queryCriteria);
-    	Object object = query.getSingleResult();
+    	Object object = null;
+    	try {
+    		object = query.getSingleResult();
+    	} catch (NoResultException e) {
+    	    object = null;
+    	}
         if ((object == null)&&(log.isDebugEnabled())) {
             log.debug("No object found");
         }

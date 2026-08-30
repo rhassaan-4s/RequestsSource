@@ -194,13 +194,19 @@ public class JwtTenantFilter extends OncePerRequestFilter {
 	        }
 	        System.out.println("*********Filter: Tenant set to: " + tenant);
 	        
-	        log.debug("Request URI = " + request.getRequestURI());
+	        
+	        logger.debug("========== JWT FILTER START ==========");
+	        logger.debug("URI = " + request.getRequestURI());
+	        logger.debug("Authorization = " + request.getHeader("Authorization"));
 	        
 	        filterChain.doFilter(request, response);
 	        System.out.println("*********Filter: After filterChain.doFilter, tenant is: " + TenantContext.getTenant());
+	        
 	        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-	        System.out.println("*****Authentication = " + auth);
+	        logger.debug("========== JWT FILTER END ==========");
+	        logger.debug("Authentication = "
+	                + auth);
 
 	        if (auth != null) {
 	            System.out.println("****Authorities = " + auth.getAuthorities());

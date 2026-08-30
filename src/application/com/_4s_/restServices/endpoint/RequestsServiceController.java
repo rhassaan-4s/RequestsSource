@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.jws.soap.SOAPBinding.Use;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.logging.Log;
@@ -46,6 +48,7 @@ import com._4s_.restServices.json.TimesheetTransWrapper;
 import com._4s_.restServices.json.TimesheetTransactionFilters;
 import com._4s_.restServices.json.UserWrapper;
 import com._4s_.restServices.service.RequestsServiceImpl;
+import com._4s_.security.model.Imei;
 import com._4s_.security.model.User;
 
 
@@ -298,6 +301,71 @@ public class RequestsServiceController {
 		                    // just make sure to ALSO attach token when login is accepted
 		                    // (skip in "already registered to another device" errors)
 		                    // for brevity I won't rewrite every branch, just note this:
+		                	
+		                	log.debug("user's persisted imei doesn't match the input imei");
+							List userImeis = requestsService.getUsersImei(user);
+							if (userImeis.isEmpty()) {
+								log.debug("user didn't register imei yet");
+								User ifuserexist = requestsService.getImeiUsers(imei.getImei());
+								if(ifuserexist == null) {
+									Imei im = new Imei();
+									im.setUsers(user);
+									im.setImei(imei.getImei());
+									requestsService.saveImei(im);
+									log.debug("new imei id " + im.getId());
+	
+									RestStatus status = new RestStatus();
+									status.setStatus("true");
+									status.setCode("200");
+									status.setMessage("Successful Authorization. IMEI Initialized");
+									response.put("Status", status);
+	
+									Employee emp = user.getEmployee();
+									EmployeeResponse e = new EmployeeResponse();
+									e.setAddress(emp.getAddress());
+									e.setAttendanceCode(emp.getAttendanceCode());
+									e.setBranch(emp.getBranch());
+									e.setCity(emp.getCity());
+									e.setDepartment(emp.getDepartment());
+									e.setEmail(emp.getEmail());
+									e.setEmpCode(emp.getEmpCode());
+									e.setEmployeeCode(emp.getEmployeeCode());
+									e.setExt(emp.getExt());
+									e.setFirstName(emp.getFirstName());
+									e.setGender(emp.getGender());
+									e.setId(emp.getId());
+									e.setIsDepartmentManager(emp.getIsDepartmentManager());
+									e.setIsManager(emp.getIsManager());
+									e.setJobTitle(emp.getJobTitle());
+									e.setLastName(emp.getLastName());
+									e.setTel(emp.getTel());
+	
+									e.setRequiredAndroidVersion(requiredVersion);
+									
+									if (emp.getProfilePicName()!=null) {
+										String picString = Base64.encodeBytes(emp.getProfilePic());
+										e.setProfilePic(picString);
+									}
+	
+									response.put("Response", e);
+	
+									return response;
+								} else {
+									RestStatus status = new RestStatus();
+									status.setStatus("False");
+									status.setCode("341");
+									status.setMessage("IMEI is already registered for another user");
+									response.put("Status", status);
+									return response;
+								}
+							} else {
+								RestStatus status = new RestStatus();
+								status.setStatus("False");
+								status.setCode("340");
+								status.setMessage("User is already registered with another device");
+								response.put("Status", status);
+								return response;
+							}
 		                }
 		            } else {
 		                RestStatus status = new RestStatus();
@@ -320,9 +388,70 @@ public class RequestsServiceController {
 		        response.put("Status", status);
 		        return response;
 		    }
-			return response;
+//			return response;
 		}
 
+	
+	@RequestMapping(value = "/logout", method = RequestMethod.POST)
+	@ResponseBody
+	public Map logout(HttpServletRequest request,
+	                   HttpServletResponse response) {
+
+		log.debug("*******Mobile App logout");
+	    Map result = new HashMap();
+	    Map status = new HashMap();
+
+	    try {
+
+	        // Clear Spring Security authentication
+	        SecurityContextHolder.clearContext();
+	        log.debug("Security context cleared");
+	        
+	        // Invalidate web session
+	        HttpSession session = request.getSession(false);
+	        log.debug("Session invalidated: " + (session != null));
+
+	        if (session != null) {
+	            session.invalidate();
+	            log.debug("Session invalidated successfully");
+	        }
+
+	        // Clear JWT cookie if it exists
+	        Cookie tokenCookie = new Cookie("token", null);
+	        tokenCookie.setMaxAge(0);
+	        tokenCookie.setPath("/");
+	        response.addCookie(tokenCookie);
+	        log.debug("JWT cookie cleared");
+
+	        // Clear tenant cookie
+	        Cookie tenantCookie = new Cookie("tenantID", null);
+	        tenantCookie.setMaxAge(0);
+	        tenantCookie.setPath("/");
+	        response.addCookie(tenantCookie);
+
+	        // Clear client cookie
+	        Cookie clientCookie = new Cookie("client", null);
+	        clientCookie.setMaxAge(0);
+	        clientCookie.setPath("/");
+	        response.addCookie(clientCookie);
+
+	        status.put("status", "true");
+	        status.put("message", "Logout successful");
+	        status.put("code", "200");
+
+	    } catch (Exception e) {
+
+	        log.error("Error during logout", e);
+
+	        status.put("status", "false");
+	        status.put("message", "Logout failed");
+	        status.put("code", "500");
+	    }
+
+	    result.put("Status", status);
+
+	    return result;
+	}
 	
 	private EmployeeResponse buildEmployeeResponse(Employee emp, Integer requiredVersion) {
 	    EmployeeResponse e = new EmployeeResponse();
@@ -381,8 +510,11 @@ public class RequestsServiceController {
 	public Map userRequest(AttendanceRequest userRequest)
 	{
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
-		UserDetails userDet = (UserDetails)token.getPrincipal();
-		User user = requestsService.getUser(userDet.getUsername());
+//		UserDetails userDet = (UserDetails)token.getPrincipal();
+//		User user = requestsService.getUser(userDet.getUsername());
+		String username = (String)token.getPrincipal();
+	    User user = requestsService.getUser(username);
+	    log.debug("user: " + user);
 		try {
 			Map response = requestsService.userRequest(userRequest,user.getEmployee().getId());
 			return response;
@@ -555,17 +687,22 @@ public class RequestsServiceController {
 
 	    
 	    // ✅ Retrieve your system user and employee data
-	    User user = (User) auth.getPrincipal();
+	    log.debug("####auth.getName() " + auth.getName());
+	    log.debug("####auth.getDetails " + auth.getDetails());
+	    log.debug("####auth.getPrincipal() " + auth.getPrincipal());
+//	    User user = (User) auth.getPrincipal();
 	 // ✅ Extract username (the principal is a String since JWT filter sets it that way)
-	    String username = user.getUsername();
+	    String username = (String)auth.getPrincipal();
 
+	    User user = requestsService.getUser(username);
+	    log.debug("user: " + user);
+
+	    
 //	    // ✅ Reload full UserDetails from DB
 //	    UserDetails userDet = requestsService.loadUserByUsername(username);
 
 	   
-//	    User user = requestsService.getUser(userDet.getUsername());
-//	    log.debug("user: " + user);
-
+	    
 	    // ✅ Continue with business logic
 	    response = requestsService.signInOut(userRequest, user.getEmployee().getId());
 	    return response;
@@ -578,8 +715,12 @@ public class RequestsServiceController {
 	public Map requestsForApproval( RequestsApprovalQuery approvalQuery)
 	{
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
-		UserDetails userDet = (UserDetails)token.getPrincipal();
-		User user = requestsService.getUser(userDet.getUsername());
+//		UserDetails userDet = (UserDetails)token.getPrincipal();
+//		User user = requestsService.getUser(userDet.getUsername());
+		String username = (String)token.getPrincipal();
+	    User user = requestsService.getUser(username);
+	    log.debug("user: " + user);
+	    
 		Map response = new HashMap();		
 		RestStatus restStatus = new RestStatus();
 		RestStatus status = new RestStatus();
@@ -634,8 +775,14 @@ public class RequestsServiceController {
 		RestStatus restStatus = new RestStatus();
 
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
-		UserDetails userDet = (UserDetails)token.getPrincipal();
-		User user = requestsService.getUser(userDet.getUsername());
+//		UserDetails userDet = (UserDetails)token.getPrincipal();
+//		User user = requestsService.getUser(userDet.getUsername());
+		
+		String username = (String)token.getPrincipal();
+
+	    User user = requestsService.getUser(username);
+	    log.debug("user: " + user);
+	    
 		approvalQuery.setEmp_code(user.getEmployee().getEmpCode());
 		approvalQuery.setCodeFrom(null);
 		approvalQuery.setCodeTo(null);
@@ -683,8 +830,12 @@ public class RequestsServiceController {
 	public Map approveRequest (RequestApproval requestApproval) {
 		Map response = new HashMap();		
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
-		UserDetails userDet = (UserDetails)token.getPrincipal();
-		User user = requestsService.getUser(userDet.getUsername());
+//		UserDetails userDet = (UserDetails)token.getPrincipal();
+//		User user = requestsService.getUser(userDet.getUsername());
+		String username = (String)token.getPrincipal();
+
+	    User user = requestsService.getUser(username);
+	    log.debug("user: " + user);
 		RestStatus restStatus = new RestStatus();
 		if (requestApproval.getApprove()==null || requestApproval.getApprove().isEmpty()
 				||requestApproval.getRequestId()==null || requestApproval.getRequestId().isEmpty()) {
@@ -761,8 +912,13 @@ public class RequestsServiceController {
 	@ResponseBody 
 	public Map searchEmployees(EmployeeWrapper emp) {
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
-		UserDetails userDet = (UserDetails)token.getPrincipal();
-		User user = requestsService.getUser(userDet.getUsername());
+//		UserDetails userDet = (UserDetails)token.getPrincipal();
+//		User user = requestsService.getUser(userDet.getUsername());
+		
+		String username = (String)token.getPrincipal();
+
+	    User user = requestsService.getUser(username);
+	    log.debug("user: " + user);
 		Map m = requestsService.searchEmployees(emp,user.getEmployee());
 		return m;
 	}
@@ -785,8 +941,11 @@ public class RequestsServiceController {
 		log.debug("getAttendanceReport ");
 		Settings settings = (Settings)requestsService.getRequestsApprovalManager().getObject(Settings.class, new Long(1));
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
-		UserDetails userDet = (UserDetails)token.getPrincipal();
-		User user = requestsService.getUser(userDet.getUsername());
+//		UserDetails userDet = (UserDetails)token.getPrincipal();
+//		User user = requestsService.getUser(userDet.getUsername());
+		String username = (String)token.getPrincipal();
+	    User user = requestsService.getUser(username);
+	    log.debug("user: " + user);
 		Map m = requestsService.getAttendanceReport(requestApproval,user.getEmployee(),settings);
 		return m;
 	}
@@ -797,8 +956,11 @@ public class RequestsServiceController {
 	public Map editUserInfo(UserWrapper userWrapper) {
 		log.debug("editUserInfo ");
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
-		UserDetails userDet = (UserDetails)token.getPrincipal();
-		User user = requestsService.getUser(userDet.getUsername());
+//		UserDetails userDet = (UserDetails)token.getPrincipal();
+//		User user = requestsService.getUser(userDet.getUsername());
+		String username = (String)token.getPrincipal();
+	    User user = requestsService.getUser(username);
+	    log.debug("user: " + user);
 		Map m = requestsService.editUserInfo(userWrapper,user.getEmployee());
 		return m;
 	}
@@ -829,8 +991,11 @@ public class RequestsServiceController {
     @Transactional(readOnly = true)
 	public Map getUserGroups() {
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
-		UserDetails userDet = (UserDetails)token.getPrincipal();
-		User user = requestsService.getUser(userDet.getUsername());
+//		UserDetails userDet = (UserDetails)token.getPrincipal();
+//		User user = requestsService.getUser(userDet.getUsername());
+		String username = (String)token.getPrincipal();
+	    User user = requestsService.getUser(username);
+	    log.debug("user: " + user);
 		Map m = requestsService.getUserGroups(user.getEmployee());
 		return m;
 	}
@@ -873,8 +1038,11 @@ public class RequestsServiceController {
 	@ResponseBody 
 	public Map insertTimesheetTransaction(TimesheetTransWrapper trans) {
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
-		UserDetails userDet = (UserDetails)token.getPrincipal();
-		User user = requestsService.getUser(userDet.getUsername());
+//		UserDetails userDet = (UserDetails)token.getPrincipal();
+//		User user = requestsService.getUser(userDet.getUsername());
+		String username = (String)token.getPrincipal();
+	    User user = requestsService.getUser(username);
+	    log.debug("user: " + user);
 		trans.setEmpCode(user.getEmployee().getEmpCode());
 		Map response = requestsService.insertTimesheetTransaction(trans);
 		return response;
@@ -913,8 +1081,11 @@ public class RequestsServiceController {
 	@ResponseBody 
 	public Map getTimesheetTransactions(TimesheetTransactionFilters search) {
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
-		UserDetails userDet = (UserDetails)token.getPrincipal();
-		User user = requestsService.getUser(userDet.getUsername());
+//		UserDetails userDet = (UserDetails)token.getPrincipal();
+//		User user = requestsService.getUser(userDet.getUsername());
+		String username = (String)token.getPrincipal();
+	    User user = requestsService.getUser(username);
+	    log.debug("user: " + user);
 		if (search.getEmpCode() == null || search.getEmpCode().isEmpty()) {
 			search.setEmpCode(user.getEmployee().getEmpCode());
 		}

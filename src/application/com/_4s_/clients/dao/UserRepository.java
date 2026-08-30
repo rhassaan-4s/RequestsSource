@@ -27,11 +27,13 @@ package com._4s_.clients.dao;
 import java.util.Optional;
 
 import com._4s_.clients.model.Role;
-import com._4s_.clients.model.User;
+import com._4s_.security.model.User;
 
 public interface UserRepository {
 
-    Optional<User> findUser(String email, String slug);
+//    Optional<User> findUser(String name, String tenant);
+	
+	public User findUser(String username);
 
     Optional<User> findGeneralAdmin(String email, Role role);
 

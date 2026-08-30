@@ -2,6 +2,7 @@ package com._4s_.security.dao;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.security.acl.Permission;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,14 +16,11 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Property;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -35,6 +33,7 @@ import com._4s_.common.model.Employee;
 import com._4s_.security.model.Fields;
 import com._4s_.security.model.IPAddress;
 import com._4s_.security.model.Imei;
+import com._4s_.security.model.Permissions;
 import com._4s_.security.model.Roles;
 import com._4s_.security.model.SecurityApplication;
 import com._4s_.security.model.User;
@@ -372,13 +371,13 @@ MySecurityDAO {
 //	            .compact();
 	    
 	 // extract only the role names
-	    List<Roles> roleList = (List<Roles>) user.getRoles(); // or getSecurityApplication().getRoles()
+//	    List<Roles> roleList = (List<Roles>) user.getRoles(); // or getSecurityApplication().getRoles()
 
-	    List<String> roleNames = roleList.stream()
-	                                     .map(Roles::getRolename)
-	                                     .collect(Collectors.toList());
+//	    List<String> roleNames = roleList.stream()
+//	                                     .map(Roles::getRolename)
+//	                                     .collect(Collectors.toList());
 	    
-	    String jwt = jwtUtil.generateToken(tenantId, user.getUsername(),roleNames);
+	    String jwt = jwtUtil.generateToken(tenantId, user.getUsername());
 
 	    // ✅ Return as JSON response
 	    Map<String, Object> result = new HashMap<>();

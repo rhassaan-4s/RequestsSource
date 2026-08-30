@@ -22,19 +22,11 @@
 		 <!-- enable remember me 
 		    <remember-me key="spring-sec"
 		    services-ref="rememberMeServices"/>--><!--  token-validity-seconds="1209600" data-source-ref="dataSource"  remember-me-parameter="remember-me" -->
-		 <remember-me key="jsfspring-sec" services-ref="rememberMeServices"/>
+		
+		
 		 <csrf disabled="true"/>
-		<!-- <remember-me user-service-ref="restService" token-repository-ref="tokenRepository" token-validity-seconds="86400" />-->
-		<!-- <remember-me key="some_random_key" 
-         token-validity-seconds="31536000" 
-         user-service-ref="restService" token-repository-ref="tokenRepository" />
-         -->
        
 			
-		<!-- authentication-success-handler-ref="mySuccessHandler" authentication-failure-handler-ref="myFailureHandler" 
-		<logout logout-url="/security/logout.html" invalidate-session="true"
-			delete-cookies="JSESSIONID,SPRING_SECURITY_REMEMBER_ME_COOKIE" success-handler-ref="myLogoutHandler" />-->
-   		
 		<form-login login-page="/api/workflow/login*" 
 			username-parameter="username" password-parameter="password" 
 			authentication-success-handler-ref="mySuccessHandler"
@@ -46,11 +38,11 @@
 		
 		<custom-filter ref="jwtTenantFilter" before="FORM_LOGIN_FILTER"/>
 		
+		<custom-filter ref="jwtAuthenticationFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
+		
 		<custom-filter ref="authenticationFilter" before="PRE_AUTH_FILTER" />
 		
 		
-		<custom-filter ref="rememberMeFilter" before="REMEMBER_ME_FILTER"/>
-
 		<access-denied-handler ref="exceptionControllerAdvice" />
 		<!-- Rest Web Service -->
 
@@ -147,6 +139,12 @@
     <beans:property name="requestsService" ref="requestsService"/>
     <beans:property name="sessionFactory" ref="sessionFactory"/>
 
+</beans:bean>
+
+<beans:bean id="jwtAuthenticationFilter"
+    class="com._4s_.security.util.JwtAuthenticationFilter">
+    <beans:property name="jwtUtil" ref="jwtUtil"/>
+    <beans:property name="userDetailsService" ref="customUserDetailsService"/>
 </beans:bean>
       
  <beans:bean id="rememberMeServices"

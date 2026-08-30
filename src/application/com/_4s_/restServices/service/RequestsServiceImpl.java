@@ -211,7 +211,9 @@ public class RequestsServiceImpl implements RequestsService, UserDetailsService 
 	}
 
 	public User getImeiUsers(String imei) {
+		log.debug("imei " + imei);
 		Object imeiObject = requestsApprovalDAO.getObjectByParameter(Imei.class, "imei", imei);
+		log.debug("imeiObject " + imeiObject);
 		if (imeiObject != null) {
 			Imei im = (Imei) imeiObject;
 			return im.getUsers();

@@ -18,10 +18,10 @@ public class JwtUtil {
     }
 
     // --- TOKEN CREATION ---
-    public String generateToken(String tenantId, String username, List<String> roles) {
+    public String generateToken(String tenantId, String username) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("tenantId", tenantId);
-        claims.put("roles", roles);
+//        claims.put("roles", roles);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -41,19 +41,19 @@ public class JwtUtil {
         return extractAllClaims(token).get("tenantId", String.class);
     }
 
-    public List<String> extractRoles(String token) {
-        Claims claims = extractAllClaims(token);
-        Object roles = claims.get("roles");
-        if (roles instanceof List<?>) {
-            List<?> rawList = (List<?>) roles;
-            List<String> result = new ArrayList<>();
-            for (Object r : rawList) {
-                result.add(r.toString());
-            }
-            return result;
-        }
-        return Collections.emptyList();
-    }
+//    public List<String> extractRoles(String token) {
+//        Claims claims = extractAllClaims(token);
+//        Object roles = claims.get("roles");
+//        if (roles instanceof List<?>) {
+//            List<?> rawList = (List<?>) roles;
+//            List<String> result = new ArrayList<>();
+//            for (Object r : rawList) {
+//                result.add(r.toString());
+//            }
+//            return result;
+//        }
+//        return Collections.emptyList();
+//    }
 
     public boolean isTokenExpired(String token) {
         return extractAllClaims(token).getExpiration().before(new Date());
