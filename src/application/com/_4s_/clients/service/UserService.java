@@ -8,7 +8,7 @@ import com._4s_.clients.dao.TenantRepository;
 import com._4s_.clients.dao.UserRepository;
 import com._4s_.clients.model.Role;
 import com._4s_.clients.model.Tenant;
-import com._4s_.clients.model.User;
+import com._4s_.clients.model.TenantUser;
 import com._4s_.clients.web.exception.TenantNotFoundException;
 
 @Service
@@ -32,6 +32,6 @@ public class UserService {
         Tenant tenant = tenantRepository.findById(tenantId)
                 .orElseThrow(() -> new TenantNotFoundException(
                         "Tenant " + tenantId + " not found."));
-        userRepository.save(new User(tenant, email, passwordEncoder.encode(password), role));
+        userRepository.save(new TenantUser(tenant, email, passwordEncoder.encode(password), role));
     }
 }

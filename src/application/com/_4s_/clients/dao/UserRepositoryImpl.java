@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com._4s_.clients.model.Role;
+import com._4s_.clients.model.TenantUser;
 import com._4s_.security.model.User;
 
 @Repository("userRepository")
@@ -101,14 +102,14 @@ public class UserRepositoryImpl implements UserRepository {
     }
     
     @Override
-    public Optional<User> findById(Long id) {
+    public Optional<TenantUser> findById(Long id) {
         return Optional.ofNullable(
-            (User) getCurrentSession().get(User.class, id)
+            (TenantUser) getCurrentSession().get(TenantUser.class, id)
         );
     }
 
     @Override
-    public User save(User user) {
+    public TenantUser save(TenantUser user) {
 
         getCurrentSession().saveOrUpdate(user);
 

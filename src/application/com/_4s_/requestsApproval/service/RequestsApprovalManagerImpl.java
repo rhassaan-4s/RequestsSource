@@ -65,6 +65,7 @@ import com._4s_.common.service.BaseManagerImpl;
 import com._4s_.common.service.SequenceManager;
 import com._4s_.common.util.LocaleUtil;
 import com._4s_.common.util.MultiCalendarDate;
+import com._4s_.common.util.Page;
 import com._4s_.i18n.model.MyLocale;
 import com._4s_.i18n.model.MyMessage;
 import com._4s_.i18n.service.MessageManager;
@@ -946,7 +947,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			reqType = Long.parseLong(requestType);
 		}
 		log.debug("emp code " + emp_code);
-		log.debug("exactDateFrom " + exactDateFrom + " exactDateTo " + exactDateTo);
+		log.debug("***********************exactDateFrom " + exactDateFrom + " exactDateTo " + exactDateTo);
 		if (exactDateFrom != null && exactDateTo != null && !exactDateFrom.isEmpty() && !exactDateTo.isEmpty()){
 			if (!exactDateFrom.equals("") && !exactDateTo.equals("") ) {
 				
@@ -998,7 +999,9 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 		loginUserReqs= getPagedRequests(fromDate, toDate,reqType,fromExact,toExact,null,null,emp_code,codeFrom,codeTo,status,sort,empReqTypeAccs,requestNumber,mgrId,isWeb,isInsideCompany,pageNumber,pageSize);
 		log.debug("--dateList.size--"+loginUserReqs.get("listSize"));
 		//model.put("loginUserReqs", loginUserReqs);
-		return loginUserReqs;
+		Page page = new Page();
+		return page.getPage(loginUserReqs, pageNumber, pageSize);
+//		return loginUserReqs;
 	}
 
 	

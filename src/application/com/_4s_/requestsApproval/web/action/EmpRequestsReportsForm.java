@@ -197,32 +197,43 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 		String codeFrom=request.getParameter("codeFrom");
 		String codeTo=request.getParameter("codeTo");
 	
+		log.debug("**********codeFrom " + codeFrom);
+		log.debug("**********codeTo " + codeTo);
 		
 //		if(errand!=null && !errand.equals("")){
 //			model.put("loginUserReqs", errandRequests);
 //		}
 //		else{
 //			model.put("loginUserReqs", allRequests);
-//		}	
+//		}
+		
+		String exact_request_date_from = request.getParameter("exact_request_date_from");
+		log.debug("---exact_request_date_from--"+exact_request_date_from);
+	
+		String exact_request_date_to = request.getParameter("exact_request_date_to");
+		log.debug("---exact_request_date_to--"+exact_request_date_to);
 
 		LoginUsers loginUsers=(LoginUsers) requestsApprovalManager.getObjectByParameter(LoginUsers.class, "empCode", emp);
 		List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(emp, requestType);
 		
+		
 		if (pageNumber>0) {
-
-			
 			if (!((dateFrom==null || dateFrom.isEmpty()) && (dateTo==null || dateTo.isEmpty()) 
-					&& (exactDateFrom==null || exactDateFrom.isEmpty()) && (exactDateTo==null || exactDateTo.isEmpty()))) {
-				model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
+					&& (exact_request_date_from==null || exact_request_date_from.isEmpty()) && (exact_request_date_to==null || exact_request_date_to.isEmpty()))) {
+				model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exact_request_date_from,exact_request_date_to,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
 				log.debug("status id 1 " + statusId);
 			}
 		} else {
 			if (!((dateFrom==null || dateFrom.isEmpty()) && (dateTo==null || dateTo.isEmpty()) 
-					&& (exactDateFrom==null || exactDateFrom.isEmpty()) && (exactDateTo==null || exactDateTo.isEmpty()))) {
-				model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
+					&& (exact_request_date_from==null || exact_request_date_from.isEmpty()) && (exact_request_date_to==null || exact_request_date_to.isEmpty()))) {
+				model = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exact_request_date_from,exact_request_date_to,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
 			}
 			log.debug("status id 2 " + statusId);
 		}
+		
+		
+		
+		model.put("dateFrom", dateFrom);
 		model.put("dateTo", dateTo);
 		model.put("status", statusIdLong);
 		log.debug("first day " + formattedDate + " today " + formatedToday);
@@ -232,6 +243,17 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 		model.put("request_date_from", request_date_from);
 		model.put("request_date_to", request_date_to);
 		model.put("errand", errand);
+		model.put("exactDateFrom", exactDateFrom);
+		model.put("exactDateTo", exactDateTo);
+		model.put("codeFrom", codeFrom);
+		model.put("codeTo", codeTo);
+		model.put("requestNumber", requestNumber);
+		model.put("empCode", emp_code);
+		model.put("exact_request_date_from", exact_request_date_from);
+		model.put("exact_request_date_to", exact_request_date_to);
+		
+		
+
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		return model;
 	}
@@ -324,10 +346,10 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 		String request_date_to = request.getParameter("request_date_to");
 		log.debug("--request_date_to--"+request_date_to);
 		
-		String exact_request_date_from = request.getParameter("exactDateFrom");
+		String exact_request_date_from = request.getParameter("exact_request_date_from");
 		log.debug("---exact_request_date_from--"+exact_request_date_from);
 	
-		String exact_request_date_to = request.getParameter("exactDateTo");
+		String exact_request_date_to = request.getParameter("exact_request_date_to");
 		log.debug("---exact_request_date_to--"+exact_request_date_to);
 		
 		String requestType= request.getParameter("requestType");
@@ -347,14 +369,14 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 		
 		log.debug("---xxxxxxxDatePeriod--");
 		
-		String exactDateFrom = request.getParameter("exactDateFrom");
-		log.debug("--exactDateFrom--"+exactDateFrom);
+//		String exactRequestDateFrom = request.getParameter("exactRequestDateFrom");
+//		log.debug("--exactRequestDateFrom--"+exactRequestDateFrom);
 //		if (exactDateFrom == null || exactDateFrom.equals("")) {
 //			exactDateFrom = formattedDate;
 //		}
 		
-		String exactDateTo = request.getParameter("exactDateTo");
-		log.debug("--exactDateTo--"+exactDateTo);
+//		String exactRequestDateTo = request.getParameter("exactRequestDateTo");
+//		log.debug("--exactRequestDateTo--"+exactRequestDateTo);
 		
 		String statusId=request.getParameter("statusId");
 		String status=request.getParameter("status");
@@ -367,12 +389,15 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 		String codeFrom=request.getParameter("codeFrom");
 		String codeTo=request.getParameter("codeTo");
 		
+		log.debug("**********codeFrom " + codeFrom);
+		log.debug("**********codeTo " + codeTo);
+		
 		List empReqTypeAccs = requestsApprovalManager.getEmpReqTypeAcc(emp, requestType);
 		
 		Map mapResults = null;
 		if (!((dateFrom==null || dateFrom.isEmpty()) && (dateTo==null || dateTo.isEmpty()) 
-				&& (exactDateFrom==null || exactDateFrom.isEmpty()) && (exactDateTo==null || exactDateTo.isEmpty()))) {
-			mapResults = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
+				&& (exact_request_date_from==null || exact_request_date_from.isEmpty()) && (exact_request_date_to==null || exact_request_date_to.isEmpty()))) {
+			mapResults = requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exact_request_date_from,exact_request_date_to,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
 			model = mapResults;
 		}
 		
@@ -439,7 +464,7 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 						
 				}
 				model = null;
-				model=requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exactDateFrom,exactDateTo,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
+				model=requestsApprovalManager.getRequestsForApproval(requestNumber,emp_code,dateFrom,dateTo,exact_request_date_from,exact_request_date_to,requestType,codeFrom,codeTo,statusId,"desc",loginUsers, empReqTypeAccs,true,null,pageNumber,10);
 				model.put("errors", errorsList);
 			}
 			else
@@ -450,7 +475,7 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 			}
 			
 			model.put("requestNumber", requestNumber);
-			model.put("employeeCode", emp_code);
+			model.put("empCode", emp_code);
 			model.put("firstDay", formattedDate);
 			model.put("today", formatedToday);
 			model.put("request_date_from", request_date_from);
@@ -459,8 +484,8 @@ public class EmpRequestsReportsForm extends BaseSimpleFormController{
 			model.put("exact_request_date_to", exact_request_date_to);
 			model.put("requestType", requestType);
 			model.put("dateFrom", dateFrom);
-			model.put("exactDateFrom", exactDateFrom);
-			model.put("exactDateTo", exactDateTo);
+//			model.put("exactDateFrom", exactDateFrom);
+//			model.put("exactDateTo", exactDateTo);
 			model.put("request_date_from", request_date_from);
 			model.put("request_date_to", request_date_to);
 			model.put("dateTo", dateTo);

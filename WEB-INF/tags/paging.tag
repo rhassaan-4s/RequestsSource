@@ -7,6 +7,23 @@
 <%@ attribute name="previous" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="parametersString" required="false" %>
 
+<c:if test="${model.numberOfPages !=null && model.numberOfPages!=''}">
+		<c:set var="numberOfPages" value="${model.numberOfPages}" />
+</c:if>
+<c:if test="${model.page !=null && model.page!=''}">
+		<c:set var="page" value="${model.page}" />
+</c:if>
+<c:if test="${model.next !=null && model.next!=''}">
+		<c:set var="next" value="${model.next}" />
+</c:if>
+<c:if test="${model.previous !=null && model.previous!=''}">
+		<c:set var="previous" value="${model.previous}" />
+</c:if>
+<c:if test="${model.parametersString !=null && model.parametersString!=''}">
+		<c:set var="parametersString" value="${model.parametersString}" />
+</c:if>
+		
+
 <c:if test="${numberOfPages > 1}">
 <table cellspacing="3" cellpadding="0" border="0" height="20" align="center">
 	<tr>
@@ -16,7 +33,7 @@
 					<a href="${url}?page=0&${parametersString}">&lt;&lt;</a>
 				</td>
 			</c:if>
-			<c:if test="${previous == false}">
+			<c:if test="${previous == null ||previous == false || previous ==''}">
 				<td valign="top" align="center" style="border:1px solid black;" width="20px" class="page">
 					&lt;&lt;
 				</td>
@@ -29,7 +46,7 @@
 					<a href="${url}?page=${page -1}&${parametersString}">&lt;</a>
 				</td>
 			</c:if>
-			<c:if test="${previous == false}">
+			<c:if test="${previous == null ||previous == false || previous ==''}">
 				<td valign="top" align="center" style="border:1px solid black;" width="20px" class="page">
 					&lt;
 				</td>
@@ -70,7 +87,7 @@
 					<a href="${url}?page=${page + 1}&${parametersString}">&gt;</a>
 				</td>
 			</c:if>
-			<c:if test="${next == false}">
+			<c:if test="${next == null ||next == false || next ==''}">
 				<td valign="top" align="center" style="border:1px solid black;" width="20px" class="page">
 	  				<font size="-1">&gt;</font>&nbsp;
 	  			</td>
@@ -83,7 +100,7 @@
 					<a href="${url}?page=${numberOfPages -1}&${parametersString}">&gt;&gt;</a>
 				</td>
 			</c:if>
-			<c:if test="${next == false}">
+			<c:if test="${next == null ||next == false || next ==''}">
 				<td valign="top" align="center" style="border:1px solid black;" width="20px" class="page">
 	  				<font size="-1">&gt;&gt;</font>&nbsp;
 	  			</td>

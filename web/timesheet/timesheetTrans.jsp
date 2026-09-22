@@ -73,7 +73,7 @@ function printSelection(node){
 </script>
 
 <style type="text/css">
-@media print {
+	@media print {
 	input#btnPrint {
 		display: none;
 	}

@@ -2452,11 +2452,11 @@ public class ExternalQueries extends CommonQueries{
 			exactf_dateString=df.format(exactFrom);
 			exactt_dateString=df.format(exactTo);
 			if (settings.getSqlServerConnectionEnabled()) {
-				where = "  ((CONVERT(date, loginUsersReq.from_date) >= convert(date,'"+exactf_dateString+"',103) and  "
-						+ "CONVERT(date, loginUsersReq.from_date) <= convert(date,'"+exactt_dateString+"',103))) ";
+				where = "  ((CONVERT(date, loginUsersReq.request_date) >= convert(date,'"+exactf_dateString+"',103) and  "
+						+ "CONVERT(date, loginUsersReq.request_date) <= convert(date,'"+exactt_dateString+"',103))) ";
 			} else {
-			where += " ((trunc(loginUsersReq.from_date) >= TO_DATE('"+exactf_dateString+"','DD/MM/YYYY') and "
-					+ "trunc(loginUsersReq.from_date) <= TO_DATE('"+exactt_dateString+"','DD/MM/YYYY'))) ";
+			where += " ((trunc(loginUsersReq.request_date) >= TO_DATE('"+exactf_dateString+"','DD/MM/YYYY') and "
+					+ "trunc(loginUsersReq.request_date) <= TO_DATE('"+exactt_dateString+"','DD/MM/YYYY'))) ";
 			}
 		}
 		////////////////////////////////////////////////////////////////////////////////////

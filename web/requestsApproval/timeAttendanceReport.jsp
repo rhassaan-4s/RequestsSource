@@ -7,7 +7,7 @@
 <html>
 <head>
 
-<title>Insert title here</title>
+<title>Time Attendance Report</title>
 <link type="text/css" rel="stylesheet"
 		href="/Requests/web/common/timepicker/jquery.multiselect.css" />
 	<link type="text/css" rel="stylesheet"
@@ -25,6 +25,15 @@
 		display: none;
 	}
 	td#btnPrint {
+		display: none;
+	}
+	input#btnexport {
+		display: none;
+	}
+	tr#btnexport {
+		display: none;
+	}
+	td#btnexport {
 		display: none;
 	}
 }

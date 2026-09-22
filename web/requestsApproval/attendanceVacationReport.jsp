@@ -7,7 +7,29 @@
 <html>
 <head>
 
-<title>Insert title here</title>
+<title>Attendance Vacation Report</title>
+<style type="text/css">
+	@media print {
+	input#btnPrint {
+		display: none;
+	}
+	tr#btnPrint {
+		display: none;
+	}
+	td#btnPrint {
+		display: none;
+	}
+	input#btnexport {
+		display: none;
+	}
+	tr#btnexport {
+		display: none;
+	}
+	td#btnexport {
+		display: none;
+	}
+}
+</style>
 </head>
 <body>
 <abc:security property="1034"/>
@@ -55,19 +77,7 @@ function printthis(which) {
 }
 </script>
 
-<style type="text/css">
-	@media print {
-	input#btnPrint {
-	display: none;
-	}
-	tr#btnPrint{
-	display: none;
-	}
-	td#btnPrint{
-	display: none;
-	}
-}
-</style>
+
 
 	<table width="90%" border="0" cellspacing="0" cellpadding="0"
 		style="padding-right: 10px">

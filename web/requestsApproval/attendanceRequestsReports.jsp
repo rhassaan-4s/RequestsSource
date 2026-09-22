@@ -7,7 +7,29 @@
 <html>
 <head>
 
-<title>Insert title here</title>
+<title>Attendance Requests Report</title>
+<style type="text/css">
+	@media print {
+	input#btnPrint {
+		display: none;
+	}
+	tr#btnPrint {
+		display: none;
+	}
+	td#btnPrint {
+		display: none;
+	}
+	input#btnexport {
+		display: none;
+	}
+	tr#btnexport {
+		display: none;
+	}
+	td#btnexport {
+		display: none;
+	}
+}
+</style>
 </head>
 <body>
 <script type="text/javascript">
@@ -85,19 +107,7 @@ function printthis(which) {
 $('.MM_from_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 $('.MM_to_d').datetimepicker( "option", "dateFormat", "dd/mm/yy" );
 </script>
-<style type="text/css">
-	@media print {
-	input#btnPrint {
-	display: none;
-	}
-	tr#btnPrint{
-	display: none;
-	}
-	td#btnPrint{
-	display: none;
-	}
-}
-</style>
+
 <table width="90%"  border="0" cellspacing="0" cellpadding="0" style="padding-right:10px ">
 	<tr>
 		<td class="tableHeader" height="1"></td>

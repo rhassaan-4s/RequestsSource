@@ -11,7 +11,7 @@ import com._4s_.clients.dao.TenantRepository;
 import com._4s_.clients.dao.UserRepository;
 import com._4s_.clients.model.Post;
 import com._4s_.clients.model.Tenant;
-import com._4s_.clients.model.User;
+import com._4s_.clients.model.TenantUser;
 import com._4s_.clients.web.exception.TenantNotFoundException;
 import com._4s_.clients.web.exception.UserNotFoundException;
 
@@ -32,7 +32,7 @@ public class PostService {
     }
 
     public void addPost(long userId, long tenantId, String text) {
-        User user = userRepository.findById(userId)
+        TenantUser user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User " + userId + " not found."));
         Tenant tenant =
                 tenantRepository.findById(tenantId).orElseThrow(() -> new TenantNotFoundException(

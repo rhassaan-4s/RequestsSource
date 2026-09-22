@@ -141,16 +141,25 @@ function printSelection(node){
 <style type="text/css">
 	@media print {
 	input#btnPrint {
-	display: none;
+		display: none;
 	}
-	tr#btnPrint{
-	display: none;
+	tr#btnPrint {
+		display: none;
 	}
-	td#btnPrint{
-	display: none;
+	td#btnPrint {
+		display: none;
+	}
+	input#btnexport {
+		display: none;
+	}
+	tr#btnexport {
+		display: none;
+	}
+	td#btnexport {
+		display: none;
 	}
 }
-</style> 
+</style>
 
 <table width="90%" border="0" cellspacing="0" cellpadding="0" style="padding-right:10px ">
    

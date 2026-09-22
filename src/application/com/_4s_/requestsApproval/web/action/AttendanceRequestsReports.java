@@ -182,6 +182,9 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		String codeFrom=request.getParameter("codeFrom");
 		String codeTo=request.getParameter("codeTo");
 		
+		log.debug("codeFrom " + codeFrom);
+		log.debug("codeTo " + codeTo);
+		
 		Employee employee = (Employee)request.getSession().getAttribute("employee");
 		
 		String requestNumber = null;
@@ -209,6 +212,9 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		model.put("request_date_from", request_date_from);
 		model.put("request_date_to", request_date_to);
 		model.put("pageNumber", pageNumber);
+		
+		model.put("codeFrom", codeFrom);
+		model.put("codeTo", codeTo);
 		log.debug(">>>>>>>>>>>>>>>>>>>>>>> End of referenceData: >>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		return model;
 	}
@@ -248,6 +254,9 @@ public class AttendanceRequestsReports extends BaseSimpleFormController{
 		}
 		String codeFrom=request.getParameter("codeFrom");
 		String codeTo=request.getParameter("codeTo");
+		
+		log.debug("codeFrom " + codeFrom);
+		log.debug("codeTo " + codeTo);
 		
 		MultiCalendarDate mCalDate = new MultiCalendarDate();
 		int year, month;

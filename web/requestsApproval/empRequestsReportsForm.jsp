@@ -8,10 +8,10 @@
 <html>
 <head>
 
-<title>Insert title here</title>
+	<title>Employee Requests Report</title>
 </head>
 <style type="text/css">
-@media print {
+	@media print {
 	input#btnPrint {
 		display: none;
 	}
@@ -19,6 +19,15 @@
 		display: none;
 	}
 	td#btnPrint {
+		display: none;
+	}
+	input#btnexport {
+		display: none;
+	}
+	tr#btnexport {
+		display: none;
+	}
+	td#btnexport {
 		display: none;
 	}
 }
@@ -69,9 +78,9 @@ function searchForm (){
 	
 
 
-	var exactDateFrom=document.getElementById("exact_request_date_from").value;
-//	alert ('-----exactDateFrom---'+exactDateFrom);
-	var exactDateTo=document.getElementById("exact_request_date_to").value;
+	var exactRequestDateFrom=document.getElementById("exact_request_date_from").value;
+//	alert ('-----exact_request_date_from---'+exactRequestDateFrom);
+	var exactRequestDateTo=document.getElementById("exact_request_date_to").value;
 //	alert ('-----exactDateTo---'+exactDateTo);
 	
 	if(document.getElementById("requestType").value!=null){
@@ -90,7 +99,7 @@ function searchForm (){
 		var errand=document.getElementById("errand").value;
 	} 
 	
-	var URL='empRequestsReportsForm.html?empCode='+empCode+'&dateFrom='+dateFrom+'&exactDateFrom='+exactDateFrom+'&exactDateTo='+exactDateTo+'&dateTo='+dateTo+'&requestType='+requestType+'&codeFrom='+codeFrom+'&codeTo='+codeTo+'&statusId='+statusId+'&errand='+errand;
+	var URL='empRequestsReportsForm.html?empCode='+empCode+'&dateFrom='+dateFrom+'&exact_request_date_from='+exactRequestDateFrom+'&exact_request_date_to='+exactRequestDateTo+'&dateTo='+dateTo+'&requestType='+requestType+'&codeFrom='+codeFrom+'&codeTo='+codeTo+'&statusId='+statusId+'&errand='+errand;
 	window.location.href=URL;
 }
 
@@ -207,7 +216,7 @@ function initMap(latitude,longitude) {
 										firstKey="commons.caption.code"
 										secondKey="commons.caption.name" firstParam="empCode"
 										secondParam="name" bindById="true"
-										valueString="${employeeCode}" valueId="" /></td>
+										valueString="${model.empCode}" valueId="" /></td>
 
 								<td nowrap class="formBodControl"><abc:i18n
 										property="requestsApproval.requestsApprovalForm.reqStatus" />
@@ -215,11 +224,11 @@ function initMap(latitude,longitude) {
 										key="requestsApproval.requestsApprovalForm.reqStatus" /></td>
 								<td class="formBodControl"><select name="statusId"
 									id="statusId">
-										<option value="" ${status==null||status==-1?'selected':''}><fmt:message
+										<option value="" ${model.status==null||status==-1?'selected':''}><fmt:message
 												key="commons.caption.select" /></option>
-										<option value="0" ${status==0?'selected':''}>لم تكتمل</option>
-										<option value="1" ${status==1?'selected':''}>موافق</option>
-										<option value="99" ${status==99?'selected' : ''}>مرفوض</option>
+										<option value="0" ${model.status==0?'selected':''}>لم تكتمل</option>
+										<option value="1" ${model.status==1?'selected':''}>موافق</option>
+										<option value="99" ${model.status==99?'selected' : ''}>مرفوض</option>
 								</select></td>
 
 							</tr>
@@ -285,7 +294,7 @@ function initMap(latitude,longitude) {
 										key="commons.caption.from" /></td>
 								<c:choose>
 									<c:when
-										test="${model.exact_request_date_from ==null || modelexact_request_date_from==''}">
+										test="${model.exact_request_date_from ==null || model.exact_request_date_from==''}">
 										<td class="formBodControl"><input type="text"
 											class="calendar" class="MM_from_d" title="ccc"
 											readonly="readonly" autocomplete="off" dir="ltr"
@@ -330,13 +339,13 @@ function initMap(latitude,longitude) {
 										property="requestsApproval.caption.codeFrom" /> <fmt:message
 										key="requestsApproval.caption.codeFrom" /></td>
 								<td class="formBodControl"><input type="text"
-									value="${codeFrom}" name="codeFrom" id="codeFrom" /></td>
+									value="${model.codeFrom}" name="codeFrom" id="codeFrom" /></td>
 
 								<td nowrap class="formBodControl"><abc:i18n
 										property="requestsApproval.caption.codeTo" /> <fmt:message
 										key="requestsApproval.caption.codeTo" /></td>
 								<td class="formBodControl"><input type="text"
-									value="${codeTo}" name="codeTo" id="codeTo" /></td>
+									value="${model.codeTo}" name="codeTo" id="codeTo" /></td>
 							</tr>
 
 							<tr height="10">

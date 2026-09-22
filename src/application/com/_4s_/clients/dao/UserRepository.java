@@ -27,6 +27,7 @@ package com._4s_.clients.dao;
 import java.util.Optional;
 
 import com._4s_.clients.model.Role;
+import com._4s_.clients.model.TenantUser;
 import com._4s_.security.model.User;
 
 public interface UserRepository {
@@ -37,7 +38,7 @@ public interface UserRepository {
 
     Optional<User> findGeneralAdmin(String email, Role role);
 
-    Optional<User> findById(Long id);
+    Optional<TenantUser> findById(Long id);
     
-    User save(User user);
+    TenantUser save(TenantUser user);
 }

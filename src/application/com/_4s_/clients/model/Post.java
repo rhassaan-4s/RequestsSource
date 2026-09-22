@@ -28,12 +28,12 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private User author;
+    private TenantUser author;
 
     public Post() {
     }
 
-    public Post(String text, Tenant tenant, User author) {
+    public Post(String text, Tenant tenant, TenantUser author) {
         this.text = text;
         this.tenant = tenant;
         this.author = author;
@@ -63,11 +63,11 @@ public class Post {
         this.tenant = tenant;
     }
 
-    public User getAuthor() {
+    public TenantUser getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(TenantUser author) {
         this.author = author;
     }
 }
