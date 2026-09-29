@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com._4s_.common.dao.TenantContext;
 import com._4s_.common.model.Employee;
 import com._4s_.common.model.Settings;
 import com._4s_.restServices.json.AttendanceRequest;
@@ -257,9 +258,8 @@ public class RequestsServiceController {
 		public Map<String, Object> login(ImeiWrapper imei, String tenantId) {
 		    Map<String, Object> response = new HashMap<>();
 		    try {
-		        log.debug("trying to login");
+		        log.debug("****************Requests Service Controller:  MObile App trying to login");
 
-		        // ✅ Get login result (user + JWT)
 		        Map<String, Object> loginResponse = requestsService.login(tenantId);
 		        User user = (User) loginResponse.get("user");
 		        String token = (String) loginResponse.get("token"); // <-- JWT generated in requestsService.login()

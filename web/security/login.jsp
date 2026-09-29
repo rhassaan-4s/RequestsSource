@@ -166,9 +166,22 @@
 									<td colspan="2" align="center" class="formBodControl">
 										<abc:i18n property="commons.caption.login"/>
 										<input type="submit" name="submit" value="<fmt:message key="commons.caption.login"/>" class="button">
+										
 										<abc:i18n property="commons.caption.forgetPassword"/> <a
 										href="forgetPassword.html"><fmt:message
 										key="commons.caption.forgetPassword" /></a>
+										</td>
+								</tr>
+								<tr>
+									<td colspan="2" align="center" class="formBodControl">
+										<div style="text-align:center;">
+										<abc:i18n property="commons.button.backToList"/>
+										<input type="button"
+									       name="back"
+									       value="<fmt:message key='commons.button.backToList'/>"
+									       onclick="window.location.href='/Requests/security/logout.html';"
+									       class="button">
+									    </div>
 <!--										<a href="Requests/../../P01.pdf">file</a>-->
 									</td>
 								</tr>

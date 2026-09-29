@@ -1397,7 +1397,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 							log.debug("------pproved=0-ddd--");
 							requestInfo.setApproved(new Long(99));
 						}
-						saveObject(requestInfo);
+//						saveObject(requestInfo);
 						showbSubmit = "0";
 						
 						throw new RequestAlreadyRejectedException("Request had already been rejected");
@@ -1409,7 +1409,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 							log.debug("------pproved=0---");
 							requestInfo.setApproved(new Long(1));							
 						}
-						saveObject(requestInfo);
+//						saveObject(requestInfo);
 					}
 				} catch (ApprovalFirstPriorityNullException appEx) {
 					restStatus.setStatus("false");
@@ -1556,11 +1556,11 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 			log.debug("acc id " + accId);
 			//record.status==2 && posted!=1
 			if (status!=null && !status.isEmpty() && status.equals("2") && (requestInfo.getPosted()==null || !requestInfo.getPosted().equals(new Long("1")))) {
-				LoginUsersRequests requestOb = requestInfo;
+//				LoginUsersRequests requestOb = requestInfo;
 				EmpReqTypeAcc empReqTypeAcc = new EmpReqTypeAcc();
-				log.debug("requestOb " + requestOb);
-				requestOb = requestInfo;
-				log.debug("requestOb 2 " + requestOb);
+//				log.debug("requestOb " + requestOb);
+//				requestOb = requestInfo;
+//				log.debug("requestOb 2 " + requestOb);
 				//				List empReqAcc
 				empReqTypeAcc = (EmpReqTypeAcc) getObject(
 						EmpReqTypeAcc.class, new Long(accId));
@@ -1584,7 +1584,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					EmpReqApproval empReqApproval = new EmpReqApproval();
 
 					empReqApproval.setApproval(new Integer(status));
-					empReqApproval.setReq_id(requestOb);
+					empReqApproval.setReq_id(requestInfo);
 					empReqApproval.setLevel_id(empReqTypeAcc);
 					empReqApproval.setUser_id(accessLevelLoggedInUser);//loginUsers
 					if (loginUsers.equals(accessLevelLoggedInUser)) {
@@ -1625,9 +1625,9 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				log.debug("test1");
 				if(approval.getApprove().equals("0")){
 
-					requestOb.setApproved(new Long(99));
+					requestInfo.setApproved(new Long(99));
 					log.debug("test2");
-					saveObject(requestOb);
+//					saveObject(requestInfo);
 
 				}
 				else {
@@ -1637,7 +1637,7 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 					log.debug("empReqAcc.size() " + empReqAcc.size());
 					if(approvedCount==empReqAcc.size()) {
 						log.debug("test4");
-						requestOb.setApproved(new Long(1));
+						requestInfo.setApproved(new Long(1));
 						log.debug("approval.getModifiedDate() " + approval.getModifiedDate());
 
 						if (approval.getModifiedDate()!=null && !approval.getModifiedDate().isEmpty()) {
@@ -1651,14 +1651,14 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 								log.debug(e.getMessage());
 							}
 
-							requestOb.setFrom_date_history(requestOb.getFrom_date());
-							requestOb.setFrom_date(modify);
-							requestOb.setPeriod_from(modify);
-							requestOb.setManagerModifiedDate(emp);
-							requestOb.setNotes(requestOb.getNotes()+ "(Attendance had been modified by manager)");
+							requestInfo.setFrom_date_history(requestInfo.getFrom_date());
+							requestInfo.setFrom_date(modify);
+							requestInfo.setPeriod_from(modify);
+							requestInfo.setManagerModifiedDate(emp);
+							requestInfo.setNotes(requestInfo.getNotes()+ "(Attendance had been modified by manager)");
 							log.debug("modified date " + modify);
 						}
-						saveObject(requestOb);
+//						saveObject(requestInfo);
 					} else {
 						if (approval.getModifiedDate()!=null && !approval.getModifiedDate().isEmpty()) {
 							Date modify = null;
@@ -1671,14 +1671,14 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 								log.debug(e.getMessage());
 							}
 
-							requestOb.setFrom_date_history(requestOb.getFrom_date());
-							requestOb.setFrom_date(modify);
-							requestOb.setPeriod_from(modify);
-							requestOb.setManagerModifiedDate(emp);
-							requestOb.setNotes(requestOb.getNotes()+ "(Attendance had been modified by manager)");
+							requestInfo.setFrom_date_history(requestInfo.getFrom_date());
+							requestInfo.setFrom_date(modify);
+							requestInfo.setPeriod_from(modify);
+							requestInfo.setManagerModifiedDate(emp);
+							requestInfo.setNotes(requestInfo.getNotes()+ "(Attendance had been modified by manager)");
 							log.debug("modified date " + modify);
 						}
-						saveObject(requestOb);
+//						saveObject(requestInfo);
 					}
 				}
 
@@ -1688,8 +1688,8 @@ public class RequestsApprovalManagerImpl extends BaseManagerImpl implements Requ
 				restStatus.setMessage("Successful Transaction");
 				response.put("Status", restStatus);
 				String errand ="";
-				if(requestOb.getVacation()!=null && !requestOb.getVacation().equals("")){
-					if(requestOb.getVacation().getVacation().equals("999")){
+				if(requestInfo.getVacation()!=null && !requestInfo.getVacation().equals("")){
+					if(requestInfo.getVacation().getVacation().equals("999")){
 						errand="true";
 					}
 				}

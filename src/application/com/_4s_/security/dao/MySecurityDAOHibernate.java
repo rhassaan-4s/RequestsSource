@@ -2,12 +2,10 @@ package com._4s_.security.dao;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.security.acl.Permission;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -20,20 +18,19 @@ import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Repository;
 
 import com._4s_.common.dao.BaseDAOHibernate;
+import com._4s_.common.dao.TenantContext;
 import com._4s_.common.model.Branch;
 import com._4s_.common.model.Department;
 import com._4s_.common.model.Employee;
 import com._4s_.security.model.Fields;
 import com._4s_.security.model.IPAddress;
 import com._4s_.security.model.Imei;
-import com._4s_.security.model.Permissions;
 import com._4s_.security.model.Roles;
 import com._4s_.security.model.SecurityApplication;
 import com._4s_.security.model.User;
@@ -342,7 +339,7 @@ MySecurityDAO {
 
 	
 	public Map<String, Object> login(String tenantId) {
-	    log.debug("login method in mysecuritydao");
+	    log.debug("****************login method in mysecuritydao");
 
 	    UsernamePasswordAuthenticationToken token =
 	            (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();

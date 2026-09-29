@@ -53,8 +53,8 @@ public class ImeiController extends BaseController {
 		String deleteId = request.getParameter("deleteId");
 		if(deleteId != null && !deleteId.equals("")) {
 			Long deleteIdLong = Long.parseLong(deleteId);
-			Object o = baseManager.getObjectByParameter(Imei.class, "id", deleteIdLong);
-			baseManager.removeObject(o);
+			Object o = commonManager.getObjectByParameter(Imei.class, "id", deleteIdLong);
+			commonManager.removeObject(o);
 		}
 		User user = null;
 		if (userId!= null && !userId.isEmpty()) {

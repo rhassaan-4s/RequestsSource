@@ -79,6 +79,7 @@ public class ClientsView {
 		System.out.println("****Clients Form*******client SCHEMA " + client);
 		if (client!=null && !client.isEmpty()) {
 			Clients c = (Clients)commonManager.getObjectByParameter(Clients.class, "id", client);
+			
 			System.out.println("****Clients Form*******client " + c.getClientName());
 			if (c!=null) {
 				

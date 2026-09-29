@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -54,6 +55,7 @@ public class Settings  implements Serializable,Auditable {
 	private Boolean periodFromToEnabled=true;
 	private Boolean footerCopyrightsEnabled=true;
 	private Boolean companyRulesEn=false;
+	@Transient
 	private Blob companyLogoHeader;
 	private String companyLogoHeaderName;
 	private Integer maxEmp;//

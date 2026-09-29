@@ -75,6 +75,9 @@ public class JwtTenantFilter extends OncePerRequestFilter {
 		this.requestsService = requestsService;
 	}
 
+	public JwtTenantFilter() {
+		 System.out.println("########### JWT TENANT FILTER CONSTRUCTOR ###########");
+	}
 	private String resolveTenant(HttpServletRequest request, String token) {
 
 		// 1) WEB: from session (after /clients.html)
@@ -110,7 +113,14 @@ public class JwtTenantFilter extends OncePerRequestFilter {
 	        FilterChain filterChain)
 	        throws ServletException, IOException {
 
+		System.out.println("########### JWT TENANT FILTER HIT ###########");
 	    String uri = request.getRequestURI();
+	    
+	 // Logout must not restore the previous tenant from the cookie
+//	    if (request.getRequestURI().equals("/Requests/security/logout.html")) {
+//	        filterChain.doFilter(request, response);
+//	        return;
+//	    }
 
 	    // skip static
 	    if (uri.contains("/css/")
@@ -163,40 +173,50 @@ public class JwtTenantFilter extends OncePerRequestFilter {
 	            }
 	        }
 
-	        // 2) header tenant
+	     // 2) header tenant
 	        if (tenant == null) {
-	        	log.info("!!!!!!!!!!!!!Checking X-Tenant header...");
+	            log.info("!!!!!!!!!!!!!Checking X-Tenant header...");
 	            tenant = request.getHeader("X-Tenant");
 	        }
 
-//	        // 3) request param
-//	        if (tenant == null) {
-//	        	log.info("!!!!!!!!!!!!!Checking tenant request parameter...");
-//	            tenant = request.getParameter("tenant");
-//	        }
+	        // 3) MOBILE LOGIN: tenant from request parameter
+	        if (tenant == null) {
+	            log.info("!!!!!!!!!!!!!Checking tenantId request parameter...");
+	            tenant = request.getParameter("tenantId");
+	            log.info("!!!!!!!!!!!!!tenantId parameter = " + tenant);
+	        }
 
 	        // 4) JWT tenant
 	        String token = extractToken(request);
-	        log.info("!!!!!!!!!!!!!Extracted token: " + (token != null ? "present" : "null") + " - " + token);
+
+	        log.info("!!!!!!!!!!!!!Extracted token: "
+	                + (token != null ? "present" : "null"));
+
 	        log.info("!!!!!!!!!!!!!tenant value: " + tenant);
+
 	        if (tenant == null && token != null) {
-	        	log.info("!!!!!!!!!!!!!Extracting tenant from JWT...");
+	            log.info("!!!!!!!!!!!!!Extracting tenant from JWT...");
 	            try {
 	                tenant = jwtUtil.extractTenantId(token);
 	            } catch (Exception ignored) {}
 	        }
-	        log.info("!!!!!!!!!!!!!Resolved tenant: " + (tenant != null ? tenant : "null"));
+
+	        log.info("!!!!!!!!!!!!!Resolved tenant: "
+	                + (tenant != null ? tenant : "null"));
 
 	        // SET TENANT
 	        if (tenant != null) {
 	            TenantContext.setTenant(tenant);
-	            MDC.put("tenantId", tenant); 
+	            MDC.put("tenantId", tenant);
 	        }
-	        System.out.println("*********Filter: Tenant set to: " + tenant);
-	        
+
+	        System.out.println("*********Filter: Tenant set to: " + tenant);	        
 	        
 	        logger.debug("========== JWT FILTER START ==========");
-	        logger.debug("URI = " + request.getRequestURI());
+	        log.info("========== JwtTenantFilter ENTERED ==========");
+	        log.info("URI = " + request.getRequestURI());
+	        log.info("tenantId parameter = " + request.getParameter("tenantId"));
+	        log.info("username parameter = " + request.getParameter("username"));
 	        logger.debug("Authorization = " + request.getHeader("Authorization"));
 	        
 	        filterChain.doFilter(request, response);
