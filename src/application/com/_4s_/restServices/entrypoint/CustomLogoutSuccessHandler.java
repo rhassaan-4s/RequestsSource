@@ -25,7 +25,8 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
     	deleteCookie(response, "client");
     	deleteCookie(response, "token");
     	deleteCookie(response, "JSESSIONID");
-        response.setStatus(HttpServletResponse.SC_OK);
+    	
+        response.setStatus(HttpServletResponse.SC_OK, "Logout successful");
         response.getWriter().flush();
     }
     private void deleteCookie(HttpServletResponse response, String name) {

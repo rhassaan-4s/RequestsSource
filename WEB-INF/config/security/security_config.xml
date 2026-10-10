@@ -15,7 +15,7 @@
 <context:property-placeholder location="classpath:application.properties"/>	
 	
 	<http pattern="/api/workflow/**" use-expressions="true"
-		auto-config="true" 
+		auto-config="false" 
 		disable-url-rewriting="false"
 		entry-point-ref="restAuthenticationEntryPoint"
 		access-decision-manager-ref="accessDecisionManager">
@@ -37,11 +37,11 @@
 			delete-cookies="JSESSIONID,SPRING_SECURITY_REMEMBER_ME_COOKIE" success-handler-ref="myLogoutHandler" />
 
 		
-		<custom-filter ref="jwtTenantFilter" before="FORM_LOGIN_FILTER"/>
+		<custom-filter ref="jwtTenantFilter" before="PRE_AUTH_FILTER"/>
 		
 		<custom-filter ref="jwtAuthenticationFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
 		
-		<custom-filter ref="authenticationFilter" before="PRE_AUTH_FILTER" />
+		 <custom-filter ref="authenticationFilter" before="FORM_LOGIN_FILTER" /> 
 		
 		
 		<access-denied-handler ref="exceptionControllerAdvice" />

@@ -326,7 +326,7 @@ public class ExternalQueries extends CommonQueries{
 	}
 
 
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	public Long getEmpVacation (String empCode, Long reqId, String vacId, Date from_date){
 		//		Long result=null;
 		Long cc1 = null,cc2 = null;
@@ -448,6 +448,13 @@ public class ExternalQueries extends CommonQueries{
 
 		log.debug("getVacationCredit----sql1---"+sql);
 		try{
+			if (session!=null) {
+				session.close();
+			}
+			if (session == null || session.isOpen()==false) {
+				log.debug("session "+ session);
+	    		getCurrentSession();
+	    	} 
 //			cc1=getJdbcTemplate().queryForObject(sql.toString(),Long.class
 			Query q = session.createNativeQuery(sql.toString());
 			cc1 = ((BigDecimal)q.getSingleResult()).longValue();

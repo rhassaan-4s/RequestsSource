@@ -23,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Repository;
 
+import com._4s_.clients.model.CustomUserDetails;
 import com._4s_.common.dao.BaseDAOHibernate;
 import com._4s_.common.dao.TenantContext;
 import com._4s_.common.model.Branch;
@@ -344,14 +345,32 @@ MySecurityDAO {
 	    UsernamePasswordAuthenticationToken token =
 	            (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 
+	    log.debug("SecurityContextHolder.getContext().getAuthentication().getClass() " + SecurityContextHolder.getContext().getAuthentication().getClass());
+	    log.debug("SecurityContextHolder.getContext().getAuthentication() " + SecurityContextHolder.getContext().getAuthentication());
+	    log.debug("SecurityContextHolder.getContext().getAuthentication().getName() " + SecurityContextHolder.getContext().getAuthentication().getName());
+	    log.debug("SecurityContextHolder.getContext().getAuthentication().getPrincipal() " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+	    log.debug("SecurityContextHolder.getContext().getAuthentication().getAuthorities() " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+	    log.debug("SecurityContextHolder.getContext().getAuthentication().isAuthenticated() " + SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
+	    
 	    if (token == null || token.getPrincipal() == null) {
 	        throw new RuntimeException("Authentication failed");
 	    }
 	    
 	    
 
-	    UserDetails userDet = (UserDetails) token.getPrincipal();
-	    User user = getUser(userDet.getUsername());
+//	    UserDetails userDet = (UserDetails) token.getPrincipal();
+//	    User user = getUser(userDet.getUsername());
+	   
+	    String username = null;
+	    
+	    if (token.getPrincipal()!= null && token.getPrincipal() instanceof String) {
+	    	username = (String)token.getPrincipal();
+	    } else if (token.getPrincipal()!= null && token.getPrincipal() instanceof CustomUserDetails) {
+	    	username = ((UserDetails) token.getPrincipal()).getUsername();
+	    } else {
+	    	throw new RuntimeException("Authentication principal is not of expected type");
+	    }
+	    User user = getUser(username);
 
 	    // ✅ Generate JWT with tenantId
 //	    String tenantId = TenantContext.getTenant();
